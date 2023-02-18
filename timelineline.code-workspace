@@ -8,6 +8,15 @@
 		"cSpell.words": [
 			"endregion",
 			"nameof"
+		],
+		"auto-close-tag.activationOnLanguage": [
+			"html",
+			"tsx",
+		]
+	},
+	"extensions": {
+		"recommendations": [
+			"formulahendry.auto-close-tag"
 		]
 	}
 }
