@@ -1,0 +1,19 @@
+{
+  "name": "timelineline",
+  "version": "1.0.0",
+  "description": "できるか知らんけどガントチャート的なものを表示・編集したい。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sk-0520/timelineline.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sk-0520/timelineline/issues"
+  },
+  "homepage": "https://github.com/sk-0520/timelineline#readme"
+}
