@@ -5,11 +5,8 @@ const Home: NextPage = () => {
 	return (
 		<>
 			<AppHead />
-			<main id='home'>
-				<ul>
-					<li>新規</li>
-					<li>読み込み</li>
-				</ul>
+			<main id='edit'>
+				がんとちゃーと
 			</main>
 		</>
 	);
