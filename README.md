@@ -62,7 +62,7 @@
 			// level: 0
 			"RGB",
 		],
-		"progress": "RGB",
+		"end": "RGB",
 	},
 	"timelines": [
 		{
@@ -77,7 +77,7 @@
 		},
 		{
 			"kind": "pin",
-			"type": "pin|line",
+			"scope": "pin|line",
 			"color": "RGB",
 			"subject": "ピン件名",
 			// 対象日時
