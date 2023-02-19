@@ -1,22 +1,23 @@
 import { Color } from "./Color";
 import * as ISO8601 from "./ISO8601";
+import * as Member from "./Member";
+import * as Version from "./Version";
 
 export type TimelineKind =
 	'marker'
 	|
 	'pin'
 	|
-	'timeline'
+	'task'
 	;
 
-export interface TimeLineBase {
+export interface Timeline {
 	kind: TimelineKind;
-	color: Color;
 	subject: string;
 	comment: string;
 }
 
-export type MarkerTimeLineScope =
+export type MarkerTimelineScope =
 	'global'
 	|
 	'local'
@@ -24,46 +25,72 @@ export type MarkerTimeLineScope =
 	'slim'
 	;
 
-export interface MarkerTimeLine extends TimeLineBase {
+export interface MarkerTimeline extends Timeline {
 	kind: 'marker';
-	scope: MarkerTimeLineScope;
+	color: Color;
+	scope: MarkerTimelineScope;
 	target: ISO8601.DateTime;
 	range: ISO8601.Time;
 }
 
-export type PinTimeLineScope =
+export type PinTimelineScope =
 	'pin'
 	|
 	'line'
 	;
 
-export interface PinTimeLine extends TimeLineBase {
+export interface PinTimeline extends Timeline {
 	kind: 'pin';
-	scope: PinTimeLineScope;
+	color: Color;
+	scope: PinTimelineScope;
 	target: ISO8601.DateTime;
 }
 
-export type TimeLineId = string;
-export type TimeLineType =
+export type TaskTimelineId = string;
+export type TaskTimelineType =
 	'group'
 	|
 	'item'
 	;
 
-export interface TimeLineGroup { }
+export interface TaskTimelineGroup { }
 
-export interface TimeLineItem {
+type TaskTimelineItemWorkState =
+	'enabled'
+	|
+	'disabled'
+	|
+	'sleep'
+	;
+
+type TaskTimelineItemWorkProgress = number;
+
+export interface TaskTimelineItemWorkHistory {
+	progress: TaskTimelineItemWorkProgress;
+	version: Version.VersionId;
+	more: ISO8601.Time;
+}
+
+export interface TaskTimelineItemWork {
+	member: Member.MemberId;
+	state: TaskTimelineItemWorkState;
+	progress: TaskTimelineItemWorkProgress;
+}
+
+export interface TaskTimelineItem {
 	static: {
 		target: ISO8601.DateTime;
 	},
 	prev: {
-		items: Array<TimeLineId>;
+		items: Array<TaskTimelineId>;
 	}
+	range: ISO8601.Time;
+	works: Array<TaskTimelineItemWork>;
 }
 
-export interface TimeLine extends TimeLineBase {
-	kind: 'timeline';
-	id: TimeLineId;
-	group: TimeLineGroup;
-	item: TimeLineItem;
+export interface TaskTimeline extends Timeline {
+	kind: 'task';
+	id: TaskTimelineId;
+	group: TaskTimelineGroup;
+	item: TaskTimelineItem;
 }

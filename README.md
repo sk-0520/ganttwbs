@@ -85,9 +85,8 @@
 			"comment": ""
 		},
 		{
-			"kind": "timeline",
-			"id": "<TIMELINE-ID>",
-			"color": "RGB",
+			"kind": "task",
+			"id": "<TASK-TIMELINE-ID>",
 			"subject": "タイムライン名",
 			"type": "group|item",
 			// type: group
@@ -104,7 +103,7 @@
 				// 先行 複数指定は全先行が終了する必要あり
 				"prev": {
 					"items": [
-						"<TIMELINE-ID>",
+						"<TASK-TIMELINE-ID>",
 					]
 				},
 				"range": "ISO8601時刻",
