@@ -1,12 +1,13 @@
 import { NextPage } from 'next';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import EditFile from '@/components/elements/EditFile'
-import EditCalendar from '@/components/elements/EditCalendar'
+import FileEditor from '@/components/elements/edit/file/FileEditor'
+import SettingEditor from '@/components/elements/edit/setting/SettingEditor'
 import Layout from '@/components/layout/Layout'
 import { EditData } from '@/models/data/EditData';
 import { useRouter } from 'next/router';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { EditContext, EditContextImpl } from '@/models/data/context/EditContext';
+import * as Storage from "@/models/Storage";
 //import * as Setting from '@/models/data/setting/Setting';
 
 const Edit: NextPage = () => {
@@ -14,19 +15,15 @@ const Edit: NextPage = () => {
 	const initTabIndex = 3;
 	const router = useRouter();
 	const [data, setData] = useState<EditData>();
-	const [tabEditMode, setTabEditMode] = useState<string>(editTabIndex === +initTabIndex ? 'visible': '');
+	const [tabEditMode, setTabEditMode] = useState<string>(editTabIndex === +initTabIndex ? 'visible' : '');
 
 	useEffect(() => {
-		const sessionData = sessionStorage.getItem('data');
-		if (!sessionData) {
+		const data = Storage.loadEditData();
+		if (!data) {
 			router.push('/');
 			return;
 		}
-		const settingObject = JSON.parse(sessionData);
-		// 型チェック
-		const data = settingObject as EditData;
 		setData(data);
-
 	}, [router]);
 
 	// const tabRef = useRef<HTMLDivElement>(null);
@@ -50,7 +47,7 @@ const Edit: NextPage = () => {
 
 	return (
 		<Layout mode='application' layoutId='edit'
-			title={data ? data.fileName + ' 編集': '編集'}
+			title={data ? data.fileName + ' 編集' : '編集'}
 		>
 			<>
 				{!data && <p>読み込み中</p>}
@@ -60,14 +57,12 @@ const Edit: NextPage = () => {
 							<TabList>
 								<Tab>ファイル</Tab>
 								<Tab>編集</Tab>
-								<Tab>メンバー設定</Tab>
-								<Tab>カレンダー設定</Tab>
-								<Tab>色設定</Tab>
+								<Tab>設定</Tab>
 							</TabList>
 
 							{/* ファイル */}
 							<TabPanel className='tab-file'>
-								<EditFile />
+								<FileEditor />
 							</TabPanel>
 							{/* 編集 */}
 							<TabPanel className={'tab-edit ' + tabEditMode} >
@@ -75,15 +70,9 @@ const Edit: NextPage = () => {
 									ほんたい
 								</p>
 							</TabPanel>
-							{/* メンバー設定 */}
-							<TabPanel className='tab-member'>
-							</TabPanel>
-							{/* カレンダー設定 */}
-							<TabPanel className='tab-calendar'>
-								<EditCalendar />
-							</TabPanel>
-							{/* 色設定 */}
-							<TabPanel className='tab-theme'>
+							{/* 設定 */}
+							<TabPanel className='tab-setting'>
+								<SettingEditor />
 							</TabPanel>
 						</Tabs>
 					</EditContext.Provider>
