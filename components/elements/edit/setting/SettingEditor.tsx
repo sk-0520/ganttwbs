@@ -1,9 +1,7 @@
 import { NextPage } from "next";
-import { FormEvent, useContext, useState } from "react";
-//import { useForm } from "react-hook-form";
+import { FormEvent, useContext } from "react";
 import { EditContext } from "@/models/data/context/EditContext";
 import { WeekDay } from "@/models/data/setting/WeekDay";
-import { useForm } from "react-hook-form";
 import WeekSettingEditor from "./WeekSettingEditor";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { Setting } from "@/models/data/setting/Setting";
@@ -42,10 +40,14 @@ const Component: NextPage = () => {
 					<dd className="calendar">
 						<dl className="inputs">
 							<dt>曜日設定</dt>
-							<dd className="week"><WeekSettingEditor /></dd>
+							<dd className="week">
+								<WeekSettingEditor />
+							</dd>
 
 							<dt>祝日</dt>
-							<dd className="holiday"><HolidaySettingEditor /></dd>
+							<dd className="holiday">
+								<HolidaySettingEditor />
+							</dd>
 						</dl>
 
 					</dd>

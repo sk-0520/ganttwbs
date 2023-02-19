@@ -1,10 +1,5 @@
 import { createContext } from 'react';
-import { EditData } from '../EditData';
-import { Setting } from '../setting/Setting';
 import * as ISO8601 from '../setting/ISO8601';
-import { Holiday } from '../setting/Holiday';
-
-
 
 interface CalendarSetting {
 	range: {
