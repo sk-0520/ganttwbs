@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import { useEffect, useRef, useState } from 'react';
+import EditFile from '@/components/elements/EditFile'
 import Layout from '@/components/layout/Layout'
 import { EditData } from '@/models/data/EditData';
 import { useRouter } from 'next/router';
@@ -8,6 +9,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 const Edit: NextPage = () => {
 	const editTabIndex = 1;
+	const initTabIndex = 0;
 	const router = useRouter();
 	const [data, setData] = useState<EditData>();
 	const [tabEditMode, setTabEditMode] = useState<string>('visible');
@@ -49,7 +51,7 @@ const Edit: NextPage = () => {
 			<>
 				{!data && <p>読み込み中</p>}
 				{data && (
-					<Tabs defaultIndex={editTabIndex} onSelect={handleSelect} >
+					<Tabs defaultIndex={initTabIndex} onSelect={handleSelect} >
 						<TabList>
 							<Tab>ファイル</Tab>
 							<Tab>編集</Tab>
@@ -60,7 +62,7 @@ const Edit: NextPage = () => {
 
 						{/* ファイル */}
 						<TabPanel className='tab-file'>
-							<p>ファイル設定</p>
+							<EditFile fileName={data.fileName} />
 						</TabPanel>
 						{/* 編集 */}
 						<TabPanel className={'tab-edit ' + tabEditMode} >

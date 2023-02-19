@@ -41,17 +41,5 @@ div#mode-page {
 	main {
 		margin: 1rem;
 	}
-
-	dl.inputs {
-		margin: 0.5em;
-
-		dd {
-			margin-left: 2em;
-
-			& + dt {
-				margin-top: 0.5em
-			}
-		}
-	}
 }
 
