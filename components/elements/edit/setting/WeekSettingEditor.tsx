@@ -7,81 +7,82 @@ import { WeekDay } from "@/models/data/setting/WeekDay";
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
 
-	const weeks: Array<WeekDay> = [
-		'sunday',
-		'monday',
-		'tuesday',
-		'wednesday',
-		'thursday',
-		'friday',
-		'saturday',
-	];
-	const weekDisplay = new Map<WeekDay, string>([
-		['sunday', '日曜日'],
-		['monday', '月曜日'],
-		['tuesday', '火曜日'],
-		['wednesday', '水曜日'],
-		['thursday', '木曜日'],
-		['friday', '金曜日'],
-		['saturday', '日曜日'],
-	]);
-
 	return (
 		<>
-			<section>
-				<h2>曜日設定</h2>
-				<ul>
-					{weeks.map(a => {
-						return (
-							<li key={a}>
-								<label>
-									<input
-										type='checkbox'
-										defaultChecked={isRegularsHoliday(a, settingContext.calendar.holiday.regulars)}
-										onChange={ev => {
-											const ar = setRegularsHoliday(a, settingContext.calendar.holiday.regulars, ev.target.checked);
-											settingContext.calendar.holiday.regulars = ar;
-										}}
-									/>
-									{weekDisplay.get(a)}
-								</label>
-							</li>
-						)
-					})}
-				</ul>
-			</section>
-
-			<section>
-				<h2>祝日設定</h2>
-
-				<section className="holiday">
-				</section>
-			</section>
+			<ul>
+				<li>
+					<label>
+						<input
+							type='checkbox'
+							defaultChecked={settingContext.calendar.holiday.week.sunday}
+							onChange={ev => settingContext.calendar.holiday.week.sunday = ev.target.checked}
+						/>
+						日曜日
+					</label>
+				</li>
+				<li>
+					<label>
+						<input
+							type='checkbox'
+							defaultChecked={settingContext.calendar.holiday.week.monday}
+							onChange={ev => settingContext.calendar.holiday.week.monday = ev.target.checked}
+						/>
+						月曜日
+					</label>
+				</li>
+				<li>
+					<label>
+						<input
+							type='checkbox'
+							defaultChecked={settingContext.calendar.holiday.week.tuesday}
+							onChange={ev => settingContext.calendar.holiday.week.tuesday = ev.target.checked}
+						/>
+						火曜日
+					</label>
+				</li>
+				<li>
+					<label>
+						<input
+							type='checkbox'
+							defaultChecked={settingContext.calendar.holiday.week.wednesday}
+							onChange={ev => settingContext.calendar.holiday.week.wednesday = ev.target.checked}
+						/>
+						水曜日
+					</label>
+				</li>
+				<li>
+					<label>
+						<input
+							type='checkbox'
+							defaultChecked={settingContext.calendar.holiday.week.thursday}
+							onChange={ev => settingContext.calendar.holiday.week.thursday = ev.target.checked}
+						/>
+						木曜日
+					</label>
+				</li>
+				<li>
+					<label>
+						<input
+							type='checkbox'
+							defaultChecked={settingContext.calendar.holiday.week.friday}
+							onChange={ev => settingContext.calendar.holiday.week.friday = ev.target.checked}
+						/>
+						金曜日
+					</label>
+				</li>
+				<li>
+					<label>
+						<input
+							type='checkbox'
+							defaultChecked={settingContext.calendar.holiday.week.saturday}
+							onChange={ev => settingContext.calendar.holiday.week.saturday = ev.target.checked}
+						/>
+						土曜日
+					</label>
+				</li>
+			</ul>
 		</>
 	);
 };
 
 export default Component;
-
-function isRegularsHoliday(week: WeekDay, weeks: ReadonlyArray<WeekDay>): boolean {
-	return weeks.some(a => a === week);
-}
-
-function setRegularsHoliday(week: WeekDay, weeks: ReadonlyArray<WeekDay>, holiday: boolean): Array<WeekDay> {
-	const index = weeks.indexOf(week);
-
-	if (holiday) {
-		if (index === -1) {
-			return [...weeks, week];
-		}
-	} else {
-		if (index !== -1) {
-			const uniques = new Set(weeks);
-			uniques.delete(week);
-
-			return [...uniques.values()];
-		}
-	}
-
-	return [...weeks];
-}
