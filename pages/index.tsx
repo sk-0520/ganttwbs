@@ -1,4 +1,5 @@
 import { NextPage } from 'next';
+import Link from 'next/link';
 import AppHead from '@/components/layout/AppHead'
 
 const Home: NextPage = () => {
@@ -7,8 +8,12 @@ const Home: NextPage = () => {
 			<AppHead />
 			<main id='home'>
 				<ul>
-					<li>新規</li>
-					<li>読み込み</li>
+					<li>
+						<Link href="/new">新規</Link>
+					</li>
+					<li>
+						<Link href="/load">読み込み</Link>
+					</li>
 				</ul>
 			</main>
 		</>

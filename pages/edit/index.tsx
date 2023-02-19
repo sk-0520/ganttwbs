@@ -4,9 +4,9 @@ import AppHead from '@/components/layout/AppHead'
 const Home: NextPage = () => {
 	return (
 		<>
-			<AppHead />
+			<AppHead title='編集' />
 			<main id='edit'>
-				がんとちゃーと
+				ここが心臓部
 			</main>
 		</>
 	);
