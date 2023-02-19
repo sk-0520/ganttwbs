@@ -8,6 +8,7 @@ body {
 
 div#mode-page {
 	margin: 2rem;
+	line-height: 1.2rem;
 
 	h1 {
 		font-weight: bold;
@@ -40,4 +41,17 @@ div#mode-page {
 	main {
 		margin: 1rem;
 	}
+
+	dl.inputs {
+		margin: 0.5em;
+
+		dd {
+			margin-left: 2em;
+
+			& + dt {
+				margin-top: 0.5em
+			}
+		}
+	}
 }
+
