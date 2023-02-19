@@ -65,7 +65,13 @@
 	},
 	"extensions": {
 		"recommendations": [
-			"formulahendry.auto-close-tag"
+			"formulahendry.auto-close-tag",
+			"editorconfig.editorconfig",
+			"orta.vscode-jest",
+			"streetsidesoftware.code-spell-checker",
+			"sibiraj-s.vscode-scss-formatter",
+			"santacodes.santacodes-region-viewer",
+			"awwsky.region-marker"
 		]
 	}
 }
