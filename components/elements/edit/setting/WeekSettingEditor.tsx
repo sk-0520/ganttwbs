@@ -12,8 +12,8 @@ const Component: NextPage = () => {
 					<label>
 						<input
 							type='checkbox'
-							defaultChecked={settingContext.calendar.holiday.week.sunday}
-							onChange={ev => settingContext.calendar.holiday.week.sunday = ev.target.checked}
+							defaultChecked={settingContext.calendar.holiday.regulars.sunday}
+							onChange={ev => settingContext.calendar.holiday.regulars.sunday = ev.target.checked}
 						/>
 						日曜日
 					</label>
@@ -22,8 +22,8 @@ const Component: NextPage = () => {
 					<label>
 						<input
 							type='checkbox'
-							defaultChecked={settingContext.calendar.holiday.week.monday}
-							onChange={ev => settingContext.calendar.holiday.week.monday = ev.target.checked}
+							defaultChecked={settingContext.calendar.holiday.regulars.monday}
+							onChange={ev => settingContext.calendar.holiday.regulars.monday = ev.target.checked}
 						/>
 						月曜日
 					</label>
@@ -32,8 +32,8 @@ const Component: NextPage = () => {
 					<label>
 						<input
 							type='checkbox'
-							defaultChecked={settingContext.calendar.holiday.week.tuesday}
-							onChange={ev => settingContext.calendar.holiday.week.tuesday = ev.target.checked}
+							defaultChecked={settingContext.calendar.holiday.regulars.tuesday}
+							onChange={ev => settingContext.calendar.holiday.regulars.tuesday = ev.target.checked}
 						/>
 						火曜日
 					</label>
@@ -42,8 +42,8 @@ const Component: NextPage = () => {
 					<label>
 						<input
 							type='checkbox'
-							defaultChecked={settingContext.calendar.holiday.week.wednesday}
-							onChange={ev => settingContext.calendar.holiday.week.wednesday = ev.target.checked}
+							defaultChecked={settingContext.calendar.holiday.regulars.wednesday}
+							onChange={ev => settingContext.calendar.holiday.regulars.wednesday = ev.target.checked}
 						/>
 						水曜日
 					</label>
@@ -52,8 +52,8 @@ const Component: NextPage = () => {
 					<label>
 						<input
 							type='checkbox'
-							defaultChecked={settingContext.calendar.holiday.week.thursday}
-							onChange={ev => settingContext.calendar.holiday.week.thursday = ev.target.checked}
+							defaultChecked={settingContext.calendar.holiday.regulars.thursday}
+							onChange={ev => settingContext.calendar.holiday.regulars.thursday = ev.target.checked}
 						/>
 						木曜日
 					</label>
@@ -62,8 +62,8 @@ const Component: NextPage = () => {
 					<label>
 						<input
 							type='checkbox'
-							defaultChecked={settingContext.calendar.holiday.week.friday}
-							onChange={ev => settingContext.calendar.holiday.week.friday = ev.target.checked}
+							defaultChecked={settingContext.calendar.holiday.regulars.friday}
+							onChange={ev => settingContext.calendar.holiday.regulars.friday = ev.target.checked}
 						/>
 						金曜日
 					</label>
@@ -72,8 +72,8 @@ const Component: NextPage = () => {
 					<label>
 						<input
 							type='checkbox'
-							defaultChecked={settingContext.calendar.holiday.week.saturday}
-							onChange={ev => settingContext.calendar.holiday.week.saturday = ev.target.checked}
+							defaultChecked={settingContext.calendar.holiday.regulars.saturday}
+							onChange={ev => settingContext.calendar.holiday.regulars.saturday = ev.target.checked}
 						/>
 						土曜日
 					</label>

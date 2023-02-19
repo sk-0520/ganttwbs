@@ -10,6 +10,7 @@ import HolidaySettingEditor from "./HolidaySettingEditor";
 import * as ISO8601 from "@/models/data/setting/ISO8601";
 import { HolidayKind, HolidayEvent } from "@/models/data/setting/Holiday";
 import * as string from "@/models/core/string";
+import { Color } from "@/models/data/setting/Color";
 
 const NewLine = "\r\n";
 
@@ -84,7 +85,7 @@ function toContext(setting: Setting): SettingContext {
 				to: setting.calendar.range.to,
 			},
 			holiday: {
-				week: {
+				regulars: {
 					monday: setting.calendar.holiday.regulars.includes('monday'),
 					tuesday: setting.calendar.holiday.regulars.includes('tuesday'),
 					wednesday: setting.calendar.holiday.regulars.includes('wednesday'),
@@ -93,9 +94,28 @@ function toContext(setting: Setting): SettingContext {
 					saturday: setting.calendar.holiday.regulars.includes('saturday'),
 					sunday: setting.calendar.holiday.regulars.includes('sunday'),
 				},
-				holidays: toCalendarHolidayEventContext('holiday', setting.calendar.holiday.events),
-				specials: toCalendarHolidayEventContext('special', setting.calendar.holiday.events),
+				events: {
+					holidays: toCalendarHolidayEventContext('holiday', setting.calendar.holiday.events),
+					specials: toCalendarHolidayEventContext('special', setting.calendar.holiday.events),
+				}
 			},
+		},
+		theme: {
+			holiday: {
+				regulars: {
+					sunday: '#000',
+					monday: '#000',
+					tuesday: '#000',
+					wednesday: '#000',
+					thursday: '#000',
+					friday: '#000',
+					saturday: '#000',
+				},
+				events: {
+					holiday: '#000',
+					special: '#000',
+				}
+			}
 		}
 	};
 }
@@ -131,17 +151,17 @@ function fromContext(source: Setting, context: SettingContext): Setting {
 			},
 			holiday: {
 				regulars: new Array<{ week: WeekDay, value: boolean }>().concat([
-					{ week: 'sunday', value: context.calendar.holiday.week.sunday },
-					{ week: 'monday', value: context.calendar.holiday.week.monday },
-					{ week: 'tuesday', value: context.calendar.holiday.week.tuesday },
-					{ week: 'wednesday', value: context.calendar.holiday.week.wednesday },
-					{ week: 'thursday', value: context.calendar.holiday.week.thursday },
-					{ week: 'friday', value: context.calendar.holiday.week.friday },
-					{ week: 'saturday', value: context.calendar.holiday.week.saturday },
+					{ week: 'sunday', value: context.calendar.holiday.regulars.sunday },
+					{ week: 'monday', value: context.calendar.holiday.regulars.monday },
+					{ week: 'tuesday', value: context.calendar.holiday.regulars.tuesday },
+					{ week: 'wednesday', value: context.calendar.holiday.regulars.wednesday },
+					{ week: 'thursday', value: context.calendar.holiday.regulars.thursday },
+					{ week: 'friday', value: context.calendar.holiday.regulars.friday },
+					{ week: 'saturday', value: context.calendar.holiday.regulars.saturday },
 				]).filter(a => a.value).map(a => a.week),
 				events: {
-					...fromCalendarHolidayEventsContext('holiday', context.calendar.holiday.holidays),
-					...fromCalendarHolidayEventsContext('special', context.calendar.holiday.specials),
+					...fromCalendarHolidayEventsContext('holiday', context.calendar.holiday.events.holidays),
+					...fromCalendarHolidayEventsContext('special', context.calendar.holiday.events.specials),
 				}
 			}
 		},
@@ -156,7 +176,10 @@ function fromContext(source: Setting, context: SettingContext): Setting {
 					saturday: '#0ff',
 					sunday: '#f0f',
 				},
-				events: {}
+				events: {
+					holiday: '#f8f',
+					special: '#8f8',
+				}
 			},
 			groups: [
 				'#444',

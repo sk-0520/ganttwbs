@@ -1,5 +1,7 @@
 import { createContext } from 'react';
+import { Color } from '../setting/Color';
 import * as ISO8601 from '../setting/ISO8601';
+import { WeekDay } from '../setting/WeekDay';
 
 interface CalendarSetting {
 	range: {
@@ -7,22 +9,27 @@ interface CalendarSetting {
 		to: ISO8601.Date;
 	};
 	holiday: {
-		week: {
-			sunday: boolean;
-			monday: boolean;
-			tuesday: boolean;
-			wednesday: boolean;
-			thursday: boolean;
-			friday: boolean;
-			saturday: boolean;
-		};
-		holidays: string;
-		specials: string;
+		regulars: { [key in WeekDay]: boolean };
+		events: {
+			holidays: string;
+			specials: string;
+		}
+	};
+}
+
+interface ThemeSetting {
+	holiday: {
+		regulars: { [key in WeekDay]: Color },
+		events: {
+			holiday: Color,
+			special: Color,
+		}
 	};
 }
 
 export interface SettingContext {
 	calendar: CalendarSetting;
+	theme: ThemeSetting;
 }
 
 export const SettingContext = createContext<SettingContext>({} as SettingContext);
