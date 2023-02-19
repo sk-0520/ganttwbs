@@ -74,6 +74,7 @@ export default New;
 function onSubmit(data: NewInput) {
 	console.debug(data);
 
+	const fileName = 'new.json';
 	const setting: Setting.Setting = {
 		name: data.title,
 		calendar: {
@@ -109,4 +110,6 @@ function onSubmit(data: NewInput) {
 	};
 
 	console.debug(setting);
+	console.debug(fileName);
+
 }
