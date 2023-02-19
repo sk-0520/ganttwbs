@@ -1,7 +1,16 @@
 main#home {
 	& > ul {
 		& > li {
-			background: #ccc;
+			& + li {
+				margin-top: 1rem;
+			}
+
+			a {
+				text-align: center;
+				display: block;
+				padding: 2rem;
+				border: 1px solid blue;
+			}
 		}
 	}
 }

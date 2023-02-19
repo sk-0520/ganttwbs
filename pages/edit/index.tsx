@@ -1,14 +1,11 @@
 import { NextPage } from 'next';
-import AppHead from '@/components/layout/AppHead'
+import Layout from '@/components/layout/Layout'
 
 const Home: NextPage = () => {
 	return (
-		<>
-			<AppHead title='編集' />
-			<main id='edit'>
-				ここが心臓部
-			</main>
-		</>
+		<Layout title='編集' mode='application' layoutId='edit'>
+			ここが心臓部
+		</Layout>
 	);
 };
 

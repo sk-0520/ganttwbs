@@ -1,0 +1,43 @@
+html {
+	font-size: 12pt;
+}
+
+body {
+	background: #eeeeee;
+}
+
+div#mode-page {
+	margin: 2rem;
+
+	h1 {
+		font-weight: bold;
+		text-align: center;
+		font-size: 1.5rem;
+		margin: 1rem auto;
+	}
+
+	header {
+		font-size: 0.8rem;
+		background: #dddddd;
+		margin: 1rem;
+
+		nav {
+			ul {
+				margin: 0;
+				text-align: right;
+
+				li {
+					display: inline;
+
+					& + li {
+						margin-left: 1ch;
+					}
+				}
+			}
+		}
+	}
+
+	main {
+		margin: 1rem;
+	}
+}

@@ -1,14 +1,11 @@
 import { NextPage } from 'next';
-import AppHead from '@/components/layout/AppHead'
+import Layout from '@/components/layout/Layout'
 
 const Load: NextPage = () => {
 	return (
-		<>
-			<AppHead title='読み込み' />
-			<main id='load'>
-				<input type='file' />
-			</main>
-		</>
+		<Layout title='読み込み' mode='page' layoutId='load'>
+			<input type='file' />
+		</Layout>
 	);
 };
 
