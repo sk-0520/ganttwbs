@@ -5,10 +5,58 @@
 		}
 	],
 	"settings": {
+		"files.exclude": {
+			"**/bin": true,
+			"**/obj": true,
+			"**/node_modules": true,
+			".vs": true,
+			"*.lnk": true
+		},
+		"files.watcherExclude": {
+			"**/.git/objects/**": true,
+			"**/.git/subtree-cache/**": true,
+			"**/node_modules/*/**": true,
+			".vs": true,
+			".vscode": true,
+			"**/dist/**": true,
+			"**/bin/**": true,
+			"**/obj/**": true,
+			"*.lnk": true,
+		},
+		"html.format.indentInnerHtml": true,
+		"html.format.wrapLineLength": 0,
+		"json.schemas": [
+			{
+				"fileMatch": [
+					"*.jsonc"
+				],
+				"schema": {
+					"allowTrailingCommas": true
+				}
+			}
+		],
 		"cSpell.words": [
 			"endregion",
 			"gangangan",
-			"nameof"
+			"nameof",
+			"pjax",
+			"postoutput",
+			"prebrowser",
+			"timespan",
+			"webextension",
+			"THTML",
+			"nameof",
+		],
+		"npm.scriptExplorerExclude": [
+			"test$",
+			"^(pre|post)",
+			"build:development",
+			"^(?!.*-env$)browser:.*$",
+			"^(?!.*-env$)debug:.*$",
+			"output",
+			"lint",
+			"license",
+			"^(check|update)$"
 		],
 		"auto-close-tag.activationOnLanguage": [
 			"html",

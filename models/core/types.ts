@@ -406,18 +406,18 @@ export function getProperties<T extends object>(obj: T): Set<keyof T> {
 	return result;
 }
 
-// /**
-//  * `TResult` のプロパティ名を満たす平坦なオブジェクトとして複製。
-//  * @param source
-//  * @returns
-//  */
-// export function flatClone<TResult extends { [K in keyof TResult]: TResult[K] }, TSource extends TResult = TResult>(source: TSource): TResult {
-// 	const properties = getProperties(source);
+/**
+ * `TResult` のプロパティ名を満たす平坦なオブジェクトとして複製。
+ * @param source
+ * @returns
+ */
+export function flatClone<TResult extends { [K in keyof TResult]: TResult[K] }, TSource extends TResult = TResult>(source: TSource): TResult {
+	const properties = getProperties(source);
 
-// 	const result = Object.fromEntries([...properties].map(i => [i, source[i]]));
+	const result = Object.fromEntries([...properties].map(i => [i, source[i]]));
 
-// 	return result as any as TResult;
-// }
+	return result as any as TResult;
+}
 
 export function nameof(name: Function): string;
 export function nameof<T extends object>(name: Extract<keyof T, string>): string;
