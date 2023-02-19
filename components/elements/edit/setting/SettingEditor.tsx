@@ -11,6 +11,9 @@ import * as Storage from "@/models/Storage";
 import HolidaySettingEditor from "./HolidaySettingEditor";
 import * as ISO8601 from "@/models/data/setting/ISO8601";
 import { HolidayKind, HolidayEvent } from "@/models/data/setting/Holiday";
+import * as string from "@/models/core/string";
+
+const NewLine = "\r\n";
 
 const Component: NextPage = () => {
 	const editContext = useContext(EditContext);
@@ -65,8 +68,8 @@ function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: ISO8601
 		.filter(([k, v]) => v.kind === kind)
 		.map(([k, v]) => ({ date: new Date(k), display: v.display }))
 		.sort((a, b) => a.date.getTime() - b.date.getTime())
-		.map(a => `${a.date.toDateString()}\t${a.display}`)
-		.join("\r\n")
+		.map(a => `${a.date.toISOString().split('T')[0]}\t${a.display}`)
+		.join(NewLine)
 		;
 
 }
@@ -95,8 +98,23 @@ function toContext(setting: Setting): SettingContext {
 	};
 }
 
-function fromCalendarHolidayEventContext(kind: HolidayKind, context: string): { [key: ISO8601.Date]: HolidayEvent } {
+function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string): { [key: ISO8601.Date]: HolidayEvent } {
 	const result: { [key: ISO8601.Date]: HolidayEvent } = {};
+
+	var items = string.splitLines(context)
+		.filter(a => a && a.trim())
+		.map(a => a.split("\t", 2))
+		.map(a => ({ date: a[0], display: a[1] }))
+		.map(a => ({ date: new Date(a.date), display: a.display }))
+		.filter(a => !isNaN(a.date.getTime()))
+		;
+
+	for (const item of items) {
+		result[item.date.toISOString().split('T')[0]] = {
+			display: item.display,
+			kind: kind
+		};
+	}
 
 	return result;
 }
@@ -120,8 +138,8 @@ function fromContext(source: Setting, context: SettingContext): Setting {
 					{ week: 'saturday', value: context.calendar.holiday.week.saturday },
 				]).filter(a => a.value).map(a => a.week),
 				events: {
-					...fromCalendarHolidayEventContext('holiday', context.calendar.holiday.holidays),
-					...fromCalendarHolidayEventContext('special', context.calendar.holiday.specials),
+					...fromCalendarHolidayEventsContext('holiday', context.calendar.holiday.holidays),
+					...fromCalendarHolidayEventsContext('special', context.calendar.holiday.specials),
 				}
 			}
 		},
