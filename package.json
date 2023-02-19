@@ -15,7 +15,7 @@
   "homepage": "https://github.com/sk-0520/timelineline#readme",
   "scripts": {
     "dev": "next dev",
-    "dev-win": "set NODE_OPTIONS='--inspect' && next dev",
+    "dev-win": "set NODE_OPTIONS=--inspect && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
