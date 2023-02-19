@@ -1,18 +1,11 @@
 import { NextPage } from "next";
 import { useContext } from "react";
-import { useController, useForm, useFormContext } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { EditContext } from '@/models/data/context/EditContext';
 
 const Component: NextPage = () => {
 	const editContext = useContext(EditContext);
 	const { register } = useForm<EditContext>();
-	//const { register } = useForm();
-	// const { control } = useFormContext();
-	// const field = useController({
-	// 	control: control,
-	// 	name: 'fileName',
-	// 	defaultValue: editContext.data.fileName
-	// });
 
 	function download() {
 		const json = JSON.stringify(editContext.data.setting, undefined, 2);

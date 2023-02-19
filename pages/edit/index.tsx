@@ -1,6 +1,7 @@
 import { NextPage } from 'next';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import EditFile from '@/components/elements/EditFile'
+import EditCalendar from '@/components/elements/EditCalendar'
 import Layout from '@/components/layout/Layout'
 import { EditData } from '@/models/data/EditData';
 import { useRouter } from 'next/router';
@@ -10,7 +11,7 @@ import { EditContext, EditContextImpl } from '@/models/data/context/EditContext'
 
 const Edit: NextPage = () => {
 	const editTabIndex = 1;
-	const initTabIndex = 0;
+	const initTabIndex = 3;
 	const router = useRouter();
 	const [data, setData] = useState<EditData>();
 	const [tabEditMode, setTabEditMode] = useState<string>(editTabIndex === +initTabIndex ? 'visible': '');
@@ -60,7 +61,7 @@ const Edit: NextPage = () => {
 								<Tab>ファイル</Tab>
 								<Tab>編集</Tab>
 								<Tab>メンバー設定</Tab>
-								<Tab>休日設定</Tab>
+								<Tab>カレンダー設定</Tab>
 								<Tab>色設定</Tab>
 							</TabList>
 
@@ -70,15 +71,16 @@ const Edit: NextPage = () => {
 							</TabPanel>
 							{/* 編集 */}
 							<TabPanel className={'tab-edit ' + tabEditMode} >
-								<>
-									{[...Array(100)].map(a => <p>ほん{a}たい</p>)}
-								</>
+								<p>
+									ほんたい
+								</p>
 							</TabPanel>
 							{/* メンバー設定 */}
 							<TabPanel className='tab-member'>
 							</TabPanel>
-							{/* 休日設定 */}
-							<TabPanel className='tab-holiday'>
+							{/* カレンダー設定 */}
+							<TabPanel className='tab-calendar'>
+								<EditCalendar />
 							</TabPanel>
 							{/* 色設定 */}
 							<TabPanel className='tab-theme'>

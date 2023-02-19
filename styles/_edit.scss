@@ -11,4 +11,15 @@ main#edit {
 			overflow: auto;
 		}
 	}
+
+	.tab-calendar {
+		section.holiday {
+			display:flex;
+			background-color: lime;
+
+			table + table {
+				margin-left: 3rem;
+			}
+		}
+	}
 }

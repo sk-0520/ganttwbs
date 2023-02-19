@@ -7,7 +7,9 @@ export interface EditContext {
 	autoSave: {
 		isEnabled: boolean,
 		minutes: number,
-	}
+	},
+
+	debug: number;
 }
 
 export class EditContextImpl {
@@ -17,6 +19,8 @@ export class EditContextImpl {
 		isEnabled: false,
 		minutes: 5,
 	};
+
+	public debug = 0;
 
 	constructor(data: EditData) {
 		this.data = data;
