@@ -1,8 +1,11 @@
 import { NextPage } from 'next';
+import { NextRouter, useRouter } from 'next/router';
 import { useForm } from "react-hook-form";
 import Layout from '@/components/layout/Layout'
 import * as ISO8601 from '@/models/data/setting/ISO8601';
 import * as Setting from '@/models/data/setting/Setting';
+import { EditData } from '@/models/data/EditData';
+import * as Goto from '@/models/Goto';
 
 interface NewInput {
 	title: string;
@@ -11,6 +14,7 @@ interface NewInput {
 }
 
 const New: NextPage = () => {
+	const router = useRouter();
 	//const { register, handleSubmit, formState: { errors } } = useForm();
 	const { register, handleSubmit, } = useForm<NewInput>();
 
@@ -18,7 +22,7 @@ const New: NextPage = () => {
 		<Layout title='新規作成' mode='page' layoutId='new'>
 			<p>ここで入力する内容は編集時に変更可能です。</p>
 
-			<form onSubmit={handleSubmit(onSubmit)}>
+			<form onSubmit={handleSubmit(data => onSubmit(data, router))}>
 				<dl className='inputs'>
 					<dt>タイトル</dt>
 					<dd>
@@ -71,7 +75,7 @@ const New: NextPage = () => {
 
 export default New;
 
-function onSubmit(data: NewInput) {
+function onSubmit(data: NewInput, router: NextRouter) {
 	console.debug(data);
 
 	const fileName = 'new.json';
@@ -112,4 +116,9 @@ function onSubmit(data: NewInput) {
 	console.debug(setting);
 	console.debug(fileName);
 
+	const editData: EditData = {
+		fileName: fileName,
+		setting: setting,
+	};
+	Goto.edit(editData, router);
 }
