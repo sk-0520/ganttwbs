@@ -8,6 +8,9 @@ import WeekSettingEditor from "./WeekSettingEditor";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { Setting } from "@/models/data/setting/Setting";
 import * as Storage from "@/models/Storage";
+import HolidaySettingEditor from "./HolidaySettingEditor";
+import * as ISO8601 from "@/models/data/setting/ISO8601";
+import { HolidayKind, HolidayEvent } from "@/models/data/setting/Holiday";
 
 const Component: NextPage = () => {
 	const editContext = useContext(EditContext);
@@ -25,27 +28,48 @@ const Component: NextPage = () => {
 	return (
 		<SettingContext.Provider value={setting}>
 			<form onSubmit={onSubmit}>
-				<section>
-					<h2>メンバー</h2>
-				</section>
-				<section>
-					<h2>カレンダー</h2>
-					<section>
-						<h3>曜日設定</h3>
-						<WeekSettingEditor />
-					</section>
-				</section>
-				<section>
-					<h2>テーマ</h2>
-				</section>
+				<dl className="inputs">
+					<dt className="general">基本</dt>
+					<dd className="general"></dd>
 
-				<button>submit</button>
+					<dt className="member">メンバー</dt>
+					<dd className="member"></dd>
+
+					<dt className="calendar">カレンダー</dt>
+					<dd className="calendar">
+						<dl className="inputs">
+							<dt>曜日設定</dt>
+							<dd className="week"><WeekSettingEditor /></dd>
+
+							<dt>祝日</dt>
+							<dd className="holiday"><HolidaySettingEditor /></dd>
+						</dl>
+
+					</dd>
+
+					<dt className="theme">テーマ</dt>
+					<dd className="theme"></dd>
+
+				</dl>
+
+				<button className="action">submit</button>
 			</form>
 		</SettingContext.Provider>
 	);
 };
 
 export default Component;
+
+function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: ISO8601.Date]: HolidayEvent }): string {
+	return Object.entries(items)
+		.filter(([k, v]) => v.kind === kind)
+		.map(([k, v]) => ({ date: new Date(k), display: v.display }))
+		.sort((a, b) => a.date.getTime() - b.date.getTime())
+		.map(a => `${a.date.toDateString()}\t${a.display}`)
+		.join("\r\n")
+		;
+
+}
 
 function toContext(setting: Setting): SettingContext {
 	return {
@@ -64,13 +88,18 @@ function toContext(setting: Setting): SettingContext {
 					saturday: setting.calendar.holiday.regulars.includes('saturday'),
 					sunday: setting.calendar.holiday.regulars.includes('sunday'),
 				},
-				holidays: '',
-				specials: '',
+				holidays: toCalendarHolidayEventContext('holiday', setting.calendar.holiday.events),
+				specials: toCalendarHolidayEventContext('special', setting.calendar.holiday.events),
 			},
 		}
 	};
 }
 
+function fromCalendarHolidayEventContext(kind: HolidayKind, context: string): { [key: ISO8601.Date]: HolidayEvent } {
+	const result: { [key: ISO8601.Date]: HolidayEvent } = {};
+
+	return result;
+}
 
 function fromContext(source: Setting, context: SettingContext): Setting {
 	return {
@@ -90,7 +119,10 @@ function fromContext(source: Setting, context: SettingContext): Setting {
 					{ week: 'friday', value: context.calendar.holiday.week.friday },
 					{ week: 'saturday', value: context.calendar.holiday.week.saturday },
 				]).filter(a => a.value).map(a => a.week),
-				events: {}
+				events: {
+					...fromCalendarHolidayEventContext('holiday', context.calendar.holiday.holidays),
+					...fromCalendarHolidayEventContext('special', context.calendar.holiday.specials),
+				}
 			}
 		},
 		theme: {

@@ -12,5 +12,20 @@ main#edit {
 		}
 	}
 
+	.tab-setting {
+		dd.calendar {
+			dd.week {
+				background: red;
+			}
 
+			dd.holiday {
+				display: flex;
+				background-color: lime;
+
+				.holiday + .holiday {
+					margin-left: 3rem;
+				}
+			}
+		}
+	}
 }

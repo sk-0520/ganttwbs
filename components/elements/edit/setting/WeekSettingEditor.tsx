@@ -1,8 +1,6 @@
 import { NextPage } from "next";
 import { useContext } from "react";
-//import { useForm } from "react-hook-form";
 import { SettingContext } from "@/models/data/context/SettingContext";
-import { WeekDay } from "@/models/data/setting/WeekDay";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);

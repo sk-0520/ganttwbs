@@ -1,7 +1,7 @@
 dl.inputs {
 	margin: 0.5em;
 
-	dd {
+	& > dd {
 		margin-left: 2em;
 
 		& + dt {
