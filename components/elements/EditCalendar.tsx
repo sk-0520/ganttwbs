@@ -3,7 +3,6 @@ import { useContext } from "react";
 //import { useForm } from "react-hook-form";
 import { EditContext } from "@/models/data/context/EditContext";
 import { WeekDay } from "@/models/data/setting/WeekDay";
-import EditHoliday from "./EditHoliday";
 
 const Component: NextPage = () => {
 	const editContext = useContext(EditContext);
@@ -57,8 +56,6 @@ const Component: NextPage = () => {
 				<h2>祝日設定</h2>
 
 				<section className="holiday">
-					<EditHoliday kind="holiday" />
-					<EditHoliday kind="special" />
 				</section>
 			</section>
 		</>
