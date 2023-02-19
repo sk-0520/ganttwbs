@@ -13,6 +13,9 @@ import * as string from "@/models/core/string";
 import { Color } from "@/models/data/setting/Color";
 
 const NewLine = "\r\n";
+const ThemeHolidayRegularColor: Color = '#0f0';
+const ThemeHolidayEventHolidayColor: Color = '#0f0';
+const ThemeHolidayEventSpecialColor: Color = '#0f0';
 
 const Component: NextPage = () => {
 	const editContext = useContext(EditContext);
@@ -103,19 +106,21 @@ function toContext(setting: Setting): SettingContext {
 		theme: {
 			holiday: {
 				regulars: {
-					sunday: '#000',
-					monday: '#000',
-					tuesday: '#000',
-					wednesday: '#000',
-					thursday: '#000',
-					friday: '#000',
-					saturday: '#000',
+					sunday: setting.theme.holiday.regulars.sunday ?? ThemeHolidayRegularColor,
+					monday: setting.theme.holiday.regulars.monday ?? ThemeHolidayRegularColor,
+					tuesday: setting.theme.holiday.regulars.tuesday ?? ThemeHolidayRegularColor,
+					wednesday: setting.theme.holiday.regulars.wednesday ?? ThemeHolidayRegularColor,
+					thursday: setting.theme.holiday.regulars.thursday ?? ThemeHolidayRegularColor,
+					friday: setting.theme.holiday.regulars.friday ?? ThemeHolidayRegularColor,
+					saturday: setting.theme.holiday.regulars.saturday ?? ThemeHolidayRegularColor,
 				},
 				events: {
-					holiday: '#000',
-					special: '#000',
+					holiday: setting.theme.holiday.events.holiday ?? ThemeHolidayEventHolidayColor,
+					special: setting.theme.holiday.events.special ?? ThemeHolidayEventSpecialColor,
 				}
-			}
+			},
+			groups: [],
+			end: '#000',
 		}
 	};
 }

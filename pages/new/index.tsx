@@ -100,7 +100,10 @@ function onSubmit(data: NewInput, router: NextRouter) {
 					'sunday': '#0000ff',
 					'monday': '#ff0000',
 				},
-				events: {}
+				events: {
+					'holiday': '#f00',
+					'special': '#f0f',
+				}
 			},
 			groups: [
 				'#00ff00',

@@ -25,6 +25,9 @@ interface ThemeSetting {
 			special: Color,
 		}
 	};
+	groups: Array<Color>;
+	end: Color;
+
 }
 
 export interface SettingContext {

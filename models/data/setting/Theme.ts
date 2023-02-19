@@ -5,7 +5,7 @@ import { HolidayKind } from "./Holiday";
 export interface Theme {
 	holiday: {
 		regulars: { [key in WeekDay]?: Color };
-		events: { [key in HolidayKind]?: Color };
+		events: { [key in HolidayKind]: Color };
 	},
 	groups: Array<Color>;
 	end: Color;
