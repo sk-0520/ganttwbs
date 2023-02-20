@@ -26,7 +26,7 @@ const Component: NextPage = () => {
 			name: groupName,
 			members: [],
 		};
-		setEditGroups([...editGroups, newGroup]);
+		setEditGroups(settingContext.groups = [...editGroups, newGroup]);
 		setNewGroupName('');
 	}
 
@@ -67,6 +67,8 @@ const Component: NextPage = () => {
 		targetGroup.members.push(newMember);
 
 		setEditGroups([...editGroups]);
+		const element = event.currentTarget.closest('[data-root]')?.querySelector('[name="member-name"]') as HTMLInputElement | undefined;
+		if(element)element.value = '';
 	}
 
 	function handleRemoveMember(group: GroupSetting, member: MemberSetting, event: MouseEvent<HTMLButtonElement>) {
@@ -135,8 +137,9 @@ const Component: NextPage = () => {
 										})}
 
 										<dt>新規メンバー</dt>
-										<dd>
+										<dd data-root>
 											<input
+												name='member-name'
 												defaultValue={memberName}
 												onChange={ev => memberName = ev.target.value}
 											/>
