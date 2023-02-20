@@ -11,19 +11,19 @@ const Component: NextPage = () => {
 	const [editGroups, setEditGroups] = useState(settingContext.groups);
 
 	function handleAddGroup(event: MouseEvent<HTMLButtonElement>) {
-		const s = newGroupName.trim();
-		if (!s) {
+		const groupName = newGroupName.trim();
+		if (!groupName) {
 			return;
 		}
 
 		const names = editGroups.map(a => a.name);
-		if (names.includes(s)) {
+		if (names.includes(groupName)) {
 			return;
 		}
 
 		const newGroup = {
 			key: v4(),
-			name: s,
+			name: groupName,
 			members: [],
 		};
 		setEditGroups([...editGroups, newGroup]);
@@ -31,67 +31,63 @@ const Component: NextPage = () => {
 	}
 
 	function handleRemoveGroup(group: GroupSetting, event: MouseEvent<HTMLButtonElement>) {
-		const index = editGroups.findIndex(a => a.key === group.key);
-		if (index === -1) {
+		const targetGroup = editGroups.find(a => a.key === group.key);
+		if (!targetGroup) {
 			throw new Error();
 		}
 
-		const groups = [];
-		for (let i = 0; i < editGroups.length; i++) {
-			if (i === index) {
+		const groups: Array<GroupSetting> = [];
+		for (const group of editGroups) {
+			if (group === targetGroup) {
 				continue;
 			}
-			const group = settingContext.groups[i];
 			groups.push(group);
 		}
 
-		setEditGroups(groups);
+		setEditGroups(settingContext.groups = groups);
 	}
 
 	function handleAddMember(group: GroupSetting, memberName: string, event: MouseEvent<HTMLButtonElement>) {
-		const index = editGroups.findIndex(a => a.key === group.key);
-		if (index === -1) {
+		const targetGroup = editGroups.find(a => a.key === group.key);
+		if (!targetGroup) {
 			throw new Error();
 		}
 
 		const name = memberName.trim();
-		if(!name) {
+		if (!name) {
 			return;
 		}
 
-		const members = [...editGroups[index].members];
 		const newMember = {
 			key: v4(),
 			id: v4(),
 			name: name,
 			color: '#ff0',
 		};
-		members.push(newMember);
-		editGroups[index].members = members;
+		targetGroup.members.push(newMember);
 
 		setEditGroups([...editGroups]);
 	}
 
 	function handleRemoveMember(group: GroupSetting, member: MemberSetting, event: MouseEvent<HTMLButtonElement>) {
-		const groupIndex = editGroups.findIndex(a => a.key === group.key);
-		if (groupIndex === -1) {
+		const targetGroup = editGroups.find(a => a.key === group.key);
+		if (!targetGroup) {
 			throw new Error();
 		}
 
-		const memberIndex = editGroups[groupIndex].members.findIndex(a => a.key === member.key);
-		if (memberIndex === -1) {
+		const targetMember = targetGroup.members.find(a => a.key === member.key);
+		if (!targetMember) {
 			throw new Error();
 		}
 
 		const members = [];
-		for (let i = 0; i < editGroups[groupIndex].members.length; i++) {
-			if (i === memberIndex) {
+		for (const member of targetGroup.members) {
+			if (member === targetMember) {
 				continue;
 			}
-			const member = settingContext.groups[groupIndex].members[i];
 			members.push(member);
 		}
-		editGroups[groupIndex].members = members;
+		targetGroup.members = members;
 
 		setEditGroups([...editGroups]);
 	}
