@@ -1,7 +1,7 @@
 import { v4 } from "uuid";
 import { NextPage } from "next";
 import { useContext, MouseEvent, useState } from "react";
-import { GroupSetting, SettingContext } from "@/models/data/context/SettingContext";
+import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
@@ -37,8 +37,8 @@ const Component: NextPage = () => {
 		}
 
 		const groups = [];
-		for(let i = 0; i < editGroups.length; i++) {
-			if(i === index) {
+		for (let i = 0; i < editGroups.length; i++) {
+			if (i === index) {
 				continue;
 			}
 			const group = settingContext.groups[i];
@@ -54,18 +54,47 @@ const Component: NextPage = () => {
 			throw new Error();
 		}
 
-		const members = [...settingContext.groups[index].members];
-		members.push({
+		const name = memberName.trim();
+		if(!name) {
+			return;
+		}
+
+		const members = [...editGroups[index].members];
+		const newMember = {
 			key: v4(),
 			id: v4(),
-			name: memberName,
+			name: name,
 			color: '#ff0',
-		});
-		settingContext.groups[index].members = members;
+		};
+		members.push(newMember);
+		editGroups[index].members = members;
 
-		console.log(settingContext.groups[index].members);
+		setEditGroups([...editGroups]);
 	}
 
+	function handleRemoveMember(group: GroupSetting, member: MemberSetting, event: MouseEvent<HTMLButtonElement>) {
+		const groupIndex = editGroups.findIndex(a => a.key === group.key);
+		if (groupIndex === -1) {
+			throw new Error();
+		}
+
+		const memberIndex = editGroups[groupIndex].members.findIndex(a => a.key === member.key);
+		if (memberIndex === -1) {
+			throw new Error();
+		}
+
+		const members = [];
+		for (let i = 0; i < editGroups[groupIndex].members.length; i++) {
+			if (i === memberIndex) {
+				continue;
+			}
+			const member = settingContext.groups[groupIndex].members[i];
+			members.push(member);
+		}
+		editGroups[groupIndex].members = members;
+
+		setEditGroups([...editGroups]);
+	}
 
 	return (
 		<>
@@ -101,6 +130,7 @@ const Component: NextPage = () => {
 															defaultValue={b.name}
 															onChange={ev => b.name = ev.target.value}
 														/>
+														<button type="button" onClick={ev => handleRemoveMember(a, b, ev)}>remove</button>
 													</label>
 												</dt>
 												<dd>
