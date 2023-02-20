@@ -11,6 +11,7 @@ import * as ISO8601 from "@/models/data/setting/ISO8601";
 import { HolidayKind, HolidayEvent } from "@/models/data/setting/Holiday";
 import * as string from "@/models/core/string";
 import { Color } from "@/models/data/setting/Color";
+import GroupEditor from "./GroupEditor";
 
 const NewLine = "\r\n";
 const ThemeHolidayRegularColor: Color = '#0f0';
@@ -37,8 +38,10 @@ const Component: NextPage = () => {
 					<dt className="general">基本</dt>
 					<dd className="general"></dd>
 
-					<dt className="member">メンバー</dt>
-					<dd className="member"></dd>
+					<dt className="group">グループ</dt>
+					<dd className="group">
+						<GroupEditor />
+					</dd>
 
 					<dt className="calendar">カレンダー</dt>
 					<dd className="calendar">
@@ -82,6 +85,7 @@ function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: ISO8601
 
 function toContext(setting: Setting): SettingContext {
 	return {
+		groups: [],
 		calendar: {
 			range: {
 				from: setting.calendar.range.from,
@@ -191,6 +195,7 @@ function fromContext(source: Setting, context: SettingContext): Setting {
 			],
 			end: '#123',
 		},
+		groups: {},
 		timelines: [],
 		versions: []
 	};

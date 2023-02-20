@@ -19,11 +19,13 @@ main#edit {
 			}
 
 			dd.holiday {
-				display: flex;
-				background-color: lime;
+				.holiday {
+					display: flex;
+					background-color: lime;
 
-				.holiday + .holiday {
-					margin-left: 3rem;
+					.holidays + .holidays {
+						margin-left: 3rem;
+					}
 				}
 			}
 		}
