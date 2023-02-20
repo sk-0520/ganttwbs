@@ -8,7 +8,7 @@ export interface Setting {
 	name: string;
 	calendar: Calendar;
 	theme: Theme;
-	groups: { [name: string]: Group };
+	groups: Array<Group>;
 	timelines: Array<Timeline.MarkerTimeline | Timeline.PinTimeline | Timeline.TaskTimeline>;
 	versions: Array<Version.VersionItem>;
 }

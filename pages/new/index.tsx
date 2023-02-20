@@ -112,6 +112,7 @@ function onSubmit(data: NewInput, router: NextRouter) {
 			],
 			end: '#000000',
 		},
+		groups: [],
 		timelines: [],
 		versions: [],
 	};

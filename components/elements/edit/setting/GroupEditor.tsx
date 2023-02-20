@@ -1,51 +1,67 @@
+import { v4 } from "uuid";
 import { NextPage } from "next";
 import { useContext, MouseEvent, useState } from "react";
-import { SettingContext, GroupSetting } from "@/models/data/context/SettingContext";
+import { GroupSetting, SettingContext } from "@/models/data/context/SettingContext";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
 	console.debug(settingContext);
 
 	const [newGroupName, setNewGroupName] = useState('');
+	const [editGroups, setEditGroups] = useState(settingContext.groups);
 
 	function handleAddGroup(event: MouseEvent<HTMLButtonElement>) {
 		const s = newGroupName.trim();
 		if (!s) {
 			return;
 		}
-		const names = settingContext.groups.map(a => a.name);
+
+		const names = editGroups.map(a => a.name);
 		if (names.includes(s)) {
 			return;
 		}
 
-		settingContext.groups.push({
+		const newGroup = {
+			key: v4(),
 			name: s,
 			members: [],
-		});
+		};
+		setEditGroups([...editGroups, newGroup]);
 		setNewGroupName('');
 	}
 
-	function handleAddMember(groupName: string, event: MouseEvent<HTMLButtonElement>) {
-		const index = settingContext.groups.findIndex(a => a.name === groupName);
+	function handleRemoveGroup(group: GroupSetting, event: MouseEvent<HTMLButtonElement>) {
+		const index = editGroups.findIndex(a => a.key === group.key);
 		if (index === -1) {
 			throw new Error();
 		}
 
-		const name = 'NEW ' + settingContext.groups[index].members.length;
+		const groups = [];
+		for(let i = 0; i < editGroups.length; i++) {
+			if(i === index) {
+				continue;
+			}
+			const group = settingContext.groups[i];
+			groups.push(group);
+		}
 
-		// const members = [...settingContext.groups[index].members];
-		// members.push({
-		// 	id: name,
-		// 	display: name,
-		// 	color: '#ff0',
-		// });
-		// settingContext.groups[index].members = members;
+		setEditGroups(groups);
+	}
 
-		settingContext.groups[index].members.push({
-			id: name,
-			display: name,
+	function handleAddMember(group: GroupSetting, memberName: string, event: MouseEvent<HTMLButtonElement>) {
+		const index = editGroups.findIndex(a => a.key === group.key);
+		if (index === -1) {
+			throw new Error();
+		}
+
+		const members = [...settingContext.groups[index].members];
+		members.push({
+			key: v4(),
+			id: v4(),
+			name: memberName,
 			color: '#ff0',
 		});
+		settingContext.groups[index].members = members;
 
 		console.log(settingContext.groups[index].members);
 	}
@@ -54,41 +70,58 @@ const Component: NextPage = () => {
 	return (
 		<>
 			<dl className="inputs">
-				{settingContext.groups.map(a => (
-					<>
-						<dt key={a.name}>
-							<label>
-								👥
-								<input defaultValue={a.name} />
-							</label>
-						</dt>
+				{editGroups.map(a => {
+					let memberName = '';
 
-						<dd key={a.name}>
-							<dl className="inputs">
-								<>
-									{a.members.map(b => {
-										<>
-											<dt>
-												<label>
-													👤
-													<input defaultValue={a.name} />
-												</label>
-											</dt>
-											<dd>
-											</dd>
-										</>
-									})}
+					return (
+						<div key={a.key}>
+							<dt >
+								<label>
+									👥
+									<input
+										defaultValue={a.name}
+										onChange={ev => a.name = ev.target.value}
+									/>
+									<span className="count">{a.members.length}</span>
 
-									<dt>新規メンバー</dt>
-									<dd>
-										<input />
-										<button onClick={ev => handleAddMember(a.name, ev)}>add</button>
-									</dd>
-								</>
-							</dl>
-						</dd>
-					</>
-				))}
+									<button onClick={ev => handleRemoveGroup(a, ev)}>remove</button>
+								</label>
+							</dt>
+
+							<dd>
+								<dl className="inputs">
+									<>
+										{a.members.map(b => {
+
+											return <div key={b.key}>
+												<dt >
+													<label>
+														👤
+														<input
+															defaultValue={b.name}
+															onChange={ev => b.name = ev.target.value}
+														/>
+													</label>
+												</dt>
+												<dd>
+												</dd>
+											</div>
+										})}
+
+										<dt>新規メンバー</dt>
+										<dd>
+											<input
+												defaultValue={memberName}
+												onChange={ev => memberName = ev.target.value}
+											/>
+											<button type="button" onClick={ev => handleAddMember(a, memberName, ev)}>add</button>
+										</dd>
+									</>
+								</dl>
+							</dd>
+						</div>
+					)
+				})}
 				<dt>新規グループ</dt>
 				<dd>
 					<input

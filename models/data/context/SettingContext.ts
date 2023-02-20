@@ -4,15 +4,19 @@ import * as ISO8601 from '../setting/ISO8601';
 import { WeekDay } from '../setting/WeekDay';
 import * as Member from '../setting/Member';
 
+type UUID = string;
+
 export interface MemberSetting {
-	id: Member.MemberId,
-	display: string,
-	color: Color,
+	key: UUID;
+	id: Member.MemberId;
+	name: string;
+	color: Color;
 }
 
-export type GroupSetting = {
-	name: string,
-	members: Array<MemberSetting>,
+export interface GroupSetting {
+	key: UUID;
+	name: string;
+	members: Array<MemberSetting>;
 };
 
 export interface CalendarSetting {

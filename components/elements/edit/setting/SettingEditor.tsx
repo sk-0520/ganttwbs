@@ -1,9 +1,10 @@
+import { v4 } from "uuid";
 import { NextPage } from "next";
 import { FormEvent, useContext } from "react";
 import { EditContext } from "@/models/data/context/EditContext";
 import { WeekDay } from "@/models/data/setting/WeekDay";
 import WeekSettingEditor from "./WeekSettingEditor";
-import { SettingContext } from "@/models/data/context/SettingContext";
+import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { Setting } from "@/models/data/setting/Setting";
 import * as Storage from "@/models/Storage";
 import HolidaySettingEditor from "./HolidaySettingEditor";
@@ -85,7 +86,16 @@ function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: ISO8601
 
 function toContext(setting: Setting): SettingContext {
 	return {
-		groups: [],
+		groups: setting.groups.map(a => ({
+			key: v4(),
+			name: a.name,
+			members: a.members.map<MemberSetting>(b => ({
+				key: v4(),
+				id: b.id,
+				name: b.name,
+				color: b.color,
+			}))
+		})),
 		calendar: {
 			range: {
 				from: setting.calendar.range.from,
@@ -150,7 +160,7 @@ function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string): {
 	return result;
 }
 
-function fromContext(source: Setting, context: SettingContext): Setting {
+function fromContext(source: Readonly<Setting>, context: SettingContext): Setting {
 	return {
 		name: source.name,
 		calendar: {
@@ -195,7 +205,14 @@ function fromContext(source: Setting, context: SettingContext): Setting {
 			],
 			end: '#123',
 		},
-		groups: {},
+		groups: context.groups.map(a => ({
+			name: a.name,
+			members: a.members.map(b => ({
+				id: b.id,
+				name: b.name,
+				color: b.color,
+			})),
+		})),
 		timelines: [],
 		versions: []
 	};
