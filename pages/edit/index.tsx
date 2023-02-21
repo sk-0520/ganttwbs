@@ -1,13 +1,13 @@
 import { NextPage } from 'next';
-import { useEffect, useState } from 'react';
-import FileEditor from '@/components/elements/edit/file/FileEditor'
-import SettingEditor from '@/components/elements/edit/setting/SettingEditor'
-import Layout from '@/components/layout/Layout'
-import { EditData } from '@/models/data/EditData';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import FileEditor from '@/components/elements/edit/file/FileEditor';
+import SettingEditor from '@/components/elements/edit/setting/SettingEditor';
+import Layout from '@/components/layout/Layout';
+import * as Storage from '@/models/Storage';
+import { EditData } from '@/models/data/EditData';
 import { EditContext, EditContextImpl } from '@/models/data/context/EditContext';
-import * as Storage from "@/models/Storage";
 //import * as Setting from '@/models/data/setting/Setting';
 
 const Edit: NextPage = () => {
@@ -43,7 +43,6 @@ const Edit: NextPage = () => {
 			setTabEditMode('');
 		}
 	}
-
 
 	return (
 		<Layout mode='application' layoutId='edit'

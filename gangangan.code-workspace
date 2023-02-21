@@ -48,13 +48,9 @@
 			"nameof",
 		],
 		"npm.scriptExplorerExclude": [
-			"test$",
+			"test:.+$",
 			"^(pre|post)",
-			"build:development",
-			"^(?!.*-env$)browser:.*$",
-			"^(?!.*-env$)debug:.*$",
-			"output",
-			"lint",
+			"lint-fix",
 			"license",
 			"^(check|update)$"
 		],

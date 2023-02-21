@@ -19,6 +19,7 @@
 		"dev": "next dev",
 		"dev-win": "set NODE_OPTIONS=--inspect && next dev",
 		"lint": "next lint",
+		"lint-fix": "next lint --fix",
 		"build": "next build",
 		"start": "next start",
 		"check": "ncu",

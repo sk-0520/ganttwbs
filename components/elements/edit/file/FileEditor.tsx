@@ -1,6 +1,6 @@
-import { NextPage } from "next";
-import { useContext } from "react";
-import { useForm } from "react-hook-form";
+import { NextPage } from 'next';
+import { useContext } from 'react';
+import { useForm } from 'react-hook-form';
 import { EditContext } from '@/models/data/context/EditContext';
 
 const Component: NextPage = () => {
@@ -15,7 +15,7 @@ const Component: NextPage = () => {
 		const link = document.createElement('a');
 		link.href = window.URL.createObjectURL(blob);
 		link.download = editContext.data.fileName;
-		link.click();;
+		link.click();
 	}
 
 	return (

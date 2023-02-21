@@ -1,3 +1,42 @@
 {
-  "extends": "next/core-web-vitals"
+	"extends": "next/core-web-vitals",
+	"rules": {
+		"import/order": [
+			"error",
+			{
+				"alphabetize": {
+					"order": "asc"
+				}
+			}
+		],
+		"quotes": [
+			"error",
+			"single",
+			{
+				"avoidEscape": true,
+				"allowTemplateLiterals": true
+			}
+		],
+		"semi": "error",
+		"camelcase": "error",
+		"no-extra-semi": "error",
+		"no-mixed-spaces-and-tabs": "error",
+		"no-trailing-spaces": "error",
+		"space-infix-ops": "error",
+		"eqeqeq": "error",
+		"arrow-spacing": "error",
+		"no-else-return": "error",
+		"no-multiple-empty-lines": [
+			"error",
+			{
+				"max": 1
+			}
+		],
+		"no-dupe-class-members": "error",
+		"no-var": "error",
+		"no-label-var": "error",
+		"prefer-spread": "error",
+		"dot-notation": "error",
+		"no-loop-func": "error"
+	}
 }

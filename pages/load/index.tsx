@@ -1,10 +1,10 @@
 import { NextPage } from 'next';
 import { NextRouter, useRouter } from 'next/router';
-import { useForm } from "react-hook-form";
-import Layout from '@/components/layout/Layout'
+import { useForm } from 'react-hook-form';
+import Layout from '@/components/layout/Layout';
+import * as Goto from '@/models/Goto';
 import { EditData } from '@/models/data/EditData';
 import * as Setting from '@/models/data/setting/Setting';
-import * as Goto from '@/models/Goto';
 
 interface LoadInput {
 	files: FileList;

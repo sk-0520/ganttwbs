@@ -1,11 +1,11 @@
 import { NextPage } from 'next';
 import { NextRouter, useRouter } from 'next/router';
-import { useForm } from "react-hook-form";
-import Layout from '@/components/layout/Layout'
+import { useForm } from 'react-hook-form';
+import Layout from '@/components/layout/Layout';
+import * as Goto from '@/models/Goto';
+import { EditData } from '@/models/data/EditData';
 import * as ISO8601 from '@/models/data/setting/ISO8601';
 import * as Setting from '@/models/data/setting/Setting';
-import { EditData } from '@/models/data/EditData';
-import * as Goto from '@/models/Goto';
 
 interface NewInput {
 	title: string;
@@ -28,7 +28,7 @@ const New: NextPage = () => {
 					<dd>
 						<input
 							type='text'
-							{...register("title", {
+							{...register('title', {
 								required: {
 									value: true,
 									message: '必須'

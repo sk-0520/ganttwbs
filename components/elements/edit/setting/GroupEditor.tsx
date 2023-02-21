@@ -1,7 +1,7 @@
-import { v4 } from "uuid";
-import { NextPage } from "next";
-import { useContext, MouseEvent, useState } from "react";
-import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
+import { NextPage } from 'next';
+import { useContext, MouseEvent, useState } from 'react';
+import { v4 } from 'uuid';
+import { GroupSetting, MemberSetting, SettingContext } from '@/models/data/context/SettingContext';
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
@@ -133,7 +133,7 @@ const Component: NextPage = () => {
 												</dt>
 												<dd>
 												</dd>
-											</div>
+											</div>;
 										})}
 
 										<dt>新規メンバー</dt>
@@ -149,7 +149,7 @@ const Component: NextPage = () => {
 								</dl>
 							</dd>
 						</div>
-					)
+					);
 				})}
 				<dt>新規グループ</dt>
 				<dd>
@@ -161,7 +161,7 @@ const Component: NextPage = () => {
 				</dd>
 			</dl>
 		</>
-	)
+	);
 };
 
 export default Component;

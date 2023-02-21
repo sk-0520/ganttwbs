@@ -1,20 +1,20 @@
-import { v4 } from "uuid";
-import { NextPage } from "next";
-import { FormEvent, useContext } from "react";
-import { EditContext } from "@/models/data/context/EditContext";
-import { WeekDay } from "@/models/data/setting/WeekDay";
-import WeekSettingEditor from "./WeekSettingEditor";
-import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
-import { Setting } from "@/models/data/setting/Setting";
-import * as Storage from "@/models/Storage";
-import HolidaySettingEditor from "./HolidaySettingEditor";
-import * as ISO8601 from "@/models/data/setting/ISO8601";
-import { HolidayKind, HolidayEvent } from "@/models/data/setting/Holiday";
-import * as string from "@/models/core/string";
-import { Color } from "@/models/data/setting/Color";
-import GroupEditor from "./GroupEditor";
+import { NextPage } from 'next';
+import { FormEvent, useContext } from 'react';
+import { v4 } from 'uuid';
+import GroupEditor from './GroupEditor';
+import HolidaySettingEditor from './HolidaySettingEditor';
+import WeekSettingEditor from './WeekSettingEditor';
+import * as Storage from '@/models/Storage';
+import * as string from '@/models/core/string';
+import { EditContext } from '@/models/data/context/EditContext';
+import { MemberSetting, SettingContext } from '@/models/data/context/SettingContext';
+import { Color } from '@/models/data/setting/Color';
+import { HolidayKind, HolidayEvent } from '@/models/data/setting/Holiday';
+import * as ISO8601 from '@/models/data/setting/ISO8601';
+import { Setting } from '@/models/data/setting/Setting';
+import { WeekDay } from '@/models/data/setting/WeekDay';
 
-const NewLine = "\r\n";
+const NewLine = '\r\n';
 const ThemeHolidayRegularColor: Color = '#0f0';
 const ThemeHolidayEventHolidayColor: Color = '#0f0';
 const ThemeHolidayEventSpecialColor: Color = '#0f0';
@@ -142,9 +142,9 @@ function toContext(setting: Setting): SettingContext {
 function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string): { [key: ISO8601.Date]: HolidayEvent } {
 	const result: { [key: ISO8601.Date]: HolidayEvent } = {};
 
-	var items = string.splitLines(context)
+	const items = string.splitLines(context)
 		.filter(a => a && a.trim())
-		.map(a => a.split("\t", 2))
+		.map(a => a.split('\t', 2))
 		.map(a => ({ date: a[0], display: a[1] }))
 		.map(a => ({ date: new Date(a.date), display: a.display }))
 		.filter(a => !isNaN(a.date.getTime()))

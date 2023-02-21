@@ -1,6 +1,6 @@
-import { NextPage } from "next";
-import Head from "next/head";
-import Link from "next/link";
+import { NextPage } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
 
 interface LayoutProps {
 	/** タイトル */
@@ -59,8 +59,6 @@ const Layout: NextPage<LayoutProps> = (props: LayoutProps) => {
 						</div>
 					)
 			}
-
-
 		</>
 	);
 };
