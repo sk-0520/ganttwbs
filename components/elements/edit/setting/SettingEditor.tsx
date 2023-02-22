@@ -1,10 +1,13 @@
 import { NextPage } from 'next';
 import { FormEvent, useContext } from 'react';
 import { v4 } from 'uuid';
-import GroupEditor from './GroupEditor';
-import HolidaySettingEditor from './HolidaySettingEditor';
-import WeekSettingEditor from './WeekSettingEditor';
-import RangeSettingEditor from './RangeSettingEditor';
+import CalendarHolidaySettingEditor from './Calendar/CalendarHolidaySettingEditor';
+import CalendarRangeSettingEditor from './Calendar/CalendarRangeSettingEditor';
+import CalendarWeekSettingEditor from './Calendar/CalendarWeekSettingEditor';
+import GroupsEditor from './Group/GroupsEditor';
+import ThemeCalendarSettingEditor from './Theme/ThemeCalendarSettingEditor';
+import ThemeCompletedSettingEditor from './Theme/ThemeCompletedSettingEditor';
+import ThemeGroupSettingEditor from './Theme/ThemeGroupSettingEditor';
 import * as Storage from '@/models/Storage';
 import * as string from '@/models/core/string';
 import { EditContext } from '@/models/data/context/EditContext';
@@ -40,9 +43,9 @@ const Component: NextPage = () => {
 					<dt className="general">基本</dt>
 					<dd className="general"></dd>
 
-					<dt className="group">グループ</dt>
+					<dt className="group">人員</dt>
 					<dd className="group">
-						<GroupEditor />
+						<GroupsEditor />
 					</dd>
 
 					<dt className="calendar">カレンダー</dt>
@@ -50,24 +53,39 @@ const Component: NextPage = () => {
 						<dl className="inputs">
 							<dt>日付範囲</dt>
 							<dd className="range">
-								<RangeSettingEditor />
+								<CalendarRangeSettingEditor />
 							</dd>
 
 							<dt>曜日設定</dt>
 							<dd className="week">
-								<WeekSettingEditor />
+								<CalendarWeekSettingEditor />
 							</dd>
 
 							<dt>祝日</dt>
 							<dd className="holiday">
-								<HolidaySettingEditor />
+								<CalendarHolidaySettingEditor />
 							</dd>
 						</dl>
 
 					</dd>
 
 					<dt className="theme">テーマ</dt>
-					<dd className="theme"></dd>
+					<dd className="theme">
+						<dl className='inputs'>
+							<dt>カレンダー</dt>
+							<dd>
+								<ThemeCalendarSettingEditor />
+							</dd>
+							<dt>グループ</dt>
+							<dd>
+								<ThemeGroupSettingEditor />
+							</dd>
+							<dt>終了</dt>
+							<dd>
+								<ThemeCompletedSettingEditor />
+							</dd>
+						</dl>
+					</dd>
 
 				</dl>
 
@@ -126,21 +144,24 @@ function toContext(setting: Setting): SettingContext {
 		theme: {
 			holiday: {
 				regulars: {
-					sunday: setting.theme.holiday.regulars.sunday ?? ThemeHolidayRegularColor,
 					monday: setting.theme.holiday.regulars.monday ?? ThemeHolidayRegularColor,
 					tuesday: setting.theme.holiday.regulars.tuesday ?? ThemeHolidayRegularColor,
 					wednesday: setting.theme.holiday.regulars.wednesday ?? ThemeHolidayRegularColor,
 					thursday: setting.theme.holiday.regulars.thursday ?? ThemeHolidayRegularColor,
 					friday: setting.theme.holiday.regulars.friday ?? ThemeHolidayRegularColor,
 					saturday: setting.theme.holiday.regulars.saturday ?? ThemeHolidayRegularColor,
+					sunday: setting.theme.holiday.regulars.sunday ?? ThemeHolidayRegularColor,
 				},
 				events: {
 					holiday: setting.theme.holiday.events.holiday ?? ThemeHolidayEventHolidayColor,
 					special: setting.theme.holiday.events.special ?? ThemeHolidayEventSpecialColor,
 				}
 			},
-			groups: [],
-			end: '#000',
+			groups: setting.theme.groups.map(a => ({
+				key: v4(),
+				value: a,
+			})),
+			completed: setting.theme.completed,
 		}
 	};
 }
@@ -176,13 +197,13 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 			},
 			holiday: {
 				regulars: new Array<{ week: WeekDay, value: boolean }>().concat([
-					{ week: 'sunday', value: context.calendar.holiday.regulars.sunday },
 					{ week: 'monday', value: context.calendar.holiday.regulars.monday },
 					{ week: 'tuesday', value: context.calendar.holiday.regulars.tuesday },
 					{ week: 'wednesday', value: context.calendar.holiday.regulars.wednesday },
 					{ week: 'thursday', value: context.calendar.holiday.regulars.thursday },
 					{ week: 'friday', value: context.calendar.holiday.regulars.friday },
 					{ week: 'saturday', value: context.calendar.holiday.regulars.saturday },
+					{ week: 'sunday', value: context.calendar.holiday.regulars.sunday },
 				]).filter(a => a.value).map(a => a.week),
 				events: {
 					...fromCalendarHolidayEventsContext('holiday', context.calendar.holiday.events.holidays),
@@ -193,23 +214,21 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 		theme: {
 			holiday: {
 				regulars: {
-					monday: '#000',
-					tuesday: '#f00',
-					wednesday: '#0f0',
-					thursday: '#00f',
-					friday: '#ff0',
-					saturday: '#0ff',
-					sunday: '#f0f',
+					monday: context.theme.holiday.regulars.monday,
+					tuesday: context.theme.holiday.regulars.tuesday,
+					wednesday: context.theme.holiday.regulars.wednesday,
+					thursday: context.theme.holiday.regulars.thursday,
+					friday: context.theme.holiday.regulars.friday,
+					saturday: context.theme.holiday.regulars.saturday,
+					sunday: context.theme.holiday.regulars.sunday,
 				},
 				events: {
-					holiday: '#f8f',
-					special: '#8f8',
+					holiday: context.theme.holiday.events.holiday,
+					special: context.theme.holiday.events.special,
 				}
 			},
-			groups: [
-				'#444',
-			],
-			end: '#123',
+			groups: context.theme.groups.map(a => a.value),
+			completed: context.theme.completed,
 		},
 		groups: context.groups.map(a => ({
 			name: a.name,

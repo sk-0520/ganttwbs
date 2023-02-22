@@ -8,5 +8,5 @@ export interface Theme {
 		events: { [key in HolidayKind]: Color };
 	},
 	groups: Array<Color>;
-	end: Color;
+	completed: Color;
 }

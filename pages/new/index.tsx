@@ -97,8 +97,8 @@ function onSubmit(data: NewInput, router: NextRouter) {
 		theme: {
 			holiday: {
 				regulars: {
-					'sunday': '#0000ff',
-					'monday': '#ff0000',
+					'saturday': '#0000ff',
+					'sunday': '#ff0000',
 				},
 				events: {
 					'holiday': '#f00',
@@ -110,7 +110,7 @@ function onSubmit(data: NewInput, router: NextRouter) {
 				'#ffff00',
 				'#00ffff',
 			],
-			end: '#000000',
+			completed: '#000000',
 		},
 		groups: [],
 		timelines: [],

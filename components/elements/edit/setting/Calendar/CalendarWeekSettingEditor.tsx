@@ -12,16 +12,6 @@ const Component: NextPage = () => {
 					<label>
 						<input
 							type='checkbox'
-							defaultChecked={settingContext.calendar.holiday.regulars.sunday}
-							onChange={ev => settingContext.calendar.holiday.regulars.sunday = ev.target.checked}
-						/>
-						日曜日
-					</label>
-				</li>
-				<li>
-					<label>
-						<input
-							type='checkbox'
 							defaultChecked={settingContext.calendar.holiday.regulars.monday}
 							onChange={ev => settingContext.calendar.holiday.regulars.monday = ev.target.checked}
 						/>
@@ -76,6 +66,16 @@ const Component: NextPage = () => {
 							onChange={ev => settingContext.calendar.holiday.regulars.saturday = ev.target.checked}
 						/>
 						土曜日
+					</label>
+				</li>
+				<li>
+					<label>
+						<input
+							type='checkbox'
+							defaultChecked={settingContext.calendar.holiday.regulars.sunday}
+							onChange={ev => settingContext.calendar.holiday.regulars.sunday = ev.target.checked}
+						/>
+						日曜日
 					</label>
 				</li>
 			</ul>

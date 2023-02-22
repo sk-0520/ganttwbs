@@ -50,7 +50,6 @@
 		"npm.scriptExplorerExclude": [
 			"test:.+$",
 			"^(pre|post)",
-			"lint-fix",
 			"license",
 			"^(check|update)$"
 		],

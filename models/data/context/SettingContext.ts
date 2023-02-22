@@ -4,7 +4,7 @@ import * as ISO8601 from '../setting/ISO8601';
 import { WeekDay } from '../setting/WeekDay';
 import * as Member from '../setting/Member';
 
-type UUID = string;
+export type UUID = string;
 
 export interface MemberSetting {
 	key: UUID;
@@ -41,8 +41,8 @@ export interface ThemeSetting {
 			special: Color,
 		}
 	};
-	groups: Array<Color>;
-	end: Color;
+	groups: Array<{ key: UUID, value: Color }>;
+	completed: Color;
 
 }
 
