@@ -1,16 +1,19 @@
 main#edit {
+	$tab-header-height: 34px;
+
 	.tab {
 		&.panel {
 			display: none;
 
 			&.react-tabs__tab-panel--selected {
+				display: block;
+
 				position: absolute;
-				top: 34px;
+				top: $tab-header-height;
 				left: 0;
 				bottom: 0;
 				right: 0;
 				overflow: auto;
-				display: block;
 			}
 		}
 
@@ -23,34 +26,54 @@ main#edit {
 		}
 
 		&.tab-setting {
-			background-color: #eea;
+			.setting-tab-item {
+				display: none;
 
-			dd.calendar {
-				dd.range {
-					background: pink;
+				&.react-tabs__tab-panel--selected {
+					display: block;
+
+					position: absolute;
+					top: $tab-header-height;
+					left: 0;
+					bottom: $tab-header-height;
+					right: 0;
+					overflow: auto;
+
+					background: #fefefe;
 				}
 
-				dd.week {
-					background: red;
-				}
+				&.calendar {
+					dd.range {
+						background: pink;
+					}
 
-				dd.holiday {
-					.holiday {
-						display: flex;
-						background-color: lime;
+					dd.week {
+						background: red;
+					}
 
-						.holidays {
-							& + .holidays {
-								margin-left: 3rem;
-							}
+					dd.holiday {
+						.holiday {
+							display: flex;
+							background-color: lime;
 
-							.editor {
-								width: 32ch;
-								min-height: 8em;
+							.holidays {
+								& + .holidays {
+									margin-left: 3rem;
+								}
+
+								.editor {
+									width: 32ch;
+									min-height: 8em;
+								}
 							}
 						}
 					}
 				}
+			}
+
+			.setting-save {
+				position: absolute;
+				bottom: 0;
 			}
 		}
 	}

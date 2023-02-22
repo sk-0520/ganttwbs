@@ -40,7 +40,7 @@ const Edit: NextPage = () => {
 				{!data && <p>読み込み中</p>}
 				{data && (
 					<EditContext.Provider value={new EditContextImpl(data)}>
-						<Tabs defaultIndex={initTabIndex}  forceRenderTabPanel={true} >
+						<Tabs defaultIndex={initTabIndex} forceRenderTabPanel={true} >
 							<TabList>
 								<Tab>ファイル</Tab>
 								<Tab>編集</Tab>

@@ -17,6 +17,7 @@ import { HolidayKind, HolidayEvent } from '@/models/data/setting/Holiday';
 import * as ISO8601 from '@/models/data/setting/ISO8601';
 import { Setting } from '@/models/data/setting/Setting';
 import { WeekDay } from '@/models/data/setting/WeekDay';
+import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 
 const NewLine = '\r\n';
 const ThemeHolidayRegularColor: Color = '#0f0';
@@ -39,17 +40,22 @@ const Component: NextPage = () => {
 	return (
 		<SettingContext.Provider value={setting}>
 			<form onSubmit={onSubmit}>
-				<dl className="inputs">
-					<dt className="general">基本</dt>
-					<dd className="general"></dd>
+				<Tabs forceRenderTabPanel={true}>
+					<TabList>
+						<Tab>基本</Tab>
+						<Tab>人員</Tab>
+						<Tab>カレンダー</Tab>
+						<Tab>テーマ</Tab>
+					</TabList>
 
-					<dt className="group">人員</dt>
-					<dd className="group">
+					<TabPanel className='setting-tab-item'>
+					</TabPanel>
+
+					<TabPanel className='setting-tab-item'>
 						<GroupsEditor />
-					</dd>
+					</TabPanel>
 
-					<dt className="calendar">カレンダー</dt>
-					<dd className="calendar">
+					<TabPanel className='setting-tab-item'>
 						<dl className="inputs">
 							<dt>日付範囲</dt>
 							<dd className="range">
@@ -66,11 +72,9 @@ const Component: NextPage = () => {
 								<CalendarHolidaySettingEditor />
 							</dd>
 						</dl>
+					</TabPanel>
 
-					</dd>
-
-					<dt className="theme">テーマ</dt>
-					<dd className="theme">
+					<TabPanel className='setting-tab-item'>
 						<dl className='inputs'>
 							<dt>カレンダー</dt>
 							<dd>
@@ -85,11 +89,10 @@ const Component: NextPage = () => {
 								<ThemeCompletedSettingEditor />
 							</dd>
 						</dl>
-					</dd>
+					</TabPanel>
+				</Tabs>
 
-				</dl>
-
-				<button className="action">submit</button>
+				<button className="action setting-save">submit</button>
 			</form>
 		</SettingContext.Provider>
 	);
