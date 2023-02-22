@@ -13,31 +13,42 @@ main#edit {
 				display: block;
 			}
 		}
-	}
 
-	.tab-file {
-		background-color: #aee;
-	}
+		&.tab-file {
+			background-color: #aee;
+		}
 
-	.tab-edit {
-		background-color: #eae;
-	}
+		&.tab-edit {
+			background-color: #eae;
+		}
 
-	.tab-setting {
-		background-color: #eea;
+		&.tab-setting {
+			background-color: #eea;
 
-		dd.calendar {
-			dd.week {
-				background: red;
-			}
+			dd.calendar {
+				dd.range {
+					background: pink;
+				}
 
-			dd.holiday {
-				.holiday {
-					display: flex;
-					background-color: lime;
+				dd.week {
+					background: red;
+				}
 
-					.holidays + .holidays {
-						margin-left: 3rem;
+				dd.holiday {
+					.holiday {
+						display: flex;
+						background-color: lime;
+
+						.holidays {
+							& + .holidays {
+								margin-left: 3rem;
+							}
+
+							.editor {
+								width: 32ch;
+								min-height: 8em;
+							}
+						}
 					}
 				}
 			}

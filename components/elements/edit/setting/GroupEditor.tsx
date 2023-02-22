@@ -68,7 +68,9 @@ const Component: NextPage = () => {
 
 		setEditGroups([...editGroups]);
 		const element = event.currentTarget.closest('[data-root]')?.querySelector('[name="member-name"]') as HTMLInputElement | undefined;
-		if(element)element.value = '';
+		if (element) {
+			element.value = '';
+		}
 	}
 
 	function handleRemoveMember(group: GroupSetting, member: MemberSetting, event: MouseEvent<HTMLButtonElement>) {

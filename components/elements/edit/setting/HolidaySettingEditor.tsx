@@ -15,6 +15,7 @@ const Component: NextPage = () => {
 				<div className="holidays">
 					<h3>祝日</h3>
 					<textarea
+						className='editor'
 						onKeyDown={Forms.handleKeyDown}
 						defaultValue={settingContext.calendar.holiday.events.holidays}
 						onChange={ev => settingContext.calendar.holiday.events.holidays = ev.target.value}
@@ -27,6 +28,7 @@ const Component: NextPage = () => {
 				<div className="holidays">
 					<h3>特殊</h3>
 					<textarea
+						className='editor'
 						onKeyDown={Forms.handleKeyDown}
 						defaultValue={settingContext.calendar.holiday.events.specials}
 						onChange={ev => settingContext.calendar.holiday.events.specials = ev.target.value}

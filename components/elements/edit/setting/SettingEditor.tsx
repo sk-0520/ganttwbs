@@ -4,6 +4,7 @@ import { v4 } from 'uuid';
 import GroupEditor from './GroupEditor';
 import HolidaySettingEditor from './HolidaySettingEditor';
 import WeekSettingEditor from './WeekSettingEditor';
+import RangeSettingEditor from './RangeSettingEditor';
 import * as Storage from '@/models/Storage';
 import * as string from '@/models/core/string';
 import { EditContext } from '@/models/data/context/EditContext';
@@ -47,6 +48,11 @@ const Component: NextPage = () => {
 					<dt className="calendar">カレンダー</dt>
 					<dd className="calendar">
 						<dl className="inputs">
+							<dt>日付範囲</dt>
+							<dd className="range">
+								<RangeSettingEditor />
+							</dd>
+
 							<dt>曜日設定</dt>
 							<dd className="week">
 								<WeekSettingEditor />
@@ -94,8 +100,8 @@ function toContext(setting: Setting): SettingContext {
 				id: b.id,
 				name: b.name,
 				color: b.color,
-			}))
-		})),
+			})).sort((a, b) => a.name.localeCompare(b.name))
+		})).sort((a, b) => a.name.localeCompare(b.name)),
 		calendar: {
 			range: {
 				from: setting.calendar.range.from,
