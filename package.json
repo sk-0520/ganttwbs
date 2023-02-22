@@ -49,10 +49,13 @@
 		"@types/react-dom": "18.0.11",
 		"eslint": "8.34.0",
 		"eslint-config-next": "13.1.6",
+		"i18next": "^22.4.10",
 		"next": "13.1.6",
+		"next-i18next": "^13.1.5",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"react-hook-form": "^7.43.1",
+		"react-i18next": "^12.1.5",
 		"react-tabs": "^6.0.0",
 		"typescript": "4.9.5",
 		"uuid": "^9.0.0"

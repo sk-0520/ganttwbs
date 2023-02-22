@@ -13,3 +13,15 @@ export type WeekDay =
 	|
 	'sunday'
 	;
+
+export function getWeekDays(): Array<WeekDay> {
+	return [
+		'monday',
+		'tuesday',
+		'wednesday',
+		'thursday',
+		'friday',
+		'saturday',
+		'sunday',
+	];
+}

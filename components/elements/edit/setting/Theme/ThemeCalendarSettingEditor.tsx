@@ -2,10 +2,14 @@ import { NextPage } from 'next';
 import { useContext, useState } from 'react';
 import { SettingContext } from '@/models/data/context/SettingContext';
 import { Color } from '@/models/data/setting/Color';
-import { WeekDay } from '@/models/data/setting/WeekDay';
+import { getWeekDays, WeekDay } from '@/models/data/setting/WeekDay';
+import { useLocale } from '@/models/locales/locale';
 
 const Component: NextPage = () => {
+	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
+
+	const weekDays = getWeekDays();
 
 	const [holidayRegulars, setHolidayRegulars] = useState(settingContext.theme.holiday.regulars);
 	const [holidayEvents, setHolidayEvents] = useState(settingContext.theme.holiday.events);
@@ -25,69 +29,17 @@ const Component: NextPage = () => {
 			<dd>
 				<table>
 					<tbody>
-						<tr>
-							<td>月曜日</td>
-							<td>
-								<input type='color'
-									defaultValue={holidayRegulars.monday}
-									onChange={ev => handleSetRegularColor('monday', ev.target.value)}
-								/>
-							</td>
-						</tr>
-						<tr>
-							<td>火曜日</td>
-							<td>
-								<input type='color'
-									defaultValue={holidayRegulars.tuesday}
-									onChange={ev => handleSetRegularColor('tuesday', ev.target.value)}
-								/>
-							</td>
-						</tr>
-						<tr>
-							<td>水曜日</td>
-							<td>
-								<input type='color'
-									defaultValue={holidayRegulars.wednesday}
-									onChange={ev => handleSetRegularColor('wednesday', ev.target.value)}
-								/>
-							</td>
-						</tr>
-						<tr>
-							<td>木曜日</td>
-							<td>
-								<input type='color'
-									defaultValue={holidayRegulars.thursday}
-									onChange={ev => handleSetRegularColor('thursday', ev.target.value)}
-								/>
-							</td>
-						</tr>
-						<tr>
-							<td>金曜日</td>
-							<td>
-								<input type='color'
-									defaultValue={holidayRegulars.friday}
-									onChange={ev => handleSetRegularColor('friday', ev.target.value)}
-								/>
-							</td>
-						</tr>
-						<tr>
-							<td>土曜日</td>
-							<td>
-								<input type='color'
-									defaultValue={holidayRegulars.saturday}
-									onChange={ev => handleSetRegularColor('saturday', ev.target.value)}
-								/>
-							</td>
-						</tr>
-						<tr>
-							<td>日曜日</td>
-							<td>
-								<input type='color'
-									defaultValue={holidayRegulars.sunday}
-									onChange={ev => handleSetRegularColor('sunday', ev.target.value)}
-								/>
-							</td>
-						</tr>
+						{weekDays.map(a => (
+							<tr key={a}>
+								<td>{locale.calendar.week.long[a]}</td>
+								<td>
+									<input type='color'
+										defaultValue={holidayRegulars[a]}
+										onChange={ev => handleSetRegularColor(a, ev.target.value)}
+									/>
+								</td>
+							</tr>
+						))}
 					</tbody>
 				</table>
 			</dd>
