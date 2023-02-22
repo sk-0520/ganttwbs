@@ -1,15 +1,22 @@
 main#edit {
+	.tab {
+		&.panel {
+			display: none;
+
+			&.react-tabs__tab-panel--selected {
+				position: absolute;
+				top: 34px;
+				left: 0;
+				bottom: 0;
+				right: 0;
+				overflow: auto;
+				display: block;
+			}
+		}
+	}
+
 	.tab-edit {
 		background-color: rebeccapurple;
-
-		&.visible {
-			position: absolute;
-			top: 34px;
-			left: 0;
-			bottom: 0;
-			right: 0;
-			overflow: auto;
-		}
 	}
 
 	.tab-setting {

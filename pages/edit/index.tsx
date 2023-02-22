@@ -15,7 +15,6 @@ const Edit: NextPage = () => {
 	const initTabIndex = 3;
 	const router = useRouter();
 	const [data, setData] = useState<EditData>();
-	const [tabEditMode, setTabEditMode] = useState<string>(editTabIndex === +initTabIndex ? 'visible' : '');
 
 	useEffect(() => {
 		const data = Storage.loadEditData();
@@ -34,16 +33,6 @@ const Edit: NextPage = () => {
 	// 	}
 	// }, [tabRef]);
 
-	function handleSelect(index: number, last: number) {
-		if (index === editTabIndex) {
-			// 可視化
-			setTabEditMode('visible');
-		} else if (last === editTabIndex) {
-			// 不可視化
-			setTabEditMode('');
-		}
-	}
-
 	return (
 		<Layout mode='application' layoutId='edit'
 			title={data ? data.fileName + ' 編集' : '編集'}
@@ -52,7 +41,7 @@ const Edit: NextPage = () => {
 				{!data && <p>読み込み中</p>}
 				{data && (
 					<EditContext.Provider value={new EditContextImpl(data)}>
-						<Tabs defaultIndex={initTabIndex} onSelect={handleSelect} >
+						<Tabs defaultIndex={initTabIndex}  forceRenderTabPanel={true} >
 							<TabList>
 								<Tab>ファイル</Tab>
 								<Tab>編集</Tab>
@@ -60,17 +49,17 @@ const Edit: NextPage = () => {
 							</TabList>
 
 							{/* ファイル */}
-							<TabPanel className='tab-file'>
+							<TabPanel className='tab panel tab-file'>
 								<FileEditor />
 							</TabPanel>
 							{/* 編集 */}
-							<TabPanel className={'tab-edit ' + tabEditMode} >
+							<TabPanel className='tab panel tab-edit' >
 								<p>
 									ほんたい
 								</p>
 							</TabPanel>
 							{/* 設定 */}
-							<TabPanel className='tab-setting'>
+							<TabPanel className='tab panel tab-setting'>
 								<SettingEditor />
 							</TabPanel>
 						</Tabs>
