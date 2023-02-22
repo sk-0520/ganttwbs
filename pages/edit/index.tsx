@@ -8,10 +8,11 @@ import Layout from '@/components/layout/Layout';
 import * as Storage from '@/models/Storage';
 import { EditData } from '@/models/data/EditData';
 import { EditContext, EditContextImpl } from '@/models/data/context/EditContext';
+import TimelineEditor from '@/components/elements/edit/timeline/TimelineEditor';
 //import * as Setting from '@/models/data/setting/Setting';
 
 const Edit: NextPage = () => {
-	const initTabIndex = 3;
+	const initTabIndex = 1;
 	const router = useRouter();
 	const [data, setData] = useState<EditData>();
 
@@ -51,11 +52,9 @@ const Edit: NextPage = () => {
 							<TabPanel className='tab panel tab-file'>
 								<FileEditor />
 							</TabPanel>
-							{/* 編集 */}
-							<TabPanel className='tab panel tab-edit' >
-								<p>
-									ほんたい
-								</p>
+							{/* ほんたい */}
+							<TabPanel className='tab panel tab-timeline' >
+								<TimelineEditor />
 							</TabPanel>
 							{/* 設定 */}
 							<TabPanel className='tab panel tab-setting'>

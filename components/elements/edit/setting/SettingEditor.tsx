@@ -35,6 +35,8 @@ const Component: NextPage = () => {
 		editContext.data.setting = fromContext(editContext.data.setting, setting);
 		console.debug(setting);
 		Storage.saveEditData(editContext.data);
+
+		window.location.reload()
 	}
 
 	return (

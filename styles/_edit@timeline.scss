@@ -1,0 +1,37 @@
+#timeline {
+	$row-header-width: 200px;
+
+	$cell-width: 3ch;
+
+	#hidariue {
+		background-color: lime;
+		width: $row-header-width;
+	}
+
+	#time-header {
+		background-color: pink;
+		table {
+			table-layout: fixed;
+			// white-space: nowrap;
+		}
+
+		.cell {
+			min-width: $cell-width;
+			max-width: $cell-width;
+		}
+
+		.year-month {
+			.equals {
+				color: rgba(0, 0, 0, 0);
+			}
+		}
+
+		.day {
+			text-align: center;
+		}
+
+		.week {
+			text-align: center;
+		}
+	}
+}
