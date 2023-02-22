@@ -2,6 +2,7 @@ import { NextPage } from 'next';
 import { useContext, MouseEvent, useState } from 'react';
 import { v4 } from 'uuid';
 import { GroupSetting, MemberSetting, SettingContext } from '@/models/data/context/SettingContext';
+import { Color } from '@/models/data/setting/Color';
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
@@ -58,6 +59,10 @@ const Component: NextPage = () => {
 			return;
 		}
 
+		if(targetGroup.members.some(a => a.name === name)) {
+			return;
+		}
+
 		const newMember = {
 			key: v4(),
 			id: v4(),
@@ -71,6 +76,10 @@ const Component: NextPage = () => {
 		if (element) {
 			element.value = '';
 		}
+	}
+
+	function handleChangeMember(member: MemberSetting, color: Color) {
+		member.color = color;
 	}
 
 	function handleRemoveMember(group: GroupSetting, member: MemberSetting, event: MouseEvent<HTMLButtonElement>) {
@@ -129,6 +138,11 @@ const Component: NextPage = () => {
 														<input
 															defaultValue={b.name}
 															onChange={ev => b.name = ev.target.value}
+														/>
+														<input
+															type="color"
+															defaultValue={b.color}
+															onChange={ev => handleChangeMember(b, ev.target.value)}
 														/>
 														<button type="button" onClick={ev => handleRemoveMember(a, b, ev)}>remove</button>
 													</label>
