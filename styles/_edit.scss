@@ -15,11 +15,17 @@ main#edit {
 		}
 	}
 
+	.tab-file {
+		background-color: #aee;
+	}
+
 	.tab-edit {
-		background-color: rebeccapurple;
+		background-color: #eae;
 	}
 
 	.tab-setting {
+		background-color: #eea;
+
 		dd.calendar {
 			dd.week {
 				background: red;

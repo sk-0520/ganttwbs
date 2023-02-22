@@ -11,7 +11,6 @@ import { EditContext, EditContextImpl } from '@/models/data/context/EditContext'
 //import * as Setting from '@/models/data/setting/Setting';
 
 const Edit: NextPage = () => {
-	const editTabIndex = 1;
 	const initTabIndex = 3;
 	const router = useRouter();
 	const [data, setData] = useState<EditData>();

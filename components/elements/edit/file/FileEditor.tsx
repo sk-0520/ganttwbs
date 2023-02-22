@@ -20,47 +20,49 @@ const Component: NextPage = () => {
 
 	return (
 		<>
-			<section>
-				<h2>設定</h2>
-				<form>
-					<dl className="inputs">
-						<dt>ファイル名</dt>
-						<dd>
-							<input type="text" {...register('data.fileName', {
-								value: editContext.data.fileName,
-								onChange: ev => editContext.data.fileName = ev.target.value
-							})} />
-						</dd>
-
-						<dt>定期的にファイルをDLする</dt>
-						<dd>
-							<label>
-								<input type='checkbox' {...register('autoSave.isEnabled', {
-									value: editContext.autoSave.isEnabled,
-									onChange: ev => editContext.autoSave.isEnabled = ev.target.checked
+			<dl className='inputs'>
+				<dt>設定</dt>
+				<dd>
+					<form>
+						<dl className="inputs">
+							<dt>ファイル名</dt>
+							<dd>
+								<input type="text" {...register('data.fileName', {
+									value: editContext.data.fileName,
+									onChange: ev => editContext.data.fileName = ev.target.value
 								})} />
-								有効にする
-							</label>
-						</dd>
-						<dd>
-							<label>
-								<input type='number' {...register('autoSave.minutes', {
-									value: editContext.autoSave.minutes,
-									onChange: ev => editContext.autoSave.minutes = ev.target.value
-								})} />
-								秒
-							</label>
-						</dd>
-					</dl>
-				</form>
-			</section>
+							</dd>
 
-			<section>
-				<h2>出力</h2>
-				<ul>
-					<li><button onClick={download}>DOWN LOAD</button></li>
-				</ul>
-			</section>
+							<dt>定期的にファイルをDLする</dt>
+							<dd>
+								<label>
+									<input type='checkbox' {...register('autoSave.isEnabled', {
+										value: editContext.autoSave.isEnabled,
+										onChange: ev => editContext.autoSave.isEnabled = ev.target.checked
+									})} />
+									有効にする
+								</label>
+							</dd>
+							<dd>
+								<label>
+									<input type='number' {...register('autoSave.minutes', {
+										value: editContext.autoSave.minutes,
+										onChange: ev => editContext.autoSave.minutes = ev.target.value
+									})} />
+									秒
+								</label>
+							</dd>
+						</dl>
+					</form>
+				</dd>
+
+				<dt>出力</dt>
+				<dd>
+					<ul>
+						<li><button onClick={download}>DOWN LOAD</button></li>
+					</ul>
+				</dd>
+			</dl>
 		</>
 	);
 };
