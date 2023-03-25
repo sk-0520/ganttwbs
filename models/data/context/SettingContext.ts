@@ -1,14 +1,12 @@
-import { createContext } from 'react';
-import { Color } from '../setting/Color';
-import * as ISO8601 from '../setting/ISO8601';
-import { WeekDay } from '../setting/WeekDay';
-import * as Member from '../setting/Member';
+import { createContext } from "react";
+import { Color, DateOnly, MemberId, WeekDay } from "../Setting";
+
 
 export type UUID = string;
 
 export interface MemberSetting {
 	key: UUID;
-	id: Member.MemberId;
+	id: MemberId;
 	name: string;
 	color: Color;
 }
@@ -17,12 +15,12 @@ export interface GroupSetting {
 	key: UUID;
 	name: string;
 	members: Array<MemberSetting>;
-};
+}
 
 export interface CalendarSetting {
 	range: {
-		from: ISO8601.Date;
-		to: ISO8601.Date;
+		from: DateOnly;
+		to: DateOnly;
 	};
 	holiday: {
 		regulars: { [key in WeekDay]: boolean };

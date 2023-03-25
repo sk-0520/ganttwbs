@@ -1,6 +1,7 @@
-import { useRouter } from 'next/router';
-import { WeekDay } from '../data/setting/WeekDay';
-import ja from './ja';
+import { useRouter } from "next/router";
+import { WeekDay } from "../data/Setting";
+
+import ja from "./ja";
 
 export interface Locale {
 	language: string;
@@ -16,10 +17,10 @@ export function useLocale(): Locale {
 	const router = useRouter();
 	let locale: Locale | null = null;
 
-	if (router.locale === 'ja') {
-		locale = ja
+	if (router.locale === "ja") {
+		locale = ja;
 	} else {
-		locale = ja
+		locale = ja;
 	}
 
 	return locale;

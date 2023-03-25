@@ -1,7 +1,8 @@
-import { NextPage } from 'next';
-import { useContext, useState } from 'react';
-import { SettingContext } from '@/models/data/context/SettingContext';
-import { Color } from '@/models/data/setting/Color';
+import { NextPage } from "next";
+import { useContext, useState } from "react";
+
+import { SettingContext } from "@/models/data/context/SettingContext";
+import { Color } from "@/models/data/Setting";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);

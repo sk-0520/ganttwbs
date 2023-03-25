@@ -1,12 +1,17 @@
-import { NextPage } from 'next';
-import TimelineHidariue from './TimelineHidariue';
-import TimelineTimeHeader from './TimelineTimeHeader';
+import { NextPage } from "next";
+
+import DaysHeader from "./DaysHeader";
+import Hidariue from "./Hidariue";
+import TimelineItems from "./TimelineItems";
+import TimelineViewer from "./TimelineViewer";
 
 const Component: NextPage = () => {
 	return (
 		<div id='timeline'>
-			<TimelineHidariue />
-			<TimelineTimeHeader />
+			<Hidariue />
+			<DaysHeader />
+			<TimelineItems />
+			<TimelineViewer />
 		</div>
 	);
 };

@@ -1,17 +1,18 @@
-import { NextPage } from 'next';
-import { NextRouter, useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
-import Layout from '@/components/layout/Layout';
-import * as Goto from '@/models/Goto';
-import { EditData } from '@/models/data/EditData';
-import * as Setting from '@/models/data/setting/Setting';
+import { NextPage } from "next";
+import { NextRouter, useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 
-interface LoadInput {
+import Layout from "@/components/layout/Layout";
+import * as Goto from "@/models/Goto";
+import { EditData } from "@/models/data/EditData";
+import { Setting } from "@/models/data/Setting";
+
+interface Input {
 	files: FileList;
 }
 
-const Load: NextPage = () => {
-	const { register, handleSubmit, } = useForm<LoadInput>();
+const Page: NextPage = () => {
+	const { register, handleSubmit, } = useForm<Input>();
 	const router = useRouter();
 
 	return (
@@ -19,7 +20,7 @@ const Load: NextPage = () => {
 			<form onSubmit={handleSubmit(data => onSubmit(data, router))}>
 				<dl className='inputs'>
 					<dt>ファイル</dt>
-					<input type='file' {...register('files')} />
+					<input type='file' {...register("files")} />
 				</dl>
 
 				<button className='action'>作業開始</button>
@@ -28,9 +29,9 @@ const Load: NextPage = () => {
 	);
 };
 
-export default Load;
+export default Page;
 
-async function onSubmit(data: LoadInput, router: NextRouter) {
+async function onSubmit(data: Input, router: NextRouter) {
 	console.log(data);
 	const file = data.files[0];
 
@@ -39,7 +40,7 @@ async function onSubmit(data: LoadInput, router: NextRouter) {
 	const json = await file.text();
 	const settingObject = JSON.parse(json);
 	//TODO: 型チェック
-	const setting = settingObject as Setting.Setting;
+	const setting = settingObject as Setting;
 	console.debug(setting);
 	console.debug(fileName);
 

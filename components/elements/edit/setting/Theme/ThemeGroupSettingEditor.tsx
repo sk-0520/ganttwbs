@@ -1,8 +1,9 @@
-import { NextPage } from 'next';
-import { useContext, useState } from 'react';
-import { v4 } from 'uuid';
-import { SettingContext, UUID } from '@/models/data/context/SettingContext';
-import { Color } from '@/models/data/setting/Color';
+import { NextPage } from "next";
+import { useContext, useState } from "react";
+import { v4 } from "uuid";
+
+import { SettingContext, UUID } from "@/models/data/context/SettingContext";
+import { Color } from "@/models/data/Setting";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
@@ -25,7 +26,7 @@ const Component: NextPage = () => {
 	function handleAddColor() {
 		groups.push({
 			key: v4(),
-			value: '#4444ff',
+			value: "#4444ff",
 		});
 		setGroups(settingContext.theme.groups = [...groups]);
 	}

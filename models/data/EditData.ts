@@ -1,6 +1,6 @@
-import * as Setting from './setting/Setting';
+import { Setting } from "./Setting";
 
 export interface EditData {
 	fileName: string;
-	setting: Setting.Setting;
+	setting: Setting;
 }

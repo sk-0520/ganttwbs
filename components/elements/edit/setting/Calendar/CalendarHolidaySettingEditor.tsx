@@ -1,7 +1,8 @@
-import { NextPage } from 'next';
-import { useContext } from 'react';
-import * as Forms from '@/models/Forms';
-import { SettingContext } from '@/models/data/context/SettingContext';
+import { NextPage } from "next";
+import { useContext } from "react";
+
+import * as Forms from "@/models/Forms";
+import { SettingContext } from "@/models/data/context/SettingContext";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);

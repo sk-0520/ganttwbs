@@ -1,0 +1,9 @@
+* {
+	box-sizing: border-box;
+}
+
+.single-line {
+	* {
+		display: inline;
+	}
+}

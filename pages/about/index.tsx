@@ -1,7 +1,8 @@
-import { NextPage } from 'next';
-import Layout from '@/components/layout/Layout';
+import { NextPage } from "next";
 
-const About: NextPage = () => {
+import Layout from "@/components/layout/Layout";
+
+const Page: NextPage = () => {
 	return (
 		<Layout title='これなに？' mode='page' layoutId='about'>
 			<p>ガントチャート的な何かをどうこうしたい。</p>
@@ -9,4 +10,4 @@ const About: NextPage = () => {
 	);
 };
 
-export default About;
+export default Page;

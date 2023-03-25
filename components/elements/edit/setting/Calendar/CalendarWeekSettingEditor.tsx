@@ -1,14 +1,15 @@
-import { NextPage } from 'next';
-import { useContext } from 'react';
-import { SettingContext } from '@/models/data/context/SettingContext';
-import { useLocale } from '@/models/locales/locale';
-import { getWeekDays } from '@/models/data/setting/WeekDay';
+import { NextPage } from "next";
+import { useContext } from "react";
+
+import { SettingContext } from "@/models/data/context/SettingContext";
+import { useLocale } from "@/models/locales/locale";
+import { Settings } from "@/models/Settings";
 
 const Component: NextPage = () => {
 	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
-	const weekDays = getWeekDays();
+	const weekDays = Settings.getWeekDays();
 
 	return (
 		<ul>

@@ -1,12 +1,12 @@
-import { NextPage } from 'next';
-import Head from 'next/head';
-import Link from 'next/link';
+import { NextPage } from "next";
+import Head from "next/head";
+import Link from "next/link";
 
 interface LayoutProps {
 	/** タイトル */
 	title?: string;
 	/** アプリケーションか通常ページ */
-	mode: 'application' | 'page';
+	mode: "application" | "page";
 	/** main 要素に対して付与するID */
 	layoutId: string;
 	/** 子要素 明示的な指定不要。 */
@@ -23,7 +23,7 @@ const Layout: NextPage<LayoutProps> = (props: LayoutProps) => {
 				<title>{headTitle}</title>
 			</Head>
 			{
-				props.mode === 'application'
+				props.mode === "application"
 					? (
 						<div id='mode-application'>
 							<main id={props.layoutId}>

@@ -1,8 +1,9 @@
-import { NextPage } from 'next';
-import Link from 'next/link';
-import Layout from '@/components/layout/Layout';
+import { NextPage } from "next";
+import Link from "next/link";
 
-const Home: NextPage = () => {
+import Layout from "@/components/layout/Layout";
+
+const Page: NextPage = () => {
 	return (
 		<Layout mode='page' layoutId='home'>
 			<ul>
@@ -20,4 +21,4 @@ const Home: NextPage = () => {
 	);
 };
 
-export default Home;
+export default Page;

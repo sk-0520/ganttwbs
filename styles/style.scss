@@ -1,8 +1,13 @@
 @import 'reset-css';
 @import 'react-tabs/style/react-tabs.css';
 
-@import 'base';
+@import 'html/html';
+@import 'html/list';
 @import 'html/input';
+@import 'html/dialog';
+
+@import 'base';
+@import 'icon';
 
 @import 'home';
 @import 'new';

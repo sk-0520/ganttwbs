@@ -1,14 +1,14 @@
-import { NextPage } from 'next';
-import { useContext, MouseEvent, useState } from 'react';
-import { v4 } from 'uuid';
-import { GroupSetting, MemberSetting, SettingContext } from '@/models/data/context/SettingContext';
-import { Color } from '@/models/data/setting/Color';
+import { NextPage } from "next";
+import { useContext, MouseEvent, useState } from "react";
+import { v4 } from "uuid";
+
+import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
+import { Color } from "@/models/data/Setting";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
-	console.debug(settingContext);
 
-	const [newGroupName, setNewGroupName] = useState('');
+	const [newGroupName, setNewGroupName] = useState("");
 	const [editGroups, setEditGroups] = useState(settingContext.groups);
 
 	function handleAddGroup(event: MouseEvent<HTMLButtonElement>) {
@@ -28,7 +28,7 @@ const Component: NextPage = () => {
 			members: [],
 		};
 		setEditGroups(settingContext.groups = [...editGroups, newGroup]);
-		setNewGroupName('');
+		setNewGroupName("");
 	}
 
 	function handleRemoveGroup(group: GroupSetting, event: MouseEvent<HTMLButtonElement>) {
@@ -67,14 +67,14 @@ const Component: NextPage = () => {
 			key: v4(),
 			id: v4(),
 			name: name,
-			color: '#ff0',
+			color: "#ff0",
 		};
 		targetGroup.members.push(newMember);
 
 		setEditGroups([...editGroups]);
-		const element = event.currentTarget.closest('[data-root]')?.querySelector('[name="member-name"]') as HTMLInputElement | undefined;
+		const element = event.currentTarget.closest("[data-root]")?.querySelector('[name="member-name"]') as HTMLInputElement | undefined;
 		if (element) {
-			element.value = '';
+			element.value = "";
 		}
 	}
 
@@ -109,7 +109,7 @@ const Component: NextPage = () => {
 		<>
 			<dl className="inputs">
 				{editGroups.map(a => {
-					let memberName = '';
+					let memberName = "";
 
 					return (
 						<div key={a.key}>

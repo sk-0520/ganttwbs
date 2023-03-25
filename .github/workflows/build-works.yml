@@ -1,0 +1,35 @@
+name: Build Works
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: <Checkout> Repository
+        uses: actions/checkout@v3
+
+      - name: <Add> Node/NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: v18.14.0
+          cache: npm
+
+      - name: <Install> NPM
+        run: npm ci
+
+      - name: <Lint>
+        shell: bash
+        run: npm run lint
+
+      - name: <Test>
+        shell: bash
+        run: npm run test
+
+    #   - name: <Build>
+    #     shell: bash
+    #     run: npm run build
+
+

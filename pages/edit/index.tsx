@@ -1,14 +1,15 @@
-import { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import FileEditor from '@/components/elements/edit/file/FileEditor';
-import SettingEditor from '@/components/elements/edit/setting/SettingEditor';
-import Layout from '@/components/layout/Layout';
-import * as Storage from '@/models/Storage';
-import { EditData } from '@/models/data/EditData';
-import { EditContext, EditContextImpl } from '@/models/data/context/EditContext';
-import TimelineEditor from '@/components/elements/edit/timeline/TimelineEditor';
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+
+import FileEditor from "@/components/elements/edit/file/FileEditor";
+import SettingEditor from "@/components/elements/edit/setting/SettingEditor";
+import TimelineEditor from "@/components/elements/edit/timeline/TimelineEditor";
+import Layout from "@/components/layout/Layout";
+import * as Storage from "@/models/Storage";
+import { EditData } from "@/models/data/EditData";
+import { EditContext, EditContextImpl } from "@/models/data/context/EditContext";
 //import * as Setting from '@/models/data/setting/Setting';
 
 const Edit: NextPage = () => {
@@ -19,7 +20,7 @@ const Edit: NextPage = () => {
 	useEffect(() => {
 		const data = Storage.loadEditData();
 		if (!data) {
-			router.push('/');
+			router.push("/");
 			return;
 		}
 		setData(data);
@@ -35,7 +36,7 @@ const Edit: NextPage = () => {
 
 	return (
 		<Layout mode='application' layoutId='edit'
-			title={data ? data.fileName + ' 編集' : '編集'}
+			title={data ? data.fileName + " 編集" : "編集"}
 		>
 			<>
 				{!data && <p>読み込み中</p>}

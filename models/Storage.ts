@@ -2,11 +2,11 @@ import { EditData } from "./data/EditData";
 
 export function saveEditData(editData: EditData) {
 	const sessionData = JSON.stringify(editData);
-	sessionStorage.setItem('data', sessionData);
+	sessionStorage.setItem("data", sessionData);
 }
 
 export function loadEditData(): EditData | null {
-	const sessionData = sessionStorage.getItem('data');
+	const sessionData = sessionStorage.getItem("data");
 	if (!sessionData) {
 		return null;
 	}

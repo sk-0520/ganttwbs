@@ -66,64 +66,46 @@
 	},
 	"timelines": [
 		{
-			"kind": "marker",
-			"scope": "global|local|slim",
-			"color": "RGB",
-			"subject": "マーカー名",
-			// 対象日時
-			"target": "ISO8601",
-			"range": "ISO8601時刻",
-			"comment": ""
-		},
-		{
-			"kind": "pin",
-			"scope": "pin|line",
-			"color": "RGB",
-			"subject": "ピン件名",
-			// 対象日時
-			"target": "ISO8601",
-			"comment": ""
-		},
+			"kind": "group",
+			"id": "<TIMELINE-ID>",
+			"subject": "タイムライン名",
+			"children": [
+				"<TIMELINE-TASK> | <TIMELINE-GROUP>"
+			],
+			"comment": "",
+		}
 		{
 			"kind": "task",
-			"id": "<TASK-TIMELINE-ID>",
+			"id": "<TIMELINE-TASK-ID>",
 			"subject": "タイムライン名",
-			"type": "group|item",
-			// type: group
-			"group": {
-				// なんもねぇなぁ
+			// 固定と先行が設定されている場合最大を使用する
+			// 固定
+			"static": {
+				"target": "ISO8601",
 			},
-			// type: item
-			"item": {
-				// 固定と先行が設定されている場合最大を使用する
-				// 固定
-				"static": {
-					"target": "ISO8601",
-				},
-				// 先行 複数指定は全先行が終了する必要あり
-				"prev": {
-					"items": [
-						"<TASK-TIMELINE-ID>",
-					]
-				},
-				"range": "ISO8601時刻",
-				"works": [
-					{
-						"member": "<MEMBER-ID>",
-						"state": "enabled|disabled|sleep",
-						"progress": 0-1,
-						"history": [
-							// 0: first history
-							{
-								"progress": 0-1,
-								"version": "<VERSION-ID>",
-								// あとどれくらいで終わんの？
-								"more": "ISO8601時刻"
-							}
-						]
-					}
+			// 先行 複数指定は全先行が終了する必要あり
+			"prev": {
+				"items": [
+					"<TIMELINE-ID>",
 				]
 			},
+			"range": "ISO8601時刻",
+			"works": [
+				{
+					"member": "<MEMBER-ID>",
+					"state": "enabled|disabled|sleep",
+					"progress": 0-1,
+					"history": [
+						// 0: first history
+						{
+							"progress": 0-1,
+							"version": "<VERSION-ID>",
+							// あとどれくらいで終わんの？
+							"more": "ISO8601時刻"
+						}
+					]
+				}
+			],
 			"comment": ""
 		},
 	],
