@@ -52,6 +52,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [endDate, setEndDate] = useState<Date | null>(null);
 	const [progressPercent, setProgressPercent] = useState(Timelines.sumProgressByGroup(props.currentTimeline) * 100.0);
 	const [children, setChildren] = useState(props.currentTimeline.children);
+	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
 
 	useEffect(() => {
 		const timeRange = props.timeRanges.get(props.currentTimeline.id);
@@ -164,6 +165,19 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.callbackRefreshChildrenProgress();
 	}
 
+	function handleChangePrevious(isSelected: boolean): void {
+		if (!props.selectingBeginDate) {
+			return;
+		}
+
+		if (isSelected) {
+			props.selectingBeginDate.previous.add(props.currentTimeline.id);
+		} else {
+			props.selectingBeginDate.previous.delete(props.currentTimeline.id);
+		}
+		setIsSelectedPrevious(isSelected);
+	}
+
 	return (
 		<div className='group'>
 			<div className='timeline-header' style={heightStyle}>
@@ -171,7 +185,13 @@ const Component: NextPage<Props> = (props: Props) => {
 					<label>
 						{props.selectingBeginDate
 							? (
-								<input id={selectingId} type="checkbox" value={props.currentTimeline.id} />
+								<input
+									id={selectingId}
+									type="checkbox"
+									value={props.currentTimeline.id}
+									checked={isSelectedPrevious}
+									onChange={ev => handleChangePrevious(ev.target.checked)}
+								/>
 							) : (
 								<span className="timeline-kind icon-timeline-group-after" />
 							)

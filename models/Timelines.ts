@@ -307,8 +307,15 @@ export default abstract class Timelines {
 
 					// 多分これで算出可能
 					const successTimeRanges = resultTimeRanges.filter(TimeRanges.maybeSuccessTimeRange);
-					console.assert(resultTimeRanges.length === successTimeRanges.length);
+					if (resultTimeRanges.length !== successTimeRanges.length) {
+						// わからん
+						continue;
+					}
+
 					const maxTimeRange = TimeRanges.maxByEndDate(successTimeRanges);
+					if (maxTimeRange === undefined) {
+						debugger;
+					}
 					let prevDate = maxTimeRange.end;
 					if (timeline.static) {
 						const staticDate = new Date(timeline.static);
