@@ -69,13 +69,6 @@ const Component: NextPage<Props> = (props: Props) => {
 				setEndDate(timeRange.end);
 			}
 		}
-
-		handleUpdateChildrenWorkload();
-		handleUpdateChildrenProgress();
-
-		props.callbackRefreshChildrenWorkload();
-		props.callbackRefreshChildrenProgress();
-
 	}, [props.timeRanges]);
 
 	useEffect(() => {
