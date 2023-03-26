@@ -128,53 +128,51 @@ const Component: NextPage = () => {
 				<ul>
 					{timelines.map((a, i) => {
 						return (
-							<>
-								<li key={a.id}>
-									{
-										Settings.maybeGroupTimeline(a) ? (
-											<GroupTimelineEditor
-												treeIndexes={[]}
-												currentIndex={i}
-												parentGroup={null}
-												currentTimeline={a as GroupTimeline/*TODO: 型ガード*/}
-												timeRanges={timeRanges}
-												selectingBeginDate={selectingBeginDate}
-												callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
-												callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
-												callbackRefreshChildrenWorkload={handleUpdateChildrenWorkload}
-												callbackRefreshChildrenProgress={() => { /*nop*/ }}
-												callbackDeleteChildTimeline={handleDeleteChildren}
-												callbackStartSelectBeginDate={handleStartSelectBeginDate}
-												callbackClearSelectBeginDate={handleClearSelectBeginDate}
-												callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}
-												callbackCancelSelectBeginDate={handleCancelSelectBeginDate}
-											/>
-										) : <></>
-									}
-									{
-										Settings.maybeTaskTimeline(a) ? (
-											<TaskTimelineEditor
-												treeIndexes={[]}
-												currentIndex={i}
-												parentGroup={null}
-												currentTimeline={a as TaskTimeline/*TODO: 型ガード*/}
-												timeRanges={timeRanges}
-												selectingBeginDate={selectingBeginDate}
-												callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
-												callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
-												callbackRefreshChildrenWorkload={handleUpdateChildrenWorkload}
-												callbackRefreshChildrenProgress={() => { /*nop*/ }}
-												callbackAddNextSiblingItem={handleAddNextSiblingItem}
-												callbackDeleteChildTimeline={handleDeleteChildren}
-												callbackStartSelectBeginDate={handleStartSelectBeginDate}
-												callbackClearSelectBeginDate={handleClearSelectBeginDate}
-												callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}
-												callbackCancelSelectBeginDate={handleCancelSelectBeginDate}
-											/>
-										) : <></>
-									}
-								</li>
-							</>
+							<li key={a.id}>
+								{
+									Settings.maybeGroupTimeline(a) ? (
+										<GroupTimelineEditor
+											treeIndexes={[]}
+											currentIndex={i}
+											parentGroup={null}
+											currentTimeline={a as GroupTimeline/*TODO: 型ガード*/}
+											timeRanges={timeRanges}
+											selectingBeginDate={selectingBeginDate}
+											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
+											callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
+											callbackRefreshChildrenWorkload={handleUpdateChildrenWorkload}
+											callbackRefreshChildrenProgress={() => { /*nop*/ }}
+											callbackDeleteChildTimeline={handleDeleteChildren}
+											callbackStartSelectBeginDate={handleStartSelectBeginDate}
+											callbackClearSelectBeginDate={handleClearSelectBeginDate}
+											callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}
+											callbackCancelSelectBeginDate={handleCancelSelectBeginDate}
+										/>
+									) : <></>
+								}
+								{
+									Settings.maybeTaskTimeline(a) ? (
+										<TaskTimelineEditor
+											treeIndexes={[]}
+											currentIndex={i}
+											parentGroup={null}
+											currentTimeline={a as TaskTimeline/*TODO: 型ガード*/}
+											timeRanges={timeRanges}
+											selectingBeginDate={selectingBeginDate}
+											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
+											callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
+											callbackRefreshChildrenWorkload={handleUpdateChildrenWorkload}
+											callbackRefreshChildrenProgress={() => { /*nop*/ }}
+											callbackAddNextSiblingItem={handleAddNextSiblingItem}
+											callbackDeleteChildTimeline={handleDeleteChildren}
+											callbackStartSelectBeginDate={handleStartSelectBeginDate}
+											callbackClearSelectBeginDate={handleClearSelectBeginDate}
+											callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}
+											callbackCancelSelectBeginDate={handleCancelSelectBeginDate}
+										/>
+									) : <></>
+								}
+							</li>
 						);
 					})}
 				</ul>

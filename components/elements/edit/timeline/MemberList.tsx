@@ -17,14 +17,13 @@ const Component: NextPage<Props> = (props: Props) => {
 		.sort((a, b) => a.name.localeCompare(b.name))
 		;
 
-	function toMemberOptions(selectedMemberId: MemberId, members: ReadonlyArray<Member>): Array<ReactNode> {
+	function toMemberOptions(members: ReadonlyArray<Member>): Array<ReactNode> {
 		return (
 			members.map(a => {
 				return (
 					<option
 						key={a.id}
 						value={a.id}
-						selected={selectedMemberId === a.id}
 					>
 						{a.name}
 					</option>
@@ -44,6 +43,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<select
 			disabled={props.disabled}
+			defaultValue={props.selectedMemberId}
 			onChange={ev => handleChangeOption(ev.target.value)}
 		>
 			<option></option>
@@ -53,15 +53,16 @@ const Component: NextPage<Props> = (props: Props) => {
 					.sort((a2, b2) => a2.name.localeCompare(b2.name))
 					;
 
+
 				return (
 					a.name ?
 						(
 							<optgroup key={a.name} label={a.name}>
-								<>{toMemberOptions(props.selectedMemberId, members)}</>
+								<>{toMemberOptions(members)}</>
 							</optgroup>
 						)
 						: (
-							<>{toMemberOptions(props.selectedMemberId, members)}</>
+							<>{toMemberOptions(members)}</>
 						)
 				)
 			})}

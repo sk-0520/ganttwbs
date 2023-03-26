@@ -44,28 +44,37 @@ const Component: NextPage = () => {
 						<dl className="inputs">
 							<dt>ファイル名</dt>
 							<dd>
-								<input type="text" {...register("data.fileName", {
-									value: editContext.data.fileName,
-									onChange: ev => editContext.data.fileName = ev.target.value
-								})} />
+								<input type="text"
+									defaultValue={editContext.data.fileName}
+									{...register("data.fileName", {
+										value: editContext.data.fileName,
+										onChange: ev => editContext.data.fileName = ev.target.value
+									})}
+								/>
 							</dd>
 
 							<dt>定期的にファイルをDLする</dt>
 							<dd>
 								<label>
-									<input type='checkbox' {...register("autoSave.isEnabled", {
-										value: editContext.autoSave.isEnabled,
-										onChange: ev => editContext.autoSave.isEnabled = ev.target.checked
-									})} />
+									<input type='checkbox'
+										defaultChecked={editContext.autoSave.isEnabled}
+										{...register("autoSave.isEnabled", {
+											value: editContext.autoSave.isEnabled,
+											onChange: ev => editContext.autoSave.isEnabled = ev.target.checked
+										})}
+									/>
 									有効にする
 								</label>
 							</dd>
 							<dd>
 								<label>
-									<input type='number' {...register("autoSave.minutes", {
-										value: editContext.autoSave.minutes,
-										onChange: ev => editContext.autoSave.minutes = ev.target.value
-									})} />
+									<input type='number'
+										defaultValue={editContext.autoSave.minutes}
+										{...register("autoSave.minutes", {
+											value: editContext.autoSave.minutes,
+											onChange: ev => editContext.autoSave.minutes = ev.target.value
+										})}
+									/>
 									秒
 								</label>
 							</dd>
@@ -84,6 +93,7 @@ const Component: NextPage = () => {
 					<button onClick={handleJsonCopy}>copy</button>
 					<textarea
 						value={settingJson}
+						readOnly={true}
 					/>
 				</dd>
 
