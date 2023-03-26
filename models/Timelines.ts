@@ -82,6 +82,12 @@ export default abstract class Timelines {
 		return false;
 	}
 
+	public static moveTimelineIndex(timelines: Array<Timeline>, sourceIndex: number, destinationIndex: number): void {
+		const sourceTimeline = timelines[sourceIndex];
+		timelines.splice(sourceIndex, 1);
+		timelines.splice(destinationIndex, 0, sourceTimeline);
+	}
+
 	public static displayWorkload(workload: number): string {
 		return workload.toFixed(2);
 	}
@@ -161,6 +167,30 @@ export default abstract class Timelines {
 		return result;
 	}
 
+	/**
+	 * 指定のタイムラインが所属するグループを取得する。
+	 * @param timeline 子タイムライン。
+	 * @param timelineNodes タイムラインノード。
+	 * @returns 親グループの配列。空の場合、最上位に位置している。 見つかんなかった場合は null を返す。
+	 */
+	public static getParentGroup(timeline: Timeline, timelineNodes: ReadonlyArray<GroupTimeline | TaskTimeline>): Array<GroupTimeline> | null {
+		if (timelineNodes.find(a => a.id === timeline.id)) {
+			// 最上位なので空配
+			return [];
+		}
+
+		const rootGroups = timelineNodes.filter(Settings.maybeGroupTimeline);
+		for (const groupTimeline of rootGroups) {
+			const nodes = this.getParentGroup(timeline, groupTimeline.children);
+			if (!nodes) {
+				continue;
+			}
+			return [groupTimeline, ...nodes];
+		}
+
+		return null;
+	}
+
 	private static convertDatesByHolidayEvents(events: { [key: DateOnly]: HolidayEvent }): Array<Date> {
 		const result = new Array<Date>();
 
@@ -172,7 +202,7 @@ export default abstract class Timelines {
 		return result;
 	}
 
-	private static toTimeRange(holidays: Holidays, timeline: Timeline, beginDate: Date, workload: TimeSpan): TimeRange {
+	private static createSuccessTimeRange(holidays: Holidays, timeline: Timeline, beginDate: Date, workload: TimeSpan): SuccessTimeRange {
 		//TODO: 非稼働日を考慮（開始から足す感じいいはず）
 		const endDate = new Date(beginDate.getTime() + workload.totalMilliseconds);
 		const result: SuccessTimeRange = {
@@ -212,7 +242,7 @@ export default abstract class Timelines {
 		for (const timeline of staticTimelines) {
 			const beginDate = new Date(timeline.static!);
 			const workload = TimeSpan.parse(timeline.workload);
-			const timeRange = this.toTimeRange(holidays, timeline, beginDate, workload);
+			const timeRange = this.createSuccessTimeRange(holidays, timeline, beginDate, workload);
 			result.set(timeline.id, timeRange);
 			cache.statics.set(timeline.id, timeline);
 		}
@@ -247,7 +277,7 @@ export default abstract class Timelines {
 
 			const workload = TimeSpan.parse(timeline.workload);
 
-			const timeRange = this.toTimeRange(holidays, timeline, prevRange.end, workload);
+			const timeRange = this.createSuccessTimeRange(holidays, timeline, prevRange.end, workload);
 			result.set(timeline.id, timeRange);
 		}
 
@@ -324,7 +354,7 @@ export default abstract class Timelines {
 					}
 
 					const workload = TimeSpan.parse(timeline.workload);
-					const timeRange = this.toTimeRange(holidays, timeline, prevDate, workload);
+					const timeRange = this.createSuccessTimeRange(holidays, timeline, prevDate, workload);
 					result.set(timeline.id, timeRange);
 
 				} else if (Settings.maybeGroupTimeline(timeline)) {
@@ -363,8 +393,8 @@ export default abstract class Timelines {
 						});
 						continue;
 					}
-					// まぁまぁ
-					const items = resultTimeRanges as unknown as ReadonlyArray<SuccessTimeRange>;
+					// まぁまぁ(たぶん条件漏れあり)
+					const items = resultTimeRanges.filter(TimeRanges.maybeSuccessTimeRange);
 					const minMax = TimeRanges.getMinMaxRange(items);
 					const timeRange: SuccessTimeRange = {
 						timeline: timeline,
@@ -377,7 +407,7 @@ export default abstract class Timelines {
 			}
 		}
 
-		console.error("反復実施数", recursiveCount, "result", result.size, "flatTimelines", flatTimelines.length)
+		console.debug("反復実施数", recursiveCount, "result", result.size, "flatTimelines", flatTimelines.length)
 
 		return result;
 	}

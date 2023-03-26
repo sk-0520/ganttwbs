@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { useContext, useEffect, useState } from "react";
+import { DragEvent, useContext, useEffect, useState } from "react";
 
 import { EditContext } from "@/models/data/context/EditContext";
 import { useLocale } from "@/models/locales/locale";
@@ -15,6 +15,7 @@ import { TimeRange, TimeRangeKind, TimeRanges } from "@/models/TimeRange";
 import Timestamp from "../../Timestamp";
 import Timelines from "@/models/Timelines";
 import SelectingBeginDate from "@/models/data/SelectingBeginDate";
+import DraggingTimeline from "@/models/data/DraggingTimeline";
 
 
 interface Props {
@@ -23,6 +24,7 @@ interface Props {
 	currentIndex: number;
 	currentTimeline: TaskTimeline;
 	timeRanges: ReadonlyMap<TimelineId, TimeRange>;
+	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
 	callbackRefreshChildrenOrder: (kind: MoveItemKind, currentTimeline: Timeline) => void;
 	callbackRefreshChildrenBeginDate(): void;
@@ -30,6 +32,7 @@ interface Props {
 	callbackRefreshChildrenProgress(): void;
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
 	callbackDeleteChildTimeline(currentTimeline: Timeline): void;
+	callbackDraggingTimeline(event: DragEvent, timeline: Timeline): void;
 	callbackStartSelectBeginDate(timeline: TaskTimeline): void;
 	callbackClearSelectBeginDate(timeline: TaskTimeline): void;
 	callbackSubmitSelectBeginDate(timeline: TaskTimeline): void;
@@ -57,6 +60,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	//const [selectingBeginDate, setSelectingBeginDate] = useState(false);
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
 	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
+	const [dropEventClassName, setDropEventClassName] = useState('');
 
 	useEffect(() => {
 		const timeRange = props.timeRanges.get(props.currentTimeline.id);
@@ -78,6 +82,12 @@ const Component: NextPage<Props> = (props: Props) => {
 			setSelectedBeginDate(props.selectingBeginDate.beginDate ?? null);
 		}
 	}, [props.selectingBeginDate]);
+
+	useEffect(() => {
+		if (!props.draggingTimeline) {
+			setDropEventClassName('');
+		}
+	}, [props.draggingTimeline]);
 
 	function handleChangeSubject(s: string) {
 		setSubject(s);
@@ -169,10 +179,36 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.callbackCancelSelectBeginDate(props.currentTimeline)
 	}
 
+	function handleDragOver() {
+		setDropEventClassName('drag-over')
+	}
+	function handleDragLeave() {
+		setDropEventClassName('')
+	}
+
 	return (
 		<div className='task' style={heightStyle}>
-			<div className='timeline-header'>
-				<div className='timeline-id' title={props.currentTimeline.id}>
+			<div
+				className={
+					'timeline-header'
+					+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? ' dragging' : '')
+					+ ' ' + dropEventClassName
+				}
+				onDragEnter={ev => props.draggingTimeline?.onDragEnter(ev, props.currentTimeline)}
+				onDragOver={ev => props.draggingTimeline?.onDragOver(ev, props.currentTimeline, handleDragOver)}
+				onDragLeave={ev => props.draggingTimeline?.onDragLeave(ev, props.currentTimeline, handleDragLeave)}
+				onDrop={ev => props.draggingTimeline?.onDrop(ev, props.currentTimeline)}
+			>
+				<div
+					className={
+						'timeline-id'
+						+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? ' dragging' : '')
+					}
+					title={props.currentTimeline.id}
+					draggable={!props.selectingBeginDate}
+					onDragStart={ev => props.callbackDraggingTimeline(ev, props.currentTimeline)}
+					onDragEnd={props.draggingTimeline?.onDragEnd}
+				>
 					<label>
 						{props.selectingBeginDate
 							? (
@@ -221,16 +257,25 @@ const Component: NextPage<Props> = (props: Props) => {
 						? (
 							<>
 								<div className='timeline-range-area'>
-									<div className="single-line">
-										<input
-											type="date"
-											value={selectedBeginDate ? Strings.formatDate(selectedBeginDate, "yyyy-MM-dd") : ''}
-											onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
-										/>
+									<div className="single-line no-warp">
 										<ul className="inline">
 											<li><button type="button" onClick={handleClearPrevious}>🆓</button></li>
+											<li>
+												<input
+													type="date"
+													value={selectedBeginDate ? Strings.formatDate(selectedBeginDate, "yyyy-MM-dd") : ''}
+													onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
+												/>
+											</li>
 											<li><button type="button" onClick={handleSubmitPrevious}>🆗</button></li>
 											<li><button type="button" onClick={handleCancelPrevious}>🆖</button></li>
+										</ul>
+									</div>
+									<div className="tools">
+										<ul>
+											<li><button>直近項目に紐づける</button></li>
+											<li><button>紐づけを解除</button></li>
+											<li><button>固定日付をクリア</button></li>
 										</ul>
 									</div>
 								</div>
@@ -240,10 +285,14 @@ const Component: NextPage<Props> = (props: Props) => {
 								? (
 									<>
 										<div className={'timeline-range-from ' + (!props.selectingBeginDate ? 'selectable' : '')} onClick={handleClickBeginDate}>
-											<Timestamp format="date" date={beginDate} />
+											<label htmlFor={selectingId}>
+												<Timestamp format="date" date={beginDate} />
+											</label>
 										</div>
 										<div className={'timeline-range-to ' + (!props.selectingBeginDate ? 'selectable' : '')} onClick={handleClickBeginDate}>
-											<Timestamp format="date" date={endDate} />
+											<label htmlFor={selectingId}>
+												<Timestamp format="date" date={endDate} />
+											</label>
 										</div>
 									</>
 								) : (

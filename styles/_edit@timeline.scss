@@ -13,6 +13,7 @@
 
 	display: grid;
 	width: max-content;
+	user-select: none;
 
 	.timeline-header {
 		display: inline-flex;
@@ -109,12 +110,59 @@
 					cursor: pointer;
 				}
 			}
+			.timeline-range-area {
+				position: relative;
+
+				background-color: palegoldenrod;
+				outline: 2px palegoldenrod solid;
+
+				* {
+					height: 100%;
+				}
+
+				.tools {
+					background-color: palegoldenrod;
+					outline: 2px palegoldenrod solid;
+					height: fit-content;
+
+					position: absolute;
+					left: $timeline-header-range-from-width + $timeline-header-range-to-width;
+					top: 0;
+					width: max-content;
+
+					button {
+						width: 100%;
+					}
+				}
+			}
 		}
 
 		.timeline-header {
-			&:hover {
+			&.dragging {
+				opacity: 0.8;
+				filter: contrast(50%) grayscale(100%);
+			}
+
+			&.drag-over {
 				position: relative;
-				outline: 1px solid red;
+				mix-blend-mode: overlay;
+			}
+
+			.timeline-id[draggable="true"] {
+				$cursor: grab;
+
+				cursor: $cursor;
+
+				&.dragging {
+					opacity: 1;
+					color: black;
+					background: whitesmoke;
+					border: 1px solid gray;
+				}
+
+				* {
+					cursor: $cursor;
+				}
 			}
 
 			label {

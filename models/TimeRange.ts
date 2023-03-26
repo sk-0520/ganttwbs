@@ -56,8 +56,6 @@ export class TimeRanges {
 		const minItems = [...items].sort((a, b) => a.begin.getTime() - b.begin.getTime());
 		const maxItems = [...items].sort((a, b) => a.end.getTime() - b.end.getTime());
 
-		if(minItems[0] === undefined) debugger;
-
 		return {
 			min: minItems[0],
 			max: maxItems[maxItems.length - 1],

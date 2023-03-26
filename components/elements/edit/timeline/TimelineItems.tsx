@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { useContext, useEffect, useState } from "react";
+import { DragEvent, useContext, useEffect, useState } from "react";
 
 import Timelines from "@/models/Timelines";
 import { EditContext } from "@/models/data/context/EditContext";
@@ -12,6 +12,8 @@ import { GroupTimeline, TaskTimeline, Timeline, TimelineId, TimelineKind } from 
 import { TimeRange } from "@/models/TimeRange";
 import SelectingBeginDate from "@/models/data/SelectingBeginDate";
 import { Settings } from "@/models/Settings";
+import DraggingTimeline from "@/models/data/DraggingTimeline";
+import DropTimeline from "@/models/data/DropTimeline";
 
 // interface Props {
 // }
@@ -23,7 +25,10 @@ const Component: NextPage = () => {
 
 	const [timelines, setTimelines] = useState(editContext.data.setting.timelineNodes);
 	const [timeRanges, setTimeRanges] = useState<Map<TimelineId, TimeRange>>(new Map());
+	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
+	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
+
 
 	function handleAddNewGroup() {
 		const item = Timelines.createNewGroup();
@@ -93,6 +98,140 @@ const Component: NextPage = () => {
 		setTimeRanges(map);
 	}
 
+	function fireDropTimeline(dropTimeline: DropTimeline) {
+		console.debug("FIRE");
+
+		if (!dropTimeline.sourceGroupTimeline && !dropTimeline.destinationGroupTimeline) {
+			// 最上位完結
+			Timelines.moveTimelineIndex(editContext.data.setting.timelineNodes, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
+			setTimelines([...editContext.data.setting.timelineNodes]);
+		} else {
+			// 最上位に対してあれこれ
+			if (!dropTimeline.sourceGroupTimeline) {
+				// 移動元が親なので破棄
+				const nextTimelines = editContext.data.setting.timelineNodes.filter(a => a.id !== dropTimeline.timeline.id);
+				setTimelines(editContext.data.setting.timelineNodes = nextTimelines);
+			}
+			if (!dropTimeline.destinationGroupTimeline) {
+				// 移動先が親なので追加
+				editContext.data.setting.timelineNodes.splice(dropTimeline.sourceIndex + 1, 0, dropTimeline.timeline);
+				setTimelines([...editContext.data.setting.timelineNodes]);
+			}
+			// 子に通知
+			setDropTimeline(dropTimeline);
+		}
+	}
+
+	function handleStartDragTimeline(event: DragEvent, sourceTimeline: GroupTimeline | TaskTimeline): void {
+		console.debug(event, sourceTimeline);
+
+		const dragging: DraggingTimeline = {
+			sourceTimeline: sourceTimeline,
+			onDragEnd: (ev) => {
+				console.debug("END", ev, sourceTimeline);
+				setDraggingTimeline(null);
+			},
+			onDragEnter: (ev, targetTimeline) => {
+				console.debug("ENTER", ev, targetTimeline);
+			},
+			onDragOver: (ev, targetTimeline, callback) => {
+				console.debug("OVER", ev, targetTimeline);
+				// 自分自身への移動は抑制
+				if (targetTimeline.id === sourceTimeline.id) {
+					return;
+				}
+
+				if (Settings.maybeGroupTimeline(sourceTimeline)) {
+					// 自分がグループの場合、自分より下への移動は抑制
+					const map = Timelines.getTimelinesMap(sourceTimeline.children);
+					if (map.has(targetTimeline.id)) {
+						return;
+					}
+				}
+
+				// 自身のグループへの移動は抑制(どうすりゃいいのか正解が分からん)
+				if (Settings.maybeGroupTimeline(targetTimeline)) {
+					if (targetTimeline.children.find(a => a.id === sourceTimeline.id)) {
+						return;
+					}
+				}
+
+				callback(dragging);
+				ev.preventDefault();
+			},
+			onDragLeave: (ev, targetTimeline, callback) => {
+				console.debug("LEAVE", ev, targetTimeline);
+				callback(dragging);
+			},
+			onDrop: (ev, targetTimeline) => {
+				console.debug("DROP", ev, targetTimeline);
+
+				const rootNodes = editContext.data.setting.timelineNodes;
+				const sourceGroupTimelines = Timelines.getParentGroup(sourceTimeline, rootNodes);
+				const targetGroupTimelines = Timelines.getParentGroup(targetTimeline, rootNodes);
+
+				if (!sourceGroupTimelines || !targetGroupTimelines) {
+					// ツリーにいない場合はどうにもならん
+					throw new Error(JSON.stringify({
+						sourceGroupTimelines,
+						targetGroupTimelines,
+					}));
+				}
+
+				// 最上位から最上位
+				if (!sourceGroupTimelines.length && !targetGroupTimelines.length) {
+					const sourceIndex = rootNodes.findIndex(a => a.id === sourceTimeline.id);
+					const destinationIndex = rootNodes.findIndex(a => a.id === targetTimeline.id);
+					if (sourceIndex === -1 || destinationIndex === -1) {
+						throw new Error(JSON.stringify({
+							sourceIndex,
+							destinationIndex,
+						}));
+					}
+
+					fireDropTimeline({
+						timeline: sourceTimeline,
+						sourceGroupTimeline: null,
+						destinationGroupTimeline: null,
+						sourceIndex: sourceIndex,
+						destinationIndex: destinationIndex,
+					});
+					return;
+				}
+
+				// 対象がグループの場合、そのグループへ移動
+				if (Settings.maybeGroupTimeline(targetTimeline)) {
+					const sourceGroupTimeline = sourceGroupTimelines[sourceGroupTimelines.length - 1];
+					const sourceIndex = sourceGroupTimeline.children.findIndex(a => a.id === sourceTimeline.id);
+
+					fireDropTimeline({
+						timeline: sourceTimeline,
+						sourceGroupTimeline: sourceGroupTimeline,
+						sourceIndex: sourceIndex,
+						destinationGroupTimeline: targetTimeline,
+						destinationIndex: -1,
+					});
+					return;
+				}
+
+				// 単純移動
+				const sourceNodes = sourceGroupTimelines.length ? sourceGroupTimelines[sourceGroupTimelines.length - 1].children : rootNodes;
+				const sourceIndex = sourceNodes.findIndex(a => a.id === sourceTimeline.id);
+				const destinationNodes = targetGroupTimelines.length ? targetGroupTimelines[targetGroupTimelines.length - 1].children : rootNodes;
+				const destinationIndex = destinationNodes.findIndex(a => a.id === targetTimeline.id);
+				fireDropTimeline({
+					timeline: sourceTimeline,
+					sourceGroupTimeline: sourceGroupTimelines.length ? sourceGroupTimelines[sourceGroupTimelines.length - 1] : null,
+					sourceIndex: sourceIndex,
+					destinationGroupTimeline: targetGroupTimelines.length ? targetGroupTimelines[targetGroupTimelines.length - 1] : null,
+					destinationIndex: destinationIndex,
+				});
+			}
+		};
+
+		setDraggingTimeline(dragging);
+	}
+
 	function handleStartSelectBeginDate(timeline: TaskTimeline): void {
 		console.debug(timeline);
 		setSelectingBeginDate({
@@ -137,12 +276,15 @@ const Component: NextPage = () => {
 											parentGroup={null}
 											currentTimeline={a}
 											timeRanges={timeRanges}
+											draggingTimeline={draggingTimeline}
 											selectingBeginDate={selectingBeginDate}
+											dropTimeline={dropTimeline}
 											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
 											callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
 											callbackRefreshChildrenWorkload={handleUpdateChildrenWorkload}
 											callbackRefreshChildrenProgress={() => { /*nop*/ }}
 											callbackDeleteChildTimeline={handleDeleteChildren}
+											callbackDraggingTimeline={handleStartDragTimeline}
 											callbackStartSelectBeginDate={handleStartSelectBeginDate}
 											callbackClearSelectBeginDate={handleClearSelectBeginDate}
 											callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}
@@ -158,6 +300,7 @@ const Component: NextPage = () => {
 											parentGroup={null}
 											currentTimeline={a}
 											timeRanges={timeRanges}
+											draggingTimeline={draggingTimeline}
 											selectingBeginDate={selectingBeginDate}
 											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
 											callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
@@ -165,6 +308,7 @@ const Component: NextPage = () => {
 											callbackRefreshChildrenProgress={() => { /*nop*/ }}
 											callbackAddNextSiblingItem={handleAddNextSiblingItem}
 											callbackDeleteChildTimeline={handleDeleteChildren}
+											callbackDraggingTimeline={handleStartDragTimeline}
 											callbackStartSelectBeginDate={handleStartSelectBeginDate}
 											callbackClearSelectBeginDate={handleClearSelectBeginDate}
 											callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}
