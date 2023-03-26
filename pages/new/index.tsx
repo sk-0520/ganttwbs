@@ -3,7 +3,7 @@ import { NextRouter, useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import Layout from "@/components/layout/Layout";
-import * as Goto from "@/models/Goto";
+import Goto from "@/models/Goto";
 import { EditData } from "@/models/data/EditData";
 import { DateOnly, DefaultRecursiveMaxCount, Setting } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
