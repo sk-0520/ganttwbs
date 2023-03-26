@@ -66,7 +66,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		const timeRange = props.timeRanges.get(props.currentTimeline.id);
 		if (timeRange) {
 			setBeginKind(timeRange.kind);
-
 			if (TimeRanges.maybeSuccessTimeRange(timeRange)) {
 				setBeginDate(timeRange.begin);
 				setEndDate(timeRange.end);

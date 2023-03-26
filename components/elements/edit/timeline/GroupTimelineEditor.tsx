@@ -100,6 +100,11 @@ const Component: NextPage<Props> = (props: Props) => {
 	useEffect(() => {
 		if (!props.draggingTimeline) {
 			setDropEventClassName('');
+			handleUpdateChildrenWorkload();
+			handleUpdateChildrenProgress();
+
+			props.callbackRefreshChildrenWorkload();
+			props.callbackRefreshChildrenProgress();
 		}
 	}, [props.draggingTimeline]);
 

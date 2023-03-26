@@ -120,6 +120,8 @@ const Component: NextPage = () => {
 			// 子に通知
 			setDropTimeline(dropTimeline);
 		}
+
+		setDraggingTimeline(null);
 	}
 
 	function handleStartDragTimeline(event: DragEvent, sourceTimeline: GroupTimeline | TaskTimeline): void {
