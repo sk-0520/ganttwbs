@@ -135,7 +135,7 @@ const Component: NextPage = () => {
 											treeIndexes={[]}
 											currentIndex={i}
 											parentGroup={null}
-											currentTimeline={a as GroupTimeline/*TODO: 型ガード*/}
+											currentTimeline={a}
 											timeRanges={timeRanges}
 											selectingBeginDate={selectingBeginDate}
 											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
@@ -148,7 +148,7 @@ const Component: NextPage = () => {
 											callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}
 											callbackCancelSelectBeginDate={handleCancelSelectBeginDate}
 										/>
-									) : <></>
+									) : null
 								}
 								{
 									Settings.maybeTaskTimeline(a) ? (
@@ -156,7 +156,7 @@ const Component: NextPage = () => {
 											treeIndexes={[]}
 											currentIndex={i}
 											parentGroup={null}
-											currentTimeline={a as TaskTimeline/*TODO: 型ガード*/}
+											currentTimeline={a}
 											timeRanges={timeRanges}
 											selectingBeginDate={selectingBeginDate}
 											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
@@ -170,7 +170,7 @@ const Component: NextPage = () => {
 											callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}
 											callbackCancelSelectBeginDate={handleCancelSelectBeginDate}
 										/>
-									) : <></>
+									) : null
 								}
 							</li>
 						);

@@ -279,7 +279,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											callbackSubmitSelectBeginDate={props.callbackSubmitSelectBeginDate}
 											callbackCancelSelectBeginDate={props.callbackCancelSelectBeginDate}
 										/>
-									) : <></>
+									) : null
 								}
 								{
 									Settings.maybeTaskTimeline(a) ? (
@@ -301,7 +301,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											callbackSubmitSelectBeginDate={props.callbackSubmitSelectBeginDate}
 											callbackCancelSelectBeginDate={props.callbackCancelSelectBeginDate}
 										/>
-									) : <></>
+									) : null
 								}
 							</li>
 						);
