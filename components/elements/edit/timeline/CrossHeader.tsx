@@ -7,7 +7,7 @@ const Component: NextPage = () => {
 	const editContext = useContext(EditContext);
 
 	return (
-		<div id='hidariue'>
+		<div id='cross-header'>
 			<h1>{editContext.data.setting.name}</h1>
 			<div className='timeline-header'>
 				<div className='timeline-id'>ID</div>

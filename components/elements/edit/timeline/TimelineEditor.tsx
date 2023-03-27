@@ -1,14 +1,14 @@
 import { NextPage } from "next";
 
 import DaysHeader from "./DaysHeader";
-import Hidariue from "./Hidariue";
+import CrossHeader from "./CrossHeader";
 import TimelineItems from "./TimelineItems";
 import TimelineViewer from "./TimelineViewer";
 
 const Component: NextPage = () => {
 	return (
 		<div id='timeline'>
-			<Hidariue />
+			<CrossHeader />
 			<DaysHeader />
 			<TimelineItems />
 			<TimelineViewer />
