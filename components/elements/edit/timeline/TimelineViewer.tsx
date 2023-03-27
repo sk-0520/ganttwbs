@@ -1,8 +1,9 @@
+import EditProps from "@/models/data/props/EditProps";
 import { TimelineId } from "@/models/data/Setting";
 import { TimeRange } from "@/models/TimeRange";
 import { NextPage } from "next";
 
-interface Props {
+interface Props extends EditProps {
 	timeRanges: Map<TimelineId, TimeRange>;
 	updateRelations: () => void;
 }

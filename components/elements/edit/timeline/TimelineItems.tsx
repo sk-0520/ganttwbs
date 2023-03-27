@@ -14,8 +14,9 @@ import SelectingBeginDate from "@/models/data/SelectingBeginDate";
 import { Settings } from "@/models/Settings";
 import DraggingTimeline from "@/models/data/DraggingTimeline";
 import DropTimeline from "@/models/data/DropTimeline";
+import EditProps from "@/models/data/props/EditProps";
 
-interface Props {
+interface Props extends EditProps {
 	timeRanges: Map<TimelineId, TimeRange>;
 	updateRelations: () => void;
 }
@@ -262,6 +263,8 @@ const Component: NextPage<Props> = (props: Props) => {
 								{
 									Settings.maybeGroupTimeline(a) ? (
 										<GroupTimelineEditor
+											configuration={props.configuration}
+											editData={props.editData}
 											treeIndexes={[]}
 											currentIndex={i}
 											parentGroup={null}
@@ -286,6 +289,8 @@ const Component: NextPage<Props> = (props: Props) => {
 								{
 									Settings.maybeTaskTimeline(a) ? (
 										<TaskTimelineEditor
+											configuration={props.configuration}
+											editData={props.editData}
 											treeIndexes={[]}
 											currentIndex={i}
 											parentGroup={null}

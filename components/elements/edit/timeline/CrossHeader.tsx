@@ -2,8 +2,11 @@ import { NextPage } from "next";
 import { useContext } from "react";
 
 import { EditContext } from "@/models/data/context/EditContext";
+import EditProps from "@/models/data/props/EditProps";
 
-const Component: NextPage = () => {
+interface Props extends EditProps { }
+
+const Component: NextPage<Props> = (props: Props) => {
 	const editContext = useContext(EditContext);
 
 	return (

@@ -17,9 +17,10 @@ import Timelines from "@/models/Timelines";
 import SelectingBeginDate from "@/models/data/SelectingBeginDate";
 import DraggingTimeline from "@/models/data/DraggingTimeline";
 import DynamicLabel from "../../DynamicLabel";
+import EditProps from "@/models/data/props/EditProps";
 
 
-interface Props {
+interface Props extends EditProps {
 	parentGroup: GroupTimeline | null;
 	treeIndexes: Array<number>;
 	currentIndex: number;

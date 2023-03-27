@@ -6,8 +6,11 @@ import { useLocale } from "@/models/locales/locale";
 import { Holiday, Theme } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
 import { Settings } from "@/models/Settings";
+import EditProps from "@/models/data/props/EditProps";
 
-const Component: NextPage = () => {
+interface Props extends EditProps { }
+
+const Component: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
 	const editContext = useContext(EditContext);
 

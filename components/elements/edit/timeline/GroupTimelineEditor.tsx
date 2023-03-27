@@ -17,8 +17,9 @@ import { Settings } from "@/models/Settings";
 import DraggingTimeline from "@/models/data/DraggingTimeline";
 import DropTimeline from "@/models/data/DropTimeline";
 import DynamicLabel from "../../DynamicLabel";
+import EditProps from "@/models/data/props/EditProps";
 
-interface Props {
+interface Props extends EditProps {
 	treeIndexes: Array<number>;
 	parentGroup: GroupTimeline | null;
 	currentIndex: number;
@@ -340,6 +341,8 @@ const Component: NextPage<Props> = (props: Props) => {
 								{
 									Settings.maybeGroupTimeline(a) ? (
 										<GroupTimelineEditor
+											configuration={props.configuration}
+											editData={props.editData}
 											treeIndexes={[...props.treeIndexes, props.currentIndex]}
 											currentIndex={i}
 											parentGroup={props.currentTimeline}
@@ -364,6 +367,8 @@ const Component: NextPage<Props> = (props: Props) => {
 								{
 									Settings.maybeTaskTimeline(a) ? (
 										<TaskTimelineEditor
+											configuration={props.configuration}
+											editData={props.editData}
 											treeIndexes={[...props.treeIndexes, props.currentIndex]}
 											currentIndex={i}
 											parentGroup={props.currentTimeline}

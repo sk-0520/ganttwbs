@@ -9,17 +9,21 @@ import { EditContext } from "@/models/data/context/EditContext";
 import { TimelineId } from "@/models/data/Setting";
 import { TimeRange } from "@/models/TimeRange";
 import Timelines from "@/models/Timelines";
+import { Configuration } from "@/models/data/Configuration";
+import { EditData } from "@/models/data/EditData";
+import EditProps from "@/models/data/props/EditProps";
 
-const Component: NextPage = () => {
-	const editContext = useContext(EditContext);
+interface Props extends EditProps { }
+
+const Component: NextPage<Props> = (props: Props) => {
 
 	const [timeRanges, setTimeRanges] = useState<Map<TimelineId, TimeRange>>(new Map());
 
 	function updateRelations() {
 		console.log("全体へ通知");
 
-		const timelineMap = Timelines.getTimelinesMap(editContext.data.setting.timelineNodes);
-		const map = Timelines.getTimeRanges([...timelineMap.values()], editContext.data.setting.calendar.holiday, editContext.data.setting.recursive);
+		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.timelineNodes);
+		const map = Timelines.getTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive);
 		setTimeRanges(map);
 	}
 
@@ -29,13 +33,23 @@ const Component: NextPage = () => {
 
 	return (
 		<div id='timeline'>
-			<CrossHeader />
-			<DaysHeader />
+			<CrossHeader
+				configuration={props.configuration}
+				editData={props.editData}
+			/>
+			<DaysHeader
+				configuration={props.configuration}
+				editData={props.editData}
+			/>
 			<TimelineItems
+				configuration={props.configuration}
+				editData={props.editData}
 				timeRanges={timeRanges}
 				updateRelations={updateRelations}
 			/>
 			<TimelineViewer
+				configuration={props.configuration}
+				editData={props.editData}
 				timeRanges={timeRanges}
 				updateRelations={updateRelations}
 			/>
