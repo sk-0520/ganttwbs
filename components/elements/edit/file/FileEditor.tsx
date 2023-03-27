@@ -1,13 +1,22 @@
 import { NextPage } from "next";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { EditContext } from "@/models/data/context/EditContext";
 import Link from "next/link";
+import { Configuration } from "@/models/data/Configuration";
+import { EditData } from "@/models/data/EditData";
+import { TimeSpan } from "@/models/TimeSpan";
 
-const Component: NextPage = () => {
-	const editContext = useContext(EditContext);
+interface Props {
+	configuration: Configuration;
+	editData: EditData;
+}
+
+const Component: NextPage<Props> = (props: Props) => {
 	const { register } = useForm<EditContext>();
+
+	const { configuration, editData } = props;
 
 	const [settingJson, setSettingJson] = useState("");
 
@@ -16,18 +25,18 @@ const Component: NextPage = () => {
 	});
 
 	function handleDownload() {
-		const json = JSON.stringify(editContext.data.setting);
+		const json = JSON.stringify(editData.setting);
 
 		// download
 		const blob = new Blob([json], { type: "application/json" });
 		const link = document.createElement("a");
 		link.href = window.URL.createObjectURL(blob);
-		link.download = editContext.data.fileName;
+		link.download = editData.fileName;
 		link.click();
 	}
 
 	function handleJsonUpdate() {
-		const json = JSON.stringify(editContext.data.setting, undefined, 2);
+		const json = JSON.stringify(editData.setting, undefined, 2);
 		setSettingJson(json);
 	}
 
@@ -45,10 +54,10 @@ const Component: NextPage = () => {
 							<dt>ファイル名</dt>
 							<dd>
 								<input type="text"
-									defaultValue={editContext.data.fileName}
+									defaultValue={editData.fileName}
 									{...register("data.fileName", {
-										value: editContext.data.fileName,
-										onChange: ev => editContext.data.fileName = ev.target.value
+										value: editData.fileName,
+										onChange: ev => editData.fileName = ev.target.value
 									})}
 								/>
 							</dd>
@@ -57,10 +66,10 @@ const Component: NextPage = () => {
 							<dd>
 								<label>
 									<input type='checkbox'
-										defaultChecked={editContext.autoSave.isEnabled}
+										defaultChecked={configuration.autoSave.isEnabled}
 										{...register("autoSave.isEnabled", {
-											value: editContext.autoSave.isEnabled,
-											onChange: ev => editContext.autoSave.isEnabled = ev.target.checked
+											value: configuration.autoSave.isEnabled,
+											onChange: ev => configuration.autoSave.isEnabled = ev.target.checked
 										})}
 									/>
 									有効にする
@@ -69,10 +78,10 @@ const Component: NextPage = () => {
 							<dd>
 								<label>
 									<input type='number'
-										defaultValue={editContext.autoSave.minutes}
+										defaultValue={configuration.autoSave.span.totalMinutes}
 										{...register("autoSave.minutes", {
-											value: editContext.autoSave.minutes,
-											onChange: ev => editContext.autoSave.minutes = ev.target.value
+											value: configuration.autoSave.span.totalMinutes,
+											onChange: ev => configuration.autoSave.span = TimeSpan.fromMinutes(ev.target.valueAsNumber)
 										})}
 									/>
 									秒

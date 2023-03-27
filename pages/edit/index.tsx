@@ -10,20 +10,24 @@ import Layout from "@/components/layout/Layout";
 import * as Storage from "@/models/Storage";
 import { EditData } from "@/models/data/EditData";
 import { EditContext, EditContextImpl } from "@/models/data/context/EditContext";
+import { Configuration } from "@/models/data/Configuration";
+import { TimeSpan } from "@/models/TimeSpan";
 //import * as Setting from '@/models/data/setting/Setting';
 
 const Edit: NextPage = () => {
 	const initTabIndex = 1;
+
 	const router = useRouter();
-	const [data, setData] = useState<EditData>();
+	const [configuration] = useState(createConfiguration());
+	const [editData, setEditData] = useState<EditData | null>(null);
 
 	useEffect(() => {
-		const data = Storage.loadEditData();
-		if (!data) {
+		const editData = Storage.loadEditData();
+		if (!editData) {
 			router.push("/");
 			return;
 		}
-		setData(data);
+		setEditData(editData);
 	}, [router]);
 
 	// const tabRef = useRef<HTMLDivElement>(null);
@@ -36,12 +40,12 @@ const Edit: NextPage = () => {
 
 	return (
 		<Layout mode='application' layoutId='edit'
-			title={data ? data.fileName + " 編集" : "編集"}
+			title={editData ? editData.fileName + " 編集" : "編集"}
 		>
 			<>
-				{!data && <p>読み込み中</p>}
-				{data && (
-					<EditContext.Provider value={new EditContextImpl(data)}>
+				{!editData && <p>読み込み中</p>}
+				{editData && (
+					<EditContext.Provider value={new EditContextImpl(editData)}>
 						<Tabs defaultIndex={initTabIndex} forceRenderTabPanel={true} >
 							<TabList>
 								<Tab>ファイル</Tab>
@@ -51,7 +55,7 @@ const Edit: NextPage = () => {
 
 							{/* ファイル */}
 							<TabPanel className='tab panel tab-file'>
-								<FileEditor />
+								<FileEditor configuration={configuration} editData={editData} />
 							</TabPanel>
 							{/* ほんたい */}
 							<TabPanel className='tab panel tab-timeline' >
@@ -71,3 +75,21 @@ const Edit: NextPage = () => {
 
 export default Edit;
 
+function createConfiguration(): Configuration {
+	const result: Configuration = {
+		autoSave: {
+			isEnabled: false,
+			span: TimeSpan.fromMinutes(3),
+		},
+		design: {
+			cell: {
+				maxWidth: "20px",
+				minWidth: "20px",
+				maxHeight: "20px",
+				minHeight: "20px",
+			}
+		}
+	};
+
+	return result;
+}
