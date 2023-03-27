@@ -1,17 +1,13 @@
 import { NextPage } from "next";
-import { useContext } from "react";
 
-import { EditContext } from "@/models/data/context/EditContext";
 import EditProps from "@/models/data/props/EditProps";
 
 interface Props extends EditProps { }
 
 const Component: NextPage<Props> = (props: Props) => {
-	const editContext = useContext(EditContext);
-
 	return (
 		<div id='cross-header'>
-			<h1>{editContext.data.setting.name}</h1>
+			<h1>{props.editData.setting.name}</h1>
 			<div className='timeline-header'>
 				<div className='timeline-id'>ID</div>
 				<div className='timeline-subject'>作業</div>

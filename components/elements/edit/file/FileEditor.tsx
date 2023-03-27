@@ -2,11 +2,16 @@ import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { EditContext } from "@/models/data/context/EditContext";
 import Link from "next/link";
 import { Configuration } from "@/models/data/Configuration";
 import { EditData } from "@/models/data/EditData";
 import { TimeSpan } from "@/models/TimeSpan";
+
+interface Input {
+	fileName: string;
+	autoSaveIsEnabled: boolean;
+	autoSaveMinutes: number;
+}
 
 interface Props {
 	configuration: Configuration;
@@ -14,9 +19,9 @@ interface Props {
 }
 
 const Component: NextPage<Props> = (props: Props) => {
-	const { register } = useForm<EditContext>();
-
 	const { configuration, editData } = props;
+
+	const { register } = useForm<Input>();
 
 	const [settingJson, setSettingJson] = useState("");
 
@@ -55,7 +60,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							<dd>
 								<input type="text"
 									defaultValue={editData.fileName}
-									{...register("data.fileName", {
+									{...register("fileName", {
 										value: editData.fileName,
 										onChange: ev => editData.fileName = ev.target.value
 									})}
@@ -67,7 +72,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								<label>
 									<input type='checkbox'
 										defaultChecked={configuration.autoSave.isEnabled}
-										{...register("autoSave.isEnabled", {
+										{...register("autoSaveIsEnabled", {
 											value: configuration.autoSave.isEnabled,
 											onChange: ev => configuration.autoSave.isEnabled = ev.target.checked
 										})}
@@ -79,7 +84,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								<label>
 									<input type='number'
 										defaultValue={configuration.autoSave.span.totalMinutes}
-										{...register("autoSave.minutes", {
+										{...register("autoSaveMinutes", {
 											value: configuration.autoSave.span.totalMinutes,
 											onChange: ev => configuration.autoSave.span = TimeSpan.fromMinutes(ev.target.valueAsNumber)
 										})}

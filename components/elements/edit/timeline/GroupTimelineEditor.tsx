@@ -2,7 +2,6 @@ import { NextPage } from "next";
 import { CSSProperties, useContext, useEffect, useState, DragEvent } from "react";
 
 import Timelines from "@/models/Timelines";
-import { EditContext } from "@/models/data/context/EditContext";
 import { useLocale } from "@/models/locales/locale";
 
 import GroupTimelineEditor from "./GroupTimelineEditor";
@@ -42,14 +41,13 @@ interface Props extends EditProps {
 
 const Component: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
-	const editContext = useContext(EditContext);
 
 	const selectingId = "timeline-node-previous-" + props.currentTimeline.id;
 
 	const heightStyle: CSSProperties = {
-		maxHeight: editContext.design.cell.maxHeight,
-		minHeight: editContext.design.cell.minHeight,
-		...getGroupStyles(props.treeIndexes.length, editContext.data.setting.theme)
+		maxHeight: props.configuration.design.cell.maxHeight,
+		minHeight: props.configuration.design.cell.minHeight,
+		...getGroupStyles(props.treeIndexes.length, props.editData.setting.theme)
 	};
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);

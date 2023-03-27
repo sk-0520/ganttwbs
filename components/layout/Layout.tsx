@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
-interface LayoutProps {
+interface Props {
 	/** タイトル */
 	title?: string;
 	/** アプリケーションか通常ページ */
@@ -13,7 +13,7 @@ interface LayoutProps {
 	children?: React.ReactNode;
 }
 
-const Layout: NextPage<LayoutProps> = (props: LayoutProps) => {
+const Component: NextPage<Props> = (props: Props) => {
 	const headTitle = props.title ? `${props.title} - ${process.env.NEXT_PUBLIC_APP_NAME}` : process.env.NEXT_PUBLIC_APP_NAME;
 	const pageTitle = props.title ? props.title : process.env.NEXT_PUBLIC_APP_NAME;
 
@@ -63,4 +63,4 @@ const Layout: NextPage<LayoutProps> = (props: LayoutProps) => {
 	);
 };
 
-export default Layout;
+export default Component;

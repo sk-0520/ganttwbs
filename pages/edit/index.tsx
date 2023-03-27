@@ -9,10 +9,8 @@ import TimelineEditor from "@/components/elements/edit/timeline/TimelineEditor";
 import Layout from "@/components/layout/Layout";
 import * as Storage from "@/models/Storage";
 import { EditData } from "@/models/data/EditData";
-import { EditContext, EditContextImpl } from "@/models/data/context/EditContext";
 import { Configuration } from "@/models/data/Configuration";
 import { TimeSpan } from "@/models/TimeSpan";
-//import * as Setting from '@/models/data/setting/Setting';
 
 const Edit: NextPage = () => {
 	const initTabIndex = 1;
@@ -45,28 +43,26 @@ const Edit: NextPage = () => {
 			<>
 				{!editData && <p>読み込み中</p>}
 				{editData && (
-					<EditContext.Provider value={new EditContextImpl(editData)}>
-						<Tabs defaultIndex={initTabIndex} forceRenderTabPanel={true} >
-							<TabList>
-								<Tab>ファイル</Tab>
-								<Tab>編集</Tab>
-								<Tab>設定</Tab>
-							</TabList>
+					<Tabs defaultIndex={initTabIndex} forceRenderTabPanel={true} >
+						<TabList>
+							<Tab>ファイル</Tab>
+							<Tab>編集</Tab>
+							<Tab>設定</Tab>
+						</TabList>
 
-							{/* ファイル */}
-							<TabPanel className='tab panel tab-file'>
-								<FileEditor configuration={configuration} editData={editData} />
-							</TabPanel>
-							{/* ほんたい */}
-							<TabPanel className='tab panel tab-timeline' >
-								<TimelineEditor configuration={configuration} editData={editData} />
-							</TabPanel>
-							{/* 設定 */}
-							<TabPanel className='tab panel tab-setting'>
-								<SettingEditor editData={editData} />
-							</TabPanel>
-						</Tabs>
-					</EditContext.Provider>
+						{/* ファイル */}
+						<TabPanel className='tab panel tab-file'>
+							<FileEditor configuration={configuration} editData={editData} />
+						</TabPanel>
+						{/* ほんたい */}
+						<TabPanel className='tab panel tab-timeline' >
+							<TimelineEditor configuration={configuration} editData={editData} />
+						</TabPanel>
+						{/* 設定 */}
+						<TabPanel className='tab panel tab-setting'>
+							<SettingEditor editData={editData} />
+						</TabPanel>
+					</Tabs>
 				)}
 			</>
 		</Layout>

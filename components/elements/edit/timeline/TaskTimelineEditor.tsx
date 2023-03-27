@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import { DragEvent, useContext, useEffect, useState } from "react";
 
-import { EditContext } from "@/models/data/context/EditContext";
 import { useLocale } from "@/models/locales/locale";
 
 import IndexNumber from "./IndexNumber";
@@ -43,13 +42,12 @@ interface Props extends EditProps {
 
 const Component: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
-	const editContext = useContext(EditContext);
 
 	const selectingId = "timeline-node-previous-" + props.currentTimeline.id;
 
 	const heightStyle = {
-		maxHeight: editContext.design.cell.maxHeight,
-		minHeight: editContext.design.cell.minHeight,
+		maxHeight: props.configuration.design.cell.maxHeight,
+		minHeight: props.configuration.design.cell.minHeight,
 	};
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
@@ -248,6 +246,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				</div>
 				<div className='timeline-resource'>
 					<MemberList
+						groups={props.editData.setting.groups}
 						selectedMemberId={memberId}
 						disabled={props.selectingBeginDate !== null}
 						callbackChangeMember={handleChangeMember}
