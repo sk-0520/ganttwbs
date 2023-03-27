@@ -16,6 +16,7 @@ import Timestamp from "../../Timestamp";
 import Timelines from "@/models/Timelines";
 import SelectingBeginDate from "@/models/data/SelectingBeginDate";
 import DraggingTimeline from "@/models/data/DraggingTimeline";
+import DynamicLabel from "../../DynamicLabel";
 
 
 interface Props {
@@ -284,19 +285,21 @@ const Component: NextPage<Props> = (props: Props) => {
 								? (
 									<>
 										<div className={'timeline-range-from ' + (!props.selectingBeginDate ? 'selectable' : '')} onClick={handleClickBeginDate}>
-											<label htmlFor={selectingId}>
+											<DynamicLabel htmlFor={selectingId} wrap={props.selectingBeginDate !== null}>
 												<Timestamp format="date" date={beginDate} />
-											</label>
+											</DynamicLabel>
 										</div>
 										<div className={'timeline-range-to ' + (!props.selectingBeginDate ? 'selectable' : '')} onClick={handleClickBeginDate}>
-											<label htmlFor={selectingId}>
+											<DynamicLabel htmlFor={selectingId} wrap={props.selectingBeginDate !== null}>
 												<Timestamp format="date" date={endDate} />
-											</label>
+											</DynamicLabel>
 										</div>
 									</>
 								) : (
 									<div className={"timeline-range-area " + (!props.selectingBeginDate ? 'selectable' : '')} onClick={handleClickBeginDate}>
-										{beginKind}
+										<DynamicLabel htmlFor={selectingId} wrap={props.selectingBeginDate !== null}>
+											{beginKind}
+										</DynamicLabel>
 									</div>
 								)
 						)
