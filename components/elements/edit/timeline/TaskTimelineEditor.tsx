@@ -256,7 +256,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
 						? (
 							<>
-								<div className='timeline-range-area'>
+								<div className='timeline-range-area prompt'>
 									<div className="single-line no-warp">
 										<ul className="inline">
 											<li><button type="button" onClick={handleClearPrevious}>🆓</button></li>
