@@ -10,19 +10,17 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 	return (
-		<div className="timeline-progress">
+		<div className='timeline-workload'>
 			<input
 				type="number"
-				readOnly={props.readOnly}
 				disabled={props.disabled}
+				step="0.25"
 				min={0}
-				max={100}
-				step={1}
-				value={Timelines.displayProgress(props.value)}
+				value={Timelines.displayWorkload(props.value)}
 				onChange={ev => props.callbackChangeValue ? props.callbackChangeValue(ev.target.valueAsNumber) : undefined}
 			/>
 		</div>
-	)
+	);
 }
 
 export default Component;

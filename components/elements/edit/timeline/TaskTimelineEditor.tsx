@@ -17,6 +17,7 @@ import DynamicLabel from "../../DynamicLabel";
 import EditProps from "@/models/data/props/EditProps";
 import TimeLineEditorProps from "@/models/data/props/TimeLineEditorProps";
 import ProgressCell from "./cell/ProgressCell";
+import WorkloadCell from "./cell/WorkloadCell";
 
 interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
@@ -216,16 +217,12 @@ const Component: NextPage<Props> = (props: Props) => {
 						onChange={ev => handleChangeSubject(ev.target.value)}
 					/>
 				</div>
-				<div className='timeline-workload'>
-					<input
-						type="number"
-						disabled={props.selectingBeginDate !== null}
-						step="0.25"
-						min={0}
-						value={Timelines.displayWorkload(workload)}
-						onChange={ev => handleChangeWorkload(ev.target.valueAsNumber)}
-					/>
-				</div>
+				<WorkloadCell
+					readOnly={true}
+					disabled={props.selectingBeginDate !== null}
+					value={workload}
+					callbackChangeValue={v => handleChangeWorkload(v)}
+				/>
 				<div className='timeline-resource'>
 					<MemberList
 						groups={props.editData.setting.groups}
@@ -289,8 +286,8 @@ const Component: NextPage<Props> = (props: Props) => {
 				<ProgressCell
 					readOnly={false}
 					disabled={props.selectingBeginDate !== null}
-					progress={progressPercent}
-					callbackOnChange={v => handleChangeProgress(v)}
+					value={progressPercent}
+					callbackChangeValue={v => handleChangeProgress(v)}
 				/>
 				<div className="timeline-controls">
 					<TimelineControls

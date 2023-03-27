@@ -17,6 +17,7 @@ import DynamicLabel from "../../DynamicLabel";
 import EditProps from "@/models/data/props/EditProps";
 import TimeLineEditorProps from "@/models/data/props/TimeLineEditorProps";
 import ProgressCell from "./cell/ProgressCell";
+import WorkloadCell from "./cell/WorkloadCell";
 
 interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 	dropTimeline: DropTimeline | null;
@@ -260,15 +261,11 @@ const Component: NextPage<Props> = (props: Props) => {
 						onChange={ev => handleChangeSubject(ev.target.value)}
 					/>
 				</div>
-				<div className='timeline-workload'>
-					<input
-						type="number"
-						step="0.01"
-						readOnly={true}
-						disabled={props.selectingBeginDate !== null}
-						value={Timelines.displayWorkload(workload)}
-					/>
-				</div>
+				<WorkloadCell
+					readOnly={true}
+					disabled={props.selectingBeginDate !== null}
+					value={workload}
+				/>
 				<div className='timeline-resource'>
 				</div>
 				{
@@ -297,7 +294,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				<ProgressCell
 					readOnly={true}
 					disabled={props.selectingBeginDate !== null}
-					progress={progressPercent}
+					value={progressPercent}
 				/>
 				<div className="timeline-controls">
 					<TimelineControls
