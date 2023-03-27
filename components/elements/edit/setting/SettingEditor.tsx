@@ -16,23 +16,28 @@ import ThemeCompletedSettingEditor from "./Theme/ThemeCompletedSettingEditor";
 import ThemeGroupSettingEditor from "./Theme/ThemeGroupSettingEditor";
 import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
+import { Configuration } from "@/models/data/Configuration";
+import { EditData } from "@/models/data/EditData";
 
 const NewLine = "\r\n";
 const ThemeHolidayRegularColor: Color = "#0f0";
 const ThemeHolidayEventHolidayColor: Color = "#0f0";
 const ThemeHolidayEventSpecialColor: Color = "#0f0";
 
-const Component: NextPage = () => {
-	const editContext = useContext(EditContext);
+interface Props {
+	editData: EditData;
+}
 
-	const setting = toContext(editContext.data.setting);
+const Component: NextPage<Props> = (props: Props) => {
+
+	const setting = toContext(props.editData.setting);
 
 	function onSubmit(event: FormEvent) {
 		event.preventDefault();
 
-		editContext.data.setting = fromContext(editContext.data.setting, setting);
+		props.editData.setting = fromContext(props.editData.setting, setting);
 		console.debug(setting);
-		Storage.saveEditData(editContext.data);
+		Storage.saveEditData(props.editData);
 
 		window.location.reload();
 	}

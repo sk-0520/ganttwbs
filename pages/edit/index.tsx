@@ -63,7 +63,7 @@ const Edit: NextPage = () => {
 							</TabPanel>
 							{/* 設定 */}
 							<TabPanel className='tab panel tab-setting'>
-								<SettingEditor />
+								<SettingEditor editData={editData} />
 							</TabPanel>
 						</Tabs>
 					</EditContext.Provider>
