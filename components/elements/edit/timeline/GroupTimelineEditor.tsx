@@ -18,7 +18,7 @@ import EditProps from "@/models/data/props/EditProps";
 import TimeLineEditorProps from "@/models/data/props/TimeLineEditorProps";
 import ProgressCell from "./cell/ProgressCell";
 import WorkloadCell from "./cell/WorkloadCell";
-import TimeRangeCell from "./cell/TimeRangeCell";
+import TimeRangeCells from "./cell/TimeRangeCells";
 
 interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 	dropTimeline: DropTimeline | null;
@@ -269,7 +269,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				/>
 				<div className='timeline-resource'>
 				</div>
-				<TimeRangeCell
+				<TimeRangeCells
 					timeRangeKind={beginKind}
 					selectable={props.selectingBeginDate !== null}
 					beginDate={beginDate}
