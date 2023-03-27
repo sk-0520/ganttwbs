@@ -16,6 +16,7 @@ import Timelines from "@/models/Timelines";
 import DynamicLabel from "../../DynamicLabel";
 import EditProps from "@/models/data/props/EditProps";
 import TimeLineEditorProps from "@/models/data/props/TimeLineEditorProps";
+import ProgressCell from "./cell/ProgressCell";
 
 interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
@@ -285,17 +286,12 @@ const Component: NextPage<Props> = (props: Props) => {
 								)
 						)
 				}
-				<div className='timeline-progress'>
-					<input
-						type="number"
-						disabled={props.selectingBeginDate !== null}
-						min={0}
-						max={100}
-						step={1}
-						value={Timelines.displayProgress(progressPercent)}
-						onChange={ev => handleChangeProgress(ev.target.valueAsNumber)}
-					/>
-				</div>
+				<ProgressCell
+					readOnly={false}
+					disabled={props.selectingBeginDate !== null}
+					progress={progressPercent}
+					callbackOnChange={v => handleChangeProgress(v)}
+				/>
 				<div className="timeline-controls">
 					<TimelineControls
 						currentTimelineKind="task"

@@ -16,6 +16,7 @@ import DropTimeline from "@/models/data/DropTimeline";
 import DynamicLabel from "../../DynamicLabel";
 import EditProps from "@/models/data/props/EditProps";
 import TimeLineEditorProps from "@/models/data/props/TimeLineEditorProps";
+import ProgressCell from "./cell/ProgressCell";
 
 interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 	dropTimeline: DropTimeline | null;
@@ -293,16 +294,11 @@ const Component: NextPage<Props> = (props: Props) => {
 							</div>
 						)
 				}
-				<div className='timeline-progress'>
-					<span>
-						<input
-							type="number"
-							readOnly={true}
-							disabled={props.selectingBeginDate !== null}
-							value={Timelines.displayProgress(progressPercent)}
-						/>
-					</span>
-				</div>
+				<ProgressCell
+					readOnly={true}
+					disabled={props.selectingBeginDate !== null}
+					progress={progressPercent}
+				/>
 				<div className="timeline-controls">
 					<TimelineControls
 						currentTimelineKind="group"
