@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { DragEvent, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useLocale } from "@/models/locales/locale";
 
@@ -7,14 +7,12 @@ import IndexNumber from "./IndexNumber";
 import TimelineControls from "./TimelineControls";
 import { MoveItemKind } from "./TimelineControls";
 import MemberList from "./MemberList";
-import { GroupTimeline, MemberId, TaskTimeline, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
+import { MemberId, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Strings } from "@/models/Strings";
-import { TimeRange, TimeRangeKind, TimeRanges } from "@/models/TimeRange";
+import { TimeRangeKind, TimeRanges } from "@/models/TimeRange";
 import Timestamp from "../../Timestamp";
 import Timelines from "@/models/Timelines";
-import SelectingBeginDate from "@/models/data/SelectingBeginDate";
-import DraggingTimeline from "@/models/data/DraggingTimeline";
 import DynamicLabel from "../../DynamicLabel";
 import EditProps from "@/models/data/props/EditProps";
 import TimeLineEditorProps from "@/models/data/props/TimeLineEditorProps";

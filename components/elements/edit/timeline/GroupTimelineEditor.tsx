@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { CSSProperties, useContext, useEffect, useState, DragEvent } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 
 import Timelines from "@/models/Timelines";
 import { useLocale } from "@/models/locales/locale";
@@ -8,12 +8,10 @@ import GroupTimelineEditor from "./GroupTimelineEditor";
 import TaskTimelineEditor from "./TaskTimelineEditor";
 import IndexNumber from "./IndexNumber";
 import TimelineControls, { MoveItemKind } from "./TimelineControls";
-import { GroupTimeline, TaskTimeline, Theme, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
-import { TimeRange, TimeRangeKind, TimeRanges } from "@/models/TimeRange";
+import { GroupTimeline, TaskTimeline, Theme, Timeline, TimelineKind } from "@/models/data/Setting";
+import { TimeRangeKind, TimeRanges } from "@/models/TimeRange";
 import Timestamp from "../../Timestamp";
-import SelectingBeginDate from "@/models/data/SelectingBeginDate";
 import { Settings } from "@/models/Settings";
-import DraggingTimeline from "@/models/data/DraggingTimeline";
 import DropTimeline from "@/models/data/DropTimeline";
 import DynamicLabel from "../../DynamicLabel";
 import EditProps from "@/models/data/props/EditProps";

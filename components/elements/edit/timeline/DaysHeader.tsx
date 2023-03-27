@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { CSSProperties, useContext } from "react";
+import { CSSProperties } from "react";
 
 import { useLocale } from "@/models/locales/locale";
 import { Holiday, Theme } from "@/models/data/Setting";

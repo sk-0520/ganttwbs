@@ -4,13 +4,10 @@ import DaysHeader from "./DaysHeader";
 import CrossHeader from "./CrossHeader";
 import TimelineItems from "./TimelineItems";
 import TimelineViewer from "./TimelineViewer";
-import { useContext, useEffect, useState } from "react";
-import { EditContext } from "@/models/data/context/EditContext";
+import { useEffect, useState } from "react";
 import { TimelineId } from "@/models/data/Setting";
 import { TimeRange } from "@/models/TimeRange";
 import Timelines from "@/models/Timelines";
-import { Configuration } from "@/models/data/Configuration";
-import { EditData } from "@/models/data/EditData";
 import EditProps from "@/models/data/props/EditProps";
 
 interface Props extends EditProps { }
