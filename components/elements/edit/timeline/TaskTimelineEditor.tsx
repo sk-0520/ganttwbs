@@ -17,27 +17,10 @@ import SelectingBeginDate from "@/models/data/SelectingBeginDate";
 import DraggingTimeline from "@/models/data/DraggingTimeline";
 import DynamicLabel from "../../DynamicLabel";
 import EditProps from "@/models/data/props/EditProps";
+import TimeLineEditorProps from "@/models/data/props/TimeLineEditorProps";
 
-
-interface Props extends EditProps {
-	parentGroup: GroupTimeline | null;
-	treeIndexes: Array<number>;
-	currentIndex: number;
-	currentTimeline: TaskTimeline;
-	timeRanges: ReadonlyMap<TimelineId, TimeRange>;
-	draggingTimeline: DraggingTimeline | null;
-	selectingBeginDate: SelectingBeginDate | null;
-	callbackRefreshChildrenOrder: (kind: MoveItemKind, currentTimeline: Timeline) => void;
-	callbackRefreshChildrenBeginDate(): void;
-	callbackRefreshChildrenWorkload(): void;
-	callbackRefreshChildrenProgress(): void;
+interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
-	callbackDeleteChildTimeline(currentTimeline: Timeline): void;
-	callbackDraggingTimeline(event: DragEvent, timeline: Timeline): void;
-	callbackStartSelectBeginDate(timeline: TaskTimeline): void;
-	callbackClearSelectBeginDate(timeline: TaskTimeline): void;
-	callbackSubmitSelectBeginDate(timeline: TaskTimeline): void;
-	callbackCancelSelectBeginDate(timeline: TaskTimeline): void;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
