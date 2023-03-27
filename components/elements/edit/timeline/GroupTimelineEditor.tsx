@@ -18,6 +18,7 @@ import EditProps from "@/models/data/props/EditProps";
 import TimeLineEditorProps from "@/models/data/props/TimeLineEditorProps";
 import ProgressCell from "./cell/ProgressCell";
 import WorkloadCell from "./cell/WorkloadCell";
+import TimeRangeCell from "./cell/TimeRangeCell";
 
 interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 	dropTimeline: DropTimeline | null;
@@ -268,29 +269,13 @@ const Component: NextPage<Props> = (props: Props) => {
 				/>
 				<div className='timeline-resource'>
 				</div>
-				{
-					beginKind === "success"
-						? (
-							<>
-								<div className='timeline-range-from'>
-									<DynamicLabel htmlFor={selectingId} wrap={props.selectingBeginDate !== null}>
-										<Timestamp format="date" date={beginDate} />
-									</DynamicLabel>
-								</div>
-								<div className='timeline-range-to'>
-									<DynamicLabel htmlFor={selectingId} wrap={props.selectingBeginDate !== null}>
-										<Timestamp format="date" date={endDate} />
-									</DynamicLabel>
-								</div>
-							</>
-						) : (
-							<div className="timeline-range-area">
-								<DynamicLabel htmlFor={selectingId} wrap={props.selectingBeginDate !== null}>
-									{beginKind}
-								</DynamicLabel>
-							</div>
-						)
-				}
+				<TimeRangeCell
+					timeRangeKind={beginKind}
+					selectable={props.selectingBeginDate !== null}
+					beginDate={beginDate}
+					endDate={endDate}
+					htmlFor={selectingId}
+				/>
 				<ProgressCell
 					readOnly={true}
 					disabled={props.selectingBeginDate !== null}
