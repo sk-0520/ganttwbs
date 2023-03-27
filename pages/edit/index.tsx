@@ -12,7 +12,7 @@ import { EditData } from "@/models/data/EditData";
 import { Configuration } from "@/models/data/Configuration";
 import { TimeSpan } from "@/models/TimeSpan";
 
-const Edit: NextPage = () => {
+const Page: NextPage = () => {
 	const initTabIndex = 1;
 
 	const router = useRouter();
@@ -69,7 +69,7 @@ const Edit: NextPage = () => {
 	);
 };
 
-export default Edit;
+export default Page;
 
 function createConfiguration(): Configuration {
 	const result: Configuration = {
