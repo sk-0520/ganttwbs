@@ -15,16 +15,16 @@ import { Settings } from "@/models/Settings";
 import DraggingTimeline from "@/models/data/DraggingTimeline";
 import DropTimeline from "@/models/data/DropTimeline";
 
-// interface Props {
-// }
+interface Props {
+	timeRanges: Map<TimelineId, TimeRange>;
+	updateRelations: () => void;
+}
 
-//const Component: NextPage<Props> = (props: Props) => {
-const Component: NextPage = () => {
+const Component: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
 	const editContext = useContext(EditContext);
 
-	const [timelines, setTimelines] = useState(editContext.data.setting.timelineNodes);
-	const [timeRanges, setTimeRanges] = useState<Map<TimelineId, TimeRange>>(new Map());
+	const [timelineNodes, setTimelineNodes] = useState(editContext.data.setting.timelineNodes);
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
@@ -33,8 +33,8 @@ const Component: NextPage = () => {
 	function handleAddNewGroup() {
 		const item = Timelines.createNewGroup();
 
-		setTimelines([
-			...timelines,
+		setTimelineNodes([
+			...timelineNodes,
 			item,
 		]);
 		editContext.data.setting.timelineNodes.push(item);
@@ -43,21 +43,21 @@ const Component: NextPage = () => {
 	function handleAddNewTask() {
 		const item = Timelines.createNewTask();
 
-		setTimelines([
-			...timelines,
+		setTimelineNodes([
+			...timelineNodes,
 			item,
 		]);
 		editContext.data.setting.timelineNodes.push(item);
 	}
 
 	function handleUpdateChildrenOrder(kind: MoveItemKind, currentTimeline: Timeline) {
-		if (Timelines.moveTimelineOrder(timelines, kind, currentTimeline)) {
-			setTimelines(editContext.data.setting.timelineNodes = [...timelines]);
+		if (Timelines.moveTimelineOrder(timelineNodes, kind, currentTimeline)) {
+			setTimelineNodes(editContext.data.setting.timelineNodes = [...timelineNodes]);
 		}
 	}
 
 	function handleAddNextSiblingItem(kind: TimelineKind, currentTimeline: Timeline) {
-		const currentIndex = timelines.findIndex(a => a === currentTimeline);
+		const currentIndex = timelineNodes.findIndex(a => a === currentTimeline);
 
 		let item: GroupTimeline | TaskTimeline | null = null;
 		switch (kind) {
@@ -74,28 +74,21 @@ const Component: NextPage = () => {
 		}
 
 		editContext.data.setting.timelineNodes.splice(currentIndex + 1, 0, item);
-		setTimelines([...editContext.data.setting.timelineNodes]);
+		setTimelineNodes([...editContext.data.setting.timelineNodes]);
 	}
 
 	function handleDeleteChildren(currentTimeline: Timeline) {
 		const nextTimelines = editContext.data.setting.timelineNodes.filter(a => a !== currentTimeline);
 
-		setTimelines(editContext.data.setting.timelineNodes = nextTimelines);
+		setTimelineNodes(editContext.data.setting.timelineNodes = nextTimelines);
 	}
 
 	function handleUpdateChildrenBeginDate() {
-		updateRelations();
+		props.updateRelations();
 	}
 
 	function handleUpdateChildrenWorkload() {
-		updateRelations();
-	}
-
-	function updateRelations() {
-		console.log("全体へ通知");
-		const timelineMap = Timelines.getTimelinesMap(editContext.data.setting.timelineNodes);
-		const map = Timelines.getTimeRanges([...timelineMap.values()], editContext.data.setting.calendar.holiday, editContext.data.setting.recursive);
-		setTimeRanges(map);
+		props.updateRelations();
 	}
 
 	function fireDropTimeline(dropTimeline: DropTimeline) {
@@ -104,18 +97,18 @@ const Component: NextPage = () => {
 		if (!dropTimeline.sourceGroupTimeline && !dropTimeline.destinationGroupTimeline) {
 			// 最上位完結
 			Timelines.moveTimelineIndex(editContext.data.setting.timelineNodes, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
-			setTimelines([...editContext.data.setting.timelineNodes]);
+			setTimelineNodes([...editContext.data.setting.timelineNodes]);
 		} else {
 			// 最上位に対してあれこれ
 			if (!dropTimeline.sourceGroupTimeline) {
 				// 移動元が親なので破棄
 				const nextTimelines = editContext.data.setting.timelineNodes.filter(a => a.id !== dropTimeline.timeline.id);
-				setTimelines(editContext.data.setting.timelineNodes = nextTimelines);
+				setTimelineNodes(editContext.data.setting.timelineNodes = nextTimelines);
 			}
 			if (!dropTimeline.destinationGroupTimeline) {
 				// 移動先が親なので追加
 				editContext.data.setting.timelineNodes.splice(dropTimeline.sourceIndex + 1, 0, dropTimeline.timeline);
-				setTimelines([...editContext.data.setting.timelineNodes]);
+				setTimelineNodes([...editContext.data.setting.timelineNodes]);
 			}
 			// 子に通知
 			setDropTimeline(dropTimeline);
@@ -259,15 +252,11 @@ const Component: NextPage = () => {
 		setSelectingBeginDate(null);
 	}
 
-	useEffect(() => {
-		updateRelations();
-	}, []);
-
 	return (
 		<div id='timelines'>
 			<>
 				<ul>
-					{timelines.map((a, i) => {
+					{timelineNodes.map((a, i) => {
 						return (
 							<li key={a.id}>
 								{
@@ -277,7 +266,7 @@ const Component: NextPage = () => {
 											currentIndex={i}
 											parentGroup={null}
 											currentTimeline={a}
-											timeRanges={timeRanges}
+											timeRanges={props.timeRanges}
 											draggingTimeline={draggingTimeline}
 											selectingBeginDate={selectingBeginDate}
 											dropTimeline={dropTimeline}
@@ -301,7 +290,7 @@ const Component: NextPage = () => {
 											currentIndex={i}
 											parentGroup={null}
 											currentTimeline={a}
-											timeRanges={timeRanges}
+											timeRanges={props.timeRanges}
 											draggingTimeline={draggingTimeline}
 											selectingBeginDate={selectingBeginDate}
 											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}

@@ -1,6 +1,13 @@
+import { TimelineId } from "@/models/data/Setting";
+import { TimeRange } from "@/models/TimeRange";
 import { NextPage } from "next";
 
-const Component: NextPage = () => {
+interface Props {
+	timeRanges: Map<TimelineId, TimeRange>;
+	updateRelations: () => void;
+}
+
+const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div id='#viewer'>
 			asd
