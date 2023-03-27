@@ -106,7 +106,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			}
 			if (!dropTimeline.destinationGroupTimeline) {
 				// 移動先が親なので追加
-				props.editData.setting.timelineNodes.splice(dropTimeline.sourceIndex + 1, 0, dropTimeline.timeline);
+				props.editData.setting.timelineNodes.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
 				setTimelineNodes([...props.editData.setting.timelineNodes]);
 			}
 			// 子に通知
