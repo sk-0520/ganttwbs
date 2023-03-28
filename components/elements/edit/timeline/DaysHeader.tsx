@@ -6,6 +6,7 @@ import { Holiday, Theme } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
 import { Settings } from "@/models/Settings";
 import { EditProps } from "@/models/data/props/EditProps";
+import { Designs } from "@/models/Designs";
 
 interface Props extends EditProps { }
 
@@ -16,9 +17,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		from: new Date(props.editData.setting.calendar.range.from),
 		to: new Date(props.editData.setting.calendar.range.to),
 	};
-
-	props.editData.setting.calendar.holiday.regulars
-	props.editData.setting.calendar.holiday.events
 
 	const diff = range.to.getTime() - range.from.getTime();
 	const days = diff / (24 * 60 * 60 * 1000);
@@ -51,7 +49,14 @@ const Component: NextPage<Props> = (props: Props) => {
 		return a.month - b.month;
 	});
 
-	const cellStyle = props.configuration.design.cell;
+	const cellStyle: CSSProperties = {
+		// minWidth: Designs.toProperty(props.configuration.design.cell.width),
+		// maxWidth: Designs.toProperty(props.configuration.design.cell.width),
+		// minHeight: Designs.toProperty(props.configuration.design.cell.height),
+		// maxHeight: Designs.toProperty(props.configuration.design.cell.height),
+		width: Designs.toProperty(props.configuration.design.cell.width),
+		height: Designs.toProperty(props.configuration.design.cell.height),
+	};
 
 	return (
 		<div id='days-header'>

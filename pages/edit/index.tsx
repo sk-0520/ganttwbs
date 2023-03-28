@@ -83,6 +83,14 @@ function createConfiguration(): Configuration {
 				minWidth: "20px",
 				maxHeight: "20px",
 				minHeight: "20px",
+				width: {
+					value: 20,
+					unit: "px"
+				},
+				height: {
+					value: 20,
+					unit: "px"
+				}
 			}
 		}
 	};
