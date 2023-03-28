@@ -90,8 +90,8 @@ const Component: NextPage<Props> = (props: Props) => {
 			handleUpdateChildrenWorkload();
 			handleUpdateChildrenProgress();
 
-			props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
-			props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
+			props.refreshedChildrenCallbacks.updatedWorkload();
+			props.refreshedChildrenCallbacks.updatedProgress();
 		}
 	}, [props.draggingTimeline]);
 
@@ -101,7 +101,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleControlMoveItem(kind: MoveItemKind) {
-		props.notifyParentCallbacks.callbackRefreshChildrenOrder(kind, props.currentTimeline);
+		props.notifyParentCallbacks.notifyMove(kind, props.currentTimeline);
 	}
 
 	function handleControlAddItem(kind: TimelineKind) {
@@ -128,12 +128,12 @@ const Component: NextPage<Props> = (props: Props) => {
 		handleUpdateChildrenWorkload();
 		handleUpdateChildrenProgress();
 
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.updatedWorkload();
+		props.refreshedChildrenCallbacks.updatedProgress();
 	}
 
 	function handleControlDeleteItem() {
-		props.notifyParentCallbacks.callbackDeleteChildTimeline(props.currentTimeline);
+		props.notifyParentCallbacks.notifyDelete(props.currentTimeline);
 	}
 
 	function handleUpdateChildrenOrder(kind: MoveItemKind, currentTimeline: Timeline) {
@@ -162,26 +162,26 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.currentTimeline.children.splice(currentIndex + 1, 0, item);
 		setChildren([...props.currentTimeline.children]);
 
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.updatedWorkload();
+		props.refreshedChildrenCallbacks.updatedProgress();
 	}
 
 	function handleUpdateChildrenBeginDate() {
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenBeginDate();
+		props.refreshedChildrenCallbacks.updatedBeginDate();
 	}
 
 	function handleUpdateChildrenWorkload() {
 		const summary = Timelines.sumWorkloadByGroup(props.currentTimeline);
 		setWorkload(summary.totalDays);
 
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
+		props.refreshedChildrenCallbacks.updatedWorkload();
 	}
 
 	function handleUpdateChildrenProgress() {
 		const progress = Timelines.sumProgressByGroup(props.currentTimeline);
 		setProgressPercent(progress * 100.0);
 
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.updatedProgress();
 	}
 
 	function handleDeleteChildren(currentTimeline: Timeline) {
@@ -191,8 +191,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		handleUpdateChildrenWorkload();
 		handleUpdateChildrenProgress();
 
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.updatedWorkload();
+		props.refreshedChildrenCallbacks.updatedProgress();
 	}
 
 	function handleChangePrevious(isSelected: boolean): void {
@@ -216,15 +216,15 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	const notifyParentCallbacks: NotifyParentCallbacks = {
-		callbackRefreshChildrenOrder: handleUpdateChildrenOrder,
-		callbackDeleteChildTimeline: handleDeleteChildren,
-		callbackDraggingTimeline: props.notifyParentCallbacks.callbackDraggingTimeline,
+		notifyMove: handleUpdateChildrenOrder,
+		notifyDelete: handleDeleteChildren,
+		notifyDragStart: props.notifyParentCallbacks.notifyDragStart,
 	};
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
-		callbackRefreshChildrenBeginDate: handleUpdateChildrenBeginDate,
-		callbackRefreshChildrenWorkload: handleUpdateChildrenWorkload,
-		callbackRefreshChildrenProgress: handleUpdateChildrenProgress,
+		updatedBeginDate: handleUpdateChildrenBeginDate,
+		updatedWorkload: handleUpdateChildrenWorkload,
+		updatedProgress: handleUpdateChildrenProgress,
 	}
 
 	return (
@@ -248,7 +248,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					}
 					title={props.currentTimeline.id}
 					draggable={!props.selectingBeginDate}
-					onDragStart={ev => props.notifyParentCallbacks.callbackDraggingTimeline(ev, props.currentTimeline)}
+					onDragStart={ev => props.notifyParentCallbacks.notifyDragStart(ev, props.currentTimeline)}
 					onDragEnd={props.draggingTimeline?.onDragEnd}
 				>
 					<label>

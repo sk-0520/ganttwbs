@@ -254,22 +254,22 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	const notifyParentCallbacks: NotifyParentCallbacks = {
-		callbackRefreshChildrenOrder: handleUpdateChildrenOrder,
-		callbackDeleteChildTimeline: handleDeleteChildren,
-		callbackDraggingTimeline: handleStartDragTimeline,
+		notifyMove: handleUpdateChildrenOrder,
+		notifyDelete: handleDeleteChildren,
+		notifyDragStart: handleStartDragTimeline,
 	};
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
-		callbackRefreshChildrenBeginDate: handleUpdateChildrenBeginDate,
-		callbackRefreshChildrenWorkload: handleUpdateChildrenWorkload,
-		callbackRefreshChildrenProgress: () => { /* nop */ },
+		updatedBeginDate: handleUpdateChildrenBeginDate,
+		updatedWorkload: handleUpdateChildrenWorkload,
+		updatedProgress: () => { /* nop */ },
 	}
 
 	const beginDateCallbacks: BeginDateCallbacks = {
-		callbackStartSelectBeginDate: handleStartSelectBeginDate,
-		callbackClearSelectBeginDate: handleClearSelectBeginDate,
-		callbackSubmitSelectBeginDate: handleSubmitSelectBeginDate,
-		callbackCancelSelectBeginDate: handleCancelSelectBeginDate,
+		startSelectBeginDate: handleStartSelectBeginDate,
+		clearSelectBeginDate: handleClearSelectBeginDate,
+		submitSelectBeginDate: handleSubmitSelectBeginDate,
+		cancelSelectBeginDate: handleCancelSelectBeginDate,
 	}
 
 	return (

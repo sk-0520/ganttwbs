@@ -81,29 +81,29 @@ const Component: NextPage<Props> = (props: Props) => {
 		setWorkload(n);
 		props.currentTimeline.workload = TimeSpan.fromDays(n).toString("readable");
 
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
+		props.refreshedChildrenCallbacks.updatedWorkload();
 	}
 
 	function handleChangeProgress(n: number) {
 		setProgressPercent(n);
 		props.currentTimeline.progress = n / 100.0;
 
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.updatedProgress();
 	}
 
 	function handleControlMoveItem(kind: MoveItemKind) {
-		props.notifyParentCallbacks.callbackRefreshChildrenOrder(kind, props.currentTimeline);
+		props.notifyParentCallbacks.notifyMove(kind, props.currentTimeline);
 	}
 
 	function handleControlAddItem(kind: TimelineKind) {
 		props.callbackAddNextSiblingItem(kind, props.currentTimeline);
 
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.updatedWorkload();
+		props.refreshedChildrenCallbacks.updatedProgress();
 	}
 
 	function handleControlDeleteItem() {
-		props.notifyParentCallbacks.callbackDeleteChildTimeline(props.currentTimeline);
+		props.notifyParentCallbacks.notifyDelete(props.currentTimeline);
 	}
 
 	function handleChangeMember(memberId: MemberId): void {
@@ -117,7 +117,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 
 		//setSelectingBeginDate(true);
-		props.beginDateCallbacks.callbackStartSelectBeginDate(props.currentTimeline);
+		props.beginDateCallbacks.startSelectBeginDate(props.currentTimeline);
 	}
 
 	function handleChangePrevious(isSelected: boolean): void {
@@ -143,7 +143,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleClearPrevious() {
-		props.beginDateCallbacks.callbackClearSelectBeginDate(props.currentTimeline);
+		props.beginDateCallbacks.clearSelectBeginDate(props.currentTimeline);
 	}
 
 	function handleSubmitPrevious() {
@@ -154,12 +154,12 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.currentTimeline.static = props.selectingBeginDate.beginDate ? Strings.formatDate(props.selectingBeginDate.beginDate, "yyyy-MM-dd") : undefined;
 		props.currentTimeline.previous = [...props.selectingBeginDate.previous];
 
-		props.beginDateCallbacks.callbackSubmitSelectBeginDate(props.currentTimeline);
-		props.refreshedChildrenCallbacks.callbackRefreshChildrenBeginDate();
+		props.beginDateCallbacks.submitSelectBeginDate(props.currentTimeline);
+		props.refreshedChildrenCallbacks.updatedBeginDate();
 	}
 
 	function handleCancelPrevious() {
-		props.beginDateCallbacks.callbackCancelSelectBeginDate(props.currentTimeline)
+		props.beginDateCallbacks.cancelSelectBeginDate(props.currentTimeline)
 	}
 
 	function handleDragOver() {
@@ -189,7 +189,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					}
 					title={props.currentTimeline.id}
 					draggable={!props.selectingBeginDate}
-					onDragStart={ev => props.notifyParentCallbacks.callbackDraggingTimeline(ev, props.currentTimeline)}
+					onDragStart={ev => props.notifyParentCallbacks.notifyDragStart(ev, props.currentTimeline)}
 					onDragEnd={props.draggingTimeline?.onDragEnd}
 				>
 					<label>
