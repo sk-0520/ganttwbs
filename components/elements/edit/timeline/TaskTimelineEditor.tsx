@@ -81,29 +81,29 @@ const Component: NextPage<Props> = (props: Props) => {
 		setWorkload(n);
 		props.currentTimeline.workload = TimeSpan.fromDays(n).toString("readable");
 
-		props.callbackRefreshChildrenWorkload();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
 	}
 
 	function handleChangeProgress(n: number) {
 		setProgressPercent(n);
 		props.currentTimeline.progress = n / 100.0;
 
-		props.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
 	}
 
 	function handleControlMoveItem(kind: MoveItemKind) {
-		props.callbackRefreshChildrenOrder(kind, props.currentTimeline);
+		props.notifyParentCallbacks.callbackRefreshChildrenOrder(kind, props.currentTimeline);
 	}
 
 	function handleControlAddItem(kind: TimelineKind) {
 		props.callbackAddNextSiblingItem(kind, props.currentTimeline);
 
-		props.callbackRefreshChildrenWorkload();
-		props.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
 	}
 
 	function handleControlDeleteItem() {
-		props.callbackDeleteChildTimeline(props.currentTimeline);
+		props.notifyParentCallbacks.callbackDeleteChildTimeline(props.currentTimeline);
 	}
 
 	function handleChangeMember(memberId: MemberId): void {
@@ -155,7 +155,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.currentTimeline.previous = [...props.selectingBeginDate.previous];
 
 		props.callbackSubmitSelectBeginDate(props.currentTimeline);
-		props.callbackRefreshChildrenBeginDate();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenBeginDate();
 	}
 
 	function handleCancelPrevious() {

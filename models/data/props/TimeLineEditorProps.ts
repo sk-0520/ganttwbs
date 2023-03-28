@@ -5,6 +5,8 @@ import { TimeRange } from "@/models/TimeRange";
 import DraggingTimeline from "../DraggingTimeline";
 import SelectingBeginDate from "../SelectingBeginDate";
 import { GroupTimeline, TaskTimeline, Timeline, TimelineId } from "../Setting";
+import RefreshedChildrenCallbacks from "../RefreshedChildrenCallbacks";
+import NotifyParentCallbacks from "../NotifyParentCallbacks";
 
 export default interface TimeLineEditorProps<TargetTimeline> {
 	treeIndexes: Array<number>;
@@ -14,11 +16,8 @@ export default interface TimeLineEditorProps<TargetTimeline> {
 	timeRanges: ReadonlyMap<TimelineId, TimeRange>;
 	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
-	callbackRefreshChildrenOrder: (kind: MoveItemKind, currentTimeline: Timeline) => void;
-	callbackRefreshChildrenBeginDate(): void;
-	callbackRefreshChildrenWorkload(): void;
-	callbackRefreshChildrenProgress(): void;
-	callbackDeleteChildTimeline(currentTimeline: Timeline): void;
+	notifyParentCallbacks: NotifyParentCallbacks;
+	refreshedChildrenCallbacks: RefreshedChildrenCallbacks;
 	callbackDraggingTimeline(event: DragEvent, timeline: Timeline): void;
 	callbackStartSelectBeginDate(timeline: TaskTimeline): void;
 	callbackClearSelectBeginDate(timeline: TaskTimeline): void;

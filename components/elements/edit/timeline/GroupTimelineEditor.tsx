@@ -19,6 +19,8 @@ import TimeLineEditorProps from "@/models/data/props/TimeLineEditorProps";
 import ProgressCell from "./cell/ProgressCell";
 import WorkloadCell from "./cell/WorkloadCell";
 import TimeRangeCells from "./cell/TimeRangeCells";
+import RefreshedChildrenCallbacks from "@/models/data/RefreshedChildrenCallbacks";
+import NotifyParentCallbacks from "@/models/data/NotifyParentCallbacks";
 
 interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 	dropTimeline: DropTimeline | null;
@@ -88,8 +90,8 @@ const Component: NextPage<Props> = (props: Props) => {
 			handleUpdateChildrenWorkload();
 			handleUpdateChildrenProgress();
 
-			props.callbackRefreshChildrenWorkload();
-			props.callbackRefreshChildrenProgress();
+			props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
+			props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
 		}
 	}, [props.draggingTimeline]);
 
@@ -99,7 +101,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleControlMoveItem(kind: MoveItemKind) {
-		props.callbackRefreshChildrenOrder(kind, props.currentTimeline);
+		props.notifyParentCallbacks.callbackRefreshChildrenOrder(kind, props.currentTimeline);
 	}
 
 	function handleControlAddItem(kind: TimelineKind) {
@@ -126,12 +128,12 @@ const Component: NextPage<Props> = (props: Props) => {
 		handleUpdateChildrenWorkload();
 		handleUpdateChildrenProgress();
 
-		props.callbackRefreshChildrenWorkload();
-		props.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
 	}
 
 	function handleControlDeleteItem() {
-		props.callbackDeleteChildTimeline(props.currentTimeline);
+		props.notifyParentCallbacks.callbackDeleteChildTimeline(props.currentTimeline);
 	}
 
 	function handleUpdateChildrenOrder(kind: MoveItemKind, currentTimeline: Timeline) {
@@ -160,26 +162,26 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.currentTimeline.children.splice(currentIndex + 1, 0, item);
 		setChildren([...props.currentTimeline.children]);
 
-		props.callbackRefreshChildrenWorkload();
-		props.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
 	}
 
 	function handleUpdateChildrenBeginDate() {
-		props.callbackRefreshChildrenBeginDate();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenBeginDate();
 	}
 
 	function handleUpdateChildrenWorkload() {
 		const summary = Timelines.sumWorkloadByGroup(props.currentTimeline);
 		setWorkload(summary.totalDays);
 
-		props.callbackRefreshChildrenWorkload();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
 	}
 
 	function handleUpdateChildrenProgress() {
 		const progress = Timelines.sumProgressByGroup(props.currentTimeline);
 		setProgressPercent(progress * 100.0);
 
-		props.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
 	}
 
 	function handleDeleteChildren(currentTimeline: Timeline) {
@@ -189,8 +191,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		handleUpdateChildrenWorkload();
 		handleUpdateChildrenProgress();
 
-		props.callbackRefreshChildrenWorkload();
-		props.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenWorkload();
+		props.refreshedChildrenCallbacks.callbackRefreshChildrenProgress();
 	}
 
 	function handleChangePrevious(isSelected: boolean): void {
@@ -211,6 +213,17 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 	function handleDragLeave() {
 		setDropEventClassName('')
+	}
+
+	const notifyParentCallbacks: NotifyParentCallbacks = {
+		callbackRefreshChildrenOrder: handleUpdateChildrenOrder,
+		callbackDeleteChildTimeline: handleDeleteChildren,
+	};
+
+	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
+		callbackRefreshChildrenBeginDate: handleUpdateChildrenBeginDate,
+		callbackRefreshChildrenWorkload: handleUpdateChildrenWorkload,
+		callbackRefreshChildrenProgress: handleUpdateChildrenProgress,
 	}
 
 	return (
@@ -309,11 +322,8 @@ const Component: NextPage<Props> = (props: Props) => {
 											draggingTimeline={props.draggingTimeline}
 											dropTimeline={props.dropTimeline}
 											selectingBeginDate={props.selectingBeginDate}
-											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
-											callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
-											callbackRefreshChildrenWorkload={handleUpdateChildrenWorkload}
-											callbackRefreshChildrenProgress={handleUpdateChildrenProgress}
-											callbackDeleteChildTimeline={handleDeleteChildren}
+											notifyParentCallbacks={notifyParentCallbacks}
+											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
 											callbackDraggingTimeline={props.callbackDraggingTimeline}
 											callbackStartSelectBeginDate={props.callbackStartSelectBeginDate}
 											callbackClearSelectBeginDate={props.callbackClearSelectBeginDate}
@@ -334,12 +344,9 @@ const Component: NextPage<Props> = (props: Props) => {
 											timeRanges={props.timeRanges}
 											draggingTimeline={props.draggingTimeline}
 											selectingBeginDate={props.selectingBeginDate}
-											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
-											callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
-											callbackRefreshChildrenWorkload={handleUpdateChildrenWorkload}
-											callbackRefreshChildrenProgress={handleUpdateChildrenProgress}
 											callbackAddNextSiblingItem={handleAddNextSiblingItem}
-											callbackDeleteChildTimeline={handleDeleteChildren}
+											notifyParentCallbacks={notifyParentCallbacks}
+											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
 											callbackDraggingTimeline={props.callbackDraggingTimeline}
 											callbackStartSelectBeginDate={props.callbackStartSelectBeginDate}
 											callbackClearSelectBeginDate={props.callbackClearSelectBeginDate}

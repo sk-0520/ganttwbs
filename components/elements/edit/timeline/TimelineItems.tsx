@@ -14,6 +14,8 @@ import { Settings } from "@/models/Settings";
 import DraggingTimeline from "@/models/data/DraggingTimeline";
 import DropTimeline from "@/models/data/DropTimeline";
 import EditProps from "@/models/data/props/EditProps";
+import RefreshedChildrenCallbacks from "@/models/data/RefreshedChildrenCallbacks";
+import NotifyParentCallbacks from "@/models/data/NotifyParentCallbacks";
 
 interface Props extends EditProps {
 	timeRanges: Map<TimelineId, TimeRange>;
@@ -251,6 +253,17 @@ const Component: NextPage<Props> = (props: Props) => {
 		setSelectingBeginDate(null);
 	}
 
+	const notifyParentCallbacks: NotifyParentCallbacks = {
+		callbackRefreshChildrenOrder: handleUpdateChildrenOrder,
+		callbackDeleteChildTimeline: handleDeleteChildren,
+	};
+
+	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
+		callbackRefreshChildrenBeginDate: handleUpdateChildrenBeginDate,
+		callbackRefreshChildrenWorkload: handleUpdateChildrenWorkload,
+		callbackRefreshChildrenProgress: () => { /* nop */ },
+	}
+
 	return (
 		<div id='timelines'>
 			<>
@@ -271,11 +284,8 @@ const Component: NextPage<Props> = (props: Props) => {
 											draggingTimeline={draggingTimeline}
 											selectingBeginDate={selectingBeginDate}
 											dropTimeline={dropTimeline}
-											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
-											callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
-											callbackRefreshChildrenWorkload={handleUpdateChildrenWorkload}
-											callbackRefreshChildrenProgress={() => { /*nop*/ }}
-											callbackDeleteChildTimeline={handleDeleteChildren}
+											notifyParentCallbacks={notifyParentCallbacks}
+											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
 											callbackDraggingTimeline={handleStartDragTimeline}
 											callbackStartSelectBeginDate={handleStartSelectBeginDate}
 											callbackClearSelectBeginDate={handleClearSelectBeginDate}
@@ -296,12 +306,9 @@ const Component: NextPage<Props> = (props: Props) => {
 											timeRanges={props.timeRanges}
 											draggingTimeline={draggingTimeline}
 											selectingBeginDate={selectingBeginDate}
-											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
-											callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
-											callbackRefreshChildrenWorkload={handleUpdateChildrenWorkload}
-											callbackRefreshChildrenProgress={() => { /*nop*/ }}
+											notifyParentCallbacks={notifyParentCallbacks}
+											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
 											callbackAddNextSiblingItem={handleAddNextSiblingItem}
-											callbackDeleteChildTimeline={handleDeleteChildren}
 											callbackDraggingTimeline={handleStartDragTimeline}
 											callbackStartSelectBeginDate={handleStartSelectBeginDate}
 											callbackClearSelectBeginDate={handleClearSelectBeginDate}
