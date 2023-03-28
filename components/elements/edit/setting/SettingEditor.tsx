@@ -3,7 +3,7 @@ import { FormEvent } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import { v4 } from "uuid";
 
-import * as Storage from "@/models/Storage";
+import { Storage } from "@/models/Storage";
 import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 
 import CalendarHolidaySettingEditor from "./Calendar/CalendarHolidaySettingEditor";

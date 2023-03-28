@@ -1,6 +1,6 @@
 import { NextRouter } from "next/router";
 
-import * as Storage from "@/models/Storage";
+import { Storage } from "@/models/Storage";
 import { EditData } from "@/models/data/EditData";
 
 export abstract class Goto {
