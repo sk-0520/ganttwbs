@@ -6,7 +6,6 @@ import { Holiday, Theme } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
 import { Settings } from "@/models/Settings";
 import { EditProps } from "@/models/data/props/EditProps";
-import { Designs } from "@/models/Designs";
 
 interface Props extends EditProps { }
 
@@ -49,15 +48,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		return a.month - b.month;
 	});
 
-	const cellStyle: CSSProperties = {
-		// minWidth: Designs.toProperty(props.configuration.design.cell.width),
-		// maxWidth: Designs.toProperty(props.configuration.design.cell.width),
-		// minHeight: Designs.toProperty(props.configuration.design.cell.height),
-		// maxHeight: Designs.toProperty(props.configuration.design.cell.height),
-		width: Designs.toProperty(props.configuration.design.cell.width),
-		height: Designs.toProperty(props.configuration.design.cell.height),
-	};
-
 	return (
 		<div id='days-header'>
 			<table>
@@ -68,7 +58,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							const display = `${a.year}/${a.month + 1}`;
 
 							return (
-								<td key={display} className={"cell"} colSpan={a.length} style={cellStyle}>{display}</td>
+								<td key={display} className="cell _dynamic_cell" colSpan={a.length}>{display}</td>
 							);
 						})}
 					</tr>
@@ -77,7 +67,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							const style = getDayStyles(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
 
 							return (
-								<td key={a.getTime()} className='cell' style={{ ...cellStyle, ...style }}>
+								<td key={a.getTime()} className='cell _dynamic_cell' style={{ ...style }}>
 									{a.getDate()}
 								</td>
 							)
@@ -88,7 +78,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							const style = getDayStyles(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
 
 							return (
-								<td key={a.getTime()} className='cell' style={{ ...cellStyle, ...style }}>
+								<td key={a.getTime()} className='cell _dynamic_cell' style={{ ...style }}>
 									{locale.calendar.week.short[Settings.toWeekDay(a.getDay())]}
 								</td>
 							);
@@ -101,7 +91,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							const style = getDayStyles(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
 
 							return (
-								<td key={a.getTime()} className='cell' style={{ ...cellStyle, ...style }}>
+								<td key={a.getTime()} className='cell _dynamic_cell' style={{ ...style }}>
 									@
 								</td>
 							);
