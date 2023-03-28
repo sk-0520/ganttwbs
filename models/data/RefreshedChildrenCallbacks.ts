@@ -2,7 +2,7 @@
 /**
  * 子が親に対して更新した旨を通知。
  */
-export default interface RefreshedChildrenCallbacks {
+export interface RefreshedChildrenCallbacks {
 	updatedBeginDate(): void;
 	updatedWorkload(): void;
 	updatedProgress(): void;

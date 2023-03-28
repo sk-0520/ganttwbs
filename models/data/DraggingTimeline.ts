@@ -1,7 +1,7 @@
 import { DragEvent } from "react";
 import { Timeline } from "./Setting";
 
-export default interface DraggingTimeline {
+export interface DraggingTimeline {
 	sourceTimeline: Timeline;
 	onDragEnd(event: DragEvent): void;
 	onDragEnter(event: DragEvent, targetTimeline: Timeline): void;

@@ -7,7 +7,7 @@ import FileEditor from "@/components/elements/edit/file/FileEditor";
 import SettingEditor from "@/components/elements/edit/setting/SettingEditor";
 import TimelineEditor from "@/components/elements/edit/timeline/TimelineEditor";
 import Layout from "@/components/layout/Layout";
-import * as Storage from "@/models/Storage";
+import { Storage } from "@/models/Storage";
 import { EditData } from "@/models/data/EditData";
 import { Configuration } from "@/models/data/Configuration";
 import { TimeSpan } from "@/models/TimeSpan";

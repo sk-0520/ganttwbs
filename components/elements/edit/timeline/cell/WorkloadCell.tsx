@@ -1,4 +1,4 @@
-import Timelines from "@/models/Timelines";
+import { Timelines } from "@/models/Timelines";
 import { NextPage } from "next";
 
 interface Props {

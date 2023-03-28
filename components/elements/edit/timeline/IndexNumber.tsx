@@ -1,4 +1,4 @@
-import Timelines from "@/models/Timelines";
+import { Timelines } from "@/models/Timelines";
 import { NextPage } from "next";
 import { CSSProperties } from "react";
 

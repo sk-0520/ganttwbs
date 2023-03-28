@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 
-import EditProps from "@/models/data/props/EditProps";
+import { EditProps } from "@/models/data/props/EditProps";
 
 interface Props extends EditProps { }
 

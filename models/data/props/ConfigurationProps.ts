@@ -1,5 +1,5 @@
 import { Configuration } from "../Configuration";
 
-export default interface ConfigurationProps {
+export interface ConfigurationProps {
 	configuration: Configuration;
 }

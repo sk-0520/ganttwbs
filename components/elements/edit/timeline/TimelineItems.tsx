@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { DragEvent, useState } from "react";
 
-import Timelines from "@/models/Timelines";
+import { Timelines } from "@/models/Timelines";
 import { useLocale } from "@/models/locales/locale";
 
 import GroupTimelineEditor from "./GroupTimelineEditor";
@@ -11,11 +11,11 @@ import { GroupTimeline, TaskTimeline, Timeline, TimelineId, TimelineKind } from 
 import { TimeRange } from "@/models/TimeRange";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Settings } from "@/models/Settings";
-import DraggingTimeline from "@/models/data/DraggingTimeline";
-import DropTimeline from "@/models/data/DropTimeline";
-import EditProps from "@/models/data/props/EditProps";
-import RefreshedChildrenCallbacks from "@/models/data/RefreshedChildrenCallbacks";
-import NotifyParentCallbacks from "@/models/data/NotifyParentCallbacks";
+import { DraggingTimeline } from "@/models/data/DraggingTimeline";
+import { DropTimeline } from "@/models/data/DropTimeline";
+import { EditProps } from "@/models/data/props/EditProps";
+import { RefreshedChildrenCallbacks } from "@/models/data/RefreshedChildrenCallbacks";
+import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
 
 interface Props extends EditProps {
 	timeRanges: Map<TimelineId, TimeRange>;

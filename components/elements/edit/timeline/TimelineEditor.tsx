@@ -7,8 +7,8 @@ import TimelineViewer from "./TimelineViewer";
 import { useEffect, useState } from "react";
 import { TimelineId } from "@/models/data/Setting";
 import { TimeRange } from "@/models/TimeRange";
-import Timelines from "@/models/Timelines";
-import EditProps from "@/models/data/props/EditProps";
+import { Timelines } from "@/models/Timelines";
+import { EditProps } from "@/models/data/props/EditProps";
 
 interface Props extends EditProps { }
 

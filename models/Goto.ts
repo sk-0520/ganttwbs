@@ -1,9 +1,9 @@
 import { NextRouter } from "next/router";
 
-import * as Storage from "@/models/Storage";
+import { Storage } from "@/models/Storage";
 import { EditData } from "@/models/data/EditData";
 
-export default class Goto {
+export abstract class Goto {
 
 	public static edit(editData: EditData, router: NextRouter): Promise<boolean> {
 		Storage.saveEditData(editData);

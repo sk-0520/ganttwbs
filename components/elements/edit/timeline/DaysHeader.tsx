@@ -5,7 +5,7 @@ import { useLocale } from "@/models/locales/locale";
 import { Holiday, Theme } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
 import { Settings } from "@/models/Settings";
-import EditProps from "@/models/data/props/EditProps";
+import { EditProps } from "@/models/data/props/EditProps";
 
 interface Props extends EditProps { }
 
