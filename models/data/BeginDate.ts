@@ -1,9 +1,10 @@
-import { TaskTimeline, TimelineId } from "./Setting";
+import { TaskTimeline, Timeline, TimelineId } from "./Setting";
 
 export interface SelectingBeginDate {
 	timeline: TaskTimeline;
 	beginDate: Date | null;
 	previous: Set<TimelineId>;
+	canSelect(timeline: Timeline): boolean;
 }
 
 export interface BeginDateCallbacks {

@@ -257,6 +257,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								<input
 									id={selectingId}
 									type="checkbox"
+									disabled={!props.selectingBeginDate.canSelect(props.currentTimeline)}
 									value={props.currentTimeline.id}
 									checked={isSelectedPrevious}
 									onChange={ev => handleChangePrevious(ev.target.checked)}

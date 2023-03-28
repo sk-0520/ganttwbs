@@ -228,12 +228,22 @@ const Component: NextPage<Props> = (props: Props) => {
 		setDraggingTimeline(dragging);
 	}
 
+	function canSelectCore(targetTimeline: Timeline, currentTimeline: Timeline): boolean {
+		const groups = Timelines.getParentGroup(currentTimeline, timelineNodes);
+		if (groups && groups.length) {
+			return !groups.some(a => a.id === targetTimeline.id);
+		}
+
+		return true;
+	}
+
 	function handleStartSelectBeginDate(timeline: TaskTimeline): void {
 		console.debug(timeline);
 		setSelectingBeginDate({
 			timeline: timeline,
 			beginDate: timeline.static ? new Date(timeline.static) : null,
 			previous: new Set(timeline.previous),
+			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
 		})
 	}
 
@@ -242,6 +252,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			timeline: timeline,
 			beginDate: null,
 			previous: new Set(),
+			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
 		})
 	}
 
