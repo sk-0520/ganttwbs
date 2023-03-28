@@ -21,6 +21,7 @@ import WorkloadCell from "./cell/WorkloadCell";
 import TimeRangeCells from "./cell/TimeRangeCells";
 import SubjectCell from "./cell/SubjectCell";
 import IdCell from "./cell/IdCell";
+import TimelineHeaderRow from "./cell/TimelineHeaderRow";
 
 interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
@@ -46,8 +47,6 @@ const Component: NextPage<Props> = (props: Props) => {
 	//const [selectingBeginDate, setSelectingBeginDate] = useState(false);
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
 	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
-	const [dropEventClassName, setDropEventClassName] = useState('');
-	const [mouseEnterClassName, setMouseEnterClassName] = useState('');
 
 	useEffect(() => {
 		const timeRange = props.timeRanges.get(props.currentTimeline.id);
@@ -68,12 +67,6 @@ const Component: NextPage<Props> = (props: Props) => {
 			setSelectedBeginDate(props.selectingBeginDate.beginDate ?? null);
 		}
 	}, [props.selectingBeginDate]);
-
-	useEffect(() => {
-		if (!props.draggingTimeline) {
-			setDropEventClassName('');
-		}
-	}, [props.draggingTimeline]);
 
 	function handleChangeSubject(s: string) {
 		setSubject(s);
@@ -165,38 +158,13 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.beginDateCallbacks.cancelSelectBeginDate(props.currentTimeline)
 	}
 
-	function handleDragOver() {
-		setDropEventClassName('drag-over')
-	}
-	function handleDragLeave() {
-		setDropEventClassName('')
-	}
-
-	function handleMouseEnter() {
-		if (!props.draggingTimeline && !props.selectingBeginDate) {
-			setMouseEnterClassName('hover');
-		}
-	}
-	function handleMouseLeave() {
-		setMouseEnterClassName('');
-	}
-
 	return (
-		<div className='task' style={heightStyle}>
-			<div
-				className={
-					'timeline-header'
-					+ ' ' + mouseEnterClassName
-					+ (props.selectingBeginDate?.timeline.id === props.currentTimeline.id ? ' ' + 'hover' : '')
-					+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? ' dragging' : '')
-					+ ' ' + dropEventClassName
-				}
-				onDragEnter={ev => props.draggingTimeline?.onDragEnter(ev, props.currentTimeline)}
-				onDragOver={ev => props.draggingTimeline?.onDragOver(ev, props.currentTimeline, handleDragOver)}
-				onDragLeave={ev => props.draggingTimeline?.onDragLeave(ev, props.currentTimeline, handleDragLeave)}
-				onDrop={ev => props.draggingTimeline?.onDrop(ev, props.currentTimeline)}
-				onMouseEnter={handleMouseEnter}
-				onMouseLeave={handleMouseLeave}
+		<div className='task'>
+			<TimelineHeaderRow
+				currentTimeline={props.currentTimeline}
+				selectingBeginDate={props.selectingBeginDate}
+				draggingTimeline={props.draggingTimeline}
+				heightStyle={heightStyle}
 			>
 				<IdCell
 					selectingId={selectingId}
@@ -283,7 +251,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						deleteItem={handleControlDeleteItem}
 					/>
 				</div>
-			</div>
+			</TimelineHeaderRow>
 		</div >
 	);
 };
