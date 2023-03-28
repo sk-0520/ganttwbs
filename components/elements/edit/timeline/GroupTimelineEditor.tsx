@@ -47,6 +47,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [children, setChildren] = useState(props.currentTimeline.children);
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
 	const [dropEventClassName, setDropEventClassName] = useState('');
+	const [mouseEnterClassName, setMouseEnterClassName] = useState('');
 
 	useEffect(() => {
 		const timeRange = props.timeRanges.get(props.currentTimeline.id);
@@ -216,6 +217,15 @@ const Component: NextPage<Props> = (props: Props) => {
 		setDropEventClassName('')
 	}
 
+	function handleMouseEnter() {
+		if(!props.draggingTimeline && !props.selectingBeginDate) {
+			setMouseEnterClassName('hover');
+		}
+	}
+	function handleMouseLeave() {
+		setMouseEnterClassName('');
+	}
+
 	const notifyParentCallbacks: NotifyParentCallbacks = {
 		notifyMove: handleUpdateChildrenOrder,
 		notifyDelete: handleDeleteChildren,
@@ -233,6 +243,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			<div
 				className={
 					'timeline-header'
+					+ ' ' + mouseEnterClassName
 					+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? ' dragging' : '')
 					+ ' ' + dropEventClassName
 				}
@@ -241,6 +252,8 @@ const Component: NextPage<Props> = (props: Props) => {
 				onDragOver={ev => props.draggingTimeline?.onDragOver(ev, props.currentTimeline, handleDragOver)}
 				onDragLeave={ev => props.draggingTimeline?.onDragLeave(ev, props.currentTimeline, handleDragLeave)}
 				onDrop={ev => props.draggingTimeline?.onDrop(ev, props.currentTimeline)}
+				onMouseEnter={handleMouseEnter}
+				onMouseLeave={handleMouseLeave}
 			>
 				<div
 					className={

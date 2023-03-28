@@ -148,6 +148,11 @@
 				mix-blend-mode: overlay;
 			}
 
+			&.hover {
+				position: relative;
+				outline:  3px double rgba(255, 0, 0, 0.555);
+			}
+
 			.timeline-id[draggable="true"] {
 				$cursor: grab;
 
