@@ -1,10 +1,9 @@
 import { NextPage } from "next";
-import { FormEvent, useContext } from "react";
+import { FormEvent } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import { v4 } from "uuid";
 
 import * as Storage from "@/models/Storage";
-import { EditContext } from "@/models/data/context/EditContext";
 import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 
 import CalendarHolidaySettingEditor from "./Calendar/CalendarHolidaySettingEditor";
@@ -16,7 +15,6 @@ import ThemeCompletedSettingEditor from "./Theme/ThemeCompletedSettingEditor";
 import ThemeGroupSettingEditor from "./Theme/ThemeGroupSettingEditor";
 import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
-import { Configuration } from "@/models/data/Configuration";
 import { EditData } from "@/models/data/EditData";
 
 const NewLine = "\r\n";

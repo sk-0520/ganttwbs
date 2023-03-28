@@ -11,7 +11,7 @@ interface Holidays {
 	weeks: ReadonlyArray<WeekIndex>;
 }
 
-export default abstract class Timelines {
+export abstract class Timelines {
 
 	public static createNewGroup(): GroupTimeline {
 		const item: GroupTimeline = {

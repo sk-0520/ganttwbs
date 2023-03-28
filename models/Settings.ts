@@ -1,6 +1,6 @@
 import { GroupTimeline, TaskTimeline, Timeline, WeekDay, WeekIndex } from "./data/Setting";
 
-export class Settings {
+export abstract class Settings {
 
 	public static getWeekDays(): Array<WeekDay> {
 		return [

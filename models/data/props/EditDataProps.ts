@@ -1,5 +1,5 @@
 import { EditData } from "../EditData";
 
-export default interface EditDataProps {
+export interface EditDataProps {
 	editData: EditData;
 }

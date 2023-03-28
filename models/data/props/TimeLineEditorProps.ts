@@ -1,14 +1,11 @@
-import { DragEvent } from "react";
-
-import { MoveItemKind } from "@/components/elements/edit/timeline/TimelineControls";
 import { TimeRange } from "@/models/TimeRange";
-import DraggingTimeline from "../DraggingTimeline";
-import {BeginDateCallbacks, SelectingBeginDate} from "../BeginDate";
-import { GroupTimeline, TaskTimeline, Timeline, TimelineId } from "../Setting";
-import RefreshedChildrenCallbacks from "../RefreshedChildrenCallbacks";
-import NotifyParentCallbacks from "../NotifyParentCallbacks";
+import { DraggingTimeline } from "../DraggingTimeline";
+import { BeginDateCallbacks, SelectingBeginDate } from "../BeginDate";
+import { GroupTimeline, TimelineId } from "../Setting";
+import { RefreshedChildrenCallbacks } from "../RefreshedChildrenCallbacks";
+import { NotifyParentCallbacks } from "../NotifyParentCallbacks";
 
-export default interface TimeLineEditorProps<TargetTimeline> {
+export interface TimeLineEditorProps<TargetTimeline> {
 	treeIndexes: Array<number>;
 	parentGroup: GroupTimeline | null;
 	currentIndex: number;

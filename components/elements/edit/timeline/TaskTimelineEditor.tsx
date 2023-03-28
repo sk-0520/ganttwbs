@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 import { useLocale } from "@/models/locales/locale";
 
-import IndexNumber from "./IndexNumber";
 import TimelineControls from "./TimelineControls";
 import { MoveItemKind } from "./TimelineControls";
 import MemberList from "./MemberList";
@@ -11,11 +10,8 @@ import { MemberId, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Se
 import { TimeSpan } from "@/models/TimeSpan";
 import { Strings } from "@/models/Strings";
 import { TimeRangeKind, TimeRanges } from "@/models/TimeRange";
-import Timestamp from "../../Timestamp";
-import Timelines from "@/models/Timelines";
-import DynamicLabel from "../../DynamicLabel";
-import EditProps from "@/models/data/props/EditProps";
-import TimeLineEditorProps from "@/models/data/props/TimeLineEditorProps";
+import { EditProps } from "@/models/data/props/EditProps";
+import { TimeLineEditorProps } from "@/models/data/props/TimeLineEditorProps";
 import ProgressCell from "./cell/ProgressCell";
 import WorkloadCell from "./cell/WorkloadCell";
 import TimeRangeCells from "./cell/TimeRangeCells";

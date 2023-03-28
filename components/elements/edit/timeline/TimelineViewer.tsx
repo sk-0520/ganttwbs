@@ -1,4 +1,4 @@
-import EditProps from "@/models/data/props/EditProps";
+import { EditProps } from "@/models/data/props/EditProps";
 import { TimelineId } from "@/models/data/Setting";
 import { TimeRange } from "@/models/TimeRange";
 import { NextPage } from "next";

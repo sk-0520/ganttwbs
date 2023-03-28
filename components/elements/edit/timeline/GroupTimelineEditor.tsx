@@ -1,26 +1,23 @@
 import { NextPage } from "next";
 import { CSSProperties, useEffect, useState } from "react";
 
-import Timelines from "@/models/Timelines";
+import { Timelines } from "@/models/Timelines";
 import { useLocale } from "@/models/locales/locale";
 
 import GroupTimelineEditor from "./GroupTimelineEditor";
 import TaskTimelineEditor from "./TaskTimelineEditor";
-import IndexNumber from "./IndexNumber";
 import TimelineControls, { MoveItemKind } from "./TimelineControls";
 import { GroupTimeline, TaskTimeline, Theme, Timeline, TimelineKind } from "@/models/data/Setting";
 import { TimeRangeKind, TimeRanges } from "@/models/TimeRange";
-import Timestamp from "../../Timestamp";
 import { Settings } from "@/models/Settings";
-import DropTimeline from "@/models/data/DropTimeline";
-import DynamicLabel from "../../DynamicLabel";
-import EditProps from "@/models/data/props/EditProps";
-import TimeLineEditorProps from "@/models/data/props/TimeLineEditorProps";
+import { DropTimeline } from "@/models/data/DropTimeline";
+import { EditProps } from "@/models/data/props/EditProps";
+import { TimeLineEditorProps } from "@/models/data/props/TimeLineEditorProps";
 import ProgressCell from "./cell/ProgressCell";
 import WorkloadCell from "./cell/WorkloadCell";
 import TimeRangeCells from "./cell/TimeRangeCells";
-import RefreshedChildrenCallbacks from "@/models/data/RefreshedChildrenCallbacks";
-import NotifyParentCallbacks from "@/models/data/NotifyParentCallbacks";
+import { RefreshedChildrenCallbacks } from "@/models/data/RefreshedChildrenCallbacks";
+import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
 import SubjectCell from "./cell/SubjectCell";
 import IdCell from "./cell/IdCell";
 import TimelineHeaderRow from "./cell/TimelineHeaderRow";

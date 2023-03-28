@@ -1,7 +1,7 @@
 import { SelectingBeginDate } from "@/models/data/BeginDate";
-import DraggingTimeline from "@/models/data/DraggingTimeline";
-import NotifyParentCallbacks from "@/models/data/NotifyParentCallbacks";
-import { GroupTimeline, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
+import { DraggingTimeline } from "@/models/data/DraggingTimeline";
+import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
+import { GroupTimeline, TaskTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { NextPage } from "next";
 import IndexNumber from "../IndexNumber";
