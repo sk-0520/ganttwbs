@@ -1,6 +1,6 @@
 import { GroupTimeline, TaskTimeline, Timeline } from "./Setting";
 
-export default interface DropTimeline {
+export interface DropTimeline {
 	/**
 	 * 対象のタイムライン。
 	 */

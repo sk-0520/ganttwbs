@@ -46,7 +46,7 @@
 		}
 	}
 
-	#hidariue {
+	#cross-header {
 		background-color: lime;
 
 		z-index: 2;
@@ -105,19 +105,17 @@
 			.timeline-range-from,
 			.timeline-range-to,
 			.timeline-range-area {
-				&.selectable {
+				&.clickable {
 					cursor: pointer;
 				}
 			}
-			.timeline-range-area {
+
+			.timeline-range-area.prompt {
 				position: relative;
 
 				background-color: palegoldenrod;
 				outline: 2px palegoldenrod solid;
-
-				* {
-					height: 100%;
-				}
+				height: fit-content;
 
 				.tools {
 					background-color: palegoldenrod;
@@ -145,6 +143,11 @@
 			&.drag-over {
 				position: relative;
 				mix-blend-mode: overlay;
+			}
+
+			&.hover {
+				position: relative;
+				outline:  3px double rgba(255, 0, 0, 0.555);
 			}
 
 			.timeline-id[draggable="true"] {

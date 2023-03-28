@@ -13,7 +13,7 @@ export type IconPosition
 	"after"
 	;
 
-export class Icon {
+export abstract class Icon {
 
 	public static getClassNames(name: IconName, position: IconPosition): ReadonlyArray<string> {
 		return [

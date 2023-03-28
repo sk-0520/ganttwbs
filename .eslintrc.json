@@ -20,10 +20,17 @@
 		"@typescript-eslint"
 	],
 	"rules": {
+		"@typescript-eslint/no-empty-interface": [
+			"error",
+			{
+				"allowSingleExtends": true
+			}
+		],
 		"@typescript-eslint/no-unused-vars": [
 			"warn",
 			{
-				"argsIgnorePattern": "^_*$",
+				//"argsIgnorePattern": "^_*$",
+				"argsIgnorePattern": "^.*$",
 				"varsIgnorePattern": "^_*$"
 			}
 		]

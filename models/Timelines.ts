@@ -11,7 +11,7 @@ interface Holidays {
 	weeks: ReadonlyArray<WeekIndex>;
 }
 
-export default abstract class Timelines {
+export abstract class Timelines {
 
 	public static createNewGroup(): GroupTimeline {
 		const item: GroupTimeline = {
@@ -395,14 +395,16 @@ export default abstract class Timelines {
 					}
 					// まぁまぁ(たぶん条件漏れあり)
 					const items = resultTimeRanges.filter(TimeRanges.maybeSuccessTimeRange);
-					const minMax = TimeRanges.getMinMaxRange(items);
-					const timeRange: SuccessTimeRange = {
-						timeline: timeline,
-						kind: "success",
-						begin: minMax.min.begin,
-						end: minMax.max.end,
+					if(items.length) {
+						const minMax = TimeRanges.getMinMaxRange(items);
+						const timeRange: SuccessTimeRange = {
+							timeline: timeline,
+							kind: "success",
+							begin: minMax.min.begin,
+							end: minMax.max.end,
+						}
+						result.set(timeline.id, timeRange);
 					}
-					result.set(timeline.id, timeRange);
 				}
 			}
 		}

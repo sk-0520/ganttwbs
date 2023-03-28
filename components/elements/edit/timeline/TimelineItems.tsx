@@ -1,8 +1,7 @@
 import { NextPage } from "next";
-import { DragEvent, useContext, useEffect, useState } from "react";
+import { DragEvent, useState } from "react";
 
-import Timelines from "@/models/Timelines";
-import { EditContext } from "@/models/data/context/EditContext";
+import { Timelines } from "@/models/Timelines";
 import { useLocale } from "@/models/locales/locale";
 
 import GroupTimelineEditor from "./GroupTimelineEditor";
@@ -10,21 +9,23 @@ import TaskTimelineEditor from "./TaskTimelineEditor";
 import { MoveItemKind } from "./TimelineControls";
 import { GroupTimeline, TaskTimeline, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { TimeRange } from "@/models/TimeRange";
-import SelectingBeginDate from "@/models/data/SelectingBeginDate";
+import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Settings } from "@/models/Settings";
-import DraggingTimeline from "@/models/data/DraggingTimeline";
-import DropTimeline from "@/models/data/DropTimeline";
+import { DraggingTimeline } from "@/models/data/DraggingTimeline";
+import { DropTimeline } from "@/models/data/DropTimeline";
+import { EditProps } from "@/models/data/props/EditProps";
+import { RefreshedChildrenCallbacks } from "@/models/data/RefreshedChildrenCallbacks";
+import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
 
-// interface Props {
-// }
+interface Props extends EditProps {
+	timeRanges: Map<TimelineId, TimeRange>;
+	updateRelations: () => void;
+}
 
-//const Component: NextPage<Props> = (props: Props) => {
-const Component: NextPage = () => {
+const Component: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
-	const editContext = useContext(EditContext);
 
-	const [timelines, setTimelines] = useState(editContext.data.setting.timelineNodes);
-	const [timeRanges, setTimeRanges] = useState<Map<TimelineId, TimeRange>>(new Map());
+	const [timelineNodes, setTimelineNodes] = useState(props.editData.setting.timelineNodes);
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
@@ -33,31 +34,31 @@ const Component: NextPage = () => {
 	function handleAddNewGroup() {
 		const item = Timelines.createNewGroup();
 
-		setTimelines([
-			...timelines,
+		setTimelineNodes([
+			...timelineNodes,
 			item,
 		]);
-		editContext.data.setting.timelineNodes.push(item);
+		props.editData.setting.timelineNodes.push(item);
 	}
 
 	function handleAddNewTask() {
 		const item = Timelines.createNewTask();
 
-		setTimelines([
-			...timelines,
+		setTimelineNodes([
+			...timelineNodes,
 			item,
 		]);
-		editContext.data.setting.timelineNodes.push(item);
+		props.editData.setting.timelineNodes.push(item);
 	}
 
 	function handleUpdateChildrenOrder(kind: MoveItemKind, currentTimeline: Timeline) {
-		if (Timelines.moveTimelineOrder(timelines, kind, currentTimeline)) {
-			setTimelines(editContext.data.setting.timelineNodes = [...timelines]);
+		if (Timelines.moveTimelineOrder(timelineNodes, kind, currentTimeline)) {
+			setTimelineNodes(props.editData.setting.timelineNodes = [...timelineNodes]);
 		}
 	}
 
 	function handleAddNextSiblingItem(kind: TimelineKind, currentTimeline: Timeline) {
-		const currentIndex = timelines.findIndex(a => a === currentTimeline);
+		const currentIndex = timelineNodes.findIndex(a => a === currentTimeline);
 
 		let item: GroupTimeline | TaskTimeline | null = null;
 		switch (kind) {
@@ -73,29 +74,22 @@ const Component: NextPage = () => {
 				throw new Error();
 		}
 
-		editContext.data.setting.timelineNodes.splice(currentIndex + 1, 0, item);
-		setTimelines([...editContext.data.setting.timelineNodes]);
+		props.editData.setting.timelineNodes.splice(currentIndex + 1, 0, item);
+		setTimelineNodes([...props.editData.setting.timelineNodes]);
 	}
 
 	function handleDeleteChildren(currentTimeline: Timeline) {
-		const nextTimelines = editContext.data.setting.timelineNodes.filter(a => a !== currentTimeline);
+		const nextTimelines = props.editData.setting.timelineNodes.filter(a => a !== currentTimeline);
 
-		setTimelines(editContext.data.setting.timelineNodes = nextTimelines);
+		setTimelineNodes(props.editData.setting.timelineNodes = nextTimelines);
 	}
 
 	function handleUpdateChildrenBeginDate() {
-		updateRelations();
+		props.updateRelations();
 	}
 
 	function handleUpdateChildrenWorkload() {
-		updateRelations();
-	}
-
-	function updateRelations() {
-		console.log("全体へ通知");
-		const timelineMap = Timelines.getTimelinesMap(editContext.data.setting.timelineNodes);
-		const map = Timelines.getTimeRanges([...timelineMap.values()], editContext.data.setting.calendar.holiday, editContext.data.setting.recursive);
-		setTimeRanges(map);
+		props.updateRelations();
 	}
 
 	function fireDropTimeline(dropTimeline: DropTimeline) {
@@ -103,19 +97,19 @@ const Component: NextPage = () => {
 
 		if (!dropTimeline.sourceGroupTimeline && !dropTimeline.destinationGroupTimeline) {
 			// 最上位完結
-			Timelines.moveTimelineIndex(editContext.data.setting.timelineNodes, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
-			setTimelines([...editContext.data.setting.timelineNodes]);
+			Timelines.moveTimelineIndex(props.editData.setting.timelineNodes, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
+			setTimelineNodes([...props.editData.setting.timelineNodes]);
 		} else {
 			// 最上位に対してあれこれ
 			if (!dropTimeline.sourceGroupTimeline) {
 				// 移動元が親なので破棄
-				const nextTimelines = editContext.data.setting.timelineNodes.filter(a => a.id !== dropTimeline.timeline.id);
-				setTimelines(editContext.data.setting.timelineNodes = nextTimelines);
+				const nextTimelines = props.editData.setting.timelineNodes.filter(a => a.id !== dropTimeline.timeline.id);
+				setTimelineNodes(props.editData.setting.timelineNodes = nextTimelines);
 			}
 			if (!dropTimeline.destinationGroupTimeline) {
 				// 移動先が親なので追加
-				editContext.data.setting.timelineNodes.splice(dropTimeline.sourceIndex + 1, 0, dropTimeline.timeline);
-				setTimelines([...editContext.data.setting.timelineNodes]);
+				props.editData.setting.timelineNodes.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
+				setTimelineNodes([...props.editData.setting.timelineNodes]);
 			}
 			// 子に通知
 			setDropTimeline(dropTimeline);
@@ -168,7 +162,7 @@ const Component: NextPage = () => {
 			onDrop: (ev, targetTimeline) => {
 				console.debug("DROP", ev, targetTimeline);
 
-				const rootNodes = editContext.data.setting.timelineNodes;
+				const rootNodes = props.editData.setting.timelineNodes;
 				const sourceGroupTimelines = Timelines.getParentGroup(sourceTimeline, rootNodes);
 				const targetGroupTimelines = Timelines.getParentGroup(targetTimeline, rootNodes);
 
@@ -234,12 +228,22 @@ const Component: NextPage = () => {
 		setDraggingTimeline(dragging);
 	}
 
+	function canSelectCore(targetTimeline: Timeline, currentTimeline: Timeline): boolean {
+		const groups = Timelines.getParentGroup(currentTimeline, timelineNodes);
+		if (groups && groups.length) {
+			return !groups.some(a => a.id === targetTimeline.id);
+		}
+
+		return true;
+	}
+
 	function handleStartSelectBeginDate(timeline: TaskTimeline): void {
 		console.debug(timeline);
 		setSelectingBeginDate({
 			timeline: timeline,
 			beginDate: timeline.static ? new Date(timeline.static) : null,
 			previous: new Set(timeline.previous),
+			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
 		})
 	}
 
@@ -248,6 +252,7 @@ const Component: NextPage = () => {
 			timeline: timeline,
 			beginDate: null,
 			previous: new Set(),
+			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
 		})
 	}
 
@@ -259,62 +264,67 @@ const Component: NextPage = () => {
 		setSelectingBeginDate(null);
 	}
 
-	useEffect(() => {
-		updateRelations();
-	}, []);
+	const notifyParentCallbacks: NotifyParentCallbacks = {
+		notifyMove: handleUpdateChildrenOrder,
+		notifyDelete: handleDeleteChildren,
+		notifyDragStart: handleStartDragTimeline,
+	};
+
+	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
+		updatedBeginDate: handleUpdateChildrenBeginDate,
+		updatedWorkload: handleUpdateChildrenWorkload,
+		updatedProgress: () => { /* nop */ },
+	}
+
+	const beginDateCallbacks: BeginDateCallbacks = {
+		startSelectBeginDate: handleStartSelectBeginDate,
+		clearSelectBeginDate: handleClearSelectBeginDate,
+		submitSelectBeginDate: handleSubmitSelectBeginDate,
+		cancelSelectBeginDate: handleCancelSelectBeginDate,
+	}
 
 	return (
 		<div id='timelines'>
 			<>
 				<ul>
-					{timelines.map((a, i) => {
+					{timelineNodes.map((a, i) => {
 						return (
 							<li key={a.id}>
 								{
 									Settings.maybeGroupTimeline(a) ? (
 										<GroupTimelineEditor
+											configuration={props.configuration}
+											editData={props.editData}
 											treeIndexes={[]}
 											currentIndex={i}
 											parentGroup={null}
 											currentTimeline={a}
-											timeRanges={timeRanges}
+											timeRanges={props.timeRanges}
 											draggingTimeline={draggingTimeline}
 											selectingBeginDate={selectingBeginDate}
 											dropTimeline={dropTimeline}
-											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
-											callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
-											callbackRefreshChildrenWorkload={handleUpdateChildrenWorkload}
-											callbackRefreshChildrenProgress={() => { /*nop*/ }}
-											callbackDeleteChildTimeline={handleDeleteChildren}
-											callbackDraggingTimeline={handleStartDragTimeline}
-											callbackStartSelectBeginDate={handleStartSelectBeginDate}
-											callbackClearSelectBeginDate={handleClearSelectBeginDate}
-											callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}
-											callbackCancelSelectBeginDate={handleCancelSelectBeginDate}
+											notifyParentCallbacks={notifyParentCallbacks}
+											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
+											beginDateCallbacks={beginDateCallbacks}
 										/>
 									) : null
 								}
 								{
 									Settings.maybeTaskTimeline(a) ? (
 										<TaskTimelineEditor
+											configuration={props.configuration}
+											editData={props.editData}
 											treeIndexes={[]}
 											currentIndex={i}
 											parentGroup={null}
 											currentTimeline={a}
-											timeRanges={timeRanges}
+											timeRanges={props.timeRanges}
 											draggingTimeline={draggingTimeline}
 											selectingBeginDate={selectingBeginDate}
-											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
-											callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
-											callbackRefreshChildrenWorkload={handleUpdateChildrenWorkload}
-											callbackRefreshChildrenProgress={() => { /*nop*/ }}
 											callbackAddNextSiblingItem={handleAddNextSiblingItem}
-											callbackDeleteChildTimeline={handleDeleteChildren}
-											callbackDraggingTimeline={handleStartDragTimeline}
-											callbackStartSelectBeginDate={handleStartSelectBeginDate}
-											callbackClearSelectBeginDate={handleClearSelectBeginDate}
-											callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}
-											callbackCancelSelectBeginDate={handleCancelSelectBeginDate}
+											notifyParentCallbacks={notifyParentCallbacks}
+											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
+											beginDateCallbacks={beginDateCallbacks}
 										/>
 									) : null
 								}

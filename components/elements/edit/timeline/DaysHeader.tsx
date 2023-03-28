@@ -1,23 +1,24 @@
 import { NextPage } from "next";
-import { CSSProperties, useContext } from "react";
+import { CSSProperties } from "react";
 
-import { EditContext } from "@/models/data/context/EditContext";
 import { useLocale } from "@/models/locales/locale";
 import { Holiday, Theme } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
 import { Settings } from "@/models/Settings";
+import { EditProps } from "@/models/data/props/EditProps";
 
-const Component: NextPage = () => {
+interface Props extends EditProps { }
+
+const Component: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
-	const editContext = useContext(EditContext);
 
 	const range = {
-		from: new Date(editContext.data.setting.calendar.range.from),
-		to: new Date(editContext.data.setting.calendar.range.to),
+		from: new Date(props.editData.setting.calendar.range.from),
+		to: new Date(props.editData.setting.calendar.range.to),
 	};
 
-	editContext.data.setting.calendar.holiday.regulars
-	editContext.data.setting.calendar.holiday.events
+	props.editData.setting.calendar.holiday.regulars
+	props.editData.setting.calendar.holiday.events
 
 	const diff = range.to.getTime() - range.from.getTime();
 	const days = diff / (24 * 60 * 60 * 1000);
@@ -50,7 +51,7 @@ const Component: NextPage = () => {
 		return a.month - b.month;
 	});
 
-	const cellStyle = editContext.design.cell;
+	const cellStyle = props.configuration.design.cell;
 
 	return (
 		<div id='days-header'>
@@ -68,7 +69,7 @@ const Component: NextPage = () => {
 					</tr>
 					<tr className='day'>
 						{dates.map(a => {
-							const style = getDayStyles(a, editContext.data.setting.calendar.holiday, editContext.data.setting.theme);
+							const style = getDayStyles(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
 
 							return (
 								<td key={a.getTime()} className='cell' style={{ ...cellStyle, ...style }}>
@@ -79,7 +80,7 @@ const Component: NextPage = () => {
 					</tr>
 					<tr className='week'>
 						{dates.map(a => {
-							const style = getDayStyles(a, editContext.data.setting.calendar.holiday, editContext.data.setting.theme);
+							const style = getDayStyles(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
 
 							return (
 								<td key={a.getTime()} className='cell' style={{ ...cellStyle, ...style }}>
@@ -92,7 +93,7 @@ const Component: NextPage = () => {
 				<tbody>
 					<tr className='pin'>
 						{dates.map(a => {
-							const style = getDayStyles(a, editContext.data.setting.calendar.holiday, editContext.data.setting.theme);
+							const style = getDayStyles(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
 
 							return (
 								<td key={a.getTime()} className='cell' style={{ ...cellStyle, ...style }}>

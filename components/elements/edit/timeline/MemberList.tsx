@@ -1,19 +1,18 @@
 import { NextPage } from "next";
 
-import { ReactNode, useContext } from "react";
-import { EditContext } from "@/models/data/context/EditContext";
-import { Member, MemberId } from "@/models/data/Setting";
+import { ReactNode } from "react";
+import { Group, Member, MemberId } from "@/models/data/Setting";
 
 interface Props {
+	groups: ReadonlyArray<Group>;
 	selectedMemberId: MemberId;
 	disabled: boolean;
 	callbackChangeMember(memberId: MemberId, memberName: string): void;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
-	const editContext = useContext(EditContext);
 
-	const groups = [...editContext.data.setting.groups]
+	const groups = [...props.groups]
 		.sort((a, b) => a.name.localeCompare(b.name))
 		;
 

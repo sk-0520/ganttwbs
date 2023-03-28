@@ -1,53 +1,40 @@
 import { NextPage } from "next";
-import { CSSProperties, useContext, useEffect, useState, DragEvent } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 
-import Timelines from "@/models/Timelines";
-import { EditContext } from "@/models/data/context/EditContext";
+import { Timelines } from "@/models/Timelines";
 import { useLocale } from "@/models/locales/locale";
 
 import GroupTimelineEditor from "./GroupTimelineEditor";
 import TaskTimelineEditor from "./TaskTimelineEditor";
-import IndexNumber from "./IndexNumber";
 import TimelineControls, { MoveItemKind } from "./TimelineControls";
-import { GroupTimeline, TaskTimeline, Theme, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
-import { TimeRange, TimeRangeKind, TimeRanges } from "@/models/TimeRange";
-import Timestamp from "../../Timestamp";
-import SelectingBeginDate from "@/models/data/SelectingBeginDate";
+import { GroupTimeline, TaskTimeline, Theme, Timeline, TimelineKind } from "@/models/data/Setting";
+import { TimeRangeKind, TimeRanges } from "@/models/TimeRange";
 import { Settings } from "@/models/Settings";
-import DraggingTimeline from "@/models/data/DraggingTimeline";
-import DropTimeline from "@/models/data/DropTimeline";
+import { DropTimeline } from "@/models/data/DropTimeline";
+import { EditProps } from "@/models/data/props/EditProps";
+import { TimeLineEditorProps } from "@/models/data/props/TimeLineEditorProps";
+import ProgressCell from "./cell/ProgressCell";
+import WorkloadCell from "./cell/WorkloadCell";
+import TimeRangeCells from "./cell/TimeRangeCells";
+import { RefreshedChildrenCallbacks } from "@/models/data/RefreshedChildrenCallbacks";
+import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
+import SubjectCell from "./cell/SubjectCell";
+import IdCell from "./cell/IdCell";
+import TimelineHeaderRow from "./cell/TimelineHeaderRow";
 
-interface Props {
-	treeIndexes: Array<number>;
-	parentGroup: GroupTimeline | null;
-	currentIndex: number;
-	currentTimeline: GroupTimeline;
-	timeRanges: ReadonlyMap<TimelineId, TimeRange>;
-	draggingTimeline: DraggingTimeline | null;
+interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 	dropTimeline: DropTimeline | null;
-	selectingBeginDate: SelectingBeginDate | null;
-	callbackRefreshChildrenOrder: (kind: MoveItemKind, currentTimeline: Timeline) => void;
-	callbackRefreshChildrenBeginDate(): void;
-	callbackRefreshChildrenWorkload(): void;
-	callbackRefreshChildrenProgress(): void;
-	callbackDeleteChildTimeline(currentTimeline: Timeline): void;
-	callbackDraggingTimeline(event: DragEvent, timeline: Timeline): void;
-	callbackStartSelectBeginDate(timeline: TaskTimeline): void;
-	callbackClearSelectBeginDate(timeline: TaskTimeline): void;
-	callbackSubmitSelectBeginDate(timeline: TaskTimeline): void;
-	callbackCancelSelectBeginDate(timeline: TaskTimeline): void;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
-	const editContext = useContext(EditContext);
 
 	const selectingId = "timeline-node-previous-" + props.currentTimeline.id;
 
 	const heightStyle: CSSProperties = {
-		maxHeight: editContext.design.cell.maxHeight,
-		minHeight: editContext.design.cell.minHeight,
-		...getGroupStyles(props.treeIndexes.length, editContext.data.setting.theme)
+		maxHeight: props.configuration.design.cell.maxHeight,
+		minHeight: props.configuration.design.cell.minHeight,
+		...getGroupStyles(props.treeIndexes.length, props.editData.setting.theme)
 	};
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
@@ -58,7 +45,6 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [progressPercent, setProgressPercent] = useState(Timelines.sumProgressByGroup(props.currentTimeline) * 100.0);
 	const [children, setChildren] = useState(props.currentTimeline.children);
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
-	const [dropEventClassName, setDropEventClassName] = useState('');
 
 	useEffect(() => {
 		const timeRange = props.timeRanges.get(props.currentTimeline.id);
@@ -99,12 +85,11 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	useEffect(() => {
 		if (!props.draggingTimeline) {
-			setDropEventClassName('');
 			handleUpdateChildrenWorkload();
 			handleUpdateChildrenProgress();
 
-			props.callbackRefreshChildrenWorkload();
-			props.callbackRefreshChildrenProgress();
+			props.refreshedChildrenCallbacks.updatedWorkload();
+			props.refreshedChildrenCallbacks.updatedProgress();
 		}
 	}, [props.draggingTimeline]);
 
@@ -114,7 +99,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleControlMoveItem(kind: MoveItemKind) {
-		props.callbackRefreshChildrenOrder(kind, props.currentTimeline);
+		props.notifyParentCallbacks.notifyMove(kind, props.currentTimeline);
 	}
 
 	function handleControlAddItem(kind: TimelineKind) {
@@ -141,12 +126,12 @@ const Component: NextPage<Props> = (props: Props) => {
 		handleUpdateChildrenWorkload();
 		handleUpdateChildrenProgress();
 
-		props.callbackRefreshChildrenWorkload();
-		props.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.updatedWorkload();
+		props.refreshedChildrenCallbacks.updatedProgress();
 	}
 
 	function handleControlDeleteItem() {
-		props.callbackDeleteChildTimeline(props.currentTimeline);
+		props.notifyParentCallbacks.notifyDelete(props.currentTimeline);
 	}
 
 	function handleUpdateChildrenOrder(kind: MoveItemKind, currentTimeline: Timeline) {
@@ -175,26 +160,26 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.currentTimeline.children.splice(currentIndex + 1, 0, item);
 		setChildren([...props.currentTimeline.children]);
 
-		props.callbackRefreshChildrenWorkload();
-		props.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.updatedWorkload();
+		props.refreshedChildrenCallbacks.updatedProgress();
 	}
 
 	function handleUpdateChildrenBeginDate() {
-		props.callbackRefreshChildrenBeginDate();
+		props.refreshedChildrenCallbacks.updatedBeginDate();
 	}
 
 	function handleUpdateChildrenWorkload() {
 		const summary = Timelines.sumWorkloadByGroup(props.currentTimeline);
 		setWorkload(summary.totalDays);
 
-		props.callbackRefreshChildrenWorkload();
+		props.refreshedChildrenCallbacks.updatedWorkload();
 	}
 
 	function handleUpdateChildrenProgress() {
 		const progress = Timelines.sumProgressByGroup(props.currentTimeline);
 		setProgressPercent(progress * 100.0);
 
-		props.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.updatedProgress();
 	}
 
 	function handleDeleteChildren(currentTimeline: Timeline) {
@@ -204,8 +189,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		handleUpdateChildrenWorkload();
 		handleUpdateChildrenProgress();
 
-		props.callbackRefreshChildrenWorkload();
-		props.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.updatedWorkload();
+		props.refreshedChildrenCallbacks.updatedProgress();
 	}
 
 	function handleChangePrevious(isSelected: boolean): void {
@@ -221,114 +206,74 @@ const Component: NextPage<Props> = (props: Props) => {
 		setIsSelectedPrevious(isSelected);
 	}
 
-	function handleDragOver() {
-		setDropEventClassName('drag-over')
-	}
-	function handleDragLeave() {
-		setDropEventClassName('')
+	const notifyParentCallbacks: NotifyParentCallbacks = {
+		notifyMove: handleUpdateChildrenOrder,
+		notifyDelete: handleDeleteChildren,
+		notifyDragStart: props.notifyParentCallbacks.notifyDragStart,
+	};
+
+	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
+		updatedBeginDate: handleUpdateChildrenBeginDate,
+		updatedWorkload: handleUpdateChildrenWorkload,
+		updatedProgress: handleUpdateChildrenProgress,
 	}
 
 	return (
-		<div className='group'>
-			<div
-				className={
-					'timeline-header'
-					+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? ' dragging' : '')
-					+ ' ' + dropEventClassName
-				}
-				style={heightStyle}
-				onDragEnter={ev => props.draggingTimeline?.onDragEnter(ev, props.currentTimeline)}
-				onDragOver={ev => props.draggingTimeline?.onDragOver(ev, props.currentTimeline, handleDragOver)}
-				onDragLeave={ev => props.draggingTimeline?.onDragLeave(ev, props.currentTimeline, handleDragLeave)}
-				onDrop={ev => props.draggingTimeline?.onDrop(ev, props.currentTimeline)}
-			>
-				<div
-					className={
-						'timeline-id'
-						+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? ' dragging' : '')
-					}
-					title={props.currentTimeline.id}
-					draggable={!props.selectingBeginDate}
-					onDragStart={ev => props.callbackDraggingTimeline(ev, props.currentTimeline)}
-					onDragEnd={props.draggingTimeline?.onDragEnd}
+		<>
+			<div className='group'>
+				<TimelineHeaderRow
+					currentTimeline={props.currentTimeline}
+					selectingBeginDate={props.selectingBeginDate}
+					draggingTimeline={props.draggingTimeline}
+					heightStyle={heightStyle}
 				>
-					<label>
-						{props.selectingBeginDate
-							? (
-								<input
-									id={selectingId}
-									type="checkbox"
-									value={props.currentTimeline.id}
-									checked={isSelectedPrevious}
-									onChange={ev => handleChangePrevious(ev.target.checked)}
-								/>
-							) : (
-								<span className="timeline-kind icon-timeline-group-after" />
-							)
-						}
-						<IndexNumber treeIndexes={props.treeIndexes} currentIndex={props.currentIndex} />
-					</label>
-				</div>
-				<div className='timeline-subject'>
-					<input
-						type='text'
+					<IdCell
+						selectingId={selectingId}
+						treeIndexes={props.treeIndexes}
+						currentIndex={props.currentIndex}
+						currentTimeline={props.currentTimeline}
+						isSelectedPrevious={isSelectedPrevious}
+						draggingTimeline={props.draggingTimeline}
+						notifyParentCallbacks={props.notifyParentCallbacks}
+						selectingBeginDate={props.selectingBeginDate}
+						callbackChangePrevious={handleChangePrevious}
+					/>
+					<SubjectCell
 						value={subject}
 						disabled={props.selectingBeginDate !== null}
-						onChange={ev => handleChangeSubject(ev.target.value)}
+						readOnly={false}
+						callbackChangeValue={handleChangeSubject}
 					/>
-				</div>
-				<div className='timeline-workload'>
-					<input
-						type="number"
-						step="0.01"
+					<WorkloadCell
 						readOnly={true}
 						disabled={props.selectingBeginDate !== null}
-						value={Timelines.displayWorkload(workload)}
+						value={workload}
 					/>
-				</div>
-				<div className='timeline-resource'>
-				</div>
-				{
-					beginKind === "success"
-						? (
-							<>
-								<div className='timeline-range-from'>
-									<label htmlFor={selectingId}>
-										<Timestamp format="date" date={beginDate} />
-									</label>
-								</div>
-								<div className='timeline-range-to'>
-									<label htmlFor={selectingId}>
-										<Timestamp format="date" date={endDate} />
-									</label>
-								</div>
-							</>
-						) : (
-							<div className="timeline-range-area">
-								{beginKind}
-							</div>
-						)
-				}
-				<div className='timeline-progress'>
-					<span>
-						<input
-							type="number"
-							readOnly={true}
-							disabled={props.selectingBeginDate !== null}
-							value={Timelines.displayProgress(progressPercent)}
-						/>
-					</span>
-				</div>
-				<div className="timeline-controls">
-					<TimelineControls
-						currentTimelineKind="group"
+					<div className='timeline-resource'>
+					</div>
+					<TimeRangeCells
+						timeRangeKind={beginKind}
+						selectable={props.selectingBeginDate !== null}
+						beginDate={beginDate}
+						endDate={endDate}
+						htmlFor={selectingId}
+					/>
+					<ProgressCell
+						readOnly={true}
 						disabled={props.selectingBeginDate !== null}
-						moveItem={handleControlMoveItem}
-						addItem={handleControlAddItem}
-						deleteItem={handleControlDeleteItem}
+						value={progressPercent}
 					/>
-				</div>
-			</div>
+					<div className="timeline-controls">
+						<TimelineControls
+							currentTimelineKind="group"
+							disabled={props.selectingBeginDate !== null}
+							moveItem={handleControlMoveItem}
+							addItem={handleControlAddItem}
+							deleteItem={handleControlDeleteItem}
+						/>
+					</div>
+				</TimelineHeaderRow>
+			</div >
 			{props.currentTimeline.children.length ? (
 				<ul>
 					{props.currentTimeline.children.map((a, i) => {
@@ -337,6 +282,8 @@ const Component: NextPage<Props> = (props: Props) => {
 								{
 									Settings.maybeGroupTimeline(a) ? (
 										<GroupTimelineEditor
+											configuration={props.configuration}
+											editData={props.editData}
 											treeIndexes={[...props.treeIndexes, props.currentIndex]}
 											currentIndex={i}
 											parentGroup={props.currentTimeline}
@@ -345,22 +292,17 @@ const Component: NextPage<Props> = (props: Props) => {
 											draggingTimeline={props.draggingTimeline}
 											dropTimeline={props.dropTimeline}
 											selectingBeginDate={props.selectingBeginDate}
-											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
-											callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
-											callbackRefreshChildrenWorkload={handleUpdateChildrenWorkload}
-											callbackRefreshChildrenProgress={handleUpdateChildrenProgress}
-											callbackDeleteChildTimeline={handleDeleteChildren}
-											callbackDraggingTimeline={props.callbackDraggingTimeline}
-											callbackStartSelectBeginDate={props.callbackStartSelectBeginDate}
-											callbackClearSelectBeginDate={props.callbackClearSelectBeginDate}
-											callbackSubmitSelectBeginDate={props.callbackSubmitSelectBeginDate}
-											callbackCancelSelectBeginDate={props.callbackCancelSelectBeginDate}
+											notifyParentCallbacks={notifyParentCallbacks}
+											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
+											beginDateCallbacks={props.beginDateCallbacks}
 										/>
 									) : null
 								}
 								{
 									Settings.maybeTaskTimeline(a) ? (
 										<TaskTimelineEditor
+											configuration={props.configuration}
+											editData={props.editData}
 											treeIndexes={[...props.treeIndexes, props.currentIndex]}
 											currentIndex={i}
 											parentGroup={props.currentTimeline}
@@ -368,17 +310,10 @@ const Component: NextPage<Props> = (props: Props) => {
 											timeRanges={props.timeRanges}
 											draggingTimeline={props.draggingTimeline}
 											selectingBeginDate={props.selectingBeginDate}
-											callbackRefreshChildrenOrder={handleUpdateChildrenOrder}
-											callbackRefreshChildrenBeginDate={handleUpdateChildrenBeginDate}
-											callbackRefreshChildrenWorkload={handleUpdateChildrenWorkload}
-											callbackRefreshChildrenProgress={handleUpdateChildrenProgress}
 											callbackAddNextSiblingItem={handleAddNextSiblingItem}
-											callbackDeleteChildTimeline={handleDeleteChildren}
-											callbackDraggingTimeline={props.callbackDraggingTimeline}
-											callbackStartSelectBeginDate={props.callbackStartSelectBeginDate}
-											callbackClearSelectBeginDate={props.callbackClearSelectBeginDate}
-											callbackSubmitSelectBeginDate={props.callbackSubmitSelectBeginDate}
-											callbackCancelSelectBeginDate={props.callbackCancelSelectBeginDate}
+											notifyParentCallbacks={notifyParentCallbacks}
+											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
+											beginDateCallbacks={props.beginDateCallbacks}
 										/>
 									) : null
 								}
@@ -387,7 +322,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					})}
 				</ul>
 			) : null}
-		</div >
+		</>
 	);
 };
 

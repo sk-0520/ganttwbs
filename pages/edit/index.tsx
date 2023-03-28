@@ -7,23 +7,25 @@ import FileEditor from "@/components/elements/edit/file/FileEditor";
 import SettingEditor from "@/components/elements/edit/setting/SettingEditor";
 import TimelineEditor from "@/components/elements/edit/timeline/TimelineEditor";
 import Layout from "@/components/layout/Layout";
-import * as Storage from "@/models/Storage";
+import { Storage } from "@/models/Storage";
 import { EditData } from "@/models/data/EditData";
-import { EditContext, EditContextImpl } from "@/models/data/context/EditContext";
-//import * as Setting from '@/models/data/setting/Setting';
+import { Configuration } from "@/models/data/Configuration";
+import { TimeSpan } from "@/models/TimeSpan";
 
-const Edit: NextPage = () => {
+const Page: NextPage = () => {
 	const initTabIndex = 1;
+
 	const router = useRouter();
-	const [data, setData] = useState<EditData>();
+	const [configuration] = useState(createConfiguration());
+	const [editData, setEditData] = useState<EditData | null>(null);
 
 	useEffect(() => {
-		const data = Storage.loadEditData();
-		if (!data) {
+		const editData = Storage.loadEditData();
+		if (!editData) {
 			router.push("/");
 			return;
 		}
-		setData(data);
+		setEditData(editData);
 	}, [router]);
 
 	// const tabRef = useRef<HTMLDivElement>(null);
@@ -36,38 +38,54 @@ const Edit: NextPage = () => {
 
 	return (
 		<Layout mode='application' layoutId='edit'
-			title={data ? data.fileName + " 編集" : "編集"}
+			title={editData ? editData.fileName + " 編集" : "編集"}
 		>
 			<>
-				{!data && <p>読み込み中</p>}
-				{data && (
-					<EditContext.Provider value={new EditContextImpl(data)}>
-						<Tabs defaultIndex={initTabIndex} forceRenderTabPanel={true} >
-							<TabList>
-								<Tab>ファイル</Tab>
-								<Tab>編集</Tab>
-								<Tab>設定</Tab>
-							</TabList>
+				{!editData && <p>読み込み中</p>}
+				{editData && (
+					<Tabs defaultIndex={initTabIndex} forceRenderTabPanel={true} >
+						<TabList>
+							<Tab>ファイル</Tab>
+							<Tab>編集</Tab>
+							<Tab>設定</Tab>
+						</TabList>
 
-							{/* ファイル */}
-							<TabPanel className='tab panel tab-file'>
-								<FileEditor />
-							</TabPanel>
-							{/* ほんたい */}
-							<TabPanel className='tab panel tab-timeline' >
-								<TimelineEditor />
-							</TabPanel>
-							{/* 設定 */}
-							<TabPanel className='tab panel tab-setting'>
-								<SettingEditor />
-							</TabPanel>
-						</Tabs>
-					</EditContext.Provider>
+						{/* ファイル */}
+						<TabPanel className='tab panel tab-file'>
+							<FileEditor configuration={configuration} editData={editData} />
+						</TabPanel>
+						{/* ほんたい */}
+						<TabPanel className='tab panel tab-timeline' >
+							<TimelineEditor configuration={configuration} editData={editData} />
+						</TabPanel>
+						{/* 設定 */}
+						<TabPanel className='tab panel tab-setting'>
+							<SettingEditor editData={editData} />
+						</TabPanel>
+					</Tabs>
 				)}
 			</>
 		</Layout>
 	);
 };
 
-export default Edit;
+export default Page;
 
+function createConfiguration(): Configuration {
+	const result: Configuration = {
+		autoSave: {
+			isEnabled: false,
+			span: TimeSpan.fromMinutes(3),
+		},
+		design: {
+			cell: {
+				maxWidth: "20px",
+				minWidth: "20px",
+				maxHeight: "20px",
+				minHeight: "20px",
+			}
+		}
+	};
+
+	return result;
+}

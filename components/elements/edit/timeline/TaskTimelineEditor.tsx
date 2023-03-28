@@ -1,53 +1,36 @@
 import { NextPage } from "next";
-import { DragEvent, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { EditContext } from "@/models/data/context/EditContext";
 import { useLocale } from "@/models/locales/locale";
 
-import IndexNumber from "./IndexNumber";
 import TimelineControls from "./TimelineControls";
 import { MoveItemKind } from "./TimelineControls";
 import MemberList from "./MemberList";
-import { GroupTimeline, MemberId, TaskTimeline, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
+import { MemberId, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Strings } from "@/models/Strings";
-import { TimeRange, TimeRangeKind, TimeRanges } from "@/models/TimeRange";
-import Timestamp from "../../Timestamp";
-import Timelines from "@/models/Timelines";
-import SelectingBeginDate from "@/models/data/SelectingBeginDate";
-import DraggingTimeline from "@/models/data/DraggingTimeline";
+import { TimeRangeKind, TimeRanges } from "@/models/TimeRange";
+import { EditProps } from "@/models/data/props/EditProps";
+import { TimeLineEditorProps } from "@/models/data/props/TimeLineEditorProps";
+import ProgressCell from "./cell/ProgressCell";
+import WorkloadCell from "./cell/WorkloadCell";
+import TimeRangeCells from "./cell/TimeRangeCells";
+import SubjectCell from "./cell/SubjectCell";
+import IdCell from "./cell/IdCell";
+import TimelineHeaderRow from "./cell/TimelineHeaderRow";
 
-
-interface Props {
-	parentGroup: GroupTimeline | null;
-	treeIndexes: Array<number>;
-	currentIndex: number;
-	currentTimeline: TaskTimeline;
-	timeRanges: ReadonlyMap<TimelineId, TimeRange>;
-	draggingTimeline: DraggingTimeline | null;
-	selectingBeginDate: SelectingBeginDate | null;
-	callbackRefreshChildrenOrder: (kind: MoveItemKind, currentTimeline: Timeline) => void;
-	callbackRefreshChildrenBeginDate(): void;
-	callbackRefreshChildrenWorkload(): void;
-	callbackRefreshChildrenProgress(): void;
+interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
-	callbackDeleteChildTimeline(currentTimeline: Timeline): void;
-	callbackDraggingTimeline(event: DragEvent, timeline: Timeline): void;
-	callbackStartSelectBeginDate(timeline: TaskTimeline): void;
-	callbackClearSelectBeginDate(timeline: TaskTimeline): void;
-	callbackSubmitSelectBeginDate(timeline: TaskTimeline): void;
-	callbackCancelSelectBeginDate(timeline: TaskTimeline): void;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
-	const editContext = useContext(EditContext);
 
 	const selectingId = "timeline-node-previous-" + props.currentTimeline.id;
 
 	const heightStyle = {
-		maxHeight: editContext.design.cell.maxHeight,
-		minHeight: editContext.design.cell.minHeight,
+		maxHeight: props.configuration.design.cell.maxHeight,
+		minHeight: props.configuration.design.cell.minHeight,
 	};
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
@@ -60,7 +43,6 @@ const Component: NextPage<Props> = (props: Props) => {
 	//const [selectingBeginDate, setSelectingBeginDate] = useState(false);
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
 	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
-	const [dropEventClassName, setDropEventClassName] = useState('');
 
 	useEffect(() => {
 		const timeRange = props.timeRanges.get(props.currentTimeline.id);
@@ -82,12 +64,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 	}, [props.selectingBeginDate]);
 
-	useEffect(() => {
-		if (!props.draggingTimeline) {
-			setDropEventClassName('');
-		}
-	}, [props.draggingTimeline]);
-
 	function handleChangeSubject(s: string) {
 		setSubject(s);
 		props.currentTimeline.subject = s;
@@ -97,29 +73,29 @@ const Component: NextPage<Props> = (props: Props) => {
 		setWorkload(n);
 		props.currentTimeline.workload = TimeSpan.fromDays(n).toString("readable");
 
-		props.callbackRefreshChildrenWorkload();
+		props.refreshedChildrenCallbacks.updatedWorkload();
 	}
 
 	function handleChangeProgress(n: number) {
 		setProgressPercent(n);
 		props.currentTimeline.progress = n / 100.0;
 
-		props.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.updatedProgress();
 	}
 
 	function handleControlMoveItem(kind: MoveItemKind) {
-		props.callbackRefreshChildrenOrder(kind, props.currentTimeline);
+		props.notifyParentCallbacks.notifyMove(kind, props.currentTimeline);
 	}
 
 	function handleControlAddItem(kind: TimelineKind) {
 		props.callbackAddNextSiblingItem(kind, props.currentTimeline);
 
-		props.callbackRefreshChildrenWorkload();
-		props.callbackRefreshChildrenProgress();
+		props.refreshedChildrenCallbacks.updatedWorkload();
+		props.refreshedChildrenCallbacks.updatedProgress();
 	}
 
 	function handleControlDeleteItem() {
-		props.callbackDeleteChildTimeline(props.currentTimeline);
+		props.notifyParentCallbacks.notifyDelete(props.currentTimeline);
 	}
 
 	function handleChangeMember(memberId: MemberId): void {
@@ -133,7 +109,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 
 		//setSelectingBeginDate(true);
-		props.callbackStartSelectBeginDate(props.currentTimeline);
+		props.beginDateCallbacks.startSelectBeginDate(props.currentTimeline);
 	}
 
 	function handleChangePrevious(isSelected: boolean): void {
@@ -159,7 +135,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleClearPrevious() {
-		props.callbackClearSelectBeginDate(props.currentTimeline);
+		props.beginDateCallbacks.clearSelectBeginDate(props.currentTimeline);
 	}
 
 	function handleSubmitPrevious() {
@@ -170,82 +146,48 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.currentTimeline.static = props.selectingBeginDate.beginDate ? Strings.formatDate(props.selectingBeginDate.beginDate, "yyyy-MM-dd") : undefined;
 		props.currentTimeline.previous = [...props.selectingBeginDate.previous];
 
-		props.callbackSubmitSelectBeginDate(props.currentTimeline);
-		props.callbackRefreshChildrenBeginDate();
+		props.beginDateCallbacks.submitSelectBeginDate(props.currentTimeline);
+		props.refreshedChildrenCallbacks.updatedBeginDate();
 	}
 
 	function handleCancelPrevious() {
-		props.callbackCancelSelectBeginDate(props.currentTimeline)
-	}
-
-	function handleDragOver() {
-		setDropEventClassName('drag-over')
-	}
-	function handleDragLeave() {
-		setDropEventClassName('')
+		props.beginDateCallbacks.cancelSelectBeginDate(props.currentTimeline)
 	}
 
 	return (
-		<div className='task' style={heightStyle}>
-			<div
-				className={
-					'timeline-header'
-					+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? ' dragging' : '')
-					+ ' ' + dropEventClassName
-				}
-				onDragEnter={ev => props.draggingTimeline?.onDragEnter(ev, props.currentTimeline)}
-				onDragOver={ev => props.draggingTimeline?.onDragOver(ev, props.currentTimeline, handleDragOver)}
-				onDragLeave={ev => props.draggingTimeline?.onDragLeave(ev, props.currentTimeline, handleDragLeave)}
-				onDrop={ev => props.draggingTimeline?.onDrop(ev, props.currentTimeline)}
+		<div className='task'>
+			<TimelineHeaderRow
+				currentTimeline={props.currentTimeline}
+				selectingBeginDate={props.selectingBeginDate}
+				draggingTimeline={props.draggingTimeline}
+				heightStyle={heightStyle}
 			>
-				<div
-					className={
-						'timeline-id'
-						+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? ' dragging' : '')
-					}
-					title={props.currentTimeline.id}
-					draggable={!props.selectingBeginDate}
-					onDragStart={ev => props.callbackDraggingTimeline(ev, props.currentTimeline)}
-					onDragEnd={props.draggingTimeline?.onDragEnd}
-				>
-					<label>
-						{props.selectingBeginDate
-							? (
-								<input
-									id={selectingId}
-									type="checkbox"
-									disabled={props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id}
-									value={props.currentTimeline.id}
-									checked={isSelectedPrevious}
-									onChange={ev => handleChangePrevious(ev.target.checked)}
-								/>
-							) : (
-								<span className="timeline-kind icon-timeline-task-after" />
-							)
-						}
-						<IndexNumber treeIndexes={props.treeIndexes} currentIndex={props.currentIndex} />
-					</label>
-				</div>
-				<div className='timeline-subject'>
-					<input
-						type='text'
-						disabled={props.selectingBeginDate !== null}
-						value={subject}
-						onChange={ev => handleChangeSubject(ev.target.value)}
-					/>
-				</div>
-				<div className='timeline-workload'>
-					<input
-						type="number"
-						disabled={props.selectingBeginDate !== null}
-						step="0.25"
-						min={0}
-						value={Timelines.displayWorkload(workload)}
-						onChange={ev => handleChangeWorkload(ev.target.valueAsNumber)}
-					/>
-				</div>
+				<IdCell
+					selectingId={selectingId}
+					treeIndexes={props.treeIndexes}
+					currentIndex={props.currentIndex}
+					currentTimeline={props.currentTimeline}
+					isSelectedPrevious={isSelectedPrevious}
+					draggingTimeline={props.draggingTimeline}
+					notifyParentCallbacks={props.notifyParentCallbacks}
+					selectingBeginDate={props.selectingBeginDate}
+					callbackChangePrevious={handleChangePrevious}
+				/>
+				<SubjectCell
+					value={subject}
+					disabled={props.selectingBeginDate !== null}
+					readOnly={false}
+					callbackChangeValue={handleChangeSubject}
+				/>
+				<WorkloadCell
+					readOnly={true}
+					disabled={props.selectingBeginDate !== null}
+					value={workload}
+					callbackChangeValue={v => handleChangeWorkload(v)}
+				/>
 				<div className='timeline-resource'>
 					<MemberList
+						groups={props.editData.setting.groups}
 						selectedMemberId={memberId}
 						disabled={props.selectingBeginDate !== null}
 						callbackChangeMember={handleChangeMember}
@@ -255,7 +197,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
 						? (
 							<>
-								<div className='timeline-range-area'>
+								<div className='timeline-range-area prompt'>
 									<div className="single-line no-warp">
 										<ul className="inline">
 											<li><button type="button" onClick={handleClearPrevious}>🆓</button></li>
@@ -280,38 +222,22 @@ const Component: NextPage<Props> = (props: Props) => {
 								</div>
 							</>
 						) : (
-							beginKind === "success"
-								? (
-									<>
-										<div className={'timeline-range-from ' + (!props.selectingBeginDate ? 'selectable' : '')} onClick={handleClickBeginDate}>
-											<label htmlFor={selectingId}>
-												<Timestamp format="date" date={beginDate} />
-											</label>
-										</div>
-										<div className={'timeline-range-to ' + (!props.selectingBeginDate ? 'selectable' : '')} onClick={handleClickBeginDate}>
-											<label htmlFor={selectingId}>
-												<Timestamp format="date" date={endDate} />
-											</label>
-										</div>
-									</>
-								) : (
-									<div className={"timeline-range-area " + (!props.selectingBeginDate ? 'selectable' : '')} onClick={handleClickBeginDate}>
-										{beginKind}
-									</div>
-								)
+							<TimeRangeCells
+								timeRangeKind={beginKind}
+								selectable={props.selectingBeginDate !== null}
+								beginDate={beginDate}
+								endDate={endDate}
+								htmlFor={selectingId}
+								callbackClickBeginDate={handleClickBeginDate}
+							/>
 						)
 				}
-				<div className='timeline-progress'>
-					<input
-						type="number"
-						disabled={props.selectingBeginDate !== null}
-						min={0}
-						max={100}
-						step={1}
-						value={Timelines.displayProgress(progressPercent)}
-						onChange={ev => handleChangeProgress(ev.target.valueAsNumber)}
-					/>
-				</div>
+				<ProgressCell
+					readOnly={false}
+					disabled={props.selectingBeginDate !== null}
+					value={progressPercent}
+					callbackChangeValue={v => handleChangeProgress(v)}
+				/>
 				<div className="timeline-controls">
 					<TimelineControls
 						currentTimelineKind="task"
@@ -321,7 +247,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						deleteItem={handleControlDeleteItem}
 					/>
 				</div>
-			</div>
+			</TimelineHeaderRow>
 		</div >
 	);
 };

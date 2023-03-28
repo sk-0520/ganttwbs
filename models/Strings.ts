@@ -1,4 +1,4 @@
-export class Strings {
+export abstract class Strings {
 
 	/**
 	 * 非空文字列(ホワイトスペース構成は除く)か。
