@@ -21,6 +21,7 @@ import WorkloadCell from "./cell/WorkloadCell";
 import TimeRangeCells from "./cell/TimeRangeCells";
 import RefreshedChildrenCallbacks from "@/models/data/RefreshedChildrenCallbacks";
 import NotifyParentCallbacks from "@/models/data/NotifyParentCallbacks";
+import SubjectCell from "./cell/SubjectCell";
 
 interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 	dropTimeline: DropTimeline | null;
@@ -269,14 +270,12 @@ const Component: NextPage<Props> = (props: Props) => {
 						<IndexNumber treeIndexes={props.treeIndexes} currentIndex={props.currentIndex} />
 					</label>
 				</div>
-				<div className='timeline-subject'>
-					<input
-						type='text'
-						value={subject}
-						disabled={props.selectingBeginDate !== null}
-						onChange={ev => handleChangeSubject(ev.target.value)}
-					/>
-				</div>
+				<SubjectCell
+					value={subject}
+					disabled={props.selectingBeginDate !== null}
+					readOnly={false}
+					callbackChangeValue={handleChangeSubject}
+				/>
 				<WorkloadCell
 					readOnly={true}
 					disabled={props.selectingBeginDate !== null}

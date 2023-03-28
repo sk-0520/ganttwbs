@@ -19,6 +19,7 @@ import TimeLineEditorProps from "@/models/data/props/TimeLineEditorProps";
 import ProgressCell from "./cell/ProgressCell";
 import WorkloadCell from "./cell/WorkloadCell";
 import TimeRangeCells from "./cell/TimeRangeCells";
+import SubjectCell from "./cell/SubjectCell";
 
 interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
@@ -210,14 +211,12 @@ const Component: NextPage<Props> = (props: Props) => {
 						<IndexNumber treeIndexes={props.treeIndexes} currentIndex={props.currentIndex} />
 					</label>
 				</div>
-				<div className='timeline-subject'>
-					<input
-						type='text'
-						disabled={props.selectingBeginDate !== null}
-						value={subject}
-						onChange={ev => handleChangeSubject(ev.target.value)}
-					/>
-				</div>
+				<SubjectCell
+					value={subject}
+					disabled={props.selectingBeginDate !== null}
+					readOnly={false}
+					callbackChangeValue={handleChangeSubject}
+				/>
 				<WorkloadCell
 					readOnly={true}
 					disabled={props.selectingBeginDate !== null}
