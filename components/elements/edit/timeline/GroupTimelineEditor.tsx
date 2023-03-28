@@ -325,10 +325,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											selectingBeginDate={props.selectingBeginDate}
 											notifyParentCallbacks={notifyParentCallbacks}
 											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
-											callbackStartSelectBeginDate={props.callbackStartSelectBeginDate}
-											callbackClearSelectBeginDate={props.callbackClearSelectBeginDate}
-											callbackSubmitSelectBeginDate={props.callbackSubmitSelectBeginDate}
-											callbackCancelSelectBeginDate={props.callbackCancelSelectBeginDate}
+											beginDateCallbacks={props.beginDateCallbacks}
 										/>
 									) : null
 								}
@@ -347,10 +344,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											callbackAddNextSiblingItem={handleAddNextSiblingItem}
 											notifyParentCallbacks={notifyParentCallbacks}
 											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
-											callbackStartSelectBeginDate={props.callbackStartSelectBeginDate}
-											callbackClearSelectBeginDate={props.callbackClearSelectBeginDate}
-											callbackSubmitSelectBeginDate={props.callbackSubmitSelectBeginDate}
-											callbackCancelSelectBeginDate={props.callbackCancelSelectBeginDate}
+											beginDateCallbacks={props.beginDateCallbacks}
 										/>
 									) : null
 								}

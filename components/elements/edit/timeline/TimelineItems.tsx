@@ -9,7 +9,7 @@ import TaskTimelineEditor from "./TaskTimelineEditor";
 import { MoveItemKind } from "./TimelineControls";
 import { GroupTimeline, TaskTimeline, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { TimeRange } from "@/models/TimeRange";
-import SelectingBeginDate from "@/models/data/SelectingBeginDate";
+import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Settings } from "@/models/Settings";
 import DraggingTimeline from "@/models/data/DraggingTimeline";
 import DropTimeline from "@/models/data/DropTimeline";
@@ -265,6 +265,13 @@ const Component: NextPage<Props> = (props: Props) => {
 		callbackRefreshChildrenProgress: () => { /* nop */ },
 	}
 
+	const beginDateCallbacks: BeginDateCallbacks = {
+		callbackStartSelectBeginDate: handleStartSelectBeginDate,
+		callbackClearSelectBeginDate: handleClearSelectBeginDate,
+		callbackSubmitSelectBeginDate: handleSubmitSelectBeginDate,
+		callbackCancelSelectBeginDate: handleCancelSelectBeginDate,
+	}
+
 	return (
 		<div id='timelines'>
 			<>
@@ -287,10 +294,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											dropTimeline={dropTimeline}
 											notifyParentCallbacks={notifyParentCallbacks}
 											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
-											callbackStartSelectBeginDate={handleStartSelectBeginDate}
-											callbackClearSelectBeginDate={handleClearSelectBeginDate}
-											callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}
-											callbackCancelSelectBeginDate={handleCancelSelectBeginDate}
+											beginDateCallbacks={beginDateCallbacks}
 										/>
 									) : null
 								}
@@ -306,13 +310,10 @@ const Component: NextPage<Props> = (props: Props) => {
 											timeRanges={props.timeRanges}
 											draggingTimeline={draggingTimeline}
 											selectingBeginDate={selectingBeginDate}
+											callbackAddNextSiblingItem={handleAddNextSiblingItem}
 											notifyParentCallbacks={notifyParentCallbacks}
 											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
-											callbackAddNextSiblingItem={handleAddNextSiblingItem}
-											callbackStartSelectBeginDate={handleStartSelectBeginDate}
-											callbackClearSelectBeginDate={handleClearSelectBeginDate}
-											callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}
-											callbackCancelSelectBeginDate={handleCancelSelectBeginDate}
+											beginDateCallbacks={beginDateCallbacks}
 										/>
 									) : null
 								}

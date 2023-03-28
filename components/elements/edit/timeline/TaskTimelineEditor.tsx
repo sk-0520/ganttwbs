@@ -117,7 +117,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 
 		//setSelectingBeginDate(true);
-		props.callbackStartSelectBeginDate(props.currentTimeline);
+		props.beginDateCallbacks.callbackStartSelectBeginDate(props.currentTimeline);
 	}
 
 	function handleChangePrevious(isSelected: boolean): void {
@@ -143,7 +143,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleClearPrevious() {
-		props.callbackClearSelectBeginDate(props.currentTimeline);
+		props.beginDateCallbacks.callbackClearSelectBeginDate(props.currentTimeline);
 	}
 
 	function handleSubmitPrevious() {
@@ -154,12 +154,12 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.currentTimeline.static = props.selectingBeginDate.beginDate ? Strings.formatDate(props.selectingBeginDate.beginDate, "yyyy-MM-dd") : undefined;
 		props.currentTimeline.previous = [...props.selectingBeginDate.previous];
 
-		props.callbackSubmitSelectBeginDate(props.currentTimeline);
+		props.beginDateCallbacks.callbackSubmitSelectBeginDate(props.currentTimeline);
 		props.refreshedChildrenCallbacks.callbackRefreshChildrenBeginDate();
 	}
 
 	function handleCancelPrevious() {
-		props.callbackCancelSelectBeginDate(props.currentTimeline)
+		props.beginDateCallbacks.callbackCancelSelectBeginDate(props.currentTimeline)
 	}
 
 	function handleDragOver() {

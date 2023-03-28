@@ -3,7 +3,7 @@ import { DragEvent } from "react";
 import { MoveItemKind } from "@/components/elements/edit/timeline/TimelineControls";
 import { TimeRange } from "@/models/TimeRange";
 import DraggingTimeline from "../DraggingTimeline";
-import SelectingBeginDate from "../SelectingBeginDate";
+import {BeginDateCallbacks, SelectingBeginDate} from "../BeginDate";
 import { GroupTimeline, TaskTimeline, Timeline, TimelineId } from "../Setting";
 import RefreshedChildrenCallbacks from "../RefreshedChildrenCallbacks";
 import NotifyParentCallbacks from "../NotifyParentCallbacks";
@@ -18,8 +18,5 @@ export default interface TimeLineEditorProps<TargetTimeline> {
 	selectingBeginDate: SelectingBeginDate | null;
 	notifyParentCallbacks: NotifyParentCallbacks;
 	refreshedChildrenCallbacks: RefreshedChildrenCallbacks;
-	callbackStartSelectBeginDate(timeline: TaskTimeline): void;
-	callbackClearSelectBeginDate(timeline: TaskTimeline): void;
-	callbackSubmitSelectBeginDate(timeline: TaskTimeline): void;
-	callbackCancelSelectBeginDate(timeline: TaskTimeline): void;
+	beginDateCallbacks: BeginDateCallbacks;
 }
