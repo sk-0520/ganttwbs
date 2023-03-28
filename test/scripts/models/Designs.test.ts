@@ -12,4 +12,15 @@ describe("Designs", () => {
 		expect(Designs.toProperty(input)).toBe(expected);
 	});
 
+	test("convertStyleClasses", () => {
+		const inputA = {
+			name: {
+				a: "test"
+			},
+		};
+		const actualA = Designs.convertStyleClasses(inputA, []);
+		expect(actualA.has('name')).toBeTruthy();
+	})
+
+
 });

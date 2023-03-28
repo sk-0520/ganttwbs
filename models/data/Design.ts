@@ -7,6 +7,16 @@ export interface ValueUnit {
 	unit: 'px' | string;
 }
 
+export function isValueUnit(args: unknown): args is ValueUnit {
+	return args !== null
+		&& typeof (args) === 'object'
+		&& 'value' in args
+		&& 'unit' in args
+		&& typeof (args.value) === "number"
+		&& typeof (args.unit) === "string"
+		;
+}
+
 export interface Design {
 	cell: {
 		maxWidth: string;

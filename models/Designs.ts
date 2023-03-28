@@ -1,17 +1,10 @@
-import { ValueUnit } from "./data/Design";
+import { isValueUnit, ValueUnit } from "./data/Design";
 
-interface StyleProperty {
-	selector: string;
-	property: string;
-}
+// セレクタとか難しい概念は知らん
 
-
-interface StyleClass {
-	className: string,
-	properties: Array<StyleProperty>
-}
-
-
+type ClassName = string;
+type Property = string;
+type Value = string;
 
 export abstract class Designs {
 
@@ -23,29 +16,33 @@ export abstract class Designs {
 		return `${valueUnit.value}${valueUnit.unit}`;
 	}
 
-	public static convertStyles(obj: object, parents: ReadonlyArray<string>): Array<StyleClass> {
-		const result = new Array<StyleClass>()
+	public static convertStyleClasses(obj: object, parents: ReadonlyArray<string>): Map<ClassName, Map<Property, Value>> {
+		// const result = new Map<ClassName, Map<Property, Value>>();
 
-		for (const [key, value] of Object.entries(obj)) {
-			if (typeof (value) === 'object') {
-				if ('value' in value && 'unit' in value) {
-					const vu = value as ValueUnit;
-					// result.push({
-					// 	className: key,
-					// 	properties: {
-					// 		[key]: Designs.toProperty(vu)
-					// 	}
-					// });
-				} else {
-					const items = this.convertStyles(value, [...parents, key]);
-					result.push(...items);
-				}
-			} else {
+		// for (const [className, propertiesOrNestedClass] of Object.entries(obj)) {
+		// 	const properties = new Map<Property, Value>();
 
-			}
-		}
+		// 	if (typeof (propertiesOrNestedClass) === 'object') {
+		// 		if (isValueUnit(propertiesOrNestedClass)) {
+		// 			// result.push({
+		// 			// 	className: key,
+		// 			// 	properties: {
+		// 			// 		[key]: Designs.toProperty(vu)
+		// 			// 	}
+		// 			// });
+		// 		} else {
+		// 			const map = this.convertStyleClasses(propertiesOrNestedClass, [...parents, className]);
+		// 			for (const [key, value] of map) {
+		// 				result.set(key, value);
+		// 			}
+		// 			continue;
+		// 		}
+		// 	} else {
+		// 		properties.set(className, propertiesOrNestedClass);
+		// 	}
+		// }
 
-		return result;
+		// return result;
 	}
 
 
