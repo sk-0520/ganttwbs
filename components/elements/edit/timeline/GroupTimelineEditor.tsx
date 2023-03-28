@@ -22,6 +22,7 @@ import TimeRangeCells from "./cell/TimeRangeCells";
 import RefreshedChildrenCallbacks from "@/models/data/RefreshedChildrenCallbacks";
 import NotifyParentCallbacks from "@/models/data/NotifyParentCallbacks";
 import SubjectCell from "./cell/SubjectCell";
+import IdCell from "./cell/IdCell";
 
 interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 	dropTimeline: DropTimeline | null;
@@ -255,34 +256,17 @@ const Component: NextPage<Props> = (props: Props) => {
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 			>
-				<div
-					className={
-						'timeline-id'
-						+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? ' dragging' : '')
-					}
-					title={props.currentTimeline.id}
-					draggable={!props.selectingBeginDate}
-					onDragStart={ev => props.notifyParentCallbacks.notifyDragStart(ev, props.currentTimeline)}
-					onDragEnd={props.draggingTimeline?.onDragEnd}
-				>
-					<label>
-						{props.selectingBeginDate
-							? (
-								<input
-									id={selectingId}
-									type="checkbox"
-									disabled={!props.selectingBeginDate.canSelect(props.currentTimeline)}
-									value={props.currentTimeline.id}
-									checked={isSelectedPrevious}
-									onChange={ev => handleChangePrevious(ev.target.checked)}
-								/>
-							) : (
-								<span className="timeline-kind icon-timeline-group-after" />
-							)
-						}
-						<IndexNumber treeIndexes={props.treeIndexes} currentIndex={props.currentIndex} />
-					</label>
-				</div>
+				<IdCell
+					selectingId={selectingId}
+					treeIndexes={props.treeIndexes}
+					currentIndex={props.currentIndex}
+					currentTimeline={props.currentTimeline}
+					isSelectedPrevious={isSelectedPrevious}
+					draggingTimeline={props.draggingTimeline}
+					notifyParentCallbacks={props.notifyParentCallbacks}
+					selectingBeginDate={props.selectingBeginDate}
+					callbackChangePrevious={handleChangePrevious}
+				/>
 				<SubjectCell
 					value={subject}
 					disabled={props.selectingBeginDate !== null}
