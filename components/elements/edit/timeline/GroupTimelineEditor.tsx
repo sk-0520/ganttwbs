@@ -218,6 +218,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const notifyParentCallbacks: NotifyParentCallbacks = {
 		callbackRefreshChildrenOrder: handleUpdateChildrenOrder,
 		callbackDeleteChildTimeline: handleDeleteChildren,
+		callbackDraggingTimeline: props.notifyParentCallbacks.callbackDraggingTimeline,
 	};
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
@@ -247,7 +248,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					}
 					title={props.currentTimeline.id}
 					draggable={!props.selectingBeginDate}
-					onDragStart={ev => props.callbackDraggingTimeline(ev, props.currentTimeline)}
+					onDragStart={ev => props.notifyParentCallbacks.callbackDraggingTimeline(ev, props.currentTimeline)}
 					onDragEnd={props.draggingTimeline?.onDragEnd}
 				>
 					<label>
@@ -324,7 +325,6 @@ const Component: NextPage<Props> = (props: Props) => {
 											selectingBeginDate={props.selectingBeginDate}
 											notifyParentCallbacks={notifyParentCallbacks}
 											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
-											callbackDraggingTimeline={props.callbackDraggingTimeline}
 											callbackStartSelectBeginDate={props.callbackStartSelectBeginDate}
 											callbackClearSelectBeginDate={props.callbackClearSelectBeginDate}
 											callbackSubmitSelectBeginDate={props.callbackSubmitSelectBeginDate}
@@ -347,7 +347,6 @@ const Component: NextPage<Props> = (props: Props) => {
 											callbackAddNextSiblingItem={handleAddNextSiblingItem}
 											notifyParentCallbacks={notifyParentCallbacks}
 											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
-											callbackDraggingTimeline={props.callbackDraggingTimeline}
 											callbackStartSelectBeginDate={props.callbackStartSelectBeginDate}
 											callbackClearSelectBeginDate={props.callbackClearSelectBeginDate}
 											callbackSubmitSelectBeginDate={props.callbackSubmitSelectBeginDate}

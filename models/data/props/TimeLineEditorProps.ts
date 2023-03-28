@@ -18,7 +18,6 @@ export default interface TimeLineEditorProps<TargetTimeline> {
 	selectingBeginDate: SelectingBeginDate | null;
 	notifyParentCallbacks: NotifyParentCallbacks;
 	refreshedChildrenCallbacks: RefreshedChildrenCallbacks;
-	callbackDraggingTimeline(event: DragEvent, timeline: Timeline): void;
 	callbackStartSelectBeginDate(timeline: TaskTimeline): void;
 	callbackClearSelectBeginDate(timeline: TaskTimeline): void;
 	callbackSubmitSelectBeginDate(timeline: TaskTimeline): void;

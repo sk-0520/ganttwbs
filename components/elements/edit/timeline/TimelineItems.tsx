@@ -256,6 +256,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const notifyParentCallbacks: NotifyParentCallbacks = {
 		callbackRefreshChildrenOrder: handleUpdateChildrenOrder,
 		callbackDeleteChildTimeline: handleDeleteChildren,
+		callbackDraggingTimeline: handleStartDragTimeline,
 	};
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
@@ -286,7 +287,6 @@ const Component: NextPage<Props> = (props: Props) => {
 											dropTimeline={dropTimeline}
 											notifyParentCallbacks={notifyParentCallbacks}
 											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
-											callbackDraggingTimeline={handleStartDragTimeline}
 											callbackStartSelectBeginDate={handleStartSelectBeginDate}
 											callbackClearSelectBeginDate={handleClearSelectBeginDate}
 											callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}
@@ -309,7 +309,6 @@ const Component: NextPage<Props> = (props: Props) => {
 											notifyParentCallbacks={notifyParentCallbacks}
 											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
 											callbackAddNextSiblingItem={handleAddNextSiblingItem}
-											callbackDraggingTimeline={handleStartDragTimeline}
 											callbackStartSelectBeginDate={handleStartSelectBeginDate}
 											callbackClearSelectBeginDate={handleClearSelectBeginDate}
 											callbackSubmitSelectBeginDate={handleSubmitSelectBeginDate}

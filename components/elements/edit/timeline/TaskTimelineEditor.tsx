@@ -189,7 +189,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					}
 					title={props.currentTimeline.id}
 					draggable={!props.selectingBeginDate}
-					onDragStart={ev => props.callbackDraggingTimeline(ev, props.currentTimeline)}
+					onDragStart={ev => props.notifyParentCallbacks.callbackDraggingTimeline(ev, props.currentTimeline)}
 					onDragEnd={props.draggingTimeline?.onDragEnd}
 				>
 					<label>
