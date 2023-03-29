@@ -27,6 +27,21 @@ describe("Designs", () => {
 		expect(actual.get('name')?.get("b")).toBe("bbbb");
 	});
 
+	test("convertStyleClasses-simple-named", () => {
+		const input = {
+			name: {
+				a: "test",
+				b: "bbbb",
+			},
+		};
+
+		const actual = Designs.convertStyleClasses(input, ["NAME"]);
+
+		expect(actual.has('NAME_name')).toBeTruthy();
+		expect(actual.get('NAME_name')?.get("a")).toBe("test");
+		expect(actual.get('NAME_name')?.get("b")).toBe("bbbb");
+	});
+
 	test("convertStyleClasses-nested", () => {
 		const input = {
 			name: {
@@ -86,5 +101,26 @@ describe("Designs", () => {
 
 		expect(actual.has('name_nested_c2')).toBeTruthy();
 		expect(actual.get('name_nested_c2')?.get("abc")).toBe("def");
+	});
+
+	test("convertStyleClasses-valueUnit", () => {
+		const input = {
+			name: {
+				a: {
+					value: 100,
+					unit: 'px'
+				},
+				b: {
+					value: 0,
+					unit: 'px'
+				},
+			},
+		};
+
+		const actual = Designs.convertStyleClasses(input, []);
+
+		expect(actual.has('name')).toBeTruthy();
+		expect(actual.get('name')?.get("a")).toBe("100px");
+		expect(actual.get('name')?.get("b")).toBe("0");
 	});
 });

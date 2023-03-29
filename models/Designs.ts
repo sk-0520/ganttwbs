@@ -2,9 +2,11 @@ import { isValueUnit, ValueUnit } from "./data/Design";
 
 // セレクタとか難しい概念は知らん
 
-type Selector = string;
+type ClassName = string;
 type Property = string;
 type Value = string;
+
+type StyleObject = { [key: string]: string | ValueUnit | StyleObject }
 
 export abstract class Designs {
 
@@ -16,8 +18,8 @@ export abstract class Designs {
 		return `${valueUnit.value}${valueUnit.unit}`;
 	}
 
-	public static convertStyleClasses(obj: object, parents: ReadonlyArray<string>): Map<Selector, Map<Property, Value>> {
-		const result = new Map<Selector, Map<Property, Value>>();
+	public static convertStyleClasses(obj: StyleObject, parents: ReadonlyArray<string>): Map<ClassName, Map<Property, Value>> {
+		const result = new Map<ClassName, Map<Property, Value>>();
 
 		const propertyValues = new Map<Property, Value>();
 
