@@ -21,6 +21,7 @@ import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
 import SubjectCell from "./cell/SubjectCell";
 import IdCell from "./cell/IdCell";
 import TimelineHeaderRow from "./cell/TimelineHeaderRow";
+import RelationCell from "./cell/RelationCell";
 
 interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 	dropTimeline: DropTimeline | null;
@@ -245,6 +246,11 @@ const Component: NextPage<Props> = (props: Props) => {
 					/>
 					<div className='timeline-resource'>
 					</div>
+					<RelationCell
+						currentTimeline={props.currentTimeline}
+						selectable={props.selectingBeginDate !== null}
+						htmlFor={selectingId}
+					/>
 					<TimeRangeCells
 						timeRangeKind={beginKind}
 						selectable={props.selectingBeginDate !== null}

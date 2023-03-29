@@ -4,6 +4,7 @@
 	$timeline-header-subject-width: 15ch;
 	$timeline-header-workload-width: 7ch;
 	$timeline-header-resource-width: 8ch;
+	$timeline-header-relation: 2em;
 	$timeline-header-range-from-width: 11ch;
 	$timeline-header-range-to-width: 11ch;
 	$timeline-header-progress-width: 5ch;
@@ -32,14 +33,21 @@
 		.timeline-resource {
 			width: $timeline-header-resource-width;
 		}
+		.timeline-relation {
+			width: $timeline-header-relation;
+			text-align: center;
+		}
 		.timeline-range-from {
 			width: $timeline-header-range-from-width;
+			text-align: center;
 		}
 		.timeline-range-to {
 			width: $timeline-header-range-to-width;
+			text-align: center;
 		}
 		.timeline-range-area {
 			width: $timeline-header-range-from-width + $timeline-header-range-to-width;
+			text-align: center;
 		}
 		.timeline-progress {
 			width: $timeline-header-progress-width;
@@ -150,7 +158,7 @@
 
 			&.hover {
 				position: relative;
-				outline:  3px double rgba(255, 0, 0, 0.555);
+				outline: 3px double rgba(255, 0, 0, 0.555);
 			}
 
 			.timeline-id[draggable="true"] {

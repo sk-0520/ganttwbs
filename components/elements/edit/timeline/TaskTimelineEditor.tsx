@@ -18,6 +18,7 @@ import TimeRangeCells from "./cell/TimeRangeCells";
 import SubjectCell from "./cell/SubjectCell";
 import IdCell from "./cell/IdCell";
 import TimelineHeaderRow from "./cell/TimelineHeaderRow";
+import RelationCell from "./cell/RelationCell";
 
 interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
@@ -188,6 +189,11 @@ const Component: NextPage<Props> = (props: Props) => {
 						callbackChangeMember={handleChangeMember}
 					/>
 				</div>
+				<RelationCell
+					currentTimeline={props.currentTimeline}
+					selectable={props.selectingBeginDate !== null}
+					htmlFor={selectingId}
+				/>
 				{
 					props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
 						? (

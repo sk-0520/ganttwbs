@@ -13,6 +13,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				<div className='timeline-subject'>作業</div>
 				<div className='timeline-workload'>工数</div>
 				<div className='timeline-resource'>割当</div>
+				<div className="timeline-relation">💩</div>
 				<div className='timeline-range-from'>開始</div>
 				<div className='timeline-range-to'>終了</div>
 				<div className='timeline-progress'>進捗率</div>
