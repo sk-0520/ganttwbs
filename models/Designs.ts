@@ -8,7 +8,7 @@ type Value = string;
 
 export abstract class Designs {
 
-	public static toProperty(valueUnit: ValueUnit): string {
+	public static toValue(valueUnit: ValueUnit): string {
 		if (valueUnit.value === 0) {
 			return '0';
 		}
@@ -24,7 +24,7 @@ export abstract class Designs {
 		for (const [selectorOrProperty, valuesOrNestedBlock] of Object.entries(obj)) {
 			if (typeof (valuesOrNestedBlock) === 'object') {
 				if (isValueUnit(valuesOrNestedBlock)) {
-					propertyValues.set(selectorOrProperty, Designs.toProperty(valuesOrNestedBlock))
+					propertyValues.set(selectorOrProperty, Designs.toValue(valuesOrNestedBlock))
 				} else {
 					const map = this.convertStyleClasses(valuesOrNestedBlock, [...parents, selectorOrProperty]);
 					for (const [key, value] of map) {

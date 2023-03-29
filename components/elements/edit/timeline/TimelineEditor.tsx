@@ -90,8 +90,8 @@ function renderDynamicStyle(design: Design): ReactNode {
 
 	const style = `
 		._dynamic_cell {
-			width: ${Designs.toProperty(design.cell.width)};
-			height: ${Designs.toProperty(design.cell.height)};
+			width: ${Designs.toValue(design.cell.width)};
+			height: ${Designs.toValue(design.cell.height)};
 		}
 	`;
 

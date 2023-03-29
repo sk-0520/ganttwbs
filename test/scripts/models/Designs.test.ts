@@ -8,8 +8,8 @@ describe("Designs", () => {
 		["1234em", { value: 1234, unit: "em" }],
 		["0", { value: 0, unit: "px" }],
 		["0", { value: 0, unit: "em" }],
-	])("toProperty", (expected: string, input: ValueUnit) => {
-		expect(Designs.toProperty(input)).toBe(expected);
+	])("toValue", (expected: string, input: ValueUnit) => {
+		expect(Designs.toValue(input)).toBe(expected);
 	});
 
 	test("convertStyleClasses-simple", () => {
