@@ -1,6 +1,5 @@
 import { Timelines } from "@/models/Timelines";
 import { NextPage } from "next";
-import { CSSProperties } from "react";
 
 interface Props {
 	treeIndexes: ReadonlyArray<number>;
@@ -8,13 +7,10 @@ interface Props {
 }
 
 const Component: NextPage<Props> = (props: Props) => {
-	const styles: CSSProperties = {
-		display: 'inline-block',
-		paddingLeft: (props.treeIndexes.length * 0.5) + 'ch',
-	}
+	const className = "_dynamic_programmable_indexNumber_level-" + props.treeIndexes.length;
 
 	return (
-		<span style={styles}>
+		<span className={className}>
 			{Timelines.toIndexNumber(props.treeIndexes, props.currentIndex)}
 		</span>
 	);

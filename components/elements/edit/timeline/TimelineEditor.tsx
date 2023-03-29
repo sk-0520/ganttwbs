@@ -65,7 +65,23 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 
 	// 動的なCSSクラス名をここでがっつり作るのです
 	const styleObject = {
-		design: design,
+		design: design.honest,
+
+		programmable: {
+			indexNumber: {
+				...Array.from(Array(design.programmable.indexNumber.maximum), (_, index) => index + 1)
+					.map(a => {
+						return {
+							[`level-${a}`]: {
+								display: 'inline-block',
+								paddingLeft: (a * design.programmable.indexNumber.paddingLeft.value) + design.programmable.indexNumber.paddingLeft.unit,
+							}
+						}
+					})
+					.reduce((r, a) => ({ ...r, ...a })),
+			}
+		},
+
 		theme: {
 			holiday: {
 				regulars: Settings.getWeekDays()
@@ -76,7 +92,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 					.map(([k, v]) => ({ [k]: { background: `${v} !important` } }))
 					.reduce((r, a) => ({ ...r, ...a })),
 			}
-		}
+		},
 	};
 
 	const styleClasses = Designs.convertStyleClasses(styleObject, ["_dynamic"]);

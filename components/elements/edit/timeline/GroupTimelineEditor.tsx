@@ -32,8 +32,8 @@ const Component: NextPage<Props> = (props: Props) => {
 	const selectingId = "timeline-node-previous-" + props.currentTimeline.id;
 
 	const heightStyle: CSSProperties = {
-		maxHeight: props.configuration.design.cell.maxHeight,
-		minHeight: props.configuration.design.cell.minHeight,
+		maxHeight: props.configuration.design.honest.cell.maxHeight,
+		minHeight: props.configuration.design.honest.cell.minHeight,
 		...getGroupStyles(props.treeIndexes.length, props.editData.setting.theme)
 	};
 

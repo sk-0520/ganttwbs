@@ -78,20 +78,31 @@ function createConfiguration(): Configuration {
 			span: TimeSpan.fromMinutes(3),
 		},
 		design: {
-			cell: {
-				maxWidth: "20px",
-				minWidth: "20px",
-				maxHeight: "20px",
-				minHeight: "20px",
-				width: {
-					value: 20,
-					unit: "px"
-				},
-				height: {
-					value: 20,
-					unit: "px"
+			honest: {
+				cell: {
+					maxWidth: "20px",
+					minWidth: "20px",
+					maxHeight: "20px",
+					minHeight: "20px",
+					width: {
+						value: 20,
+						unit: "px"
+					},
+					height: {
+						value: 20,
+						unit: "px"
+					}
 				}
-			}
+			},
+			programmable: {
+				indexNumber: {
+					maximum: 10,
+					paddingLeft: {
+						value: 0.5,
+						unit: "ch"
+					},
+				}
+			},
 		}
 	};
 

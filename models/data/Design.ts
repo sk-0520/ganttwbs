@@ -18,12 +18,25 @@ export function isValueUnit(args: unknown): args is ValueUnit {
 }
 
 export interface Design {
-	cell: {
-		maxWidth: string;
-		minWidth: string;
-		maxHeight: string;
-		minHeight: string;
-		width: ValueUnit;
-		height: ValueUnit;
+	/** 単純なスタイルシート */
+	honest: {
+		cell: {
+			maxWidth: string;
+			minWidth: string;
+			maxHeight: string;
+			minHeight: string;
+			width: ValueUnit;
+			height: ValueUnit;
+		}
+	},
+	/** 計算する系 */
+	programmable: {
+		/** 表示番号 */
+		indexNumber: {
+			/** 最大値 */
+			maximum: number,
+			/** 左余白基準 */
+			paddingLeft: ValueUnit
+		},
 	}
 }
