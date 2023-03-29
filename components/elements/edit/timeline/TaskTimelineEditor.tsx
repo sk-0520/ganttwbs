@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 
 import { useLocale } from "@/models/locales/locale";
 
-import TimelineControls from "./TimelineControls";
-import { MoveItemKind } from "./TimelineControls";
 import MemberList from "./MemberList";
 import { MemberId, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
 import { TimeSpan } from "@/models/TimeSpan";
@@ -19,6 +17,7 @@ import SubjectCell from "./cell/SubjectCell";
 import IdCell from "./cell/IdCell";
 import TimelineHeaderRow from "./cell/TimelineHeaderRow";
 import RelationCell from "./cell/RelationCell";
+import ControlsCell, { MoveItemKind } from "./cell/ControlsCell";
 
 interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
@@ -239,15 +238,13 @@ const Component: NextPage<Props> = (props: Props) => {
 					value={progressPercent}
 					callbackChangeValue={handleChangeProgress}
 				/>
-				<div className="timeline-controls">
-					<TimelineControls
-						currentTimelineKind="task"
-						disabled={props.selectingBeginDate !== null}
-						moveItem={handleControlMoveItem}
-						addItem={handleControlAddItem}
-						deleteItem={handleControlDeleteItem}
-					/>
-				</div>
+				<ControlsCell
+					currentTimelineKind="task"
+					disabled={props.selectingBeginDate !== null}
+					moveItem={handleControlMoveItem}
+					addItem={handleControlAddItem}
+					deleteItem={handleControlDeleteItem}
+				/>
 			</TimelineHeaderRow>
 		</div >
 	);

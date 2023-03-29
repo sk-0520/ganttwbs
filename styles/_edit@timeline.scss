@@ -148,6 +148,21 @@
 						width: 100%;
 					}
 				}
+
+				.overlay {
+					&::before {
+						z-index: 3;
+						grid-row-start: 1;
+						grid-column-start: 1;
+
+						position: fixed;
+						top: 0;
+						left: 0;
+						bottom: 0;
+						right: 0;
+						background-color: #28ddc5a4;
+					}
+				}
 			}
 		}
 
