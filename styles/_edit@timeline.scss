@@ -132,6 +132,12 @@
 
 					width: max-content;
 
+					&.before {
+						position: absolute;
+						right: 0;
+						top: 0;
+					}
+
 					&.after {
 						position: absolute;
 						left: $timeline-header-range-from-width + $timeline-header-range-to-width;
