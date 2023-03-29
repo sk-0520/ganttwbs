@@ -28,11 +28,6 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const selectingId = "timeline-node-previous-" + props.currentTimeline.id;
 
-	const heightStyle = {
-		maxHeight: props.configuration.design.honest.cell.maxHeight,
-		minHeight: props.configuration.design.honest.cell.minHeight,
-	};
-
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [beginKind, setBeginKind] = useState<TimeRangeKind>("loading");
 	const [beginDate, setBeginDate] = useState<Date | null>(null);
@@ -157,10 +152,10 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div className='task'>
 			<TimelineHeaderRow
+				level={props.treeIndexes.length + 1}
 				currentTimeline={props.currentTimeline}
 				selectingBeginDate={props.selectingBeginDate}
 				draggingTimeline={props.draggingTimeline}
-				heightStyle={heightStyle}
 			>
 				<IdCell
 					selectingId={selectingId}

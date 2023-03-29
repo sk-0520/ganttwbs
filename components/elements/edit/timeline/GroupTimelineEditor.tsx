@@ -31,12 +31,6 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const selectingId = "timeline-node-previous-" + props.currentTimeline.id;
 
-	const heightStyle: CSSProperties = {
-		maxHeight: props.configuration.design.honest.cell.maxHeight,
-		minHeight: props.configuration.design.honest.cell.minHeight,
-		...getGroupStyles(props.treeIndexes.length, props.editData.setting.theme)
-	};
-
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(Timelines.sumWorkloadByGroup(props.currentTimeline).totalDays);
 	const [beginKind, setBeginKind] = useState<TimeRangeKind>("loading");
@@ -225,7 +219,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					currentTimeline={props.currentTimeline}
 					selectingBeginDate={props.selectingBeginDate}
 					draggingTimeline={props.draggingTimeline}
-					heightStyle={heightStyle}
+					level={props.treeIndexes.length + 1}
 				>
 					<IdCell
 						selectingId={selectingId}

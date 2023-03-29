@@ -29,14 +29,20 @@ export interface Design {
 			height: ValueUnit;
 		}
 	},
-	/** 計算する系 */
+
+	/** 計算したり抜粋する系の基準値 */
 	programmable: {
+		group: {
+			/** 最大値 */
+			maximum: number;
+			default: string;
+		};
 		/** 表示番号 */
 		indexNumber: {
 			/** 最大値 */
-			maximum: number,
+			maximum: number;
 			/** 左余白基準 */
-			paddingLeft: ValueUnit
-		},
+			paddingLeft: ValueUnit;
+		};
 	}
 }

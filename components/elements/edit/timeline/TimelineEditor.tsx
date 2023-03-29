@@ -68,6 +68,27 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 		design: design.honest,
 
 		programmable: {
+			cell: {
+				height: {
+					height: design.honest.cell.height,
+				},
+				width: {
+					width: design.honest.cell.width,
+				}
+			},
+
+			groups: {
+				...Array.from(Array(design.programmable.group.maximum), (_, index) => index + 1)
+					.map(a => {
+						return {
+							[`level-${a}`]: {
+								background: a in theme.groups ? theme.groups[a]: design.programmable.group.default,
+							}
+						}
+					})
+					.reduce((r, a) => ({ ...r, ...a })),
+			},
+
 			indexNumber: {
 				...Array.from(Array(design.programmable.indexNumber.maximum), (_, index) => index + 1)
 					.map(a => {
@@ -79,7 +100,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 						}
 					})
 					.reduce((r, a) => ({ ...r, ...a })),
-			}
+			},
 		},
 
 		theme: {
