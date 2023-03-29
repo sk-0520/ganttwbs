@@ -178,7 +178,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					readOnly={true}
 					disabled={props.selectingBeginDate !== null}
 					value={workload}
-					callbackChangeValue={v => handleChangeWorkload(v)}
+					callbackChangeValue={handleChangeWorkload}
 				/>
 				<div className='timeline-resource'>
 					<MemberList
@@ -207,7 +207,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											<li><button type="button" onClick={handleCancelPrevious}>🆖</button></li>
 										</ul>
 									</div>
-									<div className="tools">
+									<div className="tools after">
 										<ul>
 											<li><button>直近項目に紐づける</button></li>
 											<li><button>紐づけを解除</button></li>
@@ -231,7 +231,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					readOnly={false}
 					disabled={props.selectingBeginDate !== null}
 					value={progressPercent}
-					callbackChangeValue={v => handleChangeProgress(v)}
+					callbackChangeValue={handleChangeProgress}
 				/>
 				<div className="timeline-controls">
 					<TimelineControls

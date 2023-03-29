@@ -110,7 +110,7 @@
 				}
 			}
 
-			.timeline-range-area.prompt {
+			.prompt {
 				position: relative;
 
 				background-color: palegoldenrod;
@@ -122,10 +122,13 @@
 					outline: 2px palegoldenrod solid;
 					height: fit-content;
 
-					position: absolute;
-					left: $timeline-header-range-from-width + $timeline-header-range-to-width;
-					top: 0;
 					width: max-content;
+
+					&.after {
+						position: absolute;
+						left: $timeline-header-range-from-width + $timeline-header-range-to-width;
+						top: 0;
+					}
 
 					button {
 						width: 100%;
