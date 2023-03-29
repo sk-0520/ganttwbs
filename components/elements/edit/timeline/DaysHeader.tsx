@@ -17,9 +17,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		to: new Date(props.editData.setting.calendar.range.to),
 	};
 
-	props.editData.setting.calendar.holiday.regulars
-	props.editData.setting.calendar.holiday.events
-
 	const diff = range.to.getTime() - range.from.getTime();
 	const days = diff / (24 * 60 * 60 * 1000);
 
@@ -51,8 +48,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		return a.month - b.month;
 	});
 
-	const cellStyle = props.configuration.design.cell;
-
 	return (
 		<div id='days-header'>
 			<table>
@@ -63,16 +58,17 @@ const Component: NextPage<Props> = (props: Props) => {
 							const display = `${a.year}/${a.month + 1}`;
 
 							return (
-								<td key={display} className={"cell"} colSpan={a.length} style={cellStyle}>{display}</td>
+								<td key={display} className="cell _dynamic_design_cell" colSpan={a.length}>{display}</td>
 							);
 						})}
 					</tr>
 					<tr className='day'>
 						{dates.map(a => {
-							const style = getDayStyles(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
+							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
+							const className = getCellClassName(classNames);
 
 							return (
-								<td key={a.getTime()} className='cell' style={{ ...cellStyle, ...style }}>
+								<td key={a.getTime()} className={className}>
 									{a.getDate()}
 								</td>
 							)
@@ -80,10 +76,11 @@ const Component: NextPage<Props> = (props: Props) => {
 					</tr>
 					<tr className='week'>
 						{dates.map(a => {
-							const style = getDayStyles(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
+							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
+							const className = getCellClassName(classNames);
 
 							return (
-								<td key={a.getTime()} className='cell' style={{ ...cellStyle, ...style }}>
+								<td key={a.getTime()} className={className}>
 									{locale.calendar.week.short[Settings.toWeekDay(a.getDay())]}
 								</td>
 							);
@@ -93,10 +90,11 @@ const Component: NextPage<Props> = (props: Props) => {
 				<tbody>
 					<tr className='pin'>
 						{dates.map(a => {
-							const style = getDayStyles(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
+							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
+							const className = getCellClassName(classNames);
 
 							return (
-								<td key={a.getTime()} className='cell' style={{ ...cellStyle, ...style }}>
+								<td key={a.getTime()} className={className}>
 									@
 								</td>
 							);
@@ -110,41 +108,38 @@ const Component: NextPage<Props> = (props: Props) => {
 
 export default Component;
 
-function getWeekDayStyles(date: Date, regulars: Holiday['regulars'], theme: Theme): CSSProperties {
-	const styles: CSSProperties = {};
+function getWeekDayClassName(date: Date, regulars: Holiday['regulars'], theme: Theme): string {
 
 	for (const regular of regulars) {
 		const weekday = Settings.toWeekDay(date.getDay());
 		if (regular === weekday) {
-			const color = theme.holiday.regulars[weekday];
-			if (color) {
-				styles.backgroundColor = color;
-				break;
-			}
+			return "_dynamic_theme_holiday_regulars_" + regular;
 		}
 	}
 
-	return styles;
+	return "";
 }
 
-function getHolidayStyles(date: Date, events: Holiday['events'], theme: Theme): CSSProperties {
-	const styles: CSSProperties = {};
+function getHolidayClassName(date: Date, events: Holiday['events'], theme: Theme): string {
 
 	const dateText = Strings.formatDate(date, 'yyyy-MM-dd');
 	if (dateText in events) {
 		const holidayEvent = events[dateText];
 		if (holidayEvent) {
-			const color = theme.holiday.events[holidayEvent.kind];
-			styles.backgroundColor = color;
+			return "_dynamic_theme_holiday_events_" + holidayEvent.kind;
 		}
 	}
 
-	return styles;
+	return "";
 }
 
-function getDayStyles(date: Date, setting: Holiday, theme: Theme): CSSProperties {
-	const week = getWeekDayStyles(date, setting.regulars, theme);
-	const holiday = getHolidayStyles(date, setting.events, theme);
+function getDayClassNames(date: Date, setting: Holiday, theme: Theme): Array<string> {
+	const weekClassName = getWeekDayClassName(date, setting.regulars, theme);
+	const holidayClassName = getHolidayClassName(date, setting.events, theme);
 
-	return { ...week, ...holiday };
+	return [weekClassName, holidayClassName].filter(a => a);
+}
+
+function getCellClassName(customClassNames: ReadonlyArray<string>): string {
+	return ["cell", "_dynamic_design_cell", ...customClassNames].join(" ");
 }

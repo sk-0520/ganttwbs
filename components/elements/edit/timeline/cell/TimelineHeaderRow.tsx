@@ -3,13 +3,13 @@ import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { Timeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { NextPage } from "next";
-import { CSSProperties, ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 interface Props {
+	level: number;
 	currentTimeline: Timeline;
 	selectingBeginDate: SelectingBeginDate | null;
 	draggingTimeline: DraggingTimeline | null;
-	heightStyle: CSSProperties;
 	children: ReactNode;
 }
 
@@ -44,12 +44,13 @@ const Component: NextPage<Props> = (props: Props) => {
 		<div
 			className={
 				'timeline-header'
+				+ ' _dynamic_programmable_cell_height'
+				+ (' _dynamic_programmable_groups_level-' + props.level.toString())
 				+ ' ' + mouseEnterClassName
 				+ (Settings.maybeTaskTimeline(props.currentTimeline) ? props.selectingBeginDate?.timeline.id === props.currentTimeline.id ? ' ' + 'hover' : '' : '')
 				+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? ' dragging' : '')
 				+ ' ' + dropEventClassName
 			}
-			style={props.heightStyle}
 			onDragEnter={ev => props.draggingTimeline?.onDragEnter(ev, props.currentTimeline)}
 			onDragOver={ev => props.draggingTimeline?.onDragOver(ev, props.currentTimeline, handleDragOver)}
 			onDragLeave={ev => props.draggingTimeline?.onDragLeave(ev, props.currentTimeline, handleDragLeave)}
