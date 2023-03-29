@@ -117,6 +117,23 @@
 					cursor: pointer;
 				}
 			}
+		}
+
+		.timeline-header {
+			&.dragging {
+				opacity: 0.8;
+				filter: contrast(50%) grayscale(100%);
+			}
+
+			&.drag-over {
+				position: relative;
+				mix-blend-mode: overlay;
+			}
+
+			&.hover {
+				position: relative;
+				outline: 3px double rgba(255, 0, 0, 0.555);
+			}
 
 			.prompt {
 				position: relative;
@@ -163,23 +180,6 @@
 						background-color: #28ddc5a4;
 					}
 				}
-			}
-		}
-
-		.timeline-header {
-			&.dragging {
-				opacity: 0.8;
-				filter: contrast(50%) grayscale(100%);
-			}
-
-			&.drag-over {
-				position: relative;
-				mix-blend-mode: overlay;
-			}
-
-			&.hover {
-				position: relative;
-				outline: 3px double rgba(255, 0, 0, 0.555);
 			}
 
 			.timeline-id[draggable="true"] {
