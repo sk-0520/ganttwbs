@@ -1,18 +1,18 @@
 {
-	"name": "gangangan",
+	"name": "ganttwbs",
 	"version": "0.1.0",
 	"private": true,
 	"description": "できるか知らんけどガントチャート的なものを表示・編集したい。",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/sk-0520/gangangan.git"
+		"url": "git+https://github.com/sk-0520/ganttwbs.git"
 	},
 	"author": "",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/sk-0520/gangangan/issues"
+		"url": "https://github.com/sk-0520/ganttwbs/issues"
 	},
-	"homepage": "https://github.com/sk-0520/gangangan#readme",
+	"homepage": "https://github.com/sk-0520/ganttwbs#readme",
 	"scripts": {
 		"typescript": "npx tsc",
 		"lint": "next lint --dir .",

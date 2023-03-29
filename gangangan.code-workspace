@@ -38,14 +38,14 @@
 		"cSpell.words": [
 			"endregion",
 			"gangangan",
+			"ganttwbs",
 			"nameof",
 			"pjax",
 			"postoutput",
 			"prebrowser",
-			"timespan",
-			"webextension",
 			"THTML",
-			"nameof",
+			"timespan",
+			"webextension"
 		],
 		"npm.scriptExplorerExclude": [
 			"test:.+$",
