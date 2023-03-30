@@ -6,7 +6,6 @@ import { useLocale } from "@/models/locales/locale";
 
 import GroupTimelineEditor from "./GroupTimelineEditor";
 import TaskTimelineEditor from "./TaskTimelineEditor";
-import TimelineControls, { MoveItemKind } from "./TimelineControls";
 import { GroupTimeline, TaskTimeline, Theme, Timeline, TimelineKind } from "@/models/data/Setting";
 import { TimeRangeKind, TimeRanges } from "@/models/TimeRange";
 import { Settings } from "@/models/Settings";
@@ -21,6 +20,8 @@ import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
 import SubjectCell from "./cell/SubjectCell";
 import IdCell from "./cell/IdCell";
 import TimelineHeaderRow from "./cell/TimelineHeaderRow";
+import RelationCell from "./cell/RelationCell";
+import ControlsCell, { MoveItemKind } from "./cell/ControlsCell";
 
 interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 	dropTimeline: DropTimeline | null;
@@ -245,6 +246,11 @@ const Component: NextPage<Props> = (props: Props) => {
 					/>
 					<div className='timeline-resource'>
 					</div>
+					<RelationCell
+						currentTimeline={props.currentTimeline}
+						selectable={props.selectingBeginDate !== null}
+						htmlFor={selectingId}
+					/>
 					<TimeRangeCells
 						timeRangeKind={beginKind}
 						selectable={props.selectingBeginDate !== null}
@@ -257,15 +263,13 @@ const Component: NextPage<Props> = (props: Props) => {
 						disabled={props.selectingBeginDate !== null}
 						value={progressPercent}
 					/>
-					<div className="timeline-controls">
-						<TimelineControls
-							currentTimelineKind="group"
-							disabled={props.selectingBeginDate !== null}
-							moveItem={handleControlMoveItem}
-							addItem={handleControlAddItem}
-							deleteItem={handleControlDeleteItem}
-						/>
-					</div>
+					<ControlsCell
+						currentTimelineKind="group"
+						disabled={props.selectingBeginDate !== null}
+						moveItem={handleControlMoveItem}
+						addItem={handleControlAddItem}
+						deleteItem={handleControlDeleteItem}
+					/>
 				</TimelineHeaderRow>
 			</div >
 			{props.currentTimeline.children.length ? (

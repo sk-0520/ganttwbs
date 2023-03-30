@@ -1,0 +1,16 @@
+$overlay-index: 10;
+
+.overlay {
+	background-color: transparent;
+	position: fixed;
+	z-index: $overlay-index;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.children {
+	position: relative;
+	z-index: $overlay-index + 1;
+}

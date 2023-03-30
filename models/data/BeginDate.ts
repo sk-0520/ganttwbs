@@ -9,7 +9,8 @@ export interface SelectingBeginDate {
 
 export interface BeginDateCallbacks {
 	startSelectBeginDate(timeline: TaskTimeline): void;
-	clearSelectBeginDate(timeline: TaskTimeline): void;
+	clearSelectBeginDate(timeline: TaskTimeline, clearDate: boolean, clearPrevious: boolean): void;
+	setSelectBeginDate(timeline: TaskTimeline, map: ReadonlySet<TimelineId>): void;
 	submitSelectBeginDate(timeline: TaskTimeline): void;
 	cancelSelectBeginDate(timeline: TaskTimeline): void;
 }

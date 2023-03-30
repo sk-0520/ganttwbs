@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 
 import { useLocale } from "@/models/locales/locale";
 
-import TimelineControls from "./TimelineControls";
-import { MoveItemKind } from "./TimelineControls";
 import MemberList from "./MemberList";
 import { MemberId, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
 import { TimeSpan } from "@/models/TimeSpan";
@@ -18,6 +16,8 @@ import TimeRangeCells from "./cell/TimeRangeCells";
 import SubjectCell from "./cell/SubjectCell";
 import IdCell from "./cell/IdCell";
 import TimelineHeaderRow from "./cell/TimelineHeaderRow";
+import RelationCell from "./cell/RelationCell";
+import ControlsCell, { MoveItemKind } from "./cell/ControlsCell";
 
 interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
@@ -129,8 +129,23 @@ const Component: NextPage<Props> = (props: Props) => {
 		setSelectedBeginDate(date);
 	}
 
+	function handleAttachPrevTimeline() {
+		debugger;
+		if (!props.currentIndex) {
+			return;
+		}
+
+		const nodes = props.parentGroup ? props.parentGroup.children : props.editData.setting.timelineNodes;
+		const prevTimeline = nodes[props.currentIndex - 1];
+		props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([prevTimeline.id]));
+	}
+
 	function handleClearPrevious() {
-		props.beginDateCallbacks.clearSelectBeginDate(props.currentTimeline);
+		props.beginDateCallbacks.clearSelectBeginDate(props.currentTimeline, false, true);
+	}
+
+	function handleClearStatic() {
+		props.beginDateCallbacks.clearSelectBeginDate(props.currentTimeline, true, false);
 	}
 
 	function handleSubmitPrevious() {
@@ -178,7 +193,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					readOnly={true}
 					disabled={props.selectingBeginDate !== null}
 					value={workload}
-					callbackChangeValue={v => handleChangeWorkload(v)}
+					callbackChangeValue={handleChangeWorkload}
 				/>
 				<div className='timeline-resource'>
 					<MemberList
@@ -188,30 +203,32 @@ const Component: NextPage<Props> = (props: Props) => {
 						callbackChangeMember={handleChangeMember}
 					/>
 				</div>
+				<RelationCell
+					currentTimeline={props.currentTimeline}
+					selectable={props.selectingBeginDate !== null}
+					htmlFor={selectingId}
+				/>
 				{
 					props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
 						? (
 							<>
 								<div className='timeline-range-area prompt'>
-									<div className="single-line no-warp">
-										<ul className="inline">
-											<li><button type="button" onClick={handleClearPrevious}>🆓</button></li>
-											<li>
-												<input
-													type="date"
-													value={selectedBeginDate ? Strings.formatDate(selectedBeginDate, "yyyy-MM-dd") : ''}
-													onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
-												/>
-											</li>
-											<li><button type="button" onClick={handleSubmitPrevious}>🆗</button></li>
-											<li><button type="button" onClick={handleCancelPrevious}>🆖</button></li>
-										</ul>
-									</div>
-									<div className="tools">
+									<ul className="contents">
+										<li className="main">
+											<input
+												type="date"
+												value={selectedBeginDate ? Strings.formatDate(selectedBeginDate, "yyyy-MM-dd") : ''}
+												onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
+											/>
+										</li>
+										<li><button type="button" onClick={handleSubmitPrevious}>更新</button></li>
+										<li><button type="button" onClick={handleCancelPrevious}>取消</button></li>
+									</ul>
+									<div className="tools after">
 										<ul>
-											<li><button>直近項目に紐づける</button></li>
-											<li><button>紐づけを解除</button></li>
-											<li><button>固定日付をクリア</button></li>
+											<li><button onClick={handleAttachPrevTimeline}>直近項目に紐づける</button></li>
+											<li><button onClick={handleClearPrevious}>紐づけを解除</button></li>
+											<li><button onClick={handleClearStatic}>固定日付をクリア</button></li>
 										</ul>
 									</div>
 								</div>
@@ -231,17 +248,15 @@ const Component: NextPage<Props> = (props: Props) => {
 					readOnly={false}
 					disabled={props.selectingBeginDate !== null}
 					value={progressPercent}
-					callbackChangeValue={v => handleChangeProgress(v)}
+					callbackChangeValue={handleChangeProgress}
 				/>
-				<div className="timeline-controls">
-					<TimelineControls
-						currentTimelineKind="task"
-						disabled={props.selectingBeginDate !== null}
-						moveItem={handleControlMoveItem}
-						addItem={handleControlAddItem}
-						deleteItem={handleControlDeleteItem}
-					/>
-				</div>
+				<ControlsCell
+					currentTimelineKind="task"
+					disabled={props.selectingBeginDate !== null}
+					moveItem={handleControlMoveItem}
+					addItem={handleControlAddItem}
+					deleteItem={handleControlDeleteItem}
+				/>
 			</TimelineHeaderRow>
 		</div >
 	);

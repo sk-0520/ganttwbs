@@ -8,7 +8,7 @@ interface Props {
 	selectable: boolean;
 	beginDate: Date | null;
 	endDate: Date | null;
-	htmlFor?: string;
+	htmlFor: string;
 	callbackClickBeginDate?(): void;
 }
 
