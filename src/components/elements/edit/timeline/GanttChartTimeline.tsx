@@ -36,8 +36,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		const diffSpan = TimeSpan.fromMilliseconds(diffTime);
 		const diffDays = diffSpan.totalDays;
 
-		const x = cell.width.value + diffDays * cell.width.value;
-		const y = cell.height.value + props.currentIndex * cell.height.value;
+		const x = diffDays * cell.width.value;
+		const y = props.currentIndex * cell.height.value;
 
 		console.debug(props.currentTimeline.id, diffDays)
 
@@ -50,14 +50,14 @@ const Component: NextPage<Props> = (props: Props) => {
 					height={10}
 				/>
 				<text
-					x={x}
+					x={x + cell.height.value}
 					y={y + (cell.height.value / 2)}
 				>
-{props.currentTimeline.id}/{props.currentIndex}
+					{props.currentTimeline.id}/{props.currentIndex}
 				</text>
 
 
-				<text y={y}>{x}:{y}</text>
+				<text y={y+ (cell.height.value / 2)}>{props.currentTimeline.id}@{x}:{y}</text>
 			</>
 		)
 	}
