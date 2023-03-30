@@ -12,8 +12,14 @@ interface Props extends EditProps {
 }
 
 const Component: NextPage<Props> = (props: Props) => {
+	const range = {
+		from: new Date(props.editData.setting.calendar.range.from),
+		to: new Date(props.editData.setting.calendar.range.to),
+	}
+
+
 	return (
-		<div id='#viewer'>
+		<div id='viewer'>
 			<svg>
 				<></>
 				{props.editData.setting.timelineNodes.flatMap(a => Settings.maybeGroupTimeline(a) ? a.children : a)
@@ -26,6 +32,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								parentGroup={null}
 								currentTimeline={a}
 								currentIndex={i}
+								range={range}
 								timeRanges={props.timeRanges}
 								updateRelations={props.updateRelations}
 							/>

@@ -4,6 +4,7 @@ import { TimeLineEditorProps } from "@/models/data/props/TimeLineEditorProps";
 import { GroupTimeline, Timeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { SuccessTimeRange, TimeRanges } from "@/models/TimeRange";
+import { TimeSpan } from "@/models/TimeSpan";
 import { NextPage } from "next";
 import { ReactNode, useEffect, useState } from "react";
 
@@ -29,20 +30,34 @@ const Component: NextPage<Props> = (props: Props) => {
 			return <></>
 		}
 
-		const range = props.editData.setting.calendar.range;
 		const cell = props.configuration.design.honest.cell;
-		
-		//const x =
+
+		const diffTime = timeRange.begin.getTime() - props.range.from.getTime();
+		const diffSpan = TimeSpan.fromMilliseconds(diffTime);
+		const diffDays = diffSpan.totalDays;
+
+		const x = cell.width.value + diffDays * cell.width.value;
+		const y = cell.height.value + props.currentIndex * cell.height.value;
+
+		console.debug(props.currentTimeline.id, diffDays)
 
 		return (
 			<>
 				<rect
-					x={10}
-					y={10}
+					x={x}
+					y={y}
 					width={10}
 					height={10}
 				/>
-				{props.currentTimeline.id}
+				<text
+					x={x}
+					y={y + (cell.height.value / 2)}
+				>
+{props.currentTimeline.id}/{props.currentIndex}
+				</text>
+
+
+				<text y={y}>{x}:{y}</text>
 			</>
 		)
 	}
@@ -50,7 +65,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<>
 			{renderCurrentTimeline()}
-			{Settings.maybeGroupTimeline(props.currentTimeline) && props.currentTimeline.children.map((a, i) => {
+			{/* {Settings.maybeGroupTimeline(props.currentTimeline) && props.currentTimeline.children.map((a, i) => {
 				return (
 					<Component
 						key={a.id}
@@ -59,11 +74,12 @@ const Component: NextPage<Props> = (props: Props) => {
 						parentGroup={props.currentTimeline as GroupTimeline}
 						currentTimeline={a}
 						currentIndex={i}
+						range={props.range}
 						timeRanges={props.timeRanges}
 						updateRelations={props.updateRelations}
 					/>
 				);
-			})}
+			})} */}
 		</>
 	);
 };
