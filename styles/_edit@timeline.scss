@@ -157,7 +157,7 @@
 
 					&.after {
 						position: absolute;
-						left: $timeline-header-range-from-width + $timeline-header-range-to-width;
+						left: 100%;
 						top: 0;
 					}
 
