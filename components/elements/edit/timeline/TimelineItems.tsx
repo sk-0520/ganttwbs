@@ -6,7 +6,6 @@ import { useLocale } from "@/models/locales/locale";
 
 import GroupTimelineEditor from "./GroupTimelineEditor";
 import TaskTimelineEditor from "./TaskTimelineEditor";
-import { MoveItemKind } from "./TimelineControls";
 import { GroupTimeline, TaskTimeline, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { TimeRange } from "@/models/TimeRange";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
@@ -16,6 +15,7 @@ import { DropTimeline } from "@/models/data/DropTimeline";
 import { EditProps } from "@/models/data/props/EditProps";
 import { RefreshedChildrenCallbacks } from "@/models/data/RefreshedChildrenCallbacks";
 import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
+import { MoveItemKind } from "./cell/ControlsCell";
 
 interface Props extends EditProps {
 	timeRanges: Map<TimelineId, TimeRange>;
@@ -247,13 +247,22 @@ const Component: NextPage<Props> = (props: Props) => {
 		})
 	}
 
-	function handleClearSelectBeginDate(timeline: TaskTimeline): void {
-		setSelectingBeginDate({
+	function handleClearSelectBeginDate(timeline: TaskTimeline, clearDate: boolean, clearPrevious: boolean): void {
+		setSelectingBeginDate(c => ({
 			timeline: timeline,
-			beginDate: null,
-			previous: new Set(),
+			beginDate: clearDate ? null : c?.beginDate ?? null,
+			previous: clearPrevious ? new Set() : c?.previous ?? new Set(),
 			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
-		})
+		}));
+	}
+
+	function handleSetSelectBeginDate(timeline: TaskTimeline, set: ReadonlySet<TimelineId>): void {
+		setSelectingBeginDate(c => ({
+			timeline: timeline,
+			beginDate: c?.beginDate ?? null,
+			previous: new Set(set),
+			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
+		}));
 	}
 
 	function handleSubmitSelectBeginDate(timeline: TaskTimeline): void {
@@ -279,6 +288,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const beginDateCallbacks: BeginDateCallbacks = {
 		startSelectBeginDate: handleStartSelectBeginDate,
 		clearSelectBeginDate: handleClearSelectBeginDate,
+		setSelectBeginDate: handleSetSelectBeginDate,
 		submitSelectBeginDate: handleSubmitSelectBeginDate,
 		cancelSelectBeginDate: handleCancelSelectBeginDate,
 	}

@@ -129,8 +129,23 @@ const Component: NextPage<Props> = (props: Props) => {
 		setSelectedBeginDate(date);
 	}
 
+	function handleAttachPrevTimeline() {
+		debugger;
+		if (!props.currentIndex) {
+			return;
+		}
+
+		const nodes = props.parentGroup ? props.parentGroup.children : props.editData.setting.timelineNodes;
+		const prevTimeline = nodes[props.currentIndex - 1];
+		props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([prevTimeline.id]));
+	}
+
 	function handleClearPrevious() {
-		props.beginDateCallbacks.clearSelectBeginDate(props.currentTimeline);
+		props.beginDateCallbacks.clearSelectBeginDate(props.currentTimeline, false, true);
+	}
+
+	function handleClearStatic() {
+		props.beginDateCallbacks.clearSelectBeginDate(props.currentTimeline, true, false);
 	}
 
 	function handleSubmitPrevious() {
@@ -198,25 +213,22 @@ const Component: NextPage<Props> = (props: Props) => {
 						? (
 							<>
 								<div className='timeline-range-area prompt'>
-									<div className="single-line no-warp">
-										<ul className="inline">
-											<li><button type="button" onClick={handleClearPrevious}>🆓</button></li>
-											<li>
-												<input
-													type="date"
-													value={selectedBeginDate ? Strings.formatDate(selectedBeginDate, "yyyy-MM-dd") : ''}
-													onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
-												/>
-											</li>
-											<li><button type="button" onClick={handleSubmitPrevious}>🆗</button></li>
-											<li><button type="button" onClick={handleCancelPrevious}>🆖</button></li>
-										</ul>
-									</div>
+									<ul className="contents">
+										<li className="main">
+											<input
+												type="date"
+												value={selectedBeginDate ? Strings.formatDate(selectedBeginDate, "yyyy-MM-dd") : ''}
+												onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
+											/>
+										</li>
+										<li><button type="button" onClick={handleSubmitPrevious}>更新</button></li>
+										<li><button type="button" onClick={handleCancelPrevious}>取消</button></li>
+									</ul>
 									<div className="tools after">
 										<ul>
-											<li><button>直近項目に紐づける</button></li>
-											<li><button>紐づけを解除</button></li>
-											<li><button>固定日付をクリア</button></li>
+											<li><button onClick={handleAttachPrevTimeline}>直近項目に紐づける</button></li>
+											<li><button onClick={handleClearPrevious}>紐づけを解除</button></li>
+											<li><button onClick={handleClearStatic}>固定日付をクリア</button></li>
 										</ul>
 									</div>
 								</div>

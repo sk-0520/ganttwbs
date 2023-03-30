@@ -199,6 +199,21 @@
 				}
 			}
 
+			.timeline-range-area.prompt {
+				.contents {
+					display: flex;
+					align-items: center;
+
+					.main {
+						flex: content;
+
+						input {
+							width: 100%;
+						}
+					}
+				}
+			}
+
 			label {
 				display: block;
 			}
