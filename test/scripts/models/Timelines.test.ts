@@ -1,4 +1,4 @@
-import { Timelines } from "../../../models/Timelines";
+import { Timelines } from "../../../src/models/Timelines";
 
 describe("Timelines", () => {
 	test.each([

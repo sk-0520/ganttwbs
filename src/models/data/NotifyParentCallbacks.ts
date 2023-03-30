@@ -1,5 +1,5 @@
+import { MoveItemKind } from "@/components/elements/edit/timeline/cell/ControlsCell";
 import { DragEvent } from "react";
-import { MoveItemKind } from "@/components/elements/edit/timeline/TimelineControls";
 import { GroupTimeline, TaskTimeline, Timeline } from "./Setting";
 
 /**

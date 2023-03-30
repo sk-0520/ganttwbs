@@ -1,10 +1,10 @@
 import { v4 } from "uuid";
 
-import { MoveItemKind } from "@/components/elements/edit/timeline/TimelineControls";
 import { DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, Timeline, TimelineId, WeekIndex } from "./data/Setting";
 import { TimeSpan } from "./TimeSpan";
 import { SuccessTimeRange, TimeRange, TimeRanges } from "./TimeRange";
 import { Settings } from "./Settings";
+import { MoveItemKind } from "@/components/elements/edit/timeline/cell/ControlsCell";
 
 interface Holidays {
 	dates: ReadonlyArray<Date>;

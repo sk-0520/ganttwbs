@@ -1,4 +1,4 @@
-import { Strings } from "../../../models/Strings";
+import { Strings } from "../../../src/models/Strings";
 
 describe("String", () => {
 	test.each([

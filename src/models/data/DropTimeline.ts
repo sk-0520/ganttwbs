@@ -1,4 +1,4 @@
-import { GroupTimeline, TaskTimeline, Timeline } from "./Setting";
+import { GroupTimeline, TaskTimeline } from "./Setting";
 
 export interface DropTimeline {
 	/**

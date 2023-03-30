@@ -1,12 +1,12 @@
 import { NextPage } from "next";
-import { CSSProperties, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Timelines } from "@/models/Timelines";
 import { useLocale } from "@/models/locales/locale";
 
 import GroupTimelineEditor from "./GroupTimelineEditor";
 import TaskTimelineEditor from "./TaskTimelineEditor";
-import { GroupTimeline, TaskTimeline, Theme, Timeline, TimelineKind } from "@/models/data/Setting";
+import { GroupTimeline, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
 import { TimeRangeKind, TimeRanges } from "@/models/TimeRange";
 import { Settings } from "@/models/Settings";
 import { DropTimeline } from "@/models/data/DropTimeline";
@@ -325,15 +325,3 @@ const Component: NextPage<Props> = (props: Props) => {
 };
 
 export default Component;
-
-function getGroupStyles(level: number, theme: Readonly<Theme>): CSSProperties {
-	if (theme.groups.length < level) {
-		return {};
-	}
-
-	const color = theme.groups[level];
-
-	return {
-		backgroundColor: color,
-	};
-}

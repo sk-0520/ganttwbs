@@ -1,4 +1,4 @@
-import { TimeSpan } from "../../../models/TimeSpan";
+import { TimeSpan } from "../../../src/models/TimeSpan";
 
 
 describe("TimeSpan", () => {

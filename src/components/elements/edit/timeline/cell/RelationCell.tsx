@@ -1,5 +1,4 @@
 import DynamicLabel from "@/components/elements/DynamicLabel";
-import Timestamp from "@/components/elements/Timestamp";
 import { GroupTimeline, TaskTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { NextPage } from "next";
