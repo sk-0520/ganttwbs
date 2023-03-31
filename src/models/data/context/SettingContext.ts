@@ -40,8 +40,12 @@ export interface ThemeSetting {
 		}
 	};
 	groups: Array<{ key: UUID, value: Color }>;
-	completed: Color;
-
+	timeline: {
+		group: Color;
+		defaultGroup: Color;
+		defaultTask: Color;
+		completed: Color;
+	};
 }
 
 export interface SettingContext {

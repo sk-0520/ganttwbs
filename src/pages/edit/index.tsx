@@ -97,7 +97,6 @@ function createConfiguration(): Configuration {
 			programmable: {
 				group: {
 					maximum: 10,
-					default: "purple",
 				},
 				indexNumber: {
 					maximum: 10,

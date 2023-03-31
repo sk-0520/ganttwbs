@@ -10,7 +10,7 @@ export interface GanttChartTimelineProps extends EditProps {
 	range: {
 		from: Date,
 		to: Date,
-	}
+	};
 
 	timeRanges: Map<TimelineId, TimeRange>;
 	updateRelations: () => void;

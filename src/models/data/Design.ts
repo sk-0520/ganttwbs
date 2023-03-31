@@ -35,7 +35,6 @@ export interface Design {
 		group: {
 			/** 最大値 */
 			maximum: number;
-			default: string;
 		};
 		/** 表示番号 */
 		indexNumber: {

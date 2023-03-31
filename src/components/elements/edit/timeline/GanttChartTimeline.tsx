@@ -32,22 +32,28 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		const cell = props.configuration.design.honest.cell;
 
-		const diffTime = timeRange.begin.getTime() - props.range.from.getTime();
-		const diffSpan = TimeSpan.fromMilliseconds(diffTime);
-		const diffDays = diffSpan.totalDays;
+		const startDiffTime = timeRange.begin.getTime() - props.range.from.getTime();
+		const startDiffSpan = TimeSpan.fromMilliseconds(startDiffTime);
+		const startDiffDays = startDiffSpan.totalDays;
 
-		const x = diffDays * cell.width.value;
-		const y = props.currentIndex * cell.height.value;
+		const endDiffTime = timeRange.end.getTime() - timeRange.begin.getTime();
+		const endDiffSpan = TimeSpan.fromMilliseconds(endDiffTime);
+		const endDiffDays = endDiffSpan.totalDays;
 
-		console.debug(props.currentTimeline.id, diffDays)
+		const height = cell.height.value * 0.8;
+		const width = endDiffDays * cell.width.value;
+		const x = startDiffDays * cell.width.value;
+		const y = props.currentIndex * cell.height.value + (cell.height.value / 2 - height / 2);
+
+		console.debug(props.currentTimeline.id, startDiffDays)
 
 		return (
 			<>
 				<rect
 					x={x}
 					y={y}
-					width={10}
-					height={10}
+					width={width}
+					height={height}
 				/>
 				<text
 					x={x + cell.height.value}
@@ -57,7 +63,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				</text>
 
 
-				<text y={y+ (cell.height.value / 2)}>{props.currentTimeline.id}@{x}:{y}</text>
+				<text y={y + (cell.height.value / 2)}>{props.currentTimeline.id}@{x}:{y}</text>
 			</>
 		)
 	}
