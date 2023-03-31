@@ -5,6 +5,7 @@ import { Settings } from "@/models/Settings";
 import { TimeRange } from "@/models/TimeRange";
 import { NextPage } from "next";
 import GanttChartTimeline from "./GanttChartTimeline";
+import { MemberMapValue } from "@/models/data/MemberMapValue";
 
 interface Props extends EditProps {
 	timeRanges: Map<TimelineId, TimeRange>;
@@ -36,10 +37,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const timelines = props.editData.setting.timelineNodes.flatMap(a => flat(a));
 
 	//TODO: for しなくてもできると思うけどパッと思いつかなんだ
-	const memberMap = new Map<MemberId, {
-		group: Group,
-		member: Member
-	}>();
+	const memberMap = new Map<MemberId, MemberMapValue>();
 	for (const group of props.editData.setting.groups) {
 		for (const member of group.members) {
 			memberMap.set(member.id, { group: group, member: member });
@@ -52,23 +50,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		<div id='viewer'>
 			<svg>
 				<></>
-				{/* {props.editData.setting.timelineNodes.flatMap(a => Settings.maybeGroupTimeline(a) ? a.children : a)
-					.map((a, i) => {
-						return (
-							<GanttChartTimeline
-								key={a.id}
-								configuration={props.configuration}
-								editData={props.editData}
-								parentGroup={null}
-								currentTimeline={a}
-								currentIndex={i}
-								range={range}
-								timeRanges={props.timeRanges}
-								updateRelations={props.updateRelations}
-							/>
-						);
-					})
-				} */}
 				{timelines.map((a, i) => {
 					return (
 						<GanttChartTimeline

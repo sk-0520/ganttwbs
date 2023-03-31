@@ -82,7 +82,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 					.map(a => {
 						return {
 							[`level-${a}`]: {
-								background: a in theme.groups ? theme.groups[a]: theme.timeline.group,
+								background: a in theme.groups ? theme.groups[a] : theme.timeline.group,
 							}
 						}
 					})

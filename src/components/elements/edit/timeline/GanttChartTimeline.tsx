@@ -7,6 +7,8 @@ import { SuccessTimeRange, TimeRanges } from "@/models/TimeRange";
 import { TimeSpan } from "@/models/TimeSpan";
 import { NextPage } from "next";
 import { ReactNode, useEffect, useState } from "react";
+import TaskChart from "./chart/TaskChart";
+import { ChartArea } from "@/models/data/ChartArea";
 
 interface Props extends GanttChartTimelineProps { }
 
@@ -40,30 +42,48 @@ const Component: NextPage<Props> = (props: Props) => {
 		const endDiffSpan = TimeSpan.fromMilliseconds(endDiffTime);
 		const endDiffDays = endDiffSpan.totalDays;
 
-		const height = cell.height.value * 0.8;
-		const width = endDiffDays * cell.width.value;
 		const x = startDiffDays * cell.width.value;
-		const y = props.currentIndex * cell.height.value + (cell.height.value / 2 - height / 2);
+		const y = props.currentIndex * cell.height.value;
+		const width = endDiffDays * cell.width.value;
+		const height = cell.height.value;
+
+		const area: ChartArea = {
+			x: x,
+			y: y,
+			width: width,
+			height: height,
+		};
 
 		console.debug(props.currentTimeline.id, startDiffDays);
 
 		return (
 			<>
-				<rect
-					x={x}
-					y={y}
-					width={width}
-					height={height}
-				/>
-				<text
-					x={x + cell.height.value}
-					y={y + (cell.height.value / 2)}
-				>
-					{props.currentTimeline.id}/{props.currentIndex}
-				</text>
+				{
+					Settings.maybeTaskTimeline(props.currentTimeline)
+						? (
+							<TaskChart
+								configuration={props.configuration}
+								background="#ff0000"
+								foreground={props.editData.setting.theme.timeline.completed}
+								borderColor="#000000"
+								borderThickness={1}
+								area={area}
+								progress={props.currentTimeline.progress}
+							/>
+						) : (
+							<></>
+						)
+				}
+				<>
+					<text
+						x={x + cell.height.value}
+						y={y + (cell.height.value / 2)}
+					>
+						{props.currentTimeline.id}/{props.currentIndex}
+					</text>
 
-
-				<text y={y + (cell.height.value / 2)}>{props.currentTimeline.id}@{x}:{y}</text>
+					{/* <text y={y + (cell.height.value / 2)}>{props.currentTimeline.id}@{x}:{y}</text> */}
+				</>
 			</>
 		)
 	}
@@ -71,21 +91,6 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<>
 			{renderCurrentTimeline()}
-			{/* {Settings.maybeGroupTimeline(props.currentTimeline) && props.currentTimeline.children.map((a, i) => {
-				return (
-					<Component
-						key={a.id}
-						configuration={props.configuration}
-						editData={props.editData}
-						parentGroup={props.currentTimeline as GroupTimeline}
-						currentTimeline={a}
-						currentIndex={i}
-						range={props.range}
-						timeRanges={props.timeRanges}
-						updateRelations={props.updateRelations}
-					/>
-				);
-			})} */}
 		</>
 	);
 };

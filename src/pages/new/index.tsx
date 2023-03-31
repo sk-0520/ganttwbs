@@ -179,7 +179,7 @@ function createEmptySetting(data: Input): Setting {
 				group: "#ff00ff",
 				defaultGroup: "#ff0000",
 				defaultTask: "#00ff00",
-				completed: "#0000ff"
+				completed: "#000000"
 			}
 		},
 		groups: [],
@@ -227,7 +227,7 @@ function createTemplateSetting(data: Input): Setting {
 				group: "#ff00ff",
 				defaultGroup: "#ff0000",
 				defaultTask: "#00ff00",
-				completed: "#0000ff"
+				completed: "#000000"
 			}
 		},
 		"groups": [

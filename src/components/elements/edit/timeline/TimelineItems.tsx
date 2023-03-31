@@ -92,6 +92,10 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.updateRelations();
 	}
 
+	function handleUpdateChildrenProgress() {
+		props.updateRelations();
+	}
+
 	function fireDropTimeline(dropTimeline: DropTimeline) {
 		console.debug("FIRE");
 
@@ -282,7 +286,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
 		updatedBeginDate: handleUpdateChildrenBeginDate,
 		updatedWorkload: handleUpdateChildrenWorkload,
-		updatedProgress: () => { /* nop */ },
+		updatedProgress: handleUpdateChildrenProgress,
 	}
 
 	const beginDateCallbacks: BeginDateCallbacks = {
