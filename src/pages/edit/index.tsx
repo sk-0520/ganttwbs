@@ -80,10 +80,6 @@ function createConfiguration(): Configuration {
 		design: {
 			honest: {
 				cell: {
-					maxWidth: "20px",
-					minWidth: "20px",
-					maxHeight: "20px",
-					minHeight: "20px",
 					width: {
 						value: 20,
 						unit: "px"

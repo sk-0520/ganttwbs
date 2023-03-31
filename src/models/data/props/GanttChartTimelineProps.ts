@@ -1,5 +1,5 @@
 import { TimeRange } from "@/models/TimeRange";
-import { GroupTimeline, Timeline, TimelineId } from "../Setting";
+import { Color, Group, GroupTimeline, Member, MemberId, Timeline, TimelineId } from "../Setting";
 import { EditProps } from "./EditProps";
 
 export interface GanttChartTimelineProps extends EditProps {
@@ -11,6 +11,11 @@ export interface GanttChartTimelineProps extends EditProps {
 		from: Date,
 		to: Date,
 	};
+
+	memberMap: ReadonlyMap<MemberId, {
+		group: Group,
+		member: Member
+	}>;
 
 	timeRanges: Map<TimelineId, TimeRange>;
 	updateRelations: () => void;

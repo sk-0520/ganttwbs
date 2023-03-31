@@ -9,17 +9,6 @@ export interface EditContext {
 		isEnabled: boolean;
 		minutes: number;
 	};
-
-	design: {
-		cell: {
-			maxWidth: string;
-			minWidth: string;
-			maxHeight: string;
-			minHeight: string;
-		}
-	}
-
-	debug: number;
 }
 
 export class EditContextImpl {
@@ -28,15 +17,6 @@ export class EditContextImpl {
 	public autoSave = {
 		isEnabled: false,
 		minutes: 5,
-	};
-
-	public design = {
-		cell: {
-			maxWidth: "20px",
-			minWidth: "20px",
-			maxHeight: "20px",
-			minHeight: "20px",
-		}
 	};
 
 	public debug = 0;

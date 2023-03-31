@@ -21,10 +21,6 @@ export interface Design {
 	/** 単純なスタイルシート */
 	honest: {
 		cell: {
-			maxWidth: string;
-			minWidth: string;
-			maxHeight: string;
-			minHeight: string;
 			width: ValueUnit;
 			height: ValueUnit;
 		}

@@ -1,6 +1,6 @@
 import { Design } from "@/models/data/Design";
 import { EditProps } from "@/models/data/props/EditProps";
-import { Timeline, TimelineId } from "@/models/data/Setting";
+import { Group, Member, MemberId, Timeline, TimelineId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeRange } from "@/models/TimeRange";
 import { NextPage } from "next";
@@ -25,7 +25,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		} else if (Settings.maybeGroupTimeline(timeline)) {
 			result.push(timeline);
 			const children = timeline.children.flatMap(a => flat(a));
-			for(const child of children) {
+			for (const child of children) {
 				result.push(child);
 			}
 		}
@@ -34,6 +34,17 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	const timelines = props.editData.setting.timelineNodes.flatMap(a => flat(a));
+
+	//TODO: for しなくてもできると思うけどパッと思いつかなんだ
+	const memberMap = new Map<MemberId, {
+		group: Group,
+		member: Member
+	}>();
+	for (const group of props.editData.setting.groups) {
+		for (const member of group.members) {
+			memberMap.set(member.id, { group: group, member: member });
+		}
+	}
 
 	// props.editData.setting.timelineNodes.flatMap(a => Settings.maybeGroupTimeline(a) ? a.children : a)
 
@@ -61,16 +72,17 @@ const Component: NextPage<Props> = (props: Props) => {
 				{timelines.map((a, i) => {
 					return (
 						<GanttChartTimeline
-						key={a.id}
-						configuration={props.configuration}
-						editData={props.editData}
-						parentGroup={null}
-						currentTimeline={a}
-						currentIndex={i}
-						range={range}
-						timeRanges={props.timeRanges}
-						updateRelations={props.updateRelations}
-					/>
+							key={a.id}
+							configuration={props.configuration}
+							editData={props.editData}
+							parentGroup={null}
+							currentTimeline={a}
+							currentIndex={i}
+							range={range}
+							memberMap={memberMap}
+							timeRanges={props.timeRanges}
+							updateRelations={props.updateRelations}
+						/>
 					)
 				})}
 			</svg>

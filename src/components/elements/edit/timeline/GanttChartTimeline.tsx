@@ -45,7 +45,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		const x = startDiffDays * cell.width.value;
 		const y = props.currentIndex * cell.height.value + (cell.height.value / 2 - height / 2);
 
-		console.debug(props.currentTimeline.id, startDiffDays)
+		console.debug(props.currentTimeline.id, startDiffDays);
 
 		return (
 			<>
