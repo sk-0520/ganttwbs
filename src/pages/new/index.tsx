@@ -175,7 +175,12 @@ function createEmptySetting(data: Input): Setting {
 				"#ffff00",
 				"#00ffff",
 			],
-			completed: "#000000",
+			timeline: {
+				group: "#ff00ff",
+				defaultGroup: "#ff0000",
+				defaultTask: "#00ff00",
+				completed: "#000000"
+			}
 		},
 		groups: [],
 		timelineNodes: [],
@@ -218,7 +223,12 @@ function createTemplateSetting(data: Input): Setting {
 				"#ffff00",
 				"#00ffff",
 			],
-			completed: "#000000",
+			timeline: {
+				group: "#ff00ff",
+				defaultGroup: "#ff0000",
+				defaultTask: "#00ff00",
+				completed: "#000000"
+			}
 		},
 		"groups": [
 			{

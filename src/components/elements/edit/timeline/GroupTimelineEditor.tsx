@@ -53,6 +53,13 @@ const Component: NextPage<Props> = (props: Props) => {
 	}, [props.timeRanges]);
 
 	useEffect(() => {
+		if (props.selectingBeginDate) {
+			const selected = props.selectingBeginDate.previous.has(props.currentTimeline.id);
+			setIsSelectedPrevious(selected);
+		}
+	}, [props.selectingBeginDate]);
+
+	useEffect(() => {
 		if (props.dropTimeline) {
 			const sourceIsSelf = props.dropTimeline.sourceGroupTimeline?.id === props.currentTimeline.id;
 			const destinationIsSelf = props.dropTimeline.destinationGroupTimeline?.id === props.currentTimeline.id;
@@ -163,6 +170,10 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.refreshedChildrenCallbacks.updatedBeginDate();
 	}
 
+	function handleUpdateChildrenResource() {
+		props.refreshedChildrenCallbacks.updateResource();
+	}
+
 	function handleUpdateChildrenWorkload() {
 		const summary = Timelines.sumWorkloadByGroup(props.currentTimeline);
 		setWorkload(summary.totalDays);
@@ -209,6 +220,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
 		updatedBeginDate: handleUpdateChildrenBeginDate,
+		updateResource: handleUpdateChildrenResource,
 		updatedWorkload: handleUpdateChildrenWorkload,
 		updatedProgress: handleUpdateChildrenProgress,
 	}

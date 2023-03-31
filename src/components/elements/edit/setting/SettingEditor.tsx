@@ -11,7 +11,7 @@ import CalendarRangeSettingEditor from "./Calendar/CalendarRangeSettingEditor";
 import CalendarWeekSettingEditor from "./Calendar/CalendarWeekSettingEditor";
 import GroupsEditor from "./Group/GroupsEditor";
 import ThemeCalendarSettingEditor from "./Theme/ThemeCalendarSettingEditor";
-import ThemeCompletedSettingEditor from "./Theme/ThemeCompletedSettingEditor";
+import ThemeTimelineSettingEditor from "./Theme/ThemeTimelineSettingEditor";
 import ThemeGroupSettingEditor from "./Theme/ThemeGroupSettingEditor";
 import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
@@ -87,9 +87,9 @@ const Component: NextPage<Props> = (props: Props) => {
 							<dd>
 								<ThemeGroupSettingEditor />
 							</dd>
-							<dt>終了</dt>
+							<dt>タイムライン</dt>
 							<dd>
-								<ThemeCompletedSettingEditor />
+								<ThemeTimelineSettingEditor />
 							</dd>
 						</dl>
 					</TabPanel>
@@ -167,7 +167,12 @@ function toContext(setting: Setting): SettingContext {
 				key: v4(),
 				value: a,
 			})),
-			completed: setting.theme.completed,
+			timeline: {
+				group: setting.theme.timeline.group,
+				defaultGroup: setting.theme.timeline.defaultGroup,
+				defaultTask: setting.theme.timeline.defaultTask,
+				completed: setting.theme.timeline.completed,
+			}
 		}
 	};
 }
@@ -235,7 +240,12 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 				}
 			},
 			groups: context.theme.groups.map(a => a.value),
-			completed: context.theme.completed,
+			timeline: {
+				group: context.theme.timeline.group,
+				defaultGroup: context.theme.timeline.defaultGroup,
+				defaultTask: context.theme.timeline.defaultTask,
+				completed: context.theme.timeline.completed,
+			},
 		},
 		groups: context.groups.map(a => ({
 			name: a.name,

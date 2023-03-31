@@ -88,7 +88,15 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.updateRelations();
 	}
 
+	function handleUpdateChildrenResource() {
+		props.updateRelations();
+	}
+
 	function handleUpdateChildrenWorkload() {
+		props.updateRelations();
+	}
+
+	function handleUpdateChildrenProgress() {
 		props.updateRelations();
 	}
 
@@ -281,8 +289,9 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
 		updatedBeginDate: handleUpdateChildrenBeginDate,
+		updateResource: handleUpdateChildrenResource,
 		updatedWorkload: handleUpdateChildrenWorkload,
-		updatedProgress: () => { /* nop */ },
+		updatedProgress: handleUpdateChildrenProgress,
 	}
 
 	const beginDateCallbacks: BeginDateCallbacks = {

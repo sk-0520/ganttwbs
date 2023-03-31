@@ -21,10 +21,6 @@ export interface Design {
 	/** 単純なスタイルシート */
 	honest: {
 		cell: {
-			maxWidth: string;
-			minWidth: string;
-			maxHeight: string;
-			minHeight: string;
 			width: ValueUnit;
 			height: ValueUnit;
 		}
@@ -35,7 +31,6 @@ export interface Design {
 		group: {
 			/** 最大値 */
 			maximum: number;
-			default: string;
 		};
 		/** 表示番号 */
 		indexNumber: {
