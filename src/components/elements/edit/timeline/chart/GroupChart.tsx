@@ -7,7 +7,7 @@ interface Props extends ChartProps {
 const Component: NextPage<Props> = (props: Props) => {
 
 	const width = props.area.width;
-	const height = props.area.height * 0.4;
+	const height = props.area.height * 0.2;
 	const x = props.area.x;
 	const y = props.area.y + (props.area.height / 2 - height / 2);
 
@@ -21,6 +21,8 @@ const Component: NextPage<Props> = (props: Props) => {
 				fill={props.background}
 				stroke={props.borderColor}
 				strokeWidth={props.borderThickness}
+				rx={height / 2}
+				ry={width / 2}
 			/>
 		</>
 	);

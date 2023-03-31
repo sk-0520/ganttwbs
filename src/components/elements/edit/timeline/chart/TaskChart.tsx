@@ -27,9 +27,9 @@ const Component: NextPage<Props> = (props: Props) => {
 
 			<rect
 				x={x}
-				y={y}
+				y={y + height * 0.2}
 				width={width * props.progress}
-				height={height}
+				height={height * 0.6}
 				fill={props.foreground}
 			/>
 		</>
