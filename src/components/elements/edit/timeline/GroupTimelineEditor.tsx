@@ -170,6 +170,10 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.refreshedChildrenCallbacks.updatedBeginDate();
 	}
 
+	function handleUpdateChildrenResource() {
+		props.refreshedChildrenCallbacks.updateResource();
+	}
+
 	function handleUpdateChildrenWorkload() {
 		const summary = Timelines.sumWorkloadByGroup(props.currentTimeline);
 		setWorkload(summary.totalDays);
@@ -216,6 +220,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
 		updatedBeginDate: handleUpdateChildrenBeginDate,
+		updateResource: handleUpdateChildrenResource,
 		updatedWorkload: handleUpdateChildrenWorkload,
 		updatedProgress: handleUpdateChildrenProgress,
 	}

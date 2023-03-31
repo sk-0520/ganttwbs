@@ -89,8 +89,8 @@ const Component: NextPage<Props> = (props: Props) => {
 				}
 				<>
 					<text
-						x={x + cell.height.value}
-						y={y + (cell.height.value / 2)}
+						x={area.x + area.width}
+						y={area.y + area.height}
 					>
 						{props.currentTimeline.id}/{props.currentIndex}
 					</text>

@@ -96,6 +96,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	function handleChangeMember(memberId: MemberId): void {
 		setMemberId(memberId);
 		props.currentTimeline.memberId = memberId;
+		props.refreshedChildrenCallbacks.updateResource();
 	}
 
 	function handleClickBeginDate() {
