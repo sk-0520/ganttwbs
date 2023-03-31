@@ -28,7 +28,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		height: cell.height.value * timelines.length,
 	}
 
-
 	//TODO: for しなくてもできると思うけどパッと思いつかなんだ
 	const memberMap = new Map<MemberId, MemberMapValue>();
 	for (const group of props.editData.setting.groups) {
@@ -59,11 +58,11 @@ const Component: NextPage<Props> = (props: Props) => {
 		const rangeDays = rangeSpan.totalDays;
 
 		const width = cell.width.value * rangeDays;
-		//const height = cell.height.value * props.timeRanges.size;
+		const height = cell.height.value * timelines.length;
 
 		const gridHorizontals = new Array<ReactNode>();
 		for (let i = 0; i < props.timeRanges.size; i++) {
-			const y = cell.height.value * i;
+			const y = cell.height.value + cell.height.value * i;
 			gridHorizontals.push(
 				<line
 					x1={0}
@@ -71,20 +70,37 @@ const Component: NextPage<Props> = (props: Props) => {
 					y1={y}
 					y2={y}
 					stroke="black"
-					strokeWidth={1}
+					strokeWidth={0.5}
+					strokeDasharray={1}
+					/>
+			)
+		}
+
+		const gridVerticals = new Array<ReactNode>();
+		for (let i = 0; i < rangeDays; i++) {
+			const x = cell.width.value + cell.width.value * i;
+			gridVerticals.push(
+				<line
+					x1={x}
+					x2={x}
+					y1={0}
+					y2={height}
+					stroke="black"
+					strokeWidth={0.5}
+					strokeDasharray={2}
 				/>
 			)
 		}
 
-		//const gridVericals = new Array<ReactNode>();
-
-
 		return (
-			<>
+			<g>
 				<g>
 					{gridHorizontals.map(a => a)}
 				</g>
-			</>
+				<g>
+					{gridVerticals.map(a => a)}
+				</g>
+			</g>
 		)
 	}
 
