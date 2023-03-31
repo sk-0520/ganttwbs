@@ -53,6 +53,13 @@ const Component: NextPage<Props> = (props: Props) => {
 	}, [props.timeRanges]);
 
 	useEffect(() => {
+		if (props.selectingBeginDate) {
+			const selected = props.selectingBeginDate.previous.has(props.currentTimeline.id);
+			setIsSelectedPrevious(selected);
+		}
+	}, [props.selectingBeginDate]);
+
+	useEffect(() => {
 		if (props.dropTimeline) {
 			const sourceIsSelf = props.dropTimeline.sourceGroupTimeline?.id === props.currentTimeline.id;
 			const destinationIsSelf = props.dropTimeline.destinationGroupTimeline?.id === props.currentTimeline.id;
