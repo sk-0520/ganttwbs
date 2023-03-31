@@ -31,6 +31,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 	}, [props.timeRanges]);
 
+
 	function renderCurrentTimeline(): ReactNode {
 		if (!timeRange) {
 			return <></>
