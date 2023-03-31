@@ -1,7 +1,6 @@
 import { EditProps } from "@/models/data/props/EditProps";
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
-import { TimeLineEditorProps } from "@/models/data/props/TimeLineEditorProps";
-import { GroupTimeline, Timeline } from "@/models/data/Setting";
+import { GroupTimeline, MemberId, TaskTimeline, Theme, Timeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { SuccessTimeRange, TimeRanges } from "@/models/TimeRange";
 import { TimeSpan } from "@/models/TimeSpan";
@@ -9,6 +8,11 @@ import { NextPage } from "next";
 import { ReactNode, useEffect, useState } from "react";
 import TaskChart from "./chart/TaskChart";
 import { ChartArea } from "@/models/data/ChartArea";
+import GroupChart from "./chart/GroupChart";
+import { MemberMapValue } from "@/models/data/MemberMapValue";
+import { Configuration } from "@/models/data/Configuration";
+import { Design } from "@/models/data/Design";
+import { Timelines } from "@/models/Timelines";
 
 interface Props extends GanttChartTimelineProps { }
 
@@ -63,16 +67,25 @@ const Component: NextPage<Props> = (props: Props) => {
 						? (
 							<TaskChart
 								configuration={props.configuration}
-								background="#ff0000"
+								// background="#ff0000"
+								background={getTaskBackground(props.currentTimeline, props.memberMap, props.editData.setting.theme)}
 								foreground={props.editData.setting.theme.timeline.completed}
 								borderColor="#000000"
 								borderThickness={1}
 								area={area}
 								progress={props.currentTimeline.progress}
 							/>
-						) : (
-							<></>
-						)
+						) : Settings.maybeGroupTimeline(props.currentTimeline) ? (
+							<GroupChart
+								configuration={props.configuration}
+								background={getGroupBackground(props.currentTimeline, props.editData.setting.timelineNodes, props.editData.setting.theme)}
+								foreground="#ffffff"
+								borderColor="#000000"
+								borderThickness={1}
+								area={area}
+							// progress={props.currentTimeline.progress}
+							/>
+						) : null
 				}
 				<>
 					<text
@@ -88,6 +101,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		)
 	}
 
+	props.editData.setting.theme
+
 	return (
 		<>
 			{renderCurrentTimeline()}
@@ -96,3 +111,31 @@ const Component: NextPage<Props> = (props: Props) => {
 };
 
 export default Component;
+
+
+function getGroupBackground(timeline: GroupTimeline, nodes: ReadonlyArray<GroupTimeline | TaskTimeline>, theme: Theme): string {
+	// 未設定とグループラインの扱いが微妙過ぎる
+	const parents = Timelines.getParentGroup(timeline, nodes);
+	if (parents) {
+		if (parents.length < theme.groups.length) {
+			// これはこれで正しいのだ(-1 したい気持ちは抑えるべし)
+			const index = parents.length;
+			if (index in theme.groups) {
+				return theme.groups[index];
+			}
+			return theme.timeline.defaultGroup;
+		}
+	}
+
+	return theme.timeline.group;
+}
+
+function getTaskBackground(timeline: TaskTimeline, memberMap: ReadonlyMap<MemberId, MemberMapValue>, theme: Theme): string {
+	const member = memberMap.get(timeline.memberId);
+	if (member) {
+		return member.member.color;
+	}
+
+	return theme.timeline.defaultTask;
+}
+
