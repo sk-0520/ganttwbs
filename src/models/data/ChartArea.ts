@@ -1,3 +1,4 @@
+import { ChartSize } from "./ChartSize";
 
 /**
  * チャートの基準領域。
@@ -8,4 +9,5 @@ export interface ChartArea {
 	y: number;
 	width: number;
 	height: number;
+	chartSize: ChartSize;
 }

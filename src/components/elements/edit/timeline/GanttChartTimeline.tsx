@@ -57,6 +57,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			y: y,
 			width: width,
 			height: height,
+			chartSize: props.chartSize
 		};
 
 		console.debug(props.currentTimeline.id, startDiffDays);
@@ -82,7 +83,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								background={getGroupBackground(props.currentTimeline, props.editData.setting.timelineNodes, props.editData.setting.theme)}
 								foreground="#ffffff"
 								borderColor="#000000"
-								borderThickness={1}
+								borderThickness={4}
 								area={area}
 							// progress={props.currentTimeline.progress}
 							/>

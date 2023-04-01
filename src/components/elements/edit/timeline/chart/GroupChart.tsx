@@ -13,17 +13,29 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	return (
 		<>
-			<rect
-				x={x}
-				y={y}
-				width={width}
-				height={height}
-				fill={props.background}
-				stroke={props.borderColor}
-				strokeWidth={props.borderThickness}
-				rx={height / 2}
-				ry={width / 2}
-			/>
+			<g>
+				<rect
+					x={0}
+					y={props.area.y}
+					width={props.area.chartSize.width}
+					height={props.area.height}
+					fill={props.background}
+					fillOpacity={0.5}
+				/>
+
+				<rect
+					x={x}
+					y={y}
+					width={width}
+					height={height}
+					fill={props.background}
+					stroke={props.borderColor}
+					strokeWidth={props.borderThickness}
+					rx={height / 2}
+					ry={width / 2}
+					paintOrder="stroke"
+				/>
+			</g>
 		</>
 	);
 };

@@ -23,13 +23,14 @@ const Component: NextPage<Props> = (props: Props) => {
 				fill={props.background}
 				stroke={props.borderColor}
 				strokeWidth={props.borderThickness}
+				paintOrder="stroke"
 			/>
 
 			<rect
 				x={x}
-				y={y + height * 0.2}
+				y={y + height * 0.1}
 				width={width * props.progress}
-				height={height * 0.6}
+				height={height * 0.8}
 				fill={props.foreground}
 			/>
 		</>
