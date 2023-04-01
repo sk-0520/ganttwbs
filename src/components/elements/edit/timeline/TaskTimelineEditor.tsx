@@ -17,7 +17,8 @@ import SubjectCell from "./cell/SubjectCell";
 import IdCell from "./cell/IdCell";
 import TimelineHeaderRow from "./cell/TimelineHeaderRow";
 import RelationCell from "./cell/RelationCell";
-import ControlsCell, { MoveItemKind } from "./cell/ControlsCell";
+import ControlsCell from "./cell/ControlsCell";
+import { Timelines } from "@/models/Timelines";
 
 interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
@@ -26,7 +27,7 @@ interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 const Component: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
 
-	const selectingId = "timeline-node-previous-" + props.currentTimeline.id;
+	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [beginKind, setBeginKind] = useState<TimeRangeKind>("loading");
@@ -66,7 +67,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	function handleChangeWorkload(n: number) {
 		setWorkload(n);
-		props.currentTimeline.workload = TimeSpan.fromDays(n).toString("readable");
+		props.currentTimeline.workload = Timelines.serializeWorkload(TimeSpan.fromDays(n));
 
 		props.refreshedChildrenCallbacks.updatedWorkload();
 	}
@@ -78,8 +79,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.refreshedChildrenCallbacks.updatedProgress();
 	}
 
-	function handleControlMoveItem(kind: MoveItemKind) {
-		props.notifyParentCallbacks.notifyMove(kind, props.currentTimeline);
+	function handleControlMoveItem(moveUp: boolean) {
+		props.notifyParentCallbacks.notifyMove(moveUp, props.currentTimeline);
 	}
 
 	function handleControlAddItem(kind: TimelineKind) {

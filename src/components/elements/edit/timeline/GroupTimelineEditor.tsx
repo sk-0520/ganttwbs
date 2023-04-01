@@ -21,7 +21,7 @@ import SubjectCell from "./cell/SubjectCell";
 import IdCell from "./cell/IdCell";
 import TimelineHeaderRow from "./cell/TimelineHeaderRow";
 import RelationCell from "./cell/RelationCell";
-import ControlsCell, { MoveItemKind } from "./cell/ControlsCell";
+import ControlsCell from "./cell/ControlsCell";
 
 interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 	dropTimeline: DropTimeline | null;
@@ -30,7 +30,7 @@ interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 const Component: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
 
-	const selectingId = "timeline-node-previous-" + props.currentTimeline.id;
+	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(Timelines.sumWorkloadByGroup(props.currentTimeline).totalDays);
@@ -100,8 +100,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.currentTimeline.subject = s;
 	}
 
-	function handleControlMoveItem(kind: MoveItemKind) {
-		props.notifyParentCallbacks.notifyMove(kind, props.currentTimeline);
+	function handleControlMoveItem(moveUp: boolean) {
+		props.notifyParentCallbacks.notifyMove(moveUp, props.currentTimeline);
 	}
 
 	function handleControlAddItem(kind: TimelineKind) {
@@ -136,8 +136,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.notifyParentCallbacks.notifyDelete(props.currentTimeline);
 	}
 
-	function handleUpdateChildrenOrder(kind: MoveItemKind, currentTimeline: Timeline) {
-		if (Timelines.moveTimelineOrder(props.currentTimeline.children, kind, currentTimeline)) {
+	function handleUpdateChildrenOrder(moveUp: boolean, currentTimeline: Timeline) {
+		if (Timelines.moveTimelineOrder(props.currentTimeline.children, moveUp, currentTimeline)) {
 			setChildren([...props.currentTimeline.children]);
 		}
 	}

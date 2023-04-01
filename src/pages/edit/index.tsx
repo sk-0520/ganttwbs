@@ -72,6 +72,17 @@ const Page: NextPage = () => {
 export default Page;
 
 function createConfiguration(): Configuration {
+	const cell = {
+		width: {
+			value: 20,
+			unit: "px"
+		},
+		height: {
+			value: 20,
+			unit: "px"
+		}
+	};
+
 	const result: Configuration = {
 		autoSave: {
 			isEnabled: false,
@@ -80,14 +91,10 @@ function createConfiguration(): Configuration {
 		design: {
 			honest: {
 				cell: {
-					width: {
-						value: 20,
-						unit: "px"
-					},
-					height: {
-						value: 20,
-						unit: "px"
-					}
+					width: cell.width,
+					maxWidth: cell.width,
+					height: cell.height,
+					maxHeight: cell.height,
 				}
 			},
 			programmable: {

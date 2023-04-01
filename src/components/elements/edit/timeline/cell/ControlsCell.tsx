@@ -3,12 +3,10 @@ import { TimelineKind } from "@/models/data/Setting";
 import { NextPage } from "next";
 import { useState } from "react";
 
-export type MoveItemKind = "up" | "down";
-
 interface Props {
 	currentTimelineKind: TimelineKind;
 	disabled: boolean,
-	moveItem: (kind: MoveItemKind) => void;
+	moveItem: (moveUp: boolean) => void;
 	addItem: (kind: TimelineKind) => void;
 	deleteItem: () => void;
 }
@@ -23,8 +21,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		setVisibleControls(false);
 	}
 
-	function handleMoveItem(kind: MoveItemKind) {
-		props.moveItem(kind);
+	function handleMoveItem(moveUp: boolean) {
+		props.moveItem(moveUp);
 		handleHideControls();
 	}
 
@@ -58,14 +56,14 @@ const Component: NextPage<Props> = (props: Props) => {
 						<li>
 							<button
 								className="simple"
-								onClick={_ => handleMoveItem("up")}>
+								onClick={_ => handleMoveItem(true)}>
 								⬆️上へ移動
 							</button >
 						</li >
 						<li>
 							<button
 								className="simple"
-								onClick={_ => handleMoveItem("down")}>
+								onClick={_ => handleMoveItem(false)}>
 								⬇️下へ移動
 							</button>
 						</li>

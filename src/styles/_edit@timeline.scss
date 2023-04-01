@@ -4,13 +4,16 @@
 	$timeline-header-subject-width: 15ch;
 	$timeline-header-workload-width: 7ch;
 	$timeline-header-resource-width: 8ch;
-	$timeline-header-relation: 2em;
+	$timeline-header-relation: 3ch;
 	$timeline-header-range-from-width: 11ch;
 	$timeline-header-range-to-width: 11ch;
 	$timeline-header-progress-width: 5ch;
 	$timeline-header-controls-item-width: 3ch;
 
 	$app-header-height: 80px;
+	$app-header-width: $timeline-header-id-width + $timeline-header-subject-width + $timeline-header-workload-width +
+		$timeline-header-resource-width + $timeline-header-relation + $timeline-header-range-from-width +
+		$timeline-header-range-to-width + $timeline-header-progress-width + $timeline-header-controls-item-width;
 
 	display: grid;
 	width: max-content;
@@ -64,11 +67,14 @@
 		grid-row-start: 1;
 		grid-column-start: 1;
 
+		width: $app-header-width;
 		height: $app-header-height;
 	}
 
 	#days-header {
-		background-color: pink;
+		$base-background: pink;
+
+		background-color: $base-background;
 
 		z-index: 1;
 		position: sticky;
@@ -80,7 +86,7 @@
 
 		table {
 			table-layout: fixed;
-			// white-space: nowrap;
+			border-collapse: collapse;
 		}
 
 		.cell {
@@ -89,14 +95,43 @@
 		}
 
 		.year-month {
+			td {
+				position: sticky;
+				left: $app-header-width;
+				background-color: $base-background;
+				// border: 1px solid black;
+
+				// & + td {
+				// 	border-right: 1px solid black;
+				// }
+				time {
+					border-left: 1px dotted black;
+				}
+			}
 		}
 
 		.day {
 			text-align: center;
+
+			td {
+				border: 1px solid black;
+			}
 		}
 
 		.week {
 			text-align: center;
+
+			td {
+				border: 1px solid black;
+			}
+		}
+
+		.pin {
+			text-align: center;
+
+			td {
+				border: 1px solid black;
+			}
 		}
 	}
 
@@ -108,6 +143,7 @@
 		left: 0;
 		grid-row-start: 2;
 		grid-column-start: 1;
+		width: $app-header-width;
 
 		.task {
 			.timeline-range-from,
@@ -285,7 +321,7 @@
 		grid-column-start: 2;
 
 		svg {
-		background: skyblue;
+			background: skyblue;
 			width: 100%;
 			height: 100%;
 		}

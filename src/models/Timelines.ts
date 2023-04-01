@@ -1,10 +1,10 @@
 import { v4 } from "uuid";
 
-import { DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, Timeline, TimelineId, WeekIndex } from "./data/Setting";
+import { DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, TimeOnly, Timeline, TimelineId, WeekIndex } from "./data/Setting";
 import { TimeSpan } from "./TimeSpan";
 import { SuccessTimeRange, TimeRange, TimeRanges } from "./TimeRange";
 import { Settings } from "./Settings";
-import { MoveItemKind } from "@/components/elements/edit/timeline/cell/ControlsCell";
+import { Strings } from "./Strings";
 
 interface Holidays {
 	dates: ReadonlyArray<Date>;
@@ -12,6 +12,19 @@ interface Holidays {
 }
 
 export abstract class Timelines {
+
+	public static toNodePreviousId(timeline: Timeline): string {
+		return "timeline-node-previous-" + timeline.id;
+	}
+
+	public static toDaysId(date: Date): string {
+		return "days-" + Strings.formatDate(date, "yyyy_MM_dd");
+	}
+
+
+	public static serializeWorkload(workload: TimeSpan): TimeOnly {
+		return workload.toString("readable");
+	}
 
 	public static createNewGroup(): GroupTimeline {
 		const item: GroupTimeline = {
@@ -33,7 +46,7 @@ export abstract class Timelines {
 			subject: "",
 			comment: "",
 			previous: [],
-			workload: workload.toString("readable"),
+			workload: this.serializeWorkload(workload),
 			memberId: '',
 			progress: 0,
 		};
@@ -51,32 +64,25 @@ export abstract class Timelines {
 		return currentNumber.toString();
 	}
 
-	public static moveTimelineOrder(timelines: Array<Timeline>, kind: MoveItemKind, currentTimeline: Timeline): boolean {
+	public static moveTimelineOrder(timelines: Array<Timeline>, moveUp: boolean, currentTimeline: Timeline): boolean {
 		const currentIndex = timelines.findIndex(a => a === currentTimeline);
 
-		switch (kind) {
-			case "up":
-				if (currentIndex && timelines.length) {
-					const nextIndex = currentIndex - 1;
-					const tempTimeline = timelines[nextIndex];
-					timelines[nextIndex] = currentTimeline;
-					timelines[currentIndex] = tempTimeline;
-					return true;
-				}
-				break;
-
-			case "down":
-				if (currentIndex < timelines.length - 1) {
-					const nextIndex = currentIndex + 1;
-					const tempTimeline = timelines[nextIndex];
-					timelines[nextIndex] = currentTimeline;
-					timelines[currentIndex] = tempTimeline;
-					return true;
-				}
-				break;
-
-			default:
-				throw new Error();
+		if (moveUp) {
+			if (currentIndex && timelines.length) {
+				const nextIndex = currentIndex - 1;
+				const tempTimeline = timelines[nextIndex];
+				timelines[nextIndex] = currentTimeline;
+				timelines[currentIndex] = tempTimeline;
+				return true;
+			}
+		} else {
+			if (currentIndex < timelines.length - 1) {
+				const nextIndex = currentIndex + 1;
+				const tempTimeline = timelines[nextIndex];
+				timelines[nextIndex] = currentTimeline;
+				timelines[currentIndex] = tempTimeline;
+				return true;
+			}
 		}
 
 		return false;
@@ -395,7 +401,7 @@ export abstract class Timelines {
 					}
 					// まぁまぁ(たぶん条件漏れあり)
 					const items = resultTimeRanges.filter(TimeRanges.maybeSuccessTimeRange);
-					if(items.length) {
+					if (items.length) {
 						const minMax = TimeRanges.getMinMaxRange(items);
 						const timeRange: SuccessTimeRange = {
 							timeline: timeline,

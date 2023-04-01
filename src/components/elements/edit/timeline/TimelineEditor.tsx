@@ -5,7 +5,7 @@ import CrossHeader from "./CrossHeader";
 import TimelineItems from "./TimelineItems";
 import TimelineViewer from "./TimelineViewer";
 import { ReactNode, useEffect, useState } from "react";
-import { Theme, TimelineId } from "@/models/data/Setting";
+import { GroupTimeline, TaskTimeline, Theme, TimelineId } from "@/models/data/Setting";
 import { TimeRange } from "@/models/TimeRange";
 import { Timelines } from "@/models/Timelines";
 import { EditProps } from "@/models/data/props/EditProps";
@@ -17,6 +17,7 @@ interface Props extends EditProps { }
 
 const Component: NextPage<Props> = (props: Props) => {
 
+	const [timelineNodes, setTimelineNodes] = useState(props.editData.setting.timelineNodes);
 	const [timeRanges, setTimeRanges] = useState<Map<TimelineId, TimeRange>>(new Map());
 
 	function updateRelations() {
@@ -31,6 +32,10 @@ const Component: NextPage<Props> = (props: Props) => {
 		updateRelations();
 	}, []);
 
+	function handleSetTimelineNodes(timelineNodes: Array<GroupTimeline | TaskTimeline>) {
+		setTimelineNodes(props.editData.setting.timelineNodes = timelineNodes);
+	}
+
 	return (
 		<div id='timeline'>
 			{renderDynamicStyle(props.configuration.design, props.editData.setting.theme)}
@@ -38,6 +43,8 @@ const Component: NextPage<Props> = (props: Props) => {
 			<CrossHeader
 				configuration={props.configuration}
 				editData={props.editData}
+				timelineRootNodes={timelineNodes}
+				setTimelineRootNodes={handleSetTimelineNodes}
 			/>
 			<DaysHeader
 				configuration={props.configuration}
@@ -46,6 +53,8 @@ const Component: NextPage<Props> = (props: Props) => {
 			<TimelineItems
 				configuration={props.configuration}
 				editData={props.editData}
+				timelineRootNodes={timelineNodes}
+				setTimelineRootNodes={handleSetTimelineNodes}
 				timeRanges={timeRanges}
 				updateRelations={updateRelations}
 			/>
@@ -71,9 +80,11 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 			cell: {
 				height: {
 					height: design.honest.cell.height,
+					maxHeight: design.honest.cell.height,
 				},
 				width: {
 					width: design.honest.cell.width,
+					maxWidth: design.honest.cell.width,
 				}
 			},
 

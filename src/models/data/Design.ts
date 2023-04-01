@@ -22,7 +22,9 @@ export interface Design {
 	honest: {
 		cell: {
 			width: ValueUnit;
+			maxWidth: ValueUnit;
 			height: ValueUnit;
+			maxHeight: ValueUnit;
 		}
 	},
 

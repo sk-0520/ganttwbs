@@ -5,6 +5,8 @@ import { Holiday, Theme } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
 import { Settings } from "@/models/Settings";
 import { EditProps } from "@/models/data/props/EditProps";
+import { TimeSpan } from "@/models/TimeSpan";
+import { Timelines } from "@/models/Timelines";
 
 interface Props extends EditProps { }
 
@@ -16,8 +18,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		to: new Date(props.editData.setting.calendar.range.to),
 	};
 
-	const diff = range.to.getTime() - range.from.getTime();
-	const days = diff / (24 * 60 * 60 * 1000);
+	const diff = TimeSpan.diff(range.to, range.from);
+	const days = diff.totalDays + 1;
 
 	const dates = Array.from(Array(days), (_, index) => {
 		const date = new Date(range.from.getTime());
@@ -53,11 +55,16 @@ const Component: NextPage<Props> = (props: Props) => {
 				<thead>
 					<tr className='year-month'>
 						{yearMonthBucket.map(a => {
+							const year = a.year;
+							const month = a.month + 1;
 
-							const display = `${a.year}/${a.month + 1}`;
+							const display = `${year}/${month}`;
+							const dateTime = `${year}-${month}`;
 
 							return (
-								<td key={display} className="cell _dynamic_design_cell" colSpan={a.length}>{display}</td>
+								<td key={display} className="cell _dynamic_design_cell" colSpan={a.length}>
+									<time dateTime={dateTime}>{display}</time>
+								</td>
 							);
 						})}
 					</tr>
@@ -67,8 +74,8 @@ const Component: NextPage<Props> = (props: Props) => {
 							const className = getCellClassName(classNames);
 
 							return (
-								<td key={a.getTime()} className={className}>
-									{a.getDate()}
+								<td key={a.getTime()} id={Timelines.toDaysId(a)} className={className}>
+									<time dateTime={a.toISOString()}>{a.getDate()}</time>
 								</td>
 							)
 						})}

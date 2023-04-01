@@ -19,12 +19,14 @@ const Component: NextPage<Props> = (props: Props) => {
 		from: new Date(props.editData.setting.calendar.range.from),
 		to: new Date(props.editData.setting.calendar.range.to),
 	}
+	const diff = TimeSpan.diff(range.to, range.from);
+	const days = diff.totalDays + 1;
 
 	const cell = props.configuration.design.honest.cell;
 	const timelines = props.editData.setting.timelineNodes.flatMap(a => flat(a));
 
 	const box = {
-		width: cell.width.value * TimeSpan.fromMilliseconds(range.to.getTime() - range.from.getTime()).totalDays,
+		width: cell.width.value * days,
 		height: cell.height.value * timelines.length,
 	}
 
@@ -54,10 +56,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	function renderGrid(): ReactNode {
 
-		const rangeSpan = TimeSpan.fromMilliseconds(range.to.getTime() - range.from.getTime());
-		const rangeDays = rangeSpan.totalDays;
-
-		const width = cell.width.value * rangeDays;
+		const width = cell.width.value * days;
 		const height = cell.height.value * timelines.length;
 
 		const gridHorizontals = new Array<ReactNode>();
@@ -77,7 +76,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 
 		const gridVerticals = new Array<ReactNode>();
-		for (let i = 0; i < rangeDays; i++) {
+		for (let i = 0; i < days; i++) {
 			const x = cell.width.value + cell.width.value * i;
 			gridVerticals.push(
 				<line
