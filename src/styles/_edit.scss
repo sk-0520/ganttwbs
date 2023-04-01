@@ -1,5 +1,6 @@
+@use "variable" as variable;
+
 main#edit {
-	$tab-header-height: 34px;
 	user-select: none;
 
 	.tab {
@@ -10,7 +11,7 @@ main#edit {
 				display: block;
 
 				position: absolute;
-				top: $tab-header-height;
+				top: variable.$tab-edit-header-height;
 				left: 0;
 				bottom: 0;
 				right: 0;
@@ -36,9 +37,9 @@ main#edit {
 					display: block;
 
 					position: absolute;
-					top: $tab-header-height;
+					top: variable.$tab-edit-header-height;
 					left: 0;
-					bottom: $tab-header-height;
+					bottom: variable.$tab-edit-header-height;
 					right: 0;
 					overflow: auto;
 
