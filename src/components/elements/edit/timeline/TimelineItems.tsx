@@ -2,7 +2,6 @@ import { NextPage } from "next";
 import { DragEvent, useState } from "react";
 
 import { Timelines } from "@/models/Timelines";
-import { useLocale } from "@/models/locales/locale";
 
 import GroupTimelineEditor from "./GroupTimelineEditor";
 import TaskTimelineEditor from "./TaskTimelineEditor";
@@ -23,8 +22,6 @@ interface Props extends EditProps, TimelineRootProps {
 }
 
 const Component: NextPage<Props> = (props: Props) => {
-	const locale = useLocale();
-
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);

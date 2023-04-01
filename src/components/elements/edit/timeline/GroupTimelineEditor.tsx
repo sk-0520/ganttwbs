@@ -2,7 +2,6 @@ import { NextPage } from "next";
 import { useEffect, useState } from "react";
 
 import { Timelines } from "@/models/Timelines";
-import { useLocale } from "@/models/locales/locale";
 
 import GroupTimelineEditor from "./GroupTimelineEditor";
 import TaskTimelineEditor from "./TaskTimelineEditor";
@@ -28,7 +27,6 @@ interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 }
 
 const Component: NextPage<Props> = (props: Props) => {
-	const locale = useLocale();
 
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 

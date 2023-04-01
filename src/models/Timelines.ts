@@ -47,7 +47,7 @@ export abstract class Timelines {
 			comment: "",
 			previous: [],
 			workload: this.serializeWorkload(workload),
-			memberId: '',
+			memberId: "",
 			progress: 0,
 		};
 

@@ -28,14 +28,6 @@ const Page: NextPage = () => {
 		setEditData(editData);
 	}, [router]);
 
-	// const tabRef = useRef<HTMLDivElement>(null);
-	// const [tabHeight, setTabHeight] = useState(0);
-	// useEffect(() => {
-	// 	if(tabRef.current) {
-	// 		setTabHeight(tabRef.current.clientHeight)
-	// 	}
-	// }, [tabRef]);
-
 	return (
 		<Layout mode='application' layoutId='edit'
 			title={editData ? editData.fileName + " 編集" : "編集"}

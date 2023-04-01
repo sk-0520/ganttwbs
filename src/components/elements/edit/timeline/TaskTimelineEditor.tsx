@@ -1,8 +1,6 @@
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 
-import { useLocale } from "@/models/locales/locale";
-
 import MemberList from "./MemberList";
 import { MemberId, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
 import { TimeSpan } from "@/models/TimeSpan";
@@ -25,8 +23,6 @@ interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 }
 
 const Component: NextPage<Props> = (props: Props) => {
-	const locale = useLocale();
-
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
@@ -219,7 +215,7 @@ const Component: NextPage<Props> = (props: Props) => {
 										<li className="main">
 											<input
 												type="date"
-												value={selectedBeginDate ? Strings.formatDate(selectedBeginDate, "yyyy-MM-dd") : ''}
+												value={selectedBeginDate ? Strings.formatDate(selectedBeginDate, "yyyy-MM-dd") : ""}
 												onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
 											/>
 										</li>

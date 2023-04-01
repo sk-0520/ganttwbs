@@ -305,7 +305,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 1
 					},
 					{
@@ -315,7 +315,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0.94
 					},
 					{
@@ -330,7 +330,7 @@ function createTemplateSetting(data: Input): Setting {
 								comment: "",
 								previous: [],
 								workload: "1.00:00:00",
-								memberId: '',
+								memberId: "",
 								progress: 1
 							},
 							{
@@ -340,7 +340,7 @@ function createTemplateSetting(data: Input): Setting {
 								comment: "",
 								previous: [],
 								workload: "1.00:00:00",
-								memberId: '',
+								memberId: "",
 								progress: 1
 							},
 							{
@@ -350,7 +350,7 @@ function createTemplateSetting(data: Input): Setting {
 								comment: "",
 								previous: [],
 								workload: "1.00:00:00",
-								memberId: '',
+								memberId: "",
 								progress: 1
 							}
 						],
@@ -363,7 +363,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "13.06:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0.05
 					}
 				],
@@ -376,7 +376,7 @@ function createTemplateSetting(data: Input): Setting {
 				comment: "",
 				previous: [],
 				workload: "1.00:00:00",
-				memberId: '',
+				memberId: "",
 				progress: 0.11
 			},
 			{
@@ -400,7 +400,7 @@ function createTemplateSetting(data: Input): Setting {
 				comment: "",
 				previous: [],
 				workload: "1.00:00:00",
-				memberId: '',
+				memberId: "",
 				progress: 0.06
 			},
 			{
@@ -410,7 +410,7 @@ function createTemplateSetting(data: Input): Setting {
 				comment: "",
 				previous: [],
 				workload: "1.00:00:00",
-				memberId: '',
+				memberId: "",
 				progress: 0.83
 			},
 			{
@@ -420,7 +420,7 @@ function createTemplateSetting(data: Input): Setting {
 				comment: "",
 				previous: [],
 				workload: "1.00:00:00",
-				memberId: '',
+				memberId: "",
 				progress: 0.17
 			},
 			{
@@ -435,7 +435,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.12:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 1
 					},
 					{
@@ -445,7 +445,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0.05
 					},
 					{
@@ -455,7 +455,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -465,7 +465,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0.5
 					},
 					{
@@ -475,7 +475,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -485,7 +485,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -495,7 +495,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -505,7 +505,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -515,7 +515,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -525,7 +525,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -535,7 +535,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -545,7 +545,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 1
 					},
 					{
@@ -560,7 +560,7 @@ function createTemplateSetting(data: Input): Setting {
 								comment: "",
 								previous: [],
 								workload: "1.00:00:00",
-								memberId: '',
+								memberId: "",
 								progress: 0.05
 							},
 							{
@@ -570,7 +570,7 @@ function createTemplateSetting(data: Input): Setting {
 								comment: "",
 								previous: [],
 								workload: "1.00:00:00",
-								memberId: '',
+								memberId: "",
 								progress: 0.06
 							},
 							{
@@ -580,7 +580,7 @@ function createTemplateSetting(data: Input): Setting {
 								comment: "",
 								previous: [],
 								workload: "1.00:00:00",
-								memberId: '',
+								memberId: "",
 								progress: 0.56
 							}
 						],
@@ -593,7 +593,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 1
 					},
 					{
@@ -603,7 +603,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 1
 					},
 					{
@@ -613,7 +613,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 1
 					},
 					{
@@ -623,7 +623,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 1
 					}
 				],
@@ -636,7 +636,7 @@ function createTemplateSetting(data: Input): Setting {
 				comment: "",
 				previous: [],
 				workload: "1.00:00:00",
-				memberId: '',
+				memberId: "",
 				progress: 0.14
 			},
 			{
@@ -646,7 +646,7 @@ function createTemplateSetting(data: Input): Setting {
 				comment: "",
 				previous: [],
 				workload: "1.00:00:00",
-				memberId: '',
+				memberId: "",
 				progress: 0
 			},
 			{
@@ -661,7 +661,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0.59
 					},
 					{
@@ -671,7 +671,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 1
 					},
 					{
@@ -681,7 +681,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -691,7 +691,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -706,7 +706,7 @@ function createTemplateSetting(data: Input): Setting {
 								comment: "",
 								previous: [],
 								workload: "1.00:00:00",
-								memberId: '',
+								memberId: "",
 								progress: 1
 							},
 							{
@@ -716,7 +716,7 @@ function createTemplateSetting(data: Input): Setting {
 								comment: "",
 								previous: [],
 								workload: "1.00:00:00",
-								memberId: '',
+								memberId: "",
 								progress: 1
 							},
 							{
@@ -726,7 +726,7 @@ function createTemplateSetting(data: Input): Setting {
 								comment: "",
 								previous: [],
 								workload: "1.00:00:00",
-								memberId: '',
+								memberId: "",
 								progress: 0.19
 							},
 							{
@@ -736,7 +736,7 @@ function createTemplateSetting(data: Input): Setting {
 								comment: "",
 								previous: [],
 								workload: "1.00:00:00",
-								memberId: '',
+								memberId: "",
 								progress: 1
 							},
 							{
@@ -751,7 +751,7 @@ function createTemplateSetting(data: Input): Setting {
 										comment: "",
 										previous: [],
 										workload: "1.00:00:00",
-										memberId: '',
+										memberId: "",
 										progress: 1
 									}
 								],
@@ -764,7 +764,7 @@ function createTemplateSetting(data: Input): Setting {
 								comment: "",
 								previous: [],
 								workload: "1.00:00:00",
-								memberId: '',
+								memberId: "",
 								progress: 1
 							},
 							{
@@ -774,7 +774,7 @@ function createTemplateSetting(data: Input): Setting {
 								comment: "",
 								previous: [],
 								workload: "1.00:00:00",
-								memberId: '',
+								memberId: "",
 								progress: 1
 							},
 							{
@@ -784,7 +784,7 @@ function createTemplateSetting(data: Input): Setting {
 								comment: "",
 								previous: [],
 								workload: "1.00:00:00",
-								memberId: '',
+								memberId: "",
 								progress: 1
 							}
 						],
@@ -797,7 +797,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -807,7 +807,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -817,7 +817,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -827,7 +827,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					},
 					{
@@ -837,7 +837,7 @@ function createTemplateSetting(data: Input): Setting {
 						comment: "",
 						previous: [],
 						workload: "1.00:00:00",
-						memberId: '',
+						memberId: "",
 						progress: 0
 					}
 				],
@@ -850,7 +850,7 @@ function createTemplateSetting(data: Input): Setting {
 				comment: "",
 				previous: [],
 				workload: "18:00:00",
-				memberId: '',
+				memberId: "",
 				progress: 0.05
 			},
 			{
@@ -860,7 +860,7 @@ function createTemplateSetting(data: Input): Setting {
 				comment: "",
 				previous: [],
 				workload: "1.00:00:00",
-				memberId: '',
+				memberId: "",
 				progress: 0.47
 			},
 			{
@@ -870,7 +870,7 @@ function createTemplateSetting(data: Input): Setting {
 				comment: "",
 				previous: [],
 				workload: "1.00:00:00",
-				memberId: '',
+				memberId: "",
 				progress: 0
 			},
 			{
@@ -880,7 +880,7 @@ function createTemplateSetting(data: Input): Setting {
 				comment: "",
 				previous: [],
 				workload: "1.00:00:00",
-				memberId: '',
+				memberId: "",
 				progress: 0
 			}
 		],

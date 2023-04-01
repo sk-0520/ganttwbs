@@ -7,7 +7,7 @@ export abstract class Strings {
 	 * @returns
 	 */
 	public static isNotWhiteSpace(s: string | null | undefined): s is string {
-		return typeof s === 'string' && this.trim(s).length !== 0;
+		return typeof s === "string" && this.trim(s).length !== 0;
 	}
 
 	/**

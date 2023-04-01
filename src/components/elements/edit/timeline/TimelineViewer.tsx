@@ -1,6 +1,5 @@
-import { Design } from "@/models/data/Design";
 import { EditProps } from "@/models/data/props/EditProps";
-import { Group, Member, MemberId, Timeline, TimelineId } from "@/models/data/Setting";
+import { MemberId, Timeline, TimelineId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeRange } from "@/models/TimeRange";
 import { NextPage } from "next";
@@ -97,24 +96,24 @@ const Component: NextPage<Props> = (props: Props) => {
 				/>
 			);
 
-			let color: string | null  = null;
+			let color: string | null = null;
 
 			console.log("<DATE>", date);
-			const dateText = Strings.formatDate(date, 'yyyy-MM-dd');
+			const dateText = Strings.formatDate(date, "yyyy-MM-dd");
 			if (dateText in props.editData.setting.calendar.holiday.events) {
 				const holidayEvent = props.editData.setting.calendar.holiday.events[dateText];
 				if (holidayEvent) {
 					color = props.editData.setting.theme.holiday.events[holidayEvent.kind];
 				}
 			}
-			if(!color) {
+			if (!color) {
 				const week = Settings.toWeekDay(date.getDay());
-				if(props.editData.setting.calendar.holiday.regulars.includes(week)) {
+				if (props.editData.setting.calendar.holiday.regulars.includes(week)) {
 					color = props.editData.setting.theme.holiday.regulars[week] ?? null;
 					console.debug(123);
 				}
 			}
-			if(color) {
+			if (color) {
 				const holidayX = cell.width.value * i;
 
 				gridHolidays.push(

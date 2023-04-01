@@ -12,7 +12,7 @@ export abstract class Designs {
 
 	public static toValue(valueUnit: ValueUnit): string {
 		if (valueUnit.value === 0) {
-			return '0';
+			return "0";
 		}
 
 		return `${valueUnit.value}${valueUnit.unit}`;
@@ -24,7 +24,7 @@ export abstract class Designs {
 		const propertyValues = new Map<Property, Value>();
 
 		for (const [selectorOrProperty, valuesOrNestedBlock] of Object.entries(obj)) {
-			if (typeof (valuesOrNestedBlock) === 'object') {
+			if (typeof (valuesOrNestedBlock) === "object") {
 				if (isValueUnit(valuesOrNestedBlock)) {
 					propertyValues.set(selectorOrProperty, Designs.toValue(valuesOrNestedBlock))
 				} else {
@@ -52,7 +52,7 @@ export abstract class Designs {
 	public static toStyleProperty(s: string): string {
 		return s.match(this.PropertyRegex)!
 			.map(x => x.toLowerCase())
-			.join('-')
+			.join("-")
 			;
 	}
 

@@ -22,8 +22,8 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div
 			className={
-				'timeline-id'
-				+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? ' dragging' : '')
+				"timeline-id"
+				+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? " dragging" : "")
 			}
 			title={props.currentTimeline.id}
 			draggable={!props.selectingBeginDate}

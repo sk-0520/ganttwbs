@@ -105,7 +105,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 					.map(a => {
 						return {
 							[`level-${a}`]: {
-								display: 'inline-block',
+								display: "inline-block",
 								paddingLeft: (a * design.programmable.indexNumber.paddingLeft.value) + design.programmable.indexNumber.paddingLeft.unit,
 							}
 						}

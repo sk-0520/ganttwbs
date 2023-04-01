@@ -114,7 +114,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 export default Component;
 
-function getWeekDayClassName(date: Date, regulars: Holiday['regulars'], theme: Theme): string {
+function getWeekDayClassName(date: Date, regulars: Holiday["regulars"], theme: Theme): string {
 
 	for (const regular of regulars) {
 		const weekday = Settings.toWeekDay(date.getDay());
@@ -126,9 +126,9 @@ function getWeekDayClassName(date: Date, regulars: Holiday['regulars'], theme: T
 	return "";
 }
 
-function getHolidayClassName(date: Date, events: Holiday['events'], theme: Theme): string {
+function getHolidayClassName(date: Date, events: Holiday["events"], theme: Theme): string {
 
-	const dateText = Strings.formatDate(date, 'yyyy-MM-dd');
+	const dateText = Strings.formatDate(date, "yyyy-MM-dd");
 	if (dateText in events) {
 		const holidayEvent = events[dateText];
 		if (holidayEvent) {

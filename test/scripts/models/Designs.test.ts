@@ -22,9 +22,9 @@ describe("Designs", () => {
 
 		const actual = Designs.convertStyleClasses(input, []);
 
-		expect(actual.has('name')).toBeTruthy();
-		expect(actual.get('name')?.get("a")).toBe("test");
-		expect(actual.get('name')?.get("b")).toBe("bbbb");
+		expect(actual.has("name")).toBeTruthy();
+		expect(actual.get("name")?.get("a")).toBe("test");
+		expect(actual.get("name")?.get("b")).toBe("bbbb");
 	});
 
 	test("convertStyleClasses-simple-named", () => {
@@ -37,9 +37,9 @@ describe("Designs", () => {
 
 		const actual = Designs.convertStyleClasses(input, ["NAME"]);
 
-		expect(actual.has('NAME_name')).toBeTruthy();
-		expect(actual.get('NAME_name')?.get("a")).toBe("test");
-		expect(actual.get('NAME_name')?.get("b")).toBe("bbbb");
+		expect(actual.has("NAME_name")).toBeTruthy();
+		expect(actual.get("NAME_name")?.get("a")).toBe("test");
+		expect(actual.get("NAME_name")?.get("b")).toBe("bbbb");
 	});
 
 	test("convertStyleClasses-nested", () => {
@@ -59,14 +59,14 @@ describe("Designs", () => {
 
 		const actual = Designs.convertStyleClasses(input, []);
 
-		expect(actual.has('name')).toBeTruthy();
-		expect(actual.get('name')?.get("a")).toBe("aaaa");
-		expect(actual.get('name')?.get("b")).toBe("bbbb");
-		expect(actual.get('name')?.get("c")).toBe("cccc");
+		expect(actual.has("name")).toBeTruthy();
+		expect(actual.get("name")?.get("a")).toBe("aaaa");
+		expect(actual.get("name")?.get("b")).toBe("bbbb");
+		expect(actual.get("name")?.get("c")).toBe("cccc");
 
-		expect(actual.has('name_nested')).toBeTruthy();
-		expect(actual.get('name_nested')?.get("a2")).toBe("nestA");
-		expect(actual.get('name_nested')?.get("b2")).toBe("nestB");
+		expect(actual.has("name_nested")).toBeTruthy();
+		expect(actual.get("name_nested")?.get("a2")).toBe("nestA");
+		expect(actual.get("name_nested")?.get("b2")).toBe("nestB");
 	});
 
 	test("convertStyleClasses-nested-nested", () => {
@@ -90,17 +90,17 @@ describe("Designs", () => {
 
 		const actual = Designs.convertStyleClasses(input, []);
 
-		expect(actual.has('name')).toBeTruthy();
-		expect(actual.get('name')?.get("a")).toBe("aaaa");
-		expect(actual.get('name')?.get("b")).toBe("bbbb");
-		expect(actual.get('name')?.get("c")).toBe("cccc");
+		expect(actual.has("name")).toBeTruthy();
+		expect(actual.get("name")?.get("a")).toBe("aaaa");
+		expect(actual.get("name")?.get("b")).toBe("bbbb");
+		expect(actual.get("name")?.get("c")).toBe("cccc");
 
-		expect(actual.has('name_nested')).toBeTruthy();
-		expect(actual.get('name_nested')?.get("a2")).toBe("nestA");
-		expect(actual.get('name_nested')?.get("b2")).toBe("nestB");
+		expect(actual.has("name_nested")).toBeTruthy();
+		expect(actual.get("name_nested")?.get("a2")).toBe("nestA");
+		expect(actual.get("name_nested")?.get("b2")).toBe("nestB");
 
-		expect(actual.has('name_nested_c2')).toBeTruthy();
-		expect(actual.get('name_nested_c2')?.get("abc")).toBe("def");
+		expect(actual.has("name_nested_c2")).toBeTruthy();
+		expect(actual.get("name_nested_c2")?.get("abc")).toBe("def");
 	});
 
 	test("convertStyleClasses-valueUnit", () => {
@@ -108,19 +108,19 @@ describe("Designs", () => {
 			name: {
 				a: {
 					value: 100,
-					unit: 'px'
+					unit: "px"
 				},
 				b: {
 					value: 0,
-					unit: 'px'
+					unit: "px"
 				},
 			},
 		};
 
 		const actual = Designs.convertStyleClasses(input, []);
 
-		expect(actual.has('name')).toBeTruthy();
-		expect(actual.get('name')?.get("a")).toBe("100px");
-		expect(actual.get('name')?.get("b")).toBe("0");
+		expect(actual.has("name")).toBeTruthy();
+		expect(actual.get("name")?.get("a")).toBe("100px");
+		expect(actual.get("name")?.get("b")).toBe("0");
 	});
 });

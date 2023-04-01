@@ -72,7 +72,7 @@ const Component: NextPage = () => {
 		targetGroup.members.push(newMember);
 
 		setEditGroups([...editGroups]);
-		const element = event.currentTarget.closest("[data-root]")?.querySelector('[name="member-name"]') as HTMLInputElement | undefined;
+		const element = event.currentTarget.closest("[data-root]")?.querySelector("[name=\"member-name\"]") as HTMLInputElement | undefined;
 		if (element) {
 			element.value = "";
 		}

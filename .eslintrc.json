@@ -20,6 +20,36 @@
 		"@typescript-eslint"
 	],
 	"rules": {
+		"quotes": [
+			"error",
+			"double"
+		],
+		"no-tabs": [
+			"error",
+			{
+				"allowIndentationTabs": true
+			}
+		],
+		// "indent": [
+		// 	"error",
+		// 	"tab",
+		// 	{
+		// 		"SwitchCase": 1,
+		// 		"VariableDeclarator": 1,
+		// 		"MemberExpression": 1,
+		// 		"ignoredNodes": ["ConditionalExpression"]
+		// 	}
+		// ],
+		"max-len": [
+			"warn",
+			{
+				"code": 140
+			}
+		],
+		"react/jsx-indent": [
+			"error",
+			"tab"
+		],
 		"@typescript-eslint/no-empty-interface": [
 			"error",
 			{

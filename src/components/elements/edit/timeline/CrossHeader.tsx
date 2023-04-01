@@ -29,7 +29,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	function scrollFromDate(date: Date): void {
 		const daysId = Timelines.toDaysId(date);
 		const targetElement = document.getElementById(daysId);
-		const mainContentElement = document.querySelector('.tab-timeline');
+		const mainContentElement = document.querySelector(".tab-timeline");
 		if (targetElement && mainContentElement) {
 			mainContentElement.scrollTo({
 				left: targetElement.offsetLeft

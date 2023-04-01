@@ -13,7 +13,7 @@ const Component: NextPage = () => {
 	const [completed, setCompleted] = useState(settingContext.theme.timeline.completed);
 
 	function handleChangeGroup(color: Color) {
-		setDefaultGroup(color);
+		setGroup(color);
 		settingContext.theme.timeline.group = color;
 	}
 

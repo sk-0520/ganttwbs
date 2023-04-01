@@ -1,6 +1,5 @@
-import { EditProps } from "@/models/data/props/EditProps";
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
-import { GroupTimeline, MemberId, TaskTimeline, Theme, Timeline } from "@/models/data/Setting";
+import { GroupTimeline, MemberId, TaskTimeline, Theme } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { SuccessTimeRange, TimeRanges } from "@/models/TimeRange";
 import { TimeSpan } from "@/models/TimeSpan";
@@ -10,8 +9,6 @@ import TaskChart from "./chart/TaskChart";
 import { ChartArea } from "@/models/data/ChartArea";
 import GroupChart from "./chart/GroupChart";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
-import { Configuration } from "@/models/data/Configuration";
-import { Design } from "@/models/data/Design";
 import { Timelines } from "@/models/Timelines";
 
 interface Props extends GanttChartTimelineProps { }

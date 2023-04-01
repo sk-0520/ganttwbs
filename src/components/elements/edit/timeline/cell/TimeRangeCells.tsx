@@ -14,15 +14,15 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 
-	const selectOrClickClassName = props.selectable ? 'selectable' : 'clickable'
+	const selectOrClickClassName = props.selectable ? "selectable" : "clickable"
 
 	return props.timeRangeKind === "success"
 		? (
 			<>
 				<div
 					className={
-						'timeline-range-from'
-						+ ' ' + selectOrClickClassName
+						"timeline-range-from"
+						+ " " + selectOrClickClassName
 					}
 					onClick={props.callbackClickBeginDate}
 				>
@@ -32,8 +32,8 @@ const Component: NextPage<Props> = (props: Props) => {
 				</div>
 				<div
 					className={
-						'timeline-range-to'
-						+ ' ' + selectOrClickClassName
+						"timeline-range-to"
+						+ " " + selectOrClickClassName
 					}
 					onClick={props.callbackClickBeginDate}
 				>
@@ -46,7 +46,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			<div
 				className={
 					"timeline-range-area"
-					+ ' ' + selectOrClickClassName
+					+ " " + selectOrClickClassName
 				}
 				onClick={props.callbackClickBeginDate}
 			>

@@ -15,41 +15,41 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 
-	const [dropEventClassName, setDropEventClassName] = useState('');
-	const [mouseEnterClassName, setMouseEnterClassName] = useState('');
+	const [dropEventClassName, setDropEventClassName] = useState("");
+	const [mouseEnterClassName, setMouseEnterClassName] = useState("");
 
 	useEffect(() => {
 		if (!props.draggingTimeline) {
-			setDropEventClassName('');
+			setDropEventClassName("");
 		}
 	}, [props.draggingTimeline]);
 
 	function handleDragOver() {
-		setDropEventClassName('drag-over')
+		setDropEventClassName("drag-over")
 	}
 	function handleDragLeave() {
-		setDropEventClassName('')
+		setDropEventClassName("")
 	}
 
 	function handleMouseEnter() {
 		if (!props.draggingTimeline && !props.selectingBeginDate) {
-			setMouseEnterClassName('hover');
+			setMouseEnterClassName("hover");
 		}
 	}
 	function handleMouseLeave() {
-		setMouseEnterClassName('');
+		setMouseEnterClassName("");
 	}
 
 	return (
 		<div
 			className={
-				'timeline-header'
-				+ ' _dynamic_programmable_cell_height'
-				+ (' _dynamic_programmable_groups_level-' + props.level.toString())
-				+ ' ' + mouseEnterClassName
-				+ (Settings.maybeTaskTimeline(props.currentTimeline) ? props.selectingBeginDate?.timeline.id === props.currentTimeline.id ? ' ' + 'hover' : '' : '')
-				+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? ' dragging' : '')
-				+ ' ' + dropEventClassName
+				"timeline-header"
+				+ " _dynamic_programmable_cell_height"
+				+ (" _dynamic_programmable_groups_level-" + props.level.toString())
+				+ " " + mouseEnterClassName
+				+ (Settings.maybeTaskTimeline(props.currentTimeline) ? props.selectingBeginDate?.timeline.id === props.currentTimeline.id ? " " + "hover" : "" : "")
+				+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? " dragging" : "")
+				+ " " + dropEventClassName
 			}
 			onDragEnter={ev => props.draggingTimeline?.onDragEnter(ev, props.currentTimeline)}
 			onDragOver={ev => props.draggingTimeline?.onDragOver(ev, props.currentTimeline, handleDragOver)}
