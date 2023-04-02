@@ -5,7 +5,7 @@ import { SketchPicker } from "react-color";
 import { PresetColor } from "react-color/lib/components/sketch/Sketch";
 import Overlay from "./Overlay";
 import { TinyColor } from "@ctrl/tinycolor";
-import style from "../../styles/components/modules/PlainColorPicker.module.scss";
+import style from "../../styles/modules/components/elements/PlainColorPicker.module.scss";
 
 interface Props {
 	color: Color;
