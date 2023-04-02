@@ -1,10 +1,11 @@
 import { Color } from "@/models/data/Setting";
 import { NextPage } from "next";
-import { useState } from "react";
+import { CSSProperties, useState } from "react";
 import { SketchPicker } from "react-color";
 import { PresetColor } from "react-color/lib/components/sketch/Sketch";
 import Overlay from "./Overlay";
 import { TinyColor } from "@ctrl/tinycolor";
+import style from "../../styles/components/modules/PlainColorPicker.module.scss";
 
 interface Props {
 	color: Color;
@@ -33,20 +34,33 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 	}
 
+	const current = new TinyColor(color);
+
+	const boxStyle: CSSProperties = {
+		background: current.toHexString(),
+		borderColor: current.isLight()
+			? current.darken().toHexString()
+			: current.lighten().toHexString()
+		,
+	}
+
 	return (
 		<>
-			<span>
+			<span className={style.wrapper}>
 				<button
+					className={style.button}
 					type="button"
 					onClick={ev => setIsVisible(true)}
 				>
-					{(new TinyColor(color)).toHexString()}
+					<span className={style.box} style={boxStyle}>&nbsp;</span>
+					<code>{current.toHexString()}</code>
 				</button>
 				<Overlay
 					isVisible={isVisible}
 					callBackHidden={() => setIsVisible(false)}
 				>
 					<SketchPicker
+						className={style.picker}
 						color={color}
 						disableAlpha={false}
 						presetColors={presetColors}
