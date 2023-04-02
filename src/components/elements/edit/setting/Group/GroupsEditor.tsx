@@ -5,13 +5,24 @@ import { v4 } from "uuid";
 import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import MemberEditor from "./MemberEditor";
 import Dialog from "@/components/elements/Dialog";
+import { Color, MemberId } from "@/models/data/Setting";
+
+type ColorKind = "abc" | "def" | "ghi" | "jkl";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
 
 	const [newGroupName, setNewGroupName] = useState("");
 	const [editGroups, setEditGroups] = useState(settingContext.groups);
-	const [choiceColorDialog, setChoiceColorDialog] = useState<GroupSetting | null>(null);
+	const [choiceColorGroup, setChoiceColorGroup] = useState<GroupSetting | null>(null);
+	const [choiceColors, setChoiceColors] = useState<Map<MemberId, Color>>(new Map());
+
+	const colorKinds: ReadonlyArray<ColorKind> = [
+		"abc",
+		"def",
+		"ghi",
+		"jkl",
+	]
 
 	function removeMember(group: GroupSetting, member: MemberSetting) {
 		const targetGroup = editGroups.find(a => a.key === group.key);
@@ -57,7 +68,29 @@ const Component: NextPage = () => {
 	}
 
 	function handleStartChoiceColor(group: GroupSetting): void {
-		setChoiceColorDialog(group);
+		setChoiceColors(new Map(
+			group.members.map(a => [a.id, a.color])
+		));
+		setChoiceColorGroup(group);
+	}
+
+	function handleSelectColorKind(colorKind: ColorKind, group: GroupSetting): void {
+		switch (colorKind) {
+			case "abc":
+				break;
+
+			case "def":
+				break;
+
+			case "ghi":
+				break;
+
+			case "jkl":
+				break;
+
+			default:
+				throw new Error();
+		}
 	}
 
 	function handleRemoveGroup(group: GroupSetting) {
@@ -208,22 +241,53 @@ const Component: NextPage = () => {
 					<button type="button" onClick={handleAddGroup}>add</button>
 				</dd>
 			</dl>
-			{choiceColorDialog && (
+			{choiceColorGroup && (
 				<Dialog
 					button="submit"
 					title="色選択"
 					dataFactory={() => {
-						return {a:1};
+						return { a: 1 };
 					}}
 					callbackClose={(type, data) => {
 						console.log(type, data);
-						setChoiceColorDialog(null);
+						setChoiceColorGroup(null);
 					}}
 				>
-					<ul>
-						<li><label><input type="radio" name="color" value="a"/>a</label></li>
-						<li><label><input type="radio" name="color" value="b"/>b</label></li>
-					</ul>
+					<>
+						<ul className="inline">
+							{colorKinds.map(a => {
+								return (
+									<li key={a}>
+										<label>
+											<button
+												type="button"
+												onClick={ev => handleSelectColorKind(a, choiceColorGroup)}
+											>
+												{a}
+											</button>
+										</label>
+									</li>
+								);
+							})}
+						</ul>
+						<ul>
+							{
+								[...choiceColors.entries()].map(([k, v]) => {
+									const member = choiceColorGroup.members.find(a => a.id === k);
+									if (!member) {
+										return <></>;
+									}
+
+									return (
+										<li key={member.key}>
+											{member.name}
+											{choiceColors.get(member.id)}
+										</li>
+									);
+								})
+							}
+						</ul>
+					</>
 				</Dialog>
 			)}
 		</>
