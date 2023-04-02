@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 
-import { useLocale } from "@/models/locales/locale";
+import { useLocale } from "@/locales/locale";
 import { Holiday, Theme } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
 import { Settings } from "@/models/Settings";

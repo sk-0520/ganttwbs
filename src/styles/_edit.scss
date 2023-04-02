@@ -97,7 +97,8 @@ main#edit {
 						.name {
 							min-width: 20ch;
 						}
-						.cost, .sales {
+						.cost,
+						.sales {
 							width: 10ch;
 
 							input[type="number"] {
@@ -138,6 +139,35 @@ main#edit {
 									min-height: 8em;
 								}
 							}
+						}
+					}
+				}
+
+				&.theme {
+					$cell-padding: 0.25em 0.5em;
+
+					.holiday {
+						td {
+							padding: $cell-padding;
+
+							&.header {
+							}
+							&.subject {
+							}
+							&.theme {
+							}
+						}
+					}
+
+					.groups {
+						td {
+							padding: $cell-padding;
+						}
+					}
+
+					.timeline {
+						td {
+							padding: $cell-padding;
 						}
 					}
 				}

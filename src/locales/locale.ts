@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { WeekDay } from "../data/Setting";
+import { WeekDay } from "../models/data/Setting";
 
 import ja from "./ja";
 
@@ -11,6 +11,7 @@ export interface Locale {
 	},
 	calendar: {
 		week: {
+			name: string,
 			long: { [key in WeekDay]: string };
 			short: { [key in WeekDay]: string };
 		};

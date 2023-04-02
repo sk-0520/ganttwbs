@@ -8,6 +8,7 @@ const locale: Locale = {
 	},
 	calendar: {
 		week: {
+			name: "曜日",
 			long: {
 				"monday": "月曜日",
 				"tuesday": "火曜日",
