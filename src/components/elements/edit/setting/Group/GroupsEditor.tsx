@@ -6,6 +6,7 @@ import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/conte
 import MemberEditor from "./MemberEditor";
 import Dialog from "@/components/elements/Dialog";
 import { Color, MemberId } from "@/models/data/Setting";
+import { TinyColor } from "@ctrl/tinycolor";
 
 type ColorKind = "abc" | "def" | "ghi" | "jkl";
 
@@ -15,7 +16,8 @@ const Component: NextPage = () => {
 	const [newGroupName, setNewGroupName] = useState("");
 	const [editGroups, setEditGroups] = useState(settingContext.groups);
 	const [choiceColorGroup, setChoiceColorGroup] = useState<GroupSetting | null>(null);
-	const [choiceColors, setChoiceColors] = useState<Map<MemberId, Color>>(new Map());
+	const [choiceColors, setChoiceColors] = useState<Map<MemberId, TinyColor>>(new Map());
+	const [choiceBaseColor, setChoiceBaseColor] = useState<Color>("#ff0000");
 
 	const colorKinds: ReadonlyArray<ColorKind> = [
 		"abc",
@@ -69,7 +71,7 @@ const Component: NextPage = () => {
 
 	function handleStartChoiceColor(group: GroupSetting): void {
 		setChoiceColors(new Map(
-			group.members.map(a => [a.id, a.color])
+			group.members.map(a => [a.id, new TinyColor(a.color)])
 		));
 		setChoiceColorGroup(group);
 	}
@@ -241,19 +243,26 @@ const Component: NextPage = () => {
 					<button type="button" onClick={handleAddGroup}>add</button>
 				</dd>
 			</dl>
+
 			{choiceColorGroup && (
 				<Dialog
 					button="submit"
 					title="色選択"
-					dataFactory={() => {
-						return { a: 1 };
-					}}
-					callbackClose={(type, data) => {
-						console.log(type, data);
+					callbackClose={(type) => {
+						console.log(type);
 						setChoiceColorGroup(null);
 					}}
 				>
 					<>
+						<label>
+							基準色
+							<input
+								type="color"
+								value={choiceBaseColor}
+								onChange={ev => setChoiceBaseColor(ev.target.value)}
+							/>
+						</label>
+
 						<ul className="inline">
 							{colorKinds.map(a => {
 								return (
@@ -275,18 +284,49 @@ const Component: NextPage = () => {
 								[...choiceColors.entries()].map(([k, v]) => {
 									const member = choiceColorGroup.members.find(a => a.id === k);
 									if (!member) {
+										console.warn("MEMBER", k)
 										return <></>;
 									}
 
 									return (
 										<li key={member.key}>
 											{member.name}
-											{choiceColors.get(member.id)}
+											{v.toHexString()}
 										</li>
 									);
 								})
 							}
 						</ul>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>1</p>
+						<p>A</p>
+						<p>b</p>
+						<p>c</p>
+						{/* <p>d</p>
+						<p>e</p>
+						<p>f</p>
+						<p>g</p>
+						<p>h</p>
+						<p>i</p>
+						<p>j</p>
+						<p>k</p> */}
 					</>
 				</Dialog>
 			)}

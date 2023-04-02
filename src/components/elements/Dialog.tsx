@@ -8,8 +8,7 @@ interface Props {
 	button: ButtonType;
 
 	preSubmit?: () => boolean;
-	dataFactory?: () => object;
-	callbackClose: (type: ButtonType, data?: object) => void;
+	callbackClose: (type: ButtonType) => void;
 
 	/** 子要素 */
 	children: React.ReactNode;
@@ -33,13 +32,6 @@ const Component: NextPage<Props> = (props: Props) => {
 					return;
 				}
 			}
-			if (props.dataFactory) {
-				const data = props.dataFactory();
-				props.callbackClose(type, data);
-			} else {
-				props.callbackClose(type);
-			}
-			return;
 		}
 
 		props.callbackClose(type);
