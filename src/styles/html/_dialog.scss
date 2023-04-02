@@ -11,7 +11,7 @@ dialog {
 		display: flex;
 		flex-direction: column;
 		//min-height: min-content;
-		max-height: 100%;
+		//max-height: 100%;
 		//overflow: auto;
 		//grid-template-rows: $header-height 1fr $footer-height;
 
@@ -22,13 +22,15 @@ dialog {
 		}
 
 		.main {
-			//flex: content;
+			flex: content;
 			background-color: pink;
+			overflow: auto;
+			padding: 1rem;
 			//min-height: auto;
 			//margin-block: ($header-height / 2) ($footer-height / 2);
 			//min-height: $header-height + $footer-height;
-			flex-shrink: 1;
 			//max-height: 80%;//calc(70vh - (#{$footer-height + $footer-height}));
+			max-height: calc(70vh - (#{$footer-height + $footer-height}));
 		}
 
 		.footer {
