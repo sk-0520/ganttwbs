@@ -11,6 +11,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div className='timeline-subject'>
 			<input
+				className="edit"
 				type='text'
 				value={props.value}
 				readOnly={props.readOnly}

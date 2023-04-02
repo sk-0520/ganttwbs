@@ -12,6 +12,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div className="timeline-progress">
 			<input
+				className="edit"
 				type="number"
 				readOnly={props.readOnly}
 				disabled={props.disabled}

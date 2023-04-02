@@ -20,11 +20,11 @@ main#edit {
 		}
 
 		&.tab-file {
-			background-color: #aee;
+			background: variable.$app-timeline-default-background;
 		}
 
 		&.tab-timeline {
-			background-color: #eae;
+			background: white;
 		}
 
 		&.tab-setting {
@@ -45,7 +45,7 @@ main#edit {
 					right: 0;
 					overflow: auto;
 
-					background: #fefefe;
+					background: variable.$app-timeline-default-background;
 				}
 
 				&.group {
@@ -108,7 +108,7 @@ main#edit {
 						.theme {
 							width: 100px;
 							& > {
-								display: block
+								display: block;
 							}
 						}
 						.remove {

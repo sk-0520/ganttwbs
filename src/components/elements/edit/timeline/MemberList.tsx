@@ -41,6 +41,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	return (
 		<select
+			className="edit"
 			disabled={props.disabled}
 			defaultValue={props.selectedMemberId}
 			onChange={ev => handleChangeOption(ev.target.value)}

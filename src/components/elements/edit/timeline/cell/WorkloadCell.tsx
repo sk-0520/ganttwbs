@@ -12,6 +12,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div className='timeline-workload'>
 			<input
+				className="edit"
 				type="number"
 				disabled={props.disabled}
 				step="0.25"
