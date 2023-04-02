@@ -5,6 +5,7 @@ import { SettingContext } from "@/models/data/context/SettingContext";
 import { useLocale } from "@/models/locales/locale";
 import { Color, WeekDay } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
+import PlainColorPicker from "@/components/elements/PlainColorPicker";
 
 const Component: NextPage = () => {
 	const locale = useLocale();
@@ -34,10 +35,14 @@ const Component: NextPage = () => {
 							<tr key={a}>
 								<td>{locale.calendar.week.long[a]}</td>
 								<td>
-									<input type='color'
+									<PlainColorPicker
+										color={holidayRegulars[a]}
+										callbackChanged={c => handleSetRegularColor(a, c)}
+									/>
+									{/* <input type='color'
 										defaultValue={holidayRegulars[a]}
 										onChange={ev => handleSetRegularColor(a, ev.target.value)}
-									/>
+									/> */}
 								</td>
 							</tr>
 						))}

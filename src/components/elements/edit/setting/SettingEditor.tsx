@@ -29,7 +29,7 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 	//const initTabIndex = 0;
-	const initTabIndex = 2;
+	const initTabIndex = 3;
 
 	const setting = toContext(props.editData.setting);
 
