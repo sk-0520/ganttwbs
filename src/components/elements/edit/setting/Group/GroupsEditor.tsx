@@ -4,12 +4,36 @@ import { v4 } from "uuid";
 
 import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
+import MemberEditor from "./MemberEditor";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
 
 	const [newGroupName, setNewGroupName] = useState("");
 	const [editGroups, setEditGroups] = useState(settingContext.groups);
+
+	function removeMember(group: GroupSetting, member: MemberSetting) {
+		const targetGroup = editGroups.find(a => a.key === group.key);
+		if (!targetGroup) {
+			throw new Error();
+		}
+
+		const targetMember = targetGroup.members.find(a => a.key === member.key);
+		if (!targetMember) {
+			throw new Error();
+		}
+
+		const members = [];
+		for (const member of targetGroup.members) {
+			if (member === targetMember) {
+				continue;
+			}
+			members.push(member);
+		}
+		targetGroup.members = members;
+
+		setEditGroups([...editGroups]);
+	}
 
 	function handleAddGroup(event: MouseEvent<HTMLButtonElement>) {
 		const groupName = newGroupName.trim();
@@ -80,38 +104,15 @@ const Component: NextPage = () => {
 		}
 	}
 
-	function handleChangeMember(member: MemberSetting, color: Color) {
-		member.color = color;
-	}
-
-	function handleRemoveMember(group: GroupSetting, member: MemberSetting, event: MouseEvent<HTMLButtonElement>) {
-		const targetGroup = editGroups.find(a => a.key === group.key);
-		if (!targetGroup) {
-			throw new Error();
-		}
-
-		const targetMember = targetGroup.members.find(a => a.key === member.key);
-		if (!targetMember) {
-			throw new Error();
-		}
-
-		const members = [];
-		for (const member of targetGroup.members) {
-			if (member === targetMember) {
-				continue;
-			}
-			members.push(member);
-		}
-		targetGroup.members = members;
-
-		setEditGroups([...editGroups]);
-	}
-
 	return (
 		<>
 			<dl className="inputs">
 				{editGroups.map(a => {
 					let memberName = "";
+
+					const handleRemoveMember = (member: MemberSetting) => {
+						removeMember(a, member);
+					};
 
 					return (
 						<>
@@ -128,85 +129,45 @@ const Component: NextPage = () => {
 								</label>
 							</dt>
 
-							<dd key={"member-" + a.key} >
+							<dd key={"member-" + a.key} className="member">
 								<table className="members">
-									<>
-										<thead>
-											<tr>
-												<th className="name">名前</th>
-												<th className="cost">原価</th>
-												<th className="sales">売上</th>
-												<th className="theme">テーマ</th>
-												<th className="remove">削除</th>
-											</tr>
-										</thead>
+									<thead>
+										<tr>
+											<th className="name">名前</th>
+											<th className="cost">原価</th>
+											<th className="sales">売上</th>
+											<th className="theme">テーマ</th>
+											<th className="remove">削除</th>
+										</tr>
+									</thead>
 
-										<tbody>
-											{a.members.map(b => {
-												return (
-													<tr key={b.key}>
-														<td className="name">
-															<input
-																defaultValue={b.name}
-																onChange={ev => b.name = ev.target.value}
-															/>
-														</td>
-														<td className="cost">
-															<input
-																type="number"
-																min={0}
-																step={1000}
-																defaultValue={b.priceCost}
-																onChange={ev => b.priceCost = ev.target.valueAsNumber}
-															/>
-														</td>
-														<td className="sales">
-															<input
-																type="number"
-																min={0}
-																step={1000}
-																defaultValue={b.priceSales}
-																onChange={ev => b.priceSales = ev.target.valueAsNumber}
-															/>
-														</td>
-														<td className="theme">
-															<input
-																type="color"
-																defaultValue={b.color}
-																onChange={ev => handleChangeMember(b, ev.target.value)}
-															/>
-														</td>
-														<td className="remove">
-															<button
-																type="button"
-																onClick={ev => handleRemoveMember(a, b, ev)}
-															>
-																remove
-															</button>
-														</td>
-													</tr>
-												);
-											})}
-										</tbody>
+									<tbody>
+										{a.members.map(b =>
+											<MemberEditor
+												key={b.key}
+												member={b}
+												callbackRemoveMember={handleRemoveMember}
+											/>
+										)}
+									</tbody>
 
-										<tfoot data-new-member>
-											<td className="name">
-												<input
-													name='member-name'
-													defaultValue={memberName}
-													onChange={ev => memberName = ev.target.value}
-												/>
-											</td>
-											<td className="add">
-												<button
-													type="button"
-													onClick={ev => handleAddMember(a, memberName, ev)}
-												>
-													add
-												</button>
-											</td>
-										</tfoot>
-									</>
+									<tfoot data-new-member>
+										<td className="name">
+											<input
+												name='member-name'
+												defaultValue={memberName}
+												onChange={ev => memberName = ev.target.value}
+											/>
+										</td>
+										<td className="add">
+											<button
+												type="button"
+												onClick={ev => handleAddMember(a, memberName, ev)}
+											>
+												add
+											</button>
+										</td>
+									</tfoot>
 								</table>
 							</dd>
 						</>

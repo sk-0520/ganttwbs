@@ -48,36 +48,62 @@ main#edit {
 					background-color: lime;
 
 					.group {
-						& + .group {
-							margin-top: 1em;
+						.count {
+							display: inline-block;
+							width: 4ch;
+							&::before {
+								content: "(";
+							}
+							&::after {
+								content: ")";
+							}
 						}
 					}
 
+					.member + .group {
+						margin-top: 1em;
+						padding-top: 0.5em;
+						border-top: 1px solid black;
+					}
+
 					.members {
+						margin-top: 1em;
+
+						thead {
+							th {
+								text-align: center;
+								font-weight: bold;
+							}
+						}
+
+						tfoot {
+							td {
+								padding-top: 1em;
+							}
+						}
+
 						td {
 							* {
 								width: 100%;
 							}
 						}
 
-						input[type="number"] {
-							text-align: right;
-						}
-
 						.name {
 							min-width: 20ch;
 						}
-						.cost {
+						.cost, .sales {
 							width: 10ch;
-						}
-						.sales {
-							width: 10ch;
+
+							input[type="number"] {
+								text-align: right;
+							}
 						}
 						.theme {
 							min-width: 6ch;
 						}
 						.remove {
 							min-width: 6ch;
+							padding-left: 1em;
 						}
 						.add {
 							//width: 12ch;
