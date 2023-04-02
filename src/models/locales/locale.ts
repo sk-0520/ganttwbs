@@ -5,6 +5,10 @@ import ja from "./ja";
 
 export interface Locale {
 	language: string;
+	common: {
+		add: string;
+		remove: string;
+	},
 	calendar: {
 		week: {
 			long: { [key in WeekDay]: string };

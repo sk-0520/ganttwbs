@@ -2,6 +2,10 @@ import { Locale } from "./locale";
 
 const locale: Locale = {
 	language: "日本語",
+	common: {
+		add: "追加",
+		remove: "削除",
+	},
 	calendar: {
 		week: {
 			long: {

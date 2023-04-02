@@ -25,8 +25,6 @@ main#edit {
 
 		&.tab-timeline {
 			background-color: #eae;
-
-
 		}
 
 		&.tab-setting {
@@ -44,6 +42,47 @@ main#edit {
 					overflow: auto;
 
 					background: #fefefe;
+				}
+
+				&.group {
+					background-color: lime;
+
+					.group {
+						& + .group {
+							margin-top: 1em;
+						}
+					}
+
+					.members {
+						td {
+							* {
+								width: 100%;
+							}
+						}
+
+						input[type="number"] {
+							text-align: right;
+						}
+
+						.name {
+							min-width: 20ch;
+						}
+						.cost {
+							width: 10ch;
+						}
+						.sales {
+							width: 10ch;
+						}
+						.theme {
+							min-width: 6ch;
+						}
+						.remove {
+							min-width: 6ch;
+						}
+						.add {
+							//width: 12ch;
+						}
+					}
 				}
 
 				&.calendar {

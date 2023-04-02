@@ -52,11 +52,11 @@ const Component: NextPage<Props> = (props: Props) => {
 						<Tab>テーマ</Tab>
 					</TabList>
 
-					<TabPanel className='setting-tab-item'>
+					<TabPanel className='setting-tab-item general'>
 						<GeneralEditor />
 					</TabPanel>
 
-					<TabPanel className='setting-tab-item'>
+					<TabPanel className='setting-tab-item group'>
 						<GroupsEditor />
 					</TabPanel>
 
@@ -79,7 +79,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						</dl>
 					</TabPanel>
 
-					<TabPanel className='setting-tab-item'>
+					<TabPanel className='setting-tab-item theme'>
 						<dl className='inputs'>
 							<dt>カレンダー</dt>
 							<dd>

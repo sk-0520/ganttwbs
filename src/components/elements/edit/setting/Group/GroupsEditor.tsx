@@ -59,7 +59,7 @@ const Component: NextPage = () => {
 			return;
 		}
 
-		if(targetGroup.members.some(a => a.name === name)) {
+		if (targetGroup.members.some(a => a.name === name)) {
 			return;
 		}
 
@@ -74,7 +74,7 @@ const Component: NextPage = () => {
 		targetGroup.members.push(newMember);
 
 		setEditGroups([...editGroups]);
-		const element = event.currentTarget.closest("[data-root]")?.querySelector("[name=\"member-name\"]") as HTMLInputElement | undefined;
+		const element = event.currentTarget.closest("[data-new-member]")?.querySelector("[name=\"member-name\"]") as HTMLInputElement | undefined;
 		if (element) {
 			element.value = "";
 		}
@@ -114,10 +114,10 @@ const Component: NextPage = () => {
 					let memberName = "";
 
 					return (
-						<div key={a.key}>
-							<dt >
+						<>
+							<dt key={"group-" + a.key} className="group">
 								<label>
-									👥
+									グループ名
 									<input
 										defaultValue={a.name}
 										onChange={ev => a.name = ev.target.value}
@@ -128,48 +128,92 @@ const Component: NextPage = () => {
 								</label>
 							</dt>
 
-							<dd>
-								<dl className="inputs">
+							<dd key={"member-" + a.key} >
+								<table className="members">
 									<>
-										{a.members.map(b => {
+										<thead>
+											<tr>
+												<th className="name">名前</th>
+												<th className="cost">原価</th>
+												<th className="sales">売上</th>
+												<th className="theme">テーマ</th>
+												<th className="remove">削除</th>
+											</tr>
+										</thead>
 
-											return <div key={b.key}>
-												<dt >
-													<label>
-														👤
-														<input
-															defaultValue={b.name}
-															onChange={ev => b.name = ev.target.value}
-														/>
-														<input
-															type="color"
-															defaultValue={b.color}
-															onChange={ev => handleChangeMember(b, ev.target.value)}
-														/>
-														<button type="button" onClick={ev => handleRemoveMember(a, b, ev)}>remove</button>
-													</label>
-												</dt>
-												<dd>
-												</dd>
-											</div>;
-										})}
+										<tbody>
+											{a.members.map(b => {
+												return (
+													<tr key={b.key}>
+														<td className="name">
+															<input
+																defaultValue={b.name}
+																onChange={ev => b.name = ev.target.value}
+															/>
+														</td>
+														<td className="cost">
+															<input
+																type="number"
+																min={0}
+																step={1000}
+																defaultValue={b.priceCost}
+																onChange={ev => b.priceCost = ev.target.valueAsNumber}
+															/>
+														</td>
+														<td className="sales">
+															<input
+																type="number"
+																min={0}
+																step={1000}
+																defaultValue={b.priceSales}
+																onChange={ev => b.priceSales = ev.target.valueAsNumber}
+															/>
+														</td>
+														<td className="theme">
+															<input
+																type="color"
+																defaultValue={b.color}
+																onChange={ev => handleChangeMember(b, ev.target.value)}
+															/>
+														</td>
+														<td className="remove">
+															<button
+																type="button"
+																onClick={ev => handleRemoveMember(a, b, ev)}
+															>
+																remove
+															</button>
+														</td>
+													</tr>
+												);
+											})}
+										</tbody>
 
-										<dt>新規メンバー</dt>
-										<dd data-root>
-											<input
-												name='member-name'
-												defaultValue={memberName}
-												onChange={ev => memberName = ev.target.value}
-											/>
-											<button type="button" onClick={ev => handleAddMember(a, memberName, ev)}>add</button>
-										</dd>
+										<tfoot data-new-member>
+											<td className="name">
+												<input
+													name='member-name'
+													defaultValue={memberName}
+													onChange={ev => memberName = ev.target.value}
+												/>
+											</td>
+											<td className="add">
+												<button
+													type="button"
+													onClick={ev => handleAddMember(a, memberName, ev)}
+												>
+													add
+												</button>
+											</td>
+										</tfoot>
 									</>
-								</dl>
+								</table>
 							</dd>
-						</div>
+						</>
 					);
 				})}
-				<dt>新規グループ</dt>
+
+				<dt className="group">新規グループ</dt>
 				<dd>
 					<input
 						value={newGroupName}
