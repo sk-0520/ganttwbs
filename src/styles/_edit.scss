@@ -28,6 +28,10 @@ main#edit {
 		}
 
 		&.tab-setting {
+			code.example {
+				border: 1px solid gray;
+			}
+
 			.setting-tab-item {
 				display: none;
 
@@ -45,8 +49,6 @@ main#edit {
 				}
 
 				&.group {
-					background-color: lime;
-
 					.group {
 						.count {
 							display: inline-block;
@@ -117,17 +119,14 @@ main#edit {
 
 				&.calendar {
 					dd.range {
-						background: pink;
 					}
 
 					dd.week {
-						background: red;
 					}
 
 					dd.holiday {
 						.holiday {
 							display: flex;
-							background-color: lime;
 
 							.holidays {
 								& + .holidays {

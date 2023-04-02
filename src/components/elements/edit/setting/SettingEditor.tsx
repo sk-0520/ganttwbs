@@ -28,6 +28,8 @@ interface Props {
 }
 
 const Component: NextPage<Props> = (props: Props) => {
+	//const initTabIndex = 0;
+	const initTabIndex = 2;
 
 	const setting = toContext(props.editData.setting);
 
@@ -44,7 +46,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<SettingContext.Provider value={setting}>
 			<form onSubmit={onSubmit}>
-				<Tabs forceRenderTabPanel={true}>
+				<Tabs defaultIndex={initTabIndex} forceRenderTabPanel={true}>
 					<TabList>
 						<Tab>基本</Tab>
 						<Tab>人員</Tab>
@@ -191,13 +193,13 @@ function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string): {
 	const items = Strings.splitLines(context)
 		.filter(a => a && a.trim())
 		.map(a => a.split("\t", 2))
-		.map(a => ({ date: a[0], display: a[1] }))
+		.map(a => ({ date: a[0], display: 1 in a ? a[1]: "" }))
 		.map(a => ({ date: new Date(a.date), display: a.display }))
 		.filter(a => !isNaN(a.date.getTime()))
 		;
 
 	for (const item of items) {
-		result[item.date.toISOString().split("T")[0]] = {
+		result[Strings.formatDate(item.date, "yyyy-MM-dd")] = {
 			display: item.display,
 			kind: kind
 		};

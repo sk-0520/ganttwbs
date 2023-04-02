@@ -10,7 +10,7 @@ const Component: NextPage = () => {
 	return (
 		<>
 			<p>
-				日付 TAB 内容
+				<code className="example">YYYY-MM-DD&lt;TAB&gt;説明</code> の形で入力してください。
 			</p>
 			<div className="holiday">
 				<div className="holidays">
