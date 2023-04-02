@@ -16,6 +16,7 @@ import ThemeGroupSettingEditor from "./Theme/ThemeGroupSettingEditor";
 import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
 import { EditData } from "@/models/data/EditData";
+import GeneralEditor from "./General/GeneralEditor";
 
 const NewLine = "\r\n";
 const ThemeHolidayRegularColor: Color = "#0f0";
@@ -52,6 +53,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					</TabList>
 
 					<TabPanel className='setting-tab-item'>
+						<GeneralEditor />
 					</TabPanel>
 
 					<TabPanel className='setting-tab-item'>
@@ -116,6 +118,10 @@ function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnl
 
 function toContext(setting: Setting): SettingContext {
 	return {
+		general: {
+			name: setting.name,
+			recursive: setting.recursive,
+		},
 		groups: setting.groups.map(a => ({
 			key: v4(),
 			name: a.name,
@@ -200,8 +206,8 @@ function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string): {
 
 function fromContext(source: Readonly<Setting>, context: SettingContext): Setting {
 	return {
-		name: source.name,
-		recursive: source.recursive,
+		name: context.general.name,
+		recursive: context.general.recursive,
 		calendar: {
 			range: {
 				from: context.calendar.range.from,

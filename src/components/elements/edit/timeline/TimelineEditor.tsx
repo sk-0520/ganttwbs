@@ -21,7 +21,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [timeRanges, setTimeRanges] = useState<Map<TimelineId, TimeRange>>(new Map());
 
 	function updateRelations() {
-		console.log("全体へ通知");
+		console.debug("全体へ通知");
 
 		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.timelineNodes);
 		const map = Timelines.getTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive);

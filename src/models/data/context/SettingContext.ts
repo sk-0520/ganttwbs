@@ -11,6 +11,11 @@ export interface MemberSetting {
 	color: Color;
 }
 
+export interface GeneralSetting {
+	name: string;
+	recursive: number;
+}
+
 export interface GroupSetting {
 	key: UUID;
 	name: string;
@@ -49,6 +54,7 @@ export interface ThemeSetting {
 }
 
 export interface SettingContext {
+	general: GeneralSetting;
 	groups: Array<GroupSetting>,
 	calendar: CalendarSetting;
 	theme: ThemeSetting;
