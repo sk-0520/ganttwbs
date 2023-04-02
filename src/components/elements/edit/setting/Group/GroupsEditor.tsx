@@ -1,16 +1,17 @@
 import { NextPage } from "next";
-import { useContext, MouseEvent, useState } from "react";
+import { useContext, MouseEvent, useState, ReactNode } from "react";
 import { v4 } from "uuid";
 
 import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
-import { Color } from "@/models/data/Setting";
 import MemberEditor from "./MemberEditor";
+import Dialog from "@/components/elements/Dialog";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
 
 	const [newGroupName, setNewGroupName] = useState("");
 	const [editGroups, setEditGroups] = useState(settingContext.groups);
+	const [choiceColorDialog, setChoiceColorDialog] = useState<GroupSetting | null>(null);
 
 	function removeMember(group: GroupSetting, member: MemberSetting) {
 		const targetGroup = editGroups.find(a => a.key === group.key);
@@ -55,7 +56,11 @@ const Component: NextPage = () => {
 		setNewGroupName("");
 	}
 
-	function handleRemoveGroup(group: GroupSetting, event: MouseEvent<HTMLButtonElement>) {
+	function handleStartChoiceColor(group: GroupSetting): void {
+		setChoiceColorDialog(group);
+	}
+
+	function handleRemoveGroup(group: GroupSetting) {
 		const targetGroup = editGroups.find(a => a.key === group.key);
 		if (!targetGroup) {
 			throw new Error();
@@ -117,16 +122,36 @@ const Component: NextPage = () => {
 					return (
 						<>
 							<dt key={"group-" + a.key} className="group">
-								<label>
-									グループ名
-									<input
-										defaultValue={a.name}
-										onChange={ev => a.name = ev.target.value}
-									/>
-									<span className="count">{a.members.length}</span>
+								<ul className="inline">
+									<li>
+										<label>
+											グループ名
+											<input
+												defaultValue={a.name}
+												onChange={ev => a.name = ev.target.value}
+											/>
+											<span className="count">{a.members.length}</span>
+										</label>
+									</li>
+									<li>
+										<button
+											type="button"
+											onClick={ev => handleStartChoiceColor(a)}
+										>
+											色を割り振り
+										</button>
+									</li>
+									<li className="remove">
+										<button
+											type="button"
+											onClick={ev => handleRemoveGroup(a)}
+										>
+											remove
+										</button>
+									</li>
+								</ul>
 
-									<button onClick={ev => handleRemoveGroup(a, ev)}>remove</button>
-								</label>
+
 							</dt>
 
 							<dd key={"member-" + a.key} className="member">
@@ -183,6 +208,24 @@ const Component: NextPage = () => {
 					<button type="button" onClick={handleAddGroup}>add</button>
 				</dd>
 			</dl>
+			{choiceColorDialog && (
+				<Dialog
+					button="submit"
+					title="色選択"
+					dataFactory={() => {
+						return {a:1};
+					}}
+					callbackClose={(type, data) => {
+						console.log(type, data);
+						setChoiceColorDialog(null);
+					}}
+				>
+					<ul>
+						<li><label><input type="radio" name="color" value="a"/>a</label></li>
+						<li><label><input type="radio" name="color" value="b"/>b</label></li>
+					</ul>
+				</Dialog>
+			)}
 		</>
 	);
 };
