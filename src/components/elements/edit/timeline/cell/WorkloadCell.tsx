@@ -15,6 +15,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				className="edit"
 				type="number"
 				disabled={props.disabled}
+				readOnly={props.readOnly}
 				step="0.25"
 				min={0}
 				value={Timelines.displayWorkload(props.value)}

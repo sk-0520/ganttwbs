@@ -177,27 +177,38 @@
 			}
 
 			.edit {
+				@mixin editing {
+					border: 1px solid black;
+					background: white;
+				}
+
 				background: rgba($color: #fff, $alpha: 0.5);
 				border-block: none;
 				border-inline: 1px dotted black;
 				outline: none;
 
 				&:hover {
-					&:not(:disabled),&:not(:read-only) {
-						border: 1px solid black;
-						background: white;
+					&:not(:disabled),
+					&:not(:read-only) {
+						@include editing;
 					}
+				}
+				&:focus {
+					@include editing;
 				}
 			}
 
 			.prompt {
+				$prompt-background-color: palegoldenrod;
+
 				position: relative;
 
-				outline: 2px palegoldenrod solid;
+				background-color: $prompt-background-color;
+				outline: 2px $prompt-background-color solid;
 				height: fit-content;
 
 				.tools {
-					outline: 2px palegoldenrod solid;
+					outline: 2px $prompt-background-color solid;
 					height: fit-content;
 
 					width: max-content;

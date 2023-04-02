@@ -243,7 +243,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						)
 				}
 				<ProgressCell
-					readOnly={false}
+					readOnly={true}
 					disabled={props.selectingBeginDate !== null}
 					value={progressPercent}
 					callbackChangeValue={handleChangeProgress}
