@@ -9,6 +9,8 @@ export interface MemberSetting {
 	id: MemberId;
 	name: string;
 	color: Color;
+	priceCost: number;
+	priceSales: number;
 }
 
 export interface GeneralSetting {

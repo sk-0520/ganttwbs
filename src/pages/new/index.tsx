@@ -237,17 +237,29 @@ function createTemplateSetting(data: Input): Setting {
 					{
 						"id": "432c2338-fcba-4102-9068-5bc0d2afcc59",
 						"name": "1",
-						"color": "#ff0"
+						"color": "#ff0",
+						"price": {
+							"cost": 40000,
+							"sales": 50000
+						}
 					},
 					{
 						"id": "8a776768-782e-4a5e-a34b-03d6a75f8f4a",
 						"name": "2",
-						"color": "#ff0"
+						"color": "#ff0",
+						"price": {
+							"cost": 40000,
+							"sales": 50000
+						}
 					},
 					{
 						"id": "e0df9635-a45a-4fa7-98a1-636917d2bfea",
 						"name": "3",
-						"color": "#ff0"
+						"color": "#ff0",
+						"price": {
+							"cost": 40000,
+							"sales": 50000
+						}
 					}
 				]
 			},
@@ -257,17 +269,29 @@ function createTemplateSetting(data: Input): Setting {
 					{
 						"id": "84397d4c-b318-40a7-b8e6-3241f01d45ee",
 						"name": "11",
-						"color": "#ff0"
+						"color": "#ff0",
+						"price": {
+							"cost": 40000,
+							"sales": 50000
+						}
 					},
 					{
 						"id": "904de269-90e5-4044-baf8-f48c0a0d3ad9",
 						"name": "22",
-						"color": "#ff0"
+						"color": "#ff0",
+						"price": {
+							"cost": 40000,
+							"sales": 50000
+						}
 					},
 					{
 						"id": "e9562e8b-0751-4c53-b12f-765455421aba",
 						"name": "33",
-						"color": "#ff0"
+						"color": "#ff0",
+						"price": {
+							"cost": 40000,
+							"sales": 50000
+						}
 					}
 				]
 			},
@@ -277,17 +301,29 @@ function createTemplateSetting(data: Input): Setting {
 					{
 						"id": "ea8d0a7e-7f03-43f3-bd10-37ed6e28df21",
 						"name": "XXX",
-						"color": "#ff0"
+						"color": "#ff0",
+						"price": {
+							"cost": 40000,
+							"sales": 50000
+						}
 					},
 					{
 						"id": "df99b15d-024a-4b3e-9b75-8cf9b3e9e277",
 						"name": "YYY",
-						"color": "#ff0"
+						"color": "#ff0",
+						"price": {
+							"cost": 40000,
+							"sales": 50000
+						}
 					},
 					{
 						"id": "0e01addf-a633-4d60-a83a-f03bac40ec6e",
 						"name": "ZZZ",
-						"color": "#ff0"
+						"color": "#ff0",
+						"price": {
+							"cost": 40000,
+							"sales": 50000
+						}
 					}
 				]
 			}

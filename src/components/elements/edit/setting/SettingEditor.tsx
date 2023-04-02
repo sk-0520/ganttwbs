@@ -130,6 +130,8 @@ function toContext(setting: Setting): SettingContext {
 				id: b.id,
 				name: b.name,
 				color: b.color,
+				priceCost: b.price.cost,
+				priceSales: b.price.sales,
 			})).sort((a, b) => a.name.localeCompare(b.name))
 		})).sort((a, b) => a.name.localeCompare(b.name)),
 		calendar: {
@@ -259,6 +261,10 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 				id: b.id,
 				name: b.name,
 				color: b.color,
+				price: {
+					cost: b.priceCost,
+					sales: b.priceSales,
+				},
 			})),
 		})),
 		timelineNodes: source.timelineNodes,

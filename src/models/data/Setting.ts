@@ -137,6 +137,15 @@ export interface Member {
 	id: MemberId;
 	name: string;
 	color: Color;
+	price: Price;
+}
+
+/** 1日単価 */
+export interface Price {
+	/** 原価 */
+	cost: number;
+	/** 売上 */
+	sales: number;
 }
 
 export interface Group {

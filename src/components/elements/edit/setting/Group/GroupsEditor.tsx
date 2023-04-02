@@ -63,11 +63,13 @@ const Component: NextPage = () => {
 			return;
 		}
 
-		const newMember = {
+		const newMember: MemberSetting = {
 			key: v4(),
 			id: v4(),
 			name: name,
 			color: "#ff0",
+			priceCost: 40000,
+			priceSales: 50000,
 		};
 		targetGroup.members.push(newMember);
 
