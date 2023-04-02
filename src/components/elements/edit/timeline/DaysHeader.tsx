@@ -87,7 +87,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 							return (
 								<td key={a.getTime()} className={className}>
-									{locale.calendar.week.short[Settings.toWeekDay(a.getDay())]}
+									{locale.common.calendar.week.short[Settings.toWeekDay(a.getDay())]}
 								</td>
 							);
 						})}

@@ -6,16 +6,19 @@ import ja from "./ja";
 export interface Locale {
 	language: string;
 	common: {
-		add: string;
-		remove: string;
-	},
-	calendar: {
-		week: {
-			name: string,
-			long: { [key in WeekDay]: string };
-			short: { [key in WeekDay]: string };
+		command: {
+			add: string;
+			remove: string;
 		};
-	}
+
+		calendar: {
+			week: {
+				name: string,
+				long: { [key in WeekDay]: string };
+				short: { [key in WeekDay]: string };
+			};
+		}
+	},
 }
 
 export function useLocale(): Locale {

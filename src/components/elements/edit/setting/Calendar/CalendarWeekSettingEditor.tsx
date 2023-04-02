@@ -21,7 +21,7 @@ const Component: NextPage = () => {
 							defaultChecked={settingContext.calendar.holiday.regulars[a]}
 							onChange={ev => settingContext.calendar.holiday.regulars[a] = ev.target.checked}
 						/>
-						{locale.calendar.week.long[a]}
+						{locale.common.calendar.week.long[a]}
 					</label>
 				</li>
 			))}

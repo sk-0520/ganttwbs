@@ -34,7 +34,7 @@ const Component: NextPage = () => {
 						return (
 							<>
 								<td className="subject">
-									{locale.calendar.week.long[week]}
+									{locale.common.calendar.week.long[week]}
 								</td>
 								<td className="theme">
 									<PlainColorPicker
@@ -54,7 +54,7 @@ const Component: NextPage = () => {
 								) : (
 									<>
 										<td className="header" rowSpan={weekDays.length}>
-											{locale.calendar.week.name}
+											{locale.common.calendar.week.name}
 										</td>
 										{renderWeek(a)}
 									</>
