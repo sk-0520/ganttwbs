@@ -106,7 +106,10 @@ main#edit {
 							}
 						}
 						.theme {
-							min-width: 6ch;
+							width: 100px;
+							& > {
+								display: block
+							}
 						}
 						.remove {
 							min-width: 6ch;
@@ -150,12 +153,12 @@ main#edit {
 						td {
 							padding: $cell-padding;
 
-							&.header {
-							}
-							&.subject {
-							}
-							&.theme {
-							}
+							// &.header {
+							// }
+							// &.subject {
+							// }
+							// &.theme {
+							// }
 						}
 					}
 

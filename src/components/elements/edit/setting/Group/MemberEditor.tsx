@@ -2,6 +2,7 @@ import { Color, MemberId } from "@/models/data/Setting";
 import { MemberSetting } from "@/models/data/context/SettingContext";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
+import PlainColorPicker from "@/components/elements/PlainColorPicker";
 
 interface Props {
 	member: MemberSetting;
@@ -66,10 +67,9 @@ const Component: NextPage<Props> = (props: Props) => {
 				/>
 			</td>
 			<td className="theme">
-				<input
-					type="color"
-					value={color}
-					onChange={ev => handleChangeColor(ev.target.value)}
+				<PlainColorPicker
+					color={color}
+					callbackChanged={c => handleChangeColor(c)}
 				/>
 			</td>
 			<td className="remove">
