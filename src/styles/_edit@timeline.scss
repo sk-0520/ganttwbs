@@ -50,15 +50,12 @@
 		}
 		.timeline-range-from {
 			@include box.width($timeline-header-range-from-width);
-			text-align: center;
 		}
 		.timeline-range-to {
 			@include box.width($timeline-header-range-to-width);
-			text-align: center;
 		}
 		.timeline-range-area {
 			@include box.width($timeline-header-range-from-width + $timeline-header-range-to-width);
-			text-align: center;
 		}
 		.timeline-progress {
 			@include box.width($timeline-header-progress-width);
@@ -66,6 +63,8 @@
 	}
 
 	#cross-header {
+		display: flex;
+		flex-direction: column;
 		background: #dddddd;
 		z-index: 2;
 		position: sticky;
@@ -76,6 +75,19 @@
 
 		width: $app-header-width;
 		height: $app-header-height;
+
+		.header {
+			h1 {
+				font-weight: bold;
+			}
+		}
+		.content {
+			flex: content;
+		}
+		.footer {
+			background: darkgrey;
+			text-align: center;
+		}
 	}
 
 	#days-header {
@@ -158,6 +170,18 @@
 			}
 		}
 
+		.timeline-range-from {
+			text-align: center;
+		}
+
+		.timeline-range-to {
+			text-align: center;
+		}
+
+		.timeline-range-area {
+			text-align: center;
+		}
+
 		.timeline-header {
 			border-bottom: 1px dotted black;
 
@@ -184,8 +208,10 @@
 
 				background: rgba($color: #fff, $alpha: 0.5);
 				border-block: none;
-				border-inline: 1px dotted black;
+				border-inline: 1px dotted #000000;
 				outline: none;
+
+				// 以下は多分間違ってる
 
 				&:hover {
 					&:not(:disabled),
@@ -194,7 +220,10 @@
 					}
 				}
 				&:focus {
+					&:not(:disabled),
+					&:not(:read-only) {
 					@include editing;
+					}
 				}
 			}
 
@@ -311,11 +340,6 @@
 					//width: $timeline-header-controls-item-width;
 					padding: 0;
 				}
-			}
-		}
-
-		.task {
-			& > .timeline-header {
 			}
 		}
 
