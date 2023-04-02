@@ -214,15 +214,13 @@
 				// 以下は多分間違ってる
 
 				&:hover {
-					&:not(:disabled),
-					&:not(:read-only) {
+					&:not(:disabled):not(:read-only) {
 						@include editing;
 					}
 				}
 				&:focus {
-					&:not(:disabled),
-					&:not(:read-only) {
-					@include editing;
+					&:not(:disabled):not(:read-only) {
+						@include editing;
 					}
 				}
 			}
