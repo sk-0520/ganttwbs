@@ -45,7 +45,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			className={
 				"timeline-header"
 				+ " _dynamic_programmable_cell_height"
-				+ (" _dynamic_programmable_groups_level-" + props.level.toString())
+				+ (Settings.maybeGroupTimeline(props.currentTimeline) ? " _dynamic_programmable_groups_level-" + props.level.toString(): "")
 				+ " " + mouseEnterClassName
 				+ (Settings.maybeTaskTimeline(props.currentTimeline) ? props.selectingBeginDate?.timeline.id === props.currentTimeline.id ? " " + "hover" : "" : "")
 				+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? " dragging" : "")

@@ -182,9 +182,11 @@
 				border-inline: 1px dotted black;
 				outline: none;
 
-				&:not(:disabled):hover,
-				&:not(:read-only):hover {
-					background: rgba($color: #fff, $alpha: 0.9);
+				&:hover {
+					&:not(:disabled),&:not(:read-only) {
+						border: 1px solid black;
+						background: white;
+					}
 				}
 			}
 
