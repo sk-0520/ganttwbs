@@ -188,7 +188,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					callbackChangeValue={handleChangeSubject}
 				/>
 				<WorkloadCell
-					readOnly={true}
+					readOnly={props.selectingBeginDate !== null}
 					disabled={props.selectingBeginDate !== null}
 					value={workload}
 					callbackChangeValue={handleChangeWorkload}
@@ -243,7 +243,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						)
 				}
 				<ProgressCell
-					readOnly={true}
+					readOnly={props.selectingBeginDate !== null}
 					disabled={props.selectingBeginDate !== null}
 					value={progressPercent}
 					callbackChangeValue={handleChangeProgress}
