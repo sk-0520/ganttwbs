@@ -1,9 +1,11 @@
+import { Color, MemberId } from "@/models/data/Setting";
 import { MemberSetting } from "@/models/data/context/SettingContext";
 import { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
 	member: MemberSetting;
+	updatedColors: ReadonlyMap<MemberId, Color>;
 	callbackRemoveMember(member: MemberSetting): void;
 }
 
@@ -13,6 +15,13 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [priceCost, setPriceCost] = useState(props.member.priceCost);
 	const [priceSales, setPriceSales] = useState(props.member.priceSales);
 	const [color, setColor] = useState(props.member.color);
+
+	useEffect(() => {
+		const color = props.updatedColors.get(props.member.id);
+		if (color) {
+			handleChangeColor(color);
+		}
+	}, [props.updatedColors])
 
 	function handleChangeName(value: string) {
 		setName(props.member.name = value);
@@ -34,7 +43,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		<tr>
 			<td className="name">
 				<input
-					defaultValue={name}
+					value={name}
 					onChange={ev => handleChangeName(ev.target.value)}
 				/>
 			</td>
@@ -43,7 +52,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					type="number"
 					min={0}
 					step={1000}
-					defaultValue={priceCost}
+					value={priceCost}
 					onChange={ev => handleChangePriceCost(ev.target.valueAsNumber)}
 				/>
 			</td>
@@ -52,14 +61,14 @@ const Component: NextPage<Props> = (props: Props) => {
 					type="number"
 					min={0}
 					step={1000}
-					defaultValue={priceSales}
+					value={priceSales}
 					onChange={ev => handleChangePriceSales(ev.target.valueAsNumber)}
 				/>
 			</td>
 			<td className="theme">
 				<input
 					type="color"
-					defaultValue={color}
+					value={color}
 					onChange={ev => handleChangeColor(ev.target.value)}
 				/>
 			</td>
