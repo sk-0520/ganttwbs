@@ -5,10 +5,9 @@ import { TimeRange } from "@/models/TimeRange";
 import { NextPage } from "next";
 import GanttChartTimeline from "./GanttChartTimeline";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
-import { TimeSpan } from "@/models/TimeSpan";
 import { ReactNode } from "react";
-import { Strings } from "@/models/Strings";
 import { ChartSize } from "@/models/data/ChartSize";
+import { Dates } from "@/models/Dates";
 
 interface Props extends EditProps {
 	timeRanges: Map<TimelineId, TimeRange>;
@@ -20,7 +19,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		from: new Date(props.editData.setting.calendar.range.from),
 		to: new Date(props.editData.setting.calendar.range.to),
 	}
-	const diff = TimeSpan.diff(range.to, range.from);
+	const diff = Dates.diff(range.to, range.from);
 	const days = diff.totalDays + 1;
 
 	const cell = props.configuration.design.honest.cell;
@@ -98,7 +97,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 			let color: string | null = null;
 
-			const dateText = Strings.formatDate(date, "yyyy-MM-dd");
+			const dateText = Dates.format(date, "yyyy-MM-dd");
 			if (dateText in props.editData.setting.calendar.holiday.events) {
 				const holidayEvent = props.editData.setting.calendar.holiday.events[dateText];
 				if (holidayEvent) {

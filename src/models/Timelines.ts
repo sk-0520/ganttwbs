@@ -4,7 +4,7 @@ import { DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline,
 import { TimeSpan } from "./TimeSpan";
 import { SuccessTimeRange, TimeRange, TimeRanges } from "./TimeRange";
 import { Settings } from "./Settings";
-import { Strings } from "./Strings";
+import { Dates } from "./Dates";
 
 interface Holidays {
 	dates: ReadonlyArray<Date>;
@@ -18,7 +18,7 @@ export abstract class Timelines {
 	}
 
 	public static toDaysId(date: Date): string {
-		return "days-" + Strings.formatDate(date, "yyyy_MM_dd");
+		return "days-" + Dates.format(date, "yyyy_MM_dd");
 	}
 
 
