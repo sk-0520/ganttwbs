@@ -38,7 +38,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	return (
 		<div className={
-			"timeline-controls"
+			"timeline-cell timeline-controls"
 			+ " " + (visibleControls ? " prompt" : "")
 		}>
 			<button

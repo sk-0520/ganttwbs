@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import style from "../../styles/components/modules/overlay.module.scss";
+import style from "../../styles/modules/components/elements/Overlay.module.scss";
 
 interface Props {
 	isVisible: boolean;

@@ -1,24 +1,42 @@
 dialog {
+	// overflow: hidden;
+	// height: max-content;
+	padding: 0;
+	//max-height: 100vh;
+
 	& > .content {
 		$header-height: 40px;
 		$footer-height: 40px;
 
-		display: grid;
-		grid-template-rows: $header-height 1fr $footer-height;
-		overflow: visible;
+		display: flex;
+		flex-direction: column;
+		//min-height: min-content;
+		//max-height: 100%;
+		//overflow: auto;
+		//grid-template-rows: $header-height 1fr $footer-height;
 
 		.header {
+			min-height: $header-height;
+			max-height: $header-height;
 			background: red;
 		}
 
 		.main {
+			flex: content;
+			background-color: pink;
 			overflow: auto;
-			margin-block: $header-height $footer-height;
-
+			padding: 1rem;
+			//min-height: auto;
+			//margin-block: ($header-height / 2) ($footer-height / 2);
+			//min-height: $header-height + $footer-height;
+			//max-height: 80%;//calc(70vh - (#{$footer-height + $footer-height}));
 			max-height: calc(70vh - (#{$footer-height + $footer-height}));
 		}
 
 		.footer {
+			min-height: $footer-height;
+			max-height: $footer-height;
+
 			background: lime;
 
 			ul.buttons {

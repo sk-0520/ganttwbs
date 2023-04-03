@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import { useContext } from "react";
 
 import { SettingContext } from "@/models/data/context/SettingContext";
-import { useLocale } from "@/models/locales/locale";
+import { useLocale } from "@/locales/locale";
 import { Settings } from "@/models/Settings";
 
 const Component: NextPage = () => {
@@ -21,7 +21,7 @@ const Component: NextPage = () => {
 							defaultChecked={settingContext.calendar.holiday.regulars[a]}
 							onChange={ev => settingContext.calendar.holiday.regulars[a] = ev.target.checked}
 						/>
-						{locale.calendar.week.long[a]}
+						{locale.common.calendar.week.long[a]}
 					</label>
 				</li>
 			))}

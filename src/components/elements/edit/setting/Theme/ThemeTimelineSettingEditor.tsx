@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
+import PlainColorPicker from "@/components/elements/PlainColorPicker";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
@@ -33,43 +34,49 @@ const Component: NextPage = () => {
 	}
 
 	return (
-		<dl className='inputs'>
-			<dt>未設定グループ</dt>
-			<dd>
-				<input
-					type='color'
-					defaultValue={group}
-					onChange={ev => handleChangeGroup(ev.target.value)}
-				/>
-			</dd>
+		<table className='timeline'>
+			<tbody>
+				<tr>
+					<td>未設定グループ</td>
+					<td>
+						<PlainColorPicker
+							color={group}
+							callbackChanged={c => handleChangeGroup(c)}
+						/>
+					</td>
+				</tr>
 
-			<dt>グループライン</dt>
-			<dd>
-				<input
-					type='color'
-					defaultValue={defaultGroup}
-					onChange={ev => handleChangeDefaultGroup(ev.target.value)}
-				/>
-			</dd>
+				<tr>
+					<td>グループライン</td>
+					<td>
+						<PlainColorPicker
+							color={defaultGroup}
+							callbackChanged={c => handleChangeDefaultGroup(c)}
+						/>
+					</td>
+				</tr>
 
-			<dt>タスクライン</dt>
-			<dd>
-				<input
-					type='color'
-					defaultValue={defaultTask}
-					onChange={ev => handleChangeDefaultTask(ev.target.value)}
-				/>
-			</dd>
+				<tr>
+					<td>タスクライン</td>
+					<td>
+						<PlainColorPicker
+							color={defaultTask}
+							callbackChanged={c => handleChangeDefaultTask(c)}
+						/>
+					</td>
+				</tr>
 
-			<dt>完了</dt>
-			<dd>
-				<input
-					type='color'
-					defaultValue={completed}
-					onChange={ev => handleChangeCompleted(ev.target.value)}
-				/>
-			</dd>
-		</dl>
+				<tr>
+					<td>完了</td>
+					<td>
+						<PlainColorPicker
+							color={completed}
+							callbackChanged={c => handleChangeCompleted(c)}
+						/>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	);
 };
 

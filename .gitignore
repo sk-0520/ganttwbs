@@ -43,6 +43,5 @@ next-env.d.ts
 *.gz
 *.log
 -*
-_*
 ~*
 ^*

@@ -4,6 +4,8 @@ import { v4 } from "uuid";
 
 import { SettingContext, UUID } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
+import PlainColorPicker from "@/components/elements/PlainColorPicker";
+import { random } from "@ctrl/tinycolor";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
@@ -26,11 +28,12 @@ const Component: NextPage = () => {
 	function handleAddColor() {
 		groups.push({
 			key: v4(),
-			value: "#4444ff",
+			value: random().toHexString(),
 		});
 		setGroups(settingContext.theme.groups = [...groups]);
 	}
 
+	/*
 	return (
 		<>
 			<ol>
@@ -50,6 +53,47 @@ const Component: NextPage = () => {
 			<button type='button' onClick={handleAddColor}>追加</button>
 		</>
 	);
+	*/
+
+	return (
+		<table className="groups">
+			<tbody>
+				{groups.map((a, i) => {
+					return (
+						<tr key={a.key}>
+							<td>レベル {i + 1}</td>
+							<td>
+								<PlainColorPicker
+									color={a.value}
+									callbackChanged={c => handleChangeColor(a.key, c)}
+								/>
+							</td>
+							<td>
+								<button
+									type='button'
+									onClick={ev => handleRemoveColor(a.key)}
+								>
+									remove
+								</button>
+							</td>
+						</tr>
+					)
+				})}
+			</tbody>
+			<tfoot>
+				<td />
+				<td colSpan={2}>
+					<button
+						type='button'
+						onClick={handleAddColor}
+					>
+						末尾追加
+					</button>
+				</td>
+			</tfoot>
+		</table>
+	)
+
 };
 
 export default Component;

@@ -21,7 +21,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			<>
 				<div
 					className={
-						"timeline-range-from"
+						"timeline-cell timeline-range-from"
 						+ " " + selectOrClickClassName
 					}
 					onClick={props.callbackClickBeginDate}
@@ -32,7 +32,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				</div>
 				<div
 					className={
-						"timeline-range-to"
+						"timeline-cell timeline-range-to"
 						+ " " + selectOrClickClassName
 					}
 					onClick={props.callbackClickBeginDate}
@@ -45,7 +45,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		) : (
 			<div
 				className={
-					"timeline-range-area"
+					"timeline-cell timeline-range-area"
 					+ " " + selectOrClickClassName
 				}
 				onClick={props.callbackClickBeginDate}

@@ -1,65 +1,74 @@
+@use "variable" as variable;
+@use "./common/box" as box;
+
 #timeline {
-	//$timeline-header-id-width: 10ch;
 	$timeline-header-id-width: 14ch;
 	$timeline-header-subject-width: 15ch;
-	$timeline-header-workload-width: 7ch;
-	$timeline-header-resource-width: 8ch;
-	$timeline-header-relation: 3ch;
-	$timeline-header-range-from-width: 11ch;
-	$timeline-header-range-to-width: 11ch;
-	$timeline-header-progress-width: 5ch;
-	$timeline-header-controls-item-width: 3ch;
+	$timeline-header-workload-width: 9ch;
+	$timeline-header-resource-width: 10ch;
+	$timeline-header-relation-width: 4ch;
+	$timeline-header-range-from-width: 12ch;
+	$timeline-header-range-to-width: 12ch;
+	$timeline-header-progress-width: 7ch;
+	$timeline-header-controls-item-width: 5ch;
 
 	$app-header-height: 80px;
 	$app-header-width: $timeline-header-id-width + $timeline-header-subject-width + $timeline-header-workload-width +
-		$timeline-header-resource-width + $timeline-header-relation + $timeline-header-range-from-width +
+		$timeline-header-resource-width + $timeline-header-relation-width + $timeline-header-range-from-width +
 		$timeline-header-range-to-width + $timeline-header-progress-width + $timeline-header-controls-item-width;
 
 	display: grid;
 	width: max-content;
 
+	font-size: variable.$app-timeline-mode-font-size;
+
+	* {
+		font-size: variable.$app-timeline-mode-font-size;
+	}
+
 	.timeline-header {
 		display: inline-flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
-		justify-content: center;
+		justify-content: start;
 
 		.timeline-id {
-			width: $timeline-header-id-width;
+			@include box.width($timeline-header-id-width);
 		}
 		.timeline-subject {
-			width: $timeline-header-subject-width;
+			@include box.width($timeline-header-subject-width);
 		}
 		.timeline-workload {
-			width: $timeline-header-workload-width;
+			@include box.width($timeline-header-workload-width);
 		}
 		.timeline-resource {
-			width: $timeline-header-resource-width;
+			@include box.width($timeline-header-resource-width);
 		}
 		.timeline-relation {
-			width: $timeline-header-relation;
+			@include box.width($timeline-header-relation-width);
 			text-align: center;
 		}
 		.timeline-range-from {
-			width: $timeline-header-range-from-width;
-			text-align: center;
+			@include box.width($timeline-header-range-from-width);
 		}
 		.timeline-range-to {
-			width: $timeline-header-range-to-width;
-			text-align: center;
+			@include box.width($timeline-header-range-to-width);
 		}
 		.timeline-range-area {
-			width: $timeline-header-range-from-width + $timeline-header-range-to-width;
-			text-align: center;
+			@include box.width($timeline-header-range-from-width + $timeline-header-range-to-width);
 		}
 		.timeline-progress {
-			width: $timeline-header-progress-width;
+			@include box.width($timeline-header-progress-width);
+		}
+		.timeline-controls {
+			@include box.width($timeline-header-controls-item-width);
 		}
 	}
 
 	#cross-header {
-		background-color: lime;
-
+		display: flex;
+		flex-direction: column;
+		background: #dddddd;
 		z-index: 2;
 		position: sticky;
 		top: 0;
@@ -69,12 +78,33 @@
 
 		width: $app-header-width;
 		height: $app-header-height;
+
+		.header {
+			h1 {
+				font-weight: bold;
+			}
+		}
+		.content {
+			flex: content;
+		}
+		.footer {
+			background: darkgrey;
+			border-bottom: 1px solid black;
+
+			.timeline-header {
+				text-align: center;
+
+				.timeline-cell {
+					border-right: 1px solid black;
+				}
+			}
+		}
 	}
 
 	#days-header {
-		$base-background: pink;
+		$days-header-background: #eeeeee;
 
-		background-color: $base-background;
+		background: $days-header-background;
 
 		z-index: 1;
 		position: sticky;
@@ -98,14 +128,15 @@
 			td {
 				position: sticky;
 				left: $app-header-width;
-				background-color: $base-background;
 				// border: 1px solid black;
+				background: $days-header-background;
 
 				// & + td {
 				// 	border-right: 1px solid black;
 				// }
 				time {
 					border-left: 1px dotted black;
+					padding-left: 10px;
 				}
 			}
 		}
@@ -136,8 +167,7 @@
 	}
 
 	#timelines {
-		background: orange;
-
+		background: white;
 		z-index: 0;
 		position: sticky;
 		left: 0;
@@ -153,6 +183,18 @@
 					cursor: pointer;
 				}
 			}
+		}
+
+		.timeline-range-from {
+			text-align: center;
+		}
+
+		.timeline-range-to {
+			text-align: center;
+		}
+
+		.timeline-range-area {
+			text-align: center;
 		}
 
 		.timeline-header {
@@ -173,16 +215,52 @@
 				outline: 3px double rgba(255, 0, 0, 0.555);
 			}
 
+			.timeline-cell {
+				border-right: 1px dotted black;
+			}
+
+			.edit {
+				@mixin editing($border-color, $background) {
+					border: 1px solid $border-color;
+					background: $background;
+				}
+
+				background: rgba($color: #fff, $alpha: 0.5);
+				border: 1px solid transparent;
+				outline: none;
+
+				// @at-root {
+				// 	select.edit {
+				// 		outline: 10px solid lime !important;;
+				// 	}
+				// }
+
+				&:disabled,
+				&:read-only {
+					cursor: default;
+				}
+
+				&:not(:disabled):not(:read-only) {
+					&:hover {
+						@include editing(gray, rgba(white, 0.9));
+					}
+					&:focus {
+						@include editing(black, white);
+					}
+				}
+			}
+
 			.prompt {
+				$prompt-background-color: palegoldenrod;
+
 				position: relative;
 
-				background-color: palegoldenrod;
-				outline: 2px palegoldenrod solid;
+				background-color: $prompt-background-color;
+				outline: 2px $prompt-background-color solid;
 				height: fit-content;
 
 				.tools {
-					background-color: palegoldenrod;
-					outline: 2px palegoldenrod solid;
+					outline: 2px $prompt-background-color solid;
 					height: fit-content;
 
 					width: max-content;
@@ -215,7 +293,6 @@
 						left: 0;
 						bottom: 0;
 						right: 0;
-						background-color: #28ddc5a4;
 					}
 				}
 			}
@@ -228,7 +305,6 @@
 				&.dragging {
 					opacity: 1;
 					color: black;
-					background: whitesmoke;
 					border: 1px solid gray;
 				}
 
@@ -290,17 +366,10 @@
 			}
 		}
 
-		.task {
-			& > .timeline-header {
-				background-color: olivedrab;
-			}
-		}
-
 		dialog.selector {
 			table.previous {
 				tr {
 					&.self {
-						background: gold;
 					}
 				}
 
@@ -323,7 +392,6 @@
 		grid-column-start: 2;
 
 		svg {
-			background: skyblue;
 			width: 100%;
 			height: 100%;
 		}

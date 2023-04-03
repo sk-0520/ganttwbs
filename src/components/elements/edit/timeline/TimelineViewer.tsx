@@ -98,7 +98,6 @@ const Component: NextPage<Props> = (props: Props) => {
 
 			let color: string | null = null;
 
-			console.log("<DATE>", date);
 			const dateText = Strings.formatDate(date, "yyyy-MM-dd");
 			if (dateText in props.editData.setting.calendar.holiday.events) {
 				const holidayEvent = props.editData.setting.calendar.holiday.events[dateText];
@@ -110,7 +109,6 @@ const Component: NextPage<Props> = (props: Props) => {
 				const week = Settings.toWeekDay(date.getDay());
 				if (props.editData.setting.calendar.holiday.regulars.includes(week)) {
 					color = props.editData.setting.theme.holiday.regulars[week] ?? null;
-					console.debug(123);
 				}
 			}
 			if (color) {

@@ -9,6 +9,13 @@ export interface MemberSetting {
 	id: MemberId;
 	name: string;
 	color: Color;
+	priceCost: number;
+	priceSales: number;
+}
+
+export interface GeneralSetting {
+	name: string;
+	recursive: number;
 }
 
 export interface GroupSetting {
@@ -49,6 +56,7 @@ export interface ThemeSetting {
 }
 
 export interface SettingContext {
+	general: GeneralSetting;
 	groups: Array<GroupSetting>,
 	calendar: CalendarSetting;
 	theme: ThemeSetting;

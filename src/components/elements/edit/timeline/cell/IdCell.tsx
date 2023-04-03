@@ -22,7 +22,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div
 			className={
-				"timeline-id"
+				"timeline-cell timeline-id"
 				+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? " dragging" : "")
 			}
 			title={props.currentTimeline.id}

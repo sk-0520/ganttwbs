@@ -16,6 +16,7 @@ import ThemeGroupSettingEditor from "./Theme/ThemeGroupSettingEditor";
 import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
 import { EditData } from "@/models/data/EditData";
+import GeneralEditor from "./General/GeneralEditor";
 
 const NewLine = "\r\n";
 const ThemeHolidayRegularColor: Color = "#0f0";
@@ -27,6 +28,8 @@ interface Props {
 }
 
 const Component: NextPage<Props> = (props: Props) => {
+	const initTabIndex = 0;
+	//const initTabIndex = 1;
 
 	const setting = toContext(props.editData.setting);
 
@@ -43,7 +46,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<SettingContext.Provider value={setting}>
 			<form onSubmit={onSubmit}>
-				<Tabs forceRenderTabPanel={true}>
+				<Tabs defaultIndex={initTabIndex} forceRenderTabPanel={true}>
 					<TabList>
 						<Tab>基本</Tab>
 						<Tab>人員</Tab>
@@ -51,10 +54,11 @@ const Component: NextPage<Props> = (props: Props) => {
 						<Tab>テーマ</Tab>
 					</TabList>
 
-					<TabPanel className='setting-tab-item'>
+					<TabPanel className='setting-tab-item general'>
+						<GeneralEditor />
 					</TabPanel>
 
-					<TabPanel className='setting-tab-item'>
+					<TabPanel className='setting-tab-item group'>
 						<GroupsEditor />
 					</TabPanel>
 
@@ -77,7 +81,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						</dl>
 					</TabPanel>
 
-					<TabPanel className='setting-tab-item'>
+					<TabPanel className='setting-tab-item theme'>
 						<dl className='inputs'>
 							<dt>カレンダー</dt>
 							<dd>
@@ -116,6 +120,10 @@ function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnl
 
 function toContext(setting: Setting): SettingContext {
 	return {
+		general: {
+			name: setting.name,
+			recursive: setting.recursive,
+		},
 		groups: setting.groups.map(a => ({
 			key: v4(),
 			name: a.name,
@@ -124,6 +132,8 @@ function toContext(setting: Setting): SettingContext {
 				id: b.id,
 				name: b.name,
 				color: b.color,
+				priceCost: b.price.cost,
+				priceSales: b.price.sales,
 			})).sort((a, b) => a.name.localeCompare(b.name))
 		})).sort((a, b) => a.name.localeCompare(b.name)),
 		calendar: {
@@ -183,13 +193,13 @@ function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string): {
 	const items = Strings.splitLines(context)
 		.filter(a => a && a.trim())
 		.map(a => a.split("\t", 2))
-		.map(a => ({ date: a[0], display: a[1] }))
+		.map(a => ({ date: a[0], display: 1 in a ? a[1]: "" }))
 		.map(a => ({ date: new Date(a.date), display: a.display }))
 		.filter(a => !isNaN(a.date.getTime()))
 		;
 
 	for (const item of items) {
-		result[item.date.toISOString().split("T")[0]] = {
+		result[Strings.formatDate(item.date, "yyyy-MM-dd")] = {
 			display: item.display,
 			kind: kind
 		};
@@ -200,8 +210,8 @@ function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string): {
 
 function fromContext(source: Readonly<Setting>, context: SettingContext): Setting {
 	return {
-		name: source.name,
-		recursive: source.recursive,
+		name: context.general.name,
+		recursive: context.general.recursive,
 		calendar: {
 			range: {
 				from: context.calendar.range.from,
@@ -253,6 +263,10 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 				id: b.id,
 				name: b.name,
 				color: b.color,
+				price: {
+					cost: b.priceCost,
+					sales: b.priceSales,
+				},
 			})),
 		})),
 		timelineNodes: source.timelineNodes,

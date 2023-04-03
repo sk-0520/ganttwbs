@@ -9,8 +9,9 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 	return (
-		<div className='timeline-subject'>
+		<div className='timeline-cell timeline-subject'>
 			<input
+				className="edit"
 				type='text'
 				value={props.value}
 				readOnly={props.readOnly}

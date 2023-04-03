@@ -45,6 +45,7 @@
 			"prebrowser",
 			"THTML",
 			"timespan",
+			"tinycolor",
 			"webextension"
 		],
 		"npm.scriptExplorerExclude": [

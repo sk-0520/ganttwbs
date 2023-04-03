@@ -128,7 +128,6 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleAttachPrevTimeline() {
-		debugger;
 		if (!props.currentIndex) {
 			return;
 		}
@@ -188,12 +187,12 @@ const Component: NextPage<Props> = (props: Props) => {
 					callbackChangeValue={handleChangeSubject}
 				/>
 				<WorkloadCell
-					readOnly={true}
+					readOnly={props.selectingBeginDate !== null}
 					disabled={props.selectingBeginDate !== null}
 					value={workload}
 					callbackChangeValue={handleChangeWorkload}
 				/>
-				<div className='timeline-resource'>
+				<div className='timeline-cell timeline-resource'>
 					<MemberList
 						groups={props.editData.setting.groups}
 						selectedMemberId={memberId}
@@ -210,7 +209,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
 						? (
 							<>
-								<div className='timeline-range-area prompt'>
+								<div className='timeline-cell timeline-range-area prompt'>
 									<ul className="contents">
 										<li className="main">
 											<input
@@ -243,7 +242,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						)
 				}
 				<ProgressCell
-					readOnly={false}
+					readOnly={props.selectingBeginDate !== null}
 					disabled={props.selectingBeginDate !== null}
 					value={progressPercent}
 					callbackChangeValue={handleChangeProgress}

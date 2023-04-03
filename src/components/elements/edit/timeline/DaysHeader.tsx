@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 
-import { useLocale } from "@/models/locales/locale";
+import { useLocale } from "@/locales/locale";
 import { Holiday, Theme } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
 import { Settings } from "@/models/Settings";
@@ -75,7 +75,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 							return (
 								<td key={a.getTime()} id={Timelines.toDaysId(a)} className={className}>
-									<time dateTime={a.toISOString()}>{a.getDate()}</time>
+									<time className="auto-color" dateTime={a.toISOString()}>{a.getDate()}</time>
 								</td>
 							)
 						})}
@@ -87,7 +87,9 @@ const Component: NextPage<Props> = (props: Props) => {
 
 							return (
 								<td key={a.getTime()} className={className}>
-									{locale.calendar.week.short[Settings.toWeekDay(a.getDay())]}
+									<span className="auto-color">
+										{locale.common.calendar.week.short[Settings.toWeekDay(a.getDay())]}
+									</span>
 								</td>
 							);
 						})}

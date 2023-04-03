@@ -1,5 +1,6 @@
+@use "variable" as variable;
+
 main#edit {
-	$tab-header-height: 34px;
 	user-select: none;
 
 	.tab {
@@ -10,7 +11,7 @@ main#edit {
 				display: block;
 
 				position: absolute;
-				top: $tab-header-height;
+				top: variable.$tab-edit-header-height;
 				left: 0;
 				bottom: 0;
 				right: 0;
@@ -19,16 +20,18 @@ main#edit {
 		}
 
 		&.tab-file {
-			background-color: #aee;
+			background: variable.$app-timeline-default-background;
 		}
 
 		&.tab-timeline {
-			background-color: #eae;
-
-
+			background: white;
 		}
 
 		&.tab-setting {
+			code.example {
+				border: 1px solid gray;
+			}
+
 			.setting-tab-item {
 				display: none;
 
@@ -36,28 +39,98 @@ main#edit {
 					display: block;
 
 					position: absolute;
-					top: $tab-header-height;
+					top: variable.$tab-edit-header-height;
 					left: 0;
-					bottom: $tab-header-height;
+					bottom: variable.$tab-edit-header-height;
 					right: 0;
 					overflow: auto;
 
-					background: #fefefe;
+					background: variable.$app-timeline-default-background;
+				}
+
+				&.group {
+					.group {
+						.count {
+							display: inline-block;
+							width: 4ch;
+							&::before {
+								content: "(";
+							}
+							&::after {
+								content: ")";
+							}
+						}
+
+						.remove {
+							margin-left: 2em;
+						}
+					}
+
+					.member + .group {
+						margin-top: 1em;
+						padding-top: 0.5em;
+						border-top: 1px solid black;
+					}
+
+					.members {
+						margin-top: 1em;
+
+						thead {
+							th {
+								text-align: center;
+								font-weight: bold;
+							}
+						}
+
+						tfoot {
+							td {
+								padding-top: 1em;
+							}
+						}
+
+						td {
+							* {
+								width: 100%;
+							}
+						}
+
+						.name {
+							min-width: 20ch;
+						}
+						.cost,
+						.sales {
+							width: 10ch;
+
+							input[type="number"] {
+								text-align: right;
+							}
+						}
+						.theme {
+							width: 100px;
+							& > {
+								display: block;
+							}
+						}
+						.remove {
+							min-width: 6ch;
+							padding-left: 1em;
+						}
+						.add {
+							//width: 12ch;
+						}
+					}
 				}
 
 				&.calendar {
 					dd.range {
-						background: pink;
 					}
 
 					dd.week {
-						background: red;
 					}
 
 					dd.holiday {
 						.holiday {
 							display: flex;
-							background-color: lime;
 
 							.holidays {
 								& + .holidays {
@@ -69,6 +142,35 @@ main#edit {
 									min-height: 8em;
 								}
 							}
+						}
+					}
+				}
+
+				&.theme {
+					$cell-padding: 0.25em 0.5em;
+
+					.holiday {
+						td {
+							padding: $cell-padding;
+
+							// &.header {
+							// }
+							// &.subject {
+							// }
+							// &.theme {
+							// }
+						}
+					}
+
+					.groups {
+						td {
+							padding: $cell-padding;
+						}
+					}
+
+					.timeline {
+						td {
+							padding: $cell-padding;
 						}
 					}
 				}

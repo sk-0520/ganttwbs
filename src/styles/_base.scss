@@ -1,5 +1,10 @@
-html {
-	font-size: 12pt;
+@use "variable" as variable;
+
+html,
+html * {
+	font-family: 'Meiryo UI','Yu Gothic UI','ヒラギノ角ゴシック','Hiragino Sans','klee','Consolas','Calibri',sans-serif;
+	font-size: variable.$page-mode-font-size;
+	line-height: 1.2em;
 }
 
 body {
@@ -42,4 +47,3 @@ div#mode-page {
 		margin: 1rem;
 	}
 }
-

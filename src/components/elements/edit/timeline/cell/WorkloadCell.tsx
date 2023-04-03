@@ -10,10 +10,12 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 	return (
-		<div className='timeline-workload'>
+		<div className='timeline-cell timeline-workload'>
 			<input
+				className="edit"
 				type="number"
 				disabled={props.disabled}
+				readOnly={props.readOnly}
 				step="0.25"
 				min={0}
 				value={Timelines.displayWorkload(props.value)}
