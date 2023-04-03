@@ -30,7 +30,7 @@
 		display: inline-flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
-		justify-content: center;
+		justify-content: start;
 
 		.timeline-id {
 			@include box.width($timeline-header-id-width);
@@ -60,6 +60,9 @@
 		.timeline-progress {
 			@include box.width($timeline-header-progress-width);
 		}
+		.timeline-controls {
+			@include box.width($timeline-header-controls-item-width);
+		}
 	}
 
 	#cross-header {
@@ -86,9 +89,9 @@
 		}
 		.footer {
 			background: darkgrey;
-			text-align: center;
 
 			.timeline-header {
+				text-align: center;
 			}
 		}
 	}
@@ -212,8 +215,8 @@
 			}
 
 			.edit {
-				@mixin editing($background) {
-					border: 1px solid black;
+				@mixin editing($border-color, $background) {
+					border: 1px solid $border-color;
 					background: $background;
 				}
 
@@ -225,10 +228,10 @@
 
 				&:not(:disabled):not(:read-only) {
 					&:hover {
-						@include editing(rgba(white, 0.9));
+						@include editing(gray, rgba(white, 0.9));
 					}
 					&:focus {
-						@include editing(white);
+						@include editing(black, white);
 					}
 				}
 
