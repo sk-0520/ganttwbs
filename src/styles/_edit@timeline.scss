@@ -91,7 +91,9 @@
 	}
 
 	#days-header {
-		background: #eeeeee;
+		$days-header-background: #eeeeee;
+
+		background: $days-header-background;
 
 		z-index: 1;
 		position: sticky;
@@ -116,12 +118,14 @@
 				position: sticky;
 				left: $app-header-width;
 				// border: 1px solid black;
+				background: $days-header-background;
 
 				// & + td {
 				// 	border-right: 1px solid black;
 				// }
 				time {
 					border-left: 1px dotted black;
+					padding-left: 10px;
 				}
 			}
 		}
@@ -201,10 +205,10 @@
 			}
 
 			.edit {
-				@mixin editing {
-					border: 1px solid black;
-					background: white;
-				}
+				// @mixin editing {
+				// 	border: 1px solid black;
+				// 	background: white;
+				// }
 
 				background: rgba($color: #fff, $alpha: 0.5);
 				border-block: none;
@@ -213,16 +217,16 @@
 
 				// 以下は多分間違ってる
 
-				&:hover {
-					&:not(:disabled):not(:read-only) {
-						@include editing;
-					}
-				}
-				&:focus {
-					&:not(:disabled):not(:read-only) {
-						@include editing;
-					}
-				}
+				// &:hover {
+				// 	&:not(:disabled):not(:read-only) {
+				// 		@include editing;
+				// 	}
+				// }
+				// &:focus {
+				// 	&:not(:disabled):not(:read-only) {
+				// 		@include editing;
+				// 	}
+				// }
 			}
 
 			.prompt {
