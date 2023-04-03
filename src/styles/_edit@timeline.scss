@@ -89,9 +89,14 @@
 		}
 		.footer {
 			background: darkgrey;
+			border-bottom: 1px solid black;
 
 			.timeline-header {
 				text-align: center;
+
+				.timeline-cell {
+					border-right: 1px solid black;
+				}
 			}
 		}
 	}
