@@ -6,6 +6,7 @@ import { Settings } from "@/models/Settings";
 import { EditProps } from "@/models/data/props/EditProps";
 import { Timelines } from "@/models/Timelines";
 import { Dates } from "@/models/Dates";
+import { TimeSpan } from "@/models/TimeSpan";
 
 interface Props extends EditProps { }
 
@@ -21,8 +22,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const days = diff.totalDays + 1;
 
 	const dates = Array.from(Array(days), (_, index) => {
-		const date = new Date(range.from.getTime());
-		date.setDate(date.getDate() + index);
+		const date = Dates.add(range.from, TimeSpan.fromDays(index));
 		return date;
 	});
 

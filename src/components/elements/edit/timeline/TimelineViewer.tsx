@@ -8,6 +8,7 @@ import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { ReactNode } from "react";
 import { ChartSize } from "@/models/data/ChartSize";
 import { Dates } from "@/models/Dates";
+import { TimeSpan } from "@/models/TimeSpan";
 
 interface Props extends EditProps {
 	timeRanges: Map<TimelineId, TimeRange>;
@@ -78,8 +79,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
 		for (let i = 0; i < days; i++) {
-			const date = new Date(range.from.getTime());
-			date.setDate(date.getDate() + i);
+			const date = Dates.add(range.from, TimeSpan.fromDays(i));
 
 			const gridX = cell.width.value + cell.width.value * i;
 

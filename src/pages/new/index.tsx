@@ -22,7 +22,7 @@ const Page: NextPage = () => {
 
 	const fromDate = new Date();
 	const toDate = new Date(fromDate.getTime());
-	toDate.setFullYear(toDate.getFullYear() + 1);
+	toDate.setFullYear(toDate.getFullYear() + 1); // ここは add せんでいいや
 
 	return (
 		<Layout title='新規作成' mode='page' layoutId='new'>

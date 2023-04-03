@@ -2,6 +2,19 @@ import { Dates } from "../../../src/models/Dates";
 import { TimeSpan } from "../../../src/models/TimeSpan";
 
 describe("Dates", () => {
+
+	test.each([
+		[new Date("2000-01-01T00:00:00"), new Date("2000-01-01T00:00:00"), TimeSpan.zero],
+		[new Date("2000-01-01T00:00:00.001"), new Date("2000-01-01T00:00:00"), TimeSpan.fromMilliseconds(1)],
+		[new Date("1999-12-31T23:59:59.999"), new Date("2000-01-01T00:00:00"), TimeSpan.fromMilliseconds(-1)],
+		[new Date("2000-01-01T00:00:01"), new Date("2000-01-01T00:00:00"), TimeSpan.fromSeconds(1)],
+		[new Date("2000-01-01T00:01:00"), new Date("2000-01-01T00:00:00"), TimeSpan.fromMinutes(1)],
+		[new Date("2000-01-01T01:00:00"), new Date("2000-01-01T00:00:00"), TimeSpan.fromHours(1)],
+		[new Date("2000-01-02T00:00:00"), new Date("2000-01-01T00:00:00"), TimeSpan.fromDays(1)],
+	])("add", (expected, date, time) => {
+		expect(Dates.add(date, time)).toEqual(expected);
+	});
+
 	test.each([
 		[TimeSpan.fromDays(1), new Date(2000, 6, 10), new Date(2000, 6, 9)],
 		[TimeSpan.fromDays(2), new Date(2000, 6, 10), new Date(2000, 6, 8)],
@@ -17,10 +30,8 @@ describe("Dates", () => {
 		[new Date("3000-01-01T00:00:00"), "3000-01-01T00:00:00"],
 		[null, "yyyy-MM-ddThh:mm:ss"],
 	])("parse", (expected: Date | null, input) => {
-		const actual = Dates.parse(input);
-		expect(actual).toEqual(expected);
+		expect(Dates.parse(input)).toEqual(expected);
 	});
-
 
 	test.each([
 		["4321", "yyyy"],

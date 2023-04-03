@@ -3,6 +3,18 @@ import { TimeSpan } from "./TimeSpan";
 export abstract class Dates {
 
 	/**
+	 * 加算。
+	 * @param date
+	 * @param timeSpan
+	 * @returns
+	 */
+	public static add(date: Date, timeSpan: TimeSpan): Date {
+		const result = new Date(date.getTime());
+		result.setMilliseconds(result.getMilliseconds() + timeSpan.totalMilliseconds);
+		return result;
+	}
+
+	/**
 	 * Date の差分を取得。
 	 * @param base 基準
 	 * @param target 差分対象
@@ -28,7 +40,12 @@ export abstract class Dates {
 		return date;
 	}
 
-
+	/**
+	 * フォーマット。
+	 * @param date
+	 * @param format
+	 * @returns
+	 */
 	public static format(date: Date, format?: string): string {
 		if (format === undefined) {
 			return date.toISOString();
