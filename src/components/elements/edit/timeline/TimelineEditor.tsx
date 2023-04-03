@@ -12,6 +12,7 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { Design } from "@/models/data/Design";
 import { Designs } from "@/models/Designs";
 import { Settings } from "@/models/Settings";
+import { TinyColor, mostReadable } from "@ctrl/tinycolor";
 
 interface Props extends EditProps { }
 
@@ -72,6 +73,19 @@ export default Component;
 
 function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 
+	function toTextColor(backgroundColor: TinyColor): TinyColor {
+		const textColors = ["#000", "#fff"];
+		const result = mostReadable(
+			backgroundColor,
+			textColors,
+			{
+				includeFallbackColors: true
+			}
+		);
+
+		return result ?? new TinyColor("#000");
+	}
+
 	// 動的なCSSクラス名をここでがっつり作るのです
 	const styleObject = {
 		design: design.honest,
@@ -118,10 +132,26 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 			holiday: {
 				regulars: Settings.getWeekDays()
 					.filter(a => a in theme.holiday.regulars)
-					.map(a => ({ [a]: { background: theme.holiday.regulars[a] } }))
+					.map(a => {
+						const backgroundColor = new TinyColor(theme.holiday.regulars[a]);
+						return {
+							[a]: {
+								color: toTextColor(backgroundColor).toHexString(),
+								background: backgroundColor.toHexString(),
+							}
+						}
+					})
 					.reduce((r, a) => ({ ...r, ...a })),
 				events: Object.entries(theme.holiday.events)
-					.map(([k, v]) => ({ [k]: { background: `${v} !important` } }))
+					.map(([k, v]) => {
+						const backgroundColor = new TinyColor(v);
+						return {
+							[k]: {
+								color: toTextColor(backgroundColor).toHexString(),
+								background: `${backgroundColor.toHexString()} !important`
+							}
+						}
+					})
 					.reduce((r, a) => ({ ...r, ...a })),
 			}
 		},
