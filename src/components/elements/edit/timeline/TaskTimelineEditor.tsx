@@ -128,7 +128,6 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleAttachPrevTimeline() {
-		debugger;
 		if (!props.currentIndex) {
 			return;
 		}
