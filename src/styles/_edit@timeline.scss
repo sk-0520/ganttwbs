@@ -224,7 +224,11 @@
 				border: 1px solid transparent;
 				outline: none;
 
-				// 以下は多分間違ってる
+				// @at-root {
+				// 	select.edit {
+				// 		outline: 10px solid lime !important;;
+				// 	}
+				// }
 
 				&:not(:disabled):not(:read-only) {
 					&:hover {
@@ -234,17 +238,6 @@
 						@include editing(black, white);
 					}
 				}
-
-				// &:hover {
-				// 	&:not(:disabled):not(:read-only) {
-				// 		@include editing(rgba(#fff, 0.8));
-				// 	}
-				// }
-				// &:focus {
-				// 	&:not(:disabled):not(:read-only) {
-				// 		@include editing(white);
-				// 	}
-				// }
 			}
 
 			.prompt {
