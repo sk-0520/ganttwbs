@@ -10,7 +10,7 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 	return (
-		<div className="timeline-progress">
+		<div className="timeline-cell timeline-progress">
 			<input
 				className="edit"
 				type="number"

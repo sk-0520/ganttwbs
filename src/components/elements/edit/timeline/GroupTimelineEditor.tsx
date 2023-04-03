@@ -254,7 +254,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						disabled={props.selectingBeginDate !== null}
 						value={workload}
 					/>
-					<div className='timeline-resource'>
+					<div className='header timeline-resource'>
 					</div>
 					<RelationCell
 						currentTimeline={props.currentTimeline}

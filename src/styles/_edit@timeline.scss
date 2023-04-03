@@ -87,6 +87,9 @@
 		.footer {
 			background: darkgrey;
 			text-align: center;
+
+			.timeline-header {
+			}
 		}
 	}
 
@@ -204,6 +207,10 @@
 				outline: 3px double rgba(255, 0, 0, 0.555);
 			}
 
+			.timeline-cell {
+				border-right: 1px dotted black;
+			}
+
 			.edit {
 				@mixin editing($background) {
 					border: 1px solid black;
@@ -211,8 +218,7 @@
 				}
 
 				background: rgba($color: #fff, $alpha: 0.5);
-				border-block: none;
-				border-inline: 1px dotted #000000;
+				border: 1px solid transparent;
 				outline: none;
 
 				// 以下は多分間違ってる

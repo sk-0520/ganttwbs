@@ -193,7 +193,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					value={workload}
 					callbackChangeValue={handleChangeWorkload}
 				/>
-				<div className='timeline-resource'>
+				<div className='timeline-cell timeline-resource'>
 					<MemberList
 						groups={props.editData.setting.groups}
 						selectedMemberId={memberId}
@@ -210,7 +210,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
 						? (
 							<>
-								<div className='timeline-range-area prompt'>
+								<div className='timeline-cell timeline-range-area prompt'>
 									<ul className="contents">
 										<li className="main">
 											<input

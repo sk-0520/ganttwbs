@@ -43,7 +43,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div
 			className={
-				"timeline-header"
+				"timeline-cell timeline-header"
 				+ " _dynamic_programmable_cell_height"
 				+ (Settings.maybeGroupTimeline(props.currentTimeline) ? " _dynamic_programmable_groups_level-" + props.level.toString(): "")
 				+ " " + mouseEnterClassName
