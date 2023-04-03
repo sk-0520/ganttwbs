@@ -20,6 +20,10 @@ export class TimeSpan {
 
 	//#region property
 
+	public static get zero(): TimeSpan {
+		return new TimeSpan(0);
+	}
+
 	public get milliseconds(): number {
 		return this._ticks % 1000;
 	}

@@ -6,7 +6,7 @@ import Layout from "@/components/layout/Layout";
 import { Goto } from "@/models/Goto";
 import { EditData } from "@/models/data/EditData";
 import { DateOnly, DefaultRecursiveMaxCount, Setting } from "@/models/data/Setting";
-import { Strings } from "@/models/Strings";
+import { Dates } from "@/models/Dates";
 
 interface Input {
 	title: string;
@@ -22,7 +22,7 @@ const Page: NextPage = () => {
 
 	const fromDate = new Date();
 	const toDate = new Date(fromDate.getTime());
-	toDate.setFullYear(toDate.getFullYear() + 1);
+	toDate.setFullYear(toDate.getFullYear() + 1); // ここは add せんでいいや
 
 	return (
 		<Layout title='新規作成' mode='page' layoutId='new'>
@@ -50,7 +50,7 @@ const Page: NextPage = () => {
 							開始
 							<input
 								type='date'
-								defaultValue={Strings.formatDate(fromDate, "yyyy-MM-dd")}
+								defaultValue={Dates.format(fromDate, "yyyy-MM-dd")}
 								{...register("dateFrom", {
 									required: {
 										value: true,
@@ -63,7 +63,7 @@ const Page: NextPage = () => {
 						<label>
 							<input
 								type='date'
-								defaultValue={Strings.formatDate(toDate, "yyyy-MM-dd")}
+								defaultValue={Dates.format(toDate, "yyyy-MM-dd")}
 								{...register("dateTo", {
 									required: {
 										value: true,

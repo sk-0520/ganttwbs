@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import MemberList from "./MemberList";
 import { MemberId, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
 import { TimeSpan } from "@/models/TimeSpan";
-import { Strings } from "@/models/Strings";
 import { TimeRangeKind, TimeRanges } from "@/models/TimeRange";
 import { EditProps } from "@/models/data/props/EditProps";
 import { TimeLineEditorProps } from "@/models/data/props/TimeLineEditorProps";
@@ -17,6 +16,7 @@ import TimelineHeaderRow from "./cell/TimelineHeaderRow";
 import RelationCell from "./cell/RelationCell";
 import ControlsCell from "./cell/ControlsCell";
 import { Timelines } from "@/models/Timelines";
+import { Dates } from "@/models/Dates";
 
 interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
@@ -150,7 +150,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			return;
 		}
 
-		props.currentTimeline.static = props.selectingBeginDate.beginDate ? Strings.formatDate(props.selectingBeginDate.beginDate, "yyyy-MM-dd") : undefined;
+		props.currentTimeline.static = props.selectingBeginDate.beginDate ? Dates.format(props.selectingBeginDate.beginDate, "yyyy-MM-dd") : undefined;
 		props.currentTimeline.previous = [...props.selectingBeginDate.previous];
 
 		props.beginDateCallbacks.submitSelectBeginDate(props.currentTimeline);
@@ -214,7 +214,7 @@ const Component: NextPage<Props> = (props: Props) => {
 										<li className="main">
 											<input
 												type="date"
-												value={selectedBeginDate ? Strings.formatDate(selectedBeginDate, "yyyy-MM-dd") : ""}
+												value={selectedBeginDate ? Dates.format(selectedBeginDate, "yyyy-MM-dd") : ""}
 												onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
 											/>
 										</li>

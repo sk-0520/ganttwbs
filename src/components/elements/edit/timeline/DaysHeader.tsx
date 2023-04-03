@@ -2,11 +2,11 @@ import { NextPage } from "next";
 
 import { useLocale } from "@/locales/locale";
 import { Holiday, Theme } from "@/models/data/Setting";
-import { Strings } from "@/models/Strings";
 import { Settings } from "@/models/Settings";
 import { EditProps } from "@/models/data/props/EditProps";
-import { TimeSpan } from "@/models/TimeSpan";
 import { Timelines } from "@/models/Timelines";
+import { Dates } from "@/models/Dates";
+import { TimeSpan } from "@/models/TimeSpan";
 
 interface Props extends EditProps { }
 
@@ -18,12 +18,11 @@ const Component: NextPage<Props> = (props: Props) => {
 		to: new Date(props.editData.setting.calendar.range.to),
 	};
 
-	const diff = TimeSpan.diff(range.to, range.from);
+	const diff = Dates.diff(range.to, range.from);
 	const days = diff.totalDays + 1;
 
 	const dates = Array.from(Array(days), (_, index) => {
-		const date = new Date(range.from.getTime());
-		date.setDate(date.getDate() + index);
+		const date = Dates.add(range.from, TimeSpan.fromDays(index));
 		return date;
 	});
 
@@ -75,7 +74,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 							return (
 								<td key={a.getTime()} id={Timelines.toDaysId(a)} className={className}>
-									<time className="auto-color" dateTime={a.toISOString()}>{a.getDate()}</time>
+									<time dateTime={a.toISOString()}>{a.getDate()}</time>
 								</td>
 							)
 						})}
@@ -87,9 +86,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 							return (
 								<td key={a.getTime()} className={className}>
-									<span className="auto-color">
-										{locale.common.calendar.week.short[Settings.toWeekDay(a.getDay())]}
-									</span>
+									{locale.common.calendar.week.short[Settings.toWeekDay(a.getDay())]}
 								</td>
 							);
 						})}
@@ -130,7 +127,7 @@ function getWeekDayClassName(date: Date, regulars: Holiday["regulars"], theme: T
 
 function getHolidayClassName(date: Date, events: Holiday["events"], theme: Theme): string {
 
-	const dateText = Strings.formatDate(date, "yyyy-MM-dd");
+	const dateText = Dates.format(date, "yyyy-MM-dd");
 	if (dateText in events) {
 		const holidayEvent = events[dateText];
 		if (holidayEvent) {

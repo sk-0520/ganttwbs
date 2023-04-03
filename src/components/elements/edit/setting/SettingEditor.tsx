@@ -17,6 +17,7 @@ import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/
 import { Strings } from "@/models/Strings";
 import { EditData } from "@/models/data/EditData";
 import GeneralEditor from "./General/GeneralEditor";
+import { Dates } from "@/models/Dates";
 
 const NewLine = "\r\n";
 const ThemeHolidayRegularColor: Color = "#0f0";
@@ -199,7 +200,7 @@ function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string): {
 		;
 
 	for (const item of items) {
-		result[Strings.formatDate(item.date, "yyyy-MM-dd")] = {
+		result[Dates.format(item.date, "yyyy-MM-dd")] = {
 			display: item.display,
 			kind: kind
 		};
