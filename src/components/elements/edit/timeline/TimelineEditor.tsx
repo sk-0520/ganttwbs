@@ -37,16 +37,16 @@ const Component: NextPage<Props> = (props: Props) => {
 		console.debug("全体へ通知");
 
 		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.timelineNodes);
-		const map = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive);
-		setTimeRanges(map);
+		const dateTimeRanges = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive);
+		setTimeRanges(dateTimeRanges);
 
 		const items = new Map(
 			[...timelineMap.entries()]
 				.filter(([k, _]) => timelineMap.has(k))
 				.map(([k, v]) => {
 					const item: TimelineItem = {
-						timeline: v as GroupTimeline | TaskTimeline,
-						range: map.get(k)!,
+						timeline: v as GroupTimeline | TaskTimeline, // 妥協の産物
+						range: dateTimeRanges.get(k)!,
 					}
 
 					return [k, item];

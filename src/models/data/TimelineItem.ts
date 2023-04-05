@@ -1,7 +1,7 @@
 import { DateTimeRange } from "./DateTimeRange";
-import { GroupTimeline, TaskTimeline } from "./Setting";
+import { AnyTimeline } from "./Setting";
 
 export interface TimelineItem {
-	timeline: GroupTimeline | TaskTimeline;
+	timeline: AnyTimeline;
 	range: DateTimeRange;
 }

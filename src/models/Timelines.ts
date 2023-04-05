@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 
-import { DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, TimeOnly, Timeline, TimelineId, WeekIndex } from "./data/Setting";
+import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, TimeOnly, Timeline, TimelineId, WeekIndex } from "./data/Setting";
 import { TimeSpan } from "./TimeSpan";
 import { Settings } from "./Settings";
 import { Dates } from "./Dates";
@@ -156,13 +156,12 @@ export abstract class Timelines {
 		return this.sumProgress(groupTimeline.children);
 	}
 
-	public static getTimelinesMap(timelineNodes: ReadonlyArray<GroupTimeline | TaskTimeline>): Map<TimelineId, Timeline> {
-		const result = new Map<TimelineId, Timeline>();
+	public static getTimelinesMap(timelineNodes: ReadonlyArray<AnyTimeline>): Map<TimelineId, AnyTimeline> {
+		const result = new Map<TimelineId, AnyTimeline>();
 
 		for (const timeline of timelineNodes) {
 			if (Settings.maybeGroupTimeline(timeline)) {
-				const groupTimeline = timeline as GroupTimeline;
-				const map = this.getTimelinesMap(groupTimeline.children);
+				const map = this.getTimelinesMap(timeline.children);
 				for (const [key, value] of map) {
 					result.set(key, value);
 				}

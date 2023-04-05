@@ -111,6 +111,8 @@ export interface TaskTimeline extends Timeline {
 	progress: Progress;
 }
 
+export type AnyTimeline = GroupTimeline | TaskTimeline;
+
 export type VersionId = string;
 
 export interface VersionItem {
