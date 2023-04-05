@@ -5,7 +5,7 @@ import CrossHeader from "./CrossHeader";
 import TimelineItems from "./TimelineItems";
 import TimelineViewer from "./TimelineViewer";
 import { ReactNode, useEffect, useState } from "react";
-import { GroupTimeline, TaskTimeline, Theme, TimelineId } from "@/models/data/Setting";
+import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, TimelineId } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
 import { EditProps } from "@/models/data/props/EditProps";
 import { Design } from "@/models/data/Design";
@@ -25,19 +25,15 @@ const Component: NextPage<Props> = (props: Props) => {
 	function createTimelineStore(items: Map<TimelineId, TimelineItem>): TimelineStore {
 		const result: TimelineStore = {
 			items: items,
-			updateGroup: updateGroupTimeline,
-			updateTask: updateTaskTimeline,
+			updateTimeline: updateTimeline,
 		};
 
 		return result;
 	}
 
-	function updateGroupTimeline(timeline: GroupTimeline): void {
+	function updateTimeline(timeline: AnyTimeline): void {
 		//
-	}
-
-	function updateTaskTimeline(timeline: TaskTimeline): void {
-		//
+		const current = Timelines.searchTimeline(timeline.id, timelineNodes);
 	}
 
 	function updateRelations() {

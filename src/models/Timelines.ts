@@ -173,6 +173,19 @@ export abstract class Timelines {
 		return result;
 	}
 
+	public static searchTimeline(timelineId: TimelineId, timelineNodes: ReadonlyArray<AnyTimeline>): AnyTimeline {
+		for (const node of timelineNodes) {
+			if (node.id === timelineId) {
+				return node;
+			}
+			if (Settings.maybeGroupTimeline(node)) {
+				return this.searchTimeline(timelineId, node.children);
+			}
+		}
+
+		throw new Error(timelineId);
+	}
+
 	/**
 	 * 指定のタイムラインが所属するグループを取得する。
 	 * @param timeline 子タイムライン。
