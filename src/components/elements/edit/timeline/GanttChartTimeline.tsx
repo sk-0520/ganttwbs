@@ -19,15 +19,15 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [timeRange, setTimeRange] = useState<SuccessDateTimeRange | null>();
 
 	useEffect(() => {
-		const tr = props.timeRanges.get(props.currentTimeline.id);
-		if (tr) {
-			if (DateTimeRanges.maybeSuccessTimeRange(tr)) {
-				setTimeRange(tr);
+		const timelineItem = props.timelineStore.items.get(props.currentTimeline.id);
+		if (timelineItem) {
+			if (DateTimeRanges.maybeSuccessTimeRange(timelineItem.range)) {
+				setTimeRange(timelineItem.range);
 			} else {
 				setTimeRange(null);
 			}
 		}
-	}, [props.timeRanges]);
+	}, [props.timelineStore, props.currentTimeline]);
 
 
 	function renderCurrentTimeline(): ReactNode {

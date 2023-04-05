@@ -21,7 +21,6 @@ interface Props extends EditProps { }
 const Component: NextPage<Props> = (props: Props) => {
 
 	const [timelineNodes, setTimelineNodes] = useState(props.editData.setting.timelineNodes);
-	const [timeRanges, setTimeRanges] = useState<Map<TimelineId, DateTimeRange>>(new Map());
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map()));
 
 	function createTimelineStore(items: Map<TimelineId, TimelineItem>): TimelineStore {
@@ -38,7 +37,6 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.timelineNodes);
 		const dateTimeRanges = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive);
-		setTimeRanges(dateTimeRanges);
 
 		const items = new Map(
 			[...timelineMap.entries()]
@@ -84,14 +82,12 @@ const Component: NextPage<Props> = (props: Props) => {
 				editData={props.editData}
 				timelineRootNodes={timelineNodes}
 				setTimelineRootNodes={handleSetTimelineNodes}
-				timeRanges={timeRanges}
 				updateRelations={updateRelations}
 				timelineStore={timelineStore}
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
 				editData={props.editData}
-				timeRanges={timeRanges}
 				updateRelations={updateRelations}
 				timelineStore={timelineStore}
 			/>

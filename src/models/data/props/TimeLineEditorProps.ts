@@ -1,9 +1,8 @@
 import { DraggingTimeline } from "../DraggingTimeline";
 import { BeginDateCallbacks, SelectingBeginDate } from "../BeginDate";
-import { GroupTimeline, TimelineId } from "../Setting";
+import { GroupTimeline } from "../Setting";
 import { RefreshedChildrenCallbacks } from "../RefreshedChildrenCallbacks";
 import { NotifyParentCallbacks } from "../NotifyParentCallbacks";
-import { DateTimeRange } from "../DateTimeRange";
 import { TimelineStore } from "@/models/store/TimelineStore";
 
 export interface TimeLineEditorProps<TargetTimeline> {
@@ -11,7 +10,6 @@ export interface TimeLineEditorProps<TargetTimeline> {
 	parentGroup: GroupTimeline | null;
 	currentIndex: number;
 	currentTimeline: TargetTimeline;
-	timeRanges: ReadonlyMap<TimelineId, DateTimeRange>;
 	timelineStore: TimelineStore;
 	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;

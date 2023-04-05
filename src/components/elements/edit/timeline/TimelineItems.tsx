@@ -14,11 +14,9 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { RefreshedChildrenCallbacks } from "@/models/data/RefreshedChildrenCallbacks";
 import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
 import { TimelineRootProps } from "@/models/data/props/TimelineRootProps";
-import { DateTimeRange } from "@/models/data/DateTimeRange";
 import { TimelineStore } from "@/models/store/TimelineStore";
 
 interface Props extends EditProps, TimelineRootProps {
-	timeRanges: Map<TimelineId, DateTimeRange>;
 	updateRelations: () => void;
 	timelineStore: TimelineStore;
 }
@@ -297,7 +295,6 @@ const Component: NextPage<Props> = (props: Props) => {
 											currentIndex={i}
 											parentGroup={null}
 											currentTimeline={a}
-											timeRanges={props.timeRanges}
 											timelineStore={props.timelineStore}
 											draggingTimeline={draggingTimeline}
 											selectingBeginDate={selectingBeginDate}
@@ -317,7 +314,6 @@ const Component: NextPage<Props> = (props: Props) => {
 											currentIndex={i}
 											parentGroup={null}
 											currentTimeline={a}
-											timeRanges={props.timeRanges}
 											timelineStore={props.timelineStore}
 											draggingTimeline={draggingTimeline}
 											selectingBeginDate={selectingBeginDate}

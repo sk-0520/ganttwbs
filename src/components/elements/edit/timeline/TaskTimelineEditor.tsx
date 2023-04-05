@@ -38,15 +38,15 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
 
 	useEffect(() => {
-		const timeRange = props.timeRanges.get(props.currentTimeline.id);
-		if (timeRange) {
-			setBeginKind(timeRange.kind);
-			if (DateTimeRanges.maybeSuccessTimeRange(timeRange)) {
-				setBeginDate(timeRange.begin);
-				setEndDate(timeRange.end);
+		const timelineItem = props.timelineStore.items.get(props.currentTimeline.id);
+		if (timelineItem) {
+			setBeginKind(timelineItem.range.kind);
+			if (DateTimeRanges.maybeSuccessTimeRange(timelineItem.range)) {
+				setBeginDate(timelineItem.range.begin);
+				setEndDate(timelineItem.range.end);
 			}
 		}
-	}, [props.timeRanges]);
+	}, [props.currentTimeline, props.timelineStore]);
 
 	useEffect(() => {
 		if (props.selectingBeginDate) {

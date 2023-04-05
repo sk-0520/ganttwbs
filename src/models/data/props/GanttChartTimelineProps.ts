@@ -18,7 +18,6 @@ export interface GanttChartTimelineProps extends EditProps {
 
 	memberMap: ReadonlyMap<MemberId, MemberMapValue>;
 
-	timeRanges: Map<TimelineId, DateTimeRange>;
 	updateRelations: () => void;
 
 	timelineStore: TimelineStore;

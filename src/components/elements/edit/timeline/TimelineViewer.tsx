@@ -8,11 +8,9 @@ import { ReactNode } from "react";
 import { ChartSize } from "@/models/data/ChartSize";
 import { Dates } from "@/models/Dates";
 import { TimeSpan } from "@/models/TimeSpan";
-import { DateTimeRange } from "@/models/data/DateTimeRange";
 import { TimelineStore } from "@/models/store/TimelineStore";
 
 interface Props extends EditProps {
-	timeRanges: Map<TimelineId, DateTimeRange>;
 	updateRelations: () => void;
 	timelineStore: TimelineStore;
 }
@@ -63,7 +61,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		const height = cell.height.value * timelines.length;
 
 		const gridHorizontals = new Array<ReactNode>();
-		for (let i = 0; i < props.timeRanges.size; i++) {
+		for (let i = 0; i < props.timelineStore.items.size; i++) {
 			const y = cell.height.value + cell.height.value * i;
 			gridHorizontals.push(
 				<line
@@ -160,7 +158,6 @@ const Component: NextPage<Props> = (props: Props) => {
 							range={range}
 							chartSize={chartSize}
 							memberMap={memberMap}
-							timeRanges={props.timeRanges}
 							updateRelations={props.updateRelations}
 							timelineStore={props.timelineStore}
 						/>
