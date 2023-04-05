@@ -38,13 +38,46 @@ const Component: NextPage<Props> = (props: Props) => {
 			throw new Error();
 		}
 
+		const prevSource = { ...source };
 		Object.assign(timeline, source);
+		const timelineItems = new Array<TimelineItem>();
+		timelineItems.push({
+			timeline: source
+		});
 
-		const timelineItem: TimelineItem = {
-			timeline: source,
-		};
+		if (Settings.maybeTaskTimeline(timeline)) {
+			const src = prevSource as TaskTimeline;
 
-		const items = new Map([[source.id, timelineItem]]);
+			// 先祖グループに対してふわーっと処理
+			const groups = Timelines.getParentGroup(timeline, timelineNodes);
+			if (groups) {
+				const reversedGroups = groups.reverse();
+				// 工数
+				if (timeline.workload !== src.workload) {
+					for (const group of reversedGroups) {
+						Timelines.sumWorkloadByGroup(group);
+						timelineItems.push({
+							timeline: group
+						});
+					}
+				}
+				// 進捗
+				if (timeline.progress !== src.progress) {
+					for (const group of reversedGroups) {
+						Timelines.sumWorkloadByGroup(group);
+						timelineItems.push({
+							timeline: group
+						});
+					}
+				}
+			}
+		}
+
+
+		const items = new Map<TimelineId, TimelineItem>(
+			timelineItems.map(a => [a.timeline.id, a])
+		);
+
 		const store = createTimelineStore(items);
 		setTimelineStore(store);
 	}
