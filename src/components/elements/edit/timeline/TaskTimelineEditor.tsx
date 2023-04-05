@@ -33,7 +33,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [endDate, setEndDate] = useState<Date | null>(null);
 	const [workload, setWorkload] = useState(TimeSpan.parse(props.currentTimeline.workload).totalDays);
 	const [memberId, setMemberId] = useState(props.currentTimeline.memberId);
-	const [progressPercent, setProgressPercent] = useState(props.currentTimeline.progress * 100.0);
+	const [progress, setProgress] = useState(props.currentTimeline.progress);
 	//const [selectingBeginDate, setSelectingBeginDate] = useState(false);
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
 	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
@@ -48,8 +48,8 @@ const Component: NextPage<Props> = (props: Props) => {
 			const workload = TimeSpan.parse(timelineItem.timeline.workload).totalDays;
 			setWorkload(workload);
 
-			const progress = timelineItem.timeline.progress * 100.0
-			setProgressPercent(progress);
+			const progress = timelineItem.timeline.progress;
+			setProgress(progress);
 
 			if (timelineItem.range) {
 				setBeginKind(timelineItem.range.kind);
@@ -267,7 +267,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				<ProgressCell
 					readOnly={props.selectingBeginDate !== null}
 					disabled={props.selectingBeginDate !== null}
-					value={progressPercent}
+					progress={progress}
 					callbackChangeValue={handleChangeProgress}
 				/>
 				<ControlsCell

@@ -125,7 +125,7 @@ export abstract class Timelines {
 	}
 
 	public static displayProgress(progress: number): string {
-		return Math.floor(progress).toFixed(0);
+		return Math.floor(progress * 100.0).toFixed(0);
 	}
 
 	public static sumProgress(timelines: ReadonlyArray<Timeline>): Progress {

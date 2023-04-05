@@ -36,7 +36,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [beginKind, setBeginKind] = useState<DateTimeRangeKind>("loading");
 	const [beginDate, setBeginDate] = useState<Date | null>(null);
 	const [endDate, setEndDate] = useState<Date | null>(null);
-	const [progressPercent, setProgressPercent] = useState(Timelines.sumProgressByGroup(props.currentTimeline) * 100.0);
+	const [progress, setProgress] = useState(Timelines.sumProgressByGroup(props.currentTimeline));
 	const [children, setChildren] = useState(props.currentTimeline.children);
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
 
@@ -51,7 +51,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			setWorkload(workload);
 
 			const progress =  Timelines.sumProgressByGroup(timelineItem.timeline);
-			setProgressPercent(progress * 100.0);
+			setProgress(progress);
 
 			if (timelineItem.range) {
 				setBeginKind(timelineItem.range.kind);
@@ -278,7 +278,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					<ProgressCell
 						readOnly={true}
 						disabled={props.selectingBeginDate !== null}
-						value={progressPercent}
+						progress={progress}
 					/>
 					<ControlsCell
 						currentTimelineKind="group"
