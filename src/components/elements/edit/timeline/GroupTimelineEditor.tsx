@@ -298,6 +298,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											parentGroup={props.currentTimeline}
 											currentTimeline={a}
 											timeRanges={props.timeRanges}
+											timelineStore={props.timelineStore}
 											draggingTimeline={props.draggingTimeline}
 											dropTimeline={props.dropTimeline}
 											selectingBeginDate={props.selectingBeginDate}
@@ -317,6 +318,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											parentGroup={props.currentTimeline}
 											currentTimeline={a}
 											timeRanges={props.timeRanges}
+											timelineStore={props.timelineStore}
 											draggingTimeline={props.draggingTimeline}
 											selectingBeginDate={props.selectingBeginDate}
 											callbackAddNextSiblingItem={handleAddNextSiblingItem}

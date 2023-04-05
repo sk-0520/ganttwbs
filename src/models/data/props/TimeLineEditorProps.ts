@@ -4,6 +4,7 @@ import { GroupTimeline, TimelineId } from "../Setting";
 import { RefreshedChildrenCallbacks } from "../RefreshedChildrenCallbacks";
 import { NotifyParentCallbacks } from "../NotifyParentCallbacks";
 import { DateTimeRange } from "../DateTimeRange";
+import { TimelineStore } from "@/models/store/TimelineStore";
 
 export interface TimeLineEditorProps<TargetTimeline> {
 	treeIndexes: Array<number>;
@@ -11,6 +12,7 @@ export interface TimeLineEditorProps<TargetTimeline> {
 	currentIndex: number;
 	currentTimeline: TargetTimeline;
 	timeRanges: ReadonlyMap<TimelineId, DateTimeRange>;
+	timelineStore: TimelineStore;
 	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
 	notifyParentCallbacks: NotifyParentCallbacks;

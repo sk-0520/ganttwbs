@@ -7,8 +7,11 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { Timelines } from "@/models/Timelines";
 import { Dates } from "@/models/Dates";
 import { TimeSpan } from "@/models/TimeSpan";
+import { TimelineStore } from "@/models/store/TimelineStore";
 
-interface Props extends EditProps { }
+interface Props extends EditProps {
+	timelineStore: TimelineStore;
+}
 
 const Component: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();

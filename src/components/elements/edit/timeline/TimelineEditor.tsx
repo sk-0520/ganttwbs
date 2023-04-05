@@ -13,6 +13,8 @@ import { Designs } from "@/models/Designs";
 import { Settings } from "@/models/Settings";
 import { TinyColor, mostReadable } from "@ctrl/tinycolor";
 import { DateTimeRange } from "@/models/data/DateTimeRange";
+import { TimelineStore } from "@/models/store/TimelineStore";
+import { TimelineItem } from "@/models/data/TimelineItem";
 
 interface Props extends EditProps { }
 
@@ -20,6 +22,16 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const [timelineNodes, setTimelineNodes] = useState(props.editData.setting.timelineNodes);
 	const [timeRanges, setTimeRanges] = useState<Map<TimelineId, DateTimeRange>>(new Map());
+	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map()));
+
+	function createTimelineStore(items: Map<TimelineId, TimelineItem>): TimelineStore {
+		const result: TimelineStore = {
+			items: items,
+		};
+
+		return result;
+	}
+
 
 	function updateRelations() {
 		console.debug("全体へ通知");
@@ -27,6 +39,21 @@ const Component: NextPage<Props> = (props: Props) => {
 		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.timelineNodes);
 		const map = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive);
 		setTimeRanges(map);
+
+		const items = new Map(
+			[...timelineMap.entries()]
+				.filter(([k, _]) => timelineMap.has(k))
+				.map(([k, v]) => {
+					const item: TimelineItem = {
+						timeline: v as GroupTimeline | TaskTimeline,
+						range: map.get(k)!,
+					}
+
+					return [k, item];
+				})
+		);
+		const store = createTimelineStore(items);
+		setTimelineStore(store);
 	}
 
 	useEffect(() => {
@@ -50,6 +77,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			<DaysHeader
 				configuration={props.configuration}
 				editData={props.editData}
+				timelineStore={timelineStore}
 			/>
 			<TimelineItems
 				configuration={props.configuration}
@@ -58,12 +86,14 @@ const Component: NextPage<Props> = (props: Props) => {
 				setTimelineRootNodes={handleSetTimelineNodes}
 				timeRanges={timeRanges}
 				updateRelations={updateRelations}
+				timelineStore={timelineStore}
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
 				editData={props.editData}
 				timeRanges={timeRanges}
 				updateRelations={updateRelations}
+				timelineStore={timelineStore}
 			/>
 		</div>
 	);

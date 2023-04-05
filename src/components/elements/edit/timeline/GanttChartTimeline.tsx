@@ -73,6 +73,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								borderColor="#000000"
 								borderThickness={1}
 								area={area}
+								timelineStore={props.timelineStore}
 								progress={props.currentTimeline.progress}
 							/>
 						) : Settings.maybeGroupTimeline(props.currentTimeline) ? (
@@ -83,6 +84,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								borderColor="#000000"
 								borderThickness={4}
 								area={area}
+								timelineStore={props.timelineStore}
 							// progress={props.currentTimeline.progress}
 							/>
 						) : null

@@ -9,10 +9,12 @@ import { ChartSize } from "@/models/data/ChartSize";
 import { Dates } from "@/models/Dates";
 import { TimeSpan } from "@/models/TimeSpan";
 import { DateTimeRange } from "@/models/data/DateTimeRange";
+import { TimelineStore } from "@/models/store/TimelineStore";
 
 interface Props extends EditProps {
 	timeRanges: Map<TimelineId, DateTimeRange>;
 	updateRelations: () => void;
+	timelineStore: TimelineStore;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
@@ -160,6 +162,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							memberMap={memberMap}
 							timeRanges={props.timeRanges}
 							updateRelations={props.updateRelations}
+							timelineStore={props.timelineStore}
 						/>
 					)
 				})}
