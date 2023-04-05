@@ -1,8 +1,7 @@
-import { GroupTimeline, MemberId, Timeline, TimelineId } from "../Setting";
+import { GroupTimeline, MemberId, Timeline } from "../Setting";
 import { EditProps } from "./EditProps";
 import { MemberMapValue } from "../MemberMapValue";
 import { ChartSize } from "../ChartSize";
-import { DateTimeRange } from "../DateTimeRange";
 import { TimelineStore } from "@/models/store/TimelineStore";
 
 export interface GanttChartTimelineProps extends EditProps {

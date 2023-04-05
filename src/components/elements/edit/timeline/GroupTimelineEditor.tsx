@@ -43,10 +43,12 @@ const Component: NextPage<Props> = (props: Props) => {
 	useEffect(() => {
 		const timelineItem = props.timelineStore.items.get(props.currentTimeline.id);
 		if (timelineItem) {
-			setBeginKind(timelineItem.range.kind);
-			if (DateTimeRanges.maybeSuccessTimeRange(timelineItem.range)) {
-				setBeginDate(timelineItem.range.begin);
-				setEndDate(timelineItem.range.end);
+			if (timelineItem.range) {
+				setBeginKind(timelineItem.range.kind);
+				if (DateTimeRanges.maybeSuccessTimeRange(timelineItem.range)) {
+					setBeginDate(timelineItem.range.begin);
+					setEndDate(timelineItem.range.end);
+				}
 			}
 		}
 	}, [props.currentTimeline, props.timelineStore]);

@@ -21,10 +21,12 @@ const Component: NextPage<Props> = (props: Props) => {
 	useEffect(() => {
 		const timelineItem = props.timelineStore.items.get(props.currentTimeline.id);
 		if (timelineItem) {
-			if (DateTimeRanges.maybeSuccessTimeRange(timelineItem.range)) {
-				setTimeRange(timelineItem.range);
-			} else {
-				setTimeRange(null);
+			if (timelineItem.range) {
+				if (DateTimeRanges.maybeSuccessTimeRange(timelineItem.range)) {
+					setTimeRange(timelineItem.range);
+				} else {
+					setTimeRange(null);
+				}
 			}
 		}
 	}, [props.timelineStore, props.currentTimeline]);

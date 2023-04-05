@@ -3,5 +3,5 @@ import { AnyTimeline } from "./Setting";
 
 export interface TimelineItem {
 	timeline: AnyTimeline;
-	range: DateTimeRange;
+	range?: DateTimeRange;
 }

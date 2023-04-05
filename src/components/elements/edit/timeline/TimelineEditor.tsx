@@ -33,7 +33,20 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	function updateTimeline(timeline: AnyTimeline): void {
 		//
-		const current = Timelines.searchTimeline(timeline.id, timelineNodes);
+		const source = Timelines.searchTimeline(timeline.id, timelineNodes);
+		if (source.kind !== timeline.kind) {
+			throw new Error();
+		}
+
+		Object.assign(timeline, source);
+
+		const timelineItem: TimelineItem = {
+			timeline: source,
+		};
+
+		const items = new Map([[source.id, timelineItem]]);
+		const store = createTimelineStore(items);
+		setTimelineStore(store);
 	}
 
 	function updateRelations() {
@@ -47,8 +60,8 @@ const Component: NextPage<Props> = (props: Props) => {
 				.filter(([k, _]) => timelineMap.has(k))
 				.map(([k, v]) => {
 					const item: TimelineItem = {
-						timeline: v as GroupTimeline | TaskTimeline, // 妥協の産物
-						range: dateTimeRanges.get(k)!,
+						timeline: v,
+						range: dateTimeRanges.get(k),
 					}
 
 					return [k, item];

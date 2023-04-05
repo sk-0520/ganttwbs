@@ -1,5 +1,5 @@
 import { EditProps } from "@/models/data/props/EditProps";
-import { MemberId, Timeline, TimelineId } from "@/models/data/Setting";
+import { MemberId, Timeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { NextPage } from "next";
 import GanttChartTimeline from "./GanttChartTimeline";
