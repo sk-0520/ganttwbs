@@ -18,6 +18,7 @@ import { Timelines } from "@/models/Timelines";
 import { Dates } from "@/models/Dates";
 import { DateTimeRanges } from "@/models/DateTimeRanges";
 import { DateTimeRangeKind } from "@/models/data/DateTimeRange";
+import { Settings } from "@/models/Settings";
 
 interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
@@ -40,6 +41,13 @@ const Component: NextPage<Props> = (props: Props) => {
 	useEffect(() => {
 		const timelineItem = props.timelineStore.items.get(props.currentTimeline.id);
 		if (timelineItem) {
+			if (!Settings.maybeTaskTimeline(timelineItem.timeline)) {
+				throw new Error(timelineItem.timeline.id + " - " + timelineItem.timeline.kind);
+			}
+
+			const workload = TimeSpan.parse(timelineItem.timeline.workload).totalDays;
+			setWorkload(workload);
+
 			if (timelineItem.range) {
 				setBeginKind(timelineItem.range.kind);
 				if (DateTimeRanges.maybeSuccessTimeRange(timelineItem.range)) {
@@ -65,10 +73,14 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleChangeWorkload(n: number) {
-		setWorkload(n);
-		props.currentTimeline.workload = Timelines.serializeWorkload(TimeSpan.fromDays(n));
+		//setWorkload(n);
+		//props.currentTimeline.workload = Timelines.serializeWorkload(TimeSpan.fromDays(n));
+		const workload = Timelines.serializeWorkload(TimeSpan.fromDays(n));
 
-		props.timelineStore.updateTimeline(props.currentTimeline);
+		props.timelineStore.updateTimeline({
+			...props.currentTimeline,
+			workload: workload,
+		});
 	}
 
 	function handleChangeProgress(n: number) {

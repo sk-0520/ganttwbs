@@ -43,6 +43,12 @@ const Component: NextPage<Props> = (props: Props) => {
 	useEffect(() => {
 		const timelineItem = props.timelineStore.items.get(props.currentTimeline.id);
 		if (timelineItem) {
+			if (!Settings.maybeGroupTimeline(timelineItem.timeline)) {
+				throw new Error(timelineItem.timeline.id + " - " + timelineItem.timeline.kind);
+			}
+
+			setWorkload(Timelines.sumWorkloadByGroup(timelineItem.timeline).totalDays);
+
 			if (timelineItem.range) {
 				setBeginKind(timelineItem.range.kind);
 				if (DateTimeRanges.maybeSuccessTimeRange(timelineItem.range)) {
@@ -173,10 +179,10 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleUpdateChildrenWorkload() {
-		const summary = Timelines.sumWorkloadByGroup(props.currentTimeline);
-		setWorkload(summary.totalDays);
+		// const summary = Timelines.sumWorkloadByGroup(props.currentTimeline);
+		// setWorkload(summary.totalDays);
 
-		props.timelineStore.updateTimeline(props.currentTimeline);
+		// props.timelineStore.updateTimeline(props.currentTimeline);
 	}
 
 	function handleUpdateChildrenProgress() {

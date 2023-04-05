@@ -39,7 +39,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 
 		const prevSource = { ...source };
-		Object.assign(timeline, source);
+		Object.assign(source, timeline);
 		const timelineItems = new Array<TimelineItem>();
 		timelineItems.push({
 			timeline: source
@@ -55,7 +55,6 @@ const Component: NextPage<Props> = (props: Props) => {
 				// 工数
 				if (timeline.workload !== src.workload) {
 					for (const group of reversedGroups) {
-						Timelines.sumWorkloadByGroup(group);
 						timelineItems.push({
 							timeline: group
 						});
