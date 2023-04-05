@@ -18,6 +18,7 @@ export type DateTimeRangeKind =
 	"unknown-error"
 	;
 
+
 export interface DateTimeRange {
 	kind: DateTimeRangeKind;
 	timeline: Timeline;
@@ -28,3 +29,8 @@ export interface SuccessDateTimeRange extends DateTimeRange {
 	begin: Date;
 	end: Date;
 }
+
+export interface SuccessRange {
+	minimum: SuccessDateTimeRange;
+	maximum: SuccessDateTimeRange;
+ }

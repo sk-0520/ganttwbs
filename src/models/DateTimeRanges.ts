@@ -1,4 +1,4 @@
-import { DateTimeRange, DateTimeRangeKind, SuccessDateTimeRange } from "./data/DateTimeRange";
+import { DateTimeRange, DateTimeRangeKind, SuccessDateTimeRange, SuccessRange } from "./data/DateTimeRange";
 
 export class DateTimeRanges {
 
@@ -23,14 +23,16 @@ export class DateTimeRanges {
 		return errorKinds.includes(timeRange.kind);
 	}
 
-	public static getMinMaxRange(items: ReadonlyArray<SuccessDateTimeRange>): { min: SuccessDateTimeRange, max: SuccessDateTimeRange } {
+	public static getMinMaxRange(items: ReadonlyArray<SuccessDateTimeRange>): SuccessRange {
 		const minItems = [...items].sort((a, b) => a.begin.getTime() - b.begin.getTime());
 		const maxItems = [...items].sort((a, b) => a.end.getTime() - b.end.getTime());
 
-		return {
-			min: minItems[0],
-			max: maxItems[maxItems.length - 1],
+		const result: SuccessRange = {
+			minimum: minItems[0],
+			maximum: maxItems[maxItems.length - 1],
 		};
+
+		return result;
 	}
 
 	public static maxByEndDate(items: ReadonlyArray<SuccessDateTimeRange>): SuccessDateTimeRange {

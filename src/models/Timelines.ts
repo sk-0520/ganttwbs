@@ -407,8 +407,8 @@ export abstract class Timelines {
 						const timeRange: SuccessDateTimeRange = {
 							timeline: timeline,
 							kind: "success",
-							begin: minMax.min.begin,
-							end: minMax.max.end,
+							begin: minMax.minimum.begin,
+							end: minMax.maximum.end,
 						}
 						result.set(timeline.id, timeRange);
 					}
