@@ -68,14 +68,14 @@ const Component: NextPage<Props> = (props: Props) => {
 		setWorkload(n);
 		props.currentTimeline.workload = Timelines.serializeWorkload(TimeSpan.fromDays(n));
 
-		props.refreshedChildrenCallbacks.updatedWorkload();
+		props.timelineStore.updateTimeline(props.currentTimeline);
 	}
 
 	function handleChangeProgress(n: number) {
 		setProgressPercent(n);
 		props.currentTimeline.progress = n / 100.0;
 
-		props.refreshedChildrenCallbacks.updatedProgress();
+		props.timelineStore.updateTimeline(props.currentTimeline);
 	}
 
 	function handleControlMoveItem(moveUp: boolean) {
@@ -85,8 +85,9 @@ const Component: NextPage<Props> = (props: Props) => {
 	function handleControlAddItem(kind: TimelineKind) {
 		props.callbackAddNextSiblingItem(kind, props.currentTimeline);
 
-		props.refreshedChildrenCallbacks.updatedWorkload();
-		props.refreshedChildrenCallbacks.updatedProgress();
+		//props.refreshedChildrenCallbacks.updatedWorkload();
+		//props.refreshedChildrenCallbacks.updatedProgress();
+		props.timelineStore.updateTimeline(props.currentTimeline);
 	}
 
 	function handleControlDeleteItem() {

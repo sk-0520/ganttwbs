@@ -91,8 +91,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			handleUpdateChildrenWorkload();
 			handleUpdateChildrenProgress();
 
-			props.refreshedChildrenCallbacks.updatedWorkload();
-			props.refreshedChildrenCallbacks.updatedProgress();
+			props.timelineStore.updateTimeline(props.currentTimeline);
 		}
 	}, [props.draggingTimeline]);
 
@@ -129,8 +128,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		handleUpdateChildrenWorkload();
 		handleUpdateChildrenProgress();
 
-		props.refreshedChildrenCallbacks.updatedWorkload();
-		props.refreshedChildrenCallbacks.updatedProgress();
+		props.timelineStore.updateTimeline(props.currentTimeline);
 	}
 
 	function handleControlDeleteItem() {
@@ -163,8 +161,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.currentTimeline.children.splice(currentIndex + 1, 0, item);
 		setChildren([...props.currentTimeline.children]);
 
-		props.refreshedChildrenCallbacks.updatedWorkload();
-		props.refreshedChildrenCallbacks.updatedProgress();
+		props.timelineStore.updateTimeline(props.currentTimeline);
 	}
 
 	function handleUpdateChildrenBeginDate() {
@@ -179,14 +176,14 @@ const Component: NextPage<Props> = (props: Props) => {
 		const summary = Timelines.sumWorkloadByGroup(props.currentTimeline);
 		setWorkload(summary.totalDays);
 
-		props.refreshedChildrenCallbacks.updatedWorkload();
+		props.timelineStore.updateTimeline(props.currentTimeline);
 	}
 
 	function handleUpdateChildrenProgress() {
 		const progress = Timelines.sumProgressByGroup(props.currentTimeline);
 		setProgressPercent(progress * 100.0);
 
-		props.refreshedChildrenCallbacks.updatedProgress();
+		props.timelineStore.updateTimeline(props.currentTimeline);
 	}
 
 	function handleDeleteChildren(currentTimeline: Timeline) {
@@ -196,8 +193,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		handleUpdateChildrenWorkload();
 		handleUpdateChildrenProgress();
 
-		props.refreshedChildrenCallbacks.updatedWorkload();
-		props.refreshedChildrenCallbacks.updatedProgress();
+		props.timelineStore.updateTimeline(props.currentTimeline);
 	}
 
 	function handleChangePrevious(isSelected: boolean): void {
@@ -222,8 +218,6 @@ const Component: NextPage<Props> = (props: Props) => {
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
 		updatedBeginDate: handleUpdateChildrenBeginDate,
 		updateResource: handleUpdateChildrenResource,
-		updatedWorkload: handleUpdateChildrenWorkload,
-		updatedProgress: handleUpdateChildrenProgress,
 	}
 
 	return (

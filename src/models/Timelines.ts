@@ -173,14 +173,26 @@ export abstract class Timelines {
 		return result;
 	}
 
-	public static searchTimeline(timelineId: TimelineId, timelineNodes: ReadonlyArray<AnyTimeline>): AnyTimeline {
+	private static searchTimelineCore(timelineId: TimelineId, timelineNodes: ReadonlyArray<AnyTimeline>): AnyTimeline | null {
 		for (const node of timelineNodes) {
 			if (node.id === timelineId) {
 				return node;
 			}
 			if (Settings.maybeGroupTimeline(node)) {
-				return this.searchTimeline(timelineId, node.children);
+				const result = this.searchTimelineCore(timelineId, node.children);
+				if (result) {
+					return result;
+				}
 			}
+		}
+
+		return null;
+	}
+
+	public static searchTimeline(timelineId: TimelineId, timelineNodes: ReadonlyArray<AnyTimeline>): AnyTimeline {
+		const result = this.searchTimelineCore(timelineId, timelineNodes);
+		if (result) {
+			return result;
 		}
 
 		throw new Error(timelineId);
