@@ -57,7 +57,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			chartSize: props.chartSize
 		};
 
-		console.debug(props.currentTimeline.id, startDiffDays);
+		//console.debug(props.currentTimeline.id, startDiffDays);
 
 		return (
 			<>
