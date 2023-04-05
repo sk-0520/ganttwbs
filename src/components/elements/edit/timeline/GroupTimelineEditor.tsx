@@ -47,7 +47,11 @@ const Component: NextPage<Props> = (props: Props) => {
 				throw new Error(timelineItem.timeline.id + " - " + timelineItem.timeline.kind);
 			}
 
-			setWorkload(Timelines.sumWorkloadByGroup(timelineItem.timeline).totalDays);
+			const workload = Timelines.sumWorkloadByGroup(timelineItem.timeline).totalDays;
+			setWorkload(workload);
+
+			const progress =  Timelines.sumProgressByGroup(timelineItem.timeline);
+			setProgressPercent(progress * 100.0);
 
 			if (timelineItem.range) {
 				setBeginKind(timelineItem.range.kind);
@@ -186,10 +190,10 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleUpdateChildrenProgress() {
-		const progress = Timelines.sumProgressByGroup(props.currentTimeline);
-		setProgressPercent(progress * 100.0);
+		// const progress = Timelines.sumProgressByGroup(props.currentTimeline);
+		// setProgressPercent(progress * 100.0);
 
-		props.timelineStore.updateTimeline(props.currentTimeline);
+		// props.timelineStore.updateTimeline(props.currentTimeline);
 	}
 
 	function handleDeleteChildren(currentTimeline: Timeline) {

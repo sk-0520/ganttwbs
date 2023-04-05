@@ -78,6 +78,7 @@ export interface Calendar {
 
 
 export type TimelineId = string;
+/** 0-1 */
 export type Progress = number;
 
 

@@ -48,6 +48,9 @@ const Component: NextPage<Props> = (props: Props) => {
 			const workload = TimeSpan.parse(timelineItem.timeline.workload).totalDays;
 			setWorkload(workload);
 
+			const progress = timelineItem.timeline.progress * 100.0
+			setProgressPercent(progress);
+
 			if (timelineItem.range) {
 				setBeginKind(timelineItem.range.kind);
 				if (DateTimeRanges.maybeSuccessTimeRange(timelineItem.range)) {
@@ -84,10 +87,14 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleChangeProgress(n: number) {
-		setProgressPercent(n);
-		props.currentTimeline.progress = n / 100.0;
+		//setProgressPercent(n);
+		//props.currentTimeline.progress = n / 100.0;
+		const progress = n / 100.0;
 
-		props.timelineStore.updateTimeline(props.currentTimeline);
+		props.timelineStore.updateTimeline({
+			...props.currentTimeline,
+			progress: progress,
+		});
 	}
 
 	function handleControlMoveItem(moveUp: boolean) {

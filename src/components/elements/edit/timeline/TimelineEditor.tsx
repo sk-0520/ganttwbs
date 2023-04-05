@@ -63,7 +63,6 @@ const Component: NextPage<Props> = (props: Props) => {
 				// 進捗
 				if (timeline.progress !== src.progress) {
 					for (const group of reversedGroups) {
-						Timelines.sumWorkloadByGroup(group);
 						timelineItems.push({
 							timeline: group
 						});
