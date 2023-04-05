@@ -54,11 +54,9 @@ const Component: NextPage<Props> = (props: Props) => {
 				const reversedGroups = groups.reverse();
 				// 工数
 				if (timeline.workload !== src.workload) {
-					for (const group of reversedGroups) {
-						timelineItems.push({
-							timeline: group
-						});
-					}
+					// 何も考えず全更新(工数が変わってる場合、差分検出するより全更新したほうが手っ取り早い→速度は知らん)
+					updateRelations();
+					return;
 				}
 				// 進捗
 				if (timeline.progress !== src.progress) {
