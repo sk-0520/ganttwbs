@@ -12,7 +12,6 @@ import { Design } from "@/models/data/Design";
 import { Designs } from "@/models/Designs";
 import { Settings } from "@/models/Settings";
 import { TinyColor, mostReadable } from "@ctrl/tinycolor";
-import { DateTimeRange } from "@/models/data/DateTimeRange";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { TimelineItem } from "@/models/data/TimelineItem";
 
@@ -26,11 +25,20 @@ const Component: NextPage<Props> = (props: Props) => {
 	function createTimelineStore(items: Map<TimelineId, TimelineItem>): TimelineStore {
 		const result: TimelineStore = {
 			items: items,
+			updateGroup: updateGroupTimeline,
+			updateTask: updateTaskTimeline,
 		};
 
 		return result;
 	}
 
+	function updateGroupTimeline(timeline: GroupTimeline): void {
+		//
+	}
+
+	function updateTaskTimeline(timeline: TaskTimeline): void {
+		//
+	}
 
 	function updateRelations() {
 		console.debug("全体へ通知");
