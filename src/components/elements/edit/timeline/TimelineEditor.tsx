@@ -6,26 +6,26 @@ import TimelineItems from "./TimelineItems";
 import TimelineViewer from "./TimelineViewer";
 import { ReactNode, useEffect, useState } from "react";
 import { GroupTimeline, TaskTimeline, Theme, TimelineId } from "@/models/data/Setting";
-import { TimeRange } from "@/models/TimeRange";
 import { Timelines } from "@/models/Timelines";
 import { EditProps } from "@/models/data/props/EditProps";
 import { Design } from "@/models/data/Design";
 import { Designs } from "@/models/Designs";
 import { Settings } from "@/models/Settings";
 import { TinyColor, mostReadable } from "@ctrl/tinycolor";
+import { DateTimeRange } from "@/models/data/DateTimeRange";
 
 interface Props extends EditProps { }
 
 const Component: NextPage<Props> = (props: Props) => {
 
 	const [timelineNodes, setTimelineNodes] = useState(props.editData.setting.timelineNodes);
-	const [timeRanges, setTimeRanges] = useState<Map<TimelineId, TimeRange>>(new Map());
+	const [timeRanges, setTimeRanges] = useState<Map<TimelineId, DateTimeRange>>(new Map());
 
 	function updateRelations() {
 		console.debug("全体へ通知");
 
 		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.timelineNodes);
-		const map = Timelines.getTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive);
+		const map = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive);
 		setTimeRanges(map);
 	}
 

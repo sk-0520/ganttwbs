@@ -6,7 +6,6 @@ import { Timelines } from "@/models/Timelines";
 import GroupTimelineEditor from "./GroupTimelineEditor";
 import TaskTimelineEditor from "./TaskTimelineEditor";
 import { GroupTimeline, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
-import { TimeRangeKind, TimeRanges } from "@/models/TimeRange";
 import { Settings } from "@/models/Settings";
 import { DropTimeline } from "@/models/data/DropTimeline";
 import { EditProps } from "@/models/data/props/EditProps";
@@ -21,6 +20,8 @@ import IdCell from "./cell/IdCell";
 import TimelineHeaderRow from "./cell/TimelineHeaderRow";
 import RelationCell from "./cell/RelationCell";
 import ControlsCell from "./cell/ControlsCell";
+import { DateTimeRanges } from "@/models/DateTimeRanges";
+import { DateTimeRangeKind } from "@/models/data/DateTimeRange";
 
 interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 	dropTimeline: DropTimeline | null;
@@ -32,7 +33,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(Timelines.sumWorkloadByGroup(props.currentTimeline).totalDays);
-	const [beginKind, setBeginKind] = useState<TimeRangeKind>("loading");
+	const [beginKind, setBeginKind] = useState<DateTimeRangeKind>("loading");
 	const [beginDate, setBeginDate] = useState<Date | null>(null);
 	const [endDate, setEndDate] = useState<Date | null>(null);
 	const [progressPercent, setProgressPercent] = useState(Timelines.sumProgressByGroup(props.currentTimeline) * 100.0);
@@ -43,7 +44,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		const timeRange = props.timeRanges.get(props.currentTimeline.id);
 		if (timeRange) {
 			setBeginKind(timeRange.kind);
-			if (TimeRanges.maybeSuccessTimeRange(timeRange)) {
+			if (DateTimeRanges.maybeSuccessTimeRange(timeRange)) {
 				setBeginDate(timeRange.begin);
 				setEndDate(timeRange.end);
 			}

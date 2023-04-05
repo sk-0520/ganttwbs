@@ -1,7 +1,6 @@
 import { EditProps } from "@/models/data/props/EditProps";
 import { MemberId, Timeline, TimelineId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
-import { TimeRange } from "@/models/TimeRange";
 import { NextPage } from "next";
 import GanttChartTimeline from "./GanttChartTimeline";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
@@ -9,9 +8,10 @@ import { ReactNode } from "react";
 import { ChartSize } from "@/models/data/ChartSize";
 import { Dates } from "@/models/Dates";
 import { TimeSpan } from "@/models/TimeSpan";
+import { DateTimeRange } from "@/models/data/DateTimeRange";
 
 interface Props extends EditProps {
-	timeRanges: Map<TimelineId, TimeRange>;
+	timeRanges: Map<TimelineId, DateTimeRange>;
 	updateRelations: () => void;
 }
 

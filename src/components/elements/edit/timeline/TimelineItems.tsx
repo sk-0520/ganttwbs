@@ -6,7 +6,6 @@ import { Timelines } from "@/models/Timelines";
 import GroupTimelineEditor from "./GroupTimelineEditor";
 import TaskTimelineEditor from "./TaskTimelineEditor";
 import { GroupTimeline, TaskTimeline, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
-import { TimeRange } from "@/models/TimeRange";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Settings } from "@/models/Settings";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -15,9 +14,10 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { RefreshedChildrenCallbacks } from "@/models/data/RefreshedChildrenCallbacks";
 import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
 import { TimelineRootProps } from "@/models/data/props/TimelineRootProps";
+import { DateTimeRange } from "@/models/data/DateTimeRange";
 
 interface Props extends EditProps, TimelineRootProps {
-	timeRanges: Map<TimelineId, TimeRange>;
+	timeRanges: Map<TimelineId, DateTimeRange>;
 	updateRelations: () => void;
 }
 

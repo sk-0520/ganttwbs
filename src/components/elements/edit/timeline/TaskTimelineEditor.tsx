@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import MemberList from "./MemberList";
 import { MemberId, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
 import { TimeSpan } from "@/models/TimeSpan";
-import { TimeRangeKind, TimeRanges } from "@/models/TimeRange";
 import { EditProps } from "@/models/data/props/EditProps";
 import { TimeLineEditorProps } from "@/models/data/props/TimeLineEditorProps";
 import ProgressCell from "./cell/ProgressCell";
@@ -17,6 +16,8 @@ import RelationCell from "./cell/RelationCell";
 import ControlsCell from "./cell/ControlsCell";
 import { Timelines } from "@/models/Timelines";
 import { Dates } from "@/models/Dates";
+import { DateTimeRanges } from "@/models/DateTimeRanges";
+import { DateTimeRangeKind } from "@/models/data/DateTimeRange";
 
 interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
@@ -26,7 +27,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
-	const [beginKind, setBeginKind] = useState<TimeRangeKind>("loading");
+	const [beginKind, setBeginKind] = useState<DateTimeRangeKind>("loading");
 	const [beginDate, setBeginDate] = useState<Date | null>(null);
 	const [endDate, setEndDate] = useState<Date | null>(null);
 	const [workload, setWorkload] = useState(TimeSpan.parse(props.currentTimeline.workload).totalDays);
@@ -40,7 +41,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		const timeRange = props.timeRanges.get(props.currentTimeline.id);
 		if (timeRange) {
 			setBeginKind(timeRange.kind);
-			if (TimeRanges.maybeSuccessTimeRange(timeRange)) {
+			if (DateTimeRanges.maybeSuccessTimeRange(timeRange)) {
 				setBeginDate(timeRange.begin);
 				setEndDate(timeRange.end);
 			}
