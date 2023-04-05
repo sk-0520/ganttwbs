@@ -60,8 +60,9 @@ const Component: NextPage<Props> = (props: Props) => {
 		const width = cell.width.value * days;
 		const height = cell.height.value * timelines.length;
 
+		// 横系
 		const gridHorizontals = new Array<ReactNode>();
-		for (let i = 0; i < props.timelineStore.items.size; i++) {
+		for (let i = 0; i < timelines.length; i++) {
 			const y = cell.height.value + cell.height.value * i;
 			gridHorizontals.push(
 				<line
@@ -76,6 +77,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			)
 		}
 
+		// 縦系
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
 		for (let i = 0; i < days; i++) {
