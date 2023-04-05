@@ -66,13 +66,13 @@ export interface Holiday {
 }
 
 
-export interface DateRange {
-	from: DateOnly
-	to: DateOnly
+export interface WorkDateRange {
+	from: DateOnly;
+	to: DateOnly;
 }
 
 export interface Calendar {
-	range: DateRange;
+	range: WorkDateRange;
 	holiday: Holiday;
 }
 
