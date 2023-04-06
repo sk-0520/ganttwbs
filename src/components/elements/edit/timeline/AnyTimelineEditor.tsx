@@ -89,10 +89,10 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	useEffect(() => {
 		if (props.selectingBeginDate) {
-			if(Settings.maybeGroupTimeline(props.currentTimeline)) {
+			if (Settings.maybeGroupTimeline(props.currentTimeline)) {
 				const selected = props.selectingBeginDate.previous.has(props.currentTimeline.id);
 				setIsSelectedPrevious(selected);
-			} else if(Settings.maybeTaskTimeline(props.currentTimeline)) {
+			} else if (Settings.maybeTaskTimeline(props.currentTimeline)) {
 				const selected = props.selectingBeginDate.previous.has(props.currentTimeline.id);
 				setIsSelectedPrevious(selected);
 
@@ -141,6 +141,36 @@ const Component: NextPage<Props> = (props: Props) => {
 	function handleChangeSubject(s: string) {
 		setSubject(s);
 		props.currentTimeline.subject = s;
+	}
+
+	function handleChangeWorkload(n: number) {
+		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
+			throw new Error();
+		}
+
+		//setWorkload(n);
+		//props.currentTimeline.workload = Timelines.serializeWorkload(TimeSpan.fromDays(n));
+		const workload = Timelines.serializeWorkload(TimeSpan.fromDays(n));
+
+		props.timelineStore.updateTimeline({
+			...props.currentTimeline,
+			workload: workload,
+		});
+	}
+
+	function handleChangeProgress(n: number) {
+		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
+			throw new Error();
+		}
+
+		//setProgressPercent(n);
+		//props.currentTimeline.progress = n / 100.0;
+		const progress = n / 100.0;
+
+		props.timelineStore.updateTimeline({
+			...props.currentTimeline,
+			progress: progress,
+		});
 	}
 
 	function handleControlMoveItem(moveUp: boolean) {
@@ -309,7 +339,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleAttachPrevTimeline() {
-		if(!Settings.maybeTaskTimeline(props.currentTimeline)) {
+		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
 			throw new Error();
 		}
 
@@ -323,7 +353,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleClearPrevious() {
-		if(!Settings.maybeTaskTimeline(props.currentTimeline)) {
+		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
 			throw new Error();
 		}
 
@@ -331,7 +361,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleClearStatic() {
-		if(!Settings.maybeTaskTimeline(props.currentTimeline)) {
+		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
 			throw new Error();
 		}
 
@@ -339,7 +369,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleSubmitPrevious() {
-		if(!Settings.maybeTaskTimeline(props.currentTimeline)) {
+		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
 			throw new Error();
 		}
 
@@ -355,7 +385,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleCancelPrevious() {
-		if(!Settings.maybeTaskTimeline(props.currentTimeline)) {
+		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
 			throw new Error();
 		}
 
@@ -405,11 +435,12 @@ const Component: NextPage<Props> = (props: Props) => {
 						readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
 						disabled={props.selectingBeginDate !== null}
 						value={workload}
+						callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeWorkload : undefined}
 					/>
 					<ResourceCell
 						currentTimeline={props.currentTimeline}
 						groups={props.editData.setting.groups}
-						selectedMemberId=""
+						selectedMemberId={memberId}
 						disabled={props.selectingBeginDate !== null}
 						callbackChangeMember={handleChangeMember}
 					/>
@@ -450,7 +481,7 @@ const Component: NextPage<Props> = (props: Props) => {
 									beginDate={beginDate}
 									endDate={endDate}
 									htmlFor={selectingId}
-									callbackClickBeginDate={Settings.maybeTaskTimeline(props.currentTimeline) ? handleClickBeginDate: undefined}
+									callbackClickBeginDate={Settings.maybeTaskTimeline(props.currentTimeline) ? handleClickBeginDate : undefined}
 								/>
 							)
 					}
@@ -458,6 +489,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
 						disabled={props.selectingBeginDate !== null}
 						progress={progress}
+						callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
 					/>
 					<ControlsCell
 						currentTimelineKind="group"
