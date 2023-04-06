@@ -22,6 +22,7 @@ import RelationCell from "./cell/RelationCell";
 import ControlsCell from "./cell/ControlsCell";
 import { DateTimeRanges } from "@/models/DateTimeRanges";
 import { DateTimeRangeKind } from "@/models/data/DateTimeRange";
+import ResourceCell from "./cell/ResourceCell";
 
 interface Props extends EditProps, TimeLineEditorProps<GroupTimeline> {
 	dropTimeline: DropTimeline | null;
@@ -50,7 +51,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			const workload = Timelines.sumWorkloadByGroup(timelineItem.timeline).totalDays;
 			setWorkload(workload);
 
-			const progress =  Timelines.sumProgressByGroup(timelineItem.timeline);
+			const progress = Timelines.sumProgressByGroup(timelineItem.timeline);
 			setProgress(progress);
 
 			if (timelineItem.range) {
@@ -178,10 +179,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.refreshedChildrenCallbacks.updatedBeginDate();
 	}
 
-	function handleUpdateChildrenResource() {
-		//props.refreshedChildrenCallbacks.updateResource();
-	}
-
 	function handleUpdateChildrenWorkload() {
 		// const summary = Timelines.sumWorkloadByGroup(props.currentTimeline);
 		// setWorkload(summary.totalDays);
@@ -261,8 +258,13 @@ const Component: NextPage<Props> = (props: Props) => {
 						disabled={props.selectingBeginDate !== null}
 						value={workload}
 					/>
-					<div className='timeline-cell timeline-resource'>
-					</div>
+					<ResourceCell
+						currentTimeline={props.currentTimeline}
+						groups={props.editData.setting.groups}
+						selectedMemberId=""
+						disabled={props.selectingBeginDate !== null}
+						callbackChangeMember={(_1, _2) => { /*NOP*/ }}
+					/>
 					<RelationCell
 						currentTimeline={props.currentTimeline}
 						selectable={props.selectingBeginDate !== null}

@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 
-import MemberList from "./MemberList";
 import { MemberId, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
 import { TimeSpan } from "@/models/TimeSpan";
 import { EditProps } from "@/models/data/props/EditProps";
@@ -19,6 +18,7 @@ import { Dates } from "@/models/Dates";
 import { DateTimeRanges } from "@/models/DateTimeRanges";
 import { DateTimeRangeKind } from "@/models/data/DateTimeRange";
 import { Settings } from "@/models/Settings";
+import ResourceCell from "./cell/ResourceCell";
 
 interface Props extends EditProps, TimeLineEditorProps<TaskTimeline> {
 	callbackAddNextSiblingItem: (kind: TimelineKind, currentTimeline: Timeline) => void;
@@ -222,14 +222,13 @@ const Component: NextPage<Props> = (props: Props) => {
 					value={workload}
 					callbackChangeValue={handleChangeWorkload}
 				/>
-				<div className='timeline-cell timeline-resource'>
-					<MemberList
-						groups={props.editData.setting.groups}
-						selectedMemberId={memberId}
-						disabled={props.selectingBeginDate !== null}
-						callbackChangeMember={handleChangeMember}
-					/>
-				</div>
+				<ResourceCell
+					currentTimeline={props.currentTimeline}
+					groups={props.editData.setting.groups}
+					selectedMemberId={memberId}
+					disabled={props.selectingBeginDate !== null}
+					callbackChangeMember={handleChangeMember}
+				/>
 				<RelationCell
 					currentTimeline={props.currentTimeline}
 					selectable={props.selectingBeginDate !== null}
