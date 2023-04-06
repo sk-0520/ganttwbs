@@ -1,7 +1,6 @@
 import { EditProps } from "@/models/data/props/EditProps";
-import { MemberId, Timeline, TimelineId } from "@/models/data/Setting";
+import { MemberId, Timeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
-import { TimeRange } from "@/models/TimeRange";
 import { NextPage } from "next";
 import GanttChartTimeline from "./GanttChartTimeline";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
@@ -9,10 +8,11 @@ import { ReactNode } from "react";
 import { ChartSize } from "@/models/data/ChartSize";
 import { Dates } from "@/models/Dates";
 import { TimeSpan } from "@/models/TimeSpan";
+import { TimelineStore } from "@/models/store/TimelineStore";
 
 interface Props extends EditProps {
-	timeRanges: Map<TimelineId, TimeRange>;
 	updateRelations: () => void;
+	timelineStore: TimelineStore;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
@@ -60,8 +60,9 @@ const Component: NextPage<Props> = (props: Props) => {
 		const width = cell.width.value * days;
 		const height = cell.height.value * timelines.length;
 
+		// 横系
 		const gridHorizontals = new Array<ReactNode>();
-		for (let i = 0; i < props.timeRanges.size; i++) {
+		for (let i = 0; i < timelines.length; i++) {
 			const y = cell.height.value + cell.height.value * i;
 			gridHorizontals.push(
 				<line
@@ -76,6 +77,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			)
 		}
 
+		// 縦系
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
 		for (let i = 0; i < days; i++) {
@@ -158,8 +160,8 @@ const Component: NextPage<Props> = (props: Props) => {
 							range={range}
 							chartSize={chartSize}
 							memberMap={memberMap}
-							timeRanges={props.timeRanges}
 							updateRelations={props.updateRelations}
+							timelineStore={props.timelineStore}
 						/>
 					)
 				})}

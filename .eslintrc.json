@@ -40,12 +40,12 @@
 		// 		"ignoredNodes": ["ConditionalExpression"]
 		// 	}
 		// ],
-		"max-len": [
-			"warn",
-			{
-				"code": 140
-			}
-		],
+		// "max-len": [
+		// 	"warn",
+		// 	{
+		// 		"code": 140
+		// 	}
+		// ],
 		"react/jsx-indent": [
 			"error",
 			"tab"

@@ -1,8 +1,8 @@
-import { TimeRange } from "@/models/TimeRange";
-import { GroupTimeline, MemberId, Timeline, TimelineId } from "../Setting";
+import { GroupTimeline, MemberId, Timeline } from "../Setting";
 import { EditProps } from "./EditProps";
 import { MemberMapValue } from "../MemberMapValue";
 import { ChartSize } from "../ChartSize";
+import { TimelineStore } from "@/models/store/TimelineStore";
 
 export interface GanttChartTimelineProps extends EditProps {
 	parentGroup: GroupTimeline | null;
@@ -17,7 +17,8 @@ export interface GanttChartTimelineProps extends EditProps {
 
 	memberMap: ReadonlyMap<MemberId, MemberMapValue>;
 
-	timeRanges: Map<TimelineId, TimeRange>;
 	updateRelations: () => void;
+
+	timelineStore: TimelineStore;
 }
 

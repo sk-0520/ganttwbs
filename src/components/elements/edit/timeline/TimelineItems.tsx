@@ -3,10 +3,7 @@ import { DragEvent, useState } from "react";
 
 import { Timelines } from "@/models/Timelines";
 
-import GroupTimelineEditor from "./GroupTimelineEditor";
-import TaskTimelineEditor from "./TaskTimelineEditor";
 import { GroupTimeline, TaskTimeline, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
-import { TimeRange } from "@/models/TimeRange";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Settings } from "@/models/Settings";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -15,10 +12,12 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { RefreshedChildrenCallbacks } from "@/models/data/RefreshedChildrenCallbacks";
 import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
 import { TimelineRootProps } from "@/models/data/props/TimelineRootProps";
+import { TimelineStore } from "@/models/store/TimelineStore";
+import AnyTimelineEditor from "./AnyTimelineEditor";
 
 interface Props extends EditProps, TimelineRootProps {
-	timeRanges: Map<TimelineId, TimeRange>;
 	updateRelations: () => void;
+	timelineStore: TimelineStore;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
@@ -62,18 +61,6 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleUpdateChildrenBeginDate() {
-		props.updateRelations();
-	}
-
-	function handleUpdateChildrenResource() {
-		props.updateRelations();
-	}
-
-	function handleUpdateChildrenWorkload() {
-		props.updateRelations();
-	}
-
-	function handleUpdateChildrenProgress() {
 		props.updateRelations();
 	}
 
@@ -266,9 +253,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
 		updatedBeginDate: handleUpdateChildrenBeginDate,
-		updateResource: handleUpdateChildrenResource,
-		updatedWorkload: handleUpdateChildrenWorkload,
-		updatedProgress: handleUpdateChildrenProgress,
+		//updateResource: handleUpdateChildrenResource,
 	}
 
 	const beginDateCallbacks: BeginDateCallbacks = {
@@ -286,7 +271,23 @@ const Component: NextPage<Props> = (props: Props) => {
 					{props.timelineRootNodes.map((a, i) => {
 						return (
 							<li key={a.id}>
-								{
+								<AnyTimelineEditor
+									configuration={props.configuration}
+									editData={props.editData}
+									treeIndexes={[]}
+									currentIndex={i}
+									parentGroup={null}
+									currentTimeline={a}
+									timelineStore={props.timelineStore}
+									draggingTimeline={draggingTimeline}
+									selectingBeginDate={selectingBeginDate}
+									dropTimeline={dropTimeline}
+									notifyParentCallbacks={notifyParentCallbacks}
+									refreshedChildrenCallbacks={refreshedChildrenCallbacks}
+									beginDateCallbacks={beginDateCallbacks}
+									callbackAddNextSiblingItem={handleAddNextSiblingItem}
+								/>
+								{/* {
 									Settings.maybeGroupTimeline(a) ? (
 										<GroupTimelineEditor
 											configuration={props.configuration}
@@ -295,7 +296,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											currentIndex={i}
 											parentGroup={null}
 											currentTimeline={a}
-											timeRanges={props.timeRanges}
+											timelineStore={props.timelineStore}
 											draggingTimeline={draggingTimeline}
 											selectingBeginDate={selectingBeginDate}
 											dropTimeline={dropTimeline}
@@ -314,7 +315,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											currentIndex={i}
 											parentGroup={null}
 											currentTimeline={a}
-											timeRanges={props.timeRanges}
+											timelineStore={props.timelineStore}
 											draggingTimeline={draggingTimeline}
 											selectingBeginDate={selectingBeginDate}
 											callbackAddNextSiblingItem={handleAddNextSiblingItem}
@@ -323,7 +324,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											beginDateCallbacks={beginDateCallbacks}
 										/>
 									) : null
-								}
+								} */}
 							</li>
 						);
 					})}

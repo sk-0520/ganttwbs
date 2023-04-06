@@ -66,18 +66,19 @@ export interface Holiday {
 }
 
 
-export interface DateRange {
-	from: DateOnly
-	to: DateOnly
+export interface WorkDateRange {
+	from: DateOnly;
+	to: DateOnly;
 }
 
 export interface Calendar {
-	range: DateRange;
+	range: WorkDateRange;
 	holiday: Holiday;
 }
 
 
 export type TimelineId = string;
+/** 0-1 */
 export type Progress = number;
 
 
@@ -110,6 +111,8 @@ export interface TaskTimeline extends Timeline {
 	workload: TimeOnly;
 	progress: Progress;
 }
+
+export type AnyTimeline = GroupTimeline | TaskTimeline;
 
 export type VersionId = string;
 

@@ -1,7 +1,6 @@
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
 import { GroupTimeline, MemberId, TaskTimeline, Theme } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
-import { SuccessTimeRange, TimeRanges } from "@/models/TimeRange";
 import { TimeSpan } from "@/models/TimeSpan";
 import { NextPage } from "next";
 import { ReactNode, useEffect, useState } from "react";
@@ -10,23 +9,27 @@ import { ChartArea } from "@/models/data/ChartArea";
 import GroupChart from "./chart/GroupChart";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { Timelines } from "@/models/Timelines";
+import { SuccessDateTimeRange } from "@/models/data/DateTimeRange";
+import { DateTimeRanges } from "@/models/DateTimeRanges";
 
 interface Props extends GanttChartTimelineProps { }
 
 const Component: NextPage<Props> = (props: Props) => {
 
-	const [timeRange, setTimeRange] = useState<SuccessTimeRange | null>();
+	const [timeRange, setTimeRange] = useState<SuccessDateTimeRange | null>();
 
 	useEffect(() => {
-		const tr = props.timeRanges.get(props.currentTimeline.id);
-		if (tr) {
-			if (TimeRanges.maybeSuccessTimeRange(tr)) {
-				setTimeRange(tr);
-			} else {
-				setTimeRange(null);
+		const timelineItem = props.timelineStore.items.get(props.currentTimeline.id);
+		if (timelineItem) {
+			if (timelineItem.range) {
+				if (DateTimeRanges.maybeSuccessTimeRange(timelineItem.range)) {
+					setTimeRange(timelineItem.range);
+				} else {
+					setTimeRange(null);
+				}
 			}
 		}
-	}, [props.timeRanges]);
+	}, [props.timelineStore, props.currentTimeline]);
 
 
 	function renderCurrentTimeline(): ReactNode {
@@ -57,7 +60,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			chartSize: props.chartSize
 		};
 
-		console.debug(props.currentTimeline.id, startDiffDays);
+		//console.debug(props.currentTimeline.id, startDiffDays);
 
 		return (
 			<>
@@ -72,6 +75,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								borderColor="#000000"
 								borderThickness={1}
 								area={area}
+								timelineStore={props.timelineStore}
 								progress={props.currentTimeline.progress}
 							/>
 						) : Settings.maybeGroupTimeline(props.currentTimeline) ? (
@@ -82,6 +86,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								borderColor="#000000"
 								borderThickness={4}
 								area={area}
+								timelineStore={props.timelineStore}
 							// progress={props.currentTimeline.progress}
 							/>
 						) : null

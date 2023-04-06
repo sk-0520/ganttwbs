@@ -1,10 +1,11 @@
 import { Timelines } from "@/models/Timelines";
+import { Progress } from "@/models/data/Setting";
 import { NextPage } from "next";
 
 interface Props {
 	readOnly: boolean;
 	disabled: boolean;
-	value: number;
+	progress: Progress;
 	callbackChangeValue?: (value: number) => void;
 }
 
@@ -19,7 +20,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				min={0}
 				max={100}
 				step={1}
-				value={Timelines.displayProgress(props.value)}
+				value={Timelines.displayProgress(props.progress)}
 				onChange={ev => props.callbackChangeValue ? props.callbackChangeValue(ev.target.valueAsNumber) : undefined}
 			/>
 		</div>
