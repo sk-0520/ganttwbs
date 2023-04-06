@@ -179,7 +179,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleUpdateChildrenResource() {
-		props.refreshedChildrenCallbacks.updateResource();
+		//props.refreshedChildrenCallbacks.updateResource();
 	}
 
 	function handleUpdateChildrenWorkload() {
@@ -227,7 +227,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
 		updatedBeginDate: handleUpdateChildrenBeginDate,
-		updateResource: handleUpdateChildrenResource,
+		//updateResource: handleUpdateChildrenResource,
 	}
 
 	return (

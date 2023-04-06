@@ -258,7 +258,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
 		updatedBeginDate: handleUpdateChildrenBeginDate,
-		updateResource: handleUpdateChildrenResource,
+		//updateResource: handleUpdateChildrenResource,
 	}
 
 	const beginDateCallbacks: BeginDateCallbacks = {

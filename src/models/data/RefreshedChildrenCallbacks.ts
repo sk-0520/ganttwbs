@@ -4,7 +4,7 @@
  */
 export interface RefreshedChildrenCallbacks {
 	updatedBeginDate(): void;
-	updateResource(): void;
+	//updateResource(): void;
 	// updatedWorkload(): void;
 	// updatedProgress(): void;
 }
