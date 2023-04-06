@@ -3,8 +3,6 @@ import { DragEvent, useState } from "react";
 
 import { Timelines } from "@/models/Timelines";
 
-import GroupTimelineEditor from "./GroupTimelineEditor";
-import TaskTimelineEditor from "./TaskTimelineEditor";
 import { GroupTimeline, TaskTimeline, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Settings } from "@/models/Settings";
