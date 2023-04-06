@@ -1,5 +1,5 @@
 import DynamicLabel from "@/components/elements/DynamicLabel";
-import { GroupTimeline, TaskTimeline } from "@/models/data/Setting";
+import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { NextPage } from "next";
 
@@ -11,7 +11,7 @@ const enum Relations {
 }
 
 interface Props {
-	currentTimeline: GroupTimeline | TaskTimeline;
+	readonly currentTimeline: Readonly<AnyTimeline>;
 	selectable: boolean;
 	htmlFor: string;
 }

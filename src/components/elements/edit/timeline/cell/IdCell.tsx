@@ -1,7 +1,7 @@
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
-import { GroupTimeline, TaskTimeline } from "@/models/data/Setting";
+import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { NextPage } from "next";
 import IndexNumber from "../IndexNumber";
@@ -11,7 +11,7 @@ interface Props {
 	isSelectedPrevious: boolean;
 	treeIndexes: ReadonlyArray<number>;
 	currentIndex: number;
-	currentTimeline: GroupTimeline | TaskTimeline;
+	readonly currentTimeline: Readonly<AnyTimeline>;
 	selectingBeginDate: SelectingBeginDate | null;
 	draggingTimeline: DraggingTimeline | null;
 	notifyParentCallbacks: NotifyParentCallbacks;

@@ -4,7 +4,7 @@ import { NextPage } from "next";
 import { ReactNode } from "react";
 
 interface Props {
-	currentTimeline: AnyTimeline;
+	readonly currentTimeline: Readonly<AnyTimeline>;
 	groups: ReadonlyArray<Group>;
 	selectedMemberId: MemberId;
 	disabled: boolean;
@@ -12,7 +12,6 @@ interface Props {
 }
 
 const Component: NextPage<Props> = (props: Props) => {
-
 	const groups = [...props.groups]
 		.sort((a, b) => a.name.localeCompare(b.name))
 		;
