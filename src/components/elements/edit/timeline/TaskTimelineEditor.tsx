@@ -51,6 +51,9 @@ const Component: NextPage<Props> = (props: Props) => {
 			const progress = timelineItem.timeline.progress;
 			setProgress(progress);
 
+			const memberId = timelineItem.timeline.memberId;
+			setMemberId(memberId);
+
 			if (timelineItem.range) {
 				setBeginKind(timelineItem.range.kind);
 				if (DateTimeRanges.maybeSuccessTimeRange(timelineItem.range)) {
@@ -114,9 +117,13 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleChangeMember(memberId: MemberId): void {
-		setMemberId(memberId);
-		props.currentTimeline.memberId = memberId;
-		props.refreshedChildrenCallbacks.updateResource();
+		//setMemberId(memberId);
+		//props.currentTimeline.memberId = memberId;
+		//props.refreshedChildrenCallbacks.updateResource();
+		props.timelineStore.updateTimeline({
+			...props.currentTimeline,
+			memberId: memberId,
+		});
 	}
 
 	function handleClickBeginDate() {
