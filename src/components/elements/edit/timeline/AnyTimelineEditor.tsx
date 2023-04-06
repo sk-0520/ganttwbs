@@ -398,11 +398,11 @@ const Component: NextPage<Props> = (props: Props) => {
 					<SubjectCell
 						value={subject}
 						disabled={props.selectingBeginDate !== null}
-						readOnly={false}
+						readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
 						callbackChangeValue={handleChangeSubject}
 					/>
 					<WorkloadCell
-						readOnly={true}
+						readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
 						disabled={props.selectingBeginDate !== null}
 						value={workload}
 					/>
@@ -450,19 +450,12 @@ const Component: NextPage<Props> = (props: Props) => {
 									beginDate={beginDate}
 									endDate={endDate}
 									htmlFor={selectingId}
-									callbackClickBeginDate={handleClickBeginDate}
+									callbackClickBeginDate={Settings.maybeTaskTimeline(props.currentTimeline) ? handleClickBeginDate: undefined}
 								/>
 							)
 					}
-					<TimeRangeCells
-						timeRangeKind={beginKind}
-						selectable={props.selectingBeginDate !== null}
-						beginDate={beginDate}
-						endDate={endDate}
-						htmlFor={selectingId}
-					/>
 					<ProgressCell
-						readOnly={true}
+						readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
 						disabled={props.selectingBeginDate !== null}
 						progress={progress}
 					/>
