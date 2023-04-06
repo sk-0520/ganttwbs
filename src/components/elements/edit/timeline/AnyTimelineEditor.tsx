@@ -51,6 +51,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [progress, setProgress] = useState(0);
 	const [children, setChildren] = useState(Settings.maybeGroupTimeline(props.currentTimeline) ? props.currentTimeline.children : []);
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
+	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
 
 	useEffect(() => {
 		const timelineItem = props.timelineStore.items.get(props.currentTimeline.id);
@@ -88,8 +89,17 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	useEffect(() => {
 		if (props.selectingBeginDate) {
-			const selected = props.selectingBeginDate.previous.has(props.currentTimeline.id);
-			setIsSelectedPrevious(selected);
+			if(Settings.maybeGroupTimeline(props.currentTimeline)) {
+				const selected = props.selectingBeginDate.previous.has(props.currentTimeline.id);
+				setIsSelectedPrevious(selected);
+			} else if(Settings.maybeTaskTimeline(props.currentTimeline)) {
+				const selected = props.selectingBeginDate.previous.has(props.currentTimeline.id);
+				setIsSelectedPrevious(selected);
+
+				setSelectedBeginDate(props.selectingBeginDate.beginDate ?? null);
+			} else {
+				throw new Error();
+			}
 		}
 	}, [props.selectingBeginDate]);
 
@@ -263,6 +273,19 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.timelineStore.updateTimeline(props.currentTimeline);
 	}
 
+	function handleClickBeginDate() {
+		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
+			throw new Error();
+		}
+
+		if (props.selectingBeginDate) {
+			return;
+		}
+
+		//setSelectingBeginDate(true);
+		props.beginDateCallbacks.startSelectBeginDate(props.currentTimeline);
+	}
+
 	function handleChangePrevious(isSelected: boolean): void {
 		if (!props.selectingBeginDate) {
 			return;
@@ -274,6 +297,69 @@ const Component: NextPage<Props> = (props: Props) => {
 			props.selectingBeginDate.previous.delete(props.currentTimeline.id);
 		}
 		setIsSelectedPrevious(isSelected);
+	}
+
+	function handleChangeSelectingBeginDate(date: Date | null): void {
+		if (!props.selectingBeginDate) {
+			return;
+		}
+
+		props.selectingBeginDate.beginDate = date;
+		setSelectedBeginDate(date);
+	}
+
+	function handleAttachPrevTimeline() {
+		if(!Settings.maybeTaskTimeline(props.currentTimeline)) {
+			throw new Error();
+		}
+
+		if (!props.currentIndex) {
+			return;
+		}
+
+		const nodes = props.parentGroup ? props.parentGroup.children : props.editData.setting.timelineNodes;
+		const prevTimeline = nodes[props.currentIndex - 1];
+		props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([prevTimeline.id]));
+	}
+
+	function handleClearPrevious() {
+		if(!Settings.maybeTaskTimeline(props.currentTimeline)) {
+			throw new Error();
+		}
+
+		props.beginDateCallbacks.clearSelectBeginDate(props.currentTimeline, false, true);
+	}
+
+	function handleClearStatic() {
+		if(!Settings.maybeTaskTimeline(props.currentTimeline)) {
+			throw new Error();
+		}
+
+		props.beginDateCallbacks.clearSelectBeginDate(props.currentTimeline, true, false);
+	}
+
+	function handleSubmitPrevious() {
+		if(!Settings.maybeTaskTimeline(props.currentTimeline)) {
+			throw new Error();
+		}
+
+		if (!props.selectingBeginDate) {
+			return;
+		}
+
+		props.currentTimeline.static = props.selectingBeginDate.beginDate ? Dates.format(props.selectingBeginDate.beginDate, "yyyy-MM-dd") : undefined;
+		props.currentTimeline.previous = [...props.selectingBeginDate.previous];
+
+		props.beginDateCallbacks.submitSelectBeginDate(props.currentTimeline);
+		props.refreshedChildrenCallbacks.updatedBeginDate();
+	}
+
+	function handleCancelPrevious() {
+		if(!Settings.maybeTaskTimeline(props.currentTimeline)) {
+			throw new Error();
+		}
+
+		props.beginDateCallbacks.cancelSelectBeginDate(props.currentTimeline)
 	}
 
 	const notifyParentCallbacks: NotifyParentCallbacks = {
@@ -332,6 +418,42 @@ const Component: NextPage<Props> = (props: Props) => {
 						selectable={props.selectingBeginDate !== null}
 						htmlFor={selectingId}
 					/>
+					{
+						props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
+							? (
+								<>
+									<div className='timeline-cell timeline-range-area prompt'>
+										<ul className="contents">
+											<li className="main">
+												<input
+													type="date"
+													value={selectedBeginDate ? Dates.format(selectedBeginDate, "yyyy-MM-dd") : ""}
+													onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
+												/>
+											</li>
+											<li><button type="button" onClick={handleSubmitPrevious}>更新</button></li>
+											<li><button type="button" onClick={handleCancelPrevious}>取消</button></li>
+										</ul>
+										<div className="tools after">
+											<ul>
+												<li><button onClick={handleAttachPrevTimeline}>直近項目に紐づける</button></li>
+												<li><button onClick={handleClearPrevious}>紐づけを解除</button></li>
+												<li><button onClick={handleClearStatic}>固定日付をクリア</button></li>
+											</ul>
+										</div>
+									</div>
+								</>
+							) : (
+								<TimeRangeCells
+									timeRangeKind={beginKind}
+									selectable={props.selectingBeginDate !== null}
+									beginDate={beginDate}
+									endDate={endDate}
+									htmlFor={selectingId}
+									callbackClickBeginDate={handleClickBeginDate}
+								/>
+							)
+					}
 					<TimeRangeCells
 						timeRangeKind={beginKind}
 						selectable={props.selectingBeginDate !== null}
@@ -373,7 +495,7 @@ const Component: NextPage<Props> = (props: Props) => {
 									refreshedChildrenCallbacks={refreshedChildrenCallbacks}
 									beginDateCallbacks={props.beginDateCallbacks}
 									callbackAddNextSiblingItem={handleAddNextSiblingItem}
-									/>
+								/>
 								{/* {
 									Settings.maybeGroupTimeline(a) ? (
 										<GroupTimelineEditor

@@ -15,6 +15,7 @@ import { RefreshedChildrenCallbacks } from "@/models/data/RefreshedChildrenCallb
 import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
 import { TimelineRootProps } from "@/models/data/props/TimelineRootProps";
 import { TimelineStore } from "@/models/store/TimelineStore";
+import AnyTimelineEditor from "./AnyTimelineEditor";
 
 interface Props extends EditProps, TimelineRootProps {
 	updateRelations: () => void;
@@ -272,7 +273,23 @@ const Component: NextPage<Props> = (props: Props) => {
 					{props.timelineRootNodes.map((a, i) => {
 						return (
 							<li key={a.id}>
-								{
+								<AnyTimelineEditor
+									configuration={props.configuration}
+									editData={props.editData}
+									treeIndexes={[]}
+									currentIndex={i}
+									parentGroup={null}
+									currentTimeline={a}
+									timelineStore={props.timelineStore}
+									draggingTimeline={draggingTimeline}
+									selectingBeginDate={selectingBeginDate}
+									dropTimeline={dropTimeline}
+									notifyParentCallbacks={notifyParentCallbacks}
+									refreshedChildrenCallbacks={refreshedChildrenCallbacks}
+									beginDateCallbacks={beginDateCallbacks}
+									callbackAddNextSiblingItem={handleAddNextSiblingItem}
+								/>
+								{/* {
 									Settings.maybeGroupTimeline(a) ? (
 										<GroupTimelineEditor
 											configuration={props.configuration}
@@ -309,7 +326,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											beginDateCallbacks={beginDateCallbacks}
 										/>
 									) : null
-								}
+								} */}
 							</li>
 						);
 					})}
