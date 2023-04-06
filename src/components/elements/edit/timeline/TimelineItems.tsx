@@ -65,10 +65,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.updateRelations();
 	}
 
-	function handleUpdateChildrenResource() {
-		props.updateRelations();
-	}
-
 	function fireDropTimeline(dropTimeline: DropTimeline) {
 		console.debug("FIRE");
 
