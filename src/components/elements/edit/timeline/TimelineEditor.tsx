@@ -33,7 +33,10 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	function updateTimeline(timeline: AnyTimeline): void {
 		//
-		const source = Timelines.searchTimeline(timeline.id, timelineNodes);
+		const source = Timelines.findTimeline(timeline.id, timelineNodes);
+		if(!source) {
+			return;
+		}
 		if (source.kind !== timeline.kind) {
 			throw new Error();
 		}
@@ -105,7 +108,8 @@ const Component: NextPage<Props> = (props: Props) => {
 	}, []);
 
 	function handleSetTimelineNodes(timelineNodes: Array<GroupTimeline | TaskTimeline>) {
-		setTimelineNodes(props.editData.setting.timelineNodes = timelineNodes);
+		props.editData.setting.timelineNodes = timelineNodes;
+		setTimelineNodes(props.editData.setting.timelineNodes);
 	}
 
 	return (
