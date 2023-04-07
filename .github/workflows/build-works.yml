@@ -28,8 +28,14 @@ jobs:
         shell: bash
         run: npm run test
 
-    #   - name: <Build>
-    #     shell: bash
-    #     run: npm run build
+      - name: <Build>
+        shell: bash
+        run: npm run build
 
-
+      - name: <Archive>
+        uses: actions/upload-artifact@v3
+        with:
+          name: ganttwbs
+          path: |
+            .next
+            coverage
