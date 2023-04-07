@@ -7,6 +7,8 @@ import MemberEditor from "./MemberEditor";
 import { Color, MemberId } from "@/models/data/Setting";
 import { random } from "@ctrl/tinycolor";
 import GroupColorsDialog from "./GroupColorsDialog";
+import Colors from "@/models/data/Colors";
+import PlainColorPicker from "@/components/elements/PlainColorPicker";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
@@ -15,6 +17,12 @@ const Component: NextPage = () => {
 	const [editGroups, setEditGroups] = useState(settingContext.groups);
 	const [choiceColorGroup, setChoiceColorGroup] = useState<GroupSetting | null>(null);
 	const [updatedColors, setUpdatedColors] = useState<Map<MemberId, Color>>(new Map());
+
+	const cs = Colors.generateGradation(
+		"#ff0000",
+		"#0000ff",
+		2
+	);
 
 	function removeMember(group: GroupSetting, member: MemberSetting) {
 		const targetGroup = editGroups.find(a => a.key === group.key);
@@ -210,6 +218,7 @@ const Component: NextPage = () => {
 						onChange={ev => setNewGroupName(ev.target.value)}
 					/>
 					<button type="button" onClick={handleAddGroup}>add</button>
+					{cs.map(a => <PlainColorPicker key={a.toHex()} color={a.toHexString()} />)}
 				</dd>
 			</dl>
 
