@@ -4,6 +4,10 @@ dialog {
 	padding: 0;
 	//max-height: 100vh;
 
+	&::backdrop {
+		backdrop-filter: blur(0.25ex);
+	}
+
 	& > .content {
 		$header-height: 40px;
 		$footer-height: 40px;
