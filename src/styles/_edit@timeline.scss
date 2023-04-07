@@ -30,7 +30,7 @@
 		display: inline-flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
-		justify-content: start;
+		justify-content: flex-start;
 
 		.timeline-id {
 			@include box.width($timeline-header-id-width);
