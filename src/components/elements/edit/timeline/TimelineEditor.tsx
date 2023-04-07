@@ -35,7 +35,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	function updateTimeline(timeline: AnyTimeline): void {
 		//
 		const source = Timelines.findTimeline(timeline.id, timelineNodes);
-		if(!source) {
+		if (!source) {
 			return;
 		}
 		if (source.kind !== timeline.kind) {
@@ -169,9 +169,13 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 			groups: {
 				...Array.from(Array(design.programmable.group.maximum), (_, index) => index + 1)
 					.map(a => {
+						const backgroundColor = (a - 1) in theme.groups ? theme.groups[a - 1] : theme.timeline.group;
+						const foregroundColor = Colors.getAutoColor(backgroundColor);
+
 						return {
 							[`level-${a}`]: {
-								background: (a - 1) in theme.groups ? theme.groups[a - 1] : theme.timeline.group,
+								color: foregroundColor.toHexString(),
+								background: backgroundColor,
 							}
 						}
 					})

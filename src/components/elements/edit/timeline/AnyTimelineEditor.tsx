@@ -428,7 +428,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					<SubjectCell
 						value={subject}
 						disabled={props.selectingBeginDate !== null}
-						readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
+						readOnly={false}
 						callbackChangeValue={handleChangeSubject}
 					/>
 					<WorkloadCell
