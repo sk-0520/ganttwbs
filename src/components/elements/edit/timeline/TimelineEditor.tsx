@@ -11,9 +11,10 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { Design } from "@/models/data/Design";
 import { Designs } from "@/models/Designs";
 import { Settings } from "@/models/Settings";
-import { TinyColor, mostReadable } from "@ctrl/tinycolor";
+import { TinyColor } from "@ctrl/tinycolor";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { TimelineItem } from "@/models/data/TimelineItem";
+import Colors from "@/models/data/Colors";
 
 interface Props extends EditProps { }
 
@@ -149,19 +150,6 @@ export default Component;
 
 function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 
-	function toTextColor(backgroundColor: TinyColor): TinyColor {
-		const textColors = ["#000", "#fff"];
-		const result = mostReadable(
-			backgroundColor,
-			textColors,
-			{
-				includeFallbackColors: true
-			}
-		);
-
-		return result ?? new TinyColor("#000");
-	}
-
 	// 動的なCSSクラス名をここでがっつり作るのです
 	const styleObject = {
 		design: design.honest,
@@ -212,7 +200,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 						const backgroundColor = new TinyColor(theme.holiday.regulars[a]);
 						return {
 							[a]: {
-								color: toTextColor(backgroundColor).toHexString(),
+								color: Colors.getAutoColor(backgroundColor).toHexString(),
 								background: backgroundColor.toHexString(),
 							}
 						}
@@ -223,7 +211,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 						const backgroundColor = new TinyColor(v);
 						return {
 							[k]: {
-								color: toTextColor(backgroundColor).toHexString(),
+								color: Colors.getAutoColor(backgroundColor).toHexString(),
 								background: `${backgroundColor.toHexString()} !important`
 							}
 						}

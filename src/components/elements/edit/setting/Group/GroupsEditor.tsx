@@ -4,11 +4,9 @@ import { v4 } from "uuid";
 
 import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import MemberEditor from "./MemberEditor";
-import Dialog from "@/components/elements/Dialog";
 import { Color, MemberId } from "@/models/data/Setting";
-import { TinyColor, random } from "@ctrl/tinycolor";
-
-type ColorKind = "same" | "analogy" | "monochrome" | "random";
+import { random } from "@ctrl/tinycolor";
+import GroupColorsDialog from "./GroupColorsDialog";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
@@ -16,16 +14,7 @@ const Component: NextPage = () => {
 	const [newGroupName, setNewGroupName] = useState("");
 	const [editGroups, setEditGroups] = useState(settingContext.groups);
 	const [choiceColorGroup, setChoiceColorGroup] = useState<GroupSetting | null>(null);
-	const [choiceColors, setChoiceColors] = useState<Map<MemberId, TinyColor>>(new Map());
 	const [updatedColors, setUpdatedColors] = useState<Map<MemberId, Color>>(new Map());
-	const [choiceBaseColor, setChoiceBaseColor] = useState<Color>("#ff0000");
-
-	const colorKinds: ReadonlyArray<ColorKind> = [
-		"same",
-		"analogy",
-		"monochrome",
-		"random",
-	]
 
 	function removeMember(group: GroupSetting, member: MemberSetting) {
 		const targetGroup = editGroups.find(a => a.key === group.key);
@@ -71,53 +60,7 @@ const Component: NextPage = () => {
 	}
 
 	function handleStartChoiceColor(group: GroupSetting): void {
-		setChoiceColors(new Map(
-			group.members.map(a => [a.id, new TinyColor(a.color)])
-		));
 		setChoiceColorGroup(group);
-	}
-
-	function handleSelectColorKind(colorKind: ColorKind, group: GroupSetting): void {
-		const colorMap = new Map<MemberId, TinyColor>();
-		const baseColor = new TinyColor(choiceBaseColor);
-
-		switch (colorKind) {
-			case "same":
-				for (const member of group.members) {
-					colorMap.set(member.id, baseColor);
-				}
-				break;
-
-			case "analogy":
-				{
-					const colors = baseColor.analogous(group.members.length);
-					for (let i = 0; i < colors.length; i++) {
-						colorMap.set(group.members[i].id, colors[i]);
-					}
-				}
-				break;
-
-			case "monochrome":
-				{
-					const colors = baseColor.monochromatic(group.members.length);
-					for (let i = 0; i < colors.length; i++) {
-						colorMap.set(group.members[i].id, colors[i]);
-					}
-				}
-				break;
-
-			case "random":
-				for (const member of group.members) {
-					const color = random();
-					colorMap.set(member.id, color);
-				}
-				break;
-
-			default:
-				throw new Error();
-		}
-
-		setChoiceColors(colorMap);
 	}
 
 	function handleRemoveGroup(group: GroupSetting) {
@@ -271,71 +214,15 @@ const Component: NextPage = () => {
 			</dl>
 
 			{choiceColorGroup && (
-				<Dialog
-					button="submit"
-					title="色選択"
-					callbackClose={(type) => {
-						if (type === "submit") {
-							const map = new Map<MemberId, Color>([...choiceColors.entries()].map(([k, v]) => [k, v.toHexString()]));
-							setUpdatedColors(map);
-						}
+				<GroupColorsDialog
+					choiceColorGroup={choiceColorGroup}
+					callbackClose={a => {
+						//if (type === "submit") {
+						//const map = new Map<MemberId, Color>([...choiceColors.entries()].map(([k, v]) => [k, v.toHexString()]));
+						setUpdatedColors(a);
+						//}
 						setChoiceColorGroup(null);
-					}}
-				>
-					<>
-						<label>
-							基準色
-							<input
-								type="color"
-								value={choiceBaseColor}
-								onChange={ev => setChoiceBaseColor(ev.target.value)}
-							/>
-						</label>
-
-						<ul className="inline">
-							{colorKinds.map(a => {
-								return (
-									<li key={a}>
-										<label>
-											<button
-												type="button"
-												onClick={ev => handleSelectColorKind(a, choiceColorGroup)}
-											>
-												{a}
-											</button>
-										</label>
-									</li>
-								);
-							})}
-						</ul>
-						<table className="color-example">
-							<tbody>
-								{
-									[...choiceColors.entries()].map(([k, v]) => {
-										const member = choiceColorGroup.members.find(a => a.id === k);
-										if (!member) {
-											console.warn("MEMBER", k)
-											return <></>;
-										}
-
-										const color = v.toHexString();
-
-										return (
-											<tr key={member.key}>
-												<td>
-													{member.name}
-												</td>
-												<td style={{ background: color }}>
-													{color}
-												</td>
-											</tr>
-										);
-									})
-								}
-							</tbody>
-						</table>
-					</>
-				</Dialog>
+					}} />
 			)}
 		</>
 	);

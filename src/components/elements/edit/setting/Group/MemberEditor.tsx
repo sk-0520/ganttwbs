@@ -20,9 +20,9 @@ const Component: NextPage<Props> = (props: Props) => {
 	useEffect(() => {
 		const color = props.updatedColors.get(props.member.id);
 		if (color) {
-			handleChangeColor(color);
+			setColor(props.member.color = color);
 		}
-	}, [props.updatedColors])
+	}, [props.member, props.updatedColors])
 
 	function handleChangeName(value: string) {
 		setName(props.member.name = value);
@@ -34,10 +34,6 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	function handleChangePriceSales(value: number) {
 		setPriceSales(props.member.priceSales = value);
-	}
-
-	function handleChangeColor(value: string) {
-		setColor(props.member.color = value);
 	}
 
 	return (
@@ -69,7 +65,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			<td className="theme">
 				<PlainColorPicker
 					color={color}
-					callbackChanged={c => handleChangeColor(c)}
+					callbackChanged={c => setColor(c)}
 				/>
 			</td>
 			<td className="remove">

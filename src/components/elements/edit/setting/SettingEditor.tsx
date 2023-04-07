@@ -29,12 +29,12 @@ interface Props {
 }
 
 const Component: NextPage<Props> = (props: Props) => {
-	const initTabIndex = 0;
-	//const initTabIndex = 1;
+	//const initTabIndex = 0;
+	const initTabIndex = 1;
 
 	const setting = toContext(props.editData.setting);
 
-	function onSubmit(event: FormEvent) {
+	function handleSubmit(event: FormEvent) {
 		event.preventDefault();
 
 		props.editData.setting = fromContext(props.editData.setting, setting);
@@ -46,7 +46,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	return (
 		<SettingContext.Provider value={setting}>
-			<form onSubmit={onSubmit}>
+			<form onSubmit={handleSubmit}>
 				<Tabs defaultIndex={initTabIndex} forceRenderTabPanel={true}>
 					<TabList>
 						<Tab>基本</Tab>

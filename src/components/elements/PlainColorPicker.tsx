@@ -1,11 +1,12 @@
 import { Color } from "@/models/data/Setting";
 import { NextPage } from "next";
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { SketchPicker } from "react-color";
 import { PresetColor } from "react-color/lib/components/sketch/Sketch";
 import Overlay from "./Overlay";
 import { TinyColor } from "@ctrl/tinycolor";
 import style from "../../styles/modules/components/elements/PlainColorPicker.module.scss";
+import Colors from "@/models/data/Colors";
 
 interface Props {
 	color: Color;
@@ -19,6 +20,10 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [color, setColor] = useState(props.color);
 
 	const presetColors = new Array<PresetColor>();
+
+	useEffect(() => {
+		setColor(props.color);
+	}, [props.color]);
 
 	function handleChanging(value: Color): void {
 		setColor(value);
@@ -38,10 +43,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const boxStyle: CSSProperties = {
 		background: current.toHexString(),
-		borderColor: current.isLight()
-			? current.darken().toHexString()
-			: current.lighten().toHexString()
-		,
+		borderColor: Colors.getAutoColor(current).toHexString(),
 	}
 
 	return (
