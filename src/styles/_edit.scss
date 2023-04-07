@@ -1,0 +1,181 @@
+@use "variable" as variable;
+
+main#edit {
+	user-select: none;
+
+	.tab {
+		&.panel {
+			display: none;
+
+			&.react-tabs__tab-panel--selected {
+				display: block;
+
+				position: absolute;
+				top: variable.$tab-edit-header-height;
+				left: 0;
+				bottom: 0;
+				right: 0;
+				overflow: auto;
+			}
+		}
+
+		&.tab-file {
+			background: variable.$app-timeline-default-background;
+		}
+
+		&.tab-timeline {
+			background: white;
+		}
+
+		&.tab-setting {
+			code.example {
+				border: 1px solid gray;
+			}
+
+			.setting-tab-item {
+				display: none;
+
+				&.react-tabs__tab-panel--selected {
+					display: block;
+
+					position: absolute;
+					top: variable.$tab-edit-header-height;
+					left: 0;
+					bottom: variable.$tab-edit-header-height;
+					right: 0;
+					overflow: auto;
+
+					background: variable.$app-timeline-default-background;
+				}
+
+				&.group {
+					.group {
+						.count {
+							display: inline-block;
+							width: 4ch;
+							&::before {
+								content: "(";
+							}
+							&::after {
+								content: ")";
+							}
+						}
+
+						.remove {
+							margin-left: 2em;
+						}
+					}
+
+					.member + .group {
+						margin-top: 1em;
+						padding-top: 0.5em;
+						border-top: 1px solid black;
+					}
+
+					.members {
+						margin-top: 1em;
+
+						thead {
+							th {
+								text-align: center;
+								font-weight: bold;
+							}
+						}
+
+						tfoot {
+							td {
+								padding-top: 1em;
+							}
+						}
+
+						td {
+							* {
+								width: 100%;
+							}
+						}
+
+						.name {
+							min-width: 20ch;
+						}
+						.cost,
+						.sales {
+							width: 10ch;
+						}
+						.theme {
+							width: 100px;
+							& > {
+								display: block;
+							}
+						}
+						.remove {
+							min-width: 6ch;
+							padding-left: 1em;
+						}
+						.add {
+							//width: 12ch;
+						}
+					}
+				}
+
+				&.calendar {
+					dd.range {
+					}
+
+					dd.week {
+					}
+
+					dd.holiday {
+						.holiday {
+							display: flex;
+
+							.holidays {
+								& + .holidays {
+									margin-left: 3rem;
+								}
+
+								.editor {
+									width: 32ch;
+									min-height: 8em;
+								}
+							}
+						}
+					}
+				}
+
+				&.theme {
+					$cell-padding: 0.25em 0.5em;
+
+					.holiday {
+						td {
+							padding: $cell-padding;
+
+							// &.header {
+							// }
+							// &.subject {
+							// }
+							// &.theme {
+							// }
+						}
+					}
+
+					.groups {
+						td {
+							padding: $cell-padding;
+						}
+					}
+
+					.timeline {
+						td {
+							padding: $cell-padding;
+						}
+					}
+				}
+			}
+
+			.setting-save {
+				position: absolute;
+				bottom: 0;
+			}
+		}
+	}
+}

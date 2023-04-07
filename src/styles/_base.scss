@@ -1,0 +1,49 @@
+@use "variable" as variable;
+
+html,
+html * {
+	font-family: 'Meiryo UI','Yu Gothic UI','ヒラギノ角ゴシック','Hiragino Sans','klee','Consolas','Calibri',sans-serif;
+	font-size: variable.$page-mode-font-size;
+	line-height: 1.2em;
+}
+
+body {
+	background: #eeeeee;
+}
+
+div#mode-page {
+	margin: 2rem;
+	line-height: 1.2rem;
+
+	h1 {
+		font-weight: bold;
+		text-align: center;
+		font-size: 1.5rem;
+		margin: 1rem auto;
+	}
+
+	header {
+		font-size: 0.8rem;
+		background: #dddddd;
+		margin: 1rem;
+
+		nav {
+			ul {
+				margin: 0;
+				text-align: right;
+
+				li {
+					display: inline;
+
+					& + li {
+						margin-left: 1ch;
+					}
+				}
+			}
+		}
+	}
+
+	main {
+		margin: 1rem;
+	}
+}

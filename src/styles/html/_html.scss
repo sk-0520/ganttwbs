@@ -1,0 +1,14 @@
+* {
+	box-sizing: border-box;
+}
+
+.single-line {
+	&.no-warp {
+		white-space: nowrap;
+		position: relative;;
+	}
+
+	* {
+		display: inline;
+	}
+}

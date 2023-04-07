@@ -1,0 +1,76 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/bin": true,
+			"**/obj": true,
+			"**/node_modules": true,
+			".vs": true,
+			"*.lnk": true
+		},
+		"files.watcherExclude": {
+			"**/.git/objects/**": true,
+			"**/.git/subtree-cache/**": true,
+			"**/node_modules/*/**": true,
+			".vs": true,
+			".vscode": true,
+			"**/dist/**": true,
+			"**/bin/**": true,
+			"**/obj/**": true,
+			"*.lnk": true,
+		},
+		"html.format.indentInnerHtml": true,
+		"html.format.wrapLineLength": 0,
+		"json.schemas": [
+			{
+				"fileMatch": [
+					"*.jsonc"
+				],
+				"schema": {
+					"allowTrailingCommas": true
+				}
+			}
+		],
+		"cSpell.words": [
+			"endregion",
+			"gangangan",
+			"Gantt",
+			"ganttwbs",
+			"nameof",
+			"pjax",
+			"postoutput",
+			"prebrowser",
+			"THTML",
+			"timespan",
+			"tinycolor",
+			"webextension"
+		],
+		"npm.scriptExplorerExclude": [
+			"test:.+$",
+			"^(pre|post)",
+			"license",
+			"^(check|update)$"
+		],
+		"auto-close-tag.activationOnLanguage": [
+			"html",
+			"tsx",
+		]
+	},
+	"extensions": {
+		"recommendations": [
+			"formulahendry.auto-close-tag",
+			"editorconfig.editorconfig",
+			"orta.vscode-jest",
+			"streetsidesoftware.code-spell-checker",
+			"sibiraj-s.vscode-scss-formatter",
+			"santacodes.santacodes-region-viewer",
+			"awwsky.region-marker",
+			"dbaeumer.vscode-eslint",
+			"firefox-devtools.vscode-firefox-debug"
+		]
+	}
+}

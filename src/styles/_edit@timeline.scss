@@ -1,0 +1,397 @@
+@use "variable" as variable;
+@use "./common/box" as box;
+
+#timeline {
+	$timeline-header-id-width: 14ch;
+	$timeline-header-subject-width: 15ch;
+	$timeline-header-workload-width: 9ch;
+	$timeline-header-resource-width: 10ch;
+	$timeline-header-relation-width: 4ch;
+	$timeline-header-range-from-width: 12ch;
+	$timeline-header-range-to-width: 12ch;
+	$timeline-header-progress-width: 7ch;
+	$timeline-header-controls-item-width: 5ch;
+
+	$app-header-height: 80px;
+	$app-header-width: $timeline-header-id-width + $timeline-header-subject-width + $timeline-header-workload-width +
+		$timeline-header-resource-width + $timeline-header-relation-width + $timeline-header-range-from-width +
+		$timeline-header-range-to-width + $timeline-header-progress-width + $timeline-header-controls-item-width;
+
+	display: grid;
+	width: max-content;
+
+	font-size: variable.$app-timeline-mode-font-size;
+
+	* {
+		font-size: variable.$app-timeline-mode-font-size;
+	}
+
+	.timeline-header {
+		display: inline-flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		justify-content: flex-start;
+
+		.timeline-id {
+			@include box.width($timeline-header-id-width);
+		}
+		.timeline-subject {
+			@include box.width($timeline-header-subject-width);
+		}
+		.timeline-workload {
+			@include box.width($timeline-header-workload-width);
+		}
+		.timeline-resource {
+			@include box.width($timeline-header-resource-width);
+		}
+		.timeline-relation {
+			@include box.width($timeline-header-relation-width);
+			text-align: center;
+		}
+		.timeline-range-from {
+			@include box.width($timeline-header-range-from-width);
+		}
+		.timeline-range-to {
+			@include box.width($timeline-header-range-to-width);
+		}
+		.timeline-range-area {
+			@include box.width($timeline-header-range-from-width + $timeline-header-range-to-width);
+		}
+		.timeline-progress {
+			@include box.width($timeline-header-progress-width);
+		}
+		.timeline-controls {
+			@include box.width($timeline-header-controls-item-width);
+		}
+	}
+
+	#cross-header {
+		display: flex;
+		flex-direction: column;
+		background: #dddddd;
+		z-index: 2;
+		position: sticky;
+		top: 0;
+		left: 0;
+		grid-row-start: 1;
+		grid-column-start: 1;
+
+		width: $app-header-width;
+		height: $app-header-height;
+
+		.header {
+			h1 {
+				font-weight: bold;
+			}
+		}
+		.content {
+			flex: content;
+		}
+		.footer {
+			background: darkgrey;
+			border-bottom: 1px solid black;
+
+			.timeline-header {
+				text-align: center;
+
+				.timeline-cell {
+					border-right: 1px solid black;
+				}
+			}
+		}
+	}
+
+	#days-header {
+		$days-header-background: #eeeeee;
+
+		background: $days-header-background;
+
+		z-index: 1;
+		position: sticky;
+		top: 0;
+		grid-row-start: 1;
+		grid-column-start: 2;
+
+		height: $app-header-height;
+
+		table {
+			table-layout: fixed;
+			border-collapse: collapse;
+		}
+
+		.cell {
+			//filter: invert(100%) grayscale(100%) contrast(100);
+			//filter: grayscale(1) contrast(9999) invert(1);
+		}
+
+		.year-month {
+			td {
+				position: sticky;
+				left: $app-header-width;
+				// border: 1px solid black;
+				background: $days-header-background;
+
+				// & + td {
+				// 	border-right: 1px solid black;
+				// }
+				time {
+					border-left: 1px dotted black;
+					padding-left: 10px;
+				}
+			}
+		}
+
+		.day {
+			text-align: center;
+
+			td {
+				border: 1px solid black;
+			}
+		}
+
+		.week {
+			text-align: center;
+
+			td {
+				border: 1px solid black;
+			}
+		}
+
+		.pin {
+			text-align: center;
+
+			td {
+				border: 1px solid black;
+			}
+		}
+	}
+
+	#timelines {
+		background: white;
+		z-index: 0;
+		position: sticky;
+		left: 0;
+		grid-row-start: 2;
+		grid-column-start: 1;
+		width: $app-header-width;
+
+		.task {
+			.timeline-range-from,
+			.timeline-range-to,
+			.timeline-range-area {
+				&.clickable {
+					cursor: pointer;
+				}
+			}
+		}
+
+		.timeline-range-from {
+			text-align: center;
+		}
+
+		.timeline-range-to {
+			text-align: center;
+		}
+
+		.timeline-range-area {
+			text-align: center;
+		}
+
+		.timeline-header {
+			border-bottom: 1px dotted black;
+
+			&.dragging {
+				opacity: 0.8;
+				filter: contrast(50%) grayscale(100%);
+			}
+
+			&.drag-over {
+				position: relative;
+				mix-blend-mode: overlay;
+			}
+
+			&.hover {
+				position: relative;
+				outline: 3px double rgba(255, 0, 0, 0.555);
+			}
+
+			.timeline-cell {
+				border-right: 1px dotted black;
+			}
+
+			.edit {
+				@mixin editing($border-color, $background) {
+					border: 1px solid $border-color;
+					background: $background;
+				}
+
+				background: rgba($color: #fff, $alpha: 0.5);
+				border: 1px solid transparent;
+				outline: none;
+
+				// @at-root {
+				// 	select.edit {
+				// 		outline: 10px solid lime !important;;
+				// 	}
+				// }
+
+				&:disabled,
+				&:read-only {
+					cursor: default;
+				}
+
+				&:not(:disabled):not(:read-only) {
+					&:hover {
+						@include editing(gray, rgba(white, 0.9));
+					}
+					&:focus {
+						@include editing(black, white);
+					}
+				}
+			}
+
+			.prompt {
+				$prompt-background-color: palegoldenrod;
+
+				position: relative;
+
+				background-color: $prompt-background-color;
+				outline: 2px $prompt-background-color solid;
+				height: fit-content;
+
+				.tools {
+					outline: 2px $prompt-background-color solid;
+					height: fit-content;
+
+					width: max-content;
+
+					&.before {
+						position: absolute;
+						right: 0;
+						top: 0;
+					}
+
+					&.after {
+						position: absolute;
+						left: 100%;
+						top: 0;
+					}
+
+					button {
+						width: 100%;
+					}
+				}
+
+				.overlay {
+					&::before {
+						z-index: 3;
+						grid-row-start: 1;
+						grid-column-start: 1;
+
+						position: fixed;
+						top: 0;
+						left: 0;
+						bottom: 0;
+						right: 0;
+					}
+				}
+			}
+
+			.timeline-id[draggable="true"] {
+				$cursor: grab;
+
+				cursor: $cursor;
+
+				&.dragging {
+					opacity: 1;
+					color: black;
+					border: 1px solid gray;
+				}
+
+				* {
+					cursor: $cursor;
+				}
+			}
+
+			.timeline-range-area.prompt {
+				.contents {
+					display: flex;
+					align-items: center;
+
+					.main {
+						flex: content;
+
+						input {
+							width: 100%;
+						}
+					}
+				}
+			}
+
+			label {
+				display: block;
+			}
+
+			.timeline-subject {
+				input {
+					width: 100%;
+				}
+			}
+
+			.timeline-workload {
+				input[type="number"] {
+					width: 100%;
+				}
+			}
+
+			.timeline-resource {
+				select {
+					width: 100%;
+				}
+			}
+
+			.timeline-progress {
+				input[type="number"] {
+					width: 100%;
+				}
+			}
+
+			.timeline-controls {
+				button.simple {
+					//width: $timeline-header-controls-item-width;
+					padding: 0;
+				}
+			}
+		}
+
+		dialog.selector {
+			table.previous {
+				tr {
+					&.self {
+					}
+				}
+
+				td {
+					white-space: nowrap;
+
+					& > label {
+						display: block;
+					}
+				}
+			}
+		}
+	}
+
+	#viewer {
+		width: 100%;
+		height: 100%;
+
+		grid-row-start: 2;
+		grid-column-start: 2;
+
+		svg {
+			width: 100%;
+			height: 100%;
+		}
+	}
+}

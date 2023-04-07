@@ -1,0 +1,19 @@
+dl.inputs {
+	margin: 0.5em;
+
+	& > dd {
+		margin-left: 2em;
+
+		& + dt {
+			margin-top: 0.5em;
+		}
+	}
+}
+
+button.action {
+	font-weight: bold;
+}
+
+input[type="number"] {
+	text-align: right;
+}
