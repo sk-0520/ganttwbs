@@ -39,7 +39,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		const cell = props.configuration.design.honest.cell;
 
-		const startDiffTime = timeRange.begin.getTime() - props.range.from.getTime();
+		const startDiffTime = timeRange.begin.getTime() - props.calendarRange.from.getTime();
 		const startDiffSpan = TimeSpan.fromMilliseconds(startDiffTime);
 		const startDiffDays = startDiffSpan.totalDays;
 

@@ -3,17 +3,14 @@ import { EditProps } from "./EditProps";
 import { MemberMapValue } from "../MemberMapValue";
 import { ChartSize } from "../ChartSize";
 import { TimelineStore } from "@/models/store/TimelineStore";
-import { DateTime } from "@/models/DateTime";
+import { CalendarRange } from "../CalendarRange";
 
 export interface GanttChartTimelineProps extends EditProps {
 	parentGroup: GroupTimeline | null;
 	currentTimeline: Timeline;
 	currentIndex: number;
 
-	range: {
-		from: DateTime,
-		to: DateTime,
-	};
+	calendarRange: CalendarRange;
 	chartSize: ChartSize;
 
 	memberMap: ReadonlyMap<MemberId, MemberMapValue>;

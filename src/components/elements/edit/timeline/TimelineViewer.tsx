@@ -9,8 +9,8 @@ import { ChartSize } from "@/models/data/ChartSize";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { TimeZone } from "@/models/TimeZone";
-import { DateTime } from "@/models/DateTime";
 import { CalendarRange } from "@/models/data/CalendarRange";
+import { Timelines } from "@/models/Timelines";
 
 interface Props extends EditProps {
 	timeZone: TimeZone;
@@ -20,12 +20,8 @@ interface Props extends EditProps {
 }
 
 const Component: NextPage<Props> = (props: Props) => {
-	const range = {
-		from: DateTime.parse(props.editData.setting.calendar.range.from, props.timeZone),
-		to: DateTime.parse(props.editData.setting.calendar.range.to, props.timeZone),
-	}
-	const diff = range.from.diff(range.to);
-	const days = diff.totalDays + 1;
+
+	const days = Timelines.getCalendarRangeDays(props.calendarRange);
 
 	const cell = props.configuration.design.honest.cell;
 	const timelines = props.editData.setting.timelineNodes.flatMap(a => flat(a));
@@ -85,7 +81,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
 		for (let i = 0; i < days; i++) {
-			const date = range.from.add(TimeSpan.fromDays(i));
+			const date = props.calendarRange.from.add(TimeSpan.fromDays(i));
 
 			const gridX = cell.width.value + cell.width.value * i;
 
@@ -161,7 +157,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							parentGroup={null}
 							currentTimeline={a}
 							currentIndex={i}
-							range={range}
+							calendarRange={props.calendarRange}
 							chartSize={chartSize}
 							memberMap={memberMap}
 							updateRelations={props.updateRelations}

@@ -20,8 +20,7 @@ interface Props extends EditProps {
 const Component: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
 
-	const diff = props.calendarRange.from.diff(props.calendarRange.to);
-	const days = diff.totalDays + 1;
+	const days = Timelines.getCalendarRangeDays(props.calendarRange);
 
 	const dates = Array.from(Array(days), (_, index) => {
 		const date = props.calendarRange.from.add(TimeSpan.fromDays(index));
