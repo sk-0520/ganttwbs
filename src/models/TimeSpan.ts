@@ -29,19 +29,19 @@ export class TimeSpan {
 	}
 
 	public get seconds(): number {
-		return Math.floor((this._ticks / 1000) % 60);
+		return Math.trunc((this._ticks / 1000) % 60);
 	}
 
 	public get minutes(): number {
-		return Math.floor((this._ticks / 1000 / 60) % 60);
+		return Math.trunc((this._ticks / 1000 / 60) % 60);
 	}
 
 	public get hours(): number {
-		return Math.floor((this._ticks / 1000 / 60 / 60) % 24);
+		return Math.trunc((this._ticks / 1000 / 60 / 60) % 24);
 	}
 
 	public get days(): number {
-		return Math.floor(this._ticks / 1000 / 60 / 60 / 24);
+		return Math.trunc(this._ticks / 1000 / 60 / 60 / 24);
 	}
 
 	public get ticks(): number {

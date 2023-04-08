@@ -200,6 +200,8 @@ export const SettingSchema = z.object({
 	recursive: z.number(),
 	/** 設定ファイルバージョン */
 	version: z.number().int(),
+	/** タイムゾーン */
+	timezone: z.string(),
 	calendar: CalendarSchema,
 	theme: ThemeSchema,
 	groups: z.array(GroupSchema),
