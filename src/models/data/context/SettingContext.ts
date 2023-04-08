@@ -1,7 +1,5 @@
 import { createContext } from "react";
 import { Color, DateOnly, MemberId, WeekDay } from "../Setting";
-import { TimeSpan } from "@/models/TimeSpan";
-import { TimeZone } from "@/models/TimeZone";
 
 
 export type UUID = string;

@@ -9,7 +9,6 @@ import { NextPage } from "next";
 import TimelineHeaderRow from "./cell/TimelineHeaderRow";
 import ControlsCell from "./cell/ControlsCell";
 import { DateTimeRanges } from "@/models/DateTimeRanges";
-import { Dates } from "@/models/Dates";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Timelines } from "@/models/Timelines";
@@ -23,6 +22,9 @@ import SubjectCell from "./cell/SubjectCell";
 import TimeRangeCells from "./cell/TimeRangeCells";
 import WorkloadCell from "./cell/WorkloadCell";
 import { DropTimeline } from "@/models/data/DropTimeline";
+import { DateTime } from "@/models/DateTime";
+import { TimeZone } from "@/models/TimeZone";
+import { CalendarRange } from "@/models/data/CalendarRange";
 
 interface Props extends EditProps {
 	treeIndexes: Array<number>;
@@ -37,6 +39,8 @@ interface Props extends EditProps {
 	beginDateCallbacks: BeginDateCallbacks;
 	dropTimeline: DropTimeline | null;
 	callbackAddNextSiblingItem(kind: TimelineKind, currentTimeline: Timeline): void;
+	timeZone: TimeZone;
+	calendarRange: CalendarRange;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
@@ -46,8 +50,8 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [workload, setWorkload] = useState(0);
 	const [memberId, setMemberId] = useState(Settings.maybeTaskTimeline(props.currentTimeline) ? props.currentTimeline.memberId : "");
 	const [beginKind, setBeginKind] = useState<DateTimeRangeKind>("loading");
-	const [beginDate, setBeginDate] = useState<Date | null>(null);
-	const [endDate, setEndDate] = useState<Date | null>(null);
+	const [beginDate, setBeginDate] = useState<DateTime | null>(null);
+	const [endDate, setEndDate] = useState<DateTime | null>(null);
 	const [progress, setProgress] = useState(0);
 	const [children, setChildren] = useState(Settings.maybeGroupTimeline(props.currentTimeline) ? props.currentTimeline.children : []);
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
@@ -334,8 +338,8 @@ const Component: NextPage<Props> = (props: Props) => {
 			return;
 		}
 
-		props.selectingBeginDate.beginDate = date;
-		setSelectedBeginDate(date);
+		props.selectingBeginDate.beginDate = date ? DateTime.convert(date, props.timeZone) : null;
+		setSelectedBeginDate(props.selectingBeginDate.beginDate);
 	}
 
 	function handleAttachPrevTimeline() {
@@ -377,7 +381,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			return;
 		}
 
-		props.currentTimeline.static = props.selectingBeginDate.beginDate ? Dates.format(props.selectingBeginDate.beginDate, "yyyy-MM-dd") : undefined;
+		props.currentTimeline.static = props.selectingBeginDate.beginDate ? props.selectingBeginDate.beginDate.format("yyyy-MM-dd") : undefined;
 		props.currentTimeline.previous = [...props.selectingBeginDate.previous];
 
 		props.beginDateCallbacks.submitSelectBeginDate(props.currentTimeline);
@@ -458,7 +462,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											<li className="main">
 												<input
 													type="date"
-													value={selectedBeginDate ? Dates.format(selectedBeginDate, "yyyy-MM-dd") : ""}
+													value={selectedBeginDate ? selectedBeginDate.format("yyyy-MM-dd") : ""}
 													onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
 												/>
 											</li>
@@ -520,6 +524,8 @@ const Component: NextPage<Props> = (props: Props) => {
 									refreshedChildrenCallbacks={refreshedChildrenCallbacks}
 									beginDateCallbacks={props.beginDateCallbacks}
 									callbackAddNextSiblingItem={handleAddNextSiblingItem}
+									timeZone={props.timeZone}
+									calendarRange={props.calendarRange}
 								/>
 								{/* {
 									Settings.maybeGroupTimeline(a) ? (

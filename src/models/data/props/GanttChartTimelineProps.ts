@@ -3,6 +3,7 @@ import { EditProps } from "./EditProps";
 import { MemberMapValue } from "../MemberMapValue";
 import { ChartSize } from "../ChartSize";
 import { TimelineStore } from "@/models/store/TimelineStore";
+import { DateTime } from "@/models/DateTime";
 
 export interface GanttChartTimelineProps extends EditProps {
 	parentGroup: GroupTimeline | null;
@@ -10,8 +11,8 @@ export interface GanttChartTimelineProps extends EditProps {
 	currentIndex: number;
 
 	range: {
-		from: Date,
-		to: Date,
+		from: DateTime,
+		to: DateTime,
 	};
 	chartSize: ChartSize;
 

@@ -30,7 +30,7 @@ export class DateTime {
 	}
 
 	public get week(): number {
-		throw new Error();
+		return this.date.get("day");
 	}
 
 	public get hour(): number {
@@ -86,7 +86,7 @@ export class DateTime {
 	 * @param date
 	 * @returns
 	 */
-	public format(format?: string): string {
+	public format(format?: "U" | "S" | "L" | string): string {
 		if (format === undefined) {
 			return this.date.toDate().toISOString();
 		}

@@ -1,3 +1,4 @@
+import { DateTime } from "../DateTime";
 import { Timeline } from "./Setting";
 
 export type DateTimeRangeKind =
@@ -26,8 +27,8 @@ export interface DateTimeRange {
 
 export interface SuccessDateTimeRange extends DateTimeRange {
 	kind: "success";
-	begin: Date;
-	end: Date;
+	begin: DateTime;
+	end: DateTime;
 }
 
 export interface SuccessRange {

@@ -17,7 +17,8 @@ import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/
 import { Strings } from "@/models/Strings";
 import { EditData } from "@/models/data/EditData";
 import GeneralEditor from "./General/GeneralEditor";
-import { Dates } from "@/models/Dates";
+import { DateTime } from "@/models/DateTime";
+import { TimeZone } from "@/models/TimeZone";
 
 const NewLine = "\r\n";
 const ThemeHolidayRegularColor: Color = "#0f0";
@@ -190,19 +191,19 @@ function toContext(setting: Setting): SettingContext {
 	};
 }
 
-function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string): { [key: DateOnly]: HolidayEvent } {
+function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string, timeZone: TimeZone): { [key: DateOnly]: HolidayEvent } {
 	const result: { [key: DateOnly]: HolidayEvent } = {};
 
 	const items = Strings.splitLines(context)
 		.filter(a => a && a.trim())
 		.map(a => a.split("\t", 2))
 		.map(a => ({ date: a[0], display: 1 in a ? a[1]: "" }))
-		.map(a => ({ date: new Date(a.date), display: a.display }))
+		.map(a => ({ date: DateTime.parse(a.date, timeZone), display: a.display }))
 		.filter(a => !isNaN(a.date.getTime()))
 		;
 
 	for (const item of items) {
-		result[Dates.format(item.date, "yyyy-MM-dd")] = {
+		result[item.date.format("yyyy-MM-dd")] = {
 			display: item.display,
 			kind: kind
 		};
@@ -212,6 +213,8 @@ function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string): {
 }
 
 function fromContext(source: Readonly<Setting>, context: SettingContext): Setting {
+	const timeZone = TimeZone.parse(context.general.timeZone) ?? TimeZone.getClientTimeZone();
+
 	return {
 		name: context.general.name,
 		recursive: context.general.recursive,
@@ -233,8 +236,8 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 					{ week: "sunday", value: context.calendar.holiday.regulars.sunday },
 				]).filter(a => a.value).map(a => a.week),
 				events: {
-					...fromCalendarHolidayEventsContext("holiday", context.calendar.holiday.events.holidays),
-					...fromCalendarHolidayEventsContext("special", context.calendar.holiday.events.specials),
+					...fromCalendarHolidayEventsContext("holiday", context.calendar.holiday.events.holidays, timeZone),
+					...fromCalendarHolidayEventsContext("special", context.calendar.holiday.events.specials, timeZone),
 				}
 			}
 		},

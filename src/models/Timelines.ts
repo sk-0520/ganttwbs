@@ -3,12 +3,13 @@ import { v4 } from "uuid";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, TimeOnly, Timeline, TimelineId, WeekIndex } from "./data/Setting";
 import { TimeSpan } from "./TimeSpan";
 import { Settings } from "./Settings";
-import { Dates } from "./Dates";
 import { DateTimeRange, SuccessDateTimeRange } from "./data/DateTimeRange";
 import { DateTimeRanges } from "./DateTimeRanges";
+import { DateTime } from "./DateTime";
+import { TimeZone } from "./TimeZone";
 
 interface Holidays {
-	dates: ReadonlyArray<Date>;
+	dates: ReadonlyArray<DateTime>;
 	weeks: ReadonlyArray<WeekIndex>;
 }
 
@@ -18,8 +19,8 @@ export abstract class Timelines {
 		return "timeline-node-previous-" + timeline.id;
 	}
 
-	public static toDaysId(date: Date): string {
-		return "days-" + Dates.format(date, "yyyy_MM_dd");
+	public static toDaysId(date: DateTime): string {
+		return "days-" + date.format("yyyy_MM_dd");
 	}
 
 
@@ -213,20 +214,20 @@ export abstract class Timelines {
 		return null;
 	}
 
-	private static convertDatesByHolidayEvents(events: { [key: DateOnly]: HolidayEvent }): Array<Date> {
-		const result = new Array<Date>();
+	private static convertDatesByHolidayEvents(events: { [key: DateOnly]: HolidayEvent }, timeZone: TimeZone): Array<DateTime> {
+		const result = new Array<DateTime>();
 
 		for (const [key, _] of Object.entries(events)) {
-			const date = new Date(key);
+			const date = DateTime.parse(key, timeZone);
 			result.push(date);
 		}
 
 		return result;
 	}
 
-	private static createSuccessTimeRange(holidays: Holidays, timeline: Timeline, beginDate: Date, workload: TimeSpan): SuccessDateTimeRange {
+	private static createSuccessTimeRange(holidays: Holidays, timeline: Timeline, beginDate: DateTime, workload: TimeSpan, timeZone: TimeZone): SuccessDateTimeRange {
 		//TODO: 非稼働日を考慮（開始から足す感じいいはず）
-		const endDate = new Date(beginDate.getTime() + workload.totalMilliseconds);
+		const endDate = DateTime.convert(beginDate.getTime() + workload.totalMilliseconds, timeZone);
 		const result: SuccessDateTimeRange = {
 			kind: "success",
 			timeline: timeline,
@@ -237,11 +238,11 @@ export abstract class Timelines {
 		return result;
 	}
 
-	public static getDateTimeRanges(flatTimelines: ReadonlyArray<Timeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>): Map<TimelineId, DateTimeRange> {
+	public static getDateTimeRanges(flatTimelines: ReadonlyArray<Timeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>, timeZone: TimeZone): Map<TimelineId, DateTimeRange> {
 		const result = new Map<TimelineId, DateTimeRange>();
 
 		const holidays: Holidays = {
-			dates: this.convertDatesByHolidayEvents(holiday.events),
+			dates: this.convertDatesByHolidayEvents(holiday.events, timeZone),
 			weeks: holiday.regulars.map(a => Settings.toWeekIndex(a)),
 		};
 
@@ -262,9 +263,9 @@ export abstract class Timelines {
 			.filter(a => a.static && !a.previous.length)
 			;
 		for (const timeline of staticTimelines) {
-			const beginDate = new Date(timeline.static!);
+			const beginDate = DateTime.parse(timeline.static!, timeZone);
 			const workload = TimeSpan.parse(timeline.workload);
-			const timeRange = this.createSuccessTimeRange(holidays, timeline, beginDate, workload);
+			const timeRange = this.createSuccessTimeRange(holidays, timeline, beginDate, workload, timeZone);
 			result.set(timeline.id, timeRange);
 			cache.statics.set(timeline.id, timeline);
 		}
@@ -299,7 +300,7 @@ export abstract class Timelines {
 
 			const workload = TimeSpan.parse(timeline.workload);
 
-			const timeRange = this.createSuccessTimeRange(holidays, timeline, prevRange.end, workload);
+			const timeRange = this.createSuccessTimeRange(holidays, timeline, prevRange.end, workload, timeZone);
 			result.set(timeline.id, timeRange);
 		}
 
@@ -370,13 +371,13 @@ export abstract class Timelines {
 					}
 					let prevDate = maxTimeRange.end;
 					if (timeline.static) {
-						const staticDate = new Date(timeline.static);
+						const staticDate = DateTime.parse(timeline.static, timeZone);
 						const targetTime = Math.max(staticDate.getTime(), maxTimeRange.end.getTime());
-						prevDate = new Date(targetTime);
+						prevDate = DateTime.convert(targetTime, timeZone);
 					}
 
 					const workload = TimeSpan.parse(timeline.workload);
-					const timeRange = this.createSuccessTimeRange(holidays, timeline, prevDate, workload);
+					const timeRange = this.createSuccessTimeRange(holidays, timeline, prevDate, workload, timeZone);
 					result.set(timeline.id, timeRange);
 
 				} else if (Settings.maybeGroupTimeline(timeline)) {

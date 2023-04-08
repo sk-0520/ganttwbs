@@ -41,12 +41,15 @@ async function onSubmit(data: Input, router: NextRouter) {
 	const settingObject = JSON.parse(json);
 
 	//TODO: バージョン確認
-	const settingSchemaResult = SettingSchema.safeParse(settingObject);
+	const settingSchemaResult = SettingSchema.parse(settingObject);
+	/*
 	if(!settingSchemaResult.success) {
 		console.error("error");
 		return;
 	}
 	const setting = settingSchemaResult.data;
+	*/
+	const setting = settingSchemaResult;
 	console.debug(setting);
 	console.debug(fileName);
 
