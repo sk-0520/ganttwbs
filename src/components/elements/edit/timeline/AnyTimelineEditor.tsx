@@ -8,11 +8,10 @@ import { TimelineStore } from "@/models/store/TimelineStore";
 import { NextPage } from "next";
 import TimelineHeaderRow from "./cell/TimelineHeaderRow";
 import ControlsCell from "./cell/ControlsCell";
-import { DateTimeRanges } from "@/models/DateTimeRanges";
+import { WorkRanges } from "@/models/WorkRanges";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Timelines } from "@/models/Timelines";
-import { DateTimeRangeKind } from "@/models/data/DateTimeRange";
 import { useState, useEffect } from "react";
 import IdCell from "./cell/IdCell";
 import ProgressCell from "./cell/ProgressCell";
@@ -25,6 +24,7 @@ import { DropTimeline } from "@/models/data/DropTimeline";
 import { DateTime } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "@/models/data/CalendarRange";
+import { WorkRangeKind } from "@/models/data/WorkRange";
 
 interface Props extends EditProps {
 	treeIndexes: Array<number>;
@@ -49,7 +49,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
 	const [memberId, setMemberId] = useState(Settings.maybeTaskTimeline(props.currentTimeline) ? props.currentTimeline.memberId : "");
-	const [beginKind, setBeginKind] = useState<DateTimeRangeKind>("loading");
+	const [beginKind, setBeginKind] = useState<WorkRangeKind>("loading");
 	const [beginDate, setBeginDate] = useState<DateTime | null>(null);
 	const [endDate, setEndDate] = useState<DateTime | null>(null);
 	const [progress, setProgress] = useState(0);
@@ -83,7 +83,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 			if (timelineItem.range) {
 				setBeginKind(timelineItem.range.kind);
-				if (DateTimeRanges.maybeSuccessTimeRange(timelineItem.range)) {
+				if (WorkRanges.maybeSuccessWorkRange(timelineItem.range)) {
 					setBeginDate(timelineItem.range.begin);
 					setEndDate(timelineItem.range.end);
 				}

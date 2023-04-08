@@ -1,7 +1,7 @@
 import { DateTime } from "../DateTime";
 import { Timeline } from "./Setting";
 
-export type DateTimeRangeKind =
+export type WorkRangeKind =
 	"success"
 	|
 	"loading"
@@ -20,18 +20,18 @@ export type DateTimeRangeKind =
 	;
 
 
-export interface DateTimeRange {
-	kind: DateTimeRangeKind;
+export interface WorkRange {
+	kind: WorkRangeKind;
 	timeline: Timeline;
 }
 
-export interface SuccessDateTimeRange extends DateTimeRange {
+export interface SuccessWorkRange extends WorkRange {
 	kind: "success";
 	begin: DateTime;
 	end: DateTime;
 }
 
-export interface SuccessRange {
-	minimum: SuccessDateTimeRange;
-	maximum: SuccessDateTimeRange;
+export interface TotalSuccessWorkRange {
+	minimum: SuccessWorkRange;
+	maximum: SuccessWorkRange;
  }

@@ -3,8 +3,8 @@ import { v4 } from "uuid";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, TimeOnly, Timeline, TimelineId, WeekIndex } from "./data/Setting";
 import { TimeSpan } from "./TimeSpan";
 import { Settings } from "./Settings";
-import { DateTimeRange, SuccessDateTimeRange } from "./data/DateTimeRange";
-import { DateTimeRanges } from "./DateTimeRanges";
+import { SuccessWorkRange, WorkRange } from "./data/WorkRange";
+import { WorkRanges } from "./WorkRanges";
 import { DateTime } from "./DateTime";
 import { TimeZone } from "./TimeZone";
 import { CalendarRange } from "./data/CalendarRange";
@@ -232,10 +232,10 @@ export abstract class Timelines {
 		return result;
 	}
 
-	private static createSuccessTimeRange(holidays: Holidays, timeline: Timeline, beginDate: DateTime, workload: TimeSpan, timeZone: TimeZone): SuccessDateTimeRange {
+	private static createSuccessTimeRange(holidays: Holidays, timeline: Timeline, beginDate: DateTime, workload: TimeSpan, timeZone: TimeZone): SuccessWorkRange {
 		//TODO: 非稼働日を考慮（開始から足す感じいいはず）
 		const endDate = DateTime.convert(beginDate.getTime() + workload.totalMilliseconds, timeZone);
-		const result: SuccessDateTimeRange = {
+		const result: SuccessWorkRange = {
 			kind: "success",
 			timeline: timeline,
 			begin: beginDate,
@@ -245,8 +245,8 @@ export abstract class Timelines {
 		return result;
 	}
 
-	public static getDateTimeRanges(flatTimelines: ReadonlyArray<Timeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>, timeZone: TimeZone): Map<TimelineId, DateTimeRange> {
-		const result = new Map<TimelineId, DateTimeRange>();
+	public static getDateTimeRanges(flatTimelines: ReadonlyArray<Timeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>, timeZone: TimeZone): Map<TimelineId, WorkRange> {
+		const result = new Map<TimelineId, WorkRange>();
 
 		const holidays: Holidays = {
 			dates: this.convertDatesByHolidayEvents(holiday.events, timeZone),
@@ -281,7 +281,7 @@ export abstract class Timelines {
 			.filter(a => !a.static && !a.previous.length)
 			;
 		for (const timeline of emptyTimelines) {
-			const range: DateTimeRange = {
+			const range: WorkRange = {
 				kind: "no-input",
 				timeline: timeline,
 			}
@@ -301,7 +301,7 @@ export abstract class Timelines {
 			}
 
 			const prevRange = result.get(prev.id);
-			if (!prevRange || !DateTimeRanges.maybeSuccessTimeRange(prevRange)) {
+			if (!prevRange || !WorkRanges.maybeSuccessWorkRange(prevRange)) {
 				continue;
 			}
 
@@ -354,9 +354,9 @@ export abstract class Timelines {
 
 					const resultDateTimeRanges = timeline.previous
 						.map(a => result.get(a))
-						.filter((a): a is DateTimeRange => a !== undefined)
+						.filter((a): a is WorkRange => a !== undefined)
 						;
-					if (resultDateTimeRanges.some(a => DateTimeRanges.isError(a))) {
+					if (resultDateTimeRanges.some(a => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
 							kind: "relation-error",
@@ -366,13 +366,13 @@ export abstract class Timelines {
 					}
 
 					// 多分これで算出可能
-					const successDateTimeRanges = resultDateTimeRanges.filter(DateTimeRanges.maybeSuccessTimeRange);
+					const successDateTimeRanges = resultDateTimeRanges.filter(WorkRanges.maybeSuccessWorkRange);
 					if (resultDateTimeRanges.length !== successDateTimeRanges.length) {
 						// わからん
 						continue;
 					}
 
-					const maxTimeRange = DateTimeRanges.maxByEndDate(successDateTimeRanges);
+					const maxTimeRange = WorkRanges.maxByEndDate(successDateTimeRanges);
 					if (maxTimeRange === undefined) {
 						debugger;
 					}
@@ -392,7 +392,7 @@ export abstract class Timelines {
 
 					if (!timeline.children.length) {
 						// 子がいないならエラっとっく
-						const range: DateTimeRange = {
+						const range: WorkRange = {
 							kind: "no-children",
 							timeline: timeline,
 						}
@@ -413,9 +413,9 @@ export abstract class Timelines {
 
 					const resultDateTimeRanges = resultChildren
 						.map(a => result.get(a.id))
-						.filter((a): a is DateTimeRange => a !== undefined)
+						.filter((a): a is WorkRange => a !== undefined)
 						;
-					if (resultDateTimeRanges.some(a => DateTimeRanges.isError(a))) {
+					if (resultDateTimeRanges.some(a => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
 							kind: "relation-error",
@@ -424,14 +424,14 @@ export abstract class Timelines {
 						continue;
 					}
 					// まぁまぁ(たぶん条件漏れあり)
-					const items = resultDateTimeRanges.filter(DateTimeRanges.maybeSuccessTimeRange);
+					const items = resultDateTimeRanges.filter(WorkRanges.maybeSuccessWorkRange);
 					if (items.length) {
-						const minMax = DateTimeRanges.getMinMaxRange(items);
-						const timeRange: SuccessDateTimeRange = {
+						const totalSuccessWorkRange = WorkRanges.getTotalSuccessWorkRange(items);
+						const timeRange: SuccessWorkRange = {
 							timeline: timeline,
 							kind: "success",
-							begin: minMax.minimum.begin,
-							end: minMax.maximum.end,
+							begin: totalSuccessWorkRange.minimum.begin,
+							end: totalSuccessWorkRange.maximum.end,
 						}
 						result.set(timeline.id, timeRange);
 					}
