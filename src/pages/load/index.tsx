@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import Layout from "@/components/layout/Layout";
 import { Goto } from "@/models/Goto";
 import { EditData } from "@/models/data/EditData";
-import { Setting, SettingSchema } from "@/models/data/Setting";
+import { SettingSchema } from "@/models/data/Setting";
 
 interface Input {
 	files: FileList;
