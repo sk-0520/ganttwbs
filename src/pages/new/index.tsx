@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import Layout from "@/components/layout/Layout";
 import { Goto } from "@/models/Goto";
 import { EditData } from "@/models/data/EditData";
-import { DateOnly, DefaultRecursiveMaxCount, Setting } from "@/models/data/Setting";
+import { DateOnly, DefaultRecursiveMaxCount, DefaultSettingVersion, Setting } from "@/models/data/Setting";
 import { Dates } from "@/models/Dates";
 
 interface Input {
@@ -146,6 +146,7 @@ function createEmptySetting(data: Input): Setting {
 	const setting: Setting = {
 		name: data.title,
 		recursive: DefaultRecursiveMaxCount,
+		version: DefaultSettingVersion,
 		calendar: {
 			holiday: {
 				regulars: [
@@ -194,6 +195,7 @@ function createTemplateSetting(data: Input): Setting {
 	const setting: Setting = {
 		name: data.title,
 		recursive: DefaultRecursiveMaxCount,
+		version: DefaultSettingVersion,
 		calendar: {
 			holiday: {
 				regulars: [

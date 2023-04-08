@@ -14,6 +14,10 @@ export type TimeOnly = z.infer<typeof TimeOnlySchema>;
  * 反復計算最大数。
  */
 export const DefaultRecursiveMaxCount = 1000;
+/**
+ * 最新の設定ファイルバージョン。
+ */
+export const DefaultSettingVersion = 0;
 
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -194,6 +198,8 @@ export const SettingSchema = z.object({
 	name: z.string(),
 	/** 反復計算数 */
 	recursive: z.number(),
+	/** 設定ファイルバージョン */
+	version: z.number().int(),
 	calendar: CalendarSchema,
 	theme: ThemeSchema,
 	groups: z.array(GroupSchema),

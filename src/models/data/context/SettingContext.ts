@@ -16,6 +16,7 @@ export interface MemberSetting {
 export interface GeneralSetting {
 	name: string;
 	recursive: number;
+	version: number;
 }
 
 export interface GroupSetting {
