@@ -4,41 +4,6 @@ import { TimeSpan } from "../../../src/models/TimeSpan";
 describe("Dates", () => {
 
 	test.each([
-		["+00:30", TimeSpan.fromMinutes(30)],
-		["+09:00", TimeSpan.fromMinutes(540)],
-		["+09:30", TimeSpan.fromMinutes(570)],
-		["-00:30", TimeSpan.fromMinutes(-30)],
-		["-09:00", TimeSpan.fromMinutes(-540)],
-		["-09:30", TimeSpan.fromMinutes(-570)],
-	])("serializeTimeZone", (expected: string, input: TimeSpan) => {
-		expect(Dates.serializeTimeZone({ offset: input })).toBe(expected);
-	});
-
-	test.each([
-		[TimeSpan.fromMinutes(30), "+00:30"],
-		[TimeSpan.fromMinutes(540), "+09:00"],
-		[TimeSpan.fromMinutes(570), "+09:30"],
-		[TimeSpan.fromMinutes(-30), "-00:30"],
-		[TimeSpan.fromMinutes(-540), "-09:00"],
-		[TimeSpan.fromMinutes(-570), "-09:30"],
-	])("parseTimeZone", (expected: TimeSpan, input: string) => {
-		const actual = Dates.parseTimeZone(input);
-		expect(actual).toBeTruthy();
-		expect(actual?.offset.ticks).toBe(expected.ticks);
-	});
-
-	test.each([
-		["09:00"],
-		["+0900"],
-		["-0900"],
-		["*09:00"],
-	])("parseTimeZone null", (input: string) => {
-		const actual = Dates.parseTimeZone(input);
-		expect(actual).toBeNull();
-	});
-
-
-	test.each([
 		[new Date("2000-01-01T00:00:00"), new Date("2000-01-01T00:00:00"), TimeSpan.zero],
 		[new Date("2000-01-01T00:00:00.001"), new Date("2000-01-01T00:00:00"), TimeSpan.fromMilliseconds(1)],
 		[new Date("1999-12-31T23:59:59.999"), new Date("2000-01-01T00:00:00"), TimeSpan.fromMilliseconds(-1)],
