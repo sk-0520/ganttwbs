@@ -65,7 +65,7 @@ describe("Dates", () => {
 		[new Date("3000-01-01T00:00:00"), "3000-01-01T00:00:00"],
 		[null, "yyyy-MM-ddThh:mm:ss"],
 	])("parse", (expected: Date | null, input) => {
-		expect(Dates.parse(input)).toEqual(expected);
+		expect(Dates.parseDate(input)).toEqual(expected);
 	});
 
 	test.each([

@@ -70,7 +70,7 @@ export abstract class Dates {
 	 * @param input
 	 * @returns 変換した `Date`、失敗時は `null`
 	 */
-	public static parse(input: string): Date | null {
+	public static parseDate(input: string): Date | null {
 		const date = new Date(input);
 
 		if (Number.isNaN(date.getTime())) {
