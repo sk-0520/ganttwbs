@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import Layout from "@/components/layout/Layout";
 import { Goto } from "@/models/Goto";
 import { EditData } from "@/models/data/EditData";
-import { Setting } from "@/models/data/Setting";
+import { Setting, SettingSchema } from "@/models/data/Setting";
 
 interface Input {
 	files: FileList;
@@ -39,8 +39,14 @@ async function onSubmit(data: Input, router: NextRouter) {
 
 	const json = await file.text();
 	const settingObject = JSON.parse(json);
-	//TODO: 型チェック
-	const setting = settingObject as Setting;
+
+	//TODO: バージョン確認
+	const settingSchemaResult = SettingSchema.safeParse(settingObject);
+	if(!settingSchemaResult.success) {
+		console.error("error");
+		return;
+	}
+	const setting = settingSchemaResult.data;
 	console.debug(setting);
 	console.debug(fileName);
 

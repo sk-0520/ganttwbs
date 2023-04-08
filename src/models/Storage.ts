@@ -13,7 +13,7 @@ export abstract class Storage {
 			return null;
 		}
 		const settingObject = JSON.parse(sessionData);
-		// 型チェック
+		//TODO: 型チェック+バージョン確認 -> 読み込み処理できちんとやってから実装対応する
 		const data = settingObject as EditData;
 		return data;
 	}
