@@ -4,6 +4,23 @@ import { TimeSpan } from "../../../src/models/TimeSpan";
 
 describe("DateTime", () => {
 
+	test("parse", () => {
+		const expected = DateTime.parse("2000-01-01T00:00:00", TimeZone.utc);
+		for (let i = 0; i < 24; i++) {
+			const actual = DateTime.parse("2000-01-01T00:00:00", new TimeZone(TimeSpan.fromHours(i)));
+			expect(actual.getTime()).toEqual(expected.getTime());
+		}
+	});
+
+	test("parse YYYY-MM-DD", () => {
+		const expected = DateTime.parse("2000-01-01T00:00:00", TimeZone.utc);
+		for (let i = 0; i < 24; i++) {
+			const actual = DateTime.parse("2000-01-01", new TimeZone(TimeSpan.fromHours(i)));
+			expect(actual.getTime()).toEqual(expected.getTime());
+			expect(actual.hour).toEqual(0);
+		}
+	});
+
 	test.each([
 		[DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.zero],
 		[DateTime.parse("2000-01-01T00:00:00.001", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromMilliseconds(1)],

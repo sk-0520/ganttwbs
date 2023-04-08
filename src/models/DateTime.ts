@@ -6,6 +6,7 @@ import { TimeZone } from "./TimeZone";
  * 日付のラッパー。
  *
  * Date なり依存ライブラリなり、とりあえずこれでラップしておく。
+ * 気持ちタイムゾーンもできてると思ってるけど確証はない。
  */
 export class DateTime {
 
@@ -54,16 +55,24 @@ export class DateTime {
 		return new DateTime(date, timeZone);
 	}
 
-	public static parse(input: string, timeZone: TimeZone): DateTime {
-		const create = cdate().utcOffset(timeZone.offset.totalMinutes).cdateFn();
-		const date = create(input)
+	private static _parse(input: string | Date | number, timeZone: TimeZone): DateTime {
+		let date = cdate(input)
+		if (!date.utcOffset()) {
+			date = date.utcOffset(timeZone.offset.totalMinutes);
+		}
 		return new DateTime(date, timeZone);
 	}
 
+	public static parse(input: string, timeZone: TimeZone): DateTime {
+		// const create = cdate().utcOffset(timeZone.offset.totalMinutes).cdateFn();
+		// const date = create(input)
+		// const date = cdate(input).utcOffset(timeZone.offset.totalMinutes);
+		// return new DateTime(date, timeZone);
+		return DateTime._parse(input, timeZone);
+	}
+
 	public static convert(input: Date | number, timeZone: TimeZone): DateTime {
-		const create = cdate().utcOffset(timeZone.offset.totalMinutes).cdateFn();
-		const date = create(input)
-		return new DateTime(date, timeZone);
+		return DateTime._parse(input, timeZone);
 	}
 
 	public add(timeSpan: TimeSpan): DateTime {
@@ -86,7 +95,7 @@ export class DateTime {
 	 * @param date
 	 * @returns
 	 */
-	public format(format?: "U" | "S" | "L" | string): string {
+	public format(format?: "U" | "S" | "L" | "I" | string): string {
 		if (format === undefined) {
 			return this.date.toDate().toISOString();
 		}
@@ -100,6 +109,9 @@ export class DateTime {
 
 			case "L":
 				return this.date.toDate().toLocaleString();
+
+			case "I":
+				return this.date.toDate().toISOString();
 
 			default:
 				break;
