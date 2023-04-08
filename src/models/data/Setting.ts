@@ -92,19 +92,26 @@ const ProgressSchema = z.number();
 /** @inheritdoc */
 export type Progress = z.infer<typeof ProgressSchema>;
 
-
+const TimelineSchema = z.object({
+	id: TimelineIdSchema,
+	kind: TimelineKindSchema,
+	subject: z.string(),
+	comment: z.string(),
+});
 /** @inheritdoc */
-export interface Timeline {
-	id: TimelineId;
-	kind: TimelineKind;
-	subject: string;
-	comment: string;
+export type Timeline = z.infer<typeof TimelineSchema>;
+
+interface IGroupTimeline extends Timeline{
+	kind: "group";
+	children: Array<IGroupTimeline>;
 }
 
-export interface GroupTimeline extends Timeline {
-	kind: "group";
-	children: Array<GroupTimeline | TaskTimeline>;
-}
+const GroupTimelineSchema: z.ZodSchema<IGroupTimeline> = z.lazy(() => TimelineSchema.extend({
+	kind: z.literal("group"),
+	children: z.array(GroupTimelineSchema),
+}));
+/** @inheritdoc */
+export type GroupTimeline = z.infer<typeof GroupTimelineSchema>;
 
 
 export type TaskTimelineWorkProgress = number;
