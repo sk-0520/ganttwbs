@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import { FormEvent } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import { v4 } from "uuid";
 
 import { Storage } from "@/models/Storage";
 import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
@@ -19,6 +18,7 @@ import { EditData } from "@/models/data/EditData";
 import GeneralEditor from "./General/GeneralEditor";
 import { DateTime } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
+import { IdFactory } from "@/models/IdFacotory";
 
 const NewLine = "\r\n";
 const ThemeHolidayRegularColor: Color = "#0f0";
@@ -129,10 +129,10 @@ function toContext(setting: Setting): SettingContext {
 			timeZone: setting.timeZone,
 		},
 		groups: setting.groups.map(a => ({
-			key: v4(),
+			key: IdFactory.createReactKey(),
 			name: a.name,
 			members: a.members.map<MemberSetting>(b => ({
-				key: v4(),
+				key: IdFactory.createReactKey(),
 				id: b.id,
 				name: b.name,
 				color: b.color,
@@ -178,7 +178,7 @@ function toContext(setting: Setting): SettingContext {
 				}
 			},
 			groups: setting.theme.groups.map(a => ({
-				key: v4(),
+				key: IdFactory.createReactKey(),
 				value: a,
 			})),
 			timeline: {

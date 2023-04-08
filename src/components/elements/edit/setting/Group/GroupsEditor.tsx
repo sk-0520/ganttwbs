@@ -1,6 +1,5 @@
 import { NextPage } from "next";
 import { useContext, MouseEvent, useState } from "react";
-import { v4 } from "uuid";
 
 import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import MemberEditor from "./MemberEditor";
@@ -9,6 +8,7 @@ import { random } from "@ctrl/tinycolor";
 import GroupColorsDialog from "./GroupColorsDialog";
 import Colors from "@/models/data/Colors";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
+import { IdFactory } from "@/models/IdFacotory";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
@@ -59,7 +59,7 @@ const Component: NextPage = () => {
 		}
 
 		const newGroup = {
-			key: v4(),
+			key: IdFactory.createReactKey(),
 			name: groupName,
 			members: [],
 		};
@@ -104,8 +104,8 @@ const Component: NextPage = () => {
 		}
 
 		const newMember: MemberSetting = {
-			key: v4(),
-			id: v4(),
+			key: IdFactory.createReactKey(),
+			id: IdFactory.createMemberId(),
 			name: name,
 			color: random().toHexString(),
 			priceCost: 40000,
