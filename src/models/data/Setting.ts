@@ -201,7 +201,7 @@ export const SettingSchema = z.object({
 	/** 設定ファイルバージョン */
 	version: z.number().int(),
 	/** タイムゾーン */
-	timezone: z.string(),
+	timeZone: z.string(),
 	calendar: CalendarSchema,
 	theme: ThemeSchema,
 	groups: z.array(GroupSchema),

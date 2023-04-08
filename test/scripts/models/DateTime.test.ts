@@ -34,14 +34,14 @@ describe("DateTime", () => {
 		["1", "M"],
 		["01", "MM"],
 		["2", "d"],
-		// ["02", "dd"],
-		// ["3", "H"],
-		// ["03", "HH"],
-		// ["4", "m"],
-		// ["04", "mm"],
-		// ["5", "s"],
-		// ["05", "ss"],
-		// ["43210102030405", "yyyyMMddHHmmss"],
+		["02", "dd"],
+		["3", "H"],
+		["03", "HH"],
+		["4", "m"],
+		["04", "mm"],
+		["5", "s"],
+		["05", "ss"],
+		["43210102030405", "yyyyMMddHHmmss"],
 	])("format", (expected, s) => {
 		const date = DateTime.parse("4321-01-02T03:04:05.6", TimeZone.utc);
 		const actual = date.format(s);

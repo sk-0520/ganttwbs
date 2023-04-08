@@ -125,6 +125,7 @@ function toContext(setting: Setting): SettingContext {
 			name: setting.name,
 			recursive: setting.recursive,
 			version: setting.version,
+			timeZone: setting.timeZone,
 		},
 		groups: setting.groups.map(a => ({
 			key: v4(),
@@ -215,6 +216,7 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 		name: context.general.name,
 		recursive: context.general.recursive,
 		version: context.general.version,
+		timeZone: context.general.timeZone,
 		calendar: {
 			range: {
 				from: context.calendar.range.from,

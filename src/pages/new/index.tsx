@@ -7,6 +7,7 @@ import { Goto } from "@/models/Goto";
 import { EditData } from "@/models/data/EditData";
 import { DateOnly, DefaultRecursiveMaxCount, DefaultSettingVersion, Setting } from "@/models/data/Setting";
 import { Dates } from "@/models/Dates";
+import { TimeZone } from "@/models/TimeZone";
 
 interface Input {
 	title: string;
@@ -147,6 +148,7 @@ function createEmptySetting(data: Input): Setting {
 		name: data.title,
 		recursive: DefaultRecursiveMaxCount,
 		version: DefaultSettingVersion,
+		timeZone: TimeZone.getClientTimeZone().serialize(),
 		calendar: {
 			holiday: {
 				regulars: [
@@ -196,6 +198,7 @@ function createTemplateSetting(data: Input): Setting {
 		name: data.title,
 		recursive: DefaultRecursiveMaxCount,
 		version: DefaultSettingVersion,
+		timeZone: TimeZone.getClientTimeZone().serialize(),
 		calendar: {
 			holiday: {
 				regulars: [
