@@ -1,10 +1,14 @@
+import { z } from "zod";
 
+const ColorSchema = z.string();
+export type Color = z.infer<typeof ColorSchema>;
 
-export type Color = string;
-
-export type DateTime = string;
-export type DateOnly = string;
-export type TimeOnly = string;
+const DateTimeSchema = z.string();
+export type DateTime = z.infer<typeof DateTimeSchema>;
+const DateOnlySchema = z.string();
+export type DateOnly = z.infer<typeof DateOnlySchema>;
+const TimeOnlySchema = z.string();
+export type TimeOnly = z.infer<typeof TimeOnlySchema>;
 
 /**
  * 反復計算最大数。
@@ -13,97 +17,96 @@ export const DefaultRecursiveMaxCount = 1000;
 
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
-export type WeekDay =
-	"monday"
-	|
-	"tuesday"
-	|
-	"wednesday"
-	|
-	"thursday"
-	|
-	"friday"
-	|
-	"saturday"
-	|
-	"sunday"
-	;
+const WeekDaySchema = z.enum([
+	"monday",
+	"tuesday",
+	"wednesday",
+	"thursday",
+	"friday",
+	"saturday",
+	"sunday",
+]);
+export type WeekDay = z.infer<typeof WeekDaySchema>;
 
-export type HolidayKind =
-	"holiday"
-	|
-	"special"
-	;
+const HolidayKindSchema = z.enum([
+	"holiday",
+	"special",
+]);
+export type HolidayKind = z.infer<typeof HolidayKindSchema>;
 
-export type MemberId = string;
+const MemberIdSchema = z.string();
+export type MemberId = z.infer<typeof MemberIdSchema>;
 
-export type TimelineKind =
-	"group"
-	|
-	"task"
-	;
+const TimelineKindSchema = z.enum([
+	"group",
+	"task",
+]);
+export type TimelineKind = z.infer<typeof TimelineKindSchema>;
 
-export type TaskTimelineWorkState =
-	"enabled"
-	|
-	"disabled"
-	|
-	"sleep"
-	;
+const TaskTimelineWorkStateSchema = z.enum([
+	"enabled",
+	"disabled",
+	"sleep",
+]);
+export type TaskTimelineWorkState = z.infer<typeof TaskTimelineWorkStateSchema>;
 
-export interface HolidayEvent {
-	display: string;
-	kind: HolidayKind;
-}
+const HolidayEventSchema = z.object({
+	display: z.string(),
+	kind: HolidayKindSchema,
+})
+
+export type HolidayEvent = z.infer<typeof HolidayEventSchema>;
 
 /**
  * 休日設定。
  */
-export interface Holiday {
+const HolidaySchema = z.object({
 	/** 定休曜日 */
-	regulars: Array<WeekDay>;
-	events: { [key: DateOnly]: HolidayEvent }
-}
+	regulars: z.array(WeekDaySchema),
+	events: z.record(DateOnlySchema, HolidayEventSchema)
+})
+/** @inheritdoc */
+export type Holiday = z.infer<typeof HolidaySchema>;
+
+const WorkDateRangeSchema = z.object({
+	from: DateOnlySchema,
+	to: DateOnlySchema,
+});
+/** @inheritdoc */
+export type WorkDateRange = z.infer<typeof WorkDateRangeSchema>;
+
+const CalendarSchema = z.object({
+	range: WorkDateRangeSchema,
+	holiday: HolidaySchema,
+});
+/** @inheritdoc */
+export type Calendar = z.infer<typeof CalendarSchema>;
 
 
-export interface WorkDateRange {
-	from: DateOnly;
-	to: DateOnly;
-}
+const TimelineIdSchema = z.string();
+/** @inheritdoc */
+export type TimelineId = z.infer<typeof TimelineIdSchema>;
 
-export interface Calendar {
-	range: WorkDateRange;
-	holiday: Holiday;
-}
-
-
-export type TimelineId = string;
 /** 0-1 */
-export type Progress = number;
+const ProgressSchema = z.number();
+/** @inheritdoc */
+export type Progress = z.infer<typeof ProgressSchema>;
 
+const TimelineSchema = z.object({
+	id: TimelineIdSchema,
+	kind: TimelineKindSchema,
+	subject: z.string(),
+	comment: z.string(),
+});
+/** @inheritdoc */
+export type Timeline = z.infer<typeof TimelineSchema>;
 
-export interface Timeline {
-	id: TimelineId;
-	kind: TimelineKind;
-	subject: string;
-	comment: string;
-}
-
-export interface GroupTimeline extends Timeline {
+interface IGroupTimeline extends Timeline {
 	kind: "group";
-	children: Array<GroupTimeline | TaskTimeline>;
+	children: Array<IGroupTimeline | ITaskTimeline>;
 }
 
-
-export type TaskTimelineWorkProgress = number;
-
-export interface TaskTimelineWorkHistory {
-	progress: TaskTimelineWorkProgress;
-	version: VersionId;
-	more: TimeOnly;
-}
-
-export interface TaskTimeline extends Timeline {
+interface ITaskTimeline extends Timeline {
 	kind: "task";
 	memberId: MemberId;
 	static?: DateTime;
@@ -112,60 +115,89 @@ export interface TaskTimeline extends Timeline {
 	progress: Progress;
 }
 
-export type AnyTimeline = GroupTimeline | TaskTimeline;
+const GroupTimelineSchema: z.ZodSchema<IGroupTimeline> = z.lazy(() => TimelineSchema.extend({
+	kind: z.literal("group"),
+	children: z.array(z.union([GroupTimelineSchema, TaskTimelineSchema])),
+}));
+/** @inheritdoc */
+export type GroupTimeline = z.infer<typeof GroupTimelineSchema>;
 
-export type VersionId = string;
+const TaskTimelineSchema = TimelineSchema.extend({
+	kind: z.literal("task"),
+	memberId: MemberIdSchema,
+	static: DateTimeSchema.optional(),
+	previous: z.array(TimelineIdSchema),
+	workload: TimeOnlySchema,
+	progress: ProgressSchema,
+});
+/** @inheritdoc */
+export type TaskTimeline = z.infer<typeof TaskTimelineSchema>;
 
-export interface VersionItem {
-	id: VersionId;
-	timestamp: DateTime;
-}
+const AnyTimelineSchema = z.union([GroupTimelineSchema, TaskTimelineSchema]);
+/** @inheritdoc */
+export type AnyTimeline = z.infer<typeof AnyTimelineSchema>;
 
-export interface Theme {
-	holiday: {
-		regulars: { [key in WeekDay]?: Color };
-		events: { [key in HolidayKind]: Color };
-	};
-	groups: Array<Color>;
-	timeline: {
-		group: Color;
-		defaultGroup: Color;
-		defaultTask: Color;
-		completed: Color;
-	};
-}
+const VersionIdSchema = z.string();
+/** @inheritdoc */
+export type VersionId = z.infer<typeof VersionIdSchema>;
 
+/**
+ * バージョン。
+ */
+const VersionItemSchema = z.object({
+	id: VersionIdSchema,
+	timestamp: DateTimeSchema,
+});
+/** {@inheritDoc VersionItemSchema} */
+export type VersionItem = z.infer<typeof VersionItemSchema>;
 
-export interface Member {
-	id: MemberId;
-	name: string;
-	color: Color;
-	price: Price;
-}
+const ThemeSchema = z.object({
+	holiday: z.object({
+		regulars: z.record(WeekDaySchema, ColorSchema),
+		events: z.record(HolidayKindSchema, ColorSchema),
+	}),
+	groups: z.array(ColorSchema),
+	timeline: z.object({
+		group: ColorSchema,
+		defaultGroup: ColorSchema,
+		defaultTask: ColorSchema,
+		completed: ColorSchema,
+	}),
+});
+export type Theme = z.infer<typeof ThemeSchema>;
+
 
 /** 1日単価 */
-export interface Price {
+const PriceSchema = z.object({
 	/** 原価 */
-	cost: number;
+	cost: z.number(),
 	/** 売上 */
-	sales: number;
-}
+	sales: z.number(),
+});
+export type Price = z.infer<typeof PriceSchema>;
 
-export interface Group {
-	name: string;
-	members: Array<Member>;
-}
+const MemberSchema = z.object({
+	id: MemberIdSchema,
+	name: z.string(),
+	color: ColorSchema,
+	price: PriceSchema,
+});
+export type Member = z.infer<typeof MemberSchema>;
 
+const GroupSchema = z.object({
+	name: z.string(),
+	members: z.array(MemberSchema),
+});
+export type Group = z.infer<typeof GroupSchema>;
 
-export interface Setting {
-	name: string;
+export const SettingSchema = z.object({
+	name: z.string(),
 	/** 反復計算数 */
-	recursive: number;
-	calendar: Calendar;
-	theme: Theme;
-	groups: Array<Group>;
-	timelineNodes: Array<GroupTimeline | TaskTimeline>;
-	versions: Array<VersionItem>;
-}
-
-
+	recursive: z.number(),
+	calendar: CalendarSchema,
+	theme: ThemeSchema,
+	groups: z.array(GroupSchema),
+	timelineNodes: z.array(AnyTimelineSchema),
+	versions: z.array(VersionItemSchema),
+});
+export type Setting = z.infer<typeof SettingSchema>;

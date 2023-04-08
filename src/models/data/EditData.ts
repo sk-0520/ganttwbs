@@ -1,6 +1,9 @@
-import { Setting } from "./Setting";
+import { z } from "zod";
+import { SettingSchema } from "./Setting";
 
-export interface EditData {
-	fileName: string;
-	setting: Setting;
-}
+export const EditDataSchema = z.object({
+	fileName: z.string(),
+	setting: SettingSchema,
+});
+
+export type EditData = z.infer<typeof EditDataSchema>;
