@@ -1,13 +1,14 @@
 import DynamicLabel from "@/components/elements/DynamicLabel";
 import Timestamp from "@/components/elements/Timestamp";
-import { DateTimeRangeKind } from "@/models/data/DateTimeRange";
+import { DateTime } from "@/models/DateTime";
+import { WorkRangeKind } from "@/models/data/WorkRange";
 import { NextPage } from "next";
 
 interface Props {
-	timeRangeKind: DateTimeRangeKind;
+	timeRangeKind: WorkRangeKind;
 	selectable: boolean;
-	beginDate: Date | null;
-	endDate: Date | null;
+	beginDate: DateTime | null;
+	endDate: DateTime | null;
 	htmlFor: string;
 	callbackClickBeginDate?(): void;
 }

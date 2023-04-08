@@ -4,8 +4,12 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { TimelineKind } from "@/models/data/Setting";
 import { TimelineRootProps } from "@/models/data/props/TimelineRootProps";
 import { Timelines } from "@/models/Timelines";
+import { TimeZone } from "@/models/TimeZone";
+import { DateTime } from "@/models/DateTime";
 
-interface Props extends EditProps, TimelineRootProps { }
+interface Props extends EditProps, TimelineRootProps {
+	timeZone: TimeZone;
+}
 
 const Component: NextPage<Props> = (props: Props) => {
 
@@ -26,7 +30,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		addTimeline("task");
 	}
 
-	function scrollFromDate(date: Date): void {
+	function scrollFromDate(date: DateTime): void {
 		const daysId = Timelines.toDaysId(date);
 		const targetElement = document.getElementById(daysId);
 		const mainContentElement = document.querySelector(".tab-timeline");
@@ -52,7 +56,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							<button type='button' onClick={handleAddNewTask}>add new task</button>
 						</li>
 						<li>
-							<button onClick={ev => scrollFromDate(new Date())}>
+							<button onClick={ev => scrollFromDate(DateTime.createToday(props.timeZone))}>
 								けふ
 							</button>
 						</li>

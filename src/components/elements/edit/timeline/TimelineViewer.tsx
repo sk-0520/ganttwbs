@@ -6,22 +6,22 @@ import GanttChartTimeline from "./GanttChartTimeline";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { ReactNode } from "react";
 import { ChartSize } from "@/models/data/ChartSize";
-import { Dates } from "@/models/Dates";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimelineStore } from "@/models/store/TimelineStore";
+import { TimeZone } from "@/models/TimeZone";
+import { CalendarRange } from "@/models/data/CalendarRange";
+import { Timelines } from "@/models/Timelines";
 
 interface Props extends EditProps {
-	updateRelations: () => void;
+	timeZone: TimeZone;
+	calendarRange: CalendarRange;
 	timelineStore: TimelineStore;
+	updateRelations: () => void;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
-	const range = {
-		from: new Date(props.editData.setting.calendar.range.from),
-		to: new Date(props.editData.setting.calendar.range.to),
-	}
-	const diff = Dates.diff(range.to, range.from);
-	const days = diff.totalDays + 1;
+
+	const days = Timelines.getCalendarRangeDays(props.calendarRange);
 
 	const cell = props.configuration.design.honest.cell;
 	const timelines = props.editData.setting.timelineNodes.flatMap(a => flat(a));
@@ -81,7 +81,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
 		for (let i = 0; i < days; i++) {
-			const date = Dates.add(range.from, TimeSpan.fromDays(i));
+			const date = props.calendarRange.from.add(TimeSpan.fromDays(i));
 
 			const gridX = cell.width.value + cell.width.value * i;
 
@@ -99,7 +99,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 			let color: string | undefined = undefined;
 
-			const dateText = Dates.format(date, "yyyy-MM-dd");
+			const dateText = date.format("yyyy-MM-dd");
 			if (dateText in props.editData.setting.calendar.holiday.events) {
 				const holidayEvent = props.editData.setting.calendar.holiday.events[dateText];
 				if (holidayEvent) {
@@ -107,7 +107,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				}
 			}
 			if (!color) {
-				const week = Settings.toWeekDay(date.getDay());
+				const week = Settings.toWeekDay(date.week);
 				if (props.editData.setting.calendar.holiday.regulars.includes(week)) {
 					color = props.editData.setting.theme.holiday.regulars[week];
 				}
@@ -157,7 +157,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							parentGroup={null}
 							currentTimeline={a}
 							currentIndex={i}
-							range={range}
+							calendarRange={props.calendarRange}
 							chartSize={chartSize}
 							memberMap={memberMap}
 							updateRelations={props.updateRelations}

@@ -6,7 +6,9 @@ import Layout from "@/components/layout/Layout";
 import { Goto } from "@/models/Goto";
 import { EditData } from "@/models/data/EditData";
 import { DateOnly, DefaultRecursiveMaxCount, DefaultSettingVersion, Setting } from "@/models/data/Setting";
-import { Dates } from "@/models/Dates";
+import { TimeZone } from "@/models/TimeZone";
+import { DateTime } from "@/models/DateTime";
+import { TimeSpan } from "@/models/TimeSpan";
 
 interface Input {
 	title: string;
@@ -20,9 +22,8 @@ const Page: NextPage = () => {
 	//const { register, handleSubmit, formState: { errors } } = useForm();
 	const { register, handleSubmit, } = useForm<Input>();
 
-	const fromDate = new Date();
-	const toDate = new Date(fromDate.getTime());
-	toDate.setFullYear(toDate.getFullYear() + 1); // ここは add せんでいいや
+	const fromDate = DateTime.createToday(TimeZone.getClientTimeZone());
+	const toDate = fromDate.add(TimeSpan.fromDays(365));
 
 	return (
 		<Layout title='新規作成' mode='page' layoutId='new'>
@@ -50,7 +51,7 @@ const Page: NextPage = () => {
 							開始
 							<input
 								type='date'
-								defaultValue={Dates.format(fromDate, "yyyy-MM-dd")}
+								defaultValue={fromDate.format("yyyy-MM-dd")}
 								{...register("dateFrom", {
 									required: {
 										value: true,
@@ -63,7 +64,7 @@ const Page: NextPage = () => {
 						<label>
 							<input
 								type='date'
-								defaultValue={Dates.format(toDate, "yyyy-MM-dd")}
+								defaultValue={toDate.format("yyyy-MM-dd")}
 								{...register("dateTo", {
 									required: {
 										value: true,
@@ -147,6 +148,7 @@ function createEmptySetting(data: Input): Setting {
 		name: data.title,
 		recursive: DefaultRecursiveMaxCount,
 		version: DefaultSettingVersion,
+		timeZone: TimeZone.getClientTimeZone().serialize(),
 		calendar: {
 			holiday: {
 				regulars: [
@@ -196,6 +198,7 @@ function createTemplateSetting(data: Input): Setting {
 		name: data.title,
 		recursive: DefaultRecursiveMaxCount,
 		version: DefaultSettingVersion,
+		timeZone: TimeZone.getClientTimeZone().serialize(),
 		calendar: {
 			holiday: {
 				regulars: [

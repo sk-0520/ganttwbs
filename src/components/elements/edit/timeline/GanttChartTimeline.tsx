@@ -9,20 +9,20 @@ import { ChartArea } from "@/models/data/ChartArea";
 import GroupChart from "./chart/GroupChart";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { Timelines } from "@/models/Timelines";
-import { SuccessDateTimeRange } from "@/models/data/DateTimeRange";
-import { DateTimeRanges } from "@/models/DateTimeRanges";
+import { WorkRanges } from "@/models/WorkRanges";
+import { SuccessWorkRange } from "@/models/data/WorkRange";
 
 interface Props extends GanttChartTimelineProps { }
 
 const Component: NextPage<Props> = (props: Props) => {
 
-	const [timeRange, setTimeRange] = useState<SuccessDateTimeRange | null>();
+	const [timeRange, setTimeRange] = useState<SuccessWorkRange | null>();
 
 	useEffect(() => {
 		const timelineItem = props.timelineStore.items.get(props.currentTimeline.id);
 		if (timelineItem) {
 			if (timelineItem.range) {
-				if (DateTimeRanges.maybeSuccessTimeRange(timelineItem.range)) {
+				if (WorkRanges.maybeSuccessWorkRange(timelineItem.range)) {
 					setTimeRange(timelineItem.range);
 				} else {
 					setTimeRange(null);
@@ -39,7 +39,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		const cell = props.configuration.design.honest.cell;
 
-		const startDiffTime = timeRange.begin.getTime() - props.range.from.getTime();
+		const startDiffTime = timeRange.begin.getTime() - props.calendarRange.from.getTime();
 		const startDiffSpan = TimeSpan.fromMilliseconds(startDiffTime);
 		const startDiffDays = startDiffSpan.totalDays;
 

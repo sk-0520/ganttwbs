@@ -1,8 +1,8 @@
-import { Dates } from "@/models/Dates";
+import { DateTime } from "@/models/DateTime";
 import { NextPage } from "next";
 
 interface Props {
-	date: Date | null;
+	date: DateTime | null;
 	format: "date" | "time" | "datetime"
 }
 
@@ -27,8 +27,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 
 		return (
-			<time className={"timestamp-" + props.format} dateTime={props.date.toISOString()}>
-				{Dates.format(props.date, format)}
+			<time className={"timestamp-" + props.format} dateTime={props.date.format("U")}>
+				{props.date.format(format)}
 			</time>
 		)
 	}

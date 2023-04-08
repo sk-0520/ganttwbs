@@ -15,6 +15,9 @@ import { TinyColor } from "@ctrl/tinycolor";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import Colors from "@/models/data/Colors";
+import { TimeZone } from "@/models/TimeZone";
+import { CalendarRange } from "@/models/data/CalendarRange";
+import { DateTime } from "@/models/DateTime";
 
 interface Props extends EditProps { }
 
@@ -22,6 +25,16 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const [timelineNodes, setTimelineNodes] = useState(props.editData.setting.timelineNodes);
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map()));
+
+	const timeZone = TimeZone.parse(props.editData.setting.timeZone)!;
+	if (!timeZone) {
+		throw new Error("timeZone");
+	}
+
+	const calendarRange: CalendarRange = {
+		from: DateTime.parse(props.editData.setting.calendar.range.from, timeZone),
+		to: DateTime.parse(props.editData.setting.calendar.range.to, timeZone),
+	}
 
 	function createTimelineStore(items: Map<TimelineId, TimelineItem>): TimelineStore {
 		const result: TimelineStore = {
@@ -86,7 +99,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		console.debug("全体へ通知");
 
 		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.timelineNodes);
-		const dateTimeRanges = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive);
+		const dateTimeRanges = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive, timeZone);
 
 		const items = new Map(
 			[...timelineMap.entries()]
@@ -122,11 +135,14 @@ const Component: NextPage<Props> = (props: Props) => {
 				editData={props.editData}
 				timelineRootNodes={timelineNodes}
 				setTimelineRootNodes={handleSetTimelineNodes}
+				timeZone={timeZone}
 			/>
 			<DaysHeader
 				configuration={props.configuration}
 				editData={props.editData}
 				timelineStore={timelineStore}
+				timeZone={timeZone}
+				calendarRange={calendarRange}
 			/>
 			<TimelineItems
 				configuration={props.configuration}
@@ -135,12 +151,16 @@ const Component: NextPage<Props> = (props: Props) => {
 				setTimelineRootNodes={handleSetTimelineNodes}
 				updateRelations={updateRelations}
 				timelineStore={timelineStore}
-			/>
+				timeZone={timeZone}
+				calendarRange={calendarRange}
+				/>
 			<TimelineViewer
 				configuration={props.configuration}
 				editData={props.editData}
 				updateRelations={updateRelations}
 				timelineStore={timelineStore}
+				timeZone={timeZone}
+				calendarRange={calendarRange}
 			/>
 		</div>
 	);

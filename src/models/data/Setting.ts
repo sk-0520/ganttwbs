@@ -3,8 +3,8 @@ import { z } from "zod";
 const ColorSchema = z.string();
 export type Color = z.infer<typeof ColorSchema>;
 
-const DateTimeSchema = z.string();
-export type DateTime = z.infer<typeof DateTimeSchema>;
+const TimestampSchema = z.string();
+export type Timestamp = z.infer<typeof TimestampSchema>;
 const DateOnlySchema = z.string();
 export type DateOnly = z.infer<typeof DateOnlySchema>;
 const TimeOnlySchema = z.string();
@@ -113,7 +113,7 @@ interface IGroupTimeline extends Timeline {
 interface ITaskTimeline extends Timeline {
 	kind: "task";
 	memberId: MemberId;
-	static?: DateTime;
+	static?: Timestamp;
 	previous: Array<TimelineId>;
 	workload: TimeOnly;
 	progress: Progress;
@@ -129,7 +129,7 @@ export type GroupTimeline = z.infer<typeof GroupTimelineSchema>;
 const TaskTimelineSchema = TimelineSchema.extend({
 	kind: z.literal("task"),
 	memberId: MemberIdSchema,
-	static: DateTimeSchema.optional(),
+	static: TimestampSchema.optional(),
 	previous: z.array(TimelineIdSchema),
 	workload: TimeOnlySchema,
 	progress: ProgressSchema,
@@ -150,7 +150,7 @@ export type VersionId = z.infer<typeof VersionIdSchema>;
  */
 const VersionItemSchema = z.object({
 	id: VersionIdSchema,
-	timestamp: DateTimeSchema,
+	timestamp: TimestampSchema,
 });
 /** {@inheritDoc VersionItemSchema} */
 export type VersionItem = z.infer<typeof VersionItemSchema>;
@@ -200,6 +200,8 @@ export const SettingSchema = z.object({
 	recursive: z.number(),
 	/** 設定ファイルバージョン */
 	version: z.number().int(),
+	/** タイムゾーン */
+	timeZone: z.string(),
 	calendar: CalendarSchema,
 	theme: ThemeSchema,
 	groups: z.array(GroupSchema),

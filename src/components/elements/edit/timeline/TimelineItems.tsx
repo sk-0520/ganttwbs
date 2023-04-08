@@ -14,8 +14,13 @@ import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
 import { TimelineRootProps } from "@/models/data/props/TimelineRootProps";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import AnyTimelineEditor from "./AnyTimelineEditor";
+import { DateTime } from "@/models/DateTime";
+import { TimeZone } from "@/models/TimeZone";
+import { CalendarRange } from "@/models/data/CalendarRange";
 
 interface Props extends EditProps, TimelineRootProps {
+	calendarRange: CalendarRange;
+	timeZone: TimeZone;
 	updateRelations: () => void;
 	timelineStore: TimelineStore;
 }
@@ -213,7 +218,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		console.debug(timeline);
 		setSelectingBeginDate({
 			timeline: timeline,
-			beginDate: timeline.static ? new Date(timeline.static) : null,
+			beginDate: timeline.static ? DateTime.parse(timeline.static, props.timeZone) : null,
 			previous: new Set(timeline.previous),
 			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
 		})
@@ -286,6 +291,8 @@ const Component: NextPage<Props> = (props: Props) => {
 									refreshedChildrenCallbacks={refreshedChildrenCallbacks}
 									beginDateCallbacks={beginDateCallbacks}
 									callbackAddNextSiblingItem={handleAddNextSiblingItem}
+									timeZone={props.timeZone}
+									calendarRange={props.calendarRange}
 								/>
 								{/* {
 									Settings.maybeGroupTimeline(a) ? (

@@ -17,6 +17,7 @@ export interface GeneralSetting {
 	name: string;
 	recursive: number;
 	version: number;
+	timeZone: string;
 }
 
 export interface GroupSetting {
