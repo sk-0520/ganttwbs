@@ -1,6 +1,5 @@
 import { NextPage } from "next";
 import { useContext, useState } from "react";
-import { v4 } from "uuid";
 
 import { SettingContext, UUID } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
@@ -8,6 +7,7 @@ import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { TinyColor, random } from "@ctrl/tinycolor";
 import Dialog from "@/components/elements/Dialog";
 import Colors from "@/models/data/Colors";
+import { IdFactory } from "@/models/IdFacotory";
 
 const reset = {
 	minimum: 1,
@@ -42,7 +42,7 @@ const Component: NextPage = () => {
 
 	function handleAddColor() {
 		groups.push({
-			key: v4(),
+			key: IdFactory.createReactKey(),
 			value: random().toHexString(),
 		});
 		setGroups(settingContext.theme.groups = [...groups]);
@@ -121,7 +121,7 @@ const Component: NextPage = () => {
 								? [new TinyColor(resetColorBegin)]
 								: Colors.generateGradation(resetColorBegin, resetColorEnd, resetCount)
 								;
-							const groups = colors.map(a => ({ key: v4(), value: a.toHexString() }));
+							const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a.toHexString() }));
 							setGroups(settingContext.theme.groups = groups);
 						}
 						setShowResetColor(false);

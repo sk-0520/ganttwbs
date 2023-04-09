@@ -1,5 +1,3 @@
-import { v4 } from "uuid";
-
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, TimeOnly, Timeline, TimelineId, WeekIndex } from "./data/Setting";
 import { TimeSpan } from "./TimeSpan";
 import { Settings } from "./Settings";
@@ -8,6 +6,7 @@ import { WorkRanges } from "./WorkRanges";
 import { DateTime } from "./DateTime";
 import { TimeZone } from "./TimeZone";
 import { CalendarRange } from "./data/CalendarRange";
+import { IdFactory } from "./IdFacotory";
 
 interface Holidays {
 	dates: ReadonlyArray<DateTime>;
@@ -29,9 +28,13 @@ export abstract class Timelines {
 		return workload.toString("readable");
 	}
 
+	public static serializeDateTime(date: DateTime): TimeOnly {
+		return date.format("yyyy-MM-dd");
+	}
+
 	public static createNewGroup(): GroupTimeline {
 		const item: GroupTimeline = {
-			id: v4(),
+			id: IdFactory.createTimelineId(),
 			kind: "group",
 			subject: "",
 			children: [],
@@ -44,7 +47,7 @@ export abstract class Timelines {
 	public static createNewTask(): TaskTimeline {
 		const workload = TimeSpan.fromDays(1);
 		const item: TaskTimeline = {
-			id: v4(),
+			id: IdFactory.createTimelineId(),
 			kind: "task",
 			subject: "",
 			comment: "",

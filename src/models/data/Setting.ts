@@ -10,14 +10,6 @@ export type DateOnly = z.infer<typeof DateOnlySchema>;
 const TimeOnlySchema = z.string();
 export type TimeOnly = z.infer<typeof TimeOnlySchema>;
 
-/**
- * 反復計算最大数。
- */
-export const DefaultRecursiveMaxCount = 1000;
-/**
- * 最新の設定ファイルバージョン。
- */
-export const DefaultSettingVersion = 0;
 
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -155,18 +147,24 @@ const VersionItemSchema = z.object({
 /** {@inheritDoc VersionItemSchema} */
 export type VersionItem = z.infer<typeof VersionItemSchema>;
 
+const HolidayThemeSchema = z.object({
+	regulars: z.record(WeekDaySchema, ColorSchema),
+	events: z.record(HolidayKindSchema, ColorSchema),
+});
+export type HolidayTheme = z.infer<typeof HolidayThemeSchema>;
+
+const TimelineThemeSchema = z.object({
+	group: ColorSchema,
+	defaultGroup: ColorSchema,
+	defaultTask: ColorSchema,
+	completed: ColorSchema,
+});
+export type TimelineTheme = z.infer<typeof TimelineThemeSchema>;
+
 const ThemeSchema = z.object({
-	holiday: z.object({
-		regulars: z.record(WeekDaySchema, ColorSchema),
-		events: z.record(HolidayKindSchema, ColorSchema),
-	}),
+	holiday: HolidayThemeSchema,
 	groups: z.array(ColorSchema),
-	timeline: z.object({
-		group: ColorSchema,
-		defaultGroup: ColorSchema,
-		defaultTask: ColorSchema,
-		completed: ColorSchema,
-	}),
+	timeline: TimelineThemeSchema,
 });
 export type Theme = z.infer<typeof ThemeSchema>;
 
