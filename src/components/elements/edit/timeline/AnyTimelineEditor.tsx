@@ -504,7 +504,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					/>
 				</TimelineHeaderRow>
 			</div >
-			{Settings.maybeGroupTimeline(props.currentTimeline) && props.currentTimeline.children.length && (
+			{Settings.maybeGroupTimeline(props.currentTimeline) && 0 < props.currentTimeline.children.length && (
 				<ul>
 					{props.currentTimeline.children.map((a, i) => {
 						return (
