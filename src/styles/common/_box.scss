@@ -1,4 +1,12 @@
 
 @mixin width($value) {
 	width: $value;
+	min-width: $value;
+	max-width: $value;
+}
+
+@mixin height($value) {
+	height: $value;
+	min-height: $value;
+	max-height: $value;
 }

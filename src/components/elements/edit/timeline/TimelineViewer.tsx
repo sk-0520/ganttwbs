@@ -68,8 +68,8 @@ const Component: NextPage<Props> = (props: Props) => {
 				<line
 					x1={0}
 					x2={width}
-					y1={y + 0.5}
-					y2={y + 0.5}
+					y1={y - 0.5}
+					y2={y - 0.5}
 					stroke="black"
 					strokeWidth={1}
 					strokeDasharray={1}
