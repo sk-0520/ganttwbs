@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { DateTime } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
 import { ReactNode } from "react";
+import { TimeSpan } from "@/models/TimeSpan";
 
 const Page: NextPage = () => {
 	const router = useRouter();
@@ -14,7 +15,25 @@ const Page: NextPage = () => {
 		return <></>;
 	}
 
-	function show(date: DateTime): ReactNode {
+	function renderDateTime(timeZone: TimeZone): ReactNode {
+		return (
+			<>
+				<div>{timeZone.serialize()}</div>
+				<dt>YYYY-MM-DDThh:mm:ss</dt>
+				<dd>
+					{renderPattern(DateTime.parse("2023-04-10T01:02:03", timeZone))}
+				</dd>
+
+				<dt style={{ marginTop: "1ex" }}>YYYY-MM-DD</dt>
+				<dd>
+					{renderPattern(DateTime.parse("2023-04-10", timeZone))}
+				</dd>
+				<div><hr /></div>
+			</>
+		);
+	}
+
+	function renderPattern(date: DateTime): ReactNode {
 		return (
 			<table>
 				<tbody>
@@ -66,15 +85,32 @@ const Page: NextPage = () => {
 	return (
 		<Layout mode='page' layoutId='debug' title={process.env.NODE_ENV}>
 			<dl>
-				<dt>YYYY-MM-DDThh:mm:ss</dt>
-				<dd>
-					{show(DateTime.parse("2023-04-10T00:00:00", TimeZone.getClientTimeZone()))}
-				</dd>
+				<>
+					{renderDateTime(TimeZone.getClientTimeZone())}
+					{renderDateTime(TimeZone.create(TimeSpan.fromHours(9)))}
+					{renderDateTime(TimeZone.create(TimeSpan.fromHours(0)))}
 
-				<dt>YYYY-MM-DD</dt>
-				<dd>
-					{show(DateTime.parse("2023-04-10", TimeZone.getClientTimeZone()))}
-				</dd>
+					{renderDateTime(TimeZone.create("America/Phoenix"))/* -7 */}
+					{renderDateTime(TimeZone.create("America/Guatemala"))/* -6 */}
+					{renderDateTime(TimeZone.create("America/New_York"))/* -5 */}
+					{renderDateTime(TimeZone.create("America/Halifax"))/* -4 */}
+					{renderDateTime(TimeZone.create("America/Montevideo"))/* -3 */}
+					{renderDateTime(TimeZone.create("America/Noronha"))/* -2 */}
+					{renderDateTime(TimeZone.create("Atlantic/Azores"))/* -1 */}
+
+					{renderDateTime(TimeZone.create("UTC"))/* 0 */}
+
+					{renderDateTime(TimeZone.create("Africa/Lagos"))/* +1 */}
+					{renderDateTime(TimeZone.create("Africa/Johannesburg"))/* +2 */}
+					{renderDateTime(TimeZone.create("Africa/Baghdad"))/* +3 */}
+					{renderDateTime(TimeZone.create("Asia/Baku"))/* +4 */}
+					{renderDateTime(TimeZone.create("Asia/Dhaka"))/* +5 */}
+					{renderDateTime(TimeZone.create("Asia/Dhaka"))/* +6 */}
+					{renderDateTime(TimeZone.create("Asia/Jakarta"))/* +7 */}
+					{renderDateTime(TimeZone.create("Africa/Krasnoyarsk"))/* +8 */}
+					{renderDateTime(TimeZone.create("Asia/Tokyo"))/* +9 */}
+					{renderDateTime(TimeZone.create("Australia/Sydney"))/* +10 */}
+				</>
 			</dl>
 		</Layout>
 	);

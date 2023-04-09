@@ -15,7 +15,11 @@ export abstract class TimeZone {
 	 * @returns
 	 */
 	public static getClientTimeZone(): TimeZone {
-		Intl.DateTimeFormat().resolvedOptions()
+		const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		if(tz) {
+			return new IanaTimeZone(tz);
+		}
+
 		//return Intl.DateTimeFormat().resolvedOptions().timeZone;
 		const date = new Date();
 		const offset = date.getTimezoneOffset() * -1;
@@ -45,11 +49,11 @@ export abstract class TimeZone {
 		if (input instanceof TimeSpan) {
 			return new OffsetTimeZone(input);
 		}
-		if (!Strings.isNotWhiteSpace(input)) {
+		if (Strings.isNotWhiteSpace(input)) {
 			return new IanaTimeZone(input);
 		}
 
-		throw new Error();
+		throw new Error(input);
 	}
 
 	public abstract serialize(): string;
