@@ -504,7 +504,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					/>
 				</TimelineHeaderRow>
 			</div >
-			{Settings.maybeGroupTimeline(props.currentTimeline) && props.currentTimeline.children.length ? (
+			{Settings.maybeGroupTimeline(props.currentTimeline) && props.currentTimeline.children.length && (
 				<ul>
 					{props.currentTimeline.children.map((a, i) => {
 						return (
@@ -527,49 +527,11 @@ const Component: NextPage<Props> = (props: Props) => {
 									timeZone={props.timeZone}
 									calendarRange={props.calendarRange}
 								/>
-								{/* {
-									Settings.maybeGroupTimeline(a) ? (
-										<GroupTimelineEditor
-											configuration={props.configuration}
-											editData={props.editData}
-											treeIndexes={[...props.treeIndexes, props.currentIndex]}
-											currentIndex={i}
-											parentGroup={props.currentTimeline}
-											currentTimeline={a}
-											timelineStore={props.timelineStore}
-											draggingTimeline={props.draggingTimeline}
-											dropTimeline={props.dropTimeline}
-											selectingBeginDate={props.selectingBeginDate}
-											notifyParentCallbacks={notifyParentCallbacks}
-											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
-											beginDateCallbacks={props.beginDateCallbacks}
-										/>
-									) : null
-								}
-								{
-									Settings.maybeTaskTimeline(a) ? (
-										<TaskTimelineEditor
-											configuration={props.configuration}
-											editData={props.editData}
-											treeIndexes={[...props.treeIndexes, props.currentIndex]}
-											currentIndex={i}
-											parentGroup={props.currentTimeline}
-											currentTimeline={a}
-											timelineStore={props.timelineStore}
-											draggingTimeline={props.draggingTimeline}
-											selectingBeginDate={props.selectingBeginDate}
-											callbackAddNextSiblingItem={handleAddNextSiblingItem}
-											notifyParentCallbacks={notifyParentCallbacks}
-											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
-											beginDateCallbacks={props.beginDateCallbacks}
-										/>
-									) : null
-								} */}
 							</li>
 						);
 					})}
 				</ul>
-			) : null}
+			)}
 		</>
 	);
 };

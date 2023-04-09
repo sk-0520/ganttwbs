@@ -305,16 +305,16 @@ const Component: NextPage<Props> = (props: Props) => {
 							return (
 								<li key={"dmy-" + IdFactory.createReactKey()}>
 									<div className="dummy">
-										<div className='timeline-header _dynamic_programmable_cell_height'>
-											<div className='timeline-cell timeline-id'></div>
-											<div className='timeline-cell timeline-subject'></div>
-											<div className='timeline-cell timeline-workload'></div>
-											<div className='timeline-cell timeline-resource'></div>
-											<div className="timeline-cell timeline-relation"></div>
-											<div className='timeline-cell timeline-range-from'></div>
-											<div className='timeline-cell timeline-range-to'></div>
-											<div className='timeline-cell timeline-progress'></div>
-											<div className='timeline-cell timeline-controls'></div>
+										<div className='timeline-cell timeline-header _dynamic_programmable_cell_height'>
+											<div className='timeline-cell timeline-id'>&nbsp;</div>
+											<div className='timeline-cell timeline-subject' />
+											<div className='timeline-cell timeline-workload' />
+											<div className='timeline-cell timeline-resource' />
+											<div className="timeline-cell timeline-relation" />
+											<div className='timeline-cell timeline-range-from' />
+											<div className='timeline-cell timeline-range-to' />
+											<div className='timeline-cell timeline-progress' />
+											<div className='timeline-cell timeline-controls' />
 										</div>
 									</div>
 								</li>
