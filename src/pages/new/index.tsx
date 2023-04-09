@@ -88,7 +88,6 @@ const Page: NextPage = () => {
 									<input
 										type="radio"
 										value="template"
-										/*DEBUG*/ checked={true}
 										{...register("mode", {
 											required: true
 										})}
