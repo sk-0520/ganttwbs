@@ -41,5 +41,11 @@ export interface Design {
 			/** 左余白基準 */
 			paddingLeft: ValueUnit;
 		};
+	},
+
+	/** 使用しない領域 */
+	dummy: {
+		width: number,
+		height: number,
 	}
 }

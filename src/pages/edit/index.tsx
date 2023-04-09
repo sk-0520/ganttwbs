@@ -102,6 +102,10 @@ function createConfiguration(): Configuration {
 					},
 				}
 			},
+			dummy: {
+				width: 30,
+				height: 20,
+			},
 		}
 	};
 
