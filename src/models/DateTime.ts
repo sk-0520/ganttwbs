@@ -65,13 +65,13 @@ export class DateTime {
 	private static _parse(input: string | Date | number, timeZone: TimeZone): DateTime {
 		let date = cdate(input);
 
-		if (!date.utcOffset()) {
-			if (timeZone.hasName) {
-				date = date.tz(timeZone.serialize());
-			} else if (timeZone.hasOffset) {
-				date = date.utcOffset(timeZone.serialize());
-			}
+		//if (!date.utcOffset()) {
+		if (timeZone.hasName) {
+			date = date.tz(timeZone.serialize());
+		} else if (timeZone.hasOffset) {
+			date = date.utcOffset(timeZone.serialize());
 		}
+		//}
 
 		return new DateTime(date, timeZone);
 	}
@@ -115,7 +115,7 @@ export class DateTime {
 
 		switch (format) {
 			case "U":
-				return this.date.toDate().toUTCString();
+				return this.date.text();
 
 			case "S":
 				return this.date.toDate().toString();

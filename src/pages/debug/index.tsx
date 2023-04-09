@@ -18,7 +18,7 @@ const Page: NextPage = () => {
 	function renderDateTime(timeZone: TimeZone): ReactNode {
 		return (
 			<>
-				<div>{timeZone.serialize()}</div>
+				<div style={{fontWeight: "bold"}}>{timeZone.serialize()}</div>
 				<dt>YYYY-MM-DDThh:mm:ss</dt>
 				<dd>
 					{renderPattern(DateTime.parse("2023-04-10T01:02:03", timeZone))}
@@ -102,12 +102,12 @@ const Page: NextPage = () => {
 
 					{renderDateTime(TimeZone.create("Africa/Lagos"))/* +1 */}
 					{renderDateTime(TimeZone.create("Africa/Johannesburg"))/* +2 */}
-					{renderDateTime(TimeZone.create("Africa/Baghdad"))/* +3 */}
+					{renderDateTime(TimeZone.create("Asia/Baghdad"))/* +3 */}
 					{renderDateTime(TimeZone.create("Asia/Baku"))/* +4 */}
 					{renderDateTime(TimeZone.create("Asia/Dhaka"))/* +5 */}
 					{renderDateTime(TimeZone.create("Asia/Dhaka"))/* +6 */}
 					{renderDateTime(TimeZone.create("Asia/Jakarta"))/* +7 */}
-					{renderDateTime(TimeZone.create("Africa/Krasnoyarsk"))/* +8 */}
+					{renderDateTime(TimeZone.create("Asia/Krasnoyarsk"))/* +8 */}
 					{renderDateTime(TimeZone.create("Asia/Tokyo"))/* +9 */}
 					{renderDateTime(TimeZone.create("Australia/Sydney"))/* +10 */}
 				</>
