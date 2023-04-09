@@ -108,7 +108,7 @@ export class DateTime {
 	 * @param date
 	 * @returns
 	 */
-	public format(format?: "U" | "S" | "L" | "I" | string): string {
+	public format(format?: "U" | "L" | string): string {
 		if (format === undefined) {
 			return this.date.toDate().toISOString();
 		}
@@ -117,14 +117,8 @@ export class DateTime {
 			case "U":
 				return this.date.text();
 
-			case "S":
-				return this.date.toDate().toString();
-
 			case "L":
 				return this.date.toDate().toLocaleString();
-
-			case "I":
-				return this.date.toDate().toISOString();
 
 			default:
 				break;

@@ -15,27 +15,36 @@ const Page: NextPage = () => {
 		return <></>;
 	}
 
+	const input = {
+		YYYYMMDDhhmmss: "2023-04-10T23:24:25",
+		YYYYMMDD: "2023-04-10",
+	} as const;
+
 	function renderDateTime(timeZone: TimeZone): ReactNode {
 		return (
 			<>
-				<div style={{fontWeight: "bold"}}>{timeZone.serialize()}</div>
-				<dt>YYYY-MM-DDThh:mm:ss</dt>
-				<dd>
-					{renderPattern(DateTime.parse("2023-04-10T01:02:03", timeZone))}
-				</dd>
-
-				<dt style={{ marginTop: "1ex" }}>YYYY-MM-DD</dt>
-				<dd>
-					{renderPattern(DateTime.parse("2023-04-10", timeZone))}
-				</dd>
-				<div><hr /></div>
+				<tr>
+					<td colSpan={2} style={{ fontWeight: "bold" }}>{timeZone.serialize()}</td>
+				</tr>
+				<tr>
+					<td style={{ color: "red" }}>YYYY-MM-DDThh:mm:ss</td>
+					<td>
+						{renderPattern(DateTime.parse(input.YYYYMMDDhhmmss, timeZone))}
+					</td>
+				</tr>
+				<tr>
+					<td style={{ color: "green", marginTop: "1ex" }}>YYYY-MM-DD</td>
+					<td>
+						{renderPattern(DateTime.parse(input.YYYYMMDD, timeZone))}
+					</td>
+				</tr>
 			</>
 		);
 	}
 
 	function renderPattern(date: DateTime): ReactNode {
 		return (
-			<table>
+			<table >
 				<tbody>
 					<tr>
 						<td>year</td>
@@ -73,10 +82,6 @@ const Page: NextPage = () => {
 						<td>L</td>
 						<td>{date.format("L")}</td>
 					</tr>
-					<tr>
-						<td>I</td>
-						<td>{date.format("I")}</td>
-					</tr>
 				</tbody>
 			</table>
 		);
@@ -84,8 +89,19 @@ const Page: NextPage = () => {
 
 	return (
 		<Layout mode='page' layoutId='debug' title={process.env.NODE_ENV}>
-			<dl>
-				<>
+			<table>
+				<thead>
+					<tr>
+						<th>YYYY-MM-DDThh:mm:ss</th>
+						<th>{input.YYYYMMDDhhmmss}</th>
+					</tr>
+					<tr>
+						<th>YYYY-MM-DD</th>
+						<th>{input.YYYYMMDD}</th>
+					</tr>
+				</thead>
+
+				<tbody>
 					{renderDateTime(TimeZone.getClientTimeZone())}
 					{renderDateTime(TimeZone.create(TimeSpan.fromHours(9)))}
 					{renderDateTime(TimeZone.create(TimeSpan.fromHours(0)))}
@@ -110,8 +126,8 @@ const Page: NextPage = () => {
 					{renderDateTime(TimeZone.create("Asia/Krasnoyarsk"))/* +8 */}
 					{renderDateTime(TimeZone.create("Asia/Tokyo"))/* +9 */}
 					{renderDateTime(TimeZone.create("Australia/Sydney"))/* +10 */}
-				</>
-			</dl>
+				</tbody>
+			</table>
 		</Layout>
 	);
 };
