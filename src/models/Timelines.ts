@@ -28,6 +28,10 @@ export abstract class Timelines {
 		return workload.toString("readable");
 	}
 
+	public static serializeDateTime(date: DateTime): TimeOnly {
+		return date.format("yyyy-MM-dd");
+	}
+
 	public static createNewGroup(): GroupTimeline {
 		const item: GroupTimeline = {
 			id: IdFactory.createTimelineId(),
