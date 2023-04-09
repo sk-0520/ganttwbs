@@ -15,7 +15,7 @@ export class TimeSpan {
 	 *
 	 * @param _ticks ミリ秒。
 	 */
-	private constructor(private _ticks: number) {
+	private constructor(private readonly _ticks: number) {
 	}
 
 	//#region property

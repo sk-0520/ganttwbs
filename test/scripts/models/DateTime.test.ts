@@ -7,8 +7,8 @@ describe("DateTime", () => {
 	test("parse", () => {
 		const expected = DateTime.parse("2000-01-01T00:00:00", TimeZone.utc);
 		for (let i = 0; i < 24; i++) {
-			const actual = DateTime.parse("2000-01-01T00:00:00", new TimeZone(TimeSpan.fromHours(i)));
-			expect(actual.getTime()).toEqual(expected.getTime());
+			const actual = DateTime.parse("2000-01-01T00:00:00", TimeZone.create(TimeSpan.fromHours(i)));
+			expect(actual.getTime()).toBe(expected.getTime());
 		}
 	});
 
