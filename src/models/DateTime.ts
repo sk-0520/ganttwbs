@@ -23,7 +23,7 @@ export class DateTime {
 	}
 
 	public get month(): number {
-		return this.date.get("month");
+		return this.date.get("month") + 1;
 	}
 
 	public get day(): number {
@@ -134,8 +134,8 @@ export class DateTime {
 			["yyyy", this.year.toString().padStart(4, "0")],
 			["yyyyy", this.year.toString().padStart(5, "0")],
 
-			["M", (this.month + 1).toString()],
-			["MM", (this.month + 1).toString().padStart(2, "0")],
+			["M", (this.month).toString()],
+			["MM", (this.month).toString().padStart(2, "0")],
 
 			["d", this.day.toString()],
 			["dd", this.day.toString().padStart(2, "0")],
