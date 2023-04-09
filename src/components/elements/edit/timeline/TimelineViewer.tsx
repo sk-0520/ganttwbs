@@ -58,11 +58,11 @@ const Component: NextPage<Props> = (props: Props) => {
 	function renderGrid(): ReactNode {
 
 		const width = cell.width.value * days;
-		const height = cell.height.value * timelines.length;
+		const height = (cell.height.value + props.configuration.design.dummy.height) * timelines.length;
 
 		// 横系
 		const gridHorizontals = new Array<ReactNode>();
-		for (let i = 0; i < timelines.length; i++) {
+		for (let i = 0; i < (timelines.length + props.configuration.design.dummy.height); i++) {
 			const y = cell.height.value + cell.height.value * i;
 			gridHorizontals.push(
 				<line

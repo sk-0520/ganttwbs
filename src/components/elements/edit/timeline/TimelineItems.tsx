@@ -303,17 +303,19 @@ const Component: NextPage<Props> = (props: Props) => {
 						// ダミー領域追加
 						Arrays.repeat(0, props.configuration.design.dummy.height).map(_ => {
 							return (
-								<li key={"dmy-" + IdFactory.createReactKey()} className="dummy">
-									<div className='timeline-header _dynamic_programmable_cell_height'>
-										<div className='timeline-cell timeline-id'></div>
-										<div className='timeline-cell timeline-subject'></div>
-										<div className='timeline-cell timeline-workload'></div>
-										<div className='timeline-cell timeline-resource'></div>
-										<div className="timeline-cell timeline-relation"></div>
-										<div className='timeline-cell timeline-range-from'></div>
-										<div className='timeline-cell timeline-range-to'></div>
-										<div className='timeline-cell timeline-progress'></div>
-										<div className='timeline-cell timeline-controls'></div>
+								<li key={"dmy-" + IdFactory.createReactKey()}>
+									<div className="task dummy">
+										<div className='timeline-header _dynamic_programmable_cell_height'>
+											<div className='timeline-cell timeline-id'></div>
+											<div className='timeline-cell timeline-subject'></div>
+											<div className='timeline-cell timeline-workload'></div>
+											<div className='timeline-cell timeline-resource'></div>
+											<div className="timeline-cell timeline-relation"></div>
+											<div className='timeline-cell timeline-range-from'></div>
+											<div className='timeline-cell timeline-range-to'></div>
+											<div className='timeline-cell timeline-progress'></div>
+											<div className='timeline-cell timeline-controls'></div>
+										</div>
 									</div>
 								</li>
 							)
