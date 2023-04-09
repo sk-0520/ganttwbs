@@ -51,15 +51,28 @@ export class DateTime {
 	//#region property
 
 	public static createToday(timeZone: TimeZone): DateTime {
-		const date = cdate().utcOffset(timeZone.offset.totalMinutes);
+		let date = cdate();
+
+		if (timeZone.hasName) {
+			date = date.tz(timeZone.serialize());
+		} else if (timeZone.hasOffset) {
+			date = date.utcOffset(timeZone.serialize());
+		}
+
 		return new DateTime(date, timeZone);
 	}
 
 	private static _parse(input: string | Date | number, timeZone: TimeZone): DateTime {
-		let date = cdate(input)
+		let date = cdate(input);
+
 		if (!date.utcOffset()) {
-			date = date.utcOffset(timeZone.offset.totalMinutes);
+			if (timeZone.hasName) {
+				date = date.tz(timeZone.serialize());
+			} else if (timeZone.hasOffset) {
+				date = date.utcOffset(timeZone.serialize());
+			}
 		}
+
 		return new DateTime(date, timeZone);
 	}
 
@@ -77,7 +90,7 @@ export class DateTime {
 
 	public add(timeSpan: TimeSpan): DateTime {
 		const date = this.date.add(timeSpan.totalMilliseconds, "milliseconds");
-		date.utcOffset(this.timeZone.offset.totalMinutes);
+		//date.utcOffset(this.timeZone.offset.totalMinutes);
 		return new DateTime(date, this.timeZone);
 	}
 

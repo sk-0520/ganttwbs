@@ -7,6 +7,9 @@ export abstract class TimeZone {
 		return new OffsetTimeZone(TimeSpan.zero);
 	}
 
+	public abstract get hasOffset(): boolean;
+	public abstract get hasName(): boolean;
+
 	/**
 	 * クライアント(ブラウザ)のタイムゾーンを取得。
 	 * @returns
@@ -65,6 +68,14 @@ class OffsetTimeZone extends TimeZone {
 		super();
 	}
 
+	public get hasOffset(): boolean {
+		return true;
+	}
+
+	public get hasName(): boolean {
+		return false;
+	}
+
 	public override serialize(): string {
 		if (!this.serialized) {
 			const signs = 0 <= this.offset.ticks ? "+" : "-";
@@ -85,6 +96,14 @@ class IanaTimeZone extends TimeZone {
 		public readonly name: string
 	) {
 		super();
+	}
+
+	public get hasOffset(): boolean {
+		return false;
+	}
+
+	public get hasName(): boolean {
+		return true;
 	}
 
 	public override serialize(): string {
