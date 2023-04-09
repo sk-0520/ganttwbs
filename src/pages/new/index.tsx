@@ -18,7 +18,7 @@ interface Input {
 	title: string;
 	dateFrom: DateOnly;
 	dateTo: DateOnly;
-	mode: "template" | "empty";
+	mode: "empty" | "sample";
 }
 
 const Page: NextPage = () => {
@@ -87,24 +87,24 @@ const Page: NextPage = () => {
 								<label>
 									<input
 										type="radio"
-										value="template"
-										{...register("mode", {
-											required: true
-										})}
-									/>
-									てんぷれ
-								</label>
-							</li>
-							<li>
-								<label>
-									<input
-										type="radio"
 										value="empty"
 										{...register("mode", {
 											required: true
 										})}
 									/>
 									空データ
+								</label>
+							</li>
+							<li>
+								<label>
+									<input
+										type="radio"
+										value="sample"
+										{...register("mode", {
+											required: true
+										})}
+									/>
+									サンプル
 								</label>
 							</li>
 						</ul>
@@ -126,8 +126,8 @@ function onSubmit(data: Input, router: NextRouter) {
 	let setting: Setting | null = null;
 
 	switch (data.mode) {
-		case "template":
-			setting = createTemplateSetting(data);
+		case "sample":
+			setting = createSampleSetting(data);
 			break;
 
 		case "empty":
@@ -181,7 +181,7 @@ function createEmptySetting(data: Input): Setting {
 	return setting;
 }
 
-function createTemplateSetting(data: Input): Setting {
+function createSampleSetting(data: Input): Setting {
 	const setting = createEmptySetting(data);
 	const timezone = TimeZone.parse(setting.timeZone)!;
 
@@ -772,8 +772,8 @@ function createTemplateSetting(data: Input): Setting {
 			"progress": 0
 		}
 	]
-	//--------------------------
-	;
+		//--------------------------
+		;
 
 	return setting;
 }
