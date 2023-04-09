@@ -119,6 +119,8 @@
 		table {
 			table-layout: fixed;
 			border-collapse: collapse;
+			@include box.height($app-header-height);
+			border: none;
 		}
 
 		.cell {
@@ -167,7 +169,6 @@
 			td {
 				border-right: 1px solid black;
 				border-bottom: 1px solid black;
-				background-clip: padding-box;
 			}
 		}
 	}
