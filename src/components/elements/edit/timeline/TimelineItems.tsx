@@ -304,7 +304,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						Arrays.repeat(0, props.configuration.design.dummy.height).map(_ => {
 							return (
 								<li key={"dmy-" + IdFactory.createReactKey()}>
-									<div className="task dummy">
+									<div className="dummy">
 										<div className='timeline-header _dynamic_programmable_cell_height'>
 											<div className='timeline-cell timeline-id'></div>
 											<div className='timeline-cell timeline-subject'></div>

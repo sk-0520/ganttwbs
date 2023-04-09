@@ -58,9 +58,9 @@ const Component: NextPage<Props> = (props: Props) => {
 	function renderGrid(): ReactNode {
 
 		const width = cell.width.value * days;
-		const height = (cell.height.value + props.configuration.design.dummy.height) * timelines.length;
+		const height = cell.height.value * (timelines.length + props.configuration.design.dummy.height);
 
-		// 横系
+		// 横軸
 		const gridHorizontals = new Array<ReactNode>();
 		for (let i = 0; i < (timelines.length + props.configuration.design.dummy.height); i++) {
 			const y = cell.height.value + cell.height.value * i;
@@ -77,7 +77,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			)
 		}
 
-		// 縦系
+		// 縦軸
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
 		for (let i = 0; i < days; i++) {
@@ -100,12 +100,14 @@ const Component: NextPage<Props> = (props: Props) => {
 			let color: string | undefined = undefined;
 
 			const dateText = date.format("yyyy-MM-dd");
+			// 祝日判定
 			if (dateText in props.editData.setting.calendar.holiday.events) {
 				const holidayEvent = props.editData.setting.calendar.holiday.events[dateText];
 				if (holidayEvent) {
 					color = props.editData.setting.theme.holiday.events[holidayEvent.kind];
 				}
 			}
+			// 曜日判定
 			if (!color) {
 				const week = Settings.toWeekDay(date.week);
 				if (props.editData.setting.calendar.holiday.regulars.includes(week)) {
