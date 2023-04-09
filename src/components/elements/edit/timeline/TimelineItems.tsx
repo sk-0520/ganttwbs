@@ -17,6 +17,8 @@ import AnyTimelineEditor from "./AnyTimelineEditor";
 import { DateTime } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "@/models/data/CalendarRange";
+import { IdFactory } from "@/models/IdFacotory";
+import { Arrays } from "@/models/Arrays";
 
 interface Props extends EditProps, TimelineRootProps {
 	calendarRange: CalendarRange;
@@ -294,47 +296,29 @@ const Component: NextPage<Props> = (props: Props) => {
 									timeZone={props.timeZone}
 									calendarRange={props.calendarRange}
 								/>
-								{/* {
-									Settings.maybeGroupTimeline(a) ? (
-										<GroupTimelineEditor
-											configuration={props.configuration}
-											editData={props.editData}
-											treeIndexes={[]}
-											currentIndex={i}
-											parentGroup={null}
-											currentTimeline={a}
-											timelineStore={props.timelineStore}
-											draggingTimeline={draggingTimeline}
-											selectingBeginDate={selectingBeginDate}
-											dropTimeline={dropTimeline}
-											notifyParentCallbacks={notifyParentCallbacks}
-											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
-											beginDateCallbacks={beginDateCallbacks}
-										/>
-									) : null
-								}
-								{
-									Settings.maybeTaskTimeline(a) ? (
-										<TaskTimelineEditor
-											configuration={props.configuration}
-											editData={props.editData}
-											treeIndexes={[]}
-											currentIndex={i}
-											parentGroup={null}
-											currentTimeline={a}
-											timelineStore={props.timelineStore}
-											draggingTimeline={draggingTimeline}
-											selectingBeginDate={selectingBeginDate}
-											callbackAddNextSiblingItem={handleAddNextSiblingItem}
-											notifyParentCallbacks={notifyParentCallbacks}
-											refreshedChildrenCallbacks={refreshedChildrenCallbacks}
-											beginDateCallbacks={beginDateCallbacks}
-										/>
-									) : null
-								} */}
 							</li>
 						);
 					})}
+					{
+						// ダミー領域追加
+						Arrays.repeat(0, props.configuration.design.dummy.height).map(_ => {
+							return (
+								<li key={"dmy-" + IdFactory.createReactKey()} className="dummy">
+									<div className='timeline-header _dynamic_programmable_cell_height'>
+										<div className='timeline-cell timeline-id'></div>
+										<div className='timeline-cell timeline-subject'></div>
+										<div className='timeline-cell timeline-workload'></div>
+										<div className='timeline-cell timeline-resource'></div>
+										<div className="timeline-cell timeline-relation"></div>
+										<div className='timeline-cell timeline-range-from'></div>
+										<div className='timeline-cell timeline-range-to'></div>
+										<div className='timeline-cell timeline-progress'></div>
+										<div className='timeline-cell timeline-controls'></div>
+									</div>
+								</li>
+							)
+						})
+					}
 				</ul>
 			</>
 		</div>
