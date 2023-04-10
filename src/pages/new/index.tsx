@@ -26,8 +26,8 @@ const Page: NextPage = () => {
 	//const { register, handleSubmit, formState: { errors } } = useForm();
 	const { register, handleSubmit, } = useForm<Input>();
 
-	const fromDate = DateTime.createToday(TimeZone.getClientTimeZone());
-	const toDate = fromDate.add(TimeSpan.fromDays(365));
+	const fromDate = DateTime.today(TimeZone.getClientTimeZone());
+	const toDate = fromDate.add(1, "year");
 
 	return (
 		<Layout title='新規作成' mode='page' layoutId='new'>

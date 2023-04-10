@@ -56,7 +56,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							<button type='button' onClick={handleAddNewTask}>add new task</button>
 						</li>
 						<li>
-							<button onClick={ev => scrollFromDate(DateTime.createToday(props.timeZone))}>
+							<button onClick={ev => scrollFromDate(DateTime.today(props.timeZone))}>
 								けふ
 							</button>
 						</li>

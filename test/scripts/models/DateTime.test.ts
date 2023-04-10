@@ -1,5 +1,5 @@
 import { TimeZone } from "../../../src/models/TimeZone";
-import { DateTime } from "../../../src/models/DateTime";
+import { DateTime, Unit } from "../../../src/models/DateTime";
 import { TimeSpan } from "../../../src/models/TimeSpan";
 
 describe("DateTime", () => {
@@ -28,8 +28,18 @@ describe("DateTime", () => {
 		[DateTime.parse("2000-01-01T00:01:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromMinutes(1)],
 		[DateTime.parse("2000-01-01T01:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromHours(1)],
 		[DateTime.parse("2000-01-02T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromDays(1)],
-	])("add", (expected, date, time) => {
-		const actual = date.add(time);
+	])("add - TimeSpan", (expected: DateTime, date: DateTime, diff: TimeSpan) => {
+		const actual = date.add(diff);
+		expect(actual.getTime()).toEqual(expected.getTime());
+	});
+
+	test.each([
+		[DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), 0, "year"],
+		[DateTime.parse("2000-01-02T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), 1, "day"],
+		[DateTime.parse("2000-02-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), 1, "month"],
+		[DateTime.parse("2001-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), 1, "year"],
+	])("add - unit", (expected: DateTime, date: DateTime, diff: number, unit: string) => {
+		const actual = date.add(diff, unit as Unit);
 		expect(actual.getTime()).toEqual(expected.getTime());
 	});
 

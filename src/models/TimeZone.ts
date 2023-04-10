@@ -1,14 +1,26 @@
 import { Strings } from "./Strings";
 import { TimeSpan } from "./TimeSpan";
 
+/**
+ * タイムゾーン。
+ */
 export abstract class TimeZone {
 
+	/**
+	 * UTCタイムゾーンの取得。
+	 */
 	public static get utc(): TimeZone {
 		return new OffsetTimeZone(TimeSpan.zero);
 		//return new IanaTimeZone("UTC");
 	}
 
+	/**
+	 * オフセットを持つか。
+	 */
 	public abstract get hasOffset(): boolean;
+	/**
+	 * タイムゾーン名を持つか。
+	 */
 	public abstract get hasName(): boolean;
 
 	/**
@@ -21,18 +33,23 @@ export abstract class TimeZone {
 			return new IanaTimeZone(tz);
 		}
 
-		//return Intl.DateTimeFormat().resolvedOptions().timeZone;
 		const date = new Date();
 		const offset = date.getTimezoneOffset() * -1;
 
 		return new OffsetTimeZone(TimeSpan.fromMinutes(offset));
 	}
 
+	/**
+	 * パース。
+	 * @param s
+	 * @returns パース成功時はタイムゾーン。失敗時は `null`。
+	 */
 	public static parse(s: string): TimeZone | null {
 		if (s.includes("/")) {
 			return new IanaTimeZone(s);
 		}
 
+		//TODO: +-HH:MM 形式のみ。 : なかったり、HHのみとかもうめんどい
 		const regex = /(?<signs>\+|-)(?<h>[0-2][0-9]):(?<m>[0-5][0-9])/;
 		const match = s.match(regex);
 		if (!match || !match.groups) {
@@ -46,6 +63,11 @@ export abstract class TimeZone {
 		return new OffsetTimeZone(TimeSpan.fromMinutes(totalMinutes));
 	}
 
+	/**
+	 * 生成。
+	 * @param input
+	 * @returns
+	 */
 	public static create(input: TimeSpan | string): TimeZone {
 		if (input instanceof TimeSpan) {
 			return new OffsetTimeZone(input);
@@ -57,10 +79,18 @@ export abstract class TimeZone {
 		throw new Error(input);
 	}
 
+	/**
+	 * 保存処理。
+	 *
+	 * @returns create で生成可能なものを返す。
+	 */
 	public abstract serialize(): string;
 
 }
 
+/**
+ * オフセットタイムゾーン。
+ */
 class OffsetTimeZone extends TimeZone {
 	private serialized?: string;
 
@@ -93,6 +123,9 @@ class OffsetTimeZone extends TimeZone {
 	}
 }
 
+/**
+ * 名称タイムゾーン。
+ */
 class IanaTimeZone extends TimeZone {
 	public constructor(
 		/**
