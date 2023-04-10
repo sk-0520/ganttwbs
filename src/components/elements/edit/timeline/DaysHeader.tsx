@@ -77,7 +77,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					<tr className='day'>
 						{dates.map(a => {
 							const holidayEvent = getHolidayEvent(a, props.editData.setting.calendar.holiday.events);
-							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
+							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday.regulars, holidayEvent, props.editData.setting.theme);
 							const className = getCellClassName(classNames);
 
 							return (
@@ -90,7 +90,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					<tr className='week'>
 						{dates.map(a => {
 							const holidayEvent = getHolidayEvent(a, props.editData.setting.calendar.holiday.events);
-							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
+							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday.regulars, holidayEvent, props.editData.setting.theme);
 							const className = getCellClassName(classNames);
 
 							return (
@@ -105,7 +105,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					<tr className='pin'>
 						{dates.map(a => {
 							const holidayEvent = getHolidayEvent(a, props.editData.setting.calendar.holiday.events);
-							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
+							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday.regulars, holidayEvent, props.editData.setting.theme);
 							const className = getCellClassName(classNames);
 
 							return (
@@ -135,7 +135,6 @@ function getWeekDayClassName(date: DateTime, regulars: Holiday["regulars"], them
 	return "";
 }
 
-//TODO: getHolidayClassNameの計算と重複
 function getHolidayEvent(date: DateTime, events: Holiday["events"]): HolidayEvent | null {
 	const dateText = date.format("yyyy-MM-dd");
 	if (dateText in events) {
@@ -146,9 +145,7 @@ function getHolidayEvent(date: DateTime, events: Holiday["events"]): HolidayEven
 	return null;
 }
 
-function getHolidayClassName(date: DateTime, events: Holiday["events"], theme: Theme): string {
-
-	const holidayEvent = getHolidayEvent(date, events);
+function getHolidayClassName(date: DateTime, holidayEvent: HolidayEvent | null, theme: Theme): string {
 	if (holidayEvent) {
 		if (holidayEvent) {
 			return "_dynamic_theme_holiday_events_" + holidayEvent.kind;
@@ -158,9 +155,9 @@ function getHolidayClassName(date: DateTime, events: Holiday["events"], theme: T
 	return "";
 }
 
-function getDayClassNames(date: DateTime, setting: Holiday, theme: Theme): Array<string> {
-	const weekClassName = getWeekDayClassName(date, setting.regulars, theme);
-	const holidayClassName = getHolidayClassName(date, setting.events, theme);
+function getDayClassNames(date: DateTime, regularHolidays: Holiday["regulars"], holidayEvent: HolidayEvent | null, theme: Theme): Array<string> {
+	const weekClassName = getWeekDayClassName(date, regularHolidays, theme);
+	const holidayClassName = getHolidayClassName(date, holidayEvent, theme);
 
 	return [weekClassName, holidayClassName].filter(a => a);
 }
