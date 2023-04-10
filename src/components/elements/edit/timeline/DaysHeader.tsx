@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 
 import { useLocale } from "@/locales/locale";
-import { Holiday, Theme } from "@/models/data/Setting";
+import { Holiday, HolidayEvent, Theme } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { EditProps } from "@/models/data/props/EditProps";
 import { Timelines } from "@/models/Timelines";
@@ -76,11 +76,12 @@ const Component: NextPage<Props> = (props: Props) => {
 					</tr>
 					<tr className='day'>
 						{dates.map(a => {
+							const holidayEvent = getHolidayEvent(a, props.editData.setting.calendar.holiday.events);
 							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
 							const className = getCellClassName(classNames);
 
 							return (
-								<td key={a.getTime()} id={Timelines.toDaysId(a)} className={className}>
+								<td key={a.getTime()} id={Timelines.toDaysId(a)} title={holidayEvent?.display} className={className}>
 									<time dateTime={a.format("U")}>{a.day}</time>
 								</td>
 							)
@@ -88,11 +89,12 @@ const Component: NextPage<Props> = (props: Props) => {
 					</tr>
 					<tr className='week'>
 						{dates.map(a => {
+							const holidayEvent = getHolidayEvent(a, props.editData.setting.calendar.holiday.events);
 							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
 							const className = getCellClassName(classNames);
 
 							return (
-								<td key={a.getTime()} className={className}>
+								<td key={a.getTime()} title={holidayEvent?.display} className={className}>
 									{locale.common.calendar.week.short[Settings.toWeekDay(a.week)]}
 								</td>
 							);
@@ -102,11 +104,12 @@ const Component: NextPage<Props> = (props: Props) => {
 				<tbody>
 					<tr className='pin'>
 						{dates.map(a => {
+							const holidayEvent = getHolidayEvent(a, props.editData.setting.calendar.holiday.events);
 							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
 							const className = getCellClassName(classNames);
 
 							return (
-								<td key={a.getTime()} className={className}>
+								<td key={a.getTime()} title={holidayEvent?.display} className={className}>
 									@
 								</td>
 							);
@@ -132,11 +135,21 @@ function getWeekDayClassName(date: DateTime, regulars: Holiday["regulars"], them
 	return "";
 }
 
-function getHolidayClassName(date: DateTime, events: Holiday["events"], theme: Theme): string {
-
+//TODO: getHolidayClassNameの計算と重複
+function getHolidayEvent(date: DateTime, events: Holiday["events"]): HolidayEvent | null {
 	const dateText = date.format("yyyy-MM-dd");
 	if (dateText in events) {
 		const holidayEvent = events[dateText];
+		return holidayEvent;
+	}
+
+	return null;
+}
+
+function getHolidayClassName(date: DateTime, events: Holiday["events"], theme: Theme): string {
+
+	const holidayEvent = getHolidayEvent(date, events);
+	if (holidayEvent) {
 		if (holidayEvent) {
 			return "_dynamic_theme_holiday_events_" + holidayEvent.kind;
 		}
