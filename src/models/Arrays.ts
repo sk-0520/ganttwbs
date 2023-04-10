@@ -15,6 +15,19 @@ export abstract class Arrays {
 	}
 
 	/**
+	 * とりあえず謎の配列を作成する。
+	 * @param count 配列数。 0 個を許容。
+	 * @returns なんかの配列。配列の値ではなく数を用いる想定。
+	 */
+	public static create(count: number): Array<never> {
+		if(!count) {
+			return [];
+		}
+		return this.repeat<never>(undefined as never, count);
+	}
+
+
+	/**
 	 * 指定した範囲の配列を作成
 	 * @param start
 	 * @param count

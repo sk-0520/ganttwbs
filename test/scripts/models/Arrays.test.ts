@@ -16,6 +16,20 @@ describe("Arrays", () => {
 	});
 
 	test.each([
+		[0, 0],
+		[3, 3],
+		[2, 2],
+	])("create", (expected, count: number) => {
+		expect(Arrays.create(count).length).toEqual(expected);
+	});
+
+	test.each([
+		[-1],
+	])("create - throw", (count: number) => {
+		expect(() => Arrays.create(count)).toThrowError(RangeError);
+	});
+
+	test.each([
 		[[1, 2, 3], 1, 3],
 		[[0, 1, 2], 0, 3],
 		[[-1, 0, 1], -1, 3],

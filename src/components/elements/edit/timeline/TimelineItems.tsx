@@ -301,7 +301,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					})}
 					{
 						// ダミー領域追加
-						Arrays.repeat(0, props.configuration.design.dummy.height).map(_ => {
+						Arrays.create(props.configuration.design.dummy.height).map(_ => {
 							return (
 								<li key={"dmy-" + IdFactory.createReactKey()}>
 									<div className="dummy">
