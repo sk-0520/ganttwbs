@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 
 import { useLocale } from "@/locales/locale";
-import { Holiday, Theme } from "@/models/data/Setting";
+import { Holiday, HolidayEvent, Theme } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { EditProps } from "@/models/data/props/EditProps";
 import { Timelines } from "@/models/Timelines";
@@ -27,7 +27,13 @@ const Component: NextPage<Props> = (props: Props) => {
 		return date;
 	});
 
-	const yearMonthBucket: Array<{ year: number, month: number, length: number }> = [];
+	type YearMonth = {
+		year: number,
+		month: number,
+		length: number,
+		date: DateTime,
+	};
+	const yearMonthBucket: Array<YearMonth> = [];
 	for (const date of dates) {
 		const yearTargets = yearMonthBucket.filter(a => a.year === date.year);
 		if (yearTargets.length) {
@@ -35,10 +41,10 @@ const Component: NextPage<Props> = (props: Props) => {
 			if (target) {
 				target.length += 1;
 			} else {
-				yearMonthBucket.push({ year: date.year, month: date.month, length: 1 });
+				yearMonthBucket.push({ year: date.year, month: date.month, length: 1, date: date });
 			}
 		} else {
-			yearMonthBucket.push({ year: date.year, month: date.month, length: 1 });
+			yearMonthBucket.push({ year: date.year, month: date.month, length: 1, date: date });
 		}
 	}
 	yearMonthBucket.sort((a, b) => {
@@ -58,7 +64,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							const year = a.year;
 							const month = a.month;
 
-							const display = `${year}/${month}`;
+							const display = a.date.format(locale.common.calendar.format.yearMonth);
 							const dateTime = `${year}-${month}`;
 
 							return (
@@ -70,11 +76,12 @@ const Component: NextPage<Props> = (props: Props) => {
 					</tr>
 					<tr className='day'>
 						{dates.map(a => {
-							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
+							const holidayEvent = getHolidayEvent(a, props.editData.setting.calendar.holiday.events);
+							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday.regulars, holidayEvent, props.editData.setting.theme);
 							const className = getCellClassName(classNames);
 
 							return (
-								<td key={a.getTime()} id={Timelines.toDaysId(a)} className={className}>
+								<td key={a.getTime()} id={Timelines.toDaysId(a)} title={holidayEvent?.display} className={className}>
 									<time dateTime={a.format("U")}>{a.day}</time>
 								</td>
 							)
@@ -82,11 +89,12 @@ const Component: NextPage<Props> = (props: Props) => {
 					</tr>
 					<tr className='week'>
 						{dates.map(a => {
-							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
+							const holidayEvent = getHolidayEvent(a, props.editData.setting.calendar.holiday.events);
+							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday.regulars, holidayEvent, props.editData.setting.theme);
 							const className = getCellClassName(classNames);
 
 							return (
-								<td key={a.getTime()} className={className}>
+								<td key={a.getTime()} title={holidayEvent?.display} className={className}>
 									{locale.common.calendar.week.short[Settings.toWeekDay(a.week)]}
 								</td>
 							);
@@ -96,11 +104,12 @@ const Component: NextPage<Props> = (props: Props) => {
 				<tbody>
 					<tr className='pin'>
 						{dates.map(a => {
-							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday, props.editData.setting.theme);
+							const holidayEvent = getHolidayEvent(a, props.editData.setting.calendar.holiday.events);
+							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday.regulars, holidayEvent, props.editData.setting.theme);
 							const className = getCellClassName(classNames);
 
 							return (
-								<td key={a.getTime()} className={className}>
+								<td key={a.getTime()} title={holidayEvent?.display} className={className}>
 									@
 								</td>
 							);
@@ -126,11 +135,18 @@ function getWeekDayClassName(date: DateTime, regulars: Holiday["regulars"], them
 	return "";
 }
 
-function getHolidayClassName(date: DateTime, events: Holiday["events"], theme: Theme): string {
-
+function getHolidayEvent(date: DateTime, events: Holiday["events"]): HolidayEvent | null {
 	const dateText = date.format("yyyy-MM-dd");
 	if (dateText in events) {
 		const holidayEvent = events[dateText];
+		return holidayEvent;
+	}
+
+	return null;
+}
+
+function getHolidayClassName(date: DateTime, holidayEvent: HolidayEvent | null, theme: Theme): string {
+	if (holidayEvent) {
 		if (holidayEvent) {
 			return "_dynamic_theme_holiday_events_" + holidayEvent.kind;
 		}
@@ -139,9 +155,9 @@ function getHolidayClassName(date: DateTime, events: Holiday["events"], theme: T
 	return "";
 }
 
-function getDayClassNames(date: DateTime, setting: Holiday, theme: Theme): Array<string> {
-	const weekClassName = getWeekDayClassName(date, setting.regulars, theme);
-	const holidayClassName = getHolidayClassName(date, setting.events, theme);
+function getDayClassNames(date: DateTime, regularHolidays: Holiday["regulars"], holidayEvent: HolidayEvent | null, theme: Theme): Array<string> {
+	const weekClassName = getWeekDayClassName(date, regularHolidays, theme);
+	const holidayClassName = getHolidayClassName(date, holidayEvent, theme);
 
 	return [weekClassName, holidayClassName].filter(a => a);
 }
