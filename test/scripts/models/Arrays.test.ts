@@ -29,4 +29,24 @@ describe("Arrays", () => {
 	])("range - throw", (count: number) => {
 		expect(() => Arrays.range(0, count)).toThrowError(RangeError);
 	});
+
+	test("first", () => {
+		const input = [1, 2, 3];
+		expect(Arrays.first(input)).toBe(1);
+	});
+
+	test("first - throw", () => {
+		const input: Array<number> = [];
+		expect(() => Arrays.first(input)).toThrowError(RangeError);
+	});
+
+	test("last", () => {
+		const input = [1, 2, 3];
+		expect(Arrays.last(input)).toBe(3);
+	});
+
+	test("last - throw", () => {
+		const input: Array<number> = [];
+		expect(() => Arrays.first(input)).toThrowError(RangeError);
+	});
 });

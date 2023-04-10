@@ -28,4 +28,31 @@ export abstract class Arrays {
 		return Array.from(Array(count), (_, k) => k + start);
 	}
 
+	/**
+	 * 最初の要素を取得。
+	 * @param array
+	 * @returns
+	 * @throws {RangeError} なんもねぇ
+	 */
+	public static first<T>(array: Array<T>): T {
+		if (!array.length) {
+			throw new RangeError();
+		}
+
+		return array[0];
+	}
+
+	/**
+	 * 最後の要素を取得。
+	 * @param array
+	 * @returns
+	 * @throws {RangeError} なんもねぇ
+	 */
+	public static last<T>(array: Array<T>): T {
+		if (!array.length) {
+			throw new RangeError();
+		}
+
+		return array[array.length - 1];
+	}
 }
