@@ -16,11 +16,6 @@ const Page: NextPage = () => {
 				<li>
 					<Link href="/about">これなに？</Link>
 				</li>
-				{process.env.NODE_ENV !== "production" && (
-					<li>
-						<Link href="/debug">DEBUG</Link>
-					</li>
-				)}
 			</ul>
 		</Layout>
 	);

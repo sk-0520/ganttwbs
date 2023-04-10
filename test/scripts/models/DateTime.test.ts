@@ -7,7 +7,6 @@ describe("DateTime", () => {
 	test("parse", () => {
 		const expected = DateTime.parse("2000-01-01T00:00:00", TimeZone.utc);
 		for (let i = 0; i < 20; i++) {
-			console.debug(i);
 			const offset = TimeSpan.fromHours(i);
 			const actual = DateTime.parse("2000-01-01T00:00:00", TimeZone.create(offset));
 			expect(actual.getTime() + offset.totalMilliseconds).toBe(expected.getTime());
