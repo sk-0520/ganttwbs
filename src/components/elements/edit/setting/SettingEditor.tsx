@@ -109,18 +109,20 @@ const Component: NextPage<Props> = (props: Props) => {
 
 export default Component;
 
-function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnly]: HolidayEvent }): string {
+function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnly]: HolidayEvent }, timeZone: TimeZone): string {
 	return Object.entries(items)
 		.filter(([k, v]) => v.kind === kind)
-		.map(([k, v]) => ({ date: new Date(k), display: v.display }))
+		.map(([k, v]) => ({ date: DateTime.parse(k, timeZone), display: v.display }))
 		.sort((a, b) => a.date.getTime() - b.date.getTime())
-		.map(a => `${a.date.toISOString().split("T")[0]}\t${a.display}`)
+		.map(a => `${a.date.format("yyyy-MM-dd")}\t${a.display}`)
 		.join(NewLine)
 		;
 
 }
 
 function toContext(setting: Setting): SettingContext {
+	const timeZone = TimeZone.parse(setting.timeZone) ?? TimeZone.getClientTimeZone();
+
 	return {
 		general: {
 			name: setting.name,
@@ -156,8 +158,8 @@ function toContext(setting: Setting): SettingContext {
 					sunday: setting.calendar.holiday.regulars.includes("sunday"),
 				},
 				events: {
-					holidays: toCalendarHolidayEventContext("holiday", setting.calendar.holiday.events),
-					specials: toCalendarHolidayEventContext("special", setting.calendar.holiday.events),
+					holidays: toCalendarHolidayEventContext("holiday", setting.calendar.holiday.events, timeZone),
+					specials: toCalendarHolidayEventContext("special", setting.calendar.holiday.events, timeZone),
 				}
 			},
 		},

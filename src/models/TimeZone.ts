@@ -1,26 +1,55 @@
+import { Strings } from "./Strings";
 import { TimeSpan } from "./TimeSpan";
 
-export class TimeZone {
-	public constructor(
-		/**
-		 * UTC からの位置。
-		 */
-		public readonly offset: TimeSpan
-	) {
-	}
+/**
+ * タイムゾーン。
+ */
+export abstract class TimeZone {
 
+	/**
+	 * UTCタイムゾーンの取得。
+	 */
 	public static get utc(): TimeZone {
-		return new TimeZone(TimeSpan.zero);
+		return new OffsetTimeZone(TimeSpan.zero);
+		//return new IanaTimeZone("UTC");
 	}
 
-	public serialize(): string {
-		const signs = 0 <= this.offset.ticks ? "+" : "-";
-		const h = Math.abs(this.offset.hours).toString().padStart(2, "0");
-		const m = Math.abs(this.offset.minutes).toString().padStart(2, "0");
-		return `${signs}${h}:${m}`;
+	/**
+	 * オフセットを持つか。
+	 */
+	public abstract get hasOffset(): boolean;
+	/**
+	 * タイムゾーン名を持つか。
+	 */
+	public abstract get hasName(): boolean;
+
+	/**
+	 * クライアント(ブラウザ)のタイムゾーンを取得。
+	 * @returns
+	 */
+	public static getClientTimeZone(): TimeZone {
+		const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		if(tz) {
+			return new IanaTimeZone(tz);
+		}
+
+		const date = new Date();
+		const offset = date.getTimezoneOffset() * -1;
+
+		return new OffsetTimeZone(TimeSpan.fromMinutes(offset));
 	}
 
+	/**
+	 * パース。
+	 * @param s
+	 * @returns パース成功時はタイムゾーン。失敗時は `null`。
+	 */
 	public static parse(s: string): TimeZone | null {
+		if (s.includes("/")) {
+			return new IanaTimeZone(s);
+		}
+
+		//TODO: +-HH:MM 形式のみ。 : なかったり、HHのみとかもうめんどい
 		const regex = /(?<signs>\+|-)(?<h>[0-2][0-9]):(?<m>[0-5][0-9])/;
 		const match = s.match(regex);
 		if (!match || !match.groups) {
@@ -31,18 +60,91 @@ export class TimeZone {
 		const m = Number.parseInt(match.groups["m"], 10);
 		const totalMinutes = (h * 60 + m) * signs;
 
-		return new TimeZone(TimeSpan.fromMinutes(totalMinutes));
+		return new OffsetTimeZone(TimeSpan.fromMinutes(totalMinutes));
 	}
 
 	/**
-	 * クライアント(ブラウザ)のタイムゾーンを取得。
+	 * 生成。
+	 * @param input
 	 * @returns
 	 */
-	public static getClientTimeZone(): TimeZone {
-		//return Intl.DateTimeFormat().resolvedOptions().timeZone;
-		const date = new Date();
-		const offset = date.getTimezoneOffset() * -1;
+	public static create(input: TimeSpan | string): TimeZone {
+		if (input instanceof TimeSpan) {
+			return new OffsetTimeZone(input);
+		}
+		if (Strings.isNotWhiteSpace(input)) {
+			return new IanaTimeZone(input);
+		}
 
-		return new TimeZone(TimeSpan.fromMinutes(offset));
+		throw new Error(input);
+	}
+
+	/**
+	 * 保存処理。
+	 *
+	 * @returns create で生成可能なものを返す。
+	 */
+	public abstract serialize(): string;
+
+}
+
+/**
+ * オフセットタイムゾーン。
+ */
+class OffsetTimeZone extends TimeZone {
+	private serialized?: string;
+
+	public constructor(
+		/**
+		 * UTC からの位置。
+		 */
+		public readonly offset: TimeSpan
+	) {
+		super();
+	}
+
+	public get hasOffset(): boolean {
+		return true;
+	}
+
+	public get hasName(): boolean {
+		return false;
+	}
+
+	public override serialize(): string {
+		if (!this.serialized) {
+			const signs = 0 <= this.offset.ticks ? "+" : "-";
+			const h = Math.abs(this.offset.hours).toString().padStart(2, "0");
+			const m = Math.abs(this.offset.minutes).toString().padStart(2, "0");
+			this.serialized = `${signs}${h}:${m}`;
+		}
+
+		return this.serialized;
+	}
+}
+
+/**
+ * 名称タイムゾーン。
+ */
+class IanaTimeZone extends TimeZone {
+	public constructor(
+		/**
+		 * タイムゾーン名。
+		 */
+		public readonly name: string
+	) {
+		super();
+	}
+
+	public get hasOffset(): boolean {
+		return false;
+	}
+
+	public get hasName(): boolean {
+		return true;
+	}
+
+	public override serialize(): string {
+		return this.name;
 	}
 }

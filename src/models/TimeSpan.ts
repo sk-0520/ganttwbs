@@ -15,7 +15,7 @@ export class TimeSpan {
 	 *
 	 * @param _ticks ミリ秒。
 	 */
-	private constructor(private _ticks: number) {
+	private constructor(private readonly _ticks: number) {
 	}
 
 	//#region property
@@ -176,17 +176,6 @@ export class TimeSpan {
 		}
 
 		return result.timeSpan;
-	}
-
-	/**
-	 * Date の差分を取得。
-	 * @param base 基準
-	 * @param target 差分対象
-	 * @returns base - target の結果
-	 */
-	public static diff(base: Date, target: Date): TimeSpan {
-		const time = base.getTime() - target.getTime();
-		return TimeSpan.fromMilliseconds(time);
 	}
 
 	private toReadableString(): string {

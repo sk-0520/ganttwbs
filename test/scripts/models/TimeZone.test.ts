@@ -12,7 +12,7 @@ describe("TimeZone", () => {
 		["-09:00", TimeSpan.fromMinutes(-540)],
 		["-09:30", TimeSpan.fromMinutes(-570)],
 	])("serialize", (expected: string, input: TimeSpan) => {
-		const timezone = new TimeZone(input);
+		const timezone = TimeZone.create(input);
 		expect(timezone.serialize()).toBe(expected);
 	});
 
@@ -26,7 +26,7 @@ describe("TimeZone", () => {
 	])("parse", (expected: TimeSpan, input: string) => {
 		const actual = TimeZone.parse(input);
 		expect(actual).toBeTruthy();
-		expect(actual?.offset.ticks).toBe(expected.ticks);
+		expect((actual as never)["offset"]["ticks"]).toBe(expected.ticks);
 	});
 
 	test.each([

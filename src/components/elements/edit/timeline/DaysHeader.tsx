@@ -56,7 +56,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					<tr className='year-month'>
 						{yearMonthBucket.map(a => {
 							const year = a.year;
-							const month = a.month + 1;
+							const month = a.month;
 
 							const display = `${year}/${month}`;
 							const dateTime = `${year}-${month}`;

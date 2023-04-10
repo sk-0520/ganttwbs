@@ -26,20 +26,21 @@ const Page: NextPage = () => {
 	//const { register, handleSubmit, formState: { errors } } = useForm();
 	const { register, handleSubmit, } = useForm<Input>();
 
-	const fromDate = DateTime.createToday(TimeZone.getClientTimeZone());
-	const toDate = fromDate.add(TimeSpan.fromDays(365));
+	const timeZone = TimeZone.getClientTimeZone();
+	const fromDate = DateTime.today(timeZone);
+	const toDate = fromDate.add(1, "year");
 
 	return (
 		<Layout title='新規作成' mode='page' layoutId='new'>
 			<p>ここで入力する内容は編集時に変更可能です。</p>
 
-			<form onSubmit={handleSubmit(data => onSubmit(data, router))}>
+			<form onSubmit={handleSubmit(data => onSubmit(data, timeZone, router))}>
 				<dl className='inputs'>
 					<dt>タイトル</dt>
 					<dd>
 						<input
 							type='text'
-							/*DEBUG*/ defaultValue={new Date().toLocaleString()}
+							/*DEBUG*/ defaultValue={fromDate.format("L")}
 							{...register("title", {
 								required: {
 									value: true,
@@ -119,7 +120,7 @@ const Page: NextPage = () => {
 
 export default Page;
 
-function onSubmit(data: Input, router: NextRouter) {
+function onSubmit(data: Input, timeZone: TimeZone, router: NextRouter) {
 	console.debug(data);
 
 	const fileName = "new.json";
@@ -127,12 +128,12 @@ function onSubmit(data: Input, router: NextRouter) {
 
 	switch (data.mode) {
 		case "sample":
-			setting = createSampleSetting(data);
+			setting = createSampleSetting(data, timeZone);
 			break;
 
 		case "empty":
 		default:
-			setting = createEmptySetting(data);
+			setting = createEmptySetting(data, timeZone);
 			break;
 	}
 
@@ -146,7 +147,7 @@ function onSubmit(data: Input, router: NextRouter) {
 	Goto.edit(editData, router);
 }
 
-function createEmptySetting(data: Input): Setting {
+function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 	const regularHolidays = DefaultSettings.getRegularHolidays();
 	const defaultWeekColors = Settings.getWeekDays().filter(a => !regularHolidays.has(a)).map(a => ({ [a]: "#000000" })).reduce((r, a) => ({ ...r, ...a }));
 
@@ -154,7 +155,7 @@ function createEmptySetting(data: Input): Setting {
 		name: data.title,
 		recursive: DefaultSettings.RecursiveMaxCount,
 		version: DefaultSettings.SettingVersion,
-		timeZone: TimeZone.getClientTimeZone().serialize(),
+		timeZone: timeZone.serialize(),
 		calendar: {
 			holiday: {
 				regulars: [...regularHolidays.keys()],
@@ -181,13 +182,12 @@ function createEmptySetting(data: Input): Setting {
 	return setting;
 }
 
-function createSampleSetting(data: Input): Setting {
-	const setting = createEmptySetting(data);
-	const timezone = TimeZone.parse(setting.timeZone)!;
+function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
+	const setting = createEmptySetting(data, timeZone);
 
 	const calendarRange: CalendarRange = {
-		from: DateTime.parse(data.dateFrom, timezone),
-		to: DateTime.parse(data.dateTo, timezone),
+		from: DateTime.parse(data.dateFrom, timeZone),
+		to: DateTime.parse(data.dateTo, timeZone),
 	};
 
 	const price = DefaultSettings.getPriceSetting();
