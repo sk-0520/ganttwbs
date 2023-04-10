@@ -3,6 +3,7 @@ import { Locale } from "./locale";
 const locale: Locale = {
 	language: "日本語",
 	common: {
+
 		command: {
 			add: "追加",
 			remove: "削除",
@@ -30,6 +31,10 @@ const locale: Locale = {
 					"sunday": "日",
 				},
 			},
+
+			format: {
+				yearMonth: "yyyy/MM"
+			}
 		}
 	},
 };

@@ -27,7 +27,13 @@ const Component: NextPage<Props> = (props: Props) => {
 		return date;
 	});
 
-	const yearMonthBucket: Array<{ year: number, month: number, length: number }> = [];
+	type YearMonth = {
+		year: number,
+		month: number,
+		length: number,
+		date: DateTime,
+	};
+	const yearMonthBucket: Array<YearMonth> = [];
 	for (const date of dates) {
 		const yearTargets = yearMonthBucket.filter(a => a.year === date.year);
 		if (yearTargets.length) {
@@ -35,10 +41,10 @@ const Component: NextPage<Props> = (props: Props) => {
 			if (target) {
 				target.length += 1;
 			} else {
-				yearMonthBucket.push({ year: date.year, month: date.month, length: 1 });
+				yearMonthBucket.push({ year: date.year, month: date.month, length: 1, date: date });
 			}
 		} else {
-			yearMonthBucket.push({ year: date.year, month: date.month, length: 1 });
+			yearMonthBucket.push({ year: date.year, month: date.month, length: 1, date: date });
 		}
 	}
 	yearMonthBucket.sort((a, b) => {
@@ -58,7 +64,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							const year = a.year;
 							const month = a.month;
 
-							const display = `${year}/${month}`;
+							const display = a.date.format(locale.common.calendar.format.yearMonth);
 							const dateTime = `${year}-${month}`;
 
 							return (

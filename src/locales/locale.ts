@@ -4,7 +4,9 @@ import { WeekDay } from "../models/data/Setting";
 import ja from "./ja";
 
 export interface Locale {
+	/** 言語名 */
 	language: string;
+	/** 共通項目 */
 	common: {
 		command: {
 			add: string;
@@ -16,6 +18,10 @@ export interface Locale {
 				name: string,
 				long: { [key in WeekDay]: string };
 				short: { [key in WeekDay]: string };
+			};
+
+			format: {
+				yearMonth: string;
 			};
 		}
 	},
