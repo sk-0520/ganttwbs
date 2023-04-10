@@ -63,15 +63,15 @@ export class DateTime {
 	}
 
 	private static _parse(input: string | Date | number, timeZone: TimeZone): DateTime {
-		let date = cdate(input);
-
+		let factory = cdate;
 		//if (!date.utcOffset()) {
 		if (timeZone.hasName) {
-			date = date.tz(timeZone.serialize());
+			factory = cdate().tz(timeZone.serialize()).cdateFn();
 		} else if (timeZone.hasOffset) {
-			date = date.utcOffset(timeZone.serialize());
+			factory = cdate().utcOffset(timeZone.serialize()).cdateFn();
 		}
 		//}
+		const date = factory(input);
 
 		return new DateTime(date, timeZone);
 	}

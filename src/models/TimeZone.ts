@@ -5,6 +5,7 @@ export abstract class TimeZone {
 
 	public static get utc(): TimeZone {
 		return new OffsetTimeZone(TimeSpan.zero);
+		//return new IanaTimeZone("UTC");
 	}
 
 	public abstract get hasOffset(): boolean;

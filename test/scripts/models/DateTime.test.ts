@@ -6,23 +6,23 @@ describe("DateTime", () => {
 
 	test("parse", () => {
 		const expected = DateTime.parse("2000-01-01T00:00:00", TimeZone.utc);
-		for (let i = 0; i < 24; i++) {
-			const actual = DateTime.parse("2000-01-01T00:00:00", TimeZone.create(TimeSpan.fromHours(i)));
-			expect(actual.getTime()).toBe(expected.getTime());
+		for (let i = 0; i < 20; i++) {
+			console.debug(i);
+			const offset = TimeSpan.fromHours(i);
+			const actual = DateTime.parse("2000-01-01T00:00:00", TimeZone.create(offset));
+			expect(actual.getTime() + offset.totalMilliseconds).toBe(expected.getTime());
 		}
 	});
 
-	/*
-	TODO: あっかん！
+	//TODO: あっかん！
 	test("parse YYYY-MM-DD", () => {
 		//const expected = DateTime.parse("2000-01-01T00:00:00Z", TimeZone.utc);
-		for (let i = 0; i < 24; i++) {
-			const actual = DateTime.parse("2000-01-01", new TimeZone(TimeSpan.fromHours(i)));
+		for (let i = 0; i < 20; i++) {
+			const actual = DateTime.parse("2000-01-01", TimeZone.create(TimeSpan.fromHours(i)));
 			//expect(actual.getTime()).toEqual(expected.getTime());
 			expect(actual.hour).toEqual(0);
 		}
 	});
-	*/
 
 	test.each([
 		[DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.zero],

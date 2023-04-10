@@ -27,13 +27,21 @@ const Page: NextPage = () => {
 					<td colSpan={2} style={{ fontWeight: "bold" }}>{timeZone.serialize()}</td>
 				</tr>
 				<tr>
-					<td style={{ color: "red" }}>YYYY-MM-DDThh:mm:ss</td>
+					<td>
+						<span style={{ color: "red" }}>YYYY-MM-DDThh:mm:ss</span>
+						<br />
+						<samp>{input.YYYYMMDDhhmmss}</samp>
+					</td>
 					<td>
 						{renderPattern(DateTime.parse(input.YYYYMMDDhhmmss, timeZone))}
 					</td>
 				</tr>
 				<tr>
-					<td style={{ color: "green", marginTop: "1ex" }}>YYYY-MM-DD</td>
+					<td style={{ marginTop: "1ex" }}>
+						<span style={{ color: "green" }}>YYYY-MM-DD</span>
+						<br />
+						<samp>{input.YYYYMMDD}</samp>
+					</td>
 					<td>
 						{renderPattern(DateTime.parse(input.YYYYMMDD, timeZone))}
 					</td>
@@ -81,6 +89,10 @@ const Page: NextPage = () => {
 					<tr>
 						<td>L</td>
 						<td>{date.format("L")}</td>
+					</tr>
+					<tr>
+						<td>time</td>
+						<td>{date.getTime()}</td>
 					</tr>
 				</tbody>
 			</table>
