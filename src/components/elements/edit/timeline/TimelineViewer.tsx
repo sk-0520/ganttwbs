@@ -165,15 +165,13 @@ const Component: NextPage<Props> = (props: Props) => {
 				return null;
 			}
 
-			console.debug(currentChart.getBoundingClientRect());
-
 			return a.previous.map(b => {
 				return (
 					<Xarrow
 						key={b}
 						start={Timelines.toChartId(b)}
 						end={Timelines.toChartId(a)}
-						// startAnchor={"right"}
+						startAnchor={"auto"}
 						endAnchor={"left"}
 						headShape={"arrow1"}
 						headSize={4}
@@ -181,12 +179,11 @@ const Component: NextPage<Props> = (props: Props) => {
 						divContainerStyle={{
 							left: canvas?.clientWidth + "px",
 							top: canvas?.clientHeight + "px",
+							zIndex: -1
 						}}
 					/>
 				)
-			})
-
-
+			});
 		});
 	}
 
