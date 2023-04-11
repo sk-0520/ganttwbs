@@ -28,7 +28,7 @@ const Page: NextPage = () => {
 
 	const timeZone = TimeZone.getClientTimeZone();
 	const fromDate = DateTime.today(timeZone);
-	const toDate = fromDate.add(1, "year");
+	const toDate = fromDate.add(TimeSpan.fromDays(180));
 
 	return (
 		<Layout title='新規作成' mode='page' layoutId='new'>
