@@ -4,7 +4,7 @@ import { Settings } from "@/models/Settings";
 import { NextPage } from "next";
 import GanttChartTimeline from "./GanttChartTimeline";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { ChartSize } from "@/models/data/ChartSize";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimelineStore } from "@/models/store/TimelineStore";
@@ -146,11 +146,10 @@ const Component: NextPage<Props> = (props: Props) => {
 		)
 	}
 
-	function renderLines(): ReactNode {
+	function renderConnecters(): ReactNode {
 		// const width = cell.width.value * days;
 		// const height = cell.height.value * timelines.length;
 		const canvas = document.getElementById("canvas");
-
 
 		return timelines.map((a, i) => {
 			if (!Settings.maybeTaskTimeline(a)) {
@@ -174,6 +173,11 @@ const Component: NextPage<Props> = (props: Props) => {
 						key={b}
 						start={Timelines.toChartId(b)}
 						end={Timelines.toChartId(a)}
+						// startAnchor={"right"}
+						endAnchor={"left"}
+						headShape={"arrow1"}
+						headSize={4}
+						strokeWidth={2}
 						divContainerStyle={{
 							left: canvas?.clientWidth + "px",
 							top: canvas?.clientHeight + "px",
@@ -189,9 +193,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div id='viewer'>
 			<svg id="canvas" width={chartSize.width} height={chartSize.height}>
-				<>
-					{renderGrid()}
-				</>
+				{renderGrid()}
 				{timelines.map((a, i) => {
 					return (
 						<GanttChartTimeline
@@ -211,7 +213,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				})}
 			</svg>
 			<div id="connecters">
-				{renderLines()}
+				{renderConnecters()}
 			</div>
 
 		</div>
@@ -219,3 +221,4 @@ const Component: NextPage<Props> = (props: Props) => {
 };
 
 export default Component;
+
