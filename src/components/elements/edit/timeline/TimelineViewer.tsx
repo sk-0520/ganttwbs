@@ -148,23 +148,27 @@ const Component: NextPage<Props> = (props: Props) => {
 	function renderLines(): ReactNode {
 		// const width = cell.width.value * days;
 		// const height = cell.height.value * timelines.length;
+		const canvas = document.getElementById("canvas");
+
 
 		return timelines.map((a, i) => {
 			if (!Settings.maybeTaskTimeline(a)) {
 				return null;
 			}
 
-			return (
-				<Connecter
-					key={a.id}
-					configuration={props.configuration}
-					currentTimeline={a}
-					currentIndex={i}
-					chartSize={chartSize}
-					timelineStore={props.timelineStore}
-					calendarRange={props.calendarRange}
-				/>
-			)
+			if(!a.previous.length) {
+				return null;
+			}
+
+			const currentChart = document.getElementById(Timelines.toChartId(a))
+			if(!currentChart) {
+				return null;
+			}
+
+			console.debug(currentChart.getBoundingClientRect());
+
+
+
 		});
 	}
 

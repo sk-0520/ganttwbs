@@ -16,7 +16,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const y = props.area.y + (props.area.height / 2 - height / 2);
 
 	return (
-		<g className={Timelines.toChartId(props.currentTimeline)}>
+		<g id={Timelines.toChartId(props.currentTimeline)}>
 			<rect
 				x={x}
 				y={y}

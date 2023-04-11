@@ -1,3 +1,4 @@
+import { Timelines } from "@/models/Timelines";
 import { GroupTimeline } from "@/models/data/Setting";
 import { ChartProps } from "@/models/data/props/ChartProps";
 import { NextPage } from "next";
@@ -16,6 +17,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<g>
 			<rect
+				id={Timelines.toChartId(props.currentTimeline)}
 				x={0}
 				y={props.area.y}
 				width={props.area.chartSize.width}
