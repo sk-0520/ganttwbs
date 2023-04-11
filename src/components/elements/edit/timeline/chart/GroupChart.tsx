@@ -17,7 +17,6 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<g>
 			<rect
-				id={Timelines.toChartId(props.currentTimeline)}
 				x={0}
 				y={props.area.y}
 				width={props.area.chartSize.width}
@@ -27,6 +26,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			/>
 			<g>
 				<rect
+					id={Timelines.toChartId(props.currentTimeline)}
 					x={x}
 					y={y}
 					width={width}

@@ -12,6 +12,7 @@ import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { Timelines } from "@/models/Timelines";
 import Connecter from "./chart/Connecter";
+import Xarrow from "react-xarrows";
 
 interface Props extends EditProps {
 	timeZone: TimeZone;
@@ -156,17 +157,30 @@ const Component: NextPage<Props> = (props: Props) => {
 				return null;
 			}
 
-			if(!a.previous.length) {
+			if (!a.previous.length) {
 				return null;
 			}
 
 			const currentChart = document.getElementById(Timelines.toChartId(a))
-			if(!currentChart) {
+			if (!currentChart) {
 				return null;
 			}
 
 			console.debug(currentChart.getBoundingClientRect());
 
+			return a.previous.map(b => {
+				return (
+					<Xarrow
+						key={b}
+						start={Timelines.toChartId(b)}
+						end={Timelines.toChartId(a)}
+						divContainerStyle={{
+							left: canvas?.clientWidth + "px",
+							top: canvas?.clientHeight + "px",
+						}}
+					/>
+				)
+			})
 
 
 		});
@@ -174,12 +188,9 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	return (
 		<div id='viewer'>
-			<svg width={chartSize.width} height={chartSize.height}>
+			<svg id="canvas" width={chartSize.width} height={chartSize.height}>
 				<>
 					{renderGrid()}
-				</>
-				<>
-					{renderLines()}
 				</>
 				{timelines.map((a, i) => {
 					return (
@@ -199,6 +210,10 @@ const Component: NextPage<Props> = (props: Props) => {
 					)
 				})}
 			</svg>
+			<div id="connecters">
+				{renderLines()}
+			</div>
+
 		</div>
 	);
 };
