@@ -24,7 +24,7 @@ interface Props extends EditProps { }
 const Component: NextPage<Props> = (props: Props) => {
 
 	const [timelineNodes, setTimelineNodes] = useState(props.editData.setting.timelineNodes);
-	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map()));
+	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map(), new Map()));
 
 	const timeZone = TimeZone.parse(props.editData.setting.timeZone)!;
 	if (!timeZone) {
@@ -36,9 +36,11 @@ const Component: NextPage<Props> = (props: Props) => {
 		to: DateTime.parse(props.editData.setting.calendar.range.to, timeZone),
 	}
 
-	function createTimelineStore(items: Map<TimelineId, TimelineItem>): TimelineStore {
+	function createTimelineStore(totalItems: Map<TimelineId, AnyTimeline>, changedItems: Map<TimelineId, TimelineItem>): TimelineStore {
+
 		const result: TimelineStore = {
-			items: items,
+			totalItems: totalItems,
+			changedItems: changedItems,
 			updateTimeline: updateTimeline,
 		};
 
@@ -54,6 +56,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		if (source.kind !== timeline.kind) {
 			throw new Error();
 		}
+
+		const timelineMap = Timelines.getTimelinesMap(timelineNodes);
 
 		const prevSource = { ...source };
 		Object.assign(source, timeline);
@@ -87,21 +91,21 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 
 
-		const items = new Map<TimelineId, TimelineItem>(
+		const changedItems = new Map<TimelineId, TimelineItem>(
 			timelineItems.map(a => [a.timeline.id, a])
 		);
 
-		const store = createTimelineStore(items);
+		const store = createTimelineStore(timelineMap, changedItems);
 		setTimelineStore(store);
 	}
 
 	function updateRelations() {
 		console.debug("全体へ通知");
 
-		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.timelineNodes);
+		const timelineMap = Timelines.getTimelinesMap(timelineNodes);
 		const dateTimeRanges = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive, timeZone);
 
-		const items = new Map(
+		const changedItems = new Map(
 			[...timelineMap.entries()]
 				.filter(([k, _]) => timelineMap.has(k))
 				.map(([k, v]) => {
@@ -113,7 +117,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					return [k, item];
 				})
 		);
-		const store = createTimelineStore(items);
+		const store = createTimelineStore(timelineMap, changedItems);
 		setTimelineStore(store);
 	}
 
@@ -153,7 +157,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				timelineStore={timelineStore}
 				timeZone={timeZone}
 				calendarRange={calendarRange}
-				/>
+			/>
 			<TimelineViewer
 				configuration={props.configuration}
 				editData={props.editData}

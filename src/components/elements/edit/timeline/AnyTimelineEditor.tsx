@@ -58,7 +58,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
 
 	useEffect(() => {
-		const timelineItem = props.timelineStore.items.get(props.currentTimeline.id);
+		const timelineItem = props.timelineStore.changedItems.get(props.currentTimeline.id);
 		if (timelineItem) {
 
 			if (Settings.maybeGroupTimeline(timelineItem.timeline)) {
