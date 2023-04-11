@@ -149,14 +149,20 @@ const Component: NextPage<Props> = (props: Props) => {
 		// const width = cell.width.value * days;
 		// const height = cell.height.value * timelines.length;
 
-		return timelines.filter(Settings.maybeTaskTimeline).map((a, i) => {
+		return timelines.map((a, i) => {
+			if (!Settings.maybeTaskTimeline(a)) {
+				return null;
+			}
+
 			return (
 				<Connecter
 					key={a.id}
 					configuration={props.configuration}
 					currentTimeline={a}
+					currentIndex={i}
 					chartSize={chartSize}
 					timelineStore={props.timelineStore}
+					calendarRange={props.calendarRange}
 				/>
 			)
 		});
