@@ -4,14 +4,13 @@ import { Settings } from "@/models/Settings";
 import { NextPage } from "next";
 import GanttChartTimeline from "./GanttChartTimeline";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode } from "react";
 import { ChartSize } from "@/models/data/ChartSize";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { Timelines } from "@/models/Timelines";
-import Connecter from "./chart/Connecter";
 import Xarrow from "react-xarrows";
 
 interface Props extends EditProps {
@@ -176,6 +175,8 @@ const Component: NextPage<Props> = (props: Props) => {
 						headShape={"arrow1"}
 						headSize={4}
 						strokeWidth={2}
+						path={"smooth"}
+						//dashness={true}
 						divContainerStyle={{
 							left: canvas?.clientWidth + "px",
 							top: canvas?.clientHeight + "px",
