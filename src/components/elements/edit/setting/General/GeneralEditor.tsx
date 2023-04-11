@@ -35,7 +35,6 @@ const Component: NextPage = () => {
 				<input
 					type="text"
 					required
-					pattern={/(\+|-)[0-2][0-9]:[0-5][0-9]/.source}
 					defaultValue={settingContext.general.timeZone}
 					onChange={ev => settingContext.general.timeZone = ev.target.value}
 					/>

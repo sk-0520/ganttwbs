@@ -145,6 +145,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		)
 	}
 
+	//TODO: 関係各所のID要素が生成されてないと動かない問題
 	function renderConnecters(): ReactNode {
 		// const width = cell.width.value * days;
 		// const height = cell.height.value * timelines.length;
