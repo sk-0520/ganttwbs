@@ -1,7 +1,10 @@
+import { Timelines } from "@/models/Timelines";
+import { GroupTimeline } from "@/models/data/Setting";
 import { ChartProps } from "@/models/data/props/ChartProps";
 import { NextPage } from "next";
 
 interface Props extends ChartProps {
+	currentTimeline: GroupTimeline;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
@@ -12,18 +15,18 @@ const Component: NextPage<Props> = (props: Props) => {
 	const y = props.area.y + (props.area.height / 2 - height / 2);
 
 	return (
-		<>
+		<g>
+			<rect
+				x={0}
+				y={props.area.y}
+				width={props.area.chartSize.width}
+				height={props.area.height}
+				fill={props.background}
+				fillOpacity={0.3}
+			/>
 			<g>
 				<rect
-					x={0}
-					y={props.area.y}
-					width={props.area.chartSize.width}
-					height={props.area.height}
-					fill={props.background}
-					fillOpacity={0.3}
-				/>
-
-				<rect
+					id={Timelines.toChartId(props.currentTimeline)}
 					x={x}
 					y={y}
 					width={width}
@@ -36,7 +39,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					paintOrder="stroke"
 				/>
 			</g>
-		</>
+		</g>
 	);
 };
 

@@ -11,6 +11,7 @@ import { TimelineStore } from "@/models/store/TimelineStore";
 import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { Timelines } from "@/models/Timelines";
+import Xarrow from "react-xarrows";
 
 interface Props extends EditProps {
 	timeZone: TimeZone;
@@ -144,12 +145,53 @@ const Component: NextPage<Props> = (props: Props) => {
 		)
 	}
 
+	function renderConnecters(): ReactNode {
+		// const width = cell.width.value * days;
+		// const height = cell.height.value * timelines.length;
+		const canvas = document.getElementById("canvas");
+
+		return timelines.map((a, i) => {
+			if (!Settings.maybeTaskTimeline(a)) {
+				return null;
+			}
+
+			if (!a.previous.length) {
+				return null;
+			}
+
+			const currentChart = document.getElementById(Timelines.toChartId(a))
+			if (!currentChart) {
+				return null;
+			}
+
+			return a.previous.map(b => {
+				return (
+					<Xarrow
+						key={b}
+						start={Timelines.toChartId(b)}
+						end={Timelines.toChartId(a)}
+						startAnchor={"auto"}
+						endAnchor={"left"}
+						headShape={"arrow1"}
+						headSize={4}
+						strokeWidth={2}
+						path={"smooth"}
+						//dashness={true}
+						divContainerStyle={{
+							left: canvas?.clientWidth + "px",
+							top: canvas?.clientHeight + "px",
+							zIndex: -1
+						}}
+					/>
+				)
+			});
+		});
+	}
+
 	return (
 		<div id='viewer'>
-			<svg width={chartSize.width} height={chartSize.height}>
-				<>
-					{renderGrid()}
-				</>
+			<svg id="canvas" width={chartSize.width} height={chartSize.height}>
+				{renderGrid()}
 				{timelines.map((a, i) => {
 					return (
 						<GanttChartTimeline
@@ -168,8 +210,13 @@ const Component: NextPage<Props> = (props: Props) => {
 					)
 				})}
 			</svg>
+			<div id="connecters">
+				{renderConnecters()}
+			</div>
+
 		</div>
 	);
 };
 
 export default Component;
+

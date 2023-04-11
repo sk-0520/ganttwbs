@@ -1,8 +1,10 @@
-import { Progress } from "@/models/data/Setting";
+import { Timelines } from "@/models/Timelines";
+import { Progress, TaskTimeline } from "@/models/data/Setting";
 import { ChartProps } from "@/models/data/props/ChartProps";
 import { NextPage } from "next";
 
 interface Props extends ChartProps {
+	currentTimeline: TaskTimeline;
 	progress: Progress;
 }
 
@@ -14,7 +16,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const y = props.area.y + (props.area.height / 2 - height / 2);
 
 	return (
-		<>
+		<g id={Timelines.toChartId(props.currentTimeline)}>
 			<rect
 				x={x}
 				y={y}
@@ -33,7 +35,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				height={height * 0.8}
 				fill={props.foreground}
 			/>
-		</>
+		</g>
 	);
 };
 
