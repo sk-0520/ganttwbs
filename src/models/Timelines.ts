@@ -13,16 +13,25 @@ interface Holidays {
 	weeks: ReadonlyArray<WeekIndex>;
 }
 
+type TimeLineIdOrObject = TimelineId | Timeline;
+
 export abstract class Timelines {
 
-	public static toNodePreviousId(timeline: Timeline): string {
-		return "timeline-node-previous-" + timeline.id;
+	private static getId(timeline: TimeLineIdOrObject): string {
+		return typeof timeline === "string" ? timeline : timeline.id;
+	}
+
+	public static toNodePreviousId(timeline: TimeLineIdOrObject): string {
+		return "timeline-node-previous-" + this.getId(timeline);
 	}
 
 	public static toDaysId(date: DateTime): string {
 		return "days-" + date.format("yyyy_MM_dd");
 	}
 
+	public static toChartId(timeline: TimeLineIdOrObject): string {
+		return "timeline-chart-" + this.getId(timeline);
+	}
 
 	public static serializeWorkload(workload: TimeSpan): TimeOnly {
 		return workload.toString("readable");

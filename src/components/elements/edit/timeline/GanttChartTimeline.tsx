@@ -69,7 +69,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						? (
 							<TaskChart
 								configuration={props.configuration}
-								// background="#ff0000"
+								currentTimeline={props.currentTimeline}
 								background={getTaskBackground(props.currentTimeline, props.memberMap, props.editData.setting.theme)}
 								foreground={props.editData.setting.theme.timeline.completed}
 								borderColor="#000000"
@@ -81,6 +81,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						) : Settings.maybeGroupTimeline(props.currentTimeline) ? (
 							<GroupChart
 								configuration={props.configuration}
+								currentTimeline={props.currentTimeline}
 								background={getGroupBackground(props.currentTimeline, props.editData.setting.timelineNodes, props.editData.setting.theme)}
 								foreground="#ffffff"
 								borderColor="#000000"
@@ -104,8 +105,6 @@ const Component: NextPage<Props> = (props: Props) => {
 			</>
 		)
 	}
-
-	props.editData.setting.theme
 
 	return (
 		<>

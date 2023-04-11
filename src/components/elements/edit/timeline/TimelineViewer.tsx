@@ -11,6 +11,7 @@ import { TimelineStore } from "@/models/store/TimelineStore";
 import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { Timelines } from "@/models/Timelines";
+import Connecter from "./chart/Connecter";
 
 interface Props extends EditProps {
 	timeZone: TimeZone;
@@ -144,11 +145,31 @@ const Component: NextPage<Props> = (props: Props) => {
 		)
 	}
 
+	function renderLines(): ReactNode {
+		// const width = cell.width.value * days;
+		// const height = cell.height.value * timelines.length;
+
+		return timelines.filter(Settings.maybeTaskTimeline).map((a, i) => {
+			return (
+				<Connecter
+					key={a.id}
+					configuration={props.configuration}
+					currentTimeline={a}
+					chartSize={chartSize}
+					timelineStore={props.timelineStore}
+				/>
+			)
+		});
+	}
+
 	return (
 		<div id='viewer'>
 			<svg width={chartSize.width} height={chartSize.height}>
 				<>
 					{renderGrid()}
+				</>
+				<>
+					{renderLines()}
 				</>
 				{timelines.map((a, i) => {
 					return (
