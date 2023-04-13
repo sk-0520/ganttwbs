@@ -1,7 +1,6 @@
-interface TimeSpanParseResult {
-	timeSpan?: TimeSpan;
-	exception?: Error;
-}
+import { ParseResult, ResultFactory } from "./data/Result";
+
+type TimeSpanParseResult = ParseResult<TimeSpan, Error>;
 
 /**
  * 時間を扱う。
@@ -102,17 +101,13 @@ export class TimeSpan {
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private static parseISO8601(s: string): TimeSpanParseResult {
-		return {
-			exception: new Error(),
-		};
+		return ResultFactory.error(new Error());
 	}
 
 	private static parseReadable(s: string): TimeSpanParseResult {
 		const matches = /^((?<DAY>\d+)\.)?(?<H>\d+):(?<M>\d+):(?<S>\d+)(\.(?<MS>\d{1,3}))?$/.exec(s);
 		if (!matches || !matches.groups) {
-			return {
-				exception: new Error(s),
-			};
+			return ResultFactory.error(new Error(s));
 		}
 
 		const totalSeconds
@@ -125,22 +120,16 @@ export class TimeSpan {
 			const ms = parseInt(matches.groups.MS, 10);
 			if (ms) {
 				const totalMilliseconds = totalSeconds * 1000 + ms;
-				return {
-					timeSpan: TimeSpan.fromMilliseconds(totalMilliseconds)
-				};
+				return ResultFactory.success(TimeSpan.fromMilliseconds(totalMilliseconds));
 			}
 		}
 
-		return {
-			timeSpan: TimeSpan.fromSeconds(totalSeconds)
-		};
+		return ResultFactory.success(TimeSpan.fromSeconds(totalSeconds));
 	}
 
 	private static parseCore(s: string): TimeSpanParseResult {
 		if (!s) {
-			return {
-				exception: new Error(s),
-			};
+			return ResultFactory.error(new Error());
 		}
 
 		if (s[0] === "P") {
@@ -153,29 +142,21 @@ export class TimeSpan {
 	public static tryParse(s: string): TimeSpan | null {
 		const result = TimeSpan.parseCore(s);
 
-		if (result.exception) {
+		if (!result.success) {
 			return null;
 		}
 
-		if (!result.timeSpan) {
-			throw new Error(s);
-		}
-
-		return result.timeSpan;
+		return result.value;
 	}
 
 	public static parse(s: string): TimeSpan {
 		const result = TimeSpan.parseCore(s);
 
-		if (result.exception) {
-			throw result.exception;
+		if (!result.success) {
+			throw result.error;
 		}
 
-		if (!result.timeSpan) {
-			throw new Error(s);
-		}
-
-		return result.timeSpan;
+		return result.value;
 	}
 
 	private toReadableString(): string {
@@ -190,7 +171,7 @@ export class TimeSpan {
 			this.seconds.toString().padStart(2, "0"),
 		].join(":");
 
-		if(this.milliseconds) {
+		if (this.milliseconds) {
 			result += "." + this.milliseconds.toString().padStart(3, "0");
 		}
 
@@ -198,12 +179,12 @@ export class TimeSpan {
 	}
 
 	public toString(format: "readable"): string {
-		switch(format) {
+		switch (format) {
 			case "readable":
 				return this.toReadableString();
 
-				default:
-					throw new Error();
+			default:
+				throw new Error();
 		}
 	}
 
