@@ -74,7 +74,7 @@ export abstract class TimeZone {
 	/**
 	 * パース。
 	 * @param s
-	 * @returns パース成功時はタイムゾーン。失敗時は `null`。
+	 * @returns パース成功時はタイムゾーン。
 	 */
 	public static parse(s: string): TimeZone {
 		return ResultFactory.parseErrorIsThrow(s, this.parseCore);

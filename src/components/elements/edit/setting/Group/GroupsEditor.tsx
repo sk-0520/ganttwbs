@@ -189,21 +189,23 @@ const Component: NextPage = () => {
 									</tbody>
 
 									<tfoot data-new-member>
-										<td className="name">
-											<input
-												name='member-name'
-												defaultValue={memberName}
-												onChange={ev => memberName = ev.target.value}
-											/>
-										</td>
-										<td className="add">
-											<button
-												type="button"
-												onClick={ev => handleAddMember(a, memberName, ev)}
-											>
-												add
-											</button>
-										</td>
+										<tr>
+											<td className="name">
+												<input
+													name='member-name'
+													defaultValue={memberName}
+													onChange={ev => memberName = ev.target.value}
+												/>
+											</td>
+											<td className="add">
+												<button
+													type="button"
+													onClick={ev => handleAddMember(a, memberName, ev)}
+												>
+													add
+												</button>
+											</td>
+										</tr>
 									</tfoot>
 								</table>
 							</dd>

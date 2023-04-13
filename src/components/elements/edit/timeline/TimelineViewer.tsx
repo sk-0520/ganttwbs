@@ -67,6 +67,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			const y = cell.height.value + cell.height.value * i;
 			gridHorizontals.push(
 				<line
+					key={i}
 					x1={0}
 					x2={width}
 					y1={y - 0.5}
@@ -88,6 +89,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 			gridVerticals.push(
 				<line
+					key={i}
 					x1={gridX - 0.5}
 					x2={gridX - 0.5}
 					y1={0}
@@ -120,6 +122,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 				gridHolidays.push(
 					<rect
+						key={holidayX}
 						x={holidayX}
 						y={0}
 						width={cell.width.value}
@@ -177,12 +180,16 @@ const Component: NextPage<Props> = (props: Props) => {
 						headSize={4}
 						strokeWidth={2}
 						path={"smooth"}
-						//dashness={true}
-						divContainerStyle={{
-							left: canvas?.clientWidth + "px",
-							top: canvas?.clientHeight + "px",
-							zIndex: -1
-						}}
+					//dashness={true}
+					/*
+					divContainerStyle={{
+						left: canvas?.clientWidth + "px",
+						top: canvas?.clientHeight + "px",
+						right: 0,
+						bottom: 0,
+						zIndex: -1
+					}}
+					*/
 					/>
 				)
 			});

@@ -91,23 +91,25 @@ const Component: NextPage = () => {
 					})}
 				</tbody>
 				<tfoot>
-					<td />
-					<td>
-						<button
-							type='button'
-							onClick={handleAddColor}
-						>
-							末尾追加
-						</button>
-					</td>
-					<td>
-						<button
-							type='button'
-							onClick={handleStartResetColor}
-						>
-							一括設定
-						</button>
-					</td>
+					<tr>
+						<td />
+						<td>
+							<button
+								type='button'
+								onClick={handleAddColor}
+							>
+								末尾追加
+							</button>
+						</td>
+						<td>
+							<button
+								type='button'
+								onClick={handleStartResetColor}
+							>
+								一括設定
+							</button>
+						</td>
+					</tr>
 				</tfoot>
 			</table>
 
