@@ -32,4 +32,24 @@ export abstract class ResultFactory {
 	public static error<E extends Error>(error: E): FailureResult<E> {
 		return this.failure(error);
 	}
+
+	public static parseErrorIsReturnNull<T, E extends Error>(s: string, func: (s: string) => ParseResult<T, E>): T | null {
+		const result = func(s);
+
+		if (!result.success) {
+			return null;
+		}
+
+		return result.value;
+	}
+
+	public static parseErrorIsThrow<T, E extends Error>(s: string, func: (s: string) => ParseResult<T, E>): T {
+		const result = func(s);
+
+		if (!result.success) {
+			throw result.error;
+		}
+
+		return result.value;
+	}
 }

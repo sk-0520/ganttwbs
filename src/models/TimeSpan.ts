@@ -140,23 +140,11 @@ export class TimeSpan {
 	}
 
 	public static tryParse(s: string): TimeSpan | null {
-		const result = TimeSpan.parseCore(s);
-
-		if (!result.success) {
-			return null;
-		}
-
-		return result.value;
+		return ResultFactory.parseErrorIsReturnNull(s, this.parseCore);
 	}
 
 	public static parse(s: string): TimeSpan {
-		const result = TimeSpan.parseCore(s);
-
-		if (!result.success) {
-			throw result.error;
-		}
-
-		return result.value;
+		return ResultFactory.parseErrorIsThrow(s, this.parseCore);
 	}
 
 	private toReadableString(): string {

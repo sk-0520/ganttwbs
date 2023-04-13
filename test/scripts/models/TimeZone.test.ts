@@ -34,8 +34,8 @@ describe("TimeZone", () => {
 		["+0900"],
 		["-0900"],
 		["*09:00"],
-	])("parse null", (input: string) => {
-		const actual = TimeZone.parse(input);
+	])("tryParse null", (input: string) => {
+		const actual = TimeZone.tryParse(input);
 		expect(actual).toBeNull();
 	});
 });
