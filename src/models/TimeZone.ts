@@ -1,5 +1,8 @@
 import { Strings } from "./Strings";
 import { TimeSpan } from "./TimeSpan";
+import { ParseResult, ResultFactory } from "./data/Result";
+
+type TimeZoneParseResult = ParseResult<TimeZone, Error>;
 
 /**
  * タイムゾーン。
@@ -29,7 +32,7 @@ export abstract class TimeZone {
 	 */
 	public static getClientTimeZone(): TimeZone {
 		const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-		if(tz) {
+		if (tz) {
 			return new IanaTimeZone(tz);
 		}
 
@@ -39,28 +42,42 @@ export abstract class TimeZone {
 		return new OffsetTimeZone(TimeSpan.fromMinutes(offset));
 	}
 
-	/**
-	 * パース。
-	 * @param s
-	 * @returns パース成功時はタイムゾーン。失敗時は `null`。
-	 */
-	public static parse(s: string): TimeZone | null {
+	private static parseCore(s: string): TimeZoneParseResult {
 		if (s.includes("/")) {
-			return new IanaTimeZone(s);
+			return ResultFactory.success(new IanaTimeZone(s));
 		}
 
 		//TODO: +-HH:MM 形式のみ。 : なかったり、HHのみとかもうめんどい
 		const regex = /(?<signs>\+|-)(?<h>[0-2][0-9]):(?<m>[0-5][0-9])/;
 		const match = s.match(regex);
 		if (!match || !match.groups) {
-			return null;
+			return ResultFactory.error(new Error(s));
 		}
+
 		const signs = match.groups["signs"] === "-" ? -1 : +1;
 		const h = Number.parseInt(match.groups["h"], 10);
 		const m = Number.parseInt(match.groups["m"], 10);
 		const totalMinutes = (h * 60 + m) * signs;
 
-		return new OffsetTimeZone(TimeSpan.fromMinutes(totalMinutes));
+		return ResultFactory.success(new OffsetTimeZone(TimeSpan.fromMinutes(totalMinutes)));
+	}
+
+	/**
+	 *
+	 * @param s
+	 * @returns パース成功時はタイムゾーン。失敗時は `null`。
+	 */
+	public static tryParse(s: string): TimeZone|null {
+		return ResultFactory.parseErrorIsReturnNull(s, this.parseCore);
+	}
+
+	/**
+	 * パース。
+	 * @param s
+	 * @returns パース成功時はタイムゾーン。失敗時は `null`。
+	 */
+	public static parse(s: string): TimeZone {
+		return ResultFactory.parseErrorIsThrow(s, this.parseCore);
 	}
 
 	/**
