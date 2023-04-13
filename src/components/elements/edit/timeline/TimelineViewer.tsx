@@ -4,7 +4,7 @@ import { Settings } from "@/models/Settings";
 import { NextPage } from "next";
 import GanttChartTimeline from "./GanttChartTimeline";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
-import { ReactNode } from "react";
+import { ReactNode, useRef } from "react";
 import { ChartSize } from "@/models/data/ChartSize";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimelineStore } from "@/models/store/TimelineStore";
@@ -26,6 +26,8 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const cell = props.configuration.design.honest.cell;
 	const timelines = props.editData.setting.timelineNodes.flatMap(a => flat(a));
+
+	const refCanvas = useRef();
 
 	const chartSize: ChartSize = {
 		width: cell.width.value * days,
