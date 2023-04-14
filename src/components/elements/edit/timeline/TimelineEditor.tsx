@@ -91,7 +91,6 @@ const Component: NextPage<Props> = (props: Props) => {
 			}
 		}
 
-
 		const changedItems = new Map<TimelineId, TimelineItem>(
 			timelineItems.map(a => [a.timeline.id, a])
 		);

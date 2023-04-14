@@ -12,6 +12,9 @@ import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { Timelines } from "@/models/Timelines";
 import Xarrow from "react-xarrows";
+import { ChartArea } from "@/models/data/ChartArea";
+import { WorkRanges } from "@/models/WorkRanges";
+import { Charts } from "@/models/Charts";
 
 interface Props extends EditProps {
 	timeZone: TimeZone;
@@ -26,8 +29,6 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const cell = props.configuration.design.honest.cell;
 	const timelines = props.editData.setting.timelineNodes.flatMap(a => flat(a));
-
-	// const refCanvas = useRef();
 
 	const chartSize: ChartSize = {
 		width: cell.width.value * days,
@@ -169,6 +170,33 @@ const Component: NextPage<Props> = (props: Props) => {
 			if (!currentChart) {
 				return null;
 			}
+
+			const currentItem = props.timelineStore.changedItems.get(a.id);
+			if(!currentItem || !currentItem.range || !WorkRanges.maybeSuccessWorkRange(currentItem.range)) {
+				return null;
+			}
+
+
+			const cell = props.configuration.design.honest.cell;
+
+			const startDiffTime = currentItem.range.begin.getTime() - props.calendarRange.from.getTime();
+			const startDiffSpan = TimeSpan.fromMilliseconds(startDiffTime);
+			const startDiffDays = startDiffSpan.totalDays;
+
+			const endDiffTime = currentItem.range.end.getTime() - currentItem.range.begin.getTime();
+			const endDiffSpan = TimeSpan.fromMilliseconds(endDiffTime);
+			const endDiffDays = endDiffSpan.totalDays;
+
+			const times = Charts.getTimeSpanRange(props.calendarRange.from, currentItem.range);
+
+			const currentArea: ChartArea = {
+				x: times.start.totalDays * cell.width.value,
+				y: i * cell.height.value,
+				width: times.end.totalDays * cell.width.value,
+				height: cell.height.value,
+				chartSize: chartSize,
+			}
+
 
 			return a.previous.map(b => {
 				return (
