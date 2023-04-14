@@ -29,6 +29,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const cell = props.configuration.design.honest.cell;
 	const timelines = props.editData.setting.timelineNodes.flatMap(a => flat(a));
+	const timelineIndexes = new Map(timelines.map((a, i) => [a.id, i]));
 
 	const chartSize: ChartSize = {
 		width: cell.width.value * days,
@@ -172,33 +173,30 @@ const Component: NextPage<Props> = (props: Props) => {
 			}
 
 			const currentItem = props.timelineStore.changedItems.get(a.id);
-			if(!currentItem || !currentItem.range || !WorkRanges.maybeSuccessWorkRange(currentItem.range)) {
+			if (!currentItem || !currentItem.range || !WorkRanges.maybeSuccessWorkRange(currentItem.range)) {
 				return null;
 			}
 
 
 			const cell = props.configuration.design.honest.cell;
 
-			const startDiffTime = currentItem.range.begin.getTime() - props.calendarRange.from.getTime();
-			const startDiffSpan = TimeSpan.fromMilliseconds(startDiffTime);
-			const startDiffDays = startDiffSpan.totalDays;
-
-			const endDiffTime = currentItem.range.end.getTime() - currentItem.range.begin.getTime();
-			const endDiffSpan = TimeSpan.fromMilliseconds(endDiffTime);
-			const endDiffDays = endDiffSpan.totalDays;
-
-			const times = Charts.getTimeSpanRange(props.calendarRange.from, currentItem.range);
-
-			const currentArea: ChartArea = {
-				x: times.start.totalDays * cell.width.value,
-				y: i * cell.height.value,
-				width: times.end.totalDays * cell.width.value,
-				height: cell.height.value,
-				chartSize: chartSize,
-			}
-
+			const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, currentItem.range);
+			const currentChartArea = Charts.createChartArea(currentTimeSpanRange, i, cell, chartSize);
 
 			return a.previous.map(b => {
+				const previousIndex = timelineIndexes.get(b);
+				if (typeof previousIndex === "undefined") {
+					return null;
+				}
+
+				const previousItem = props.timelineStore.changedItems.get(b);
+				if (!previousItem || !previousItem.range || !WorkRanges.maybeSuccessWorkRange(previousItem.range)) {
+					return null;
+				}
+
+				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, previousItem.range);
+				const previousChartArea = Charts.createChartArea(previousTimeSpanRange, previousIndex, cell, chartSize);
+
 				return (
 					<Xarrow
 						key={b}
