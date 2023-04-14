@@ -27,7 +27,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const cell = props.configuration.design.honest.cell;
 	const timelines = props.editData.setting.timelineNodes.flatMap(a => flat(a));
 
-	const refCanvas = useRef();
+	// const refCanvas = useRef();
 
 	const chartSize: ChartSize = {
 		width: cell.width.value * days,
@@ -154,7 +154,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	function renderConnecters(): ReactNode {
 		// const width = cell.width.value * days;
 		// const height = cell.height.value * timelines.length;
-		const canvas = document.getElementById("canvas");
+		// const canvas = document.getElementById("canvas");
 
 		return timelines.map((a, i) => {
 			if (!Settings.maybeTaskTimeline(a)) {

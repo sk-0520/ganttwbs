@@ -39,6 +39,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	function createTimelineStore(totalItems: Map<TimelineId, AnyTimeline>, changedItems: Map<TimelineId, TimelineItem>): TimelineStore {
 
 		const result: TimelineStore = {
+			nodeItems: timelineNodes,
 			totalItems: totalItems,
 			changedItems: changedItems,
 			updateTimeline: updateTimeline,

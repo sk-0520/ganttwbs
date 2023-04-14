@@ -3,6 +3,8 @@ import { TimelineItem } from "../data/TimelineItem";
 
 export interface TimelineStore {
 
+	/** ノード状態全アイテム */
+	readonly nodeItems: ReadonlyArray<AnyTimeline>;
 	/** 全てのタイムライン(ノード状態ではない) */
 	readonly totalItems: ReadonlyMap<TimelineId, AnyTimeline>;
 
