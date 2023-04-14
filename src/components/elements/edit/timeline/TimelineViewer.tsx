@@ -167,11 +167,6 @@ const Component: NextPage<Props> = (props: Props) => {
 				return null;
 			}
 
-			const currentChart = document.getElementById(Timelines.toChartId(a))
-			if (!currentChart) {
-				return null;
-			}
-
 			const currentItem = props.timelineStore.changedItems.get(a.id);
 			if (!currentItem || !currentItem.range || !WorkRanges.maybeSuccessWorkRange(currentItem.range)) {
 				return null;
@@ -198,28 +193,16 @@ const Component: NextPage<Props> = (props: Props) => {
 				const previousChartArea = Charts.createChartArea(previousTimeSpanRange, previousIndex, cell, chartSize);
 
 				return (
-					<Xarrow
+					<line
 						key={b}
-						start={Timelines.toChartId(b)}
-						end={Timelines.toChartId(a)}
-						startAnchor={"auto"}
-						endAnchor={"left"}
-						headShape={"arrow1"}
-						headSize={4}
-						strokeWidth={2}
-						path={"smooth"}
-					//dashness={true}
-					/*
-					divContainerStyle={{
-						left: canvas?.clientWidth + "px",
-						top: canvas?.clientHeight + "px",
-						right: 0,
-						bottom: 0,
-						zIndex: -1
-					}}
-					*/
+						x1={previousChartArea.x + previousChartArea.width}
+						y1={previousChartArea.y}
+						x2={currentChartArea.x}
+						y2={currentChartArea.y}
+						stroke="black"
+						strokeWidth={3}
 					/>
-				)
+				);
 			});
 		});
 	}
@@ -245,10 +228,8 @@ const Component: NextPage<Props> = (props: Props) => {
 						/>
 					)
 				})}
-			</svg>
-			<div id="connecters">
 				{renderConnecters()}
-			</div>
+			</svg>
 
 		</div>
 	);
