@@ -61,7 +61,7 @@ export abstract class Settings {
 
 	/**
 	 * `Timeline` は `GroupTimeline` か。
-	 * 本処理は型ガードではあるものの方チェックは行わない。すでに型ガードを通過していることを想定している。
+	 * 本処理は型ガードではあるものの型チェックは行わない。すでに型ガードを通過していることを想定している。
 	 * @param timeline
 	 * @returns
 	 */
@@ -70,7 +70,7 @@ export abstract class Settings {
 	}
 	/**
 	 * `Timeline` は `TaskTimeline` か。
-	 * 本処理は型ガードではあるものの方チェックは行わない。すでに型ガードを通過していることを想定している。
+	 * 本処理は型ガードではあるものの型チェックは行わない。すでに型ガードを通過していることを想定している。
 	 * @param timeline
 	 * @returns
 	 */
