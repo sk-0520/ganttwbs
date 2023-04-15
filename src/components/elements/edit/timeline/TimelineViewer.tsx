@@ -172,11 +172,12 @@ const Component: NextPage<Props> = (props: Props) => {
 				return null;
 			}
 
-
 			const cell = props.configuration.design.honest.cell;
 
 			const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, currentItem.range);
 			const currentChartArea = Charts.createChartArea(currentTimeSpanRange, i, cell, chartSize);
+
+			const currentColor = Charts.getTaskBackground(a, memberMap, props.editData.setting.theme);
 
 			return a.previous.map(b => {
 				const previousIndex = timelineIndexes.get(b);
@@ -188,6 +189,11 @@ const Component: NextPage<Props> = (props: Props) => {
 				if (!previousItem || !previousItem.range || !WorkRanges.maybeSuccessWorkRange(previousItem.range)) {
 					return null;
 				}
+
+				const previewColor = Settings.maybeGroupTimeline(previousItem.timeline)
+					? Charts.getGroupBackground(previousItem.timeline, props.timelineStore.nodeItems, props.editData.setting.theme)
+					: Charts.getTaskBackground(a, memberMap, props.editData.setting.theme)
+					;
 
 				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, previousItem.range);
 				const previousChartArea = Charts.createChartArea(previousTimeSpanRange, previousIndex, cell, chartSize);
@@ -214,7 +220,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 				if (fromHeadTail) {
 					const diff = previousChartArea.width / 2;
-					position.from.y += toTop ? -(cell.height.value / 2): (cell.height.value / 2);
+					position.from.y += toTop ? -(cell.height.value / 2) : (cell.height.value / 2);
 
 					draws.push(`M ${position.from.x - diff} ${position.from.y}`);
 					draws.push("C");
