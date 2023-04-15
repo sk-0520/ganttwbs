@@ -189,6 +189,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 		from: DateTime.parse(data.dateFrom, timeZone),
 		to: DateTime.parse(data.dateTo, timeZone),
 	};
+	const お疲れ様 = calendarRange.from.add(2, "month");
 
 	const price = DefaultSettings.getPriceSetting();
 
@@ -776,6 +777,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 			"kind": "task",
 			"subject": "お疲れ様",
 			"comment": "",
+			"static": Timelines.serializeDateTime(お疲れ様),
 			"previous": [
 				"9544ff54-d179-4814-9adf-1095ed418f48"
 			],

@@ -5,11 +5,23 @@ import { CellBox } from "./data/CellBox";
 import { ChartArea } from "./data/ChartArea";
 import { ChartSize } from "./data/ChartSize";
 import { MemberMapValue } from "./data/MemberMapValue";
-import { GroupTimeline, MemberId, TaskTimeline, Theme } from "./data/Setting";
+import { GroupTimeline, MemberId, TaskTimeline, Theme, TimelineId } from "./data/Setting";
 import { TimeSpanRange } from "./data/TimeSpanRange";
 import { SuccessWorkRange } from "./data/WorkRange";
 
 export abstract class Charts {
+
+	public static toConnecterColorId(fromTimelineId: TimelineId, toTimelineId: TimelineId): string {
+		return "connecter_" + fromTimelineId + "_" + toTimelineId;
+	}
+
+	public static toMarkerId(fromTimelineId: TimelineId, toTimelineId: TimelineId, marker: "start" | "end"): string {
+		return "marker-" + marker + "_" + fromTimelineId + "_" + toTimelineId;
+	}
+
+	public static toReference(target: string): string {
+		return "url(#" + target + ")";
+	}
 
 	public static getTimeSpanRange(startDate: DateTime, workRange: SuccessWorkRange): TimeSpanRange {
 		const startDiffTime = workRange.begin.getTime() - startDate.getTime();
@@ -66,5 +78,6 @@ export abstract class Charts {
 
 		return theme.timeline.defaultTask;
 	}
+
 
 }

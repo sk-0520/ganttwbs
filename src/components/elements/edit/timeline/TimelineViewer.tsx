@@ -152,7 +152,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		)
 	}
 
-	//TODO: 関係各所のID要素が生成されてないと動かない問題
+	// 処理詰めこみコネクタ
 	function renderConnecters(): ReactNode {
 		// const width = cell.width.value * days;
 		// const height = cell.height.value * timelines.length;
@@ -174,6 +174,20 @@ const Component: NextPage<Props> = (props: Props) => {
 
 			const cell = props.configuration.design.honest.cell;
 
+			const markerBox = {
+				width: cell.width.value * 0.3,
+				height: cell.height.value * 0.3,
+			} as const;
+			const markerCommon = {
+				viewBox: `0 0 ${markerBox.width} ${markerBox.height}`,
+				endPoint: [
+					[0, 0],
+					[markerBox.width, markerBox.width / 2],
+					[0, markerBox.height],
+				].map(([x, y]) => x + "," + y).join(" "),
+
+			}
+
 			const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, currentItem.range);
 			const currentChartArea = Charts.createChartArea(currentTimeSpanRange, i, cell, chartSize);
 
@@ -192,7 +206,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 				const previewColor = Settings.maybeGroupTimeline(previousItem.timeline)
 					? Charts.getGroupBackground(previousItem.timeline, props.timelineStore.nodeItems, props.editData.setting.theme)
-					: Charts.getTaskBackground(a, memberMap, props.editData.setting.theme)
+					: Charts.getTaskBackground(previousItem.timeline, memberMap, props.editData.setting.theme)
 					;
 
 				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, previousItem.range);
@@ -211,7 +225,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				};
 
 				// 現工程は前工程より上に位置する(線は上向きにする)
-				const toTop = currentChartArea.x < previousChartArea.y;
+				const toTop = currentChartArea.y < previousChartArea.y;
 
 				// 現工程と前工程が隣接しているので上下から生える(アプリの仕組み上 となりには誰もいない)
 				const fromHeadTail = currentChartArea.x === previousChartArea.x + previousChartArea.width;
@@ -220,13 +234,15 @@ const Component: NextPage<Props> = (props: Props) => {
 
 				if (fromHeadTail) {
 					const diff = previousChartArea.width / 2;
-					position.from.y += toTop ? -(cell.height.value / 2) : (cell.height.value / 2);
+					if (Settings.maybeTaskTimeline(previousItem.timeline)) {
+						position.from.y += toTop ? -(cell.height.value / 2) : (cell.height.value / 2);
+					}
 
 					draws.push(`M ${position.from.x - diff} ${position.from.y}`);
 					draws.push("C");
-					draws.push(` ${position.from.x - diff} ${position.to.y}`);
-					draws.push(` ${position.from.x - diff} ${position.to.y}`);
-					draws.push(` ${position.to.x} ${position.to.y}`);
+					draws.push(`${position.from.x - diff} ${position.to.y}`);
+					draws.push(`${position.from.x - diff} ${position.to.y}`);
+					draws.push(`${position.to.x} ${position.to.y}`);
 				} else {
 					const diff = {
 						x: position.to.x - position.from.x,
@@ -235,28 +251,70 @@ const Component: NextPage<Props> = (props: Props) => {
 
 					draws.push(`M ${position.from.x} ${position.from.y}`);
 					draws.push("C");
-					draws.push(` ${position.from.x} ${position.from.y}`);
-					draws.push(` ${position.to.x - diff.x} ${position.to.y}`);
-					draws.push(` ${position.to.x} ${position.to.y}`);
+					draws.push(`${position.from.x} ${position.from.y}`);
+					draws.push(`${position.to.x - diff.x} ${position.to.y}`);
+					draws.push(`${position.to.x} ${position.to.y}`);
+				}
+
+				const connecterColorId = Charts.toConnecterColorId(b, a.id);
+				const markerId = {
+					start: Charts.toMarkerId(b, a.id, "start"),
+					end: Charts.toMarkerId(b, a.id, "end"),
 				}
 
 				return (
 					<g
 						key={b}
 					>
-						{/* <line
-							x1={previousChartArea.x + previousChartArea.width}
-							y1={previousChartArea.y}
-							x2={currentChartArea.x}
-							y2={currentChartArea.y}
-							stroke="black"
-							strokeWidth={3}
-						/> */}
+						<defs>
+							<marker
+								id={markerId.start}
+								viewBox={markerCommon.viewBox}
+								refX={markerBox.width / 2}
+								refY={markerBox.height / 2}
+							>
+								<circle
+									cx={markerBox.width / 2}
+									cy={markerBox.height / 2}
+									r={markerBox.width / 2}
+									stroke="#ffffff"
+									strokeWidth={1.5}
+									fill={currentColor}
+									/>
+							</marker>
+							<marker id={markerId.end}
+								viewBox={markerCommon.viewBox}
+								refX={markerBox.width / 2}
+								refY={markerBox.height / 2}
+								markerUnits="strokeWidth"
+								markerWidth={markerBox.width}
+								markerHeight={markerBox.height}
+								orient="auto"
+							>
+								<polygon points={markerCommon.endPoint}
+									fill={previewColor}
+									stroke="#000000"
+									strokeWidth={1}
+									paintOrder="stroke"
+								/>
+							</marker>
+
+							<linearGradient
+								id={connecterColorId}
+							>
+								<stop className="previous" offset="0%" stopColor={previewColor} />
+								<stop className="current" offset="100%" stopColor={currentColor} />
+							</linearGradient>
+						</defs>
 						<path
 							d={draws.join(" ")}
 							fill="none"
-							stroke="black"
-							strokeWidth={3}
+							stroke={Charts.toReference(connecterColorId)}
+							strokeWidth={1.5}
+							strokeDasharray={2}
+							opacity={0.8}
+							markerStart={Charts.toReference(markerId.start)}
+							markerEnd={Charts.toReference(markerId.end)}
 						/>
 						<text
 							x={position.from.x}
