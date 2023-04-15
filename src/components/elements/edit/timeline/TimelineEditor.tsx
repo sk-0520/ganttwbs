@@ -76,6 +76,14 @@ const Component: NextPage<Props> = (props: Props) => {
 			timeline: source
 		});
 
+		if(Settings.maybeGroupTimeline(timeline)) {
+			const prevGroupSource = prevSource as GroupTimeline;
+			if(prevGroupSource.children !== timeline.children) {
+				// 関係が変わってる場合はがさっと変えた方が手っ取り早い
+				updateRelations();
+			}
+		}
+
 		if (Settings.maybeTaskTimeline(timeline)) {
 			const src = prevSource as TaskTimeline;
 

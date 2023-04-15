@@ -113,23 +113,30 @@ const Component: NextPage<Props> = (props: Props) => {
 			const destinationIsSelf = props.dropTimeline.destinationGroupTimeline?.id === props.currentTimeline.id;
 			console.debug("位置変更!", { sourceIsSelf, destinationIsSelf });
 
+			let newChildren = [...props.currentTimeline.children];
+
 			// 自グループ内で完結する場合は移動するだけ
 			if (sourceIsSelf && destinationIsSelf) {
-				Timelines.moveTimelineIndex(props.currentTimeline.children, props.dropTimeline.sourceIndex, props.dropTimeline.destinationIndex);
-				setChildren([...props.currentTimeline.children]);
+				Timelines.moveTimelineIndex(newChildren, props.dropTimeline.sourceIndex, props.dropTimeline.destinationIndex);
+				setChildren(newChildren);
+
 			} else {
 				// 移動元が自グループのため対象の子を破棄
 				if (sourceIsSelf) {
-					const nextTimelines = children.filter(a => a.id !== props.dropTimeline!.timeline.id);
-					setChildren(props.currentTimeline.children = nextTimelines);
+					newChildren = newChildren.filter(a => a.id !== props.dropTimeline!.timeline.id);
 				}
 
 				// 移動先が自グループのため対象の子を追加
 				if (destinationIsSelf) {
-					props.currentTimeline.children.splice(props.dropTimeline.destinationIndex, 0, props.dropTimeline.timeline);
-					setChildren([...props.currentTimeline.children]);
+					newChildren.splice(props.dropTimeline.destinationIndex, 0, props.dropTimeline.timeline);
 				}
 			}
+
+			setChildren(newChildren);
+			props.timelineStore.updateTimeline({
+				...props.currentTimeline,
+				children: newChildren,
+			});
 		}
 	}, [props.dropTimeline]);
 
@@ -197,16 +204,20 @@ const Component: NextPage<Props> = (props: Props) => {
 					throw new Error();
 			}
 
-			setChildren([
+			const newChildren = [
 				...children,
 				item,
-			]);
-			props.currentTimeline.children.push(item);
+			]
+
+			setChildren(newChildren);
+			props.timelineStore.updateTimeline({
+				...props.currentTimeline,
+				children: newChildren
+			});
 
 			handleUpdateChildrenWorkload();
 			handleUpdateChildrenProgress();
 
-			props.timelineStore.updateTimeline(props.currentTimeline);
 		} else if (Settings.maybeTaskTimeline(props.currentTimeline)) {
 			props.callbackAddNextSiblingItem(kind, props.currentTimeline);
 
@@ -273,10 +284,14 @@ const Component: NextPage<Props> = (props: Props) => {
 				throw new Error();
 		}
 
-		props.currentTimeline.children.splice(currentIndex + 1, 0, item);
-		setChildren([...props.currentTimeline.children]);
+		const newChildren = props.currentTimeline.children;
+		newChildren.splice(currentIndex + 1, 0, item);
+		setChildren(newChildren);
 
-		props.timelineStore.updateTimeline(props.currentTimeline);
+		props.timelineStore.updateTimeline({
+			...props.currentTimeline,
+			children: newChildren,
+		});
 	}
 
 	function handleUpdateChildrenBeginDate() {
@@ -302,13 +317,15 @@ const Component: NextPage<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		const nextTimelines = children.filter(a => a.id !== currentTimeline.id);
-		setChildren(props.currentTimeline.children = nextTimelines);
+		const newChildren = children.filter(a => a.id !== currentTimeline.id);
+		setChildren(newChildren);
+		props.timelineStore.updateTimeline({
+			...props.currentTimeline,
+			children: newChildren,
+		});
 
 		handleUpdateChildrenWorkload();
 		handleUpdateChildrenProgress();
-
-		props.timelineStore.updateTimeline(props.currentTimeline);
 	}
 
 	function handleClickBeginDate() {
