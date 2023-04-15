@@ -100,12 +100,12 @@ const Component: NextPage<Props> = (props: Props) => {
 						) : null
 				}
 				<>
-					<text
+					{/* <text
 						x={area.x + area.width}
 						y={area.y + area.height}
 					>
 						{props.currentTimeline.id}/{props.currentIndex}
-					</text>
+					</text> */}
 
 					{/* <text y={y + (cell.height.value / 2)}>{props.currentTimeline.id}@{x}:{y}</text> */}
 				</>

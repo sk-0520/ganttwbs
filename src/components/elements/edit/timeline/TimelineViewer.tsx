@@ -192,16 +192,49 @@ const Component: NextPage<Props> = (props: Props) => {
 				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, previousItem.range);
 				const previousChartArea = Charts.createChartArea(previousTimeSpanRange, previousIndex, cell, chartSize);
 
+				const draws = [];
+
+
+
+				if(previousChartArea.x + previousChartArea.width === currentChartArea.x) {
+					// 前工程と現工程は隣接
+				}
+
+				draws.push(`M ${previousChartArea.x + previousChartArea.width} ${previousChartArea.y}`);
+				draws.push("C");
+				draws.push(` ${previousChartArea.x + previousChartArea.width} ${currentChartArea.y}`);
+				draws.push(` ${previousChartArea.x + previousChartArea.width} ${currentChartArea.y}`);
+				draws.push(` ${currentChartArea.x} ${currentChartArea.y}`);
+
+
 				return (
-					<line
+					<g
 						key={b}
-						x1={previousChartArea.x + previousChartArea.width}
-						y1={previousChartArea.y}
-						x2={currentChartArea.x}
-						y2={currentChartArea.y}
-						stroke="black"
-						strokeWidth={3}
-					/>
+					>
+						{/* <line
+							x1={previousChartArea.x + previousChartArea.width}
+							y1={previousChartArea.y}
+							x2={currentChartArea.x}
+							y2={currentChartArea.y}
+							stroke="black"
+							strokeWidth={3}
+						/> */}
+						<path
+							d={draws.join(" ")}
+							fill="none"
+							stroke="black"
+							strokeWidth={3}
+						/>
+						<text
+							x={previousChartArea.x + previousChartArea.width}
+							y={previousChartArea.y}
+						>
+							x1={previousChartArea.x + previousChartArea.width},
+							y1={previousChartArea.y},
+							x2={currentChartArea.x},
+							y2={currentChartArea.y}
+						</text>
+					</g>
 				);
 			});
 		});

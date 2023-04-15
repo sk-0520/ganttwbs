@@ -273,6 +273,18 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 		// 適当に作ってJSONコピペなのだ
 		//--------------------------
 		{
+      "id": "2902b811-44cb-479f-a3ec-ea626396be0d",
+      "kind": "task",
+      "subject": "後の上位工程",
+      "comment": "",
+      "previous": [
+        "c9072f81-bfdb-402b-9c0d-3a55ab79da5f"
+      ],
+      "workload": "1.00:00:00",
+      "memberId": "",
+      "progress": 0
+    },
+		{
 			"id": "6c07169a-198c-4194-9e26-fed1e4513655",
 			"kind": "group",
 			"subject": "設計",
