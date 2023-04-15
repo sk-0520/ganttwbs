@@ -1,11 +1,9 @@
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
 import { GroupTimeline, MemberId, TaskTimeline, Theme } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
-import { TimeSpan } from "@/models/TimeSpan";
 import { NextPage } from "next";
 import { ReactNode, useEffect, useState } from "react";
 import TaskChart from "./chart/TaskChart";
-import { ChartArea } from "@/models/data/ChartArea";
 import GroupChart from "./chart/GroupChart";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { Timelines } from "@/models/Timelines";
