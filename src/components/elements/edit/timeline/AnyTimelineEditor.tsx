@@ -53,7 +53,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [beginDate, setBeginDate] = useState<DateTime | null>(null);
 	const [endDate, setEndDate] = useState<DateTime | null>(null);
 	const [progress, setProgress] = useState(0);
-	const [children, setChildren] = useState(Settings.maybeGroupTimeline(props.currentTimeline) ? props.currentTimeline.children : []);
+	const [children, setChildren] = useState(Settings.maybeGroupTimeline(props.currentTimeline) ? [...props.currentTimeline.children] : []);
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
 	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
 
@@ -238,8 +238,12 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	function handleUpdateChildrenOrder(moveUp: boolean, currentTimeline: Timeline) {
 		if (Settings.maybeGroupTimeline(props.currentTimeline)) {
-			if (Timelines.moveTimelineOrder(props.currentTimeline.children, moveUp, currentTimeline)) {
-				setChildren([...props.currentTimeline.children]);
+			if (Timelines.moveTimelineOrder(children, moveUp, currentTimeline)) {
+				setChildren([...children]);
+				props.timelineStore.updateTimeline({
+					...props.currentTimeline,
+					children
+				})
 			}
 		} else if (Settings.maybeTaskTimeline(props.currentTimeline)) {
 			props.notifyParentCallbacks.notifyDelete(props.currentTimeline);
