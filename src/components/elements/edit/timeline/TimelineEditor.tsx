@@ -18,11 +18,13 @@ import Colors from "@/models/data/Colors";
 import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { DateTime } from "@/models/DateTime";
+import { WorkRange } from "@/models/data/WorkRange";
 
 interface Props extends EditProps { }
 
 const Component: NextPage<Props> = (props: Props) => {
 
+	const workRangesCache = new Map<TimelineId, WorkRange>();
 	const [timelineNodes, setTimelineNodes] = useState(props.editData.setting.timelineNodes);
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map(), new Map()));
 
@@ -38,10 +40,17 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	function createTimelineStore(totalItems: Map<TimelineId, AnyTimeline>, changedItems: Map<TimelineId, TimelineItem>): TimelineStore {
 
+		for(const [k,v] of changedItems) {
+			if(v.range) {
+				workRangesCache.set(k, v.range);
+			}
+		}
+
 		const result: TimelineStore = {
 			nodeItems: timelineNodes,
 			totalItems: totalItems,
 			changedItems: changedItems,
+			workRanges: workRangesCache,
 			updateTimeline: updateTimeline,
 		};
 

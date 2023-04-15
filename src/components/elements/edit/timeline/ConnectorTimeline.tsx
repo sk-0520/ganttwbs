@@ -31,8 +31,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		return null;
 	}
 
-	const currentItem = props.timelineStore.changedItems.get(props.currentTimeline.id);
-	if (!currentItem || !currentItem.range || !WorkRanges.maybeSuccessWorkRange(currentItem.range)) {
+	const currentWorkRange = props.timelineStore.workRanges.get(props.currentTimeline.id);
+	if(!currentWorkRange || !WorkRanges.maybeSuccessWorkRange(currentWorkRange)) {
 		return null;
 	}
 
@@ -49,10 +49,9 @@ const Component: NextPage<Props> = (props: Props) => {
 			[markerBox.width, markerBox.width / 2],
 			[0, markerBox.height],
 		].map(([x, y]) => x + "," + y).join(" "),
-
 	}
 
-	const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, currentItem.range);
+	const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, currentWorkRange);
 	const currentChartArea = Charts.createChartArea(currentTimeSpanRange, props.currentIndex, cell, props.chartSize);
 
 	const currentColor = Charts.getTaskBackground(props.currentTimeline, props.memberMap, props.editData.setting.theme);
@@ -65,17 +64,22 @@ const Component: NextPage<Props> = (props: Props) => {
 					return null;
 				}
 
-				const previousItem = props.timelineStore.changedItems.get(b);
-				if (!previousItem || !previousItem.range || !WorkRanges.maybeSuccessWorkRange(previousItem.range)) {
+				const previousTimeline = props.timelineStore.totalItems.get(b);
+				if (!previousTimeline) {
 					return null;
 				}
 
-				const previewColor = Settings.maybeGroupTimeline(previousItem.timeline)
-					? Charts.getGroupBackground(previousItem.timeline, props.timelineStore.nodeItems, props.editData.setting.theme)
-					: Charts.getTaskBackground(previousItem.timeline, props.memberMap, props.editData.setting.theme)
+				const previewColor = Settings.maybeGroupTimeline(previousTimeline)
+					? Charts.getGroupBackground(previousTimeline, props.timelineStore.nodeItems, props.editData.setting.theme)
+					: Charts.getTaskBackground(previousTimeline, props.memberMap, props.editData.setting.theme)
 					;
 
-				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, previousItem.range);
+				const previewWorkRange = props.timelineStore.workRanges.get(previousTimeline.id);
+				if(!previewWorkRange || !WorkRanges.maybeSuccessWorkRange(previewWorkRange)) {
+					return null;
+				}
+
+				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, previewWorkRange);
 				const previousChartArea = Charts.createChartArea(previousTimeSpanRange, previousIndex, cell, props.chartSize);
 
 				// 基準座標を設定
@@ -100,7 +104,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 				if (fromHeadTail) {
 					const diff = previousChartArea.width / 2;
-					if (Settings.maybeTaskTimeline(previousItem.timeline)) {
+					if (Settings.maybeTaskTimeline(previousTimeline)) {
 						position.from.y += toTop ? -(cell.height.value / 2) : (cell.height.value / 2);
 					}
 

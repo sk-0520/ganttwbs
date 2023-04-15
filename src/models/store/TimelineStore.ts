@@ -1,5 +1,6 @@
 import { AnyTimeline, TimelineId } from "../data/Setting";
 import { TimelineItem } from "../data/TimelineItem";
+import { WorkRange } from "../data/WorkRange";
 
 export interface TimelineStore {
 
@@ -10,6 +11,8 @@ export interface TimelineStore {
 
 	/** 変更タイムライン */
 	readonly changedItems: ReadonlyMap<TimelineId, TimelineItem>;
+
+	readonly workRanges: ReadonlyMap<TimelineId, WorkRange>;
 
 	/**
 	 * タイムラインを更新。
