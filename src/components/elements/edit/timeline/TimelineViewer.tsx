@@ -192,20 +192,47 @@ const Component: NextPage<Props> = (props: Props) => {
 				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, previousItem.range);
 				const previousChartArea = Charts.createChartArea(previousTimeSpanRange, previousIndex, cell, chartSize);
 
+				// 基準座標を設定
+				const position = {
+					from: {
+						x: previousChartArea.x + previousChartArea.width,
+						y: previousChartArea.y + (cell.height.value / 2),
+					},
+					to: {
+						x: currentChartArea.x,
+						y: currentChartArea.y + (cell.height.value / 2),
+					}
+				};
+
+				// 現工程は前工程より上に位置する(線は上向きにする)
+				const toTop = currentChartArea.x < previousChartArea.y;
+
+				// 現工程と前工程が隣接しているので上下から生える(アプリの仕組み上 となりには誰もいない)
+				const fromHeadTail = currentChartArea.x === previousChartArea.x + previousChartArea.width;
+
 				const draws = [];
 
+				if (fromHeadTail) {
+					const diff = previousChartArea.width / 2;
+					position.from.y += toTop ? -(cell.height.value / 2): (cell.height.value / 2);
 
+					draws.push(`M ${position.from.x - diff} ${position.from.y}`);
+					draws.push("C");
+					draws.push(` ${position.from.x - diff} ${position.to.y}`);
+					draws.push(` ${position.from.x - diff} ${position.to.y}`);
+					draws.push(` ${position.to.x} ${position.to.y}`);
+				} else {
+					const diff = {
+						x: position.to.x - position.from.x,
+						y: position.to.y - position.from.y,
+					};
 
-				if(previousChartArea.x + previousChartArea.width === currentChartArea.x) {
-					// 前工程と現工程は隣接
+					draws.push(`M ${position.from.x} ${position.from.y}`);
+					draws.push("C");
+					draws.push(` ${position.from.x} ${position.from.y}`);
+					draws.push(` ${position.to.x - diff.x} ${position.to.y}`);
+					draws.push(` ${position.to.x} ${position.to.y}`);
 				}
-
-				draws.push(`M ${previousChartArea.x + previousChartArea.width} ${previousChartArea.y}`);
-				draws.push("C");
-				draws.push(` ${previousChartArea.x + previousChartArea.width} ${currentChartArea.y}`);
-				draws.push(` ${previousChartArea.x + previousChartArea.width} ${currentChartArea.y}`);
-				draws.push(` ${currentChartArea.x} ${currentChartArea.y}`);
-
 
 				return (
 					<g
@@ -226,13 +253,13 @@ const Component: NextPage<Props> = (props: Props) => {
 							strokeWidth={3}
 						/>
 						<text
-							x={previousChartArea.x + previousChartArea.width}
-							y={previousChartArea.y}
+							x={position.from.x}
+							y={position.from.y}
 						>
-							x1={previousChartArea.x + previousChartArea.width},
-							y1={previousChartArea.y},
-							x2={currentChartArea.x},
-							y2={currentChartArea.y}
+							x1={position.from.x},
+							y1={position.from.y},
+							x2={position.to.x},
+							y2={position.to.y}
 						</text>
 					</g>
 				);
