@@ -1,11 +1,11 @@
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, TimeOnly, Timeline, TimelineId, WeekIndex } from "./data/Setting";
-import { TimeSpan } from "./TimeSpan";
-import { Settings } from "./Settings";
 import { SuccessWorkRange, WorkRange } from "./data/WorkRange";
-import { WorkRanges } from "./WorkRanges";
 import { DateTime } from "./DateTime";
-import { TimeZone } from "./TimeZone";
 import { IdFactory } from "./IdFactory";
+import { Settings } from "./Settings";
+import { TimeSpan } from "./TimeSpan";
+import { TimeZone } from "./TimeZone";
+import { WorkRanges } from "./WorkRanges";
 
 interface Holidays {
 	dates: ReadonlyArray<DateTime>;

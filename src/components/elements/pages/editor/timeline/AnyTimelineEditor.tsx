@@ -1,27 +1,33 @@
-import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
-import { DraggingTimeline } from "@/models/data/DraggingTimeline";
-import { AnyTimeline, GroupTimeline, MemberId, TimelineKind } from "@/models/data/Setting";
-import { EditProps } from "@/models/data/props/EditProps";
-import { TimelineStore } from "@/models/store/TimelineStore";
 import { NextPage } from "next";
-import TimelineHeaderRow from "./cell/TimelineHeaderRow";
-import ControlsCell from "./cell/ControlsCell";
-import { WorkRanges } from "@/models/WorkRanges";
+import { useState, useEffect, DragEvent } from "react";
+
+import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
+import { DraggingTimeline } from "@/models/data/DraggingTimeline";
+import { DropTimeline } from "@/models/data/DropTimeline";
+import { EditProps } from "@/models/data/props/EditProps";
+import { AnyTimeline, GroupTimeline, MemberId, TimelineKind } from "@/models/data/Setting";
+import { WorkRangeKind } from "@/models/data/WorkRange";
+import { DateTime } from "@/models/DateTime";
 import { Settings } from "@/models/Settings";
+import { TimelineStore } from "@/models/store/TimelineStore";
+
+
+import { WorkRanges } from "@/models/WorkRanges";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Timelines } from "@/models/Timelines";
-import { useState, useEffect, DragEvent } from "react";
+import ControlsCell from "./cell/ControlsCell";
+
+
 import IdCell from "./cell/IdCell";
 import ProgressCell from "./cell/ProgressCell";
 import RelationCell from "./cell/RelationCell";
 import ResourceCell from "./cell/ResourceCell";
 import SubjectCell from "./cell/SubjectCell";
+import TimelineHeaderRow from "./cell/TimelineHeaderRow";
 import TimeRangeCells from "./cell/TimeRangeCells";
 import WorkloadCell from "./cell/WorkloadCell";
-import { DropTimeline } from "@/models/data/DropTimeline";
-import { DateTime } from "@/models/DateTime";
-import { WorkRangeKind } from "@/models/data/WorkRange";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
+
 
 interface Props extends EditProps {
 	treeIndexes: Array<number>;

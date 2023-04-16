@@ -1,13 +1,14 @@
+import { NextPage } from "next";
+
 import { Charts } from "@/models/Charts";
-import { Settings } from "@/models/Settings";
-import { WorkRanges } from "@/models/WorkRanges";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { ChartSize } from "@/models/data/ChartSize";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
-import { MemberId, TaskTimeline, TimelineId } from "@/models/data/Setting";
 import { EditProps } from "@/models/data/props/EditProps";
+import { MemberId, TaskTimeline, TimelineId } from "@/models/data/Setting";
+import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
-import { NextPage } from "next";
+import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends EditProps {
 	currentIndex: number;

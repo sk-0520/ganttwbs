@@ -3,9 +3,9 @@ import { NextRouter, useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import Layout from "@/components/layout/Layout";
-import { Goto } from "@/models/Goto";
 import { EditorData } from "@/models/data/EditorData";
 import { SettingSchema } from "@/models/data/Setting";
+import { Goto } from "@/models/Goto";
 
 interface Input {
 	files: FileList;

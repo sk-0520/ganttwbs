@@ -1,10 +1,12 @@
+import { NextPage } from "next";
+import { DragEvent } from "react";
+
+import IndexNumber from "@/components/elements/pages/editor/timeline/IndexNumber";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
-import { NextPage } from "next";
-import IndexNumber from "@/components/elements/pages/editor/timeline/IndexNumber";
-import { DragEvent } from "react";
+
 
 interface Props {
 	selectingId: string,

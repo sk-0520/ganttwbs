@@ -1,8 +1,9 @@
 import { DragEvent } from "react";
+
+import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { AnyTimeline, TimelineId } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
-import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 
 export interface TimelineStore {
 

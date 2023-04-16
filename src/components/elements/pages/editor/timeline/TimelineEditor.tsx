@@ -1,29 +1,30 @@
+import { TinyColor } from "@ctrl/tinycolor";
 import { NextPage } from "next";
 import { DragEvent } from "react";
-
-import DaysHeader from "./DaysHeader";
-import CrossHeader from "./CrossHeader";
-import TimelineItems from "./TimelineItems";
-import TimelineViewer from "./TimelineViewer";
 import { ReactNode, useEffect, useState } from "react";
-import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
-import { Timelines } from "@/models/Timelines";
-import { EditProps } from "@/models/data/props/EditProps";
+
+import { Calendars } from "@/models/Calendars";
+import Colors from "@/models/Colors";
 import { Design } from "@/models/data/Design";
+import { EditProps } from "@/models/data/props/EditProps";
 import { Designs } from "@/models/Designs";
 import { Settings } from "@/models/Settings";
-import { TinyColor } from "@ctrl/tinycolor";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { TimelineItem } from "@/models/data/TimelineItem";
-import Colors from "@/models/Colors";
 import { DateTime } from "@/models/DateTime";
 import { WorkRange } from "@/models/data/WorkRange";
-import { Calendars } from "@/models/Calendars";
 import { Arrays } from "@/models/Arrays";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
+import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
+import { Timelines } from "@/models/Timelines";
+
+import CrossHeader from "./CrossHeader";
+import DaysHeader from "./DaysHeader";
+import TimelineItems from "./TimelineItems";
+import TimelineViewer from "./TimelineViewer";
 
 interface Props extends EditProps { }
 

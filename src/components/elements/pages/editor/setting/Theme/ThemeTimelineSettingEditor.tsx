@@ -1,9 +1,9 @@
 import { NextPage } from "next";
 import { useContext, useState } from "react";
 
+import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
-import PlainColorPicker from "@/components/elements/PlainColorPicker";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);

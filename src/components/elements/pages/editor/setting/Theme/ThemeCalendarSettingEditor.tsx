@@ -1,11 +1,11 @@
 import { NextPage } from "next";
 import { useContext, useState } from "react";
 
-import { SettingContext } from "@/models/data/context/SettingContext";
+import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
+import { SettingContext } from "@/models/data/context/SettingContext";
 import { Color, WeekDay } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
-import PlainColorPicker from "@/components/elements/PlainColorPicker";
 
 const Component: NextPage = () => {
 	const locale = useLocale();

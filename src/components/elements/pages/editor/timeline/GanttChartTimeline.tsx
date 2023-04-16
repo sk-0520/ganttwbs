@@ -1,12 +1,14 @@
-import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
-import { Settings } from "@/models/Settings";
 import { NextPage } from "next";
 import { ReactNode, useEffect, useState } from "react";
-import TaskChart from "./chart/TaskChart";
-import GroupChart from "./chart/GroupChart";
-import { WorkRanges } from "@/models/WorkRanges";
-import { SuccessWorkRange } from "@/models/data/WorkRange";
+
 import { Charts } from "@/models/Charts";
+import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
+import { SuccessWorkRange } from "@/models/data/WorkRange";
+import { Settings } from "@/models/Settings";
+import { WorkRanges } from "@/models/WorkRanges";
+
+import GroupChart from "./chart/GroupChart";
+import TaskChart from "./chart/TaskChart";
 
 interface Props extends GanttChartTimelineProps { }
 

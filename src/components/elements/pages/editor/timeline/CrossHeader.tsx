@@ -1,11 +1,11 @@
 import { NextPage } from "next";
 
+import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { EditProps } from "@/models/data/props/EditProps";
 import { TimelineKind } from "@/models/data/Setting";
-import { Timelines } from "@/models/Timelines";
 import { DateTime } from "@/models/DateTime";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { TimelineStore } from "@/models/store/TimelineStore";
+import { Timelines } from "@/models/Timelines";
 
 interface Props extends EditProps {
 	calendarInfo: CalendarInfo;

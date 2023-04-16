@@ -1,8 +1,9 @@
-import { Color, MemberId } from "@/models/data/Setting";
-import { MemberSetting } from "@/models/data/context/SettingContext";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
+
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
+import { MemberSetting } from "@/models/data/context/SettingContext";
+import { Color, MemberId } from "@/models/data/Setting";
 
 interface Props {
 	member: MemberSetting;

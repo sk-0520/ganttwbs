@@ -1,4 +1,5 @@
 import { TinyColor, mostReadable } from "@ctrl/tinycolor";
+
 import { Color } from "./data/Setting";
 
 export default abstract class Colors {

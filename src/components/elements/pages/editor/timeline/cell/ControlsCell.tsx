@@ -1,7 +1,8 @@
-import Overlay from "@/components/elements/Overlay";
-import { TimelineKind } from "@/models/data/Setting";
 import { NextPage } from "next";
 import { useState } from "react";
+
+import Overlay from "@/components/elements/Overlay";
+import { TimelineKind } from "@/models/data/Setting";
 
 interface Props {
 	currentTimelineKind: TimelineKind;

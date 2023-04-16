@@ -1,6 +1,3 @@
-import { DateTime } from "./DateTime";
-import { TimeSpan } from "./TimeSpan";
-import { Timelines } from "./Timelines";
 import { CellBox } from "./data/CellBox";
 import { ChartArea } from "./data/ChartArea";
 import { ChartSize } from "./data/ChartSize";
@@ -8,6 +5,9 @@ import { MemberMapValue } from "./data/MemberMapValue";
 import { GroupTimeline, MemberId, TaskTimeline, Theme, TimelineId } from "./data/Setting";
 import { TimeSpanRange } from "./data/TimeSpanRange";
 import { SuccessWorkRange } from "./data/WorkRange";
+import { DateTime } from "./DateTime";
+import { Timelines } from "./Timelines";
+import { TimeSpan } from "./TimeSpan";
 
 export abstract class Charts {
 

@@ -1,6 +1,7 @@
-import { Timelines } from "@/models/Timelines";
-import { Progress } from "@/models/data/Setting";
 import { NextPage } from "next";
+
+import { Progress } from "@/models/data/Setting";
+import { Timelines } from "@/models/Timelines";
 
 interface Props {
 	readOnly: boolean;

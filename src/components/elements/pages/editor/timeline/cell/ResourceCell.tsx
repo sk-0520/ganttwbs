@@ -1,7 +1,8 @@
-import { Settings } from "@/models/Settings";
-import { AnyTimeline, Group, Member, MemberId } from "@/models/data/Setting";
 import { NextPage } from "next";
 import { ReactNode } from "react";
+
+import { AnyTimeline, Group, Member, MemberId } from "@/models/data/Setting";
+import { Settings } from "@/models/Settings";
 
 interface Props {
 	readonly currentTimeline: Readonly<AnyTimeline>;

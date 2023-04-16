@@ -1,7 +1,9 @@
-import { Timelines } from "@/models/Timelines";
-import { GroupTimeline } from "@/models/data/Setting";
-import { ChartProps } from "@/models/data/props/ChartProps";
 import { NextPage } from "next";
+
+import { ChartProps } from "@/models/data/props/ChartProps";
+import { GroupTimeline } from "@/models/data/Setting";
+import { Timelines } from "@/models/Timelines";
+
 
 interface Props extends ChartProps {
 	currentTimeline: GroupTimeline;

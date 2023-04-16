@@ -1,8 +1,9 @@
+import { NextPage } from "next";
+
 import DynamicLabel from "@/components/elements/DynamicLabel";
 import Timestamp from "@/components/elements/Timestamp";
-import { DateTime } from "@/models/DateTime";
 import { WorkRangeKind } from "@/models/data/WorkRange";
-import { NextPage } from "next";
+import { DateTime } from "@/models/DateTime";
 
 interface Props {
 	timeRangeKind: WorkRangeKind;

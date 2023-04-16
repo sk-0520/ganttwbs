@@ -7,9 +7,9 @@ import FileEditor from "@/components/elements/pages/editor/file/FileEditor";
 import SettingEditor from "@/components/elements/pages/editor/setting/SettingEditor";
 import TimelineEditor from "@/components/elements/pages/editor/timeline/TimelineEditor";
 import Layout from "@/components/layout/Layout";
-import { Storage } from "@/models/Storage";
-import { EditorData } from "@/models/data/EditorData";
 import { Configuration } from "@/models/data/Configuration";
+import { EditorData } from "@/models/data/EditorData";
+import { Storage } from "@/models/Storage";
 import { TimeSpan } from "@/models/TimeSpan";
 
 const Page: NextPage = () => {

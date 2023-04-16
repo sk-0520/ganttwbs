@@ -1,9 +1,10 @@
+import { NextPage } from "next";
+import { ReactNode, useEffect, useState } from "react";
+
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { Timeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
-import { NextPage } from "next";
-import { ReactNode, useEffect, useState } from "react";
 
 interface Props {
 	level: number;

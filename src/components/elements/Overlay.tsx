@@ -1,4 +1,5 @@
 import { NextPage } from "next";
+
 import style from "@/styles/modules/components/elements/Overlay.module.scss";
 
 interface Props {

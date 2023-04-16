@@ -1,5 +1,6 @@
-import { DateTime } from "@/models/DateTime";
 import { NextPage } from "next";
+
+import { DateTime } from "@/models/DateTime";
 
 interface Props {
 	date: DateTime | null;

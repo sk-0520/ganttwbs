@@ -1,14 +1,15 @@
+import { random } from "@ctrl/tinycolor";
 import { NextPage } from "next";
 import { useContext, MouseEvent, useState } from "react";
 
-import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
-import MemberEditor from "./MemberEditor";
-import { Color, MemberId } from "@/models/data/Setting";
-import { random } from "@ctrl/tinycolor";
-import GroupColorsDialog from "./GroupColorsDialog";
-import Colors from "@/models/Colors";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
+import Colors from "@/models/Colors";
+import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
+import { Color, MemberId } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
+
+import GroupColorsDialog from "./GroupColorsDialog";
+import MemberEditor from "./MemberEditor";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);

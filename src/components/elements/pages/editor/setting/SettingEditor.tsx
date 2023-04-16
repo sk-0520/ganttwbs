@@ -2,23 +2,25 @@ import { NextPage } from "next";
 import { FormEvent } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
-import { Storage } from "@/models/Storage";
 import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
+import { EditorData } from "@/models/data/EditorData";
+import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
+import { DateTime } from "@/models/DateTime";
+import { IdFactory } from "@/models/IdFactory";
+import { Storage } from "@/models/Storage";
+import { Strings } from "@/models/Strings";
+import { TimeZone } from "@/models/TimeZone";
 
 import CalendarHolidaySettingEditor from "./Calendar/CalendarHolidaySettingEditor";
 import CalendarRangeSettingEditor from "./Calendar/CalendarRangeSettingEditor";
 import CalendarWeekSettingEditor from "./Calendar/CalendarWeekSettingEditor";
+import GeneralEditor from "./General/GeneralEditor";
 import GroupsEditor from "./Group/GroupsEditor";
 import ThemeCalendarSettingEditor from "./Theme/ThemeCalendarSettingEditor";
-import ThemeTimelineSettingEditor from "./Theme/ThemeTimelineSettingEditor";
 import ThemeGroupSettingEditor from "./Theme/ThemeGroupSettingEditor";
-import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
-import { Strings } from "@/models/Strings";
-import { EditorData } from "@/models/data/EditorData";
-import GeneralEditor from "./General/GeneralEditor";
-import { DateTime } from "@/models/DateTime";
-import { TimeZone } from "@/models/TimeZone";
-import { IdFactory } from "@/models/IdFactory";
+import ThemeTimelineSettingEditor from "./Theme/ThemeTimelineSettingEditor";
+
+
 
 const NewLine = "\r\n";
 const ThemeHolidayRegularColor: Color = "#0f0";

@@ -1,6 +1,6 @@
-import { TimeZone } from "@/models/TimeZone";
 import { DateTime, Unit } from "@/models/DateTime";
 import { TimeSpan } from "@/models/TimeSpan";
+import { TimeZone } from "@/models/TimeZone";
 
 describe("DateTime", () => {
 

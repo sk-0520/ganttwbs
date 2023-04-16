@@ -1,8 +1,8 @@
 import { NextPage } from "next";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import Link from "next/link";
 import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
 import { TimeSpan } from "@/models/TimeSpan";
