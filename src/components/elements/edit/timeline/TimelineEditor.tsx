@@ -23,13 +23,14 @@ import { Arrays } from "@/models/Arrays";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
+import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 
 interface Props extends EditProps { }
 
 const Component: NextPage<Props> = (props: Props) => {
 
 	const workRangesCache = new Map<TimelineId, WorkRange>();
-	const [timelineNodes, setTimelineNodes] = useState(props.editData.setting.timelineNodes);
+	const [timelineNodes, setTimelineNodes] = useState([...props.editData.setting.timelineNodes]);
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map(), new Map()));
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
@@ -37,10 +38,33 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const calendarInfo = Calendars.createCalendarInfo(props.editData.setting.timeZone, props.editData.setting.calendar);
 
+	function createTimelineStore(totalItems: Map<TimelineId, AnyTimeline>, changedItems: Map<TimelineId, TimelineItem>): TimelineStore {
+
+		for (const [k, v] of changedItems) {
+			if (v.range) {
+				workRangesCache.set(k, v.range);
+			}
+		}
+
+		const result: TimelineStore = {
+			nodeItems: timelineNodes,
+			totalItems: totalItems,
+			changedItems: changedItems,
+			workRanges: workRangesCache,
+			addTimeline: handleAddTimeline,
+			updateTimeline: handleUpdateTimeline,
+			moveTimeline: handleMoveTimeline,
+			removeTimeline: handleRemoveTimeline,
+			startDragTimeline: handleStartDragTimeline,
+		};
+
+		return result;
+	}
+
 	function updateRelations() {
 		console.debug("全体へ通知");
 
-		const timelineMap = Timelines.getTimelinesMap(timelineNodes);
+		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.timelineNodes);
 		const dateTimeRanges = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive, calendarInfo.timeZone);
 
 		const changedItems = new Map(
@@ -57,28 +81,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		);
 		const store = createTimelineStore(timelineMap, changedItems);
 		setTimelineStore(store);
-	}
-
-	function createTimelineStore(totalItems: Map<TimelineId, AnyTimeline>, changedItems: Map<TimelineId, TimelineItem>): TimelineStore {
-
-		for (const [k, v] of changedItems) {
-			if (v.range) {
-				workRangesCache.set(k, v.range);
-			}
-		}
-
-		const result: TimelineStore = {
-			nodeItems: timelineNodes,
-			totalItems: totalItems,
-			changedItems: changedItems,
-			workRanges: workRangesCache,
-			updateTimeline: handleUpdateTimeline,
-			moveTimeline: handleMoveTimeline,
-			removeTimeline: handleRemoveTimeline,
-			startDragTimeline: handleStartDragTimeline,
-		};
-
-		return result;
 	}
 
 	function fireDropTimeline(dropTimeline: DropTimeline) {
@@ -107,9 +109,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 
 		setDraggingTimeline(null);
-
-		// 多分再計算が必要
-		updateRelations();
 	}
 
 	function handleStartDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void {
@@ -222,6 +221,74 @@ const Component: NextPage<Props> = (props: Props) => {
 		setDraggingTimeline(dragging);
 	}
 
+	function handleAddTimeline(timeline: AnyTimeline, options: NewTimelineOptions): void {
+		// 将来追加した場合の安全弁
+		if (options.position !== "next") {
+			throw new Error(options.position);
+		}
+
+		const groups = Timelines.getParentGroup(timeline, timelineNodes);
+		if (!groups) {
+			throw new Error(timeline.id);
+		}
+
+		if (groups.length) {
+			let parent: GroupTimeline;
+			if (Settings.maybeGroupTimeline(timeline)) {
+				parent = timeline;
+			} else {
+				parent = Arrays.last(groups);
+			}
+
+			let item: GroupTimeline | TaskTimeline | null = null;
+			switch (options.timelineKind) {
+				case "group":
+					item = Timelines.createNewGroup();
+					break;
+
+				case "task":
+					item = Timelines.createNewTask();
+					break;
+
+				default:
+					throw new Error();
+			}
+
+			if (Settings.maybeGroupTimeline(timeline)) {
+				// グループの場合、そのグループの末っ子に設定
+				parent.children = [
+					...parent.children,
+					item,
+				];
+			} else {
+				// タスクの場合、次に設定する
+				const currentIndex = parent.children.findIndex(a => a.id === timeline.id);
+				const newChildren = [...parent.children];
+				newChildren.splice(currentIndex + 1, 0, item)
+				parent.children = newChildren;
+			}
+		} else {
+			let item: AnyTimeline | null = null;
+			switch (options.timelineKind) {
+				case "group":
+					item = Timelines.createNewGroup();
+					break;
+
+				case "task":
+					item = Timelines.createNewTask();
+					break;
+
+				default:
+					throw new Error();
+			}
+
+			const currentIndex = timelineNodes.findIndex(a => a.id === timeline.id);
+			const newTimelineNodes = [...timelineNodes];
+			newTimelineNodes.splice(currentIndex + 1, 0, item)
+			setTimelineNodes(props.editData.setting.timelineNodes = [...newTimelineNodes]);
+		}
+	}
+
 	function handleUpdateTimeline(timeline: AnyTimeline): void {
 		//
 		const source = Timelines.findTimeline(timeline.id, timelineNodes);
@@ -292,14 +359,12 @@ const Component: NextPage<Props> = (props: Props) => {
 			const newChildren = [...group.children];
 			Timelines.moveTimelineOrder(newChildren, moveUp, timeline);
 			group.children = newChildren;
+			updateRelations();
 		} else {
 			const newChildren = [...timelineNodes];
 			Timelines.moveTimelineOrder(newChildren, moveUp, timeline);
 			setTimelineNodes(props.editData.setting.timelineNodes = newChildren);
 		}
-
-		// 直接置き換えた値はちまちま反映するのではなくリセット
-		updateRelations();
 	}
 
 	function handleRemoveTimeline(timeline: AnyTimeline): void {
@@ -395,6 +460,9 @@ const Component: NextPage<Props> = (props: Props) => {
 		updateRelations();
 	}, []);
 
+	useEffect(() => {
+		updateRelations();
+	}, [timelineNodes]);
 
 	return (
 		<div id='timeline'>

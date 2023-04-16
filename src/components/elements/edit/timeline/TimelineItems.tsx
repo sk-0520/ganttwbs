@@ -1,8 +1,5 @@
 import { NextPage } from "next";
 
-import { Timelines } from "@/models/Timelines";
-
-import { GroupTimeline, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
@@ -27,6 +24,7 @@ interface Props extends EditProps, TimelineRootProps {
 const Component: NextPage<Props> = (props: Props) => {
 	//const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 
+	/*
 	function handleAddNextSiblingItem(kind: TimelineKind, currentTimeline: Timeline) {
 		const currentIndex = props.timelineRootNodes.findIndex(a => a === currentTimeline);
 
@@ -48,6 +46,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		nodes.splice(currentIndex + 1, 0, item)
 		props.setTimelineRootNodes(nodes);
 	}
+	*/
 
 	return (
 		<div id='timelines'>
@@ -68,7 +67,7 @@ const Component: NextPage<Props> = (props: Props) => {
 									selectingBeginDate={props.selectingBeginDate}
 									dropTimeline={props.dropTimeline}
 									beginDateCallbacks={props.beginDateCallbacks}
-									callbackAddNextSiblingItem={handleAddNextSiblingItem}
+									//callbackAddNextSiblingItem={handleAddNextSiblingItem}
 									calendarInfo={props.calendarInfo}
 								/>
 							</li>

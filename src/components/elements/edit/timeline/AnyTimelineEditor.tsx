@@ -34,7 +34,7 @@ interface Props extends EditProps {
 	beginDateCallbacks: BeginDateCallbacks;
 	dropTimeline: DropTimeline | null;
 	calendarInfo: CalendarInfo;
-	callbackAddNextSiblingItem(kind: TimelineKind, currentTimeline: Timeline): void;
+	//callbackAddNextSiblingItem(kind: TimelineKind, currentTimeline: Timeline): void;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
@@ -180,6 +180,14 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleControlAddItem(kind: TimelineKind) {
+		props.timelineStore.addTimeline(
+			props.currentTimeline,
+			{
+				position: "next",
+				timelineKind: kind,
+			}
+		);
+		/*
 		if (Settings.maybeGroupTimeline(props.currentTimeline)) {
 			let item: GroupTimeline | TaskTimeline | null = null;
 			switch (kind) {
@@ -213,6 +221,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		} else {
 			throw new Error();
 		}
+		*/
 	}
 
 	function handleControlDeleteItem() {
@@ -469,7 +478,7 @@ const Component: NextPage<Props> = (props: Props) => {
 									selectingBeginDate={props.selectingBeginDate}
 									beginDateCallbacks={props.beginDateCallbacks}
 									calendarInfo={props.calendarInfo}
-									callbackAddNextSiblingItem={handleAddNextSiblingItem}
+									//callbackAddNextSiblingItem={handleAddNextSiblingItem}
 								/>
 							</li>
 						);

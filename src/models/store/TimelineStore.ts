@@ -1,7 +1,8 @@
-import {DragEvent} from "react";
+import { DragEvent } from "react";
 import { AnyTimeline, TimelineId } from "../data/Setting";
 import { TimelineItem } from "../data/TimelineItem";
 import { WorkRange } from "../data/WorkRange";
+import { NewTimelineOptions } from "../data/NewTimelineOptions";
 
 export interface TimelineStore {
 
@@ -16,6 +17,12 @@ export interface TimelineStore {
 	/** 各工数時間 */
 	readonly workRanges: ReadonlyMap<TimelineId, WorkRange>;
 
+	/**
+	 * タイムライン追加。
+	 * @param timeline 追加するタイムラインの基準タイムライン。
+	 * @param options 追加方法。
+	 */
+	addTimeline(timeline: AnyTimeline, options: NewTimelineOptions): void;
 	/**
 	 * タイムラインを更新。
 	 * @param timeline
