@@ -1,6 +1,5 @@
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
-import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
 import { RefreshedChildrenCallbacks } from "@/models/data/RefreshedChildrenCallbacks";
 import { AnyTimeline, GroupTimeline, MemberId, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
 import { EditProps } from "@/models/data/props/EditProps";
@@ -33,7 +32,6 @@ interface Props extends EditProps {
 	timelineStore: TimelineStore;
 	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
-	//notifyParentCallbacks: NotifyParentCallbacks;
 	refreshedChildrenCallbacks: RefreshedChildrenCallbacks;
 	beginDateCallbacks: BeginDateCallbacks;
 	dropTimeline: DropTimeline | null;
@@ -403,9 +401,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.beginDateCallbacks.cancelSelectBeginDate(props.currentTimeline)
 	}
 
-	const notifyParentCallbacks: NotifyParentCallbacks = {
-		//notifyDragStart: props.notifyParentCallbacks.notifyDragStart,
-	};
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
 		updatedBeginDate: handleUpdateChildrenBeginDate,
@@ -430,7 +425,6 @@ const Component: NextPage<Props> = (props: Props) => {
 						currentTimeline={props.currentTimeline}
 						isSelectedPrevious={isSelectedPrevious}
 						draggingTimeline={props.draggingTimeline}
-						//notifyParentCallbacks={props.notifyParentCallbacks}
 						selectingBeginDate={props.selectingBeginDate}
 						callbackStartDragTimeline={handleStartDragTimeline}
 						callbackChangePrevious={handleChangePrevious}
@@ -526,7 +520,6 @@ const Component: NextPage<Props> = (props: Props) => {
 									draggingTimeline={props.draggingTimeline}
 									dropTimeline={props.dropTimeline}
 									selectingBeginDate={props.selectingBeginDate}
-									//notifyParentCallbacks={notifyParentCallbacks}
 									refreshedChildrenCallbacks={refreshedChildrenCallbacks}
 									beginDateCallbacks={props.beginDateCallbacks}
 									calendarInfo={props.calendarInfo}

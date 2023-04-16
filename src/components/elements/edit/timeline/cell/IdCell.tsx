@@ -14,7 +14,6 @@ interface Props {
 	readonly currentTimeline: Readonly<AnyTimeline>;
 	selectingBeginDate: SelectingBeginDate | null;
 	draggingTimeline: DraggingTimeline | null;
-	//notifyParentCallbacks: NotifyParentCallbacks;
 	callbackStartDragTimeline(ev:DragEvent): void;
 	callbackChangePrevious: (isSelected: boolean) => void;
 }

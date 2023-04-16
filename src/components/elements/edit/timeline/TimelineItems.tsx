@@ -100,8 +100,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		setSelectingBeginDate(null);
 	}
 
-	const notifyParentCallbacks: NotifyParentCallbacks = {
-	};
 	*/
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
@@ -137,7 +135,6 @@ const Component: NextPage<Props> = (props: Props) => {
 									draggingTimeline={props.draggingTimeline}
 									selectingBeginDate={props.selectingBeginDate}
 									dropTimeline={props.dropTimeline}
-									//notifyParentCallbacks={notifyParentCallbacks}
 									refreshedChildrenCallbacks={refreshedChildrenCallbacks}
 									beginDateCallbacks={props.beginDateCallbacks}
 									callbackAddNextSiblingItem={handleAddNextSiblingItem}
