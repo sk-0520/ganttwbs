@@ -61,12 +61,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.setTimelineRootNodes(nodes);
 	}
 
-	function handleDeleteChildren(currentTimeline: Timeline) {
-		const nextTimelines = props.timelineRootNodes.filter(a => a !== currentTimeline);
-
-		props.setTimelineRootNodes(nextTimelines);
-	}
-
 	function handleUpdateChildrenBeginDate() {
 		props.updateRelations();
 	}
@@ -254,7 +248,6 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const notifyParentCallbacks: NotifyParentCallbacks = {
 		notifyMove: handleUpdateChildrenOrder,
-		notifyDelete: handleDeleteChildren,
 		notifyDragStart: handleStartDragTimeline,
 	};
 
