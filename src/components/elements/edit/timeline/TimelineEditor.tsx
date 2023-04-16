@@ -38,6 +38,15 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const calendarInfo = Calendars.createCalendarInfo(props.editData.setting.timeZone, props.editData.setting.calendar);
 
+	useEffect(() => {
+		updateRelations();
+	}, []);
+
+	useEffect(() => {
+		updateRelations();
+	}, [timelineNodes]);
+
+
 	function createTimelineStore(totalItems: Map<TimelineId, AnyTimeline>, changedItems: Map<TimelineId, TimelineItem>): TimelineStore {
 
 		for (const [k, v] of changedItems) {
@@ -428,6 +437,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		setSelectingBeginDate(null);
 	}
 
+
 	const beginDateCallbacks: BeginDateCallbacks = {
 		startSelectBeginDate: handleStartSelectBeginDate,
 		clearSelectBeginDate: handleClearSelectBeginDate,
@@ -435,14 +445,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		submitSelectBeginDate: handleSubmitSelectBeginDate,
 		cancelSelectBeginDate: handleCancelSelectBeginDate,
 	}
-
-	useEffect(() => {
-		updateRelations();
-	}, []);
-
-	useEffect(() => {
-		updateRelations();
-	}, [timelineNodes]);
 
 	return (
 		<div id='timeline'>
