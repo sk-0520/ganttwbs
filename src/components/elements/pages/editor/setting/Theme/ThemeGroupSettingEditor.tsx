@@ -121,7 +121,7 @@ const Component: NextPage = () => {
 						if (r === "submit") {
 							const colors = resetCount <= 1
 								? [new TinyColor(resetColorBegin)]
-								: Colors.generateGradation(resetColorBegin, resetColorEnd, resetCount);
+								: Colors.generateGradient(resetColorBegin, resetColorEnd, resetCount);
 const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a.toHexString() }));
 							setGroups(settingContext.theme.groups = groups);
 						}

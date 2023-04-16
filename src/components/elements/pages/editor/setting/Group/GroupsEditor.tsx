@@ -19,7 +19,7 @@ const Component: NextPage = () => {
 	const [choiceColorGroup, setChoiceColorGroup] = useState<GroupSetting | null>(null);
 	const [updatedColors, setUpdatedColors] = useState<Map<MemberId, Color>>(new Map());
 
-	const cs = Colors.generateGradation(
+	const cs = Colors.generateGradient(
 		"#ff0000",
 		"#0000ff",
 		2
