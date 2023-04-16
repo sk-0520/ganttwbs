@@ -117,6 +117,9 @@ module.exports = {
 				"argsIgnorePattern": "^.*$",
 				"varsIgnorePattern": "^_*$"
 			}
+		],
+		"@typescript-eslint/no-non-null-assertion": [
+			"error"
 		]
 	}
 };

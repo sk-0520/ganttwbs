@@ -50,16 +50,22 @@ export abstract class Designs {
 	}
 
 	public static toStyleProperty(s: string): string {
-		return s.match(this.PropertyRegex)!
+		const matches = s.match(this.PropertyRegex);
+		if (!matches) {
+			throw new Error(s);
+		}
+
+		return matches
 			.map(x => x.toLowerCase())
-			.join("-");
-}
+			.join("-")
+			;
+	}
 
 	private static convertStylesheetBlock(map: Map<Property, Value>): Array<string> {
 		return [...map.entries()]
 			.sort(([ak, av], [bk, bv]) => ak.localeCompare(bk))
 			.map(([k, v]) => `${this.toStyleProperty(k)}: ${v}`);
-}
+	}
 
 	public static convertStylesheet(styleClasses: Map<ClassName, Map<Property, Value>>): string {
 		const newLine = "\r\n";
@@ -77,6 +83,6 @@ export abstract class Designs {
 				].join(newLine);
 			})
 			.join(newLine);
-}
+	}
 
 }

@@ -5,6 +5,7 @@ import { IdFactory } from "./IdFactory";
 import { Settings } from "./Settings";
 import { TimeSpan } from "./TimeSpan";
 import { TimeZone } from "./TimeZone";
+import { Types } from "./Types";
 import { WorkRanges } from "./WorkRanges";
 
 interface Holidays {
@@ -273,10 +274,12 @@ export abstract class Timelines {
 			;
 		// 開始固定だけのタスクを算出
 		const staticTimelines = taskTimelines
-			.filter(a => a.static && !a.previous.length)
-			;
+			.filter(a => a.static && !a.previous.length);
 		for (const timeline of staticTimelines) {
-			const beginDate = DateTime.parse(timeline.static!, timeZone);
+			if (!Types.isString(timeline.static)) {
+				throw new Error();
+			}
+			const beginDate = DateTime.parse(timeline.static, timeZone);
 			const workload = TimeSpan.parse(timeline.workload);
 			const timeRange = this.createSuccessTimeRange(holidays, timeline, beginDate, workload, timeZone);
 			result.set(timeline.id, timeRange);
