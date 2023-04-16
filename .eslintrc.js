@@ -1,4 +1,4 @@
-{
+module.exports = {
 	"root": true,
 	"env": {
 		"browser": true,
@@ -25,31 +25,17 @@
 			"error",
 			"double"
 		],
+		/*
 		"no-tabs": [
 			"error",
 			{
-				"allowIndentationTabs": true
+				"allowIndentationTabs": true,
 			}
 		],
+		*/
 		"unused-imports/no-unused-imports": [
 			"error"
 		],
-		// "indent": [
-		// 	"error",
-		// 	"tab",
-		// 	{
-		// 		"SwitchCase": 1,
-		// 		"VariableDeclarator": 1,
-		// 		"MemberExpression": 1,
-		// 		"ignoredNodes": ["ConditionalExpression"]
-		// 	}
-		// ],
-		// "max-len": [
-		// 	"warn",
-		// 	{
-		// 		"code": 140
-		// 	}
-		// ],
 		"react/jsx-indent": [
 			"error",
 			"tab"
@@ -69,4 +55,4 @@
 			}
 		]
 	}
-}
+};

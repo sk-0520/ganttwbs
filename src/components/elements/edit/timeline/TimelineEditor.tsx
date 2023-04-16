@@ -306,11 +306,16 @@ const Component: NextPage<Props> = (props: Props) => {
 		});
 
 		if (Settings.maybeGroupTimeline(timeline)) {
+			/*
 			const prevGroupSource = prevSource as GroupTimeline;
 			if (prevGroupSource.children !== timeline.children) {
 				// 関係が変わってる場合はがさっと変えた方が手っ取り早い
 				updateRelations();
 			}
+			*/
+			// おう、何も考えず変えとけ変えとけ
+			updateRelations();
+			return;
 		}
 
 		if (Settings.maybeTaskTimeline(timeline)) {
@@ -355,7 +360,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			const group = Arrays.last(groups);
 			const newChildren = [...group.children];
 			Timelines.moveTimelineOrder(newChildren, moveUp, timeline);
-			group.children = newChildren;
+			//group.children = newChildren;
 			timelineStore.updateTimeline({
 				...group,
 				children: newChildren,
