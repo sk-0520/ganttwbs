@@ -100,8 +100,8 @@ const Component: NextPage<Props> = (props: Props) => {
 			// 最上位完結
 			const newTimelineNodes = [...timelineNodes];
 			Timelines.moveTimelineIndex(newTimelineNodes, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
-				props.editData.setting.timelineNodes = newTimelineNodes;
-			} else {
+			props.editData.setting.timelineNodes = newTimelineNodes;
+		} else {
 			// 最上位に対してあれこれ
 			if (!dropTimeline.sourceGroupTimeline) {
 				// 移動元が親なので破棄
@@ -269,6 +269,9 @@ const Component: NextPage<Props> = (props: Props) => {
 					newChildren.splice(currentIndex + 1, 0, item);
 					parent.children = newChildren;
 				}
+
+				updateRelations();
+				return;
 			} else {
 				const item = createEmptyTimeline(options.timelineKind);
 
