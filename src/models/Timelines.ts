@@ -5,8 +5,7 @@ import { SuccessWorkRange, WorkRange } from "./data/WorkRange";
 import { WorkRanges } from "./WorkRanges";
 import { DateTime } from "./DateTime";
 import { TimeZone } from "./TimeZone";
-import { CalendarRange } from "./data/CalendarRange";
-import { IdFactory } from "./IdFacotory";
+import { IdFactory } from "./IdFactory";
 
 interface Holidays {
 	dates: ReadonlyArray<DateTime>;

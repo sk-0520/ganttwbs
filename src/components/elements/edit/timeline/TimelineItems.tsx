@@ -17,7 +17,7 @@ import AnyTimelineEditor from "./AnyTimelineEditor";
 import { DateTime } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "@/models/data/CalendarRange";
-import { IdFactory } from "@/models/IdFacotory";
+import { IdFactory } from "@/models/IdFactory";
 import { Arrays } from "@/models/Arrays";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 

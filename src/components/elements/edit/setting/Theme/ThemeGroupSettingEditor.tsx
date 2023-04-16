@@ -7,7 +7,7 @@ import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { TinyColor, random } from "@ctrl/tinycolor";
 import Dialog from "@/components/elements/Dialog";
 import Colors from "@/models/Colors";
-import { IdFactory } from "@/models/IdFacotory";
+import { IdFactory } from "@/models/IdFactory";
 
 const reset = {
 	minimum: 1,
