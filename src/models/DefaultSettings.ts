@@ -32,7 +32,7 @@ export abstract class DefaultSettings {
 		return {
 			holiday: "#ffbaba",
 			special: "#baffba",
-		}
+		};
 	}
 
 	public static getGroupThemeColors(): Array<Color> {
@@ -61,7 +61,7 @@ export abstract class DefaultSettings {
 				cost: 40000,
 				sales: 50000,
 			}
-		}
+		};
 	}
 
 }

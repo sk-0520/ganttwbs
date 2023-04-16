@@ -115,7 +115,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							[...choiceColors.entries()].map(([k, v]) => {
 								const member = props.choiceColorGroup.members.find(a => a.id === k);
 								if (!member) {
-									console.warn("MEMBER", k)
+									console.warn("MEMBER", k);
 									return <></>;
 								}
 

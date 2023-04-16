@@ -84,7 +84,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								<td key={a.getTime()} id={Timelines.toDaysId(a)} title={holidayEventValue?.event.display} className={className}>
 									<time dateTime={a.format("U")}>{a.day}</time>
 								</td>
-							)
+							);
 						})}
 					</tr>
 					<tr className='week'>

@@ -97,7 +97,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				</div>
 			</Overlay>
 		</div>
-	)
+	);
 };
 
 export default Component;

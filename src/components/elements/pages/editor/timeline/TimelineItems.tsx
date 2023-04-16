@@ -65,7 +65,7 @@ const Component: NextPage<Props> = (props: Props) => {
 										</div>
 									</div>
 								</li>
-							)
+							);
 						})
 					}
 				</ul>

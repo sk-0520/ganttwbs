@@ -241,7 +241,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 			members.wa,
 			members.wb,
 		],
-	})
+	});
 	setting.groups.push({
 		name: "2.検証班",
 		members: [

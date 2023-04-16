@@ -11,14 +11,11 @@ import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
-
-
-import { WorkRanges } from "@/models/WorkRanges";
-import { TimeSpan } from "@/models/TimeSpan";
 import { Timelines } from "@/models/Timelines";
+import { TimeSpan } from "@/models/TimeSpan";
+import { WorkRanges } from "@/models/WorkRanges";
+
 import ControlsCell from "./cell/ControlsCell";
-
-
 import IdCell from "./cell/IdCell";
 import ProgressCell from "./cell/ProgressCell";
 import RelationCell from "./cell/RelationCell";
@@ -304,7 +301,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		props.beginDateCallbacks.cancelSelectBeginDate(props.currentTimeline)
+		props.beginDateCallbacks.cancelSelectBeginDate(props.currentTimeline);
 	}
 
 

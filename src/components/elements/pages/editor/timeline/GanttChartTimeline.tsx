@@ -35,10 +35,8 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		const timeSpanRange = timeRange
 			? Charts.getTimeSpanRange(props.calendarInfo.range.from, timeRange)
-			: null
-		;
-
-		const area = Charts.createChartArea(timeSpanRange, props.currentIndex, cell, props.chartSize);
+			: null;
+const area = Charts.createChartArea(timeSpanRange, props.currentIndex, cell, props.chartSize);
 
 		return (
 			<>
@@ -81,7 +79,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					{/* <text y={y + (cell.height.value / 2)}>{props.currentTimeline.id}@{x}:{y}</text> */}
 				</>
 			</>
-		)
+		);
 	}
 
 	return (

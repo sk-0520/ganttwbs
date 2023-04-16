@@ -23,6 +23,6 @@ const Component: NextPage<Props> = (props: Props) => {
 				<>{props.children}</>
 			)
 	);
-}
+};
 
 export default Component;

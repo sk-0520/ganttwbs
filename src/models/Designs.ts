@@ -8,7 +8,7 @@ type Value = string;
 
 export abstract class Designs {
 
-	private static readonly PropertyRegex = /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
+	private static readonly PropertyRegex = /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g;
 
 	public static toValue(valueUnit: ValueUnit): string {
 		if (valueUnit.value === 0) {
@@ -26,7 +26,7 @@ export abstract class Designs {
 		for (const [selectorOrProperty, valuesOrNestedBlock] of Object.entries(obj)) {
 			if (typeof (valuesOrNestedBlock) === "object") {
 				if (isValueUnit(valuesOrNestedBlock)) {
-					propertyValues.set(selectorOrProperty, Designs.toValue(valuesOrNestedBlock))
+					propertyValues.set(selectorOrProperty, Designs.toValue(valuesOrNestedBlock));
 				} else {
 					const map = this.convertStyleClasses(valuesOrNestedBlock, [...parents, selectorOrProperty]);
 					for (const [key, value] of map) {
@@ -52,16 +52,14 @@ export abstract class Designs {
 	public static toStyleProperty(s: string): string {
 		return s.match(this.PropertyRegex)!
 			.map(x => x.toLowerCase())
-			.join("-")
-			;
-	}
+			.join("-");
+}
 
 	private static convertStylesheetBlock(map: Map<Property, Value>): Array<string> {
 		return [...map.entries()]
 			.sort(([ak, av], [bk, bv]) => ak.localeCompare(bk))
-			.map(([k, v]) => `${this.toStyleProperty(k)}: ${v}`)
-			;
-	}
+			.map(([k, v]) => `${this.toStyleProperty(k)}: ${v}`);
+}
 
 	public static convertStylesheet(styleClasses: Map<ClassName, Map<Property, Value>>): string {
 		const newLine = "\r\n";
@@ -76,10 +74,9 @@ export abstract class Designs {
 					"{",
 					a.lines.map(aa => `\t${aa};`).join(newLine),
 					"}",
-				].join(newLine)
+				].join(newLine);
 			})
-			.join(newLine)
-			;
-	}
+			.join(newLine);
+}
 
 }

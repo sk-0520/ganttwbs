@@ -87,7 +87,7 @@ const Component: NextPage = () => {
 									</button>
 								</td>
 							</tr>
-						)
+						);
 					})}
 				</tbody>
 				<tfoot>
@@ -121,9 +121,8 @@ const Component: NextPage = () => {
 						if (r === "submit") {
 							const colors = resetCount <= 1
 								? [new TinyColor(resetColorBegin)]
-								: Colors.generateGradation(resetColorBegin, resetColorEnd, resetCount)
-								;
-							const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a.toHexString() }));
+								: Colors.generateGradation(resetColorBegin, resetColorEnd, resetCount);
+const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a.toHexString() }));
 							setGroups(settingContext.theme.groups = groups);
 						}
 						setShowResetColor(false);
@@ -171,7 +170,7 @@ const Component: NextPage = () => {
 				</Dialog >
 			)}
 		</>
-	)
+	);
 
 };
 

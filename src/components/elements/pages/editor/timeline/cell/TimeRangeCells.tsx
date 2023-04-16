@@ -16,7 +16,7 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 
-	const selectOrClickClassName = props.selectable ? "selectable" : "clickable"
+	const selectOrClickClassName = props.selectable ? "selectable" : "clickable";
 
 	return props.timeRangeKind === "success"
 		? (
@@ -56,7 +56,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					{props.timeRangeKind}
 				</DynamicLabel>
 			</div>
-		)
-}
+		);
+};
 
 export default Component;

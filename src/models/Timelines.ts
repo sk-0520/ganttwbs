@@ -117,7 +117,7 @@ export abstract class Timelines {
 
 		for (const timeline of timelines) {
 			if (Settings.maybeGroupTimeline(timeline)) {
-				const summary = this.sumWorkloads(timeline.children)
+				const summary = this.sumWorkloads(timeline.children);
 				workloads.push(summary);
 			} else if (Settings.maybeTaskTimeline(timeline)) {
 				const span = TimeSpan.parse(timeline.workload);
@@ -146,7 +146,7 @@ export abstract class Timelines {
 
 		for (const timeline of timelines) {
 			if (Settings.maybeGroupTimeline(timeline)) {
-				const summary = this.sumProgress(timeline.children)
+				const summary = this.sumProgress(timeline.children);
 				progress.push(summary);
 			} else if (Settings.maybeTaskTimeline(timeline)) {
 				progress.push(timeline.progress);
@@ -246,7 +246,7 @@ export abstract class Timelines {
 			timeline: timeline,
 			begin: beginDate,
 			end: endDate,
-		}
+		};
 
 		return result;
 	}
@@ -273,9 +273,8 @@ export abstract class Timelines {
 			;
 		// 開始固定だけのタスクを算出
 		const staticTimelines = taskTimelines
-			.filter(a => a.static && !a.previous.length)
-			;
-		for (const timeline of staticTimelines) {
+			.filter(a => a.static && !a.previous.length);
+for (const timeline of staticTimelines) {
 			const beginDate = DateTime.parse(timeline.static!, timeZone);
 			const workload = TimeSpan.parse(timeline.workload);
 			const timeRange = this.createSuccessTimeRange(holidays, timeline, beginDate, workload, timeZone);
@@ -284,13 +283,12 @@ export abstract class Timelines {
 		}
 		// 固定・前工程のないタスクを未入力設定
 		const emptyTimelines = taskTimelines
-			.filter(a => !a.static && !a.previous.length)
-			;
-		for (const timeline of emptyTimelines) {
+			.filter(a => !a.static && !a.previous.length);
+for (const timeline of emptyTimelines) {
 			const range: WorkRange = {
 				kind: "no-input",
 				timeline: timeline,
-			}
+			};
 			result.set(timeline.id, range);
 			cache.noInputs.set(timeline.id, timeline);
 		}
@@ -368,9 +366,8 @@ export abstract class Timelines {
 
 					const resultDateTimeRanges = timeline.previous
 						.map(a => result.get(a))
-						.filter((a): a is WorkRange => a !== undefined)
-						;
-					if (resultDateTimeRanges.some(a => WorkRanges.isError(a))) {
+						.filter((a): a is WorkRange => a !== undefined);
+if (resultDateTimeRanges.some(a => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
 							kind: "relation-error",
@@ -409,7 +406,7 @@ export abstract class Timelines {
 						const range: WorkRange = {
 							kind: "no-children",
 							timeline: timeline,
-						}
+						};
 						result.set(timeline.id, range);
 						continue;
 					}
@@ -427,9 +424,8 @@ export abstract class Timelines {
 
 					const resultDateTimeRanges = resultChildren
 						.map(a => result.get(a.id))
-						.filter((a): a is WorkRange => a !== undefined)
-						;
-					if (resultDateTimeRanges.some(a => WorkRanges.isError(a))) {
+						.filter((a): a is WorkRange => a !== undefined);
+if (resultDateTimeRanges.some(a => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
 							kind: "relation-error",
@@ -446,14 +442,14 @@ export abstract class Timelines {
 							kind: "success",
 							begin: totalSuccessWorkRange.minimum.begin,
 							end: totalSuccessWorkRange.maximum.end,
-						}
+						};
 						result.set(timeline.id, timeRange);
 					}
 				}
 			}
 		}
 
-		console.debug("反復実施数", recursiveCount, "result", result.size, "flatTimelines", flatTimelines.length)
+		console.debug("反復実施数", recursiveCount, "result", result.size, "flatTimelines", flatTimelines.length);
 
 		return result;
 	}

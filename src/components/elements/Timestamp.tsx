@@ -31,10 +31,10 @@ const Component: NextPage<Props> = (props: Props) => {
 			<time className={"timestamp-" + props.format} dateTime={props.date.format("U")}>
 				{props.date.format(format)}
 			</time>
-		)
+		);
 	}
 
-	return <></>
-}
+	return <></>;
+};
 
 export default Component;

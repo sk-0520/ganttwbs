@@ -36,6 +36,6 @@ const Component: NextPage<Props> = (props: Props) => {
 			)}
 		</>
 	);
-}
+};
 
 export default Component;

@@ -3,16 +3,12 @@ export type IconName
 	=
 	"timeline-group"
 	|
-	"timeline-task"
-	;
-
+	"timeline-task";
 export type IconPosition
 	=
 	"before"
 	|
-	"after"
-	;
-
+	"after";
 export abstract class Icon {
 
 	public static getClassNames(name: IconName, position: IconPosition): ReadonlyArray<string> {
@@ -20,7 +16,7 @@ export abstract class Icon {
 			"icon",
 			name,
 			position,
-		]
+		];
 	}
 
 	public static getClassName(name: IconName, position: IconPosition): string {

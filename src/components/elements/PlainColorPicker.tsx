@@ -46,7 +46,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const boxStyle: CSSProperties = {
 		background: current.toHexString(),
 		borderColor: Colors.getAutoColor(current).toHexString(),
-	}
+	};
 
 	return (
 		<>

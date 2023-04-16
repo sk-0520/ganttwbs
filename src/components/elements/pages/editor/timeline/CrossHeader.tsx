@@ -39,7 +39,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		if (targetElement && mainContentElement) {
 			mainContentElement.scrollTo({
 				left: targetElement.offsetLeft
-			})
+			});
 		}
 	}
 

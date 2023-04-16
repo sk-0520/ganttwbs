@@ -35,6 +35,21 @@ module.exports = {
 			}
 		],
 		*/
+		"semi": [
+			"error",
+			"always"
+		],
+		"semi-style": [
+			"error",
+			"last"
+		],
+		"semi-spacing": [
+			"error",
+			{
+				"before": false,
+				"after": true
+			}
+		],
 		"import/order": [
 			"warn",
 			{

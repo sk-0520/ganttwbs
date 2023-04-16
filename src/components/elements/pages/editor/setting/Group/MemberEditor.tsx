@@ -23,7 +23,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		if (color) {
 			setColor(props.member.color = color);
 		}
-	}, [props.member, props.updatedColors])
+	}, [props.member, props.updatedColors]);
 
 	function handleChangeName(value: string) {
 		setName(props.member.name = value);

@@ -26,10 +26,10 @@ const Component: NextPage<Props> = (props: Props) => {
 	}, [props.draggingTimeline]);
 
 	function handleDragOver() {
-		setDropEventClassName("drag-over")
+		setDropEventClassName("drag-over");
 	}
 	function handleDragLeave() {
-		setDropEventClassName("")
+		setDropEventClassName("");
 	}
 
 	function handleMouseEnter() {

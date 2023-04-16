@@ -43,7 +43,7 @@ const Component: NextPage = () => {
 									/>
 								</td>
 							</>
-						)
+						);
 					};
 
 					return (
@@ -61,7 +61,7 @@ const Component: NextPage = () => {
 								)
 							}
 						</tr>
-					)
+					);
 				})}
 				<tr>
 					<td className="header" rowSpan={2}>祝日</td>

@@ -32,7 +32,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const chartSize: ChartSize = {
 		width: cell.width.value * days,
 		height: cell.height.value * timelines.length,
-	}
+	};
 
 	//TODO: for しなくてもできると思うけどパッと思いつかなんだ
 	const memberMap = new Map<MemberId, MemberMapValue>();
@@ -78,7 +78,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					strokeWidth={1}
 					strokeDasharray={1}
 				/>
-			)
+			);
 		}
 
 		// 縦軸
@@ -128,7 +128,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						height={height}
 						fill={color}
 					/>
-				)
+				);
 			}
 		}
 
@@ -144,7 +144,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					{gridVerticals.map(a => a)}
 				</g>
 			</g>
-		)
+		);
 	}
 
 	return (
@@ -166,7 +166,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							updateRelations={props.updateRelations}
 							timelineStore={props.timelineStore}
 						/>
-					)
+					);
 				})}
 				{timelines.map((a, i) => {
 					if (!Settings.maybeTaskTimeline(a)) {
@@ -186,7 +186,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							updateRelations={props.updateRelations}
 							timelineStore={props.timelineStore}
 						/>
-					)
+					);
 				})}
 			</svg>
 

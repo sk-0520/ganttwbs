@@ -62,7 +62,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				<IndexNumber treeIndexes={props.treeIndexes} currentIndex={props.currentIndex} />
 			</label>
 		</div>
-	)
+	);
 };
 
 export default Component;

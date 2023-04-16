@@ -24,6 +24,6 @@ const Component: NextPage<Props> = (props: Props) => {
 			/>
 		</div>
 	);
-}
+};
 
 export default Component;

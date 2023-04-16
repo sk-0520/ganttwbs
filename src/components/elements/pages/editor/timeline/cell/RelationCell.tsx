@@ -50,7 +50,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				}
 			</DynamicLabel>
 		</div>
-	)
-}
+	);
+};
 
 export default Component;

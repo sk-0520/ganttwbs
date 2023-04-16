@@ -117,9 +117,7 @@ function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnl
 		.map(([k, v]) => ({ date: DateTime.parse(k, timeZone), display: v.display }))
 		.sort((a, b) => a.date.getTime() - b.date.getTime())
 		.map(a => `${a.date.format("yyyy-MM-dd")}\t${a.display}`)
-		.join(NewLine)
-		;
-
+		.join(NewLine);
 }
 
 function toContext(setting: Setting): SettingContext {
@@ -203,10 +201,8 @@ function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string, ti
 		.map(a => a.split("\t", 2))
 		.map(a => ({ date: a[0], display: 1 in a ? a[1]: "" }))
 		.map(a => ({ date: DateTime.parse(a.date, timeZone), display: a.display }))
-		.filter(a => !isNaN(a.date.getTime()))
-		;
-
-	for (const item of items) {
+		.filter(a => !isNaN(a.date.getTime()));
+for (const item of items) {
 		result[item.date.format("yyyy-MM-dd")] = {
 			display: item.display,
 			kind: kind

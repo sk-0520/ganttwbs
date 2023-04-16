@@ -204,10 +204,8 @@ export class DateTime {
 
 		const pattern = Array.from(map.keys())
 			.sort((a, b) => b.length - a.length)
-			.join("|")
-			;
-
-		return format.replace(
+			.join("|");
+return format.replace(
 			new RegExp("(" + pattern + ")", "g"),
 			m => map.get(m) ?? m
 		);
