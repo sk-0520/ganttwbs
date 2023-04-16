@@ -273,8 +273,9 @@ export abstract class Timelines {
 			;
 		// 開始固定だけのタスクを算出
 		const staticTimelines = taskTimelines
-			.filter(a => a.static && !a.previous.length);
-for (const timeline of staticTimelines) {
+			.filter(a => a.static && !a.previous.length)
+			;
+		for (const timeline of staticTimelines) {
 			const beginDate = DateTime.parse(timeline.static!, timeZone);
 			const workload = TimeSpan.parse(timeline.workload);
 			const timeRange = this.createSuccessTimeRange(holidays, timeline, beginDate, workload, timeZone);
@@ -284,7 +285,7 @@ for (const timeline of staticTimelines) {
 		// 固定・前工程のないタスクを未入力設定
 		const emptyTimelines = taskTimelines
 			.filter(a => !a.static && !a.previous.length);
-for (const timeline of emptyTimelines) {
+		for (const timeline of emptyTimelines) {
 			const range: WorkRange = {
 				kind: "no-input",
 				timeline: timeline,
@@ -367,7 +368,7 @@ for (const timeline of emptyTimelines) {
 					const resultDateTimeRanges = timeline.previous
 						.map(a => result.get(a))
 						.filter((a): a is WorkRange => a !== undefined);
-if (resultDateTimeRanges.some(a => WorkRanges.isError(a))) {
+					if (resultDateTimeRanges.some(a => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
 							kind: "relation-error",
@@ -425,7 +426,7 @@ if (resultDateTimeRanges.some(a => WorkRanges.isError(a))) {
 					const resultDateTimeRanges = resultChildren
 						.map(a => result.get(a.id))
 						.filter((a): a is WorkRange => a !== undefined);
-if (resultDateTimeRanges.some(a => WorkRanges.isError(a))) {
+					if (resultDateTimeRanges.some(a => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
 							kind: "relation-error",

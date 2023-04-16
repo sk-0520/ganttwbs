@@ -42,10 +42,6 @@ module.exports = {
 		"no-extra-semi": [
 			"error",
 		],
-		"semi-style": [
-			"error",
-			"last"
-		],
 		"semi-spacing": [
 			"error",
 			{
@@ -54,6 +50,12 @@ module.exports = {
 			}
 		],
 		"no-cond-assign": [
+			"error",
+		],
+		"no-func-assign": [
+			"error",
+		],
+		"no-inner-declarations": [
 			"error",
 		],
 		"import/order": [
