@@ -29,13 +29,12 @@ const Component: NextPage<Props> = (props: Props) => {
 
 
 	function renderCurrentTimeline(): ReactNode {
-		if (!timeRange) {
-			return <></>
-		}
-
 		const cell = props.configuration.design.honest.cell;
 
-		const timeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.from, timeRange);
+		const timeSpanRange = timeRange
+			? Charts.getTimeSpanRange(props.calendarInfo.range.from, timeRange)
+			: null
+		;
 
 		const area = Charts.createChartArea(timeSpanRange, props.currentIndex, cell, props.chartSize);
 

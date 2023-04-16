@@ -9,6 +9,31 @@ interface Props extends ChartProps {
 
 const Component: NextPage<Props> = (props: Props) => {
 
+	if (!props.area.timeSpanRange) {
+		const padding = props.area.height * 0.2;
+
+		return (
+			<g>
+				<rect
+					x={0}
+					y={props.area.y}
+					width={props.area.chartSize.width}
+					height={props.area.height}
+					fill={props.background}
+					fillOpacity={0.3}
+				/>
+				<rect
+					x={padding}
+					y={props.area.y + padding}
+					width={props.area.chartSize.width - padding * 2}
+					height={props.area.height - padding * 2}
+					fill="yellow"
+					fillOpacity={0.6}
+				/>
+			</g>
+		);
+	}
+
 	const width = props.area.width;
 	const height = props.area.height * 0.2;
 	const x = props.area.x;

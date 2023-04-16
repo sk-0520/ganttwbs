@@ -38,14 +38,15 @@ export abstract class Charts {
 		};
 	}
 
-	public static createChartArea(timeRange: TimeSpanRange, index: number, cell: CellBox, chartSize: ChartSize): ChartArea {
+	public static createChartArea(timeSpanRange: TimeSpanRange | null, index: number, cell: CellBox, chartSize: ChartSize): ChartArea {
 		const width = typeof cell.width === "number" ? cell.width : cell.width.value;
 		const height = typeof cell.height === "number" ? cell.height : cell.height.value;
 
 		const result: ChartArea = {
-			x: timeRange.start.totalDays * width,
+			timeSpanRange: timeSpanRange,
+			x: timeSpanRange ? timeSpanRange.start.totalDays * width : 0,
 			y: index * height,
-			width: timeRange.end.totalDays * width,
+			width: timeSpanRange ? timeSpanRange.end.totalDays * width : 0,
 			height: height,
 			chartSize: chartSize,
 		};
