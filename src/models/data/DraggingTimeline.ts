@@ -1,12 +1,12 @@
 import { DragEvent } from "react";
 
-import { Timeline } from "@/models/data/Setting";
+import { AnyTimeline } from "@/models/data/Setting";
 
 export interface DraggingTimeline {
-	sourceTimeline: Timeline;
+	sourceTimeline: AnyTimeline;
 	onDragEnd(event: DragEvent): void;
-	onDragEnter(event: DragEvent, targetTimeline: Timeline): void;
-	onDragOver(event: DragEvent, targetTimeline: Timeline, callback: (draggingTimeline: DraggingTimeline) => void): void;
-	onDragLeave(event: DragEvent, targetTimeline: Timeline, callback: (draggingTimeline: DraggingTimeline) => void): void;
-	onDrop(event: DragEvent, targetTimeline: Timeline): void;
+	onDragEnter(event: DragEvent, targetTimeline: AnyTimeline): void;
+	onDragOver(event: DragEvent, targetTimeline: AnyTimeline, callback: (draggingTimeline: DraggingTimeline) => void): void;
+	onDragLeave(event: DragEvent, targetTimeline: AnyTimeline, callback: (draggingTimeline: DraggingTimeline) => void): void;
+	onDrop(event: DragEvent, targetTimeline: AnyTimeline): void;
 }

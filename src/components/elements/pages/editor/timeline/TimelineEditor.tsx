@@ -16,7 +16,7 @@ import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { EditProps } from "@/models/data/props/EditProps";
-import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
+import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
@@ -434,7 +434,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		}));
 	}
 
-	function canSelectCore(targetTimeline: Timeline, currentTimeline: Timeline): boolean {
+	function canSelectCore(targetTimeline: AnyTimeline, currentTimeline: AnyTimeline): boolean {
 		const groups = Timelines.getParentGroup(currentTimeline, timelineNodes);
 		if (groups && groups.length) {
 			return !groups.some(a => a.id === targetTimeline.id);

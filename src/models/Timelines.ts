@@ -1,4 +1,4 @@
-import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, TimeOnly, Timeline, TimelineId, WeekIndex } from "@/models/data/Setting";
+import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, TimeOnly, TimelineId, WeekIndex } from "@/models/data/Setting";
 import { SuccessWorkRange, WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
@@ -13,7 +13,7 @@ interface Holidays {
 	weeks: ReadonlyArray<WeekIndex>;
 }
 
-type TimeLineIdOrObject = TimelineId | Timeline;
+type TimeLineIdOrObject = TimelineId | AnyTimeline;
 
 export abstract class Timelines {
 
@@ -79,7 +79,7 @@ export abstract class Timelines {
 		return currentNumber.toString();
 	}
 
-	public static moveTimelineOrder(timelines: Array<Timeline>, moveUp: boolean, currentTimeline: Timeline): boolean {
+	public static moveTimelineOrder(timelines: Array<AnyTimeline>, moveUp: boolean, currentTimeline: AnyTimeline): boolean {
 		const currentIndex = timelines.findIndex(a => a === currentTimeline);
 
 		if (moveUp) {
@@ -103,7 +103,7 @@ export abstract class Timelines {
 		return false;
 	}
 
-	public static moveTimelineIndex(timelines: Array<Timeline>, sourceIndex: number, destinationIndex: number): void {
+	public static moveTimelineIndex(timelines: Array<AnyTimeline>, sourceIndex: number, destinationIndex: number): void {
 		const sourceTimeline = timelines[sourceIndex];
 		timelines.splice(sourceIndex, 1);
 		timelines.splice(destinationIndex, 0, sourceTimeline);
@@ -142,7 +142,7 @@ export abstract class Timelines {
 		return Math.round(progress * 100.0).toFixed(0);
 	}
 
-	public static sumProgress(timelines: ReadonlyArray<Timeline>): Progress {
+	public static sumProgress(timelines: ReadonlyArray<AnyTimeline>): Progress {
 		const progress: Array<Progress> = [];
 
 		for (const timeline of timelines) {
@@ -209,7 +209,7 @@ export abstract class Timelines {
 	 * @param timelineNodes タイムラインノード。
 	 * @returns 親グループの配列。空の場合、最上位に位置している。 見つかんなかった場合は null を返す。
 	 */
-	public static getParentGroup(timeline: Timeline, timelineNodes: ReadonlyArray<GroupTimeline | TaskTimeline>): Array<GroupTimeline> | null {
+	public static getParentGroup(timeline: AnyTimeline, timelineNodes: ReadonlyArray<GroupTimeline | TaskTimeline>): Array<GroupTimeline> | null {
 		if (timelineNodes.find(a => a.id === timeline.id)) {
 			// 最上位なので空配
 			return [];
@@ -239,7 +239,7 @@ export abstract class Timelines {
 		return result;
 	}
 
-	private static createSuccessWorkRange(holidays: Holidays, timeline: Timeline, beginDate: DateTime, workload: TimeSpan, timeZone: TimeZone): SuccessWorkRange {
+	private static createSuccessWorkRange(holidays: Holidays, timeline: AnyTimeline, beginDate: DateTime, workload: TimeSpan, timeZone: TimeZone): SuccessWorkRange {
 		//TODO: 非稼働日を考慮（開始から足す感じいいはず）
 		const endDate = DateTime.convert(beginDate.getTime() + workload.totalMilliseconds, timeZone);
 		const result: SuccessWorkRange = {
@@ -252,7 +252,7 @@ export abstract class Timelines {
 		return result;
 	}
 
-	public static getWorkRanges(flatTimelines: ReadonlyArray<Timeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>, timeZone: TimeZone): Map<TimelineId, WorkRange> {
+	public static getWorkRanges(flatTimelines: ReadonlyArray<AnyTimeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>, timeZone: TimeZone): Map<TimelineId, WorkRange> {
 		const result = new Map<TimelineId, WorkRange>();
 
 		const holidays: Holidays = {

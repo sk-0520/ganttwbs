@@ -1,4 +1,4 @@
-import { GroupTimeline, TaskTimeline, Timeline, WeekDay, WeekIndex } from "@/models/data/Setting";
+import { AnyTimeline, GroupTimeline, TaskTimeline, WeekDay, WeekIndex } from "@/models/data/Setting";
 
 export abstract class Settings {
 
@@ -60,21 +60,21 @@ export abstract class Settings {
 	}
 
 	/**
-	 * `Timeline` は `GroupTimeline` か。
+	 * `timeline` は `GroupTimeline` か。
 	 * 本処理は型ガードではあるものの型チェックは行わない。すでに型ガードを通過していることを想定している。
 	 * @param timeline
 	 * @returns
 	 */
-	public static maybeGroupTimeline(timeline: Timeline): timeline is GroupTimeline {
+	public static maybeGroupTimeline(timeline: AnyTimeline): timeline is GroupTimeline {
 		return timeline.kind === "group";
 	}
 	/**
-	 * `Timeline` は `TaskTimeline` か。
+	 * `timeline` は `TaskTimeline` か。
 	 * 本処理は型ガードではあるものの型チェックは行わない。すでに型ガードを通過していることを想定している。
 	 * @param timeline
 	 * @returns
 	 */
-	public static maybeTaskTimeline(timeline: Timeline): timeline is TaskTimeline {
+	public static maybeTaskTimeline(timeline: AnyTimeline): timeline is TaskTimeline {
 		return timeline.kind === "task";
 	}
 

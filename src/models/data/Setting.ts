@@ -95,7 +95,7 @@ const TimelineSchema = z.object({
 	comment: z.string(),
 });
 /** @inheritdoc */
-export type Timeline = z.infer<typeof TimelineSchema>;
+type Timeline = z.infer<typeof TimelineSchema>;
 
 interface IGroupTimeline extends Timeline {
 	kind: "group";

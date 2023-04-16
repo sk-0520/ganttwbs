@@ -1,6 +1,5 @@
-import { Timeline } from "@/models/data/Setting";
+import { AnyTimeline } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
-
 
 export type WorkRangeKind =
 	"success"
@@ -22,7 +21,7 @@ export type WorkRangeKind =
 	"unknown-error";
 export interface WorkRange {
 	kind: WorkRangeKind;
-	timeline: Timeline;
+	timeline: AnyTimeline;
 }
 
 export interface SuccessWorkRange extends WorkRange {

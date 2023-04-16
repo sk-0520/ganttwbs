@@ -1,4 +1,4 @@
-import { TaskTimeline, Timeline, TimelineId } from "@/models/data/Setting";
+import { TaskTimeline, AnyTimeline, TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 
 
@@ -6,7 +6,7 @@ export interface SelectingBeginDate {
 	timeline: TaskTimeline;
 	beginDate: DateTime | null;
 	previous: Set<TimelineId>;
-	canSelect(timeline: Timeline): boolean;
+	canSelect(timeline: AnyTimeline): boolean;
 }
 
 export interface BeginDateCallbacks {

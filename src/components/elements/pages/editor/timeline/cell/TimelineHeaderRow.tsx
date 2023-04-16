@@ -3,12 +3,12 @@ import { ReactNode, useEffect, useState } from "react";
 
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
-import { Timeline } from "@/models/data/Setting";
+import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 
 interface Props {
 	level: number;
-	currentTimeline: Timeline;
+	currentTimeline: AnyTimeline;
 	selectingBeginDate: SelectingBeginDate | null;
 	draggingTimeline: DraggingTimeline | null;
 	children: ReactNode;

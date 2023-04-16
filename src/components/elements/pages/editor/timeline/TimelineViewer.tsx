@@ -8,7 +8,7 @@ import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { ChartSize } from "@/models/data/ChartSize";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { EditProps } from "@/models/data/props/EditProps";
-import { MemberId, Timeline } from "@/models/data/Setting";
+import { AnyTimeline, MemberId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { TimeSpan } from "@/models/TimeSpan";
@@ -42,8 +42,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 	}
 
-	function flat(timeline: Timeline): Array<Timeline> {
-		const result = new Array<Timeline>();
+	function flat(timeline: AnyTimeline): Array<AnyTimeline> {
+		const result = new Array<AnyTimeline>();
 
 		if (Settings.maybeTaskTimeline(timeline)) {
 			result.push(timeline);
