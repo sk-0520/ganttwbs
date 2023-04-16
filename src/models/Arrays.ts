@@ -47,7 +47,7 @@ export abstract class Arrays {
 	 * @returns
 	 * @throws {RangeError} なんもねぇ
 	 */
-	public static first<T>(array: Array<T>): T {
+	public static first<T>(array: ReadonlyArray<T>): T {
 		if (!array.length) {
 			throw new RangeError();
 		}
@@ -61,7 +61,7 @@ export abstract class Arrays {
 	 * @returns
 	 * @throws {RangeError} なんもねぇ
 	 */
-	public static last<T>(array: Array<T>): T {
+	public static last<T>(array: ReadonlyArray<T>): T {
 		if (!array.length) {
 			throw new RangeError();
 		}

@@ -22,7 +22,7 @@ export interface TimelineStore {
 	 * @param timeline 追加するタイムラインの基準タイムライン。
 	 * @param options 追加方法。
 	 */
-	addTimeline(timeline: AnyTimeline, options: NewTimelineOptions): void;
+	addTimeline(timeline: AnyTimeline | null, options: NewTimelineOptions): void;
 	/**
 	 * タイムラインを更新。
 	 * @param timeline

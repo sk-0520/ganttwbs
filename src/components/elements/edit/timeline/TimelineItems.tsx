@@ -4,14 +4,13 @@ import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate"
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
 import { EditProps } from "@/models/data/props/EditProps";
-import { TimelineRootProps } from "@/models/data/props/TimelineRootProps";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import AnyTimelineEditor from "./AnyTimelineEditor";
 import { IdFactory } from "@/models/IdFactory";
 import { Arrays } from "@/models/Arrays";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 
-interface Props extends EditProps, TimelineRootProps {
+interface Props extends EditProps {
 	draggingTimeline: DraggingTimeline | null;
 	dropTimeline: DropTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
@@ -52,7 +51,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		<div id='timelines'>
 			<>
 				<ul>
-					{props.timelineRootNodes.map((a, i) => {
+					{props.timelineStore.nodeItems.map((a, i) => {
 						return (
 							<li key={a.id}>
 								<AnyTimelineEditor
@@ -67,7 +66,6 @@ const Component: NextPage<Props> = (props: Props) => {
 									selectingBeginDate={props.selectingBeginDate}
 									dropTimeline={props.dropTimeline}
 									beginDateCallbacks={props.beginDateCallbacks}
-									//callbackAddNextSiblingItem={handleAddNextSiblingItem}
 									calendarInfo={props.calendarInfo}
 								/>
 							</li>

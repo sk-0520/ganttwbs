@@ -6,7 +6,7 @@ import CrossHeader from "./CrossHeader";
 import TimelineItems from "./TimelineItems";
 import TimelineViewer from "./TimelineViewer";
 import { ReactNode, useEffect, useState } from "react";
-import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, Timeline, TimelineId } from "@/models/data/Setting";
+import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
 import { EditProps } from "@/models/data/props/EditProps";
 import { Design } from "@/models/data/Design";
@@ -221,71 +221,56 @@ const Component: NextPage<Props> = (props: Props) => {
 		setDraggingTimeline(dragging);
 	}
 
-	function handleAddTimeline(timeline: AnyTimeline, options: NewTimelineOptions): void {
+	function handleAddTimeline(timeline: AnyTimeline | null, options: NewTimelineOptions): void {
 		// 将来追加した場合の安全弁
 		if (options.position !== "next") {
 			throw new Error(options.position);
 		}
 
-		const groups = Timelines.getParentGroup(timeline, timelineNodes);
-		if (!groups) {
-			throw new Error(timeline.id);
-		}
-
-		if (groups.length) {
-			let parent: GroupTimeline;
-			if (Settings.maybeGroupTimeline(timeline)) {
-				parent = timeline;
-			} else {
-				parent = Arrays.last(groups);
+		if (timeline) {
+			const groups = Timelines.getParentGroup(timeline, timelineNodes);
+			if (!groups) {
+				throw new Error(timeline.id);
 			}
 
-			let item: GroupTimeline | TaskTimeline | null = null;
-			switch (options.timelineKind) {
-				case "group":
-					item = Timelines.createNewGroup();
-					break;
+			if (groups.length) {
+				let parent: GroupTimeline;
+				if (Settings.maybeGroupTimeline(timeline)) {
+					parent = timeline;
+				} else {
+					parent = Arrays.last(groups);
+				}
 
-				case "task":
-					item = Timelines.createNewTask();
-					break;
+				const item = createEmptyTimeline(options.timelineKind);
 
-				default:
-					throw new Error();
-			}
-
-			if (Settings.maybeGroupTimeline(timeline)) {
-				// グループの場合、そのグループの末っ子に設定
-				parent.children = [
-					...parent.children,
-					item,
-				];
+				if (Settings.maybeGroupTimeline(timeline)) {
+					// グループの場合、そのグループの末っ子に設定
+					parent.children = [
+						...parent.children,
+						item,
+					];
+				} else {
+					// タスクの場合、次に設定する
+					const currentIndex = parent.children.findIndex(a => a.id === timeline.id);
+					const newChildren = [...parent.children];
+					newChildren.splice(currentIndex + 1, 0, item)
+					parent.children = newChildren;
+				}
 			} else {
-				// タスクの場合、次に設定する
-				const currentIndex = parent.children.findIndex(a => a.id === timeline.id);
-				const newChildren = [...parent.children];
-				newChildren.splice(currentIndex + 1, 0, item)
-				parent.children = newChildren;
+				const item = createEmptyTimeline(options.timelineKind);
+
+				const currentIndex = timelineNodes.findIndex(a => a.id === timeline.id);
+				const newTimelineNodes = [...timelineNodes];
+				newTimelineNodes.splice(currentIndex + 1, 0, item)
+				setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
 			}
 		} else {
-			let item: AnyTimeline | null = null;
-			switch (options.timelineKind) {
-				case "group":
-					item = Timelines.createNewGroup();
-					break;
-
-				case "task":
-					item = Timelines.createNewTask();
-					break;
-
-				default:
-					throw new Error();
-			}
-
-			const currentIndex = timelineNodes.findIndex(a => a.id === timeline.id);
-			const newTimelineNodes = [...timelineNodes];
-			newTimelineNodes.splice(currentIndex + 1, 0, item)
-			setTimelineNodes(props.editData.setting.timelineNodes = [...newTimelineNodes]);
+			const item = createEmptyTimeline(options.timelineKind);
+			const newTimelineNodes = [
+				...timelineNodes,
+				item,
+			];
+			setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
 		}
 	}
 
@@ -443,11 +428,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		setSelectingBeginDate(null);
 	}
 
-	function handleSetTimelineNodes(timelineNodes: Array<GroupTimeline | TaskTimeline>) {
-		props.editData.setting.timelineNodes = timelineNodes;
-		setTimelineNodes(props.editData.setting.timelineNodes);
-	}
-
 	const beginDateCallbacks: BeginDateCallbacks = {
 		startSelectBeginDate: handleStartSelectBeginDate,
 		clearSelectBeginDate: handleClearSelectBeginDate,
@@ -471,8 +451,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			<CrossHeader
 				configuration={props.configuration}
 				editData={props.editData}
-				timelineRootNodes={timelineNodes}
-				setTimelineRootNodes={handleSetTimelineNodes}
+				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
 			/>
 			<DaysHeader
@@ -484,12 +463,10 @@ const Component: NextPage<Props> = (props: Props) => {
 			<TimelineItems
 				configuration={props.configuration}
 				editData={props.editData}
-				timelineRootNodes={timelineNodes}
 				draggingTimeline={draggingTimeline}
 				dropTimeline={dropTimeline}
 				selectingBeginDate={selectingBeginDate}
 				beginDateCallbacks={beginDateCallbacks}
-				setTimelineRootNodes={handleSetTimelineNodes}
 				updateRelations={updateRelations}
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
@@ -592,4 +569,17 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 			{style}
 		</style>
 	);
+}
+
+function createEmptyTimeline(timelineKind: TimelineKind): AnyTimeline {
+	switch (timelineKind) {
+		case "group":
+			return Timelines.createNewGroup();
+
+		case "task":
+			return Timelines.createNewTask();
+
+		default:
+			throw new Error();
+	}
 }

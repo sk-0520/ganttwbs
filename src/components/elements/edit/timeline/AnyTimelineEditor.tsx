@@ -1,6 +1,6 @@
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
-import { AnyTimeline, GroupTimeline, MemberId, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
+import { AnyTimeline, GroupTimeline, MemberId, TimelineKind } from "@/models/data/Setting";
 import { EditProps } from "@/models/data/props/EditProps";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { NextPage } from "next";
@@ -34,7 +34,6 @@ interface Props extends EditProps {
 	beginDateCallbacks: BeginDateCallbacks;
 	dropTimeline: DropTimeline | null;
 	calendarInfo: CalendarInfo;
-	//callbackAddNextSiblingItem(kind: TimelineKind, currentTimeline: Timeline): void;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
@@ -187,41 +186,6 @@ const Component: NextPage<Props> = (props: Props) => {
 				timelineKind: kind,
 			}
 		);
-		/*
-		if (Settings.maybeGroupTimeline(props.currentTimeline)) {
-			let item: GroupTimeline | TaskTimeline | null = null;
-			switch (kind) {
-				case "group":
-					item = Timelines.createNewGroup();
-					break;
-
-				case "task":
-					item = Timelines.createNewTask();
-					break;
-
-				default:
-					throw new Error();
-			}
-
-			const newChildren = [
-				...children,
-				item,
-			]
-
-			setChildren(newChildren);
-			props.timelineStore.updateTimeline({
-				...props.currentTimeline,
-				children: newChildren
-			});
-
-		} else if (Settings.maybeTaskTimeline(props.currentTimeline)) {
-			props.callbackAddNextSiblingItem(kind, props.currentTimeline);
-
-			props.timelineStore.updateTimeline(props.currentTimeline);
-		} else {
-			throw new Error();
-		}
-		*/
 	}
 
 	function handleControlDeleteItem() {
@@ -236,37 +200,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.timelineStore.updateTimeline({
 			...props.currentTimeline,
 			memberId: memberId,
-		});
-	}
-
-	function handleAddNextSiblingItem(kind: TimelineKind, currentTimeline: Timeline): void {
-		if (!Settings.maybeGroupTimeline(props.currentTimeline)) {
-			throw new Error();
-		}
-
-		const currentIndex = children.findIndex(a => a === currentTimeline);
-
-		let item: GroupTimeline | TaskTimeline | null = null;
-		switch (kind) {
-			case "group":
-				item = Timelines.createNewGroup();
-				break;
-
-			case "task":
-				item = Timelines.createNewTask();
-				break;
-
-			default:
-				throw new Error();
-		}
-
-		const newChildren = props.currentTimeline.children;
-		newChildren.splice(currentIndex + 1, 0, item);
-		setChildren(newChildren);
-
-		props.timelineStore.updateTimeline({
-			...props.currentTimeline,
-			children: newChildren,
 		});
 	}
 
@@ -460,9 +393,9 @@ const Component: NextPage<Props> = (props: Props) => {
 					/>
 				</TimelineHeaderRow>
 			</div >
-			{Settings.maybeGroupTimeline(props.currentTimeline) && 0 < props.currentTimeline.children.length && (
+			{Settings.maybeGroupTimeline(props.currentTimeline) && 0 < children.length && (
 				<ul>
-					{props.currentTimeline.children.map((a, i) => {
+					{children.map((a, i) => {
 						return (
 							<li key={a.id}>
 								<Component
@@ -478,7 +411,6 @@ const Component: NextPage<Props> = (props: Props) => {
 									selectingBeginDate={props.selectingBeginDate}
 									beginDateCallbacks={props.beginDateCallbacks}
 									calendarInfo={props.calendarInfo}
-									//callbackAddNextSiblingItem={handleAddNextSiblingItem}
 								/>
 							</li>
 						);
