@@ -6,9 +6,10 @@ import { TimelineRootProps } from "@/models/data/props/TimelineRootProps";
 import { Timelines } from "@/models/Timelines";
 import { TimeZone } from "@/models/TimeZone";
 import { DateTime } from "@/models/DateTime";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
 
 interface Props extends EditProps, TimelineRootProps {
-	timeZone: TimeZone;
+	calendarInfo: CalendarInfo;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
@@ -56,7 +57,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							<button type='button' onClick={handleAddNewTask}>add new task</button>
 						</li>
 						<li>
-							<button onClick={ev => scrollFromDate(DateTime.today(props.timeZone))}>
+							<button onClick={ev => scrollFromDate(DateTime.today(props.calendarInfo.timeZone))}>
 								けふ
 							</button>
 						</li>

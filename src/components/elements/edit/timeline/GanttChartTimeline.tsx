@@ -43,7 +43,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		// const endDiffSpan = TimeSpan.fromMilliseconds(endDiffTime);
 		// const endDiffDays = endDiffSpan.totalDays;
 
-		const timeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, timeRange);
+		const timeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.from, timeRange);
 
 		/*
 		const x = timeRange.start.totalDays * cell.width.value;

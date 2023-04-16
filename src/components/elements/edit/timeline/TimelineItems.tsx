@@ -19,10 +19,10 @@ import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { IdFactory } from "@/models/IdFacotory";
 import { Arrays } from "@/models/Arrays";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
 
 interface Props extends EditProps, TimelineRootProps {
-	calendarRange: CalendarRange;
-	timeZone: TimeZone;
+	calendarInfo: CalendarInfo;
 	updateRelations: () => void;
 	timelineStore: TimelineStore;
 }
@@ -220,7 +220,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		console.debug(timeline);
 		setSelectingBeginDate({
 			timeline: timeline,
-			beginDate: timeline.static ? DateTime.parse(timeline.static, props.timeZone) : null,
+			beginDate: timeline.static ? DateTime.parse(timeline.static, props.calendarInfo.timeZone) : null,
 			previous: new Set(timeline.previous),
 			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
 		})
@@ -293,8 +293,7 @@ const Component: NextPage<Props> = (props: Props) => {
 									refreshedChildrenCallbacks={refreshedChildrenCallbacks}
 									beginDateCallbacks={beginDateCallbacks}
 									callbackAddNextSiblingItem={handleAddNextSiblingItem}
-									timeZone={props.timeZone}
-									calendarRange={props.calendarRange}
+									calendarInfo={props.calendarInfo}
 								/>
 							</li>
 						);

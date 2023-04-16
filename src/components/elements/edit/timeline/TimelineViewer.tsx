@@ -14,17 +14,18 @@ import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
 import { Charts } from "@/models/Charts";
 import ConnectorTimeline from "./ConnectorTimeline";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
+import { Calendars } from "@/models/Calendars";
 
 interface Props extends EditProps {
-	timeZone: TimeZone;
-	calendarRange: CalendarRange;
+	calendarInfo: CalendarInfo;
 	timelineStore: TimelineStore;
 	updateRelations: () => void;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
 
-	const days = Timelines.getCalendarRangeDays(props.calendarRange);
+	const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
 
 	const cell = props.configuration.design.honest.cell;
 	const timelines = props.editData.setting.timelineNodes.flatMap(a => flat(a));
@@ -86,7 +87,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
 		for (let i = 0; i < days; i++) {
-			const date = props.calendarRange.from.add(TimeSpan.fromDays(i));
+			const date = props.calendarInfo.range.from.add(TimeSpan.fromDays(i));
 
 			const gridX = cell.width.value + cell.width.value * i;
 
@@ -105,13 +106,10 @@ const Component: NextPage<Props> = (props: Props) => {
 
 			let color: string | undefined = undefined;
 
-			const dateText = date.format("yyyy-MM-dd");
 			// 祝日判定
-			if (dateText in props.editData.setting.calendar.holiday.events) {
-				const holidayEvent = props.editData.setting.calendar.holiday.events[dateText];
-				if (holidayEvent) {
-					color = props.editData.setting.theme.holiday.events[holidayEvent.kind];
-				}
+			const holidayEventValue = Calendars.getHolidayEventValue(date, props.calendarInfo.holidayEventMap);
+			if (holidayEventValue) {
+				color = props.editData.setting.theme.holiday.events[holidayEventValue.event.kind];
 			}
 			// 曜日判定
 			if (!color) {
@@ -164,7 +162,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							parentGroup={null}
 							currentTimeline={a}
 							currentIndex={i}
-							calendarRange={props.calendarRange}
+							calendarInfo={props.calendarInfo}
 							chartSize={chartSize}
 							memberMap={memberMap}
 							updateRelations={props.updateRelations}
@@ -184,7 +182,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							currentTimeline={a}
 							currentIndex={i}
 							timelineIndexes={timelineIndexes}
-							calendarRange={props.calendarRange}
+							calendarInfo={props.calendarInfo}
 							chartSize={chartSize}
 							memberMap={memberMap}
 							updateRelations={props.updateRelations}

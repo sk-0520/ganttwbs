@@ -1,6 +1,7 @@
 import { Charts } from "@/models/Charts";
 import { Settings } from "@/models/Settings";
 import { WorkRanges } from "@/models/WorkRanges";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { ChartSize } from "@/models/data/ChartSize";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
@@ -14,7 +15,7 @@ interface Props extends EditProps {
 	currentTimeline: TaskTimeline;
 	timelineIndexes: ReadonlyMap<TimelineId, number>;
 
-	calendarRange: CalendarRange;
+	calendarInfo: CalendarInfo;
 	chartSize: ChartSize;
 
 	memberMap: ReadonlyMap<MemberId, MemberMapValue>;
@@ -51,7 +52,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		].map(([x, y]) => x + "," + y).join(" "),
 	}
 
-	const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, currentWorkRange);
+	const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.from, currentWorkRange);
 	const currentChartArea = Charts.createChartArea(currentTimeSpanRange, props.currentIndex, cell, props.chartSize);
 
 	const currentColor = Charts.getTaskBackground(props.currentTimeline, props.memberMap, props.editData.setting.theme);
@@ -79,7 +80,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					return null;
 				}
 
-				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarRange.from, previewWorkRange);
+				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.from, previewWorkRange);
 				const previousChartArea = Charts.createChartArea(previousTimeSpanRange, previousIndex, cell, props.chartSize);
 
 				// 基準座標を設定

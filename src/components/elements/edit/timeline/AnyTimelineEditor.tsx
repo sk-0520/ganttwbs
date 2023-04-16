@@ -25,6 +25,7 @@ import { DateTime } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { WorkRangeKind } from "@/models/data/WorkRange";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
 
 interface Props extends EditProps {
 	treeIndexes: Array<number>;
@@ -38,9 +39,8 @@ interface Props extends EditProps {
 	refreshedChildrenCallbacks: RefreshedChildrenCallbacks;
 	beginDateCallbacks: BeginDateCallbacks;
 	dropTimeline: DropTimeline | null;
+	calendarInfo: CalendarInfo;
 	callbackAddNextSiblingItem(kind: TimelineKind, currentTimeline: Timeline): void;
-	timeZone: TimeZone;
-	calendarRange: CalendarRange;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
@@ -359,7 +359,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			return;
 		}
 
-		props.selectingBeginDate.beginDate = date ? DateTime.convert(date, props.timeZone) : null;
+		props.selectingBeginDate.beginDate = date ? DateTime.convert(date, props.calendarInfo.timeZone) : null;
 		setSelectedBeginDate(props.selectingBeginDate.beginDate);
 	}
 
@@ -544,9 +544,8 @@ const Component: NextPage<Props> = (props: Props) => {
 									notifyParentCallbacks={notifyParentCallbacks}
 									refreshedChildrenCallbacks={refreshedChildrenCallbacks}
 									beginDateCallbacks={props.beginDateCallbacks}
+									calendarInfo={props.calendarInfo}
 									callbackAddNextSiblingItem={handleAddNextSiblingItem}
-									timeZone={props.timeZone}
-									calendarRange={props.calendarRange}
 								/>
 							</li>
 						);

@@ -5,7 +5,7 @@ import CrossHeader from "./CrossHeader";
 import TimelineItems from "./TimelineItems";
 import TimelineViewer from "./TimelineViewer";
 import { ReactNode, useEffect, useState } from "react";
-import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, TimelineId } from "@/models/data/Setting";
+import { AnyTimeline, Calendar, GroupTimeline, TaskTimeline, Theme, TimelineId } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
 import { EditProps } from "@/models/data/props/EditProps";
 import { Design } from "@/models/data/Design";
@@ -19,6 +19,8 @@ import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { DateTime } from "@/models/DateTime";
 import { WorkRange } from "@/models/data/WorkRange";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
+import { Calendars } from "@/models/Calendars";
 
 interface Props extends EditProps { }
 
@@ -28,21 +30,12 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [timelineNodes, setTimelineNodes] = useState(props.editData.setting.timelineNodes);
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map(), new Map()));
 
-	const timeZone = TimeZone.parse(props.editData.setting.timeZone);
-
-	const calendar:Calendar = {
-
-	};
-
-	const calendarRange: CalendarRange = {
-		from: DateTime.parse(props.editData.setting.calendar.range.from, timeZone),
-		to: DateTime.parse(props.editData.setting.calendar.range.to, timeZone),
-	}
+	const calendarInfo = Calendars.createCalendarInfo(props.editData.setting.timeZone, props.editData.setting.calendar);
 
 	function createTimelineStore(totalItems: Map<TimelineId, AnyTimeline>, changedItems: Map<TimelineId, TimelineItem>): TimelineStore {
 
-		for(const [k,v] of changedItems) {
-			if(v.range) {
+		for (const [k, v] of changedItems) {
+			if (v.range) {
 				workRangesCache.set(k, v.range);
 			}
 		}
@@ -77,9 +70,9 @@ const Component: NextPage<Props> = (props: Props) => {
 			timeline: source
 		});
 
-		if(Settings.maybeGroupTimeline(timeline)) {
+		if (Settings.maybeGroupTimeline(timeline)) {
 			const prevGroupSource = prevSource as GroupTimeline;
-			if(prevGroupSource.children !== timeline.children) {
+			if (prevGroupSource.children !== timeline.children) {
 				// 関係が変わってる場合はがさっと変えた方が手っ取り早い
 				updateRelations();
 			}
@@ -121,7 +114,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		console.debug("全体へ通知");
 
 		const timelineMap = Timelines.getTimelinesMap(timelineNodes);
-		const dateTimeRanges = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive, timeZone);
+		const dateTimeRanges = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive, calendarInfo.timeZone);
 
 		const changedItems = new Map(
 			[...timelineMap.entries()]
@@ -157,14 +150,13 @@ const Component: NextPage<Props> = (props: Props) => {
 				editData={props.editData}
 				timelineRootNodes={timelineNodes}
 				setTimelineRootNodes={handleSetTimelineNodes}
-				timeZone={timeZone}
+				calendarInfo={calendarInfo}
 			/>
 			<DaysHeader
 				configuration={props.configuration}
 				editData={props.editData}
 				timelineStore={timelineStore}
-				timeZone={timeZone}
-				calendarRange={calendarRange}
+				calendarInfo={calendarInfo}
 			/>
 			<TimelineItems
 				configuration={props.configuration}
@@ -173,16 +165,14 @@ const Component: NextPage<Props> = (props: Props) => {
 				setTimelineRootNodes={handleSetTimelineNodes}
 				updateRelations={updateRelations}
 				timelineStore={timelineStore}
-				timeZone={timeZone}
-				calendarRange={calendarRange}
+				calendarInfo={calendarInfo}
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
 				editData={props.editData}
 				updateRelations={updateRelations}
 				timelineStore={timelineStore}
-				timeZone={timeZone}
-				calendarRange={calendarRange}
+				calendarInfo={calendarInfo}
 			/>
 		</div>
 	);

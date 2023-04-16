@@ -227,11 +227,6 @@ export abstract class Timelines {
 		return null;
 	}
 
-	public static getCalendarRangeDays(calendarRange: Readonly<CalendarRange>): number {
-		const diff = calendarRange.from.diff(calendarRange.to);
-		const days = diff.totalDays + 1;
-		return days;
-	}
 
 	private static convertDatesByHolidayEvents(events: { [key: DateOnly]: HolidayEvent }, timeZone: TimeZone): Array<DateTime> {
 		const result = new Array<DateTime>();
