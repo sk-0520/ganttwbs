@@ -35,7 +35,7 @@ interface Props extends EditProps {
 	timelineStore: TimelineStore;
 	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
-	notifyParentCallbacks: NotifyParentCallbacks;
+	//notifyParentCallbacks: NotifyParentCallbacks;
 	refreshedChildrenCallbacks: RefreshedChildrenCallbacks;
 	beginDateCallbacks: BeginDateCallbacks;
 	dropTimeline: DropTimeline | null;
@@ -432,7 +432,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						currentTimeline={props.currentTimeline}
 						isSelectedPrevious={isSelectedPrevious}
 						draggingTimeline={props.draggingTimeline}
-						notifyParentCallbacks={props.notifyParentCallbacks}
+						//notifyParentCallbacks={props.notifyParentCallbacks}
 						selectingBeginDate={props.selectingBeginDate}
 						callbackStartDragTimeline={handleStartDragTimeline}
 						callbackChangePrevious={handleChangePrevious}
@@ -528,7 +528,7 @@ const Component: NextPage<Props> = (props: Props) => {
 									draggingTimeline={props.draggingTimeline}
 									dropTimeline={props.dropTimeline}
 									selectingBeginDate={props.selectingBeginDate}
-									notifyParentCallbacks={notifyParentCallbacks}
+									//notifyParentCallbacks={notifyParentCallbacks}
 									refreshedChildrenCallbacks={refreshedChildrenCallbacks}
 									beginDateCallbacks={props.beginDateCallbacks}
 									calendarInfo={props.calendarInfo}

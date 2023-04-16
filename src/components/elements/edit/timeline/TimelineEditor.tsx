@@ -6,7 +6,7 @@ import CrossHeader from "./CrossHeader";
 import TimelineItems from "./TimelineItems";
 import TimelineViewer from "./TimelineViewer";
 import { ReactNode, useEffect, useState } from "react";
-import { AnyTimeline, Calendar, GroupTimeline, TaskTimeline, Theme, TimelineId } from "@/models/data/Setting";
+import { AnyTimeline, Calendar, GroupTimeline, TaskTimeline, Theme, Timeline, TimelineId } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
 import { EditProps } from "@/models/data/props/EditProps";
 import { Design } from "@/models/data/Design";
@@ -25,6 +25,7 @@ import { Calendars } from "@/models/Calendars";
 import { Arrays } from "@/models/Arrays";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
+import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 
 interface Props extends EditProps { }
 
@@ -35,6 +36,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map(), new Map()));
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
+	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 
 	const calendarInfo = Calendars.createCalendarInfo(props.editData.setting.timeZone, props.editData.setting.calendar);
 
@@ -329,6 +331,59 @@ const Component: NextPage<Props> = (props: Props) => {
 		setTimelineStore(store);
 	}
 
+	function handleStartSelectBeginDate(timeline: TaskTimeline): void {
+		console.debug(timeline);
+		setSelectingBeginDate({
+			timeline: timeline,
+			beginDate: timeline.static ? DateTime.parse(timeline.static, calendarInfo.timeZone) : null,
+			previous: new Set(timeline.previous),
+			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
+		})
+	}
+
+	function handleClearSelectBeginDate(timeline: TaskTimeline, clearDate: boolean, clearPrevious: boolean): void {
+		setSelectingBeginDate(c => ({
+			timeline: timeline,
+			beginDate: clearDate ? null : c?.beginDate ?? null,
+			previous: clearPrevious ? new Set() : c?.previous ?? new Set(),
+			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
+		}));
+	}
+
+	function handleSetSelectBeginDate(timeline: TaskTimeline, set: ReadonlySet<TimelineId>): void {
+		setSelectingBeginDate(c => ({
+			timeline: timeline,
+			beginDate: c?.beginDate ?? null,
+			previous: new Set(set),
+			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
+		}));
+	}
+
+	function canSelectCore(targetTimeline: Timeline, currentTimeline: Timeline): boolean {
+		const groups = Timelines.getParentGroup(currentTimeline, timelineNodes);
+		if (groups && groups.length) {
+			return !groups.some(a => a.id === targetTimeline.id);
+		}
+
+		return true;
+	}
+
+	function handleSubmitSelectBeginDate(timeline: TaskTimeline): void {
+		setSelectingBeginDate(null);
+	}
+
+	function handleCancelSelectBeginDate(): void {
+		setSelectingBeginDate(null);
+	}
+
+	const beginDateCallbacks: BeginDateCallbacks = {
+		startSelectBeginDate: handleStartSelectBeginDate,
+		clearSelectBeginDate: handleClearSelectBeginDate,
+		setSelectBeginDate: handleSetSelectBeginDate,
+		submitSelectBeginDate: handleSubmitSelectBeginDate,
+		cancelSelectBeginDate: handleCancelSelectBeginDate,
+	}
+
 	useEffect(() => {
 		updateRelations();
 	}, []);
@@ -361,6 +416,8 @@ const Component: NextPage<Props> = (props: Props) => {
 				timelineRootNodes={timelineNodes}
 				draggingTimeline={draggingTimeline}
 				dropTimeline={dropTimeline}
+				selectingBeginDate={selectingBeginDate}
+				beginDateCallbacks={beginDateCallbacks}
 				setTimelineRootNodes={handleSetTimelineNodes}
 				updateRelations={updateRelations}
 				timelineStore={timelineStore}

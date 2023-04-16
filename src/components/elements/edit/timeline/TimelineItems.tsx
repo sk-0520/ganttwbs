@@ -24,13 +24,15 @@ import { CalendarInfo } from "@/models/data/CalendarInfo";
 interface Props extends EditProps, TimelineRootProps {
 	draggingTimeline: DraggingTimeline | null;
 	dropTimeline: DropTimeline | null;
+	selectingBeginDate: SelectingBeginDate | null;
+	beginDateCallbacks: BeginDateCallbacks;
 	calendarInfo: CalendarInfo;
-	updateRelations: () => void;
 	timelineStore: TimelineStore;
+	updateRelations: () => void;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
-	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
+	//const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 
 	function handleAddNextSiblingItem(kind: TimelineKind, currentTimeline: Timeline) {
 		const currentIndex = props.timelineRootNodes.findIndex(a => a === currentTimeline);
@@ -58,6 +60,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.updateRelations();
 	}
 
+	/*
 	function canSelectCore(targetTimeline: Timeline, currentTimeline: Timeline): boolean {
 		const groups = Timelines.getParentGroup(currentTimeline, props.timelineRootNodes);
 		if (groups && groups.length) {
@@ -105,12 +108,14 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const notifyParentCallbacks: NotifyParentCallbacks = {
 	};
+	*/
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
 		updatedBeginDate: handleUpdateChildrenBeginDate,
 		//updateResource: handleUpdateChildrenResource,
 	}
 
+	/*
 	const beginDateCallbacks: BeginDateCallbacks = {
 		startSelectBeginDate: handleStartSelectBeginDate,
 		clearSelectBeginDate: handleClearSelectBeginDate,
@@ -118,6 +123,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		submitSelectBeginDate: handleSubmitSelectBeginDate,
 		cancelSelectBeginDate: handleCancelSelectBeginDate,
 	}
+	*/
 
 	return (
 		<div id='timelines'>
@@ -135,11 +141,11 @@ const Component: NextPage<Props> = (props: Props) => {
 									currentTimeline={a}
 									timelineStore={props.timelineStore}
 									draggingTimeline={props.draggingTimeline}
-									selectingBeginDate={selectingBeginDate}
+									selectingBeginDate={props.selectingBeginDate}
 									dropTimeline={props.dropTimeline}
-									notifyParentCallbacks={notifyParentCallbacks}
+									//notifyParentCallbacks={notifyParentCallbacks}
 									refreshedChildrenCallbacks={refreshedChildrenCallbacks}
-									beginDateCallbacks={beginDateCallbacks}
+									beginDateCallbacks={props.beginDateCallbacks}
 									callbackAddNextSiblingItem={handleAddNextSiblingItem}
 									calendarInfo={props.calendarInfo}
 								/>
