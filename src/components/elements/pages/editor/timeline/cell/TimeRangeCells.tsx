@@ -6,7 +6,7 @@ import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 
 interface Props {
-	timeRangeKind: WorkRangeKind;
+	workRangeKind: WorkRangeKind;
 	selectable: boolean;
 	beginDate: DateTime | null;
 	endDate: DateTime | null;
@@ -18,7 +18,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const selectOrClickClassName = props.selectable ? "selectable" : "clickable";
 
-	return props.timeRangeKind === "success"
+	return props.workRangeKind === "success"
 		? (
 			<>
 				<div
@@ -53,7 +53,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				onClick={props.callbackClickBeginDate}
 			>
 				<DynamicLabel htmlFor={props.htmlFor} wrap={props.selectable}>
-					{props.timeRangeKind}
+					{props.workRangeKind}
 				</DynamicLabel>
 			</div>
 		);

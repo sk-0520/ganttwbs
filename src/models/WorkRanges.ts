@@ -3,16 +3,16 @@ import { TotalSuccessWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } fro
 export class WorkRanges {
 
 	/**
-	 * `TimeRange` は `SuccessTimeRange` か。
+	 * `workRange` は `SuccessWorkRange` か。
 	 * 本処理は型ガードではあるものの型チェックは行わない。
-	 * @param timeRange
+	 * @param workRange
 	 * @returns
 	 */
-	public static maybeSuccessWorkRange(timeRange: WorkRange): timeRange is SuccessWorkRange {
-		return timeRange.kind === "success";
+	public static maybeSuccessWorkRange(workRange: WorkRange): workRange is SuccessWorkRange {
+		return workRange.kind === "success";
 	}
 
-	public static isError(timeRange: WorkRange): boolean {
+	public static isError(workRange: WorkRange): boolean {
 		const errorKinds: Array<WorkRangeKind> = [
 			"no-input",
 			"relation-error",
@@ -21,7 +21,7 @@ export class WorkRanges {
 			"unknown-error",
 		];
 
-		return errorKinds.includes(timeRange.kind);
+		return errorKinds.includes(workRange.kind);
 	}
 
 	public static getTotalSuccessWorkRange(items: ReadonlyArray<SuccessWorkRange>): TotalSuccessWorkRange {

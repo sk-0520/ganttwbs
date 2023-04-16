@@ -378,7 +378,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								</>
 							) : (
 								<TimeRangeCells
-									timeRangeKind={beginKind}
+									workRangeKind={beginKind}
 									selectable={props.selectingBeginDate !== null}
 									beginDate={beginDate}
 									endDate={endDate}

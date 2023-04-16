@@ -14,16 +14,16 @@ interface Props extends GanttChartTimelineProps { }
 
 const Component: NextPage<Props> = (props: Props) => {
 
-	const [timeRange, setTimeRange] = useState<SuccessWorkRange | null>();
+	const [successWorkRange, setSuccessWorkRange] = useState<SuccessWorkRange | null>();
 
 	useEffect(() => {
 		const timelineItem = props.timelineStore.changedItems.get(props.currentTimeline.id);
 		if (timelineItem) {
 			if (timelineItem.range) {
 				if (WorkRanges.maybeSuccessWorkRange(timelineItem.range)) {
-					setTimeRange(timelineItem.range);
+					setSuccessWorkRange(timelineItem.range);
 				} else {
-					setTimeRange(null);
+					setSuccessWorkRange(null);
 				}
 			}
 		}
@@ -33,8 +33,8 @@ const Component: NextPage<Props> = (props: Props) => {
 	function renderCurrentTimeline(): ReactNode {
 		const cell = props.configuration.design.honest.cell;
 
-		const timeSpanRange = timeRange
-			? Charts.getTimeSpanRange(props.calendarInfo.range.from, timeRange)
+		const timeSpanRange = successWorkRange
+			? Charts.getTimeSpanRange(props.calendarInfo.range.from, successWorkRange)
 			: null;
 const area = Charts.createChartArea(timeSpanRange, props.currentIndex, cell, props.chartSize);
 

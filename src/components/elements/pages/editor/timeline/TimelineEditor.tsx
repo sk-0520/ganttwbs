@@ -75,7 +75,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		console.debug("全体へ通知");
 
 		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.timelineNodes);
-		const dateTimeRanges = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive, calendarInfo.timeZone);
+		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive, calendarInfo.timeZone);
 
 		const changedItems = new Map(
 			[...timelineMap.entries()]
@@ -83,7 +83,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				.map(([k, v]) => {
 					const item: TimelineItem = {
 						timeline: v,
-						range: dateTimeRanges.get(k),
+						range: workRanges.get(k),
 					};
 
 					return [k, item];
