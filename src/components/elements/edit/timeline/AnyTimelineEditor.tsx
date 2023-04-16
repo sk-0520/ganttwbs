@@ -185,7 +185,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleControlMoveItem(moveUp: boolean) {
-		props.notifyParentCallbacks.notifyMove(moveUp, props.currentTimeline);
+		props.timelineStore.moveTimeline(moveUp, props.currentTimeline);
 	}
 
 	function handleControlAddItem(kind: TimelineKind) {
@@ -402,7 +402,6 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	const notifyParentCallbacks: NotifyParentCallbacks = {
-		notifyMove: handleUpdateChildrenOrder,
 		notifyDragStart: props.notifyParentCallbacks.notifyDragStart,
 	};
 

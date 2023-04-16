@@ -47,6 +47,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			changedItems: changedItems,
 			workRanges: workRangesCache,
 			updateTimeline: updateTimeline,
+			moveTimeline: moveTimeline,
 			removeTimeline: removeTimeline,
 		};
 
@@ -110,6 +111,27 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		const store = createTimelineStore(timelineMap, changedItems);
 		setTimelineStore(store);
+	}
+
+	function moveTimeline(moveUp: boolean, timeline: AnyTimeline): void {
+		const groups = Timelines.getParentGroup(timeline, timelineNodes)
+		if (!groups) {
+			return;
+		}
+
+		if (groups.length) {
+			const group = Arrays.last(groups);
+			const newChildren = [...group.children];
+			Timelines.moveTimelineOrder(newChildren, moveUp, timeline);
+			group.children = newChildren;
+		} else {
+			const newChildren = [...timelineNodes];
+			Timelines.moveTimelineOrder(newChildren, moveUp, timeline);
+			setTimelineNodes(newChildren);
+		}
+
+		// 直接置き換えた値はちまちま反映するのではなくリセット
+		updateRelations();
 	}
 
 	function removeTimeline(timeline: AnyTimeline): void {

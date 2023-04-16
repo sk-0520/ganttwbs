@@ -32,13 +32,6 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 
-	function handleUpdateChildrenOrder(moveUp: boolean, currentTimeline: Timeline) {
-		const nodes = [...props.timelineRootNodes];
-		if (Timelines.moveTimelineOrder(nodes, moveUp, currentTimeline)) {
-			props.setTimelineRootNodes(nodes);
-		}
-	}
-
 	function handleAddNextSiblingItem(kind: TimelineKind, currentTimeline: Timeline) {
 		const currentIndex = props.timelineRootNodes.findIndex(a => a === currentTimeline);
 
@@ -247,7 +240,6 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	const notifyParentCallbacks: NotifyParentCallbacks = {
-		notifyMove: handleUpdateChildrenOrder,
 		notifyDragStart: handleStartDragTimeline,
 	};
 

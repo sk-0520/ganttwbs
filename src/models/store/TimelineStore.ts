@@ -12,6 +12,7 @@ export interface TimelineStore {
 	/** 変更タイムライン */
 	readonly changedItems: ReadonlyMap<TimelineId, TimelineItem>;
 
+	/** 各工数時間 */
 	readonly workRanges: ReadonlyMap<TimelineId, WorkRange>;
 
 	/**
@@ -19,6 +20,12 @@ export interface TimelineStore {
 	 * @param timeline
 	 */
 	updateTimeline(timeline: AnyTimeline): void;
+	/**
+	 * タイムラインをグループ内で上下移動。
+	 * @param moveUp 上へ移動するか。
+	 * @param timeline 対象タイムライン。
+	 */
+	moveTimeline(moveUp: boolean, timeline: AnyTimeline): void;
 	/**
 	 * タイムラインを破棄。
 	 * @param timeline
