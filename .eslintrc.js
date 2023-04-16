@@ -50,6 +50,9 @@ module.exports = {
 				"after": true
 			}
 		],
+		"no-cond-assign": [
+			"error",
+		],
 		"import/order": [
 			"warn",
 			{
