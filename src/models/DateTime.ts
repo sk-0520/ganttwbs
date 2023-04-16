@@ -186,7 +186,11 @@ export class DateTime {
 
 	/**
 	 * フォーマット。
-	 * @param date
+	 * @param format
+	 *  * U: ISO8601
+	 *  * L: ローカライズ
+	 *  * `undefined`: Date.toISOString()
+	 *  * その他 _.NET_ のやつで出来そうなのだけ
 	 * @returns
 	 */
 	public format(format?: "U" | "L" | string): string {
@@ -227,7 +231,9 @@ export class DateTime {
 
 		const pattern = Array.from(map.keys())
 			.sort((a, b) => b.length - a.length)
-			.join("|");
+			.join("|")
+			;
+
 		return format.replace(
 			new RegExp("(" + pattern + ")", "g"),
 			m => map.get(m) ?? m

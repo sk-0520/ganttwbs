@@ -82,7 +82,8 @@ export abstract class Designs {
 					"}",
 				].join(newLine);
 			})
-			.join(newLine);
+			.join(newLine)
+			;
 	}
 
 }

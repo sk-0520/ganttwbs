@@ -1,12 +1,25 @@
 import { EditorData } from "@/models/data/EditorData";
 
+/**
+ * 何かしらのストレージ処理。
+ *
+ * まぁブラウザ。
+ */
 export abstract class Storage {
 
+	/**
+	 * エディタ用データ保存。
+	 * @param editorData
+	 */
 	public static saveEditorData(editorData: EditorData) {
 		const sessionData = JSON.stringify(editorData);
 		sessionStorage.setItem("editor", sessionData);
 	}
 
+	/**
+	 * エディタ用データ読み込み。
+	 * @returns あかんときは `null`。
+	 */
 	public static loadEditorData(): EditorData | null {
 		const sessionData = sessionStorage.getItem("editor");
 		if (!sessionData) {

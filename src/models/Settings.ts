@@ -2,6 +2,10 @@ import { AnyTimeline, GroupTimeline, TaskTimeline, WeekDay, WeekIndex } from "@/
 
 export abstract class Settings {
 
+	/**
+	 * 全ての `WeekDay` を取得。
+	 * @returns
+	 */
 	public static getWeekDays(): Array<WeekDay> {
 		return [
 			"monday",
@@ -14,6 +18,11 @@ export abstract class Settings {
 		];
 	}
 
+	/**
+	 * JS:Date の曜日から `WeekDay` に変換。
+	 * @param weekIndex
+	 * @returns
+	 */
 	public static toWeekDay(weekIndex: number): WeekDay {
 		switch (weekIndex) {
 			case 0:
@@ -36,6 +45,11 @@ export abstract class Settings {
 		}
 	}
 
+	/**
+	 * `WeekDay` から JS:Date の曜日に変換。
+	 * @param week
+	 * @returns
+	 */
 	public static toWeekIndex(week: WeekDay): WeekIndex {
 		switch (week) {
 			case "sunday":
