@@ -17,6 +17,7 @@ export class WorkRanges {
 			"no-input",
 			"relation-error",
 			"relation-no-input",
+			"recursive-error",
 			"unknown-error",
 		];
 

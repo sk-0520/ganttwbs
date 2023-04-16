@@ -16,6 +16,8 @@ export type WorkRangeKind =
 	|
 	"relation-error"
 	|
+	"recursive-error"
+	|
 	"unknown-error"
 	;
 

@@ -118,7 +118,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			} else {
 				// 移動元が自グループのため対象の子を破棄
 				if (sourceIsSelf) {
-					newChildren = newChildren.filter(a => a.id !== props.dropTimeline!.timeline.id);
+					newChildren = newChildren.filter(a => a.id !== props.dropTimeline?.timeline.id);
 				}
 
 				// 移動先が自グループのため対象の子を追加

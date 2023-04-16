@@ -322,7 +322,15 @@ export abstract class Timelines {
 		let recursiveCount = 0;
 		while (result.size < flatTimelines.length) {
 			if (recursiveMaxCount <= ++recursiveCount) {
-				console.error("デバッグ制限超過")
+				console.error("デバッグ制限超過");
+				for (const timeline of flatTimelines) {
+					if (!result.has(timeline.id)) {
+						result.set(timeline.id, {
+							kind: "recursive-error",
+							timeline: timeline,
+						});
+					}
+				}
 				break;
 			}
 
