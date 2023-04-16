@@ -39,6 +39,9 @@ module.exports = {
 			"error",
 			"always"
 		],
+		"no-extra-semi": [
+			"error",
+		],
 		"semi-style": [
 			"error",
 			"last"

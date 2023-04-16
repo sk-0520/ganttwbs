@@ -787,6 +787,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 		}
 	]
 		//--------------------------
+		// eslint-disable-next-line semi-style
 		;
 
 	return setting;
