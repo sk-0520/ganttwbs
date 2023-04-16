@@ -1,4 +1,5 @@
 import { NextPage } from "next";
+import { DragEvent } from "react";
 
 import DaysHeader from "./DaysHeader";
 import CrossHeader from "./CrossHeader";
@@ -22,6 +23,8 @@ import { WorkRange } from "@/models/data/WorkRange";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { Calendars } from "@/models/Calendars";
 import { Arrays } from "@/models/Arrays";
+import { DraggingTimeline } from "@/models/data/DraggingTimeline";
+import { DropTimeline } from "@/models/data/DropTimeline";
 
 interface Props extends EditProps { }
 
@@ -30,8 +33,146 @@ const Component: NextPage<Props> = (props: Props) => {
 	const workRangesCache = new Map<TimelineId, WorkRange>();
 	const [timelineNodes, setTimelineNodes] = useState(props.editData.setting.timelineNodes);
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map(), new Map()));
+	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
+	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 
 	const calendarInfo = Calendars.createCalendarInfo(props.editData.setting.timeZone, props.editData.setting.calendar);
+
+	function fireDropTimeline(dropTimeline: DropTimeline) {
+		console.debug("FIRE");
+
+		if (!dropTimeline.sourceGroupTimeline && !dropTimeline.destinationGroupTimeline) {
+			// 最上位完結
+			Timelines.moveTimelineIndex(timelineNodes, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
+			setTimelineNodes(timelineNodes);
+		} else {
+			// 最上位に対してあれこれ
+			if (!dropTimeline.sourceGroupTimeline) {
+				// 移動元が親なので破棄
+				const nextTimelines = timelineNodes.filter(a => a.id !== dropTimeline.timeline.id);
+				setTimelineNodes(nextTimelines);
+			}
+			if (!dropTimeline.destinationGroupTimeline) {
+				// 移動先が親なので追加
+				timelineNodes.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
+				setTimelineNodes(timelineNodes);
+			}
+			// 子に通知
+			setDropTimeline(dropTimeline);
+		}
+
+		setDraggingTimeline(null);
+	}
+
+	function handleStartDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void {
+		console.debug(event, sourceTimeline);
+
+		const dragging: DraggingTimeline = {
+			sourceTimeline: sourceTimeline,
+			onDragEnd: (ev) => {
+				console.debug("END", ev, sourceTimeline);
+				setDraggingTimeline(null);
+			},
+			onDragEnter: (ev, targetTimeline) => {
+				console.debug("ENTER", ev, targetTimeline);
+			},
+			onDragOver: (ev, targetTimeline, callback) => {
+				console.debug("OVER", ev, targetTimeline);
+				// 自分自身への移動は抑制
+				if (targetTimeline.id === sourceTimeline.id) {
+					return;
+				}
+
+				if (Settings.maybeGroupTimeline(sourceTimeline)) {
+					// 自分がグループの場合、自分より下への移動は抑制
+					const map = Timelines.getTimelinesMap(sourceTimeline.children);
+					if (map.has(targetTimeline.id)) {
+						return;
+					}
+				}
+
+				// 自身のグループへの移動は抑制(どうすりゃいいのか正解が分からん)
+				if (Settings.maybeGroupTimeline(targetTimeline)) {
+					if (targetTimeline.children.find(a => a.id === sourceTimeline.id)) {
+						return;
+					}
+				}
+
+				callback(dragging);
+				ev.preventDefault();
+			},
+			onDragLeave: (ev, targetTimeline, callback) => {
+				console.debug("LEAVE", ev, targetTimeline);
+				callback(dragging);
+			},
+			onDrop: (ev, targetTimeline) => {
+				console.debug("DROP", ev, targetTimeline);
+
+				const rootNodes = timelineNodes;
+				const sourceGroupTimelines = Timelines.getParentGroup(sourceTimeline, rootNodes);
+				const targetGroupTimelines = Timelines.getParentGroup(targetTimeline, rootNodes);
+
+				if (!sourceGroupTimelines || !targetGroupTimelines) {
+					// ツリーにいない場合はどうにもならん
+					throw new Error(JSON.stringify({
+						sourceGroupTimelines,
+						targetGroupTimelines,
+					}));
+				}
+
+				// 最上位から最上位
+				if (!sourceGroupTimelines.length && !targetGroupTimelines.length) {
+					const sourceIndex = rootNodes.findIndex(a => a.id === sourceTimeline.id);
+					const destinationIndex = rootNodes.findIndex(a => a.id === targetTimeline.id);
+					if (sourceIndex === -1 || destinationIndex === -1) {
+						throw new Error(JSON.stringify({
+							sourceIndex,
+							destinationIndex,
+						}));
+					}
+
+					fireDropTimeline({
+						timeline: sourceTimeline,
+						sourceGroupTimeline: null,
+						destinationGroupTimeline: null,
+						sourceIndex: sourceIndex,
+						destinationIndex: destinationIndex,
+					});
+					return;
+				}
+
+				// 対象がグループの場合、そのグループへ移動
+				if (Settings.maybeGroupTimeline(targetTimeline)) {
+					const sourceGroupTimeline = sourceGroupTimelines[sourceGroupTimelines.length - 1];
+					const sourceIndex = sourceGroupTimeline.children.findIndex(a => a.id === sourceTimeline.id);
+
+					fireDropTimeline({
+						timeline: sourceTimeline,
+						sourceGroupTimeline: sourceGroupTimeline,
+						sourceIndex: sourceIndex,
+						destinationGroupTimeline: targetTimeline,
+						destinationIndex: -1,
+					});
+					return;
+				}
+
+				// 単純移動
+				const sourceNodes = sourceGroupTimelines.length ? sourceGroupTimelines[sourceGroupTimelines.length - 1].children : rootNodes;
+				const sourceIndex = sourceNodes.findIndex(a => a.id === sourceTimeline.id);
+				const destinationNodes = targetGroupTimelines.length ? targetGroupTimelines[targetGroupTimelines.length - 1].children : rootNodes;
+				const destinationIndex = destinationNodes.findIndex(a => a.id === targetTimeline.id);
+				fireDropTimeline({
+					timeline: sourceTimeline,
+					sourceGroupTimeline: sourceGroupTimelines.length ? sourceGroupTimelines[sourceGroupTimelines.length - 1] : null,
+					sourceIndex: sourceIndex,
+					destinationGroupTimeline: targetGroupTimelines.length ? targetGroupTimelines[targetGroupTimelines.length - 1] : null,
+					destinationIndex: destinationIndex,
+				});
+			}
+		};
+
+		setDraggingTimeline(dragging);
+	}
 
 	function createTimelineStore(totalItems: Map<TimelineId, AnyTimeline>, changedItems: Map<TimelineId, TimelineItem>): TimelineStore {
 
@@ -49,6 +190,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			updateTimeline: updateTimeline,
 			moveTimeline: moveTimeline,
 			removeTimeline: removeTimeline,
+			startDragTimeline: handleStartDragTimeline,
 		};
 
 		return result;
@@ -217,6 +359,8 @@ const Component: NextPage<Props> = (props: Props) => {
 				configuration={props.configuration}
 				editData={props.editData}
 				timelineRootNodes={timelineNodes}
+				draggingTimeline={draggingTimeline}
+				dropTimeline={dropTimeline}
 				setTimelineRootNodes={handleSetTimelineNodes}
 				updateRelations={updateRelations}
 				timelineStore={timelineStore}

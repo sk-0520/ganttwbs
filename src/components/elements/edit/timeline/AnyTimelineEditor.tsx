@@ -12,7 +12,7 @@ import { WorkRanges } from "@/models/WorkRanges";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Timelines } from "@/models/Timelines";
-import { useState, useEffect } from "react";
+import { useState, useEffect, DragEvent } from "react";
 import IdCell from "./cell/IdCell";
 import ProgressCell from "./cell/ProgressCell";
 import RelationCell from "./cell/RelationCell";
@@ -325,6 +325,10 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.beginDateCallbacks.startSelectBeginDate(props.currentTimeline);
 	}
 
+	function handleStartDragTimeline(ev: DragEvent): void {
+		props.timelineStore.startDragTimeline(ev, props.currentTimeline);
+	}
+
 	function handleChangePrevious(isSelected: boolean): void {
 		if (!props.selectingBeginDate) {
 			return;
@@ -402,7 +406,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	const notifyParentCallbacks: NotifyParentCallbacks = {
-		notifyDragStart: props.notifyParentCallbacks.notifyDragStart,
+		//notifyDragStart: props.notifyParentCallbacks.notifyDragStart,
 	};
 
 	const refreshedChildrenCallbacks: RefreshedChildrenCallbacks = {
@@ -430,6 +434,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						draggingTimeline={props.draggingTimeline}
 						notifyParentCallbacks={props.notifyParentCallbacks}
 						selectingBeginDate={props.selectingBeginDate}
+						callbackStartDragTimeline={handleStartDragTimeline}
 						callbackChangePrevious={handleChangePrevious}
 					/>
 					<SubjectCell

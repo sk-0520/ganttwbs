@@ -1,3 +1,4 @@
+import {DragEvent} from "react";
 import { AnyTimeline, TimelineId } from "../data/Setting";
 import { TimelineItem } from "../data/TimelineItem";
 import { WorkRange } from "../data/WorkRange";
@@ -31,4 +32,12 @@ export interface TimelineStore {
 	 * @param timeline
 	 */
 	removeTimeline(timeline: AnyTimeline): void;
+
+	/**
+	 * D&D処理を開始
+	 * @param event
+	 * @param sourceTimeline
+	 */
+	startDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void;
+
 }

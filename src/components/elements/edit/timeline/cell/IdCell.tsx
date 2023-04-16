@@ -5,6 +5,7 @@ import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { NextPage } from "next";
 import IndexNumber from "../IndexNumber";
+import { DragEvent } from "react";
 
 interface Props {
 	selectingId: string,
@@ -15,6 +16,7 @@ interface Props {
 	selectingBeginDate: SelectingBeginDate | null;
 	draggingTimeline: DraggingTimeline | null;
 	notifyParentCallbacks: NotifyParentCallbacks;
+	callbackStartDragTimeline(ev:DragEvent): void;
 	callbackChangePrevious: (isSelected: boolean) => void;
 }
 
@@ -27,7 +29,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			}
 			title={props.currentTimeline.id}
 			draggable={!props.selectingBeginDate}
-			onDragStart={ev => props.notifyParentCallbacks.notifyDragStart(ev, props.currentTimeline)}
+			onDragStart={ev => props.callbackStartDragTimeline(ev)}
 			onDragEnd={props.draggingTimeline?.onDragEnd}
 		>
 			<label>
