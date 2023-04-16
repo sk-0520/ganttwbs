@@ -1,5 +1,6 @@
-import { TimelineStore } from "@/models/store/TimelineStore";
 import { ChartArea } from "@/models/data/ChartArea";
+import { TimelineStore } from "@/models/store/TimelineStore";
+
 import { ConfigurationProps } from "./ConfigurationProps";
 
 export interface ChartProps extends ConfigurationProps {

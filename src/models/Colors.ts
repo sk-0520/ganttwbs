@@ -1,4 +1,5 @@
 import { TinyColor, mostReadable } from "@ctrl/tinycolor";
+
 import { Color } from "./data/Setting";
 
 export default abstract class Colors {
@@ -23,7 +24,7 @@ export default abstract class Colors {
 	 * @param count 色数
 	 * @returns グラデーション配列
 	 */
-	public static generateGradation(start: Color | TinyColor, end: Color | TinyColor, count: number): Array<TinyColor> {
+	public static generateGradient(start: Color | TinyColor, end: Color | TinyColor, count: number): Array<TinyColor> {
 		if (typeof start === "string") {
 			start = new TinyColor(start);
 		}

@@ -35,6 +35,15 @@
 				}
 			}
 		],
+		"cSpell.ignorePaths": [
+			"package.json",
+			"package-lock.json",
+			"node_modules",
+			"vscode-extension",
+			".git/objects",
+			".vscode",
+			".vscode-insiders"
+		],
 		"cSpell.words": [
 			"cdate",
 			"CDate",

@@ -17,6 +17,7 @@ module.exports = {
 		"sourceType": "module"
 	},
 	"plugins": [
+		"import",
 		"no-relative-import-paths",
 		"unused-imports",
 		"@typescript-eslint"
@@ -34,6 +35,61 @@ module.exports = {
 			}
 		],
 		*/
+		"semi": [
+			"error",
+			"always"
+		],
+		"no-extra-semi": [
+			"error",
+		],
+		"semi-spacing": [
+			"error",
+			{
+				"before": false,
+				"after": true
+			}
+		],
+		"no-cond-assign": [
+			"error",
+		],
+		"no-func-assign": [
+			"error",
+		],
+		"no-inner-declarations": [
+			"error",
+		],
+		"import/order": [
+			"warn",
+			{
+				"groups": [
+					"builtin",
+					"external",
+					"internal",
+					"parent",
+					"sibling",
+					"index",
+					"object",
+					"type",
+				],
+				"newlines-between": "always",
+				"pathGroupsExcludedImportTypes": [
+					"builtin"
+				],
+				"alphabetize": {
+					"order": "asc",
+					"caseInsensitive": true
+				},
+				/*
+				"pathGroups": [
+					{
+						"pattern": "",
+						"group": "internal",
+						"position": ""
+					},
+				]
+				*/
+			}
+		],
 		"no-relative-import-paths/no-relative-import-paths": [
 			"error", {
 				"allowSameFolder": true,
@@ -61,6 +117,9 @@ module.exports = {
 				"argsIgnorePattern": "^.*$",
 				"varsIgnorePattern": "^_*$"
 			}
+		],
+		"@typescript-eslint/no-non-null-assertion": [
+			"error"
 		]
 	}
 };

@@ -2,23 +2,25 @@ import { NextPage } from "next";
 import { FormEvent } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
-import { Storage } from "@/models/Storage";
 import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
+import { EditorData } from "@/models/data/EditorData";
+import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
+import { DateTime } from "@/models/DateTime";
+import { IdFactory } from "@/models/IdFactory";
+import { Storage } from "@/models/Storage";
+import { Strings } from "@/models/Strings";
+import { TimeZone } from "@/models/TimeZone";
 
 import CalendarHolidaySettingEditor from "./Calendar/CalendarHolidaySettingEditor";
 import CalendarRangeSettingEditor from "./Calendar/CalendarRangeSettingEditor";
 import CalendarWeekSettingEditor from "./Calendar/CalendarWeekSettingEditor";
+import GeneralEditor from "./General/GeneralEditor";
 import GroupsEditor from "./Group/GroupsEditor";
 import ThemeCalendarSettingEditor from "./Theme/ThemeCalendarSettingEditor";
-import ThemeTimelineSettingEditor from "./Theme/ThemeTimelineSettingEditor";
 import ThemeGroupSettingEditor from "./Theme/ThemeGroupSettingEditor";
-import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
-import { Strings } from "@/models/Strings";
-import { EditorData } from "@/models/data/EditorData";
-import GeneralEditor from "./General/GeneralEditor";
-import { DateTime } from "@/models/DateTime";
-import { TimeZone } from "@/models/TimeZone";
-import { IdFactory } from "@/models/IdFactory";
+import ThemeTimelineSettingEditor from "./Theme/ThemeTimelineSettingEditor";
+
+
 
 const NewLine = "\r\n";
 const ThemeHolidayRegularColor: Color = "#0f0";
@@ -115,9 +117,7 @@ function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnl
 		.map(([k, v]) => ({ date: DateTime.parse(k, timeZone), display: v.display }))
 		.sort((a, b) => a.date.getTime() - b.date.getTime())
 		.map(a => `${a.date.format("yyyy-MM-dd")}\t${a.display}`)
-		.join(NewLine)
-		;
-
+		.join(NewLine);
 }
 
 function toContext(setting: Setting): SettingContext {
@@ -201,10 +201,8 @@ function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string, ti
 		.map(a => a.split("\t", 2))
 		.map(a => ({ date: a[0], display: 1 in a ? a[1]: "" }))
 		.map(a => ({ date: DateTime.parse(a.date, timeZone), display: a.display }))
-		.filter(a => !isNaN(a.date.getTime()))
-		;
-
-	for (const item of items) {
+		.filter(a => !isNaN(a.date.getTime()));
+for (const item of items) {
 		result[item.date.format("yyyy-MM-dd")] = {
 			display: item.display,
 			kind: kind

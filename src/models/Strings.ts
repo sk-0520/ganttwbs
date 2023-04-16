@@ -119,9 +119,8 @@ export abstract class Strings {
 		if (searchValue instanceof RegExp) {
 			const flags = searchValue.flags.includes("g")
 				? searchValue.flags
-				: searchValue.flags + "g"
-				;
-			return source.replace(new RegExp(searchValue.source, flags), replaceValue);
+				: searchValue.flags + "g";
+return source.replace(new RegExp(searchValue.source, flags), replaceValue);
 		}
 
 		return source.replace(new RegExp(this.escapeRegex(searchValue), "g"), replaceValue);

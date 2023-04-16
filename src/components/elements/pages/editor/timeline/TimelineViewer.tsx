@@ -1,16 +1,19 @@
+import { NextPage } from "next";
+import { ReactNode } from "react";
+
+import { Calendars } from "@/models/Calendars";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
+import { ChartSize } from "@/models/data/ChartSize";
+import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { EditProps } from "@/models/data/props/EditProps";
 import { MemberId, Timeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
-import { NextPage } from "next";
-import GanttChartTimeline from "./GanttChartTimeline";
-import { MemberMapValue } from "@/models/data/MemberMapValue";
-import { ReactNode } from "react";
-import { ChartSize } from "@/models/data/ChartSize";
-import { TimeSpan } from "@/models/TimeSpan";
 import { TimelineStore } from "@/models/store/TimelineStore";
+import { TimeSpan } from "@/models/TimeSpan";
+
 import ConnectorTimeline from "./ConnectorTimeline";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { Calendars } from "@/models/Calendars";
+import GanttChartTimeline from "./GanttChartTimeline";
+
 
 interface Props extends EditProps {
 	calendarInfo: CalendarInfo;
@@ -29,7 +32,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const chartSize: ChartSize = {
 		width: cell.width.value * days,
 		height: cell.height.value * timelines.length,
-	}
+	};
 
 	//TODO: for しなくてもできると思うけどパッと思いつかなんだ
 	const memberMap = new Map<MemberId, MemberMapValue>();
@@ -75,7 +78,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					strokeWidth={1}
 					strokeDasharray={1}
 				/>
-			)
+			);
 		}
 
 		// 縦軸
@@ -125,7 +128,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						height={height}
 						fill={color}
 					/>
-				)
+				);
 			}
 		}
 
@@ -141,7 +144,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					{gridVerticals.map(a => a)}
 				</g>
 			</g>
-		)
+		);
 	}
 
 	return (
@@ -163,7 +166,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							updateRelations={props.updateRelations}
 							timelineStore={props.timelineStore}
 						/>
-					)
+					);
 				})}
 				{timelines.map((a, i) => {
 					if (!Settings.maybeTaskTimeline(a)) {
@@ -183,7 +186,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							updateRelations={props.updateRelations}
 							timelineStore={props.timelineStore}
 						/>
-					)
+					);
 				})}
 			</svg>
 

@@ -19,7 +19,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				onChange={ev => props.callbackChangeValue(ev.target.value)}
 			/>
 		</div>
-	)
-}
+	);
+};
 
 export default Component;

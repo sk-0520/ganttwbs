@@ -1,4 +1,5 @@
 import { DateTime } from "@/models/DateTime";
+
 import { Timeline } from "./Setting";
 
 export type WorkRangeKind =
@@ -18,10 +19,7 @@ export type WorkRangeKind =
 	|
 	"recursive-error"
 	|
-	"unknown-error"
-	;
-
-
+	"unknown-error";
 export interface WorkRange {
 	kind: WorkRangeKind;
 	timeline: Timeline;

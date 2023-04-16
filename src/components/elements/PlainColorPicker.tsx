@@ -1,12 +1,14 @@
-import { Color } from "@/models/data/Setting";
+import { TinyColor } from "@ctrl/tinycolor";
 import { NextPage } from "next";
 import { CSSProperties, useEffect, useState } from "react";
 import { SketchPicker } from "react-color";
 import { PresetColor } from "react-color/lib/components/sketch/Sketch";
-import Overlay from "./Overlay";
-import { TinyColor } from "@ctrl/tinycolor";
-import style from "@/styles/modules/components/elements/PlainColorPicker.module.scss";
+
 import Colors from "@/models/Colors";
+import { Color } from "@/models/data/Setting";
+import style from "@/styles/modules/components/elements/PlainColorPicker.module.scss";
+
+import Overlay from "./Overlay";
 
 interface Props {
 	color: Color;
@@ -44,7 +46,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const boxStyle: CSSProperties = {
 		background: current.toHexString(),
 		borderColor: Colors.getAutoColor(current).toHexString(),
-	}
+	};
 
 	return (
 		<>

@@ -1,14 +1,15 @@
 import { NextPage } from "next";
 
+import { Arrays } from "@/models/Arrays";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
 import { EditProps } from "@/models/data/props/EditProps";
-import { TimelineStore } from "@/models/store/TimelineStore";
-import AnyTimelineEditor from "./AnyTimelineEditor";
 import { IdFactory } from "@/models/IdFactory";
-import { Arrays } from "@/models/Arrays";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
+import { TimelineStore } from "@/models/store/TimelineStore";
+
+import AnyTimelineEditor from "./AnyTimelineEditor";
 
 interface Props extends EditProps {
 	draggingTimeline: DraggingTimeline | null;
@@ -64,7 +65,7 @@ const Component: NextPage<Props> = (props: Props) => {
 										</div>
 									</div>
 								</li>
-							)
+							);
 						})
 					}
 				</ul>

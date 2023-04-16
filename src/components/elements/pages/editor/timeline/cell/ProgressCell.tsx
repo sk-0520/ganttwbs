@@ -1,6 +1,7 @@
-import { Timelines } from "@/models/Timelines";
-import { Progress } from "@/models/data/Setting";
 import { NextPage } from "next";
+
+import { Progress } from "@/models/data/Setting";
+import { Timelines } from "@/models/Timelines";
 
 interface Props {
 	readOnly: boolean;
@@ -24,7 +25,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				onChange={ev => props.callbackChangeValue ? props.callbackChangeValue(ev.target.valueAsNumber) : undefined}
 			/>
 		</div>
-	)
-}
+	);
+};
 
 export default Component;

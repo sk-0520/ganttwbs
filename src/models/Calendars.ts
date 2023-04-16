@@ -1,9 +1,9 @@
-import { DateTime } from "./DateTime";
-import { TimeZone } from "./TimeZone";
 import { CalendarInfo } from "./data/CalendarInfo";
 import { CalendarRange } from "./data/CalendarRange";
 import { HolidayEventMapValue } from "./data/HolidayEventMapValue";
 import { Calendar, Holiday } from "./data/Setting";
+import { DateTime } from "./DateTime";
+import { TimeZone } from "./TimeZone";
 
 export abstract class Calendars {
 
@@ -28,7 +28,7 @@ export abstract class Calendars {
 		const range: CalendarRange = {
 			from: DateTime.parse(calendar.range.from, timeZone),
 			to: DateTime.parse(calendar.range.to, timeZone),
-		}
+		};
 
 		const holidayEventMap = this.createHolidayEventMap(calendar.holiday.events, timeZone);
 

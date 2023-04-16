@@ -1,8 +1,8 @@
 import { NextPage } from "next";
 import { useContext } from "react";
 
-import { SettingContext } from "@/models/data/context/SettingContext";
 import { useLocale } from "@/locales/locale";
+import { SettingContext } from "@/models/data/context/SettingContext";
 import { Settings } from "@/models/Settings";
 
 const Component: NextPage = () => {

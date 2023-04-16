@@ -49,7 +49,7 @@ export type TaskTimelineWorkState = z.infer<typeof TaskTimelineWorkStateSchema>;
 const HolidayEventSchema = z.object({
 	display: z.string(),
 	kind: HolidayKindSchema,
-})
+});
 
 export type HolidayEvent = z.infer<typeof HolidayEventSchema>;
 
@@ -60,7 +60,7 @@ const HolidaySchema = z.object({
 	/** 定休曜日 */
 	regulars: z.array(WeekDaySchema),
 	events: z.record(DateOnlySchema, HolidayEventSchema)
-})
+});
 /** @inheritdoc */
 export type Holiday = z.infer<typeof HolidaySchema>;
 

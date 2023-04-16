@@ -1,8 +1,9 @@
-import { Color, MemberId } from "@/models/data/Setting";
-import { MemberSetting } from "@/models/data/context/SettingContext";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
+
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
+import { MemberSetting } from "@/models/data/context/SettingContext";
+import { Color, MemberId } from "@/models/data/Setting";
 
 interface Props {
 	member: MemberSetting;
@@ -22,7 +23,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		if (color) {
 			setColor(props.member.color = color);
 		}
-	}, [props.member, props.updatedColors])
+	}, [props.member, props.updatedColors]);
 
 	function handleChangeName(value: string) {
 		setName(props.member.name = value);

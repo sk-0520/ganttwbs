@@ -1,6 +1,6 @@
-import { TimeZone } from "@/models/TimeZone";
 import { DateTime, Unit } from "@/models/DateTime";
 import { TimeSpan } from "@/models/TimeSpan";
+import { TimeZone } from "@/models/TimeZone";
 
 describe("DateTime", () => {
 
@@ -11,6 +11,12 @@ describe("DateTime", () => {
 			const actual = DateTime.parse("2000-01-01T00:00:00", TimeZone.create(offset));
 			expect(actual.getTime() + offset.totalMilliseconds).toBe(expected.getTime());
 		}
+	});
+
+	test.each([
+		["", TimeZone.utc],
+	])("parse", (input: string, timeZone: TimeZone) => {
+		expect(() => DateTime.parse(input, timeZone)).toThrowError();
 	});
 
 	test("parse YYYY-MM-DD", () => {

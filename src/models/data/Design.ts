@@ -13,8 +13,7 @@ export function isValueUnit(args: unknown): args is ValueUnit {
 		&& "value" in args
 		&& "unit" in args
 		&& typeof (args.value) === "number"
-		&& typeof (args.unit) === "string"
-		;
+		&& typeof (args.unit) === "string";
 }
 
 export interface Design {

@@ -1,10 +1,11 @@
-import Dialog from "@/components/elements/Dialog";
-import Colors from "@/models/Colors";
-import { Color, MemberId } from "@/models/data/Setting";
-import { GroupSetting } from "@/models/data/context/SettingContext";
 import { TinyColor, random } from "@ctrl/tinycolor";
 import { NextPage } from "next";
 import { CSSProperties, useState } from "react";
+
+import Dialog from "@/components/elements/Dialog";
+import Colors from "@/models/Colors";
+import { GroupSetting } from "@/models/data/context/SettingContext";
+import { Color, MemberId } from "@/models/data/Setting";
 
 type ColorKind = "same" | "analogy" | "monochrome" | "random";
 
@@ -114,7 +115,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							[...choiceColors.entries()].map(([k, v]) => {
 								const member = props.choiceColorGroup.members.find(a => a.id === k);
 								if (!member) {
-									console.warn("MEMBER", k)
+									console.warn("MEMBER", k);
 									return <></>;
 								}
 

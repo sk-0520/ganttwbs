@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { SettingSchema } from "./Setting";
 
 export const EditorDataSchema = z.object({

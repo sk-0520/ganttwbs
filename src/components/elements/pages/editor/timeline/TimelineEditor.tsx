@@ -1,29 +1,30 @@
+import { TinyColor } from "@ctrl/tinycolor";
 import { NextPage } from "next";
 import { DragEvent } from "react";
-
-import DaysHeader from "./DaysHeader";
-import CrossHeader from "./CrossHeader";
-import TimelineItems from "./TimelineItems";
-import TimelineViewer from "./TimelineViewer";
 import { ReactNode, useEffect, useState } from "react";
-import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
-import { Timelines } from "@/models/Timelines";
-import { EditProps } from "@/models/data/props/EditProps";
-import { Design } from "@/models/data/Design";
-import { Designs } from "@/models/Designs";
-import { Settings } from "@/models/Settings";
-import { TinyColor } from "@ctrl/tinycolor";
-import { TimelineStore } from "@/models/store/TimelineStore";
-import { TimelineItem } from "@/models/data/TimelineItem";
-import Colors from "@/models/Colors";
-import { DateTime } from "@/models/DateTime";
-import { WorkRange } from "@/models/data/WorkRange";
-import { Calendars } from "@/models/Calendars";
+
 import { Arrays } from "@/models/Arrays";
+import { Calendars } from "@/models/Calendars";
+import Colors from "@/models/Colors";
+import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
+import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
-import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
+import { EditProps } from "@/models/data/props/EditProps";
+import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
+import { TimelineItem } from "@/models/data/TimelineItem";
+import { WorkRange } from "@/models/data/WorkRange";
+import { DateTime } from "@/models/DateTime";
+import { Designs } from "@/models/Designs";
+import { Settings } from "@/models/Settings";
+import { TimelineStore } from "@/models/store/TimelineStore";
+import { Timelines } from "@/models/Timelines";
+
+import CrossHeader from "./CrossHeader";
+import DaysHeader from "./DaysHeader";
+import TimelineItems from "./TimelineItems";
+import TimelineViewer from "./TimelineViewer";
 
 interface Props extends EditProps { }
 
@@ -83,7 +84,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					const item: TimelineItem = {
 						timeline: v,
 						range: dateTimeRanges.get(k),
-					}
+					};
 
 					return [k, item];
 				})
@@ -265,7 +266,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					// タスクの場合、次に設定する
 					const currentIndex = parent.children.findIndex(a => a.id === timeline.id);
 					const newChildren = [...parent.children];
-					newChildren.splice(currentIndex + 1, 0, item)
+					newChildren.splice(currentIndex + 1, 0, item);
 					parent.children = newChildren;
 				}
 			} else {
@@ -273,7 +274,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 				const currentIndex = timelineNodes.findIndex(a => a.id === timeline.id);
 				const newTimelineNodes = [...timelineNodes];
-				newTimelineNodes.splice(currentIndex + 1, 0, item)
+				newTimelineNodes.splice(currentIndex + 1, 0, item);
 				setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
 			}
 		} else {
@@ -351,7 +352,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleMoveTimeline(moveUp: boolean, timeline: AnyTimeline): void {
-		const groups = Timelines.getParentGroup(timeline, timelineNodes)
+		const groups = Timelines.getParentGroup(timeline, timelineNodes);
 		if (!groups) {
 			return;
 		}
@@ -373,7 +374,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleRemoveTimeline(timeline: AnyTimeline): void {
-		const groups = Timelines.getParentGroup(timeline, timelineNodes)
+		const groups = Timelines.getParentGroup(timeline, timelineNodes);
 		if (!groups) {
 			return;
 		}
@@ -409,7 +410,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			beginDate: timeline.static ? DateTime.parse(timeline.static, calendarInfo.timeZone) : null,
 			previous: new Set(timeline.previous),
 			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
-		})
+		});
 	}
 
 	function handleClearSelectBeginDate(timeline: TaskTimeline, clearDate: boolean, clearPrevious: boolean): void {
@@ -455,7 +456,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		setSelectBeginDate: handleSetSelectBeginDate,
 		submitSelectBeginDate: handleSubmitSelectBeginDate,
 		cancelSelectBeginDate: handleCancelSelectBeginDate,
-	}
+	};
 
 	return (
 		<div id='timeline'>
@@ -526,7 +527,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 								color: foregroundColor.toHexString(),
 								background: backgroundColor,
 							}
-						}
+						};
 					})
 					.reduce((r, a) => ({ ...r, ...a })),
 			},
@@ -539,7 +540,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 								display: "inline-block",
 								paddingLeft: (a * design.programmable.indexNumber.paddingLeft.value) + design.programmable.indexNumber.paddingLeft.unit,
 							}
-						}
+						};
 					})
 					.reduce((r, a) => ({ ...r, ...a })),
 			},
@@ -556,7 +557,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 								color: Colors.getAutoColor(backgroundColor).toHexString(),
 								background: backgroundColor.toHexString(),
 							}
-						}
+						};
 					})
 					.reduce((r, a) => ({ ...r, ...a })),
 				events: Object.entries(theme.holiday.events)
@@ -567,7 +568,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 								color: Colors.getAutoColor(backgroundColor).toHexString(),
 								background: `${backgroundColor.toHexString()} !important`
 							}
-						}
+						};
 					})
 					.reduce((r, a) => ({ ...r, ...a })),
 			}

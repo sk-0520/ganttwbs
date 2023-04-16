@@ -1,4 +1,3 @@
-
 export type IconName
 	=
 	"timeline-group"
@@ -20,7 +19,7 @@ export abstract class Icon {
 			"icon",
 			name,
 			position,
-		]
+		];
 	}
 
 	public static getClassName(name: IconName, position: IconPosition): string {

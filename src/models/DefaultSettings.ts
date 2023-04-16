@@ -32,11 +32,11 @@ export abstract class DefaultSettings {
 		return {
 			holiday: "#ffbaba",
 			special: "#baffba",
-		}
+		};
 	}
 
 	public static getGroupThemeColors(): Array<Color> {
-		return Colors.generateGradation("#5555ee", "#80ff00", 5).map(a => a.toHexString());
+		return Colors.generateGradient("#5555ee", "#80ff00", 5).map(a => a.toHexString());
 	}
 
 	public static getTimelineTheme(): TimelineTheme {
@@ -61,7 +61,7 @@ export abstract class DefaultSettings {
 				cost: 40000,
 				sales: 50000,
 			}
-		}
+		};
 	}
 
 }

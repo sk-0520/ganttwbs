@@ -1,16 +1,16 @@
 import { NextPage } from "next";
 
 import { useLocale } from "@/locales/locale";
-import { Holiday, Theme } from "@/models/data/Setting";
-import { Settings } from "@/models/Settings";
+import { Calendars } from "@/models/Calendars";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
+import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 import { EditProps } from "@/models/data/props/EditProps";
+import { Holiday, Theme } from "@/models/data/Setting";
+import { DateTime } from "@/models/DateTime";
+import { Settings } from "@/models/Settings";
+import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
-import { TimelineStore } from "@/models/store/TimelineStore";
-import { DateTime } from "@/models/DateTime";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { Calendars } from "@/models/Calendars";
-import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 
 interface Props extends EditProps {
 	timelineStore: TimelineStore;
@@ -84,7 +84,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								<td key={a.getTime()} id={Timelines.toDaysId(a)} title={holidayEventValue?.event.display} className={className}>
 									<time dateTime={a.format("U")}>{a.day}</time>
 								</td>
-							)
+							);
 						})}
 					</tr>
 					<tr className='week'>

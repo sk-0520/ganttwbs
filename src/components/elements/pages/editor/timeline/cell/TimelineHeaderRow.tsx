@@ -1,9 +1,10 @@
+import { NextPage } from "next";
+import { ReactNode, useEffect, useState } from "react";
+
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { Timeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
-import { NextPage } from "next";
-import { ReactNode, useEffect, useState } from "react";
 
 interface Props {
 	level: number;
@@ -25,10 +26,10 @@ const Component: NextPage<Props> = (props: Props) => {
 	}, [props.draggingTimeline]);
 
 	function handleDragOver() {
-		setDropEventClassName("drag-over")
+		setDropEventClassName("drag-over");
 	}
 	function handleDragLeave() {
-		setDropEventClassName("")
+		setDropEventClassName("");
 	}
 
 	function handleMouseEnter() {

@@ -1,13 +1,14 @@
+import { NextPage } from "next";
+
 import { Charts } from "@/models/Charts";
-import { Settings } from "@/models/Settings";
-import { WorkRanges } from "@/models/WorkRanges";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { ChartSize } from "@/models/data/ChartSize";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
-import { MemberId, TaskTimeline, TimelineId } from "@/models/data/Setting";
 import { EditProps } from "@/models/data/props/EditProps";
+import { MemberId, TaskTimeline, TimelineId } from "@/models/data/Setting";
+import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
-import { NextPage } from "next";
+import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends EditProps {
 	currentIndex: number;
@@ -49,7 +50,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			[markerBox.width, markerBox.width / 2],
 			[0, markerBox.height],
 		].map(([x, y]) => x + "," + y).join(" "),
-	}
+	};
 
 	const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.from, currentWorkRange);
 	const currentChartArea = Charts.createChartArea(currentTimeSpanRange, props.currentIndex, cell, props.chartSize);
@@ -71,10 +72,8 @@ const Component: NextPage<Props> = (props: Props) => {
 
 				const previewColor = Settings.maybeGroupTimeline(previousTimeline)
 					? Charts.getGroupBackground(previousTimeline, props.timelineStore.nodeItems, props.editData.setting.theme)
-					: Charts.getTaskBackground(previousTimeline, props.memberMap, props.editData.setting.theme)
-					;
-
-				const previewWorkRange = props.timelineStore.workRanges.get(previousTimeline.id);
+					: Charts.getTaskBackground(previousTimeline, props.memberMap, props.editData.setting.theme);
+const previewWorkRange = props.timelineStore.workRanges.get(previousTimeline.id);
 				if(!previewWorkRange || !WorkRanges.maybeSuccessWorkRange(previewWorkRange)) {
 					return null;
 				}
@@ -130,7 +129,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				const markerId = {
 					start: Charts.toMarkerId(b, props.currentTimeline.id, "start"),
 					end: Charts.toMarkerId(b, props.currentTimeline.id, "end"),
-				}
+				};
 
 				return (
 					<g

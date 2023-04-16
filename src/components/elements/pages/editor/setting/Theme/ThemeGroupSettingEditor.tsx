@@ -1,12 +1,12 @@
+import { TinyColor, random } from "@ctrl/tinycolor";
 import { NextPage } from "next";
 import { useContext, useState } from "react";
 
+import Dialog from "@/components/elements/Dialog";
+import PlainColorPicker from "@/components/elements/PlainColorPicker";
+import Colors from "@/models/Colors";
 import { SettingContext, UUID } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
-import PlainColorPicker from "@/components/elements/PlainColorPicker";
-import { TinyColor, random } from "@ctrl/tinycolor";
-import Dialog from "@/components/elements/Dialog";
-import Colors from "@/models/Colors";
 import { IdFactory } from "@/models/IdFactory";
 
 const reset = {
@@ -87,7 +87,7 @@ const Component: NextPage = () => {
 									</button>
 								</td>
 							</tr>
-						)
+						);
 					})}
 				</tbody>
 				<tfoot>
@@ -121,9 +121,8 @@ const Component: NextPage = () => {
 						if (r === "submit") {
 							const colors = resetCount <= 1
 								? [new TinyColor(resetColorBegin)]
-								: Colors.generateGradation(resetColorBegin, resetColorEnd, resetCount)
-								;
-							const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a.toHexString() }));
+								: Colors.generateGradient(resetColorBegin, resetColorEnd, resetCount);
+const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a.toHexString() }));
 							setGroups(settingContext.theme.groups = groups);
 						}
 						setShowResetColor(false);
@@ -171,7 +170,7 @@ const Component: NextPage = () => {
 				</Dialog >
 			)}
 		</>
-	)
+	);
 
 };
 

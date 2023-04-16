@@ -1,8 +1,9 @@
+import { NextPage } from "next";
+
 import DynamicLabel from "@/components/elements/DynamicLabel";
 import Timestamp from "@/components/elements/Timestamp";
-import { DateTime } from "@/models/DateTime";
 import { WorkRangeKind } from "@/models/data/WorkRange";
-import { NextPage } from "next";
+import { DateTime } from "@/models/DateTime";
 
 interface Props {
 	timeRangeKind: WorkRangeKind;
@@ -15,7 +16,7 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 
-	const selectOrClickClassName = props.selectable ? "selectable" : "clickable"
+	const selectOrClickClassName = props.selectable ? "selectable" : "clickable";
 
 	return props.timeRangeKind === "success"
 		? (
@@ -55,7 +56,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					{props.timeRangeKind}
 				</DynamicLabel>
 			</div>
-		)
-}
+		);
+};
 
 export default Component;

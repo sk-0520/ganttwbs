@@ -1,7 +1,8 @@
+import { NextPage } from "next";
+
 import DynamicLabel from "@/components/elements/DynamicLabel";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
-import { NextPage } from "next";
 
 const enum Relations {
 	Unknown = 0,
@@ -49,7 +50,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				}
 			</DynamicLabel>
 		</div>
-	)
-}
+	);
+};
 
 export default Component;

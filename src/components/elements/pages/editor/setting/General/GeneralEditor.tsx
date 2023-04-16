@@ -1,6 +1,7 @@
-import { SettingContext } from "@/models/data/context/SettingContext";
 import { NextPage } from "next";
 import { useContext } from "react";
+
+import { SettingContext } from "@/models/data/context/SettingContext";
 
 
 const Component: NextPage = () => {
