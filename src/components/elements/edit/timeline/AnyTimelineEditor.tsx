@@ -230,7 +230,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleControlDeleteItem() {
-		props.notifyParentCallbacks.notifyDelete(props.currentTimeline);
+		props.timelineStore.removeTimeline(props.currentTimeline);
 	}
 
 	function handleChangeMember(memberId: MemberId): void {
@@ -257,7 +257,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				})
 			}
 		} else if (Settings.maybeTaskTimeline(props.currentTimeline)) {
-			props.notifyParentCallbacks.notifyDelete(props.currentTimeline);
+			props.timelineStore.removeTimeline(props.currentTimeline);
 		} else {
 			throw new Error();
 		}
@@ -310,22 +310,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		// setProgressPercent(progress * 100.0);
 
 		// props.timelineStore.updateTimeline(props.currentTimeline);
-	}
-
-	function handleDeleteChildren(currentTimeline: Timeline) {
-		if (!Settings.maybeGroupTimeline(props.currentTimeline)) {
-			throw new Error();
-		}
-
-		const newChildren = children.filter(a => a.id !== currentTimeline.id);
-		setChildren(newChildren);
-		props.timelineStore.updateTimeline({
-			...props.currentTimeline,
-			children: newChildren,
-		});
-
-		handleUpdateChildrenWorkload();
-		handleUpdateChildrenProgress();
 	}
 
 	function handleClickBeginDate() {
@@ -419,7 +403,6 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const notifyParentCallbacks: NotifyParentCallbacks = {
 		notifyMove: handleUpdateChildrenOrder,
-		notifyDelete: handleDeleteChildren,
 		notifyDragStart: props.notifyParentCallbacks.notifyDragStart,
 	};
 

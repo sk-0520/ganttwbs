@@ -21,6 +21,7 @@ import { DateTime } from "@/models/DateTime";
 import { WorkRange } from "@/models/data/WorkRange";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { Calendars } from "@/models/Calendars";
+import { Arrays } from "@/models/Arrays";
 
 interface Props extends EditProps { }
 
@@ -46,6 +47,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			changedItems: changedItems,
 			workRanges: workRangesCache,
 			updateTimeline: updateTimeline,
+			removeTimeline: removeTimeline,
 		};
 
 		return result;
@@ -108,6 +110,37 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		const store = createTimelineStore(timelineMap, changedItems);
 		setTimelineStore(store);
+	}
+
+	function removeTimeline(timeline: AnyTimeline): void {
+		const groups = Timelines.getParentGroup(timeline, timelineNodes)
+		if (!groups) {
+			return;
+		}
+
+		// データから破棄
+		if (groups.length) {
+			const group = Arrays.last(groups);
+			const newChildren = group.children.filter(a => a.id !== timeline.id);
+			group.children = newChildren;
+		} else {
+			const newTimelineNodes = timelineNodes.filter(a => a.id !== timeline.id);
+			props.editData.setting.timelineNodes = newTimelineNodes;
+			setTimelineNodes(props.editData.setting.timelineNodes)
+		}
+
+		// 前工程から破棄
+		const timelineMap = Timelines.getTimelinesMap(timelineNodes);
+		for (const [_, value] of timelineMap) {
+			if (Settings.maybeTaskTimeline(value)) {
+				if (value.previous.includes(timeline.id)) {
+					value.previous = value.previous.filter(a => a !== timeline.id);
+				}
+			}
+		}
+
+		// 直接置き換えた値はちまちま反映するのではなくリセット
+		updateRelations();
 	}
 
 	function updateRelations() {

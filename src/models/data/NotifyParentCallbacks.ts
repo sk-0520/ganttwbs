@@ -6,6 +6,5 @@ import { GroupTimeline, TaskTimeline, Timeline } from "./Setting";
  */
 export interface NotifyParentCallbacks {
 	notifyMove: (moveUp: boolean, currentTimeline: Timeline) => void;
-	notifyDelete(currentTimeline: Timeline): void;
 	notifyDragStart(event: DragEvent, sourceTimeline: GroupTimeline | TaskTimeline): void;
 }

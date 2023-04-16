@@ -19,4 +19,9 @@ export interface TimelineStore {
 	 * @param timeline
 	 */
 	updateTimeline(timeline: AnyTimeline): void;
+	/**
+	 * タイムラインを破棄。
+	 * @param timeline
+	 */
+	removeTimeline(timeline: AnyTimeline): void;
 }
