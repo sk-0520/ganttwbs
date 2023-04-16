@@ -2,24 +2,26 @@ import { NextPage } from "next";
 
 import { EditProps } from "@/models/data/props/EditProps";
 import { TimelineKind } from "@/models/data/Setting";
-import { TimelineRootProps } from "@/models/data/props/TimelineRootProps";
 import { Timelines } from "@/models/Timelines";
-import { TimeZone } from "@/models/TimeZone";
 import { DateTime } from "@/models/DateTime";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
+import { TimelineStore } from "@/models/store/TimelineStore";
 
-interface Props extends EditProps, TimelineRootProps {
-	timeZone: TimeZone;
+interface Props extends EditProps {
+	calendarInfo: CalendarInfo;
+	timelineStore: TimelineStore;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
 
 	function addTimeline(kind: TimelineKind) {
-		const item = kind === "group" ? Timelines.createNewGroup() : Timelines.createNewTask();
-
-		props.setTimelineRootNodes([
-			...props.timelineRootNodes,
-			item,
-		]);
+		props.timelineStore.addTimeline(
+			props.timelineStore.nodeItems.length ? props.timelineStore.nodeItems[props.timelineStore.nodeItems.length - 1]: null,
+			{
+				position: "next",
+				timelineKind: kind,
+			}
+		);
 	}
 
 	function handleAddNewGroup() {
@@ -56,7 +58,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							<button type='button' onClick={handleAddNewTask}>add new task</button>
 						</li>
 						<li>
-							<button onClick={ev => scrollFromDate(DateTime.today(props.timeZone))}>
+							<button onClick={ev => scrollFromDate(DateTime.today(props.calendarInfo.timeZone))}>
 								けふ
 							</button>
 						</li>

@@ -18,7 +18,7 @@ import { EditData } from "@/models/data/EditData";
 import GeneralEditor from "./General/GeneralEditor";
 import { DateTime } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
-import { IdFactory } from "@/models/IdFacotory";
+import { IdFactory } from "@/models/IdFactory";
 
 const NewLine = "\r\n";
 const ThemeHolidayRegularColor: Color = "#0f0";

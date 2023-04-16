@@ -1,4 +1,4 @@
-{
+module.exports = {
 	"root": true,
 	"env": {
 		"browser": true,
@@ -17,6 +17,7 @@
 		"sourceType": "module"
 	},
 	"plugins": [
+		"unused-imports",
 		"@typescript-eslint"
 	],
 	"rules": {
@@ -24,28 +25,17 @@
 			"error",
 			"double"
 		],
+		/*
 		"no-tabs": [
 			"error",
 			{
-				"allowIndentationTabs": true
+				"allowIndentationTabs": true,
 			}
 		],
-		// "indent": [
-		// 	"error",
-		// 	"tab",
-		// 	{
-		// 		"SwitchCase": 1,
-		// 		"VariableDeclarator": 1,
-		// 		"MemberExpression": 1,
-		// 		"ignoredNodes": ["ConditionalExpression"]
-		// 	}
-		// ],
-		// "max-len": [
-		// 	"warn",
-		// 	{
-		// 		"code": 140
-		// 	}
-		// ],
+		*/
+		"unused-imports/no-unused-imports": [
+			"error"
+		],
 		"react/jsx-indent": [
 			"error",
 			"tab"
@@ -65,4 +55,4 @@
 			}
 		]
 	}
-}
+};

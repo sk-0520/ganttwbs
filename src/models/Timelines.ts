@@ -5,8 +5,7 @@ import { SuccessWorkRange, WorkRange } from "./data/WorkRange";
 import { WorkRanges } from "./WorkRanges";
 import { DateTime } from "./DateTime";
 import { TimeZone } from "./TimeZone";
-import { CalendarRange } from "./data/CalendarRange";
-import { IdFactory } from "./IdFacotory";
+import { IdFactory } from "./IdFactory";
 
 interface Holidays {
 	dates: ReadonlyArray<DateTime>;
@@ -227,11 +226,6 @@ export abstract class Timelines {
 		return null;
 	}
 
-	public static getCalendarRangeDays(calendarRange: Readonly<CalendarRange>): number {
-		const diff = calendarRange.from.diff(calendarRange.to);
-		const days = diff.totalDays + 1;
-		return days;
-	}
 
 	private static convertDatesByHolidayEvents(events: { [key: DateOnly]: HolidayEvent }, timeZone: TimeZone): Array<DateTime> {
 		const result = new Array<DateTime>();
@@ -328,7 +322,15 @@ export abstract class Timelines {
 		let recursiveCount = 0;
 		while (result.size < flatTimelines.length) {
 			if (recursiveMaxCount <= ++recursiveCount) {
-				console.error("デバッグ制限超過")
+				console.error("デバッグ制限超過");
+				for (const timeline of flatTimelines) {
+					if (!result.has(timeline.id)) {
+						result.set(timeline.id, {
+							kind: "recursive-error",
+							timeline: timeline,
+						});
+					}
+				}
 				break;
 			}
 

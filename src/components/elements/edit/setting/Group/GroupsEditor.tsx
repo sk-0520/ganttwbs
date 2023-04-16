@@ -6,9 +6,9 @@ import MemberEditor from "./MemberEditor";
 import { Color, MemberId } from "@/models/data/Setting";
 import { random } from "@ctrl/tinycolor";
 import GroupColorsDialog from "./GroupColorsDialog";
-import Colors from "@/models/data/Colors";
+import Colors from "@/models/Colors";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
-import { IdFactory } from "@/models/IdFacotory";
+import { IdFactory } from "@/models/IdFactory";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);

@@ -1,5 +1,8 @@
+import { DragEvent } from "react";
 import { AnyTimeline, TimelineId } from "../data/Setting";
 import { TimelineItem } from "../data/TimelineItem";
+import { WorkRange } from "../data/WorkRange";
+import { NewTimelineOptions } from "../data/NewTimelineOptions";
 
 export interface TimelineStore {
 
@@ -11,9 +14,37 @@ export interface TimelineStore {
 	/** 変更タイムライン */
 	readonly changedItems: ReadonlyMap<TimelineId, TimelineItem>;
 
+	/** 各工数時間 */
+	readonly workRanges: ReadonlyMap<TimelineId, WorkRange>;
+
+	/**
+	 * タイムライン追加。
+	 * @param timeline 追加するタイムラインの基準タイムライン。
+	 * @param options 追加方法。
+	 */
+	addTimeline(timeline: AnyTimeline | null, options: NewTimelineOptions): void;
 	/**
 	 * タイムラインを更新。
 	 * @param timeline
 	 */
 	updateTimeline(timeline: AnyTimeline): void;
+	/**
+	 * タイムラインをグループ内で上下移動。
+	 * @param moveUp 上へ移動するか。
+	 * @param timeline 対象タイムライン。
+	 */
+	moveTimeline(moveUp: boolean, timeline: AnyTimeline): void;
+	/**
+	 * タイムラインを破棄。
+	 * @param timeline
+	 */
+	removeTimeline(timeline: AnyTimeline): void;
+
+	/**
+	 * D&D処理を開始
+	 * @param event
+	 * @param sourceTimeline
+	 */
+	startDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void;
+
 }

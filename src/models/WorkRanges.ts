@@ -4,7 +4,7 @@ export class WorkRanges {
 
 	/**
 	 * `TimeRange` は `SuccessTimeRange` か。
-	 * 本処理は型ガードではあるものの方チェックは行わない。
+	 * 本処理は型ガードではあるものの型チェックは行わない。
 	 * @param timeRange
 	 * @returns
 	 */
@@ -17,6 +17,7 @@ export class WorkRanges {
 			"no-input",
 			"relation-error",
 			"relation-no-input",
+			"recursive-error",
 			"unknown-error",
 		];
 
