@@ -399,7 +399,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "598b203c-8c04-4122-8d50-06d3ea9e259b",
 							"kind": "task",
-							"subject": "要件A",
+							"subject": "設計-要件A",
 							"comment": "",
 							"previous": [
 								"b65076ae-e2be-40ea-93ea-d36bbfa8bfd2"
@@ -411,7 +411,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "de7e4757-d56f-48ae-b6a1-ddef6c089ddf",
 							"kind": "task",
-							"subject": "要件B",
+							"subject": "設計-要件B",
 							"comment": "",
 							"previous": [
 								"b65076ae-e2be-40ea-93ea-d36bbfa8bfd2"
@@ -423,7 +423,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "cb9b1c74-3727-4b8e-a1ed-4db7c8880d18",
 							"kind": "task",
-							"subject": "要件C",
+							"subject": "設計-要件C",
 							"comment": "",
 							"previous": [
 								"598b203c-8c04-4122-8d50-06d3ea9e259b"
@@ -435,7 +435,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "449915f4-3107-48fc-aa7b-767e87817661",
 							"kind": "task",
-							"subject": "要件D",
+							"subject": "設計-要件D",
 							"comment": "",
 							"previous": [
 								"de7e4757-d56f-48ae-b6a1-ddef6c089ddf"
@@ -447,7 +447,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "45ab760b-5d62-486c-81bf-3b9b2b822a44",
 							"kind": "task",
-							"subject": "要件E",
+							"subject": "設計-要件E",
 							"comment": "",
 							"previous": [
 								"cb9b1c74-3727-4b8e-a1ed-4db7c8880d18"
@@ -459,7 +459,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "9f9b28f4-ff08-45bf-88ed-4be86f9b06b1",
 							"kind": "task",
-							"subject": "要件F",
+							"subject": "設計-要件F",
 							"comment": "",
 							"previous": [
 								"449915f4-3107-48fc-aa7b-767e87817661"
@@ -487,7 +487,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "0627a5c3-0107-4cfc-a69d-756b5b440c72",
 							"kind": "task",
-							"subject": "要件A",
+							"subject": "作業-要件A",
 							"comment": "",
 							"previous": [
 								"c9072f81-bfdb-402b-9c0d-3a55ab79da5f"
@@ -499,7 +499,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "a130c8f6-264b-49cc-a909-2b84d2cd74be",
 							"kind": "task",
-							"subject": "要件B",
+							"subject": "作業-要件B",
 							"comment": "",
 							"previous": [
 								"c9072f81-bfdb-402b-9c0d-3a55ab79da5f"
@@ -511,7 +511,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "9f4b1cef-3da6-4f11-8d99-cdf1b8c5392b",
 							"kind": "task",
-							"subject": "要件C",
+							"subject": "作業-要件C",
 							"comment": "",
 							"previous": [
 								"0627a5c3-0107-4cfc-a69d-756b5b440c72"
@@ -523,7 +523,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "34a3db1d-645a-4136-9216-0e8631e8240e",
 							"kind": "task",
-							"subject": "要件D",
+							"subject": "作業-要件D",
 							"comment": "",
 							"previous": [
 								"a130c8f6-264b-49cc-a909-2b84d2cd74be"
@@ -535,7 +535,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "0b176d7d-7885-4e56-8ec2-a8f932b7c6f2",
 							"kind": "task",
-							"subject": "要件E",
+							"subject": "作業-要件E",
 							"comment": "",
 							"previous": [
 								"9f4b1cef-3da6-4f11-8d99-cdf1b8c5392b"
@@ -547,7 +547,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "d720520b-04c1-4b0e-b062-0f7051f7e0d6",
 							"kind": "task",
-							"subject": "要件F",
+							"subject": "作業-要件F",
 							"comment": "",
 							"previous": [
 								"34a3db1d-645a-4136-9216-0e8631e8240e"
@@ -567,7 +567,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "58e87f04-6467-4c10-b075-00208baa0bf5",
 							"kind": "task",
-							"subject": "要件A",
+							"subject": "準備-要件A",
 							"comment": "",
 							"previous": [
 								"598b203c-8c04-4122-8d50-06d3ea9e259b"
@@ -579,7 +579,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "4b907f1a-25ee-4416-aa36-cebf39dfe7a8",
 							"kind": "task",
-							"subject": "要件B",
+							"subject": "準備-要件B",
 							"comment": "",
 							"previous": [
 								"de7e4757-d56f-48ae-b6a1-ddef6c089ddf"
@@ -591,7 +591,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "59436b31-2de1-405b-a68c-fa2e64e28523",
 							"kind": "task",
-							"subject": "要件C",
+							"subject": "準備-要件C",
 							"comment": "",
 							"previous": [
 								"cb9b1c74-3727-4b8e-a1ed-4db7c8880d18",
@@ -604,7 +604,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "28426e33-25b7-41f4-941d-c5bd5d8815a7",
 							"kind": "task",
-							"subject": "要件D",
+							"subject": "準備-要件D",
 							"comment": "",
 							"previous": [
 								"449915f4-3107-48fc-aa7b-767e87817661",
@@ -617,7 +617,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "c5f5e72e-bd23-433a-b55c-a6ad21b319a6",
 							"kind": "task",
-							"subject": "要件E",
+							"subject": "準備-要件E",
 							"comment": "",
 							"previous": [
 								"45ab760b-5d62-486c-81bf-3b9b2b822a44",
@@ -630,7 +630,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "0ed76a04-f080-47ee-a490-aa8471d029fd",
 							"kind": "task",
-							"subject": "要件F",
+							"subject": "準備-要件F",
 							"comment": "",
 							"previous": [
 								"9f9b28f4-ff08-45bf-88ed-4be86f9b06b1",
@@ -659,7 +659,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "351216b9-1a20-42ba-a325-2fa8b7b04f64",
 							"kind": "task",
-							"subject": "要件A",
+							"subject": "検証-要件A",
 							"comment": "",
 							"previous": [
 								"732ae358-9644-47ae-8afd-8d9d7402fca5",
@@ -672,7 +672,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "1cad2b3e-88e2-4b95-8299-cb658951e5a9",
 							"kind": "task",
-							"subject": "要件B",
+							"subject": "検証-要件B",
 							"comment": "",
 							"previous": [
 								"732ae358-9644-47ae-8afd-8d9d7402fca5",
@@ -685,7 +685,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "774200fb-97fe-497e-82e2-16d8d5f152e1",
 							"kind": "task",
-							"subject": "要件C",
+							"subject": "検証-要件C",
 							"comment": "",
 							"previous": [
 								"351216b9-1a20-42ba-a325-2fa8b7b04f64"
@@ -697,7 +697,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "0e8bdc6c-f310-4a8a-8c15-6f92a6726a72",
 							"kind": "task",
-							"subject": "要件D",
+							"subject": "検証-要件D",
 							"comment": "",
 							"previous": [
 								"1cad2b3e-88e2-4b95-8299-cb658951e5a9"
@@ -709,7 +709,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "47c3a953-65f5-40d0-b2ad-14fa7df546e3",
 							"kind": "task",
-							"subject": "要件E",
+							"subject": "検証-要件E",
 							"comment": "7421f139-fd9a-420b-aa86-781ffbfd8113",
 							"previous": [
 								"774200fb-97fe-497e-82e2-16d8d5f152e1"
@@ -721,7 +721,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 						{
 							"id": "d4dfe6da-e566-4d41-b1a2-0938f4fa869e",
 							"kind": "task",
-							"subject": "要件F",
+							"subject": "検証-要件F",
 							"comment": "",
 							"previous": [
 								"0e8bdc6c-f310-4a8a-8c15-6f92a6726a72"
