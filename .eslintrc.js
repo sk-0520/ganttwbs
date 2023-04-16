@@ -17,6 +17,7 @@ module.exports = {
 		"sourceType": "module"
 	},
 	"plugins": [
+		"no-relative-import-paths",
 		"unused-imports",
 		"@typescript-eslint"
 	],
@@ -33,6 +34,13 @@ module.exports = {
 			}
 		],
 		*/
+		"no-relative-import-paths/no-relative-import-paths": [
+			"error", {
+				"allowSameFolder": true,
+				"rootDir": "src",
+				"prefix": "@"
+			}
+		],
 		"unused-imports/no-unused-imports": [
 			"error"
 		],

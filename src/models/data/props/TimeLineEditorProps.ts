@@ -1,6 +1,6 @@
-import { DraggingTimeline } from "../DraggingTimeline";
-import { BeginDateCallbacks, SelectingBeginDate } from "../BeginDate";
-import { GroupTimeline } from "../Setting";
+import { DraggingTimeline } from "@/models/data/DraggingTimeline";
+import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
+import { GroupTimeline } from "@/models/data/Setting";
 import { TimelineStore } from "@/models/store/TimelineStore";
 
 export interface TimeLineEditorProps<TargetTimeline> {

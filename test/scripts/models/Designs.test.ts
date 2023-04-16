@@ -1,5 +1,5 @@
-import { ValueUnit } from "../../../src/models/data/Design";
-import { Designs } from "../../../src/models/Designs";
+import { ValueUnit } from "@/models/data/Design";
+import { Designs } from "@/models/Designs";
 
 describe("Designs", () => {
 

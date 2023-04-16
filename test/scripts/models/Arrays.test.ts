@@ -1,4 +1,4 @@
-import { Arrays } from "../../../src/models/Arrays";
+import { Arrays } from "@/models/Arrays";
 
 describe("Arrays", () => {
 	test.each([

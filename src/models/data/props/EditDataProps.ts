@@ -1,4 +1,4 @@
-import { EditorData } from "../EditorData";
+import { EditorData } from "@/models/data/EditorData";
 
 export interface EditDataProps {
 	editData: EditorData;

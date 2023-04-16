@@ -1,6 +1,6 @@
-import { TimeZone } from "../../../src/models/TimeZone";
-import { DateTime, Unit } from "../../../src/models/DateTime";
-import { TimeSpan } from "../../../src/models/TimeSpan";
+import { TimeZone } from "@/models/TimeZone";
+import { DateTime, Unit } from "@/models/DateTime";
+import { TimeSpan } from "@/models/TimeSpan";
 
 describe("DateTime", () => {
 

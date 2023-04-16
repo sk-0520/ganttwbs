@@ -1,4 +1,4 @@
-import { DateTime } from "../DateTime";
+import { DateTime } from "@/models/DateTime";
 import { HolidayEvent } from "./Setting";
 
 /**

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { WeekDay } from "../models/data/Setting";
+import { WeekDay } from "@/models/data/Setting";
 
 import ja from "./ja";
 

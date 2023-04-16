@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import { EditorData } from "../EditorData";
+import { EditorData } from "@/models/data/EditorData";
 
 export interface EditContext {
 	data: EditorData;

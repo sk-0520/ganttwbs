@@ -3,7 +3,7 @@ import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { NextPage } from "next";
-import IndexNumber from "../IndexNumber";
+import IndexNumber from "@/components/elements/pages/editor/timeline/IndexNumber";
 import { DragEvent } from "react";
 
 interface Props {

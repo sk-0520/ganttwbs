@@ -1,4 +1,4 @@
-import { DateTime } from "../DateTime";
+import { DateTime } from "@/models/DateTime";
 import { Timeline } from "./Setting";
 
 export type WorkRangeKind =

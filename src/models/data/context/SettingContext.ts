@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Color, DateOnly, MemberId, WeekDay } from "../Setting";
+import { Color, DateOnly, MemberId, WeekDay } from "@/models/data/Setting";
 
 
 export type UUID = string;

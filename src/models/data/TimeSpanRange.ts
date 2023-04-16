@@ -1,4 +1,4 @@
-import { TimeSpan } from "../TimeSpan";
+import { TimeSpan } from "@/models/TimeSpan";
 
 export interface TimeSpanRange {
 	start: TimeSpan;

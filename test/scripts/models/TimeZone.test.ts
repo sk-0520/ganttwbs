@@ -1,5 +1,5 @@
-import { TimeSpan } from "../../../src/models/TimeSpan";
-import { TimeZone } from "../../../src/models/TimeZone";
+import { TimeSpan } from "@/models/TimeSpan";
+import { TimeZone } from "@/models/TimeZone";
 
 
 describe("TimeZone", () => {

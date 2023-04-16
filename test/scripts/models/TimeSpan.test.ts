@@ -1,5 +1,4 @@
-import { TimeSpan } from "../../../src/models/TimeSpan";
-
+import { TimeSpan } from "@/models/TimeSpan";
 
 describe("TimeSpan", () => {
 	test("fromMilliseconds", () => {

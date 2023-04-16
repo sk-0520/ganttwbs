@@ -1,4 +1,4 @@
-import { TimeZone } from "../TimeZone";
+import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "./CalendarRange";
 import { HolidayEventMapValue } from "./HolidayEventMapValue";
 
