@@ -135,11 +135,13 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 	}, [props.dropTimeline]);
 
+	/*
 	useEffect(() => {
 		if (!props.draggingTimeline) {
 			props.timelineStore.updateTimeline(props.currentTimeline);
 		}
 	}, [props.draggingTimeline]);
+	*/
 
 	function handleChangeSubject(s: string) {
 		setSubject(s);

@@ -114,30 +114,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				props.editData.setting.timelineNodes = newTimelineNodes;
 			}
 
-			// 子の処理
-			if (Settings.maybeGroupTimeline(dropTimeline.timeline)) {
-				const sourceIsSelf = dropTimeline.sourceGroupTimeline?.id === dropTimeline.timeline.id;
-				const destinationIsSelf = dropTimeline.destinationGroupTimeline?.id === dropTimeline.timeline.id;
-				console.debug("位置変更!", { sourceIsSelf, destinationIsSelf });
-
-				let newChildren = [...dropTimeline.timeline.children];
-
-				// 自グループ内で完結する場合は移動するだけ
-				if (sourceIsSelf && destinationIsSelf) {
-					Timelines.moveTimelineIndex(newChildren, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
-				} else {
-					// 移動元が自グループのため対象の子を破棄
-					if (sourceIsSelf) {
-						newChildren = newChildren.filter(a => a.id !== dropTimeline!.timeline.id);
-					}
-					// 移動先が自グループのため対象の子を追加
-					if (destinationIsSelf) {
-						newChildren.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
-					}
-				}
-
-				dropTimeline.timeline.children = newChildren;
-			}
+			// 子に通知
 			setDropTimeline(dropTimeline);
 		}
 
