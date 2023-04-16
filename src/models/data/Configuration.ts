@@ -1,5 +1,5 @@
-import { AutoSave } from "./AutoSave";
-import { Design } from "./Design";
+import { AutoSave } from "@/models/data/AutoSave";
+import { Design } from "@/models/data/Design";
 
 export interface Configuration {
 	autoSave: AutoSave;

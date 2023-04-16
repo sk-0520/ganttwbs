@@ -1,5 +1,5 @@
-import Colors from "./Colors";
-import { Color, HolidayKind, TimelineTheme, WeekDay } from "./data/Setting";
+import Colors from "@/models/Colors";
+import { Color, HolidayKind, TimelineTheme, WeekDay } from "@/models/data/Setting";
 
 /**
  * 設定項目の初期値。

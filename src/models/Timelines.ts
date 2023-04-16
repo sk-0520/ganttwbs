@@ -1,12 +1,12 @@
-import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, TimeOnly, Timeline, TimelineId, WeekIndex } from "./data/Setting";
-import { SuccessWorkRange, WorkRange } from "./data/WorkRange";
-import { DateTime } from "./DateTime";
-import { IdFactory } from "./IdFactory";
-import { Settings } from "./Settings";
-import { TimeSpan } from "./TimeSpan";
-import { TimeZone } from "./TimeZone";
-import { Types } from "./Types";
-import { WorkRanges } from "./WorkRanges";
+import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, TimeOnly, Timeline, TimelineId, WeekIndex } from "@/models/data/Setting";
+import { SuccessWorkRange, WorkRange } from "@/models/data/WorkRange";
+import { DateTime } from "@/models/DateTime";
+import { IdFactory } from "@/models/IdFactory";
+import { Settings } from "@/models/Settings";
+import { TimeSpan } from "@/models/TimeSpan";
+import { TimeZone } from "@/models/TimeZone";
+import { Types } from "@/models/Types";
+import { WorkRanges } from "@/models/WorkRanges";
 
 interface Holidays {
 	dates: ReadonlyArray<DateTime>;

@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 
-import { MemberId, TimelineId } from "./data/Setting";
+import { MemberId, TimelineId } from "@/models/data/Setting";
 
 /**
  * 何らかのID生成マシーン。

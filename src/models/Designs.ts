@@ -1,4 +1,4 @@
-import { isValueUnit, ValueUnit } from "./data/Design";
+import { isValueUnit, ValueUnit } from "@/models/data/Design";
 
 // セレクタとか難しい概念は知らん
 

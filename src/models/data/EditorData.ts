@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { SettingSchema } from "./Setting";
+import { SettingSchema } from "@/models/data/Setting";
 
 export const EditorDataSchema = z.object({
 	fileName: z.string(),

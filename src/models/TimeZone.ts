@@ -1,6 +1,6 @@
-import { ParseResult, ResultFactory } from "./data/Result";
-import { Strings } from "./Strings";
-import { TimeSpan } from "./TimeSpan";
+import { ParseResult, ResultFactory } from "@/models/data/Result";
+import { Strings } from "@/models/Strings";
+import { TimeSpan } from "@/models/TimeSpan";
 
 type TimeZoneParseResult = ParseResult<TimeZone, Error>;
 

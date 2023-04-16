@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 
+import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
@@ -9,7 +10,6 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { IdFactory } from "@/models/IdFactory";
 import { TimelineStore } from "@/models/store/TimelineStore";
 
-import AnyTimelineEditor from "./AnyTimelineEditor";
 
 interface Props extends EditProps {
 	draggingTimeline: DraggingTimeline | null;

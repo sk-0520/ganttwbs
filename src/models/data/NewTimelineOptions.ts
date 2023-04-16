@@ -1,4 +1,4 @@
-import { TimelineKind } from "./Setting";
+import { TimelineKind } from "@/models/data/Setting";
 
 export interface NewTimelineOptions {
 	timelineKind: TimelineKind;

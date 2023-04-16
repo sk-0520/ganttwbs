@@ -1,6 +1,6 @@
+import { TaskTimeline, Timeline, TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 
-import { TaskTimeline, Timeline, TimelineId } from "./Setting";
 
 export interface SelectingBeginDate {
 	timeline: TaskTimeline;

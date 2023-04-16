@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 
+import ja from "@/locales/ja";
 import { WeekDay } from "@/models/data/Setting";
 
-import ja from "./ja";
 
 export interface Locale {
 	/** 言語名 */

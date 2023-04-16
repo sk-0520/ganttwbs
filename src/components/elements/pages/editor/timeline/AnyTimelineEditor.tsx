@@ -1,6 +1,15 @@
 import { NextPage } from "next";
 import { useState, useEffect, DragEvent } from "react";
 
+import ControlsCell from "@/components/elements/pages/editor/timeline/cell/ControlsCell";
+import IdCell from "@/components/elements/pages/editor/timeline/cell/IdCell";
+import ProgressCell from "@/components/elements/pages/editor/timeline/cell/ProgressCell";
+import RelationCell from "@/components/elements/pages/editor/timeline/cell/RelationCell";
+import ResourceCell from "@/components/elements/pages/editor/timeline/cell/ResourceCell";
+import SubjectCell from "@/components/elements/pages/editor/timeline/cell/SubjectCell";
+import TimelineHeaderRow from "@/components/elements/pages/editor/timeline/cell/TimelineHeaderRow";
+import TimeRangeCells from "@/components/elements/pages/editor/timeline/cell/TimeRangeCells";
+import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/WorkloadCell";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -15,15 +24,6 @@ import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
 
-import ControlsCell from "./cell/ControlsCell";
-import IdCell from "./cell/IdCell";
-import ProgressCell from "./cell/ProgressCell";
-import RelationCell from "./cell/RelationCell";
-import ResourceCell from "./cell/ResourceCell";
-import SubjectCell from "./cell/SubjectCell";
-import TimelineHeaderRow from "./cell/TimelineHeaderRow";
-import TimeRangeCells from "./cell/TimeRangeCells";
-import WorkloadCell from "./cell/WorkloadCell";
 
 
 interface Props extends EditProps {

@@ -1,4 +1,4 @@
-import { ParseResult, ResultFactory } from "./data/Result";
+import { ParseResult, ResultFactory } from "@/models/data/Result";
 
 type TimeSpanParseResult = ParseResult<TimeSpan, Error>;
 

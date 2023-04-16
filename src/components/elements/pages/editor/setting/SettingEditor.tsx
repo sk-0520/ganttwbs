@@ -2,6 +2,14 @@ import { NextPage } from "next";
 import { FormEvent } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
+import CalendarHolidaySettingEditor from "@/components/elements/pages/editor/setting/Calendar/CalendarHolidaySettingEditor";
+import CalendarRangeSettingEditor from "@/components/elements/pages/editor/setting/Calendar/CalendarRangeSettingEditor";
+import CalendarWeekSettingEditor from "@/components/elements/pages/editor/setting/Calendar/CalendarWeekSettingEditor";
+import GeneralEditor from "@/components/elements/pages/editor/setting/General/GeneralEditor";
+import GroupsEditor from "@/components/elements/pages/editor/setting/Group/GroupsEditor";
+import ThemeCalendarSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeCalendarSettingEditor";
+import ThemeGroupSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeGroupSettingEditor";
+import ThemeTimelineSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeTimelineSettingEditor";
 import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { EditorData } from "@/models/data/EditorData";
 import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
@@ -11,14 +19,6 @@ import { Storage } from "@/models/Storage";
 import { Strings } from "@/models/Strings";
 import { TimeZone } from "@/models/TimeZone";
 
-import CalendarHolidaySettingEditor from "./Calendar/CalendarHolidaySettingEditor";
-import CalendarRangeSettingEditor from "./Calendar/CalendarRangeSettingEditor";
-import CalendarWeekSettingEditor from "./Calendar/CalendarWeekSettingEditor";
-import GeneralEditor from "./General/GeneralEditor";
-import GroupsEditor from "./Group/GroupsEditor";
-import ThemeCalendarSettingEditor from "./Theme/ThemeCalendarSettingEditor";
-import ThemeGroupSettingEditor from "./Theme/ThemeGroupSettingEditor";
-import ThemeTimelineSettingEditor from "./Theme/ThemeTimelineSettingEditor";
 
 
 

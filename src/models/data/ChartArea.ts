@@ -1,5 +1,5 @@
-import { ChartSize } from "./ChartSize";
-import { TimeSpanRange } from "./TimeSpanRange";
+import { ChartSize } from "@/models/data/ChartSize";
+import { TimeSpanRange } from "@/models/data/TimeSpanRange";
 
 /**
  * チャートの基準領域。

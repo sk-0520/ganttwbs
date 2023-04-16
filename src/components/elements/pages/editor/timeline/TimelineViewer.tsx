@@ -1,6 +1,8 @@
 import { NextPage } from "next";
 import { ReactNode } from "react";
 
+import ConnectorTimeline from "@/components/elements/pages/editor/timeline/ConnectorTimeline";
+import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
 import { Calendars } from "@/models/Calendars";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { ChartSize } from "@/models/data/ChartSize";
@@ -11,8 +13,6 @@ import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { TimeSpan } from "@/models/TimeSpan";
 
-import ConnectorTimeline from "./ConnectorTimeline";
-import GanttChartTimeline from "./GanttChartTimeline";
 
 
 interface Props extends EditProps {

@@ -1,7 +1,7 @@
-import { TimeZone } from "@/models/TimeZone";
 
-import { CalendarRange } from "./CalendarRange";
-import { HolidayEventMapValue } from "./HolidayEventMapValue";
+import { CalendarRange } from "@/models/data/CalendarRange";
+import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
+import { TimeZone } from "@/models/TimeZone";
 
 /**
  * カレンダー情報。

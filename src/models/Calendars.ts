@@ -1,9 +1,9 @@
-import { CalendarInfo } from "./data/CalendarInfo";
-import { CalendarRange } from "./data/CalendarRange";
-import { HolidayEventMapValue } from "./data/HolidayEventMapValue";
-import { Calendar, Holiday } from "./data/Setting";
-import { DateTime } from "./DateTime";
-import { TimeZone } from "./TimeZone";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
+import { CalendarRange } from "@/models/data/CalendarRange";
+import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
+import { Calendar, Holiday } from "@/models/data/Setting";
+import { DateTime } from "@/models/DateTime";
+import { TimeZone } from "@/models/TimeZone";
 
 export abstract class Calendars {
 

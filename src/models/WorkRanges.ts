@@ -1,4 +1,4 @@
-import { TotalSuccessWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "./data/WorkRange";
+import { TotalSuccessWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
 
 export class WorkRanges {
 

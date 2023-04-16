@@ -1,14 +1,14 @@
 import { NextPage } from "next";
 import { ReactNode, useEffect, useState } from "react";
 
+import GroupChart from "@/components/elements/pages/editor/timeline/chart/GroupChart";
+import TaskChart from "@/components/elements/pages/editor/timeline/chart/TaskChart";
 import { Charts } from "@/models/Charts";
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
 import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { Settings } from "@/models/Settings";
 import { WorkRanges } from "@/models/WorkRanges";
 
-import GroupChart from "./chart/GroupChart";
-import TaskChart from "./chart/TaskChart";
 
 interface Props extends GanttChartTimelineProps { }
 

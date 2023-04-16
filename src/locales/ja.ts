@@ -1,4 +1,4 @@
-import { Locale } from "./locale";
+import { Locale } from "@/locales/locale";
 
 const locale: Locale = {
 	language: "日本語",

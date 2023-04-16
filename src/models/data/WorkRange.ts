@@ -1,6 +1,6 @@
+import { Timeline } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 
-import { Timeline } from "./Setting";
 
 export type WorkRangeKind =
 	"success"

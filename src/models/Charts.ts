@@ -1,13 +1,13 @@
-import { CellBox } from "./data/CellBox";
-import { ChartArea } from "./data/ChartArea";
-import { ChartSize } from "./data/ChartSize";
-import { MemberMapValue } from "./data/MemberMapValue";
-import { GroupTimeline, MemberId, TaskTimeline, Theme, TimelineId } from "./data/Setting";
-import { TimeSpanRange } from "./data/TimeSpanRange";
-import { SuccessWorkRange } from "./data/WorkRange";
-import { DateTime } from "./DateTime";
-import { Timelines } from "./Timelines";
-import { TimeSpan } from "./TimeSpan";
+import { CellBox } from "@/models/data/CellBox";
+import { ChartArea } from "@/models/data/ChartArea";
+import { ChartSize } from "@/models/data/ChartSize";
+import { MemberMapValue } from "@/models/data/MemberMapValue";
+import { GroupTimeline, MemberId, TaskTimeline, Theme, TimelineId } from "@/models/data/Setting";
+import { TimeSpanRange } from "@/models/data/TimeSpanRange";
+import { SuccessWorkRange } from "@/models/data/WorkRange";
+import { DateTime } from "@/models/DateTime";
+import { Timelines } from "@/models/Timelines";
+import { TimeSpan } from "@/models/TimeSpan";
 
 export abstract class Charts {
 

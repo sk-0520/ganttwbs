@@ -1,8 +1,8 @@
 import { cdate } from "cdate";
 
-import { ParseResult, ResultFactory } from "./data/Result";
-import { TimeSpan } from "./TimeSpan";
-import { TimeZone } from "./TimeZone";
+import { ParseResult, ResultFactory } from "@/models/data/Result";
+import { TimeSpan } from "@/models/TimeSpan";
+import { TimeZone } from "@/models/TimeZone";
 
 export type Unit = "second" | "minute" | "hour" | "day" | "month" | "year";
 

@@ -1,6 +1,6 @@
 import { DragEvent } from "react";
 
-import { Timeline } from "./Setting";
+import { Timeline } from "@/models/data/Setting";
 
 export interface DraggingTimeline {
 	sourceTimeline: Timeline;

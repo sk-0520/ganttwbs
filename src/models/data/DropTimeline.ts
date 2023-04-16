@@ -1,4 +1,4 @@
-import { GroupTimeline, TaskTimeline } from "./Setting";
+import { GroupTimeline, TaskTimeline } from "@/models/data/Setting";
 
 export interface DropTimeline {
 	/**

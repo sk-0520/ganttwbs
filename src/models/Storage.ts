@@ -1,4 +1,4 @@
-import { EditorData } from "./data/EditorData";
+import { EditorData } from "@/models/data/EditorData";
 
 export abstract class Storage {
 

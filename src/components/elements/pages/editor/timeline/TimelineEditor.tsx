@@ -3,6 +3,10 @@ import { NextPage } from "next";
 import { DragEvent } from "react";
 import { ReactNode, useEffect, useState } from "react";
 
+import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
+import DaysHeader from "@/components/elements/pages/editor/timeline/DaysHeader";
+import TimelineItems from "@/components/elements/pages/editor/timeline/TimelineItems";
+import TimelineViewer from "@/components/elements/pages/editor/timeline/TimelineViewer";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import Colors from "@/models/Colors";
@@ -21,10 +25,6 @@ import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 
-import CrossHeader from "./CrossHeader";
-import DaysHeader from "./DaysHeader";
-import TimelineItems from "./TimelineItems";
-import TimelineViewer from "./TimelineViewer";
 
 interface Props extends EditProps { }
 

@@ -1,4 +1,4 @@
-import { GroupTimeline, TaskTimeline, Timeline, WeekDay, WeekIndex } from "./data/Setting";
+import { GroupTimeline, TaskTimeline, Timeline, WeekDay, WeekIndex } from "@/models/data/Setting";
 
 export abstract class Settings {
 
