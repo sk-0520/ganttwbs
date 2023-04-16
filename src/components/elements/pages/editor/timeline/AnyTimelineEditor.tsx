@@ -105,7 +105,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				throw new Error();
 			}
 		}
-	}, [props.selectingBeginDate]);
+	}, [props.currentTimeline, props.selectingBeginDate]);
 
 	useEffect(() => {
 		if (props.dropTimeline && Settings.maybeGroupTimeline(props.currentTimeline)) {
