@@ -86,19 +86,21 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		if (!dropTimeline.sourceGroupTimeline && !dropTimeline.destinationGroupTimeline) {
 			// 最上位完結
-			Timelines.moveTimelineIndex(timelineNodes, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
-			setTimelineNodes(timelineNodes);
+			const newTimelineNodes = [...timelineNodes];
+			Timelines.moveTimelineIndex(newTimelineNodes, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
+			setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
 		} else {
 			// 最上位に対してあれこれ
 			if (!dropTimeline.sourceGroupTimeline) {
 				// 移動元が親なので破棄
-				const nextTimelines = timelineNodes.filter(a => a.id !== dropTimeline.timeline.id);
-				setTimelineNodes(nextTimelines);
+				const newTimelineNodes = timelineNodes.filter(a => a.id !== dropTimeline.timeline.id);
+				setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
 			}
 			if (!dropTimeline.destinationGroupTimeline) {
 				// 移動先が親なので追加
-				timelineNodes.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
-				setTimelineNodes(timelineNodes);
+				const newTimelineNodes = [...timelineNodes];
+				newTimelineNodes.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
+				setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
 			}
 			// 子に通知
 			setDropTimeline(dropTimeline);
@@ -293,7 +295,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		} else {
 			const newChildren = [...timelineNodes];
 			Timelines.moveTimelineOrder(newChildren, moveUp, timeline);
-			setTimelineNodes(newChildren);
+			setTimelineNodes(props.editData.setting.timelineNodes = newChildren);
 		}
 
 		// 直接置き換えた値はちまちま反映するのではなくリセット
@@ -313,8 +315,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			group.children = newChildren;
 		} else {
 			const newTimelineNodes = timelineNodes.filter(a => a.id !== timeline.id);
-			props.editData.setting.timelineNodes = newTimelineNodes;
-			setTimelineNodes(props.editData.setting.timelineNodes)
+			setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
 		}
 
 		// 前工程から破棄
