@@ -1,9 +1,13 @@
 import { cdate } from "cdate";
 
+import { ParseResult, ResultFactory } from "./data/Result";
 import { TimeSpan } from "./TimeSpan";
 import { TimeZone } from "./TimeZone";
 
 export type Unit = "second" | "minute" | "hour" | "day" | "month" | "year";
+
+type DateTimeParseResult = ParseResult<DateTime, Error>;
+
 
 /**
  * 日付のラッパー。
@@ -65,7 +69,7 @@ export class DateTime {
 
 	//#region property
 
-	private static _parse(input: string | Date | number | undefined, timeZone: TimeZone): DateTime {
+	private static parseCore(input: string | Date | number | undefined, timeZone: TimeZone): DateTimeParseResult {
 		let create = cdate;
 		if (timeZone.hasName) {
 			create = cdate().tz(timeZone.serialize()).cdateFn();
@@ -74,8 +78,12 @@ export class DateTime {
 		}
 
 		const date = create(input);
+		const raw = date as object;
+		if ("t" in raw && isNaN(raw["t"] as number)) {
+			return ResultFactory.error(new Error(String(input)));
+		}
 
-		return new DateTime(date, timeZone);
+		return ResultFactory.success(new DateTime(date, timeZone));
 	}
 
 	/**
@@ -84,7 +92,22 @@ export class DateTime {
 	 * @returns
 	 */
 	public static today(timeZone: TimeZone): DateTime {
-		return this._parse(undefined, timeZone);
+		const result = this.parseCore(undefined, timeZone);
+		if (result.success) {
+			return result.value;
+		}
+
+		throw new Error("こない");
+	}
+
+	/**
+	 * パース。
+	 * @param input
+	 * @param timeZone
+	 * @returns
+	 */
+	public static tryParse(input: string, timeZone: TimeZone): DateTime | null {
+		return ResultFactory.parseErrorIsReturnNull(input, s => this.parseCore(s, timeZone));
 	}
 
 	/**
@@ -94,7 +117,7 @@ export class DateTime {
 	 * @returns
 	 */
 	public static parse(input: string, timeZone: TimeZone): DateTime {
-		return DateTime._parse(input, timeZone);
+		return ResultFactory.parseErrorIsThrow(input, s => this.parseCore(s, timeZone));
 	}
 
 	/**
@@ -104,7 +127,7 @@ export class DateTime {
 	 * @returns
 	 */
 	public static convert(input: Date | number, timeZone: TimeZone): DateTime {
-		return DateTime._parse(input, timeZone);
+		return ResultFactory.parseErrorIsThrow("", _ => this.parseCore(input, timeZone));
 	}
 
 	/**
@@ -205,7 +228,7 @@ export class DateTime {
 		const pattern = Array.from(map.keys())
 			.sort((a, b) => b.length - a.length)
 			.join("|");
-return format.replace(
+		return format.replace(
 			new RegExp("(" + pattern + ")", "g"),
 			m => map.get(m) ?? m
 		);

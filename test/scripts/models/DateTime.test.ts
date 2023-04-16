@@ -13,6 +13,12 @@ describe("DateTime", () => {
 		}
 	});
 
+	test.each([
+		["", TimeZone.utc],
+	])("parse", (input: string, timeZone: TimeZone) => {
+		expect(() => DateTime.parse(input, timeZone)).toThrowError();
+	});
+
 	test("parse YYYY-MM-DD", () => {
 		for (let i = 0; i < 20; i++) {
 			const actual = DateTime.parse("2000-01-01", TimeZone.create(TimeSpan.fromHours(i)));
