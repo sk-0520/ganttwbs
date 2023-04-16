@@ -1,5 +1,5 @@
 import Dialog from "@/components/elements/Dialog";
-import Colors from "@/models/data/Colors";
+import Colors from "@/models/Colors";
 import { Color, MemberId } from "@/models/data/Setting";
 import { GroupSetting } from "@/models/data/context/SettingContext";
 import { TinyColor, random } from "@ctrl/tinycolor";

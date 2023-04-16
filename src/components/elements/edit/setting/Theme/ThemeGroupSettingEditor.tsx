@@ -6,7 +6,7 @@ import { Color } from "@/models/data/Setting";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { TinyColor, random } from "@ctrl/tinycolor";
 import Dialog from "@/components/elements/Dialog";
-import Colors from "@/models/data/Colors";
+import Colors from "@/models/Colors";
 import { IdFactory } from "@/models/IdFacotory";
 
 const reset = {

@@ -14,7 +14,7 @@ import { Settings } from "@/models/Settings";
 import { TinyColor } from "@ctrl/tinycolor";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { TimelineItem } from "@/models/data/TimelineItem";
-import Colors from "@/models/data/Colors";
+import Colors from "@/models/Colors";
 import { TimeZone } from "@/models/TimeZone";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { DateTime } from "@/models/DateTime";
@@ -28,10 +28,11 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [timelineNodes, setTimelineNodes] = useState(props.editData.setting.timelineNodes);
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map(), new Map()));
 
-	const timeZone = TimeZone.parse(props.editData.setting.timeZone)!;
-	if (!timeZone) {
-		throw new Error("timeZone");
-	}
+	const timeZone = TimeZone.parse(props.editData.setting.timeZone);
+
+	const calendar:Calendar = {
+
+	};
 
 	const calendarRange: CalendarRange = {
 		from: DateTime.parse(props.editData.setting.calendar.range.from, timeZone),

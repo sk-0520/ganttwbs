@@ -1,4 +1,4 @@
-import Colors from "./data/Colors";
+import Colors from "./Colors";
 import { Color, HolidayKind, TimelineTheme, WeekDay } from "./data/Setting";
 
 /**
