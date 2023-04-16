@@ -3,7 +3,6 @@ import { EditProps } from "./EditProps";
 import { MemberMapValue } from "../MemberMapValue";
 import { ChartSize } from "../ChartSize";
 import { TimelineStore } from "@/models/store/TimelineStore";
-import { CalendarRange } from "../CalendarRange";
 import { CalendarInfo } from "../CalendarInfo";
 
 export interface GanttChartTimelineProps extends EditProps {

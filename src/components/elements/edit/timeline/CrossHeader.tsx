@@ -4,7 +4,6 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { TimelineKind } from "@/models/data/Setting";
 import { TimelineRootProps } from "@/models/data/props/TimelineRootProps";
 import { Timelines } from "@/models/Timelines";
-import { TimeZone } from "@/models/TimeZone";
 import { DateTime } from "@/models/DateTime";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 

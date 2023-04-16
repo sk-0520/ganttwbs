@@ -2,7 +2,6 @@ import { Charts } from "@/models/Charts";
 import { Settings } from "@/models/Settings";
 import { WorkRanges } from "@/models/WorkRanges";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { CalendarRange } from "@/models/data/CalendarRange";
 import { ChartSize } from "@/models/data/ChartSize";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { MemberId, TaskTimeline, TimelineId } from "@/models/data/Setting";

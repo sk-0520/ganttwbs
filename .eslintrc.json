@@ -17,6 +17,7 @@
 		"sourceType": "module"
 	},
 	"plugins": [
+		"unused-imports",
 		"@typescript-eslint"
 	],
 	"rules": {
@@ -29,6 +30,9 @@
 			{
 				"allowIndentationTabs": true
 			}
+		],
+		"unused-imports/no-unused-imports": [
+			"error"
 		],
 		// "indent": [
 		// 	"error",

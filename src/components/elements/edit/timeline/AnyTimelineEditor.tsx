@@ -22,8 +22,6 @@ import TimeRangeCells from "./cell/TimeRangeCells";
 import WorkloadCell from "./cell/WorkloadCell";
 import { DropTimeline } from "@/models/data/DropTimeline";
 import { DateTime } from "@/models/DateTime";
-import { TimeZone } from "@/models/TimeZone";
-import { CalendarRange } from "@/models/data/CalendarRange";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 

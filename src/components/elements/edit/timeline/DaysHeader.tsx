@@ -1,14 +1,12 @@
 import { NextPage } from "next";
 
 import { useLocale } from "@/locales/locale";
-import { Holiday, HolidayEvent, Theme } from "@/models/data/Setting";
+import { Holiday, Theme } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { EditProps } from "@/models/data/props/EditProps";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimelineStore } from "@/models/store/TimelineStore";
-import { TimeZone } from "@/models/TimeZone";
-import { CalendarRange } from "@/models/data/CalendarRange";
 import { DateTime } from "@/models/DateTime";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { Calendars } from "@/models/Calendars";

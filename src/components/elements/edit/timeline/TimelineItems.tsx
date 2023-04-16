@@ -1,22 +1,16 @@
 import { NextPage } from "next";
-import { DragEvent, useState } from "react";
 
 import { Timelines } from "@/models/Timelines";
 
-import { GroupTimeline, TaskTimeline, Timeline, TimelineId, TimelineKind } from "@/models/data/Setting";
+import { GroupTimeline, TaskTimeline, Timeline, TimelineKind } from "@/models/data/Setting";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
-import { Settings } from "@/models/Settings";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
 import { EditProps } from "@/models/data/props/EditProps";
 import { RefreshedChildrenCallbacks } from "@/models/data/RefreshedChildrenCallbacks";
-import { NotifyParentCallbacks } from "@/models/data/NotifyParentCallbacks";
 import { TimelineRootProps } from "@/models/data/props/TimelineRootProps";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import AnyTimelineEditor from "./AnyTimelineEditor";
-import { DateTime } from "@/models/DateTime";
-import { TimeZone } from "@/models/TimeZone";
-import { CalendarRange } from "@/models/data/CalendarRange";
 import { IdFactory } from "@/models/IdFactory";
 import { Arrays } from "@/models/Arrays";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
