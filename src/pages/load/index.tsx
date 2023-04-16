@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 
 import Layout from "@/components/layout/Layout";
 import { Goto } from "@/models/Goto";
-import { EditData } from "@/models/data/EditData";
+import { EditorData } from "@/models/data/EditorData";
 import { SettingSchema } from "@/models/data/Setting";
 
 interface Input {
@@ -53,9 +53,9 @@ async function onSubmit(data: Input, router: NextRouter) {
 	console.debug(setting);
 	console.debug(fileName);
 
-	const editData: EditData = {
+	const editData: EditorData = {
 		fileName: fileName,
 		setting: setting,
 	};
-	Goto.edit(editData, router);
+	Goto.editor(editData, router);
 }

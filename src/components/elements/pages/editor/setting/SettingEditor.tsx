@@ -14,7 +14,7 @@ import ThemeTimelineSettingEditor from "./Theme/ThemeTimelineSettingEditor";
 import ThemeGroupSettingEditor from "./Theme/ThemeGroupSettingEditor";
 import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
-import { EditData } from "@/models/data/EditData";
+import { EditorData } from "@/models/data/EditorData";
 import GeneralEditor from "./General/GeneralEditor";
 import { DateTime } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
@@ -26,7 +26,7 @@ const ThemeHolidayEventHolidayColor: Color = "#0f0";
 const ThemeHolidayEventSpecialColor: Color = "#0f0";
 
 interface Props {
-	editData: EditData;
+	editData: EditorData;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
@@ -40,7 +40,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		props.editData.setting = fromContext(props.editData.setting, setting);
 		console.debug(setting);
-		Storage.saveEditData(props.editData);
+		Storage.saveEditorData(props.editData);
 
 		window.location.reload();
 	}

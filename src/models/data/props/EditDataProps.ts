@@ -1,5 +1,5 @@
-import { EditData } from "../EditData";
+import { EditorData } from "../EditorData";
 
 export interface EditDataProps {
-	editData: EditData;
+	editData: EditorData;
 }

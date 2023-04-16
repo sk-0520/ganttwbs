@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 
 import Layout from "@/components/layout/Layout";
 import { Goto } from "@/models/Goto";
-import { EditData } from "@/models/data/EditData";
+import { EditorData } from "@/models/data/EditorData";
 import { DateOnly, Member, Setting } from "@/models/data/Setting";
 import { TimeZone } from "@/models/TimeZone";
 import { DateTime } from "@/models/DateTime";
@@ -140,11 +140,11 @@ function onSubmit(data: Input, timeZone: TimeZone, router: NextRouter) {
 	console.debug(setting);
 	console.debug(fileName);
 
-	const editData: EditData = {
+	const editData: EditorData = {
 		fileName: fileName,
 		setting: setting,
 	};
-	Goto.edit(editData, router);
+	Goto.editor(editData, router);
 }
 
 function createEmptySetting(data: Input, timeZone: TimeZone): Setting {

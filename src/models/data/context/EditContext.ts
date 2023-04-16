@@ -1,9 +1,9 @@
 import { createContext } from "react";
 
-import { EditData } from "../EditData";
+import { EditorData } from "../EditorData";
 
 export interface EditContext {
-	data: EditData;
+	data: EditorData;
 
 	autoSave: {
 		isEnabled: boolean;
@@ -12,7 +12,7 @@ export interface EditContext {
 }
 
 export class EditContextImpl {
-	public data: EditData;
+	public data: EditorData;
 
 	public autoSave = {
 		isEnabled: false,
@@ -21,8 +21,8 @@ export class EditContextImpl {
 
 	public debug = 0;
 
-	constructor(data: EditData) {
+	constructor(data: EditorData) {
 		this.data = data;
 	}
 }
-export const EditContext = createContext<EditContext>(new EditContextImpl({} as EditData));
+export const EditContext = createContext<EditContext>(new EditContextImpl({} as EditorData));

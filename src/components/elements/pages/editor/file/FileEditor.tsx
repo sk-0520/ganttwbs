@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 
 import Link from "next/link";
 import { Configuration } from "@/models/data/Configuration";
-import { EditData } from "@/models/data/EditData";
+import { EditorData } from "@/models/data/EditorData";
 import { TimeSpan } from "@/models/TimeSpan";
 
 interface Input {
@@ -15,7 +15,7 @@ interface Input {
 
 interface Props {
 	configuration: Configuration;
-	editData: EditData;
+	editData: EditorData;
 }
 
 const Component: NextPage<Props> = (props: Props) => {

@@ -1,13 +1,13 @@
 import { NextRouter } from "next/router";
 
 import { Storage } from "@/models/Storage";
-import { EditData } from "@/models/data/EditData";
+import { EditorData } from "@/models/data/EditorData";
 
 export abstract class Goto {
 
-	public static edit(editData: EditData, router: NextRouter): Promise<boolean> {
-		Storage.saveEditData(editData);
-		return router.push("/edit");
+	public static editor(editData: EditorData, router: NextRouter): Promise<boolean> {
+		Storage.saveEditorData(editData);
+		return router.push("/editor");
 	}
 
 }

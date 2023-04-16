@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { SettingSchema } from "./Setting";
 
-export const EditDataSchema = z.object({
+export const EditorDataSchema = z.object({
 	fileName: z.string(),
 	setting: SettingSchema,
 });
 
-export type EditData = z.infer<typeof EditDataSchema>;
+export type EditorData = z.infer<typeof EditorDataSchema>;

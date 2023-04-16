@@ -3,12 +3,12 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
-import FileEditor from "@/components/elements/edit/file/FileEditor";
-import SettingEditor from "@/components/elements/edit/setting/SettingEditor";
-import TimelineEditor from "@/components/elements/edit/timeline/TimelineEditor";
+import FileEditor from "@/components/elements/pages/editor/file/FileEditor";
+import SettingEditor from "@/components/elements/pages/editor/setting/SettingEditor";
+import TimelineEditor from "@/components/elements/pages/editor/timeline/TimelineEditor";
 import Layout from "@/components/layout/Layout";
 import { Storage } from "@/models/Storage";
-import { EditData } from "@/models/data/EditData";
+import { EditorData } from "@/models/data/EditorData";
 import { Configuration } from "@/models/data/Configuration";
 import { TimeSpan } from "@/models/TimeSpan";
 
@@ -18,10 +18,10 @@ const Page: NextPage = () => {
 
 	const router = useRouter();
 	const [configuration] = useState(createConfiguration());
-	const [editData, setEditData] = useState<EditData | null>(null);
+	const [editData, setEditData] = useState<EditorData | null>(null);
 
 	useEffect(() => {
-		const editData = Storage.loadEditData();
+		const editData = Storage.loadEditorData();
 		if (!editData) {
 			router.push("/");
 			return;
@@ -30,7 +30,7 @@ const Page: NextPage = () => {
 	}, [router]);
 
 	return (
-		<Layout mode='application' layoutId='edit'
+		<Layout mode='application' layoutId='editor'
 			title={editData ? editData.fileName + " 編集" : "編集"}
 		>
 			<>

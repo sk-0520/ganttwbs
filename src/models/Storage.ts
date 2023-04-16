@@ -1,20 +1,20 @@
-import { EditData } from "./data/EditData";
+import { EditorData } from "./data/EditorData";
 
 export abstract class Storage {
 
-	public static saveEditData(editData: EditData) {
-		const sessionData = JSON.stringify(editData);
-		sessionStorage.setItem("data", sessionData);
+	public static saveEditorData(editorData: EditorData) {
+		const sessionData = JSON.stringify(editorData);
+		sessionStorage.setItem("editor", sessionData);
 	}
 
-	public static loadEditData(): EditData | null {
-		const sessionData = sessionStorage.getItem("data");
+	public static loadEditorData(): EditorData | null {
+		const sessionData = sessionStorage.getItem("editor");
 		if (!sessionData) {
 			return null;
 		}
 		const settingObject = JSON.parse(sessionData);
 		//TODO: 型チェック+バージョン確認 -> 読み込み処理できちんとやってから実装対応する
-		const data = settingObject as EditData;
+		const data = settingObject as EditorData;
 		return data;
 	}
 
