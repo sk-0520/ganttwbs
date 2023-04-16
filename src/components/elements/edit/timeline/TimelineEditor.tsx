@@ -356,7 +356,10 @@ const Component: NextPage<Props> = (props: Props) => {
 			const newChildren = [...group.children];
 			Timelines.moveTimelineOrder(newChildren, moveUp, timeline);
 			group.children = newChildren;
-			updateRelations();
+			timelineStore.updateTimeline({
+				...group,
+				children: newChildren,
+			});
 		} else {
 			const newChildren = [...timelineNodes];
 			Timelines.moveTimelineOrder(newChildren, moveUp, timeline);

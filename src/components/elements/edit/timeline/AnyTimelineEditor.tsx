@@ -63,6 +63,8 @@ const Component: NextPage<Props> = (props: Props) => {
 				const progress = Timelines.sumProgressByGroup(timelineItem.timeline);
 				setProgress(progress);
 
+				setChildren(timelineItem.timeline.children);
+
 			} else if (Settings.maybeTaskTimeline(timelineItem.timeline)) {
 				const workload = TimeSpan.parse(timelineItem.timeline.workload).totalDays;
 				setWorkload(workload);
