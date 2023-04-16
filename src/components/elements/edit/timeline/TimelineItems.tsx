@@ -21,32 +21,6 @@ interface Props extends EditProps {
 }
 
 const Component: NextPage<Props> = (props: Props) => {
-	//const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
-
-	/*
-	function handleAddNextSiblingItem(kind: TimelineKind, currentTimeline: Timeline) {
-		const currentIndex = props.timelineRootNodes.findIndex(a => a === currentTimeline);
-
-		let item: GroupTimeline | TaskTimeline | null = null;
-		switch (kind) {
-			case "group":
-				item = Timelines.createNewGroup();
-				break;
-
-			case "task":
-				item = Timelines.createNewTask();
-				break;
-
-			default:
-				throw new Error();
-		}
-
-		const nodes = [...props.timelineRootNodes];
-		nodes.splice(currentIndex + 1, 0, item)
-		props.setTimelineRootNodes(nodes);
-	}
-	*/
-
 	return (
 		<div id='timelines'>
 			<>

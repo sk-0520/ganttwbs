@@ -35,34 +35,9 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		const cell = props.configuration.design.honest.cell;
 
-		// const startDiffTime = timeRange.begin.getTime() - props.calendarRange.from.getTime();
-		// const startDiffSpan = TimeSpan.fromMilliseconds(startDiffTime);
-		// const startDiffDays = startDiffSpan.totalDays;
-
-		// const endDiffTime = timeRange.end.getTime() - timeRange.begin.getTime();
-		// const endDiffSpan = TimeSpan.fromMilliseconds(endDiffTime);
-		// const endDiffDays = endDiffSpan.totalDays;
-
 		const timeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.from, timeRange);
 
-		/*
-		const x = timeRange.start.totalDays * cell.width.value;
-		const y = props.currentIndex * cell.height.value;
-		const width = timeRange.end.totalDays * cell.width.value;
-		const height = cell.height.value;
-
-		const area: ChartArea = {
-			x: x,
-			y: y,
-			width: width,
-			height: height,
-			chartSize: props.chartSize
-		};
-		*/
-
 		const area = Charts.createChartArea(timeSpanRange, props.currentIndex, cell, props.chartSize);
-
-		//console.debug(props.currentTimeline.id, startDiffDays);
 
 		return (
 			<>
