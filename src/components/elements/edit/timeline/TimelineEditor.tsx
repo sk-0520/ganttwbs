@@ -371,6 +371,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	function handleSubmitSelectBeginDate(timeline: TaskTimeline): void {
 		setSelectingBeginDate(null);
+		updateRelations();
 	}
 
 	function handleCancelSelectBeginDate(): void {
