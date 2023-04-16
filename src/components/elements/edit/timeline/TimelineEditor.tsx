@@ -40,6 +40,50 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const calendarInfo = Calendars.createCalendarInfo(props.editData.setting.timeZone, props.editData.setting.calendar);
 
+	function updateRelations() {
+		console.debug("全体へ通知");
+
+		const timelineMap = Timelines.getTimelinesMap(timelineNodes);
+		const dateTimeRanges = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive, calendarInfo.timeZone);
+
+		const changedItems = new Map(
+			[...timelineMap.entries()]
+				.filter(([k, _]) => timelineMap.has(k))
+				.map(([k, v]) => {
+					const item: TimelineItem = {
+						timeline: v,
+						range: dateTimeRanges.get(k),
+					}
+
+					return [k, item];
+				})
+		);
+		const store = createTimelineStore(timelineMap, changedItems);
+		setTimelineStore(store);
+	}
+
+	function createTimelineStore(totalItems: Map<TimelineId, AnyTimeline>, changedItems: Map<TimelineId, TimelineItem>): TimelineStore {
+
+		for (const [k, v] of changedItems) {
+			if (v.range) {
+				workRangesCache.set(k, v.range);
+			}
+		}
+
+		const result: TimelineStore = {
+			nodeItems: timelineNodes,
+			totalItems: totalItems,
+			changedItems: changedItems,
+			workRanges: workRangesCache,
+			updateTimeline: handleUpdateTimeline,
+			moveTimeline: handleMoveTimeline,
+			removeTimeline: handleRemoveTimeline,
+			startDragTimeline: handleStartDragTimeline,
+		};
+
+		return result;
+	}
+
 	function fireDropTimeline(dropTimeline: DropTimeline) {
 		console.debug("FIRE");
 
@@ -64,6 +108,9 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 
 		setDraggingTimeline(null);
+
+		// 多分再計算が必要
+		updateRelations();
 	}
 
 	function handleStartDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void {
@@ -176,29 +223,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		setDraggingTimeline(dragging);
 	}
 
-	function createTimelineStore(totalItems: Map<TimelineId, AnyTimeline>, changedItems: Map<TimelineId, TimelineItem>): TimelineStore {
-
-		for (const [k, v] of changedItems) {
-			if (v.range) {
-				workRangesCache.set(k, v.range);
-			}
-		}
-
-		const result: TimelineStore = {
-			nodeItems: timelineNodes,
-			totalItems: totalItems,
-			changedItems: changedItems,
-			workRanges: workRangesCache,
-			updateTimeline: updateTimeline,
-			moveTimeline: moveTimeline,
-			removeTimeline: removeTimeline,
-			startDragTimeline: handleStartDragTimeline,
-		};
-
-		return result;
-	}
-
-	function updateTimeline(timeline: AnyTimeline): void {
+	function handleUpdateTimeline(timeline: AnyTimeline): void {
 		//
 		const source = Timelines.findTimeline(timeline.id, timelineNodes);
 		if (!source) {
@@ -257,7 +282,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		setTimelineStore(store);
 	}
 
-	function moveTimeline(moveUp: boolean, timeline: AnyTimeline): void {
+	function handleMoveTimeline(moveUp: boolean, timeline: AnyTimeline): void {
 		const groups = Timelines.getParentGroup(timeline, timelineNodes)
 		if (!groups) {
 			return;
@@ -278,7 +303,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		updateRelations();
 	}
 
-	function removeTimeline(timeline: AnyTimeline): void {
+	function handleRemoveTimeline(timeline: AnyTimeline): void {
 		const groups = Timelines.getParentGroup(timeline, timelineNodes)
 		if (!groups) {
 			return;
@@ -307,28 +332,6 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		// 直接置き換えた値はちまちま反映するのではなくリセット
 		updateRelations();
-	}
-
-	function updateRelations() {
-		console.debug("全体へ通知");
-
-		const timelineMap = Timelines.getTimelinesMap(timelineNodes);
-		const dateTimeRanges = Timelines.getDateTimeRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive, calendarInfo.timeZone);
-
-		const changedItems = new Map(
-			[...timelineMap.entries()]
-				.filter(([k, _]) => timelineMap.has(k))
-				.map(([k, v]) => {
-					const item: TimelineItem = {
-						timeline: v,
-						range: dateTimeRanges.get(k),
-					}
-
-					return [k, item];
-				})
-		);
-		const store = createTimelineStore(timelineMap, changedItems);
-		setTimelineStore(store);
 	}
 
 	function handleStartSelectBeginDate(timeline: TaskTimeline): void {
@@ -376,6 +379,11 @@ const Component: NextPage<Props> = (props: Props) => {
 		setSelectingBeginDate(null);
 	}
 
+	function handleSetTimelineNodes(timelineNodes: Array<GroupTimeline | TaskTimeline>) {
+		props.editData.setting.timelineNodes = timelineNodes;
+		setTimelineNodes(props.editData.setting.timelineNodes);
+	}
+
 	const beginDateCallbacks: BeginDateCallbacks = {
 		startSelectBeginDate: handleStartSelectBeginDate,
 		clearSelectBeginDate: handleClearSelectBeginDate,
@@ -388,10 +396,6 @@ const Component: NextPage<Props> = (props: Props) => {
 		updateRelations();
 	}, []);
 
-	function handleSetTimelineNodes(timelineNodes: Array<GroupTimeline | TaskTimeline>) {
-		props.editData.setting.timelineNodes = timelineNodes;
-		setTimelineNodes(props.editData.setting.timelineNodes);
-	}
 
 	return (
 		<div id='timeline'>
