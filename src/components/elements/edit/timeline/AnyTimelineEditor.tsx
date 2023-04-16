@@ -50,6 +50,8 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
 	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
 
+	//TODO: 依存関係が腐ってるよ！
+
 	useEffect(() => {
 		const timelineItem = props.timelineStore.changedItems.get(props.currentTimeline.id);
 		if (timelineItem) {
