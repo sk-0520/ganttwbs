@@ -107,6 +107,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 	}, [props.currentTimeline, props.selectingBeginDate]);
 
+	/*
 	useEffect(() => {
 		if (props.dropTimeline && Settings.maybeGroupTimeline(props.currentTimeline)) {
 			const sourceIsSelf = props.dropTimeline.sourceGroupTimeline?.id === props.currentTimeline.id;
@@ -139,6 +140,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			});
 		}
 	}, [props.dropTimeline]);
+	*/
 
 	/*
 	useEffect(() => {
