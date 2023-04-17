@@ -1,9 +1,10 @@
 import { NextPage } from "next";
 import { useState } from "react";
 
+import Icon from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
 import { TimelineKind } from "@/models/data/Setting";
-import Icon from "@/components/elements/Icon";
+import { IconKind } from "@/models/IconKind";
 
 interface Props {
 	currentTimelineKind: TimelineKind;
@@ -48,7 +49,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				onClick={handleStartControls}
 			>
 				<Icon
-					kind="operation"
+					kind={IconKind.Operation}
 				/>
 			</button>
 			<Overlay

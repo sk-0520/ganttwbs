@@ -3,6 +3,7 @@ import { NextPage } from "next";
 import DynamicLabel from "@/components/elements/DynamicLabel";
 import Icon from "@/components/elements/Icon";
 import { AnyTimeline } from "@/models/data/Setting";
+import { IconKind } from "@/models/IconKind";
 import { Settings } from "@/models/Settings";
 
 const enum Relations {
@@ -40,13 +41,13 @@ const Component: NextPage<Props> = (props: Props) => {
 			>
 				{
 					relations === (Relations.Static | Relations.Previous)
-						? <Icon kind="relation-mix" title="前工程 + 開始固定" />
+						? <Icon kind={IconKind.RelationMix} title="前工程 + 開始固定" />
 						: relations === Relations.Static
-							? <Icon kind="relation-static" title="開始固定" />
+							? <Icon kind={IconKind.RelationStatic} title="開始固定" />
 							: relations === Relations.Previous
-								? <Icon kind="relation-previous" title="前工程あり" />
+								? <Icon kind={IconKind.RelationPrevious} title="前工程あり" />
 								: relations === Relations.Empty
-									? <Icon kind="timeline-group" />
+									? <Icon kind={IconKind.TimelineGroup} />
 									: "💩"
 				}
 			</DynamicLabel>

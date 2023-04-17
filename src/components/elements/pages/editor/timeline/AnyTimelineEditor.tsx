@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import { useState, useEffect, DragEvent } from "react";
 
+import Icon, { IconKind } from "@/components/elements/Icon";
 import ControlsCell from "@/components/elements/pages/editor/timeline/cell/ControlsCell";
 import IdCell from "@/components/elements/pages/editor/timeline/cell/IdCell";
 import ProgressCell from "@/components/elements/pages/editor/timeline/cell/ProgressCell";
@@ -22,7 +23,6 @@ import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
-import Icon from "@/components/elements/Icon";
 
 
 
@@ -321,7 +321,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											<li>
 												<button type="button" onClick={handleSubmitPrevious}>
 													<Icon
-														kind={"confirm-positive"}
+														kind={IconKind.ConfirmPositive}
 														fill="green"
 														title="確定"
 													/>
@@ -330,7 +330,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											<li>
 												<button type="button" onClick={handleCancelPrevious}>
 													<Icon
-														kind={"confirm-cancel"}
+														kind={IconKind.ConfirmCancel}
 														title="キャンセル"
 													/>
 												</button>

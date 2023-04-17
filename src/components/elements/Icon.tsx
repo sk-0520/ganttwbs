@@ -3,30 +3,21 @@ import { ReactNode } from "react";
 import { IconBaseProps } from "react-icons";
 import * as Md from "react-icons/md";
 
+import { IconKind } from "@/models/IconKind";
+
 // 基本的に Material Design icons を使用する
 // https://react-icons.github.io/react-icons/icons?name=md
-type IconKind
-	= "timeline-task"
-	| "timeline-group"
-	| "relation-mix"
-	| "relation-static"
-	| "relation-previous"
-	| "confirm-positive"
-	| "confirm-negative"
-	| "confirm-cancel"
-	| "operation"
-	;
 
 const Icons: { [key in IconKind]: (params: Parameters) => ReactNode } = {
-	"timeline-task": (params) => <Md.MdTaskAlt {...convertParameter(params)} />,
-	"timeline-group": (params) => <Md.MdFolder {...convertParameter(params)} />,
-	"relation-mix": (params) => <Md.MdOutlineStart {...convertParameter(params)} />,
-	"relation-static": (params) => <Md.MdOutlineCalendarMonth {...convertParameter(params)} />,
-	"relation-previous": (params) => <Md.MdSubdirectoryArrowRight {...convertParameter(params)} />,
-	"confirm-positive": (params) => <Md.MdCheck {...convertParameter(params)} />,
-	"confirm-negative": (params) => <Md.MdOutlineBlock {...convertParameter(params)} />,
-	"confirm-cancel": (params) => <Md.MdOutlineRemoveCircleOutline {...convertParameter(params)} />,
-	"operation": (params) => <Md.MdBuild {...convertParameter(params)} />,
+	[IconKind.TimelineTask]: (params) => <Md.MdTaskAlt {...convertParameter(params)} />,
+	[IconKind.TimelineGroup]: (params) => <Md.MdFolder {...convertParameter(params)} />,
+	[IconKind.RelationMix]: (params) => <Md.MdOutlineStart {...convertParameter(params)} />,
+	[IconKind.RelationStatic]: (params) => <Md.MdOutlineCalendarMonth {...convertParameter(params)} />,
+	[IconKind.RelationPrevious]: (params) => <Md.MdSubdirectoryArrowRight {...convertParameter(params)} />,
+	[IconKind.ConfirmPositive]: (params) => <Md.MdCheck {...convertParameter(params)} />,
+	[IconKind.ConfirmNegative]: (params) => <Md.MdOutlineBlock {...convertParameter(params)} />,
+	[IconKind.ConfirmCancel]: (params) => <Md.MdOutlineRemoveCircleOutline {...convertParameter(params)} />,
+	[IconKind.Operation]: (params) => <Md.MdBuild {...convertParameter(params)} />,
 } as const;
 
 function convertParameter(params: Parameters): IconBaseProps {
