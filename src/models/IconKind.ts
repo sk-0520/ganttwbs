@@ -4,15 +4,20 @@ export const enum IconKind {
 	TimelineGroup,
 	TimelineAddTask,
 	TimelineAddGroup,
+
 	RelationMix,
 	RelationStatic,
 	RelationPrevious,
+
 	MoveUp,
 	MoveDown,
 	MovePrev,
 	MoveNext,
+
 	ConfirmPositive,
 	ConfirmNegative,
 	ConfirmCancel,
+
 	Operation,
+	Remove,
 }

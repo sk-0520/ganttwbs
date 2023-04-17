@@ -29,6 +29,7 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.ConfirmCancel]: (props) => <Md.MdOutlineRemoveCircleOutline {...convertParameter(props)} />,
 
 	[IconKind.Operation]: (props) => <Md.MdBuild {...convertParameter(props)} />,
+	[IconKind.Remove]: (props) => <Md.MdOutlineDelete {...convertParameter(props)} />,
 } as const;
 
 function convertColor(kind: IconKind, color: string | null | undefined): string | undefined {

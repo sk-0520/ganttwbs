@@ -125,8 +125,12 @@ const Component: NextPage<Props> = (props: Props) => {
 								<td>
 									<button
 										className="simple"
-										onClick={_ => handleDeleteItem()}>
-										🗑️削除
+										onClick={_ => handleDeleteItem()}
+									>
+										<Icon
+											kind={IconKind.Remove}
+										/>
+										削除
 									</button>
 								</td>
 							</tr>
