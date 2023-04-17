@@ -39,13 +39,14 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const calendarInfo = Calendars.createCalendarInfo(props.editData.setting.timeZone, props.editData.setting.calendar);
 
+	// 初回のみ
 	useEffect(() => {
 		updateRelations();
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		updateRelations();
-	}, [timelineNodes]);
+	}, [timelineNodes]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	function createTimelineStore(totalItems: Map<TimelineId, AnyTimeline>, changedItems: Map<TimelineId, TimelineItem>): TimelineStore {
 
