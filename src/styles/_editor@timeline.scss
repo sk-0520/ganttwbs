@@ -1,4 +1,5 @@
 @use "variable" as variable;
+@use "./mixin/control" as control;
 @use "./common/box" as box;
 
 #timeline {
@@ -269,6 +270,7 @@
 				.tools {
 					outline: 2px $prompt-background-color solid;
 					height: fit-content;
+					background-color: $prompt-background-color;
 
 					width: max-content;
 
@@ -364,6 +366,19 @@
 			}
 
 			.timeline-controls {
+				button.cell {
+					@include control.reset();
+
+					display: inline-block;
+					width: 100%;
+					height: 100%;
+				}
+
+				.panel {
+					color: #000;
+					table-layout: fixed;
+				}
+
 				button.simple {
 					//width: $timeline-header-controls-item-width;
 					padding: 0;

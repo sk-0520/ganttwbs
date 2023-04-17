@@ -1,24 +1,3 @@
-// あくまでスタイルとしてのアイコンでなくてもいい感じで
-// icon-NAME-before
-// icon-NAME-after
-
-@mixin iconContent($name, $content) {
-	.icon-#{$name}-before {
-		&::before {
-			content: $content;
-		}
-	}
-
-	.icon-#{$name} {
-		content: $content;
-	}
-
-	.icon-#{$name}-after {
-		&::after {
-			content: $content;
-		}
-	}
+.icon {
+	vertical-align: middle;
 }
-
-@include iconContent("timeline-group", "📂");
-@include iconContent("timeline-task", "🐝");

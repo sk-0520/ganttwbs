@@ -1,10 +1,12 @@
 import { NextPage } from "next";
 import { DragEvent } from "react";
 
+import Icon from "@/components/elements/Icon";
 import IndexNumber from "@/components/elements/pages/editor/timeline/IndexNumber";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { AnyTimeline } from "@/models/data/Setting";
+import { IconKind } from "@/models/IconKind";
 import { Settings } from "@/models/Settings";
 
 interface Props {
@@ -49,8 +51,8 @@ const Component: NextPage<Props> = (props: Props) => {
 					) :
 					(
 						Settings.maybeGroupTimeline(props.currentTimeline)
-							? <span className="timeline-kind icon-timeline-group-after" />
-							: <span className="timeline-kind icon-timeline-task-after" />
+							? <Icon kind={IconKind.TimelineGroup} />
+							: <Icon kind={IconKind.TimelineTask} />
 					)
 				}
 				<IndexNumber treeIndexes={props.treeIndexes} currentIndex={props.currentIndex} />

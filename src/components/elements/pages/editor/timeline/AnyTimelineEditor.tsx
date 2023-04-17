@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import { useState, useEffect, DragEvent } from "react";
 
+import Icon from "@/components/elements/Icon";
 import ControlsCell from "@/components/elements/pages/editor/timeline/cell/ControlsCell";
 import IdCell from "@/components/elements/pages/editor/timeline/cell/IdCell";
 import ProgressCell from "@/components/elements/pages/editor/timeline/cell/ProgressCell";
@@ -17,13 +18,12 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { AnyTimeline, GroupTimeline, MemberId, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
+import { IconKind } from "@/models/IconKind";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
-
-
 
 interface Props extends EditProps {
 	treeIndexes: Array<number>;
@@ -317,8 +317,23 @@ const Component: NextPage<Props> = (props: Props) => {
 													onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
 												/>
 											</li>
-											<li><button type="button" onClick={handleSubmitPrevious}>更新</button></li>
-											<li><button type="button" onClick={handleCancelPrevious}>取消</button></li>
+											<li>
+												<button type="button" onClick={handleSubmitPrevious}>
+													<Icon
+														kind={IconKind.ConfirmPositive}
+														fill="green"
+														title="確定"
+													/>
+												</button>
+											</li>
+											<li>
+												<button type="button" onClick={handleCancelPrevious}>
+													<Icon
+														kind={IconKind.ConfirmCancel}
+														title="キャンセル"
+													/>
+												</button>
+											</li>
 										</ul>
 										<div className="tools after">
 											<ul>
@@ -347,7 +362,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
 					/>
 					<ControlsCell
-						currentTimelineKind="group"
+						currentTimelineKind={props.currentTimeline.kind}
 						disabled={props.selectingBeginDate !== null}
 						moveItem={handleControlMoveItem}
 						addItem={handleControlAddItem}
