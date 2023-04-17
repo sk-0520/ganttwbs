@@ -6,6 +6,7 @@ import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
+import Icon from "@/components/elements/Icon";
 
 interface Props {
 	selectingId: string,
@@ -49,8 +50,8 @@ const Component: NextPage<Props> = (props: Props) => {
 					) :
 					(
 						Settings.maybeGroupTimeline(props.currentTimeline)
-							? <span className="timeline-kind icon-timeline-group-after" />
-							: <span className="timeline-kind icon-timeline-task-after" />
+							? <Icon kind="group" fill="yellow" />
+							: <Icon kind="task" fill="red" />
 					)
 				}
 				<IndexNumber treeIndexes={props.treeIndexes} currentIndex={props.currentIndex} />
