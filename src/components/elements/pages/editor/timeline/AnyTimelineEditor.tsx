@@ -22,6 +22,7 @@ import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
+import Icon from "@/components/elements/Icon";
 
 
 
@@ -317,8 +318,23 @@ const Component: NextPage<Props> = (props: Props) => {
 													onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
 												/>
 											</li>
-											<li><button type="button" onClick={handleSubmitPrevious}>更新</button></li>
-											<li><button type="button" onClick={handleCancelPrevious}>取消</button></li>
+											<li>
+												<button type="button" onClick={handleSubmitPrevious}>
+													<Icon
+														kind={"confirm-positive"}
+														fill="green"
+														title="確定"
+													/>
+												</button>
+											</li>
+											<li>
+												<button type="button" onClick={handleCancelPrevious}>
+													<Icon
+														kind={"confirm-negative"}
+														title="キャンセル"
+													/>
+												</button>
+											</li>
 										</ul>
 										<div className="tools after">
 											<ul>

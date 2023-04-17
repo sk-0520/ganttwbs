@@ -6,17 +6,27 @@ import * as Md from "react-icons/md";
 // 基本的に Material Design icons を使用する
 // https://react-icons.github.io/react-icons/icons?name=md
 type IconKind
-	= "task"
-	| "group"
+	= "timeline-task"
+	| "timeline-group"
+	| "relation-mixin"
+	| "relation-static"
+	| "relation-previous"
+	| "confirm-positive"
+	| "confirm-negative"
 	;
 
-const Icons: { [key: string]: (params: Parameters) => ReactNode } = {
-	"task": (params) => <Md.MdTaskAlt {...convertParameter(params)} />,
-	"group": (params) => <Md.MdFolder {...convertParameter(params)} />,
-};
+const Icons: { [key in IconKind]: (params: Parameters) => ReactNode } = {
+	"timeline-task": (params) => <Md.MdTaskAlt {...convertParameter(params)} />,
+	"timeline-group": (params) => <Md.MdFolder {...convertParameter(params)} />,
+	"relation-mixin": (params) => <Md.MdCompareArrows {...convertParameter(params)} />,
+	"relation-static": (params) => <Md.MdOutlineCalendarMonth {...convertParameter(params)} />,
+	"relation-previous": (params) => <Md.MdSubdirectoryArrowRight {...convertParameter(params)} />,
+	"confirm-positive": (params) => <Md.MdCheck {...convertParameter(params)} />,
+	"confirm-negative": (params) => <Md.MdOutlineCancel {...convertParameter(params)} />,
+} as const;
 
 function convertParameter(params: Parameters): IconBaseProps {
-	const attr: IconBaseProps= {
+	const attr: IconBaseProps = {
 		title: params.title,
 		color: params.fill,
 	};
