@@ -1,4 +1,5 @@
 @use "variable" as variable;
+@use "./mixin/control" as control;
 @use "./common/box" as box;
 
 #timeline {
@@ -364,6 +365,14 @@
 			}
 
 			.timeline-controls {
+				button.cell {
+					@include control.reset();
+
+					display: inline-block;
+					width: 100%;
+					height: 100%;
+				}
+
 				button.simple {
 					//width: $timeline-header-controls-item-width;
 					padding: 0;

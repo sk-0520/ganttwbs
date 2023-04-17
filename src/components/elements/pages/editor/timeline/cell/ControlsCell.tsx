@@ -45,6 +45,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			+ " " + (visibleControls ? " prompt" : "")
 		}>
 			<button
+				className="cell"
 				disabled={props.disabled}
 				onClick={handleStartControls}
 			>

@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useState, useEffect, DragEvent } from "react";
 
-import Icon, { IconKind } from "@/components/elements/Icon";
+import Icon from "@/components/elements/Icon";
 import ControlsCell from "@/components/elements/pages/editor/timeline/cell/ControlsCell";
 import IdCell from "@/components/elements/pages/editor/timeline/cell/IdCell";
 import ProgressCell from "@/components/elements/pages/editor/timeline/cell/ProgressCell";
@@ -18,13 +18,12 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { AnyTimeline, GroupTimeline, MemberId, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
+import { IconKind } from "@/models/IconKind";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
-
-
 
 interface Props extends EditProps {
 	treeIndexes: Array<number>;
