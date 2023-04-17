@@ -24,51 +24,49 @@ interface Props extends EditProps {
 const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div id='timelines'>
-			<>
-				<ul>
-					{props.timelineStore.nodeItems.map((a, i) => {
+			<ul>
+				{props.timelineStore.nodeItems.map((a, i) => {
+					return (
+						<li key={a.id}>
+							<AnyTimelineEditor
+								configuration={props.configuration}
+								editData={props.editData}
+								treeIndexes={[]}
+								currentIndex={i}
+								parentGroup={null}
+								currentTimeline={a}
+								timelineStore={props.timelineStore}
+								draggingTimeline={props.draggingTimeline}
+								selectingBeginDate={props.selectingBeginDate}
+								beginDateCallbacks={props.beginDateCallbacks}
+								calendarInfo={props.calendarInfo}
+							/>
+						</li>
+					);
+				})}
+				{
+					// ダミー領域追加
+					Arrays.create(props.configuration.design.dummy.height).map(_ => {
 						return (
-							<li key={a.id}>
-								<AnyTimelineEditor
-									configuration={props.configuration}
-									editData={props.editData}
-									treeIndexes={[]}
-									currentIndex={i}
-									parentGroup={null}
-									currentTimeline={a}
-									timelineStore={props.timelineStore}
-									draggingTimeline={props.draggingTimeline}
-									selectingBeginDate={props.selectingBeginDate}
-									beginDateCallbacks={props.beginDateCallbacks}
-									calendarInfo={props.calendarInfo}
-								/>
+							<li key={"dmy-" + IdFactory.createReactKey()}>
+								<div className="dummy">
+									<div className='timeline-cell timeline-header _dynamic_programmable_cell_height'>
+										<div className='timeline-cell timeline-id'>&nbsp;</div>
+										<div className='timeline-cell timeline-subject' />
+										<div className='timeline-cell timeline-workload' />
+										<div className='timeline-cell timeline-resource' />
+										<div className="timeline-cell timeline-relation" />
+										<div className='timeline-cell timeline-range-from' />
+										<div className='timeline-cell timeline-range-to' />
+										<div className='timeline-cell timeline-progress' />
+										<div className='timeline-cell timeline-controls' />
+									</div>
+								</div>
 							</li>
 						);
-					})}
-					{
-						// ダミー領域追加
-						Arrays.create(props.configuration.design.dummy.height).map(_ => {
-							return (
-								<li key={"dmy-" + IdFactory.createReactKey()}>
-									<div className="dummy">
-										<div className='timeline-cell timeline-header _dynamic_programmable_cell_height'>
-											<div className='timeline-cell timeline-id'>&nbsp;</div>
-											<div className='timeline-cell timeline-subject' />
-											<div className='timeline-cell timeline-workload' />
-											<div className='timeline-cell timeline-resource' />
-											<div className="timeline-cell timeline-relation" />
-											<div className='timeline-cell timeline-range-from' />
-											<div className='timeline-cell timeline-range-to' />
-											<div className='timeline-cell timeline-progress' />
-											<div className='timeline-cell timeline-controls' />
-										</div>
-									</div>
-								</li>
-							);
-						})
-					}
-				</ul>
-			</>
+					})
+				}
+			</ul>
 		</div>
 	);
 };

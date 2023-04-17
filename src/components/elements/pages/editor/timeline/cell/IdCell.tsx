@@ -7,7 +7,6 @@ import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 
-
 interface Props {
 	selectingId: string,
 	isSelectedPrevious: boolean;
@@ -16,7 +15,7 @@ interface Props {
 	readonly currentTimeline: Readonly<AnyTimeline>;
 	selectingBeginDate: SelectingBeginDate | null;
 	draggingTimeline: DraggingTimeline | null;
-	callbackStartDragTimeline(ev:DragEvent): void;
+	callbackStartDragTimeline(ev: DragEvent): void;
 	callbackChangePrevious: (isSelected: boolean) => void;
 }
 
@@ -49,14 +48,9 @@ const Component: NextPage<Props> = (props: Props) => {
 						/>
 					) :
 					(
-						<>
-							{
-								Settings.maybeGroupTimeline(props.currentTimeline)
-									? <span className="timeline-kind icon-timeline-group-after" />
-									: <span className="timeline-kind icon-timeline-task-after" />
-							}
-						</>
-
+						Settings.maybeGroupTimeline(props.currentTimeline)
+							? <span className="timeline-kind icon-timeline-group-after" />
+							: <span className="timeline-kind icon-timeline-task-after" />
 					)
 				}
 				<IndexNumber treeIndexes={props.treeIndexes} currentIndex={props.currentIndex} />

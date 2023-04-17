@@ -33,7 +33,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	const currentWorkRange = props.timelineStore.workRanges.get(props.currentTimeline.id);
-	if(!currentWorkRange || !WorkRanges.maybeSuccessWorkRange(currentWorkRange)) {
+	if (!currentWorkRange || !WorkRanges.maybeSuccessWorkRange(currentWorkRange)) {
 		return null;
 	}
 
@@ -72,9 +72,11 @@ const Component: NextPage<Props> = (props: Props) => {
 
 				const previewColor = Settings.maybeGroupTimeline(previousTimeline)
 					? Charts.getGroupBackground(previousTimeline, props.timelineStore.nodeItems, props.editData.setting.theme)
-					: Charts.getTaskBackground(previousTimeline, props.memberMap, props.editData.setting.theme);
-const previewWorkRange = props.timelineStore.workRanges.get(previousTimeline.id);
-				if(!previewWorkRange || !WorkRanges.maybeSuccessWorkRange(previewWorkRange)) {
+					: Charts.getTaskBackground(previousTimeline, props.memberMap, props.editData.setting.theme)
+					;
+
+				const previewWorkRange = props.timelineStore.workRanges.get(previousTimeline.id);
+				if (!previewWorkRange || !WorkRanges.maybeSuccessWorkRange(previewWorkRange)) {
 					return null;
 				}
 

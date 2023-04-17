@@ -130,8 +130,6 @@ const Component: NextPage<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		//setProgressPercent(n);
-		//props.currentTimeline.progress = n / 100.0;
 		const progress = n / 100.0;
 
 		props.timelineStore.updateTimeline({
@@ -178,7 +176,6 @@ const Component: NextPage<Props> = (props: Props) => {
 			return;
 		}
 
-		//setSelectingBeginDate(true);
 		props.beginDateCallbacks.startSelectBeginDate(props.currentTimeline);
 	}
 
@@ -260,7 +257,6 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		props.beginDateCallbacks.cancelSelectBeginDate(props.currentTimeline);
 	}
-
 
 	const className = props.currentTimeline.kind;
 

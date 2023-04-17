@@ -35,50 +35,38 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		const timeSpanRange = successWorkRange
 			? Charts.getTimeSpanRange(props.calendarInfo.range.from, successWorkRange)
-			: null;
-const area = Charts.createChartArea(timeSpanRange, props.currentIndex, cell, props.chartSize);
+			: null
+			;
+
+		const area = Charts.createChartArea(timeSpanRange, props.currentIndex, cell, props.chartSize);
 
 		return (
-			<>
-				{
-					Settings.maybeTaskTimeline(props.currentTimeline)
-						? (
-							<TaskChart
-								configuration={props.configuration}
-								currentTimeline={props.currentTimeline}
-								background={Charts.getTaskBackground(props.currentTimeline, props.memberMap, props.editData.setting.theme)}
-								foreground={props.editData.setting.theme.timeline.completed}
-								borderColor="#000000"
-								borderThickness={1}
-								area={area}
-								timelineStore={props.timelineStore}
-								progress={props.currentTimeline.progress}
-							/>
-						) : Settings.maybeGroupTimeline(props.currentTimeline) ? (
-							<GroupChart
-								configuration={props.configuration}
-								currentTimeline={props.currentTimeline}
-								background={Charts.getGroupBackground(props.currentTimeline, props.editData.setting.timelineNodes, props.editData.setting.theme)}
-								foreground="#ffffff"
-								borderColor="#000000"
-								borderThickness={4}
-								area={area}
-								timelineStore={props.timelineStore}
-							// progress={props.currentTimeline.progress}
-							/>
-						) : null
-				}
-				<>
-					{/* <text
-						x={area.x + area.width}
-						y={area.y + area.height}
-					>
-						{props.currentTimeline.id}/{props.currentIndex}
-					</text> */}
-
-					{/* <text y={y + (cell.height.value / 2)}>{props.currentTimeline.id}@{x}:{y}</text> */}
-				</>
-			</>
+			Settings.maybeTaskTimeline(props.currentTimeline)
+				? (
+					<TaskChart
+						configuration={props.configuration}
+						currentTimeline={props.currentTimeline}
+						background={Charts.getTaskBackground(props.currentTimeline, props.memberMap, props.editData.setting.theme)}
+						foreground={props.editData.setting.theme.timeline.completed}
+						borderColor="#000000"
+						borderThickness={1}
+						area={area}
+						timelineStore={props.timelineStore}
+						progress={props.currentTimeline.progress}
+					/>
+				) : Settings.maybeGroupTimeline(props.currentTimeline) ? (
+					<GroupChart
+						configuration={props.configuration}
+						currentTimeline={props.currentTimeline}
+						background={Charts.getGroupBackground(props.currentTimeline, props.editData.setting.timelineNodes, props.editData.setting.theme)}
+						foreground="#ffffff"
+						borderColor="#000000"
+						borderThickness={4}
+						area={area}
+						timelineStore={props.timelineStore}
+					// progress={props.currentTimeline.progress}
+					/>
+				) : null
 		);
 	}
 

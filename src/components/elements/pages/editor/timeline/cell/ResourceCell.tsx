@@ -15,7 +15,7 @@ interface Props {
 const Component: NextPage<Props> = (props: Props) => {
 	const groups = [...props.groups]
 		.sort((a, b) => a.name.localeCompare(b.name));
-function toMemberOptions(members: ReadonlyArray<Member>): Array<ReactNode> {
+	function toMemberOptions(members: ReadonlyArray<Member>): Array<ReactNode> {
 		return (
 			members.map(a => {
 				return (
@@ -33,8 +33,10 @@ function toMemberOptions(members: ReadonlyArray<Member>): Array<ReactNode> {
 	function handleChangeOption(memberId: MemberId) {
 		const member = groups
 			.flatMap(a => a.members)
-			.find(a => a.id === memberId);
-props.callbackChangeMember(member?.id ?? "", member?.name ?? "");
+			.find(a => a.id === memberId)
+			;
+
+		props.callbackChangeMember(member?.id ?? "", member?.name ?? "");
 	}
 
 	return (
@@ -51,7 +53,7 @@ props.callbackChangeMember(member?.id ?? "", member?.name ?? "");
 					{groups.map(a => {
 						const members = [...a.members]
 							.sort((a2, b2) => a2.name.localeCompare(b2.name));
-return (
+						return (
 							a.name ?
 								(
 									<optgroup key={a.name} label={a.name}>
