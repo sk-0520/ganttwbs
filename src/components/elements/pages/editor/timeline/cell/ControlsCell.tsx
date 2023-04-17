@@ -58,47 +58,80 @@ const Component: NextPage<Props> = (props: Props) => {
 				callBackHidden={handleHideControls}
 			>
 				<div className="tools after">
-					<ul>
-						<li>
-							<button
-								className="simple"
-								onClick={_ => handleMoveItem(true)}>
-								⬆️上へ移動
-							</button >
-						</li >
-						<li>
-							<button
-								className="simple"
-								onClick={_ => handleMoveItem(false)}>
-								⬇️下へ移動
-							</button>
-						</li>
-						<li>
-							<button
-								className="simple"
-								onClick={_ => handleAddItem("group")}
-							>
-								{props.currentTimelineKind === "group" ? "📂" : "📁"}
-								直下にグループ追加
-							</button>
-						</li>
-						<li>
-							<button
-								className="simple"
-								onClick={_ => handleAddItem("task")}
-							>
-								{props.currentTimelineKind === "group" ? "🐜" : "🐞"}
-								直下にタスク追加
-							</button>
-						</li>
-						<li>
-							<button
-								className="simple"
-								onClick={_ => handleDeleteItem()}>
-								🗑️削除
-							</button>
-						</li>
-					</ul >
+					<table className="panel">
+						<tbody>
+							<tr>
+								<th>移動</th>
+								<td>
+									<button
+										className="simple"
+										onClick={_ => handleMoveItem(true)}
+									>
+										<Icon
+											kind={IconKind.MoveUp}
+										/>
+										上へ
+									</button>
+								</td>
+								<td>
+									<button
+										className="simple"
+										onClick={_ => handleMoveItem(false)}
+									>
+										<Icon
+											kind={IconKind.MoveDown}
+										/>
+										下へ
+									</button>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									追加
+									(
+									{
+										props.currentTimelineKind === "group"
+											? "終端"
+											: "直近"
+									}
+									)
+								</th>
+								<td>
+									<button
+										className="simple"
+										onClick={_ => handleAddItem("group")}
+									>
+										<Icon
+											kind={IconKind.TimelineAddGroup}
+										/>
+										グループ
+									</button>
+								</td>
+								<td>
+									<button
+										className="simple"
+										onClick={_ => handleAddItem("task")}
+									>
+										<Icon
+											kind={IconKind.TimelineAddTask}
+										/>
+										タスク
+									</button>
+								</td>
+							</tr>
+							<tr>
+								<th>削除</th>
+								<td></td>
+								<td>
+									<button
+										className="simple"
+										onClick={_ => handleDeleteItem()}>
+										🗑️削除
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</Overlay>
 		</div>

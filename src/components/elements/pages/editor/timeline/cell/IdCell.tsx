@@ -51,8 +51,8 @@ const Component: NextPage<Props> = (props: Props) => {
 					) :
 					(
 						Settings.maybeGroupTimeline(props.currentTimeline)
-							? <Icon kind={IconKind.TimelineGroup} fill="yellow" />
-							: <Icon kind={IconKind.TimelineTask} fill="green" />
+							? <Icon kind={IconKind.TimelineGroup} />
+							: <Icon kind={IconKind.TimelineTask} />
 					)
 				}
 				<IndexNumber treeIndexes={props.treeIndexes} currentIndex={props.currentIndex} />

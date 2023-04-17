@@ -362,7 +362,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
 					/>
 					<ControlsCell
-						currentTimelineKind="group"
+						currentTimelineKind={props.currentTimeline.kind}
 						disabled={props.selectingBeginDate !== null}
 						moveItem={handleControlMoveItem}
 						addItem={handleControlAddItem}

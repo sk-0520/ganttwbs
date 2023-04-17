@@ -41,13 +41,13 @@ const Component: NextPage<Props> = (props: Props) => {
 			>
 				{
 					relations === (Relations.Static | Relations.Previous)
-						? <Icon kind={IconKind.RelationMix} title="前工程 + 開始固定" />
+						? <Icon kind={IconKind.RelationMix} fill={null} title="前工程 + 開始固定" />
 						: relations === Relations.Static
-							? <Icon kind={IconKind.RelationStatic} title="開始固定" />
+							? <Icon kind={IconKind.RelationStatic} fill={null} title="開始固定" />
 							: relations === Relations.Previous
-								? <Icon kind={IconKind.RelationPrevious} title="前工程あり" />
+								? <Icon kind={IconKind.RelationPrevious} fill={null} title="前工程あり" />
 								: relations === Relations.Empty
-									? <Icon kind={IconKind.TimelineGroup} />
+									? <Icon kind={IconKind.TimelineGroup} fill={null} />
 									: "💩"
 				}
 			</DynamicLabel>
