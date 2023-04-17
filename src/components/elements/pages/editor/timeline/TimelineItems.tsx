@@ -39,7 +39,6 @@ const Component: NextPage<Props> = (props: Props) => {
 									timelineStore={props.timelineStore}
 									draggingTimeline={props.draggingTimeline}
 									selectingBeginDate={props.selectingBeginDate}
-									dropTimeline={props.dropTimeline}
 									beginDateCallbacks={props.beginDateCallbacks}
 									calendarInfo={props.calendarInfo}
 								/>

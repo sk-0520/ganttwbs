@@ -13,7 +13,6 @@ import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/Workl
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
-import { DropTimeline } from "@/models/data/DropTimeline";
 import { EditProps } from "@/models/data/props/EditProps";
 import { AnyTimeline, GroupTimeline, MemberId, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
@@ -35,7 +34,6 @@ interface Props extends EditProps {
 	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
-	dropTimeline: DropTimeline | null;
 	calendarInfo: CalendarInfo;
 }
 
@@ -106,47 +104,6 @@ const Component: NextPage<Props> = (props: Props) => {
 			}
 		}
 	}, [props.currentTimeline, props.selectingBeginDate]);
-
-	useEffect(() => {
-		if (props.dropTimeline && Settings.maybeGroupTimeline(props.currentTimeline)) {
-			const sourceIsSelf = props.dropTimeline.sourceGroupTimeline?.id === props.currentTimeline.id;
-			const destinationIsSelf = props.dropTimeline.destinationGroupTimeline?.id === props.currentTimeline.id;
-			console.debug("位置変更!", { sourceIsSelf, destinationIsSelf });
-
-			let newChildren = [...props.currentTimeline.children];
-
-			// 自グループ内で完結する場合は移動するだけ
-			if (sourceIsSelf && destinationIsSelf) {
-				Timelines.moveTimelineIndex(newChildren, props.dropTimeline.sourceIndex, props.dropTimeline.destinationIndex);
-				setChildren(newChildren);
-
-			} else {
-				// 移動元が自グループのため対象の子を破棄
-				if (sourceIsSelf) {
-					newChildren = newChildren.filter(a => a.id !== props.dropTimeline?.timeline.id);
-				}
-
-				// 移動先が自グループのため対象の子を追加
-				if (destinationIsSelf) {
-					newChildren.splice(props.dropTimeline.destinationIndex, 0, props.dropTimeline.timeline);
-				}
-			}
-
-			setChildren(newChildren);
-			props.timelineStore.updateTimeline({
-				...props.currentTimeline,
-				children: newChildren,
-			});
-		}
-	}, [props.dropTimeline]);
-
-	/*
-	useEffect(() => {
-		if (!props.draggingTimeline) {
-			props.timelineStore.updateTimeline(props.currentTimeline);
-		}
-	}, [props.draggingTimeline]);
-	*/
 
 	function handleChangeSubject(s: string) {
 		setSubject(s);
@@ -416,7 +373,6 @@ const Component: NextPage<Props> = (props: Props) => {
 									currentTimeline={a}
 									timelineStore={props.timelineStore}
 									draggingTimeline={props.draggingTimeline}
-									dropTimeline={props.dropTimeline}
 									selectingBeginDate={props.selectingBeginDate}
 									beginDateCallbacks={props.beginDateCallbacks}
 									calendarInfo={props.calendarInfo}
