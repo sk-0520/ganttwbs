@@ -330,7 +330,7 @@ const Component: NextPage<Props> = (props: Props) => {
 											<li>
 												<button type="button" onClick={handleCancelPrevious}>
 													<Icon
-														kind={"confirm-negative"}
+														kind={"confirm-cancel"}
 														title="キャンセル"
 													/>
 												</button>

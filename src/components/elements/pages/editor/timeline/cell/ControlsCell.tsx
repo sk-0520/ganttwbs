@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import Overlay from "@/components/elements/Overlay";
 import { TimelineKind } from "@/models/data/Setting";
+import Icon from "@/components/elements/Icon";
 
 interface Props {
 	currentTimelineKind: TimelineKind;
@@ -46,7 +47,9 @@ const Component: NextPage<Props> = (props: Props) => {
 				disabled={props.disabled}
 				onClick={handleStartControls}
 			>
-				操作
+				<Icon
+					kind="operation"
+				/>
 			</button>
 			<Overlay
 				isVisible={visibleControls}

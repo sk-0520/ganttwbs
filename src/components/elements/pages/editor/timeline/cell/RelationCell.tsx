@@ -40,7 +40,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			>
 				{
 					relations === (Relations.Static | Relations.Previous)
-						? <Icon kind="relation-mixin" title="前工程 + 開始固定" />
+						? <Icon kind="relation-mix" title="前工程 + 開始固定" />
 						: relations === Relations.Static
 							? <Icon kind="relation-static" title="開始固定" />
 							: relations === Relations.Previous
