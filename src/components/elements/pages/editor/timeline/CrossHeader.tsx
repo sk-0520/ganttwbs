@@ -36,7 +36,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		addTimeline("task");
 	}
 
-	function handleAddTimelines() {
+	function handleShowNewTimeline() {
 		setVisibleAddTimelines(true);
 	}
 
@@ -66,7 +66,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							<button type='button' onClick={handleAddNewTask}>add new task</button>
 						</li>
 						<li>
-							<button type='button' onClick={handleAddTimelines}>add timelines</button>
+							<button type='button' onClick={handleShowNewTimeline}>add timelines</button>
 						</li>
 						<li>
 							<button onClick={ev => scrollFromDate(DateTime.today(props.calendarInfo.timeZone))}>
