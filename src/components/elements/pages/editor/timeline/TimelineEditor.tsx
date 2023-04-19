@@ -74,7 +74,8 @@ const Component: NextPage<Props> = (props: Props) => {
 			hoverItem: hoverTimeline,
 			activeItem: activeTimeline,
 
-			addEmptyTimeline: handleAddTimeline,
+			addEmptyTimeline: handleAddEmptyTimeline,
+			addNewTimeline: handleAddNewTimeline,
 			updateTimeline: handleUpdateTimeline,
 			moveTimeline: handleMoveTimeline,
 			removeTimeline: handleRemoveTimeline,
@@ -314,7 +315,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		setDraggingTimeline(dragging);
 	}
 
-	function handleAddTimeline(baseTimeline: AnyTimeline | null, options: NewTimelineOptions): void {
+	function handleAddEmptyTimeline(baseTimeline: AnyTimeline | null, options: NewTimelineOptions): void {
 		// 将来追加した場合の安全弁
 		if (options.position !== "next") {
 			throw new Error(options.position);
@@ -368,6 +369,10 @@ const Component: NextPage<Props> = (props: Props) => {
 			];
 			setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
 		}
+	}
+
+	function handleAddNewTimeline(baseTimeline: AnyTimeline | null, newTimeline: AnyTimeline, options: NewTimelineOptions): void {
+		//
 	}
 
 	function handleUpdateTimeline(timeline: AnyTimeline): void {

@@ -36,6 +36,13 @@ export interface TimelineStore {
 	 */
 	addEmptyTimeline(baseTimeline: AnyTimeline | null, options: NewTimelineOptions): void;
 	/**
+	 * タイムライン追加。
+	 * @param baseTimeline
+	 * @param newTimeline
+	 * @param options
+	 */
+	addNewTimeline(baseTimeline: AnyTimeline | null, newTimeline: AnyTimeline, options: NewTimelineOptions): void;
+	/**
 	 * タイムラインを更新。
 	 * @param timeline
 	 */
