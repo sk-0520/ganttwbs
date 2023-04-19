@@ -74,7 +74,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			hoverItem: hoverTimeline,
 			activeItem: activeTimeline,
 
-			addTimeline: handleAddTimeline,
+			addEmptyTimeline: handleAddTimeline,
 			updateTimeline: handleUpdateTimeline,
 			moveTimeline: handleMoveTimeline,
 			removeTimeline: handleRemoveTimeline,

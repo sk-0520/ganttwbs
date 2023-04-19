@@ -143,7 +143,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleControlAddItem(kind: TimelineKind) {
-		props.timelineStore.addTimeline(
+		props.timelineStore.addEmptyTimeline(
 			props.currentTimeline,
 			{
 				position: "next",

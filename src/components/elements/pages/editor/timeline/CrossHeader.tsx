@@ -6,6 +6,7 @@ import { TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
+import { useState } from "react";
 
 interface Props extends EditProps {
 	calendarInfo: CalendarInfo;
@@ -14,8 +15,10 @@ interface Props extends EditProps {
 
 const Component: NextPage<Props> = (props: Props) => {
 
+	const [visibleAddTimelines, setVisibleAddTimelines] = useState(false);
+
 	function addTimeline(kind: TimelineKind) {
-		props.timelineStore.addTimeline(
+		props.timelineStore.addEmptyTimeline(
 			props.timelineStore.nodeItems.length ? props.timelineStore.nodeItems[props.timelineStore.nodeItems.length - 1]: null,
 			{
 				position: "next",
@@ -30,6 +33,10 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	function handleAddNewTask() {
 		addTimeline("task");
+	}
+
+	function handleAddTimelines() {
+		setVisibleAddTimelines(true);
 	}
 
 	function scrollFromDate(date: DateTime): void {
@@ -56,6 +63,9 @@ const Component: NextPage<Props> = (props: Props) => {
 						</li>
 						<li>
 							<button type='button' onClick={handleAddNewTask}>add new task</button>
+						</li>
+						<li>
+							<button type='button' onClick={handleAddTimelines}>add timelines</button>
 						</li>
 						<li>
 							<button onClick={ev => scrollFromDate(DateTime.today(props.calendarInfo.timeZone))}>
