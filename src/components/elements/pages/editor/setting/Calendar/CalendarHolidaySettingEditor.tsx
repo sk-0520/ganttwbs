@@ -1,8 +1,8 @@
+import { Editor } from "@monaco-editor/react";
 import { NextPage } from "next";
 import { useContext } from "react";
 
 import { SettingContext } from "@/models/data/context/SettingContext";
-import { Forms } from "@/models/Forms";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
@@ -15,11 +15,12 @@ const Component: NextPage = () => {
 			<div className="holiday">
 				<div className="holidays">
 					<h3>祝日</h3>
-					<textarea
+					<Editor
 						className='editor'
-						onKeyDown={Forms.handleKeyDownAcceptTab}
+						width="40vw"
+						height="8em"
 						defaultValue={settingContext.calendar.holiday.events.holidays}
-						onChange={ev => settingContext.calendar.holiday.events.holidays = ev.target.value}
+						onChange={ev => settingContext.calendar.holiday.events.holidays = ev ?? ""}
 					/>
 					<p>
 						国などが定める通常の祝日を設定してください。
@@ -28,11 +29,12 @@ const Component: NextPage = () => {
 
 				<div className="holidays">
 					<h3>特殊</h3>
-					<textarea
+					<Editor
 						className='editor'
-						onKeyDown={Forms.handleKeyDownAcceptTab}
-						defaultValue={settingContext.calendar.holiday.events.specials}
-						onChange={ev => settingContext.calendar.holiday.events.specials = ev.target.value}
+						width="40vw"
+						height="8em"
+						defaultValue={settingContext.calendar.holiday.events.holidays}
+						onChange={ev => settingContext.calendar.holiday.events.specials = ev ?? ""}
 					/>
 					<p>
 						会社の年末年始・夏季休暇などを設定してください。

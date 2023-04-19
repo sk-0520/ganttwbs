@@ -107,10 +107,9 @@ const Component: NextPage<Props> = (props: Props) => {
 					<button onClick={handleJsonUpdate}>update</button>
 					<button onClick={handleJsonCopy}>copy</button>
 					<Editor
-						value={settingJson}
-						theme="vs-dark"
+						defaultValue={settingJson}
+						defaultLanguage="json"
 						height={300}
-						language="json"
 						options={{
 							readOnly: true,
 						}}
