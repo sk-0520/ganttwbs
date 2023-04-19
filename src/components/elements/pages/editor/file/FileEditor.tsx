@@ -1,3 +1,4 @@
+import { Editor } from "@monaco-editor/react";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -105,9 +106,14 @@ const Component: NextPage<Props> = (props: Props) => {
 				<dd>
 					<button onClick={handleJsonUpdate}>update</button>
 					<button onClick={handleJsonCopy}>copy</button>
-					<textarea
+					<Editor
 						value={settingJson}
-						readOnly={true}
+						theme="vs-dark"
+						height={300}
+						language="json"
+						options={{
+							readOnly: true,
+						}}
 					/>
 				</dd>
 

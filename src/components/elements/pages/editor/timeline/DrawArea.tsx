@@ -1,12 +1,12 @@
 import { NextPage } from "next";
 
-import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { Configuration } from "@/models/data/Configuration";
-import { TimelineStore } from "@/models/store/TimelineStore";
-import { EditorData } from "@/models/data/EditorData";
+import HighlightTimeline from "@/components/elements/pages/editor/timeline/draw/HighlightTimeline";
 import { Calendars } from "@/models/Calendars";
 import { AreaSize } from "@/models/data/AreaSize";
-import HighlightTimeline from "@/components/elements/pages/editor/timeline/draw/HighlightTimeline";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
+import { Configuration } from "@/models/data/Configuration";
+import { EditorData } from "@/models/data/EditorData";
+import { TimelineStore } from "@/models/store/TimelineStore";
 
 interface Props {
 	configuration: Configuration;
