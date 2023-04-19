@@ -117,7 +117,7 @@ function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnl
 		.map(([k, v]) => ({ date: DateTime.parse(k, timeZone), display: v.display }))
 		.sort((a, b) => a.date.getTime() - b.date.getTime())
 		.map(a => `${a.date.format("yyyy-MM-dd")}\t${a.display}`)
-		.join(NewLine);
+		.join(NewLine) + NewLine;
 }
 
 function toContext(setting: Setting): SettingContext {

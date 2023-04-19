@@ -1,11 +1,28 @@
 import { Editor } from "@monaco-editor/react";
 import { NextPage } from "next";
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 
 import { SettingContext } from "@/models/data/context/SettingContext";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
+
+	function renderEditor(value: string, callbackChanged: (value: string) => void): ReactNode {
+		return (
+			<Editor
+				className='editor'
+				width="40vw"
+				height="8em"
+				defaultValue={value}
+				onChange={ev => callbackChanged(ev ?? "")}
+				options={{
+					lineNumbers: "off",
+					tabSize: 2,
+					insertSpaces: false,
+				}}
+			/>
+		);
+	}
 
 	return (
 		<>
@@ -15,13 +32,7 @@ const Component: NextPage = () => {
 			<div className="holiday">
 				<div className="holidays">
 					<h3>祝日</h3>
-					<Editor
-						className='editor'
-						width="40vw"
-						height="8em"
-						defaultValue={settingContext.calendar.holiday.events.holidays}
-						onChange={ev => settingContext.calendar.holiday.events.holidays = ev ?? ""}
-					/>
+					{renderEditor(settingContext.calendar.holiday.events.holidays, (s) => settingContext.calendar.holiday.events.holidays = s)}
 					<p>
 						国などが定める通常の祝日を設定してください。
 					</p>
@@ -29,13 +40,7 @@ const Component: NextPage = () => {
 
 				<div className="holidays">
 					<h3>特殊</h3>
-					<Editor
-						className='editor'
-						width="40vw"
-						height="8em"
-						defaultValue={settingContext.calendar.holiday.events.holidays}
-						onChange={ev => settingContext.calendar.holiday.events.specials = ev ?? ""}
-					/>
+					{renderEditor(settingContext.calendar.holiday.events.specials, (s) => settingContext.calendar.holiday.events.specials = s)}
 					<p>
 						会社の年末年始・夏季休暇などを設定してください。
 					</p>
