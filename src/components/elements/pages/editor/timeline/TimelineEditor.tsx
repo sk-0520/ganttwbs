@@ -24,6 +24,7 @@ import { Designs } from "@/models/Designs";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
+import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 
 
 interface Props extends EditProps { }
@@ -317,7 +318,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	function handleAddEmptyTimeline(baseTimeline: AnyTimeline | null, options: NewTimelineOptions): void {
 		// 将来追加した場合の安全弁
-		if (options.position !== "next") {
+		if (options.position !== NewTimelinePosition.Next) {
 			throw new Error(options.position);
 		}
 
@@ -371,7 +372,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 	}
 
-	function handleAddNewTimeline(baseTimeline: AnyTimeline | null, newTimeline: AnyTimeline, options: NewTimelineOptions): void {
+	function handleAddNewTimeline(baseTimeline: AnyTimeline | null, newTimeline: AnyTimeline, position: NewTimelinePosition): void {
 		//
 	}
 

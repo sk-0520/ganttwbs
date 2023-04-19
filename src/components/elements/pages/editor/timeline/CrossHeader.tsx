@@ -7,6 +7,7 @@ import { DateTime } from "@/models/DateTime";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { useState } from "react";
+import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 
 interface Props extends EditProps {
 	calendarInfo: CalendarInfo;
@@ -21,7 +22,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.timelineStore.addEmptyTimeline(
 			props.timelineStore.nodeItems.length ? props.timelineStore.nodeItems[props.timelineStore.nodeItems.length - 1]: null,
 			{
-				position: "next",
+				position: NewTimelinePosition.Next,
 				timelineKind: kind,
 			}
 		);

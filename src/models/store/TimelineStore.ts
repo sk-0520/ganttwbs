@@ -4,6 +4,7 @@ import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { AnyTimeline, TimelineId } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
+import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 
 export interface TimelineStore {
 
@@ -39,9 +40,9 @@ export interface TimelineStore {
 	 * タイムライン追加。
 	 * @param baseTimeline
 	 * @param newTimeline
-	 * @param options
+	 * @param position
 	 */
-	addNewTimeline(baseTimeline: AnyTimeline | null, newTimeline: AnyTimeline, options: NewTimelineOptions): void;
+	addNewTimeline(baseTimeline: AnyTimeline | null, newTimeline: AnyTimeline, position: NewTimelinePosition): void;
 	/**
 	 * タイムラインを更新。
 	 * @param timeline
