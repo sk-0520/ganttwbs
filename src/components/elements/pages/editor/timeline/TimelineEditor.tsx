@@ -314,29 +314,29 @@ const Component: NextPage<Props> = (props: Props) => {
 		setDraggingTimeline(dragging);
 	}
 
-	function handleAddTimeline(timeline: AnyTimeline | null, options: NewTimelineOptions): void {
+	function handleAddTimeline(baseTimeline: AnyTimeline | null, options: NewTimelineOptions): void {
 		// 将来追加した場合の安全弁
 		if (options.position !== "next") {
 			throw new Error(options.position);
 		}
 
-		if (timeline) {
-			const groups = Timelines.getParentGroup(timeline, timelineNodes);
+		if (baseTimeline) {
+			const groups = Timelines.getParentGroup(baseTimeline, timelineNodes);
 			if (!groups) {
-				throw new Error(timeline.id);
+				throw new Error(baseTimeline.id);
 			}
 
 			if (groups.length) {
 				let parent: GroupTimeline;
-				if (Settings.maybeGroupTimeline(timeline)) {
-					parent = timeline;
+				if (Settings.maybeGroupTimeline(baseTimeline)) {
+					parent = baseTimeline;
 				} else {
 					parent = Arrays.last(groups);
 				}
 
 				const item = createEmptyTimeline(options.timelineKind);
 
-				if (Settings.maybeGroupTimeline(timeline)) {
+				if (Settings.maybeGroupTimeline(baseTimeline)) {
 					// グループの場合、そのグループの末っ子に設定
 					parent.children = [
 						...parent.children,
@@ -344,7 +344,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					];
 				} else {
 					// タスクの場合、次に設定する
-					const currentIndex = parent.children.findIndex(a => a.id === timeline.id);
+					const currentIndex = parent.children.findIndex(a => a.id === baseTimeline.id);
 					const newChildren = [...parent.children];
 					newChildren.splice(currentIndex + 1, 0, item);
 					parent.children = newChildren;
@@ -355,7 +355,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			} else {
 				const item = createEmptyTimeline(options.timelineKind);
 
-				const currentIndex = timelineNodes.findIndex(a => a.id === timeline.id);
+				const currentIndex = timelineNodes.findIndex(a => a.id === baseTimeline.id);
 				const newTimelineNodes = [...timelineNodes];
 				newTimelineNodes.splice(currentIndex + 1, 0, item);
 				setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);

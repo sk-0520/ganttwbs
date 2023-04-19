@@ -31,10 +31,10 @@ export interface TimelineStore {
 
 	/**
 	 * タイムライン追加。
-	 * @param timeline 追加するタイムラインの基準タイムライン。
+	 * @param baseTimeline 追加するタイムラインの基準タイムライン。
 	 * @param options 追加方法。
 	 */
-	addEmptyTimeline(timeline: AnyTimeline | null, options: NewTimelineOptions): void;
+	addEmptyTimeline(baseTimeline: AnyTimeline | null, options: NewTimelineOptions): void;
 	/**
 	 * タイムラインを更新。
 	 * @param timeline
