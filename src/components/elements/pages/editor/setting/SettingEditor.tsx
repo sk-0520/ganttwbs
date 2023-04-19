@@ -19,9 +19,6 @@ import { Storage } from "@/models/Storage";
 import { Strings } from "@/models/Strings";
 import { TimeZone } from "@/models/TimeZone";
 
-
-
-
 const NewLine = "\r\n";
 const ThemeHolidayRegularColor: Color = "#0f0";
 const ThemeHolidayEventHolidayColor: Color = "#0f0";
@@ -117,7 +114,7 @@ function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnl
 		.map(([k, v]) => ({ date: DateTime.parse(k, timeZone), display: v.display }))
 		.sort((a, b) => a.date.getTime() - b.date.getTime())
 		.map(a => `${a.date.format("yyyy-MM-dd")}\t${a.display}`)
-		.join(NewLine);
+		.join(NewLine) + NewLine;
 }
 
 function toContext(setting: Setting): SettingContext {
@@ -199,10 +196,14 @@ function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string, ti
 	const items = Strings.splitLines(context)
 		.filter(a => a && a.trim())
 		.map(a => a.split("\t", 2))
-		.map(a => ({ date: a[0], display: 1 in a ? a[1]: "" }))
-		.map(a => ({ date: DateTime.parse(a.date, timeZone), display: a.display }))
-		.filter(a => !isNaN(a.date.getTime()));
-for (const item of items) {
+		.map(a => ({ date: a[0], display: 1 in a ? a[1] : "" }))
+		.map(a => ({ date: DateTime.tryParse(a.date, timeZone), display: a.display }))
+		.filter(a => a.date)
+		;
+	for (const item of items) {
+		if (!item.date) {
+			throw new Error("filter");
+		}
 		result[item.date.format("yyyy-MM-dd")] = {
 			display: item.display,
 			kind: kind

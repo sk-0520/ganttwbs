@@ -1,10 +1,10 @@
 import { NextPage } from "next";
+import { useEffect, useState } from "react";
 
+import { AreaSize } from "@/models/data/AreaSize";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { Configuration } from "@/models/data/Configuration";
 import { TimelineStore } from "@/models/store/TimelineStore";
-import { AreaSize } from "@/models/data/AreaSize";
-import { useEffect, useState } from "react";
 import { Types } from "@/models/Types";
 
 type Highlight = "hover" | "active";

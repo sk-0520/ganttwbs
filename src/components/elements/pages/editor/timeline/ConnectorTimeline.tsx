@@ -1,8 +1,8 @@
 import { NextPage } from "next";
 
 import { Charts } from "@/models/Charts";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { AreaSize } from "@/models/data/AreaSize";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { EditProps } from "@/models/data/props/EditProps";
 import { MemberId, TaskTimeline } from "@/models/data/Setting";

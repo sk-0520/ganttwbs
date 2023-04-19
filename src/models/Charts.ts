@@ -1,6 +1,6 @@
+import { AreaSize } from "@/models/data/AreaSize";
 import { CellBox } from "@/models/data/CellBox";
 import { ChartArea } from "@/models/data/ChartArea";
-import { AreaSize } from "@/models/data/AreaSize";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { GroupTimeline, MemberId, TaskTimeline, Theme, TimelineId } from "@/models/data/Setting";
 import { TimeSpanRange } from "@/models/data/TimeSpanRange";

@@ -20,7 +20,7 @@ interface Props {
 const Component: NextPage<Props> = (props: Props) => {
 
 	const [dropEventClassName, setDropEventClassName] = useState("");
-	const [mouseEnterClassName, setMouseEnterClassName] = useState("");
+	const [mouseEnterClassName/*, setMouseEnterClassName*/] = useState("");
 
 	useEffect(() => {
 		if (!props.draggingTimeline) {
