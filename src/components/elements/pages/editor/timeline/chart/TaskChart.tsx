@@ -20,7 +20,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				<rect
 					x={padding}
 					y={props.area.y + padding}
-					width={props.area.chartSize.width - padding * 2}
+					width={props.area.areaSize.width - padding * 2}
 					height={props.area.height - padding * 2}
 					fill="red"
 					fillOpacity={0.6}

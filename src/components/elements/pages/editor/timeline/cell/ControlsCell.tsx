@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { NextPage } from "next";
 import { useState } from "react";
 
@@ -41,8 +42,12 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	return (
 		<div className={
-			"timeline-cell timeline-controls"
-			+ " " + (visibleControls ? " prompt" : "")
+			classNames(
+				"timeline-cell timeline-controls",
+				{
+					"prompt": visibleControls
+				}
+			)
 		}>
 			<button
 				className="cell"

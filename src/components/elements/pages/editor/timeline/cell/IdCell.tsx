@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { NextPage } from "next";
 import { DragEvent } from "react";
 
@@ -25,8 +26,12 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div
 			className={
-				"timeline-cell timeline-id"
-				+ (props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id ? " dragging" : "")
+				classNames(
+					"timeline-cell timeline-id",
+					{
+						dragging: props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id
+					}
+				)
 			}
 			title={props.currentTimeline.id}
 			draggable={!props.selectingBeginDate}

@@ -54,7 +54,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	//TODO: 依存関係が腐ってるよ！
 
 	useEffect(() => {
-		const timelineItem = props.timelineStore.changedItems.get(props.currentTimeline.id);
+		const timelineItem = props.timelineStore.changedItemMap.get(props.currentTimeline.id);
 		if (timelineItem) {
 
 			if (Settings.maybeGroupTimeline(timelineItem.timeline)) {
@@ -79,11 +79,11 @@ const Component: NextPage<Props> = (props: Props) => {
 				throw new Error();
 			}
 
-			if (timelineItem.range) {
-				setBeginKind(timelineItem.range.kind);
-				if (WorkRanges.maybeSuccessWorkRange(timelineItem.range)) {
-					setBeginDate(timelineItem.range.begin);
-					setEndDate(timelineItem.range.end);
+			if (timelineItem.workRange) {
+				setBeginKind(timelineItem.workRange.kind);
+				if (WorkRanges.maybeSuccessWorkRange(timelineItem.workRange)) {
+					setBeginDate(timelineItem.workRange.begin);
+					setEndDate(timelineItem.workRange.end);
 				}
 			}
 		}
@@ -267,6 +267,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					currentTimeline={props.currentTimeline}
 					selectingBeginDate={props.selectingBeginDate}
 					draggingTimeline={props.draggingTimeline}
+					timelineStore={props.timelineStore}
 					level={props.treeIndexes.length + 1}
 				>
 					<IdCell

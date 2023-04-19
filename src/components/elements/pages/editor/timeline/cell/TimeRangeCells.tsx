@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { NextPage } from "next";
 
 import DynamicLabel from "@/components/elements/DynamicLabel";
@@ -23,8 +24,10 @@ const Component: NextPage<Props> = (props: Props) => {
 			<>
 				<div
 					className={
-						"timeline-cell timeline-range-from"
-						+ " " + selectOrClickClassName
+						classNames(
+							"timeline-cell timeline-range-from",
+							selectOrClickClassName
+						)
 					}
 					onClick={props.callbackClickBeginDate}
 				>
@@ -34,8 +37,10 @@ const Component: NextPage<Props> = (props: Props) => {
 				</div>
 				<div
 					className={
-						"timeline-cell timeline-range-to"
-						+ " " + selectOrClickClassName
+						classNames(
+							"timeline-cell timeline-range-to",
+							selectOrClickClassName
+						)
 					}
 					onClick={props.callbackClickBeginDate}
 				>
@@ -47,8 +52,10 @@ const Component: NextPage<Props> = (props: Props) => {
 		) : (
 			<div
 				className={
-					"timeline-cell timeline-range-area"
-					+ " " + selectOrClickClassName
+					classNames(
+						"timeline-cell timeline-range-area",
+						selectOrClickClassName
+					)
 				}
 				onClick={props.callbackClickBeginDate}
 			>

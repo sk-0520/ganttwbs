@@ -9,14 +9,25 @@ export interface TimelineStore {
 
 	/** ノード状態全アイテム */
 	readonly nodeItems: ReadonlyArray<AnyTimeline>;
+
 	/** 全てのタイムライン(ノード状態ではない) */
-	readonly totalItems: ReadonlyMap<TimelineId, AnyTimeline>;
+	readonly totalItemMap: ReadonlyMap<TimelineId, AnyTimeline>;
+
+	/** 各タイムラインを上から見たインデックス順の一覧 */
+	readonly sequenceItems: ReadonlyArray<AnyTimeline>;
+	/** 各タイムラインを上から見たインデックスのマッピング */
+	readonly indexItemMap: ReadonlyMap<TimelineId, number>;
 
 	/** 変更タイムライン */
-	readonly changedItems: ReadonlyMap<TimelineId, TimelineItem>;
+	readonly changedItemMap: ReadonlyMap<TimelineId, TimelineItem>;
 
 	/** 各工数時間 */
 	readonly workRanges: ReadonlyMap<TimelineId, WorkRange>;
+
+	/** ホバー状態タイムライン */
+	readonly hoverItem: AnyTimeline | null;
+	/** アクティブ状態タイムライン */
+	readonly activeItem: AnyTimeline | null;
 
 	/**
 	 * タイムライン追加。
@@ -42,10 +53,22 @@ export interface TimelineStore {
 	removeTimeline(timeline: AnyTimeline): void;
 
 	/**
+	 * ホバー状態設定。
+	 * @param timeline
+	 */
+	setHoverTimeline(timeline: AnyTimeline | null): void;
+	/**
+	 * アクティブ状態設定。
+	 * @param timeline
+	 */
+	setActiveTimeline(timeline: AnyTimeline | null): void;
+
+	/**
 	 * D&D処理を開始
 	 * @param event
 	 * @param sourceTimeline
 	 */
 	startDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void;
-
 }
+
+

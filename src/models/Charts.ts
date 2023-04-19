@@ -1,6 +1,6 @@
 import { CellBox } from "@/models/data/CellBox";
 import { ChartArea } from "@/models/data/ChartArea";
-import { ChartSize } from "@/models/data/ChartSize";
+import { AreaSize } from "@/models/data/AreaSize";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { GroupTimeline, MemberId, TaskTimeline, Theme, TimelineId } from "@/models/data/Setting";
 import { TimeSpanRange } from "@/models/data/TimeSpanRange";
@@ -38,7 +38,7 @@ export abstract class Charts {
 		};
 	}
 
-	public static createChartArea(timeSpanRange: TimeSpanRange | null, index: number, cell: CellBox, chartSize: ChartSize): ChartArea {
+	public static createChartArea(timeSpanRange: TimeSpanRange | null, index: number, cell: CellBox, chartSize: AreaSize): ChartArea {
 		const width = typeof cell.width === "number" ? cell.width : cell.width.value;
 		const height = typeof cell.height === "number" ? cell.height : cell.height.value;
 
@@ -48,7 +48,7 @@ export abstract class Charts {
 			y: index * height,
 			width: timeSpanRange ? timeSpanRange.end.totalDays * width : 0,
 			height: height,
-			chartSize: chartSize,
+			areaSize: chartSize,
 		};
 
 		return result;

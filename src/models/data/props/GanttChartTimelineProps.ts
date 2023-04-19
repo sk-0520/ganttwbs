@@ -1,5 +1,5 @@
 import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { ChartSize } from "@/models/data/ChartSize";
+import { AreaSize } from "@/models/data/AreaSize";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { EditProps } from "@/models/data/props/EditProps";
 import { GroupTimeline, MemberId, AnyTimeline } from "@/models/data/Setting";
@@ -12,7 +12,7 @@ export interface GanttChartTimelineProps extends EditProps {
 	currentIndex: number;
 
 	calendarInfo: CalendarInfo;
-	chartSize: ChartSize;
+	chartSize: AreaSize;
 
 	memberMap: ReadonlyMap<MemberId, MemberMapValue>;
 

@@ -1,10 +1,10 @@
 
 /**
- * チャート描画全領域。
+ * 描画全領域。
  *
  * ダミー領域は含まない。
  */
-export interface ChartSize {
+export interface AreaSize {
 	width: number;
 	height: number;
 }

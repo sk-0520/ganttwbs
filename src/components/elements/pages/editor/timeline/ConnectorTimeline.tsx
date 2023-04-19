@@ -2,10 +2,10 @@ import { NextPage } from "next";
 
 import { Charts } from "@/models/Charts";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { ChartSize } from "@/models/data/ChartSize";
+import { AreaSize } from "@/models/data/AreaSize";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { EditProps } from "@/models/data/props/EditProps";
-import { MemberId, TaskTimeline, TimelineId } from "@/models/data/Setting";
+import { MemberId, TaskTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { WorkRanges } from "@/models/WorkRanges";
@@ -13,10 +13,9 @@ import { WorkRanges } from "@/models/WorkRanges";
 interface Props extends EditProps {
 	currentIndex: number;
 	currentTimeline: TaskTimeline;
-	timelineIndexes: ReadonlyMap<TimelineId, number>;
 
 	calendarInfo: CalendarInfo;
-	chartSize: ChartSize;
+	chartSize: AreaSize;
 
 	memberMap: ReadonlyMap<MemberId, MemberMapValue>;
 
@@ -33,7 +32,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	const currentWorkRange = props.timelineStore.workRanges.get(props.currentTimeline.id);
-	if (!currentWorkRange || !WorkRanges.maybeSuccessWorkRange(currentWorkRange)) {
+	if (!WorkRanges.maybeSuccessWorkRange(currentWorkRange)) {
 		return null;
 	}
 
@@ -60,12 +59,12 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<>
 			{props.currentTimeline.previous.map(b => {
-				const previousIndex = props.timelineIndexes.get(b);
+				const previousIndex = props.timelineStore.indexItemMap.get(b);
 				if (typeof previousIndex === "undefined") {
 					return null;
 				}
 
-				const previousTimeline = props.timelineStore.totalItems.get(b);
+				const previousTimeline = props.timelineStore.totalItemMap.get(b);
 				if (!previousTimeline) {
 					return null;
 				}
@@ -76,7 +75,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					;
 
 				const previewWorkRange = props.timelineStore.workRanges.get(previousTimeline.id);
-				if (!previewWorkRange || !WorkRanges.maybeSuccessWorkRange(previewWorkRange)) {
+				if (!WorkRanges.maybeSuccessWorkRange(previewWorkRange)) {
 					return null;
 				}
 

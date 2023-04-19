@@ -9,27 +9,11 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 	if (props.date) {
-		let format = null;
-		switch (props.format) {
-			case "date":
-				format = "yyyy/MM/dd";
-				break;
-
-			case "time":
-				format = "hh:mm:ss";
-				break;
-
-			case "datetime":
-				format = "yyyy/MM/dd hh:mm:ss";
-				break;
-
-			default:
-				throw new Error();
-		}
+		const values = convert(props.format);
 
 		return (
-			<time className={"timestamp-" + props.format} dateTime={props.date.format("U")}>
-				{props.date.format(format)}
+			<time className={values.className} dateTime={props.date.format("U")}>
+				{props.date.format(values.format)}
 			</time>
 		);
 	}
@@ -38,3 +22,29 @@ const Component: NextPage<Props> = (props: Props) => {
 };
 
 export default Component;
+
+function convert(propsFormat: string): { className: string, format: string } {
+	let format: string;
+
+	switch (propsFormat) {
+		case "date":
+			format = "yyyy/MM/dd";
+			break;
+
+		case "time":
+			format = "hh:mm:ss";
+			break;
+
+		case "datetime":
+			format = "yyyy/MM/dd hh:mm:ss";
+			break;
+
+		default:
+			throw new Error();
+	}
+
+	return {
+		className: "timestamp-" + propsFormat,
+		format: format,
+	};
+}

@@ -79,6 +79,30 @@ export abstract class Timelines {
 		return currentNumber.toString();
 	}
 
+	private static flatCore(timeline: AnyTimeline): Array<AnyTimeline> {
+		const result = new Array<AnyTimeline>();
+
+		if (Settings.maybeTaskTimeline(timeline)) {
+			result.push(timeline);
+		} else if (Settings.maybeGroupTimeline(timeline)) {
+			result.push(timeline);
+			const children = timeline.children.flatMap(a => this.flatCore(a));
+			for (const child of children) {
+				result.push(child);
+			}
+		}
+
+		return result;
+	}
+
+	public static flat(timelineNodes: ReadonlyArray<AnyTimeline>): Array<AnyTimeline> {
+		return timelineNodes.flatMap(a => this.flatCore(a));
+	}
+
+	public static toIndexes(timelines: ReadonlyArray<AnyTimeline>): Map<TimelineId, number> {
+		return new Map(timelines.map((a, i) => [a.id, i]));
+	}
+
 	public static moveTimelineOrder(timelines: Array<AnyTimeline>, moveUp: boolean, currentTimeline: AnyTimeline): boolean {
 		const currentIndex = timelines.findIndex(a => a === currentTimeline);
 
@@ -309,7 +333,7 @@ export abstract class Timelines {
 			}
 
 			const prevRange = result.get(prev.id);
-			if (!prevRange || !WorkRanges.maybeSuccessWorkRange(prevRange)) {
+			if (!WorkRanges.maybeSuccessWorkRange(prevRange)) {
 				continue;
 			}
 

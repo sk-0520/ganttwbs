@@ -25,6 +25,8 @@
 		},
 		"html.format.indentInnerHtml": true,
 		"html.format.wrapLineLength": 0,
+		"javascript.preferences.importModuleSpecifier": "non-relative",
+		"typescript.preferences.importModuleSpecifier": "non-relative",
 		"json.schemas": [
 			{
 				"fileMatch": [

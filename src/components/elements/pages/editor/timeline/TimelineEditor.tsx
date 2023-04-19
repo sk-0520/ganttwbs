@@ -31,6 +31,10 @@ interface Props extends EditProps { }
 const Component: NextPage<Props> = (props: Props) => {
 
 	const workRangesCache = new Map<TimelineId, WorkRange>();
+
+	let hoverTimeline: AnyTimeline | null = null;
+	let activeTimeline: AnyTimeline | null = null;
+
 	const [timelineNodes, setTimelineNodes] = useState([...props.editData.setting.timelineNodes]);
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map(), new Map()));
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
@@ -48,23 +52,36 @@ const Component: NextPage<Props> = (props: Props) => {
 		updateRelations();
 	}, [timelineNodes]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	function createTimelineStore(totalItems: Map<TimelineId, AnyTimeline>, changedItems: Map<TimelineId, TimelineItem>): TimelineStore {
+	function createTimelineStore(totalItems: ReadonlyMap<TimelineId, AnyTimeline>, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
 
 		for (const [k, v] of changedItems) {
-			if (v.range) {
-				workRangesCache.set(k, v.range);
+			if (v.workRange) {
+				workRangesCache.set(k, v.workRange);
 			}
 		}
 
+		const timelineSequence = Timelines.flat(timelineNodes);
+
 		const result: TimelineStore = {
 			nodeItems: timelineNodes,
-			totalItems: totalItems,
-			changedItems: changedItems,
+			totalItemMap: totalItems,
+			sequenceItems: timelineSequence,
+			indexItemMap: Timelines.toIndexes(timelineSequence),
+
+			changedItemMap: changedItems,
 			workRanges: workRangesCache,
+
+			hoverItem: hoverTimeline,
+			activeItem: activeTimeline,
+
 			addTimeline: handleAddTimeline,
 			updateTimeline: handleUpdateTimeline,
 			moveTimeline: handleMoveTimeline,
 			removeTimeline: handleRemoveTimeline,
+
+			setHoverTimeline: handleSetHoverTimeline,
+			setActiveTimeline: handleSetActiveTimeline,
+
 			startDragTimeline: handleStartDragTimeline,
 		};
 
@@ -83,7 +100,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				.map(([k, v]) => {
 					const item: TimelineItem = {
 						timeline: v,
-						range: workRanges.get(k),
+						workRange: workRanges.get(k),
 					};
 
 					return [k, item];
@@ -136,6 +153,55 @@ const Component: NextPage<Props> = (props: Props) => {
 		setDraggingTimeline(null);
 
 		setTimelineNodes(props.editData.setting.timelineNodes);
+	}
+
+	function handleSetPointerTimeline(timeline: AnyTimeline | null, property: "isHover" | "isActive"): void {
+		const changedItems = new Map<TimelineId, TimelineItem>();
+
+		const currentTimeline = property === "isHover"
+			? hoverTimeline
+			: activeTimeline
+			;
+
+		if (currentTimeline && currentTimeline?.id !== timeline?.id) {
+			changedItems.set(currentTimeline.id, {
+				timeline: currentTimeline,
+				[property]: false,
+			});
+		}
+
+		if (timeline) {
+			changedItems.set(timeline.id, {
+				timeline: timeline,
+				[property]: true,
+			});
+		}
+
+		if (property === "isHover") {
+			hoverTimeline = timeline;
+		} else {
+			activeTimeline = timeline;
+		}
+
+		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.timelineNodes);
+
+		const store = createTimelineStore(timelineMap, changedItems);
+
+		setTimelineStore(store);
+	}
+
+	function handleSetHoverTimeline(timeline: AnyTimeline | null): void {
+		handleSetPointerTimeline(
+			timeline,
+			"isHover"
+		);
+	}
+
+	function handleSetActiveTimeline(timeline: AnyTimeline | null): void {
+		handleSetPointerTimeline(
+			timeline,
+			"isActive"
+		);
 	}
 
 	function handleStartDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void {
@@ -508,6 +574,12 @@ const Component: NextPage<Props> = (props: Props) => {
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
 			/>
+			{/* <DrawArea
+				configuration={props.configuration}
+				editData={props.editData}
+				timelineStore={timelineStore}
+				calendarInfo={calendarInfo}
+			/> */}
 		</div>
 	);
 };
@@ -613,3 +685,4 @@ function createEmptyTimeline(timelineKind: TimelineKind): AnyTimeline {
 			throw new Error();
 	}
 }
+

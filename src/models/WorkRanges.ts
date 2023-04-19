@@ -8,8 +8,12 @@ export class WorkRanges {
 	 * @param workRange
 	 * @returns
 	 */
-	public static maybeSuccessWorkRange(workRange: WorkRange): workRange is SuccessWorkRange {
-		return workRange.kind === "success";
+	public static maybeSuccessWorkRange(workRange: WorkRange | null | undefined): workRange is SuccessWorkRange {
+		if (workRange) {
+			return workRange.kind === "success";
+		}
+
+		return false;
 	}
 
 	public static isError(workRange: WorkRange): boolean {

@@ -5,10 +5,10 @@ import ConnectorTimeline from "@/components/elements/pages/editor/timeline/Conne
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
 import { Calendars } from "@/models/Calendars";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { ChartSize } from "@/models/data/ChartSize";
+import { AreaSize } from "@/models/data/AreaSize";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { EditProps } from "@/models/data/props/EditProps";
-import { AnyTimeline, MemberId } from "@/models/data/Setting";
+import { MemberId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { TimeSpan } from "@/models/TimeSpan";
@@ -26,12 +26,10 @@ const Component: NextPage<Props> = (props: Props) => {
 	const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
 
 	const cell = props.configuration.design.honest.cell;
-	const timelines = props.editData.setting.timelineNodes.flatMap(a => flat(a));
-	const timelineIndexes = new Map(timelines.map((a, i) => [a.id, i]));
 
-	const chartSize: ChartSize = {
+	const chartSize: AreaSize = {
 		width: cell.width.value * days,
-		height: cell.height.value * timelines.length,
+		height: cell.height.value * props.timelineStore.totalItemMap.size,
 	};
 
 	//TODO: for しなくてもできると思うけどパッと思いつかなんだ
@@ -42,30 +40,14 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 	}
 
-	function flat(timeline: AnyTimeline): Array<AnyTimeline> {
-		const result = new Array<AnyTimeline>();
-
-		if (Settings.maybeTaskTimeline(timeline)) {
-			result.push(timeline);
-		} else if (Settings.maybeGroupTimeline(timeline)) {
-			result.push(timeline);
-			const children = timeline.children.flatMap(a => flat(a));
-			for (const child of children) {
-				result.push(child);
-			}
-		}
-
-		return result;
-	}
-
 	function renderGrid(): ReactNode {
 
 		const width = cell.width.value * days;
-		const height = cell.height.value * (timelines.length + props.configuration.design.dummy.height);
+		const height = cell.height.value * (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height);
 
 		// 横軸
 		const gridHorizontals = new Array<ReactNode>();
-		for (let i = 0; i < (timelines.length + props.configuration.design.dummy.height); i++) {
+		for (let i = 0; i < (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height); i++) {
 			const y = cell.height.value + cell.height.value * i;
 			gridHorizontals.push(
 				<line
@@ -151,7 +133,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		<div id='viewer'>
 			<svg id="canvas" width={chartSize.width} height={chartSize.height}>
 				{renderGrid()}
-				{timelines.map((a, i) => {
+				{props.timelineStore.sequenceItems.map((a, i) => {
 					return (
 						<GanttChartTimeline
 							key={a.id}
@@ -168,7 +150,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						/>
 					);
 				})}
-				{timelines.map((a, i) => {
+				{props.timelineStore.sequenceItems.map((a, i) => {
 					if (!Settings.maybeTaskTimeline(a)) {
 						return null;
 					}
@@ -179,7 +161,6 @@ const Component: NextPage<Props> = (props: Props) => {
 							editData={props.editData}
 							currentTimeline={a}
 							currentIndex={i}
-							timelineIndexes={timelineIndexes}
 							calendarInfo={props.calendarInfo}
 							chartSize={chartSize}
 							memberMap={memberMap}
@@ -195,4 +176,3 @@ const Component: NextPage<Props> = (props: Props) => {
 };
 
 export default Component;
-

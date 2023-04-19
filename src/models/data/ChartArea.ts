@@ -1,4 +1,4 @@
-import { ChartSize } from "@/models/data/ChartSize";
+import { AreaSize } from "@/models/data/AreaSize";
 import { TimeSpanRange } from "@/models/data/TimeSpanRange";
 
 /**
@@ -12,5 +12,5 @@ export interface ChartArea {
 	y: number;
 	width: number;
 	height: number;
-	chartSize: ChartSize;
+	areaSize: AreaSize;
 }
