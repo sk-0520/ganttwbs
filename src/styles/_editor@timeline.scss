@@ -215,7 +215,9 @@
 
 			&.drag-over {
 				position: relative;
-				mix-blend-mode: overlay;
+				//mix-blend-mode: overlay;
+				outline: 1px solid red;
+				opacity: 0.8;
 			}
 
 			&.hover {
