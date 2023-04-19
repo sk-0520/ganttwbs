@@ -4,8 +4,6 @@ import { useContext, MouseEvent, useState } from "react";
 
 import GroupColorsDialog from "@/components/elements/pages/editor/setting/Group/GroupColorsDialog";
 import MemberEditor from "@/components/elements/pages/editor/setting/Group/MemberEditor";
-import PlainColorPicker from "@/components/elements/PlainColorPicker";
-import Colors from "@/models/Colors";
 import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
@@ -18,12 +16,6 @@ const Component: NextPage = () => {
 	const [editGroups, setEditGroups] = useState(settingContext.groups);
 	const [choiceColorGroup, setChoiceColorGroup] = useState<GroupSetting | null>(null);
 	const [updatedColors, setUpdatedColors] = useState<Map<MemberId, Color>>(new Map());
-
-	const cs = Colors.generateGradient(
-		"#ff0000",
-		"#0000ff",
-		2
-	);
 
 	function removeMember(group: GroupSetting, member: MemberSetting) {
 		const targetGroup = editGroups.find(a => a.key === group.key);
@@ -221,7 +213,6 @@ const Component: NextPage = () => {
 						onChange={ev => setNewGroupName(ev.target.value)}
 					/>
 					<button type="button" onClick={handleAddGroup}>add</button>
-					{cs.map(a => <PlainColorPicker key={a.toHex()} color={a.toHexString()} />)}
 				</dd>
 			</dl>
 
