@@ -317,9 +317,15 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleAddEmptyTimeline(baseTimeline: AnyTimeline | null, options: NewTimelineOptions): void {
+		const newTimeline = createEmptyTimeline(options.timelineKind);
+
+		handleAddNewTimeline(baseTimeline, newTimeline, options.position);
+	}
+
+	function handleAddNewTimeline(baseTimeline: AnyTimeline | null, newTimeline: AnyTimeline, position: NewTimelinePosition): void {
 		// 将来追加した場合の安全弁
-		if (options.position !== NewTimelinePosition.Next) {
-			throw new Error(options.position);
+		if (position !== NewTimelinePosition.Next) {
+			throw new Error(position);
 		}
 
 		if (baseTimeline) {
@@ -336,44 +342,35 @@ const Component: NextPage<Props> = (props: Props) => {
 					parent = Arrays.last(groups);
 				}
 
-				const item = createEmptyTimeline(options.timelineKind);
-
 				if (Settings.maybeGroupTimeline(baseTimeline)) {
 					// グループの場合、そのグループの末っ子に設定
 					parent.children = [
 						...parent.children,
-						item,
+						newTimeline,
 					];
 				} else {
 					// タスクの場合、次に設定する
 					const currentIndex = parent.children.findIndex(a => a.id === baseTimeline.id);
 					const newChildren = [...parent.children];
-					newChildren.splice(currentIndex + 1, 0, item);
+					newChildren.splice(currentIndex + 1, 0, newTimeline);
 					parent.children = newChildren;
 				}
 
 				updateRelations();
 				return;
 			} else {
-				const item = createEmptyTimeline(options.timelineKind);
-
 				const currentIndex = timelineNodes.findIndex(a => a.id === baseTimeline.id);
 				const newTimelineNodes = [...timelineNodes];
-				newTimelineNodes.splice(currentIndex + 1, 0, item);
+				newTimelineNodes.splice(currentIndex + 1, 0, newTimeline);
 				setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
 			}
 		} else {
-			const item = createEmptyTimeline(options.timelineKind);
 			const newTimelineNodes = [
 				...timelineNodes,
-				item,
+				newTimeline,
 			];
 			setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
 		}
-	}
-
-	function handleAddNewTimeline(baseTimeline: AnyTimeline | null, newTimeline: AnyTimeline, position: NewTimelinePosition): void {
-		//
 	}
 
 	function handleUpdateTimeline(timeline: AnyTimeline): void {
