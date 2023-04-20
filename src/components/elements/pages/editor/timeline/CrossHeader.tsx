@@ -2,12 +2,13 @@ import { NextPage } from "next";
 
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { EditProps } from "@/models/data/props/EditProps";
-import { TimelineKind } from "@/models/data/Setting";
+import { AnyTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { useState } from "react";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
+import InputTimelinesDialog from "@/components/elements/pages/editor/timeline/InputTimelinesDialog";
 
 interface Props extends EditProps {
 	calendarInfo: CalendarInfo;
@@ -16,11 +17,11 @@ interface Props extends EditProps {
 
 const Component: NextPage<Props> = (props: Props) => {
 
-	const [visibleAddTimelines, setVisibleAddTimelines] = useState(false);
+	const [visibleInputDialog, setVisibleInputDialog] = useState(false);
 
 	function addTimeline(kind: TimelineKind) {
 		props.timelineStore.addEmptyTimeline(
-			props.timelineStore.nodeItems.length ? props.timelineStore.nodeItems[props.timelineStore.nodeItems.length - 1]: null,
+			props.timelineStore.nodeItems.length ? props.timelineStore.nodeItems[props.timelineStore.nodeItems.length - 1] : null,
 			{
 				position: NewTimelinePosition.Next,
 				timelineKind: kind,
@@ -37,7 +38,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleShowNewTimeline() {
-		setVisibleAddTimelines(true);
+		setVisibleInputDialog(true);
 	}
 
 	function scrollFromDate(date: DateTime): void {
@@ -49,6 +50,11 @@ const Component: NextPage<Props> = (props: Props) => {
 				left: targetElement.offsetLeft
 			});
 		}
+	}
+
+	function handleInput(timeline: AnyTimeline | null) {
+		//
+		setVisibleInputDialog(false);
 	}
 
 	return (
@@ -89,6 +95,11 @@ const Component: NextPage<Props> = (props: Props) => {
 					<div className='timeline-cell timeline-controls'>操作</div>
 				</div>
 			</div>
+			{visibleInputDialog && (
+				<InputTimelinesDialog
+					callback={handleInput}
+				/>
+			)}
 		</div>
 	);
 };
