@@ -3,8 +3,8 @@ import { NextPage } from "next";
 import { Timelines } from "@/models/Timelines";
 
 interface Props {
-	treeIndexes: ReadonlyArray<number>;
-	currentIndex: number;
+	readonly treeIndexes: ReadonlyArray<number>;
+	readonly currentIndex: number;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
