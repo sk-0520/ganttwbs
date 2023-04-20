@@ -2,7 +2,7 @@ import { NextPage } from "next";
 
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { EditProps } from "@/models/data/props/EditProps";
-import { AnyTimeline, TimelineKind } from "@/models/data/Setting";
+import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
@@ -19,7 +19,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const [visibleInputDialog, setVisibleInputDialog] = useState(false);
 
-	function addTimeline(kind: TimelineKind) {
+	function addNewTimeline(kind: TimelineKind) {
 		props.timelineStore.addEmptyTimeline(
 			props.timelineStore.nodeItems.length ? props.timelineStore.nodeItems[props.timelineStore.nodeItems.length - 1] : null,
 			{
@@ -30,11 +30,11 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleAddNewGroup() {
-		addTimeline("group");
+		addNewTimeline("group");
 	}
 
 	function handleAddNewTask() {
-		addTimeline("task");
+		addNewTimeline("task");
 	}
 
 	function handleShowNewTimeline() {
@@ -52,8 +52,11 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 	}
 
-	function handleInput(timeline: AnyTimeline | null) {
-		//
+	function handleInput(timeline: GroupTimeline | null) {
+		if (timeline) {
+			props.timelineStore.addNewTimeline(null, timeline, NewTimelinePosition.Next);
+		}
+
 		setVisibleInputDialog(false);
 	}
 

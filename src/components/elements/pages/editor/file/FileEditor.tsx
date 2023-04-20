@@ -112,6 +112,7 @@ const Component: NextPage<Props> = (props: Props) => {
 						height={300}
 						options={{
 							readOnly: true,
+							quickSuggestions: false,
 						}}
 					/>
 				</dd>
