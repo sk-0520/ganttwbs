@@ -369,6 +369,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				...timelineNodes,
 				newTimeline,
 			];
+
 			setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
 		}
 	}

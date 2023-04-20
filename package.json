@@ -14,9 +14,10 @@
 	},
 	"homepage": "https://github.com/sk-0520/ganttwbs#readme",
 	"scripts": {
-		"typescript": "tsc",
-		"lint": "next lint --dir .",
+		"code:typescript": "tsc",
+		"code:lint": "next lint --dir .",
 		"lint-fix": "next lint --fix --dir .",
+		"code": "npm-run-all --sequential code:typescript code:lint",
 		"test:script": "jest --runInBand",
 		"test": "npm-run-all --sequential test:script",
 		"dev": "next dev",

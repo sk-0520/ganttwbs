@@ -14,6 +14,7 @@ import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/Workl
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
+import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { EditProps } from "@/models/data/props/EditProps";
 import { AnyTimeline, GroupTimeline, MemberId, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
@@ -146,7 +147,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.timelineStore.addEmptyTimeline(
 			props.currentTimeline,
 			{
-				position: "next",
+				position: NewTimelinePosition.Next,
 				timelineKind: kind,
 			}
 		);

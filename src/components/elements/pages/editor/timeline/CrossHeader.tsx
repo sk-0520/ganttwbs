@@ -19,7 +19,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const [visibleInputDialog, setVisibleInputDialog] = useState(false);
 
-	function addNewTimeline(kind: TimelineKind) {
+	function addEmptyTimeline(kind: TimelineKind) {
 		props.timelineStore.addEmptyTimeline(
 			props.timelineStore.nodeItems.length ? props.timelineStore.nodeItems[props.timelineStore.nodeItems.length - 1] : null,
 			{
@@ -29,12 +29,12 @@ const Component: NextPage<Props> = (props: Props) => {
 		);
 	}
 
-	function handleAddNewGroup() {
-		addNewTimeline("group");
+	function handleAddEmptyGroup() {
+		addEmptyTimeline("group");
 	}
 
-	function handleAddNewTask() {
-		addNewTimeline("task");
+	function handleAddEmptyTask() {
+		addEmptyTimeline("task");
 	}
 
 	function handleShowNewTimeline() {
@@ -69,10 +69,10 @@ const Component: NextPage<Props> = (props: Props) => {
 				<div className='operation'>
 					<ul className="inline">
 						<li>
-							<button type='button' onClick={handleAddNewGroup}>add new group</button>
+							<button type='button' onClick={handleAddEmptyGroup}>add new group</button>
 						</li>
 						<li>
-							<button type='button' onClick={handleAddNewTask}>add new task</button>
+							<button type='button' onClick={handleAddEmptyTask}>add new task</button>
 						</li>
 						<li>
 							<button type='button' onClick={handleShowNewTimeline}>add timelines</button>

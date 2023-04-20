@@ -1,3 +1,4 @@
+import { Arrays } from "@/models/Arrays";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, TimeOnly, TimelineId, WeekIndex } from "@/models/data/Setting";
 import { SuccessWorkRange, WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
@@ -480,6 +481,82 @@ export abstract class Timelines {
 		console.debug("反復実施数", recursiveCount, "result", result.size, "flatTimelines", flatTimelines.length);
 
 		return result;
+	}
+
+	/**
+	 * タイムラインから最初に見つかったタスクを返す。
+	 * ここでいう最初は層の浅い部分となる。
+	 * @param timeline
+	 * @returns
+	 */
+	public static getFirstTaskTimeline(timeline: AnyTimeline): TaskTimeline | null {
+		if(Settings.maybeTaskTimeline(timeline)) {
+			return timeline;
+		} else if(Settings.maybeGroupTimeline(timeline)) {
+			const taskChildren = timeline.children.filter(Settings.maybeTaskTimeline);
+			if(taskChildren.length) {
+				return taskChildren[0];
+			}
+
+			const groupChildren = timeline.children.filter(Settings.maybeGroupTimeline);
+			for(const groupTImeline of groupChildren) {
+				const taskTimeline = this.getFirstTaskTimeline(groupTImeline);
+				if(taskTimeline) {
+					return taskTimeline;
+				}
+			}
+		} else {
+			throw new Error();
+		}
+
+		return null;
+	}
+
+	/**
+	 * 直近のタイムラインを取得。
+	 * @param timeline 基準タイムライン。
+	 * @param timelineNodes ノード状態全タイムライン。
+	 * @returns 直近のタイムライン、あかんときは `null`
+	 */
+	public static getPrevTimeline(timeline: AnyTimeline, timelineNodes: ReadonlyArray<AnyTimeline>): AnyTimeline | null {
+		const rootIndex = timelineNodes.findIndex(a => a.id === timeline.id);
+		if (!rootIndex) {
+			return null;
+		}
+
+		if (rootIndex !== -1) {
+			return timelineNodes[rootIndex - 1];
+		}
+
+		const groups = this.getParentGroup(timeline, timelineNodes);
+		const timelines = groups
+			? Arrays.last(groups).children
+			: timelineNodes
+		;
+
+		const childIndex = timelines.findIndex(a => a.id === timeline.id);
+
+		if(childIndex) {
+			return timelines[childIndex - 1];
+		}
+		if(!groups) {
+			return null;
+		}
+
+		// 直接お爺さん見ていいのか問題(ルートは対応してるからいいはず。。。自信ない)
+		const group = Arrays.last(groups);
+		const parent = groups[groups.length - 2];
+		const parentIndex = parent.children.findIndex(a => a.id === group.id);
+
+		if(parentIndex === -1) {
+			throw new Error();
+		}
+
+		if(parentIndex) {
+			return parent.children[childIndex - 1];
+		}
+
+		return null;
 	}
 
 }
