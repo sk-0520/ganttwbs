@@ -61,7 +61,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			}
 		}
 
-		const timelineSequence = Timelines.flat(rootChildren);
+		const timelineSequence = Timelines.flat(props.editData.setting.rootTimeline.children);
 
 		const result: TimelineStore = {
 			rootGroupTimeline: props.editData.setting.rootTimeline,

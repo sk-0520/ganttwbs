@@ -11,7 +11,6 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { MemberId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
-import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 
 
@@ -134,7 +133,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		<div id='viewer'>
 			<svg id="canvas" width={chartSize.width} height={chartSize.height}>
 				{renderGrid()}
-				{Timelines.flat(props.timelineStore.rootGroupTimeline.children).map((a, i) => {
+				{props.timelineStore.sequenceItems.map((a, i) => {
 					return (
 						<GanttChartTimeline
 							key={a.id}
