@@ -1,5 +1,4 @@
-import { Arrays } from "@/models/Arrays";
-import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, TaskTimeline, TimeOnly, TimelineId, WeekIndex } from "@/models/data/Setting";
+import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, WeekIndex } from "@/models/data/Setting";
 import { SuccessWorkRange, WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
@@ -40,6 +39,18 @@ export abstract class Timelines {
 
 	public static serializeDateTime(date: DateTime): TimeOnly {
 		return date.format("yyyy-MM-dd");
+	}
+
+	public static createRootGroup(): RootTimeline {
+		const item: RootTimeline = {
+			id: IdFactory.rootTimelineId,
+			kind: "group",
+			subject: "ROOT",
+			comment: "top level timeline",
+			children: [],
+		};
+
+		return item;
 	}
 
 	public static createNewGroup(): GroupTimeline {
@@ -128,12 +139,6 @@ export abstract class Timelines {
 		return false;
 	}
 
-	public static moveTimelineIndex(timelines: Array<AnyTimeline>, sourceIndex: number, destinationIndex: number): void {
-		const sourceTimeline = timelines[sourceIndex];
-		timelines.splice(sourceIndex, 1);
-		timelines.splice(destinationIndex, 0, sourceTimeline);
-	}
-
 	public static displayWorkload(workload: number): string {
 		return workload.toFixed(2);
 	}
@@ -195,12 +200,17 @@ export abstract class Timelines {
 		return this.sumProgress(groupTimeline.children);
 	}
 
-	public static getTimelinesMap(timelineNodes: ReadonlyArray<AnyTimeline>): Map<TimelineId, AnyTimeline> {
+	/**
+	 * 対象グループの子孫をマッピング
+	 * @param groupTimeline
+	 * @returns マップデータ(`groupTimeline` は含まれない)
+	 */
+	public static getTimelinesMap(groupTimeline: GroupTimeline): Map<TimelineId, AnyTimeline> {
 		const result = new Map<TimelineId, AnyTimeline>();
 
-		for (const timeline of timelineNodes) {
+		for (const timeline of groupTimeline.children) {
 			if (Settings.maybeGroupTimeline(timeline)) {
-				const map = this.getTimelinesMap(timeline.children);
+				const map = this.getTimelinesMap(timeline);
 				for (const [key, value] of map) {
 					result.set(key, value);
 				}
@@ -231,25 +241,26 @@ export abstract class Timelines {
 	/**
 	 * 指定のタイムラインが所属するグループを取得する。
 	 * @param timeline 子タイムライン。
-	 * @param timelineNodes タイムラインノード。
-	 * @returns 親グループの配列。空の場合、最上位に位置している。 見つかんなかった場合は null を返す。
+	 * @param groupTimeline 検索対象のグループタイムライン(再帰的に参照される)。
+	 * @returns 親グループの配列。最小で1、何も見つからない場合は 空配列。
 	 */
-	public static getParentGroup(timeline: AnyTimeline, timelineNodes: ReadonlyArray<GroupTimeline | TaskTimeline>): Array<GroupTimeline> | null {
-		if (timelineNodes.find(a => a.id === timeline.id)) {
-			// 最上位なので空配
-			return [];
+	public static getParentGroups(timeline: AnyTimeline, groupTimeline: GroupTimeline): Array<GroupTimeline> {
+
+		if (groupTimeline.children.some(a => a.id === timeline.id)) {
+			return [groupTimeline];
 		}
 
-		const rootGroups = timelineNodes.filter(Settings.maybeGroupTimeline);
-		for (const groupTimeline of rootGroups) {
-			const nodes = this.getParentGroup(timeline, groupTimeline.children);
-			if (!nodes) {
+		const rootChildren = groupTimeline.children.filter(Settings.maybeGroupTimeline);
+		for (const groupTimeline of rootChildren) {
+
+			const nodes = this.getParentGroups(timeline, groupTimeline);
+			if (!nodes.length) {
 				continue;
 			}
 			return [groupTimeline, ...nodes];
 		}
 
-		return null;
+		return [];
 	}
 
 
@@ -490,18 +501,18 @@ export abstract class Timelines {
 	 * @returns
 	 */
 	public static getFirstTaskTimeline(timeline: AnyTimeline): TaskTimeline | null {
-		if(Settings.maybeTaskTimeline(timeline)) {
+		if (Settings.maybeTaskTimeline(timeline)) {
 			return timeline;
-		} else if(Settings.maybeGroupTimeline(timeline)) {
+		} else if (Settings.maybeGroupTimeline(timeline)) {
 			const taskChildren = timeline.children.filter(Settings.maybeTaskTimeline);
-			if(taskChildren.length) {
+			if (taskChildren.length) {
 				return taskChildren[0];
 			}
 
 			const groupChildren = timeline.children.filter(Settings.maybeGroupTimeline);
-			for(const groupTImeline of groupChildren) {
+			for (const groupTImeline of groupChildren) {
 				const taskTimeline = this.getFirstTaskTimeline(groupTImeline);
-				if(taskTimeline) {
+				if (taskTimeline) {
 					return taskTimeline;
 				}
 			}
@@ -515,48 +526,11 @@ export abstract class Timelines {
 	/**
 	 * 直近のタイムラインを取得。
 	 * @param timeline 基準タイムライン。
-	 * @param timelineNodes ノード状態全タイムライン。
+	 * @param rootGroupTimeline ノード状態全タイムライン。
 	 * @returns 直近のタイムライン、あかんときは `null`
 	 */
-	public static getPrevTimeline(timeline: AnyTimeline, timelineNodes: ReadonlyArray<AnyTimeline>): AnyTimeline | null {
-		const rootIndex = timelineNodes.findIndex(a => a.id === timeline.id);
-		if (!rootIndex) {
-			return null;
-		}
-
-		if (rootIndex !== -1) {
-			return timelineNodes[rootIndex - 1];
-		}
-
-		const groups = this.getParentGroup(timeline, timelineNodes);
-		const timelines = groups
-			? Arrays.last(groups).children
-			: timelineNodes
-		;
-
-		const childIndex = timelines.findIndex(a => a.id === timeline.id);
-
-		if(childIndex) {
-			return timelines[childIndex - 1];
-		}
-		if(!groups) {
-			return null;
-		}
-
-		// 直接お爺さん見ていいのか問題(ルートは対応してるからいいはず。。。自信ない)
-		const group = Arrays.last(groups);
-		const parent = groups[groups.length - 2];
-		const parentIndex = parent.children.findIndex(a => a.id === group.id);
-
-		if(parentIndex === -1) {
-			throw new Error();
-		}
-
-		if(parentIndex) {
-			return parent.children[childIndex - 1];
-		}
-
-		return null;
+	public static getPrevTimeline(timeline: AnyTimeline, rootGroupTimeline: GroupTimeline): AnyTimeline | null {
+		throw new Error("未実装");
 	}
 
 }

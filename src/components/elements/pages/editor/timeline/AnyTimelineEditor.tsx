@@ -28,7 +28,7 @@ import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends EditProps {
 	treeIndexes: Array<number>;
-	parentGroup: GroupTimeline | null;
+	parentGroup: GroupTimeline;
 	currentIndex: number;
 	currentTimeline: AnyTimeline;
 	timelineStore: TimelineStore;
@@ -215,8 +215,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			return;
 		}
 
-		const nodes = props.parentGroup ? props.parentGroup.children : props.editData.setting.timelineNodes;
-		const prevTimeline = nodes[props.currentIndex - 1];
+		const prevTimeline = props.parentGroup.children[props.currentIndex - 1];
 		props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([prevTimeline.id]));
 	}
 

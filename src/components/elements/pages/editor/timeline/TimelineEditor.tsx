@@ -15,6 +15,7 @@ import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
+import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { EditProps } from "@/models/data/props/EditProps";
 import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
@@ -24,7 +25,6 @@ import { Designs } from "@/models/Designs";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
-import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 
 
 interface Props extends EditProps { }
@@ -36,7 +36,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	let hoverTimeline: AnyTimeline | null = null;
 	let activeTimeline: AnyTimeline | null = null;
 
-	const [timelineNodes, setTimelineNodes] = useState([...props.editData.setting.timelineNodes]);
+	const [rootChildren, setRootChildren] = useState([...props.editData.setting.rootTimeline.children]);
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map(), new Map()));
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
@@ -51,7 +51,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	useEffect(() => {
 		updateRelations();
-	}, [timelineNodes]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [rootChildren]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	function createTimelineStore(totalItems: ReadonlyMap<TimelineId, AnyTimeline>, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
 
@@ -61,10 +61,10 @@ const Component: NextPage<Props> = (props: Props) => {
 			}
 		}
 
-		const timelineSequence = Timelines.flat(timelineNodes);
+		const timelineSequence = Timelines.flat(rootChildren);
 
 		const result: TimelineStore = {
-			nodeItems: timelineNodes,
+			rootGroupTimeline: props.editData.setting.rootTimeline,
 			totalItemMap: totalItems,
 			sequenceItems: timelineSequence,
 			indexItemMap: Timelines.toIndexes(timelineSequence),
@@ -93,7 +93,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	function updateRelations() {
 		console.debug("全体へ通知");
 
-		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.timelineNodes);
+		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.rootTimeline);
 		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive, calendarInfo.timeZone);
 
 		const changedItems = new Map(
@@ -115,38 +115,47 @@ const Component: NextPage<Props> = (props: Props) => {
 	function fireDropTimeline(dropTimeline: DropTimeline) {
 		console.debug("FIRE");
 
-		if (!dropTimeline.sourceGroupTimeline && !dropTimeline.destinationGroupTimeline) {
-			// 最上位完結
-			const newTimelineNodes = [...timelineNodes];
-			Timelines.moveTimelineIndex(newTimelineNodes, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
-			props.editData.setting.timelineNodes = newTimelineNodes;
-		} else {
-			// 移動元から破棄
-			if (!dropTimeline.sourceGroupTimeline) {
-				// 最上位
-				const newTimelineNodes = timelineNodes.filter(a => a.id !== dropTimeline.timeline.id);
-				props.editData.setting.timelineNodes = newTimelineNodes;
+		const sourceIsRoot = Settings.maybeRootTimeline(dropTimeline.sourceGroupTimeline);
+		const destinationIsRoot = Settings.maybeRootTimeline(dropTimeline.destinationGroupTimeline);
+		const sameGroup = dropTimeline.sourceGroupTimeline.id === dropTimeline.destinationGroupTimeline.id;
+
+		if (sameGroup) {
+			// 同一グループ内移動
+			const newChildren = [...dropTimeline.sourceGroupTimeline.children];
+			Arrays.moveIndexInPlace(newChildren, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
+
+			if (sourceIsRoot) {
+				// 最上位は設定だけ変えて後続で状態変更
+				props.editData.setting.rootTimeline.children = newChildren;
 			} else {
-				// グループから破棄
-				const newChildren = dropTimeline.sourceGroupTimeline.children.filter(a => a.id !== dropTimeline.timeline.id);
+				// 子孫は連携だけ
 				timelineStore.updateTimeline({
 					...dropTimeline.sourceGroupTimeline,
-					children: newChildren
+					children: newChildren,
 				});
 			}
+		} else {
+			// グループから破棄
+			const newSourceChildren = dropTimeline.sourceGroupTimeline.children.filter(a => a.id !== dropTimeline.timeline.id);
 
-			if (!dropTimeline.destinationGroupTimeline) {
-				// 最上位
-				const newTimelineNodes = [...timelineNodes];
-				newTimelineNodes.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
-				props.editData.setting.timelineNodes = newTimelineNodes;
+			// 別グループに追加
+			const newDestinationChildren = [...dropTimeline.destinationGroupTimeline.children];
+			newDestinationChildren.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
+
+			if (sourceIsRoot) {
+				props.editData.setting.rootTimeline.children = newSourceChildren;
 			} else {
-				// グループに追加
-				const newChildren = [...dropTimeline.destinationGroupTimeline.children];
-				newChildren.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
+				timelineStore.updateTimeline({
+					...dropTimeline.sourceGroupTimeline,
+					children: newSourceChildren,
+				});
+			}
+			if (destinationIsRoot) {
+				props.editData.setting.rootTimeline.children = newDestinationChildren;
+			} else {
 				timelineStore.updateTimeline({
 					...dropTimeline.destinationGroupTimeline,
-					children: newChildren
+					children: newDestinationChildren,
 				});
 			}
 		}
@@ -154,7 +163,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		setDropTimeline(null);
 		setDraggingTimeline(null);
 
-		setTimelineNodes(props.editData.setting.timelineNodes);
+		setRootChildren(props.editData.setting.rootTimeline.children);
 	}
 
 	function handleSetPointerTimeline(timeline: AnyTimeline | null, property: "isHover" | "isActive"): void {
@@ -185,7 +194,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			activeTimeline = timeline;
 		}
 
-		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.timelineNodes);
+		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.rootTimeline);
 
 		const store = createTimelineStore(timelineMap, changedItems);
 
@@ -227,7 +236,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 				if (Settings.maybeGroupTimeline(sourceTimeline)) {
 					// 自分がグループの場合、自分より下への移動は抑制
-					const map = Timelines.getTimelinesMap(sourceTimeline.children);
+					const map = Timelines.getTimelinesMap(sourceTimeline);
 					if (map.has(targetTimeline.id)) {
 						return;
 					}
@@ -250,11 +259,10 @@ const Component: NextPage<Props> = (props: Props) => {
 			onDrop: (ev, targetTimeline) => {
 				console.debug("DROP", ev, targetTimeline);
 
-				const rootNodes = timelineNodes;
-				const sourceGroupTimelines = Timelines.getParentGroup(sourceTimeline, rootNodes);
-				const targetGroupTimelines = Timelines.getParentGroup(targetTimeline, rootNodes);
+				const sourceGroupTimelines = Timelines.getParentGroups(sourceTimeline, props.editData.setting.rootTimeline);
+				const targetGroupTimelines = Timelines.getParentGroups(targetTimeline, props.editData.setting.rootTimeline);
 
-				if (!sourceGroupTimelines || !targetGroupTimelines) {
+				if (!sourceGroupTimelines.length || !targetGroupTimelines.length) {
 					// ツリーにいない場合はどうにもならん
 					throw new Error(JSON.stringify({
 						sourceGroupTimelines,
@@ -262,26 +270,26 @@ const Component: NextPage<Props> = (props: Props) => {
 					}));
 				}
 
-				// 最上位から最上位
-				if (!sourceGroupTimelines.length && !targetGroupTimelines.length) {
-					const sourceIndex = rootNodes.findIndex(a => a.id === sourceTimeline.id);
-					const destinationIndex = rootNodes.findIndex(a => a.id === targetTimeline.id);
-					if (sourceIndex === -1 || destinationIndex === -1) {
-						throw new Error(JSON.stringify({
-							sourceIndex,
-							destinationIndex,
-						}));
-					}
+				// // 最上位から最上位
+				// if (sourceGroupTimelines.length === 1 && targetGroupTimelines.length === 1) {
+				// 	const sourceIndex = props.editData.setting.rootTimeline.children.findIndex(a => a.id === sourceTimeline.id);
+				// 	const destinationIndex = props.editData.setting.rootTimeline.children.findIndex(a => a.id === targetTimeline.id);
+				// 	if (sourceIndex === -1 || destinationIndex === -1) {
+				// 		throw new Error(JSON.stringify({
+				// 			sourceIndex,
+				// 			destinationIndex,
+				// 		}));
+				// 	}
 
-					fireDropTimeline({
-						timeline: sourceTimeline,
-						sourceGroupTimeline: null,
-						destinationGroupTimeline: null,
-						sourceIndex: sourceIndex,
-						destinationIndex: destinationIndex,
-					});
-					return;
-				}
+				// 	fireDropTimeline({
+				// 		timeline: sourceTimeline,
+				// 		sourceGroupTimeline: null,
+				// 		destinationGroupTimeline: null,
+				// 		sourceIndex: sourceIndex,
+				// 		destinationIndex: destinationIndex,
+				// 	});
+				// 	return;
+				// }
 
 				// 対象がグループの場合、そのグループへ移動
 				if (Settings.maybeGroupTimeline(targetTimeline)) {
@@ -299,15 +307,15 @@ const Component: NextPage<Props> = (props: Props) => {
 				}
 
 				// 単純移動
-				const sourceNodes = sourceGroupTimelines.length ? sourceGroupTimelines[sourceGroupTimelines.length - 1].children : rootNodes;
+				const sourceNodes = sourceGroupTimelines[sourceGroupTimelines.length - 1].children;
 				const sourceIndex = sourceNodes.findIndex(a => a.id === sourceTimeline.id);
-				const destinationNodes = targetGroupTimelines.length ? targetGroupTimelines[targetGroupTimelines.length - 1].children : rootNodes;
+				const destinationNodes = targetGroupTimelines[targetGroupTimelines.length - 1].children;
 				const destinationIndex = destinationNodes.findIndex(a => a.id === targetTimeline.id);
 				fireDropTimeline({
 					timeline: sourceTimeline,
-					sourceGroupTimeline: sourceGroupTimelines.length ? sourceGroupTimelines[sourceGroupTimelines.length - 1] : null,
+					sourceGroupTimeline: sourceGroupTimelines[sourceGroupTimelines.length - 1],
 					sourceIndex: sourceIndex,
-					destinationGroupTimeline: targetGroupTimelines.length ? targetGroupTimelines[targetGroupTimelines.length - 1] : null,
+					destinationGroupTimeline: targetGroupTimelines[targetGroupTimelines.length - 1],
 					destinationIndex: destinationIndex,
 				});
 			}
@@ -316,67 +324,52 @@ const Component: NextPage<Props> = (props: Props) => {
 		setDraggingTimeline(dragging);
 	}
 
-	function handleAddEmptyTimeline(baseTimeline: AnyTimeline | null, options: NewTimelineOptions): void {
+	function handleAddEmptyTimeline(baseTimeline: AnyTimeline, options: NewTimelineOptions): void {
 		const newTimeline = createEmptyTimeline(options.timelineKind);
 
 		handleAddNewTimeline(baseTimeline, newTimeline, options.position);
 	}
 
-	function handleAddNewTimeline(baseTimeline: AnyTimeline | null, newTimeline: AnyTimeline, position: NewTimelinePosition): void {
+	function handleAddNewTimeline(baseTimeline: AnyTimeline, newTimeline: AnyTimeline, position: NewTimelinePosition): void {
 		// 将来追加した場合の安全弁
 		if (position !== NewTimelinePosition.Next) {
 			throw new Error(position);
 		}
 
-		if (baseTimeline) {
-			const groups = Timelines.getParentGroup(baseTimeline, timelineNodes);
-			if (!groups) {
-				throw new Error(baseTimeline.id);
-			}
+		const groups = Timelines.getParentGroups(baseTimeline, props.editData.setting.rootTimeline);
 
-			if (groups.length) {
-				let parent: GroupTimeline;
-				if (Settings.maybeGroupTimeline(baseTimeline)) {
-					parent = baseTimeline;
-				} else {
-					parent = Arrays.last(groups);
-				}
-
-				if (Settings.maybeGroupTimeline(baseTimeline)) {
-					// グループの場合、そのグループの末っ子に設定
-					parent.children = [
-						...parent.children,
-						newTimeline,
-					];
-				} else {
-					// タスクの場合、次に設定する
-					const currentIndex = parent.children.findIndex(a => a.id === baseTimeline.id);
-					const newChildren = [...parent.children];
-					newChildren.splice(currentIndex + 1, 0, newTimeline);
-					parent.children = newChildren;
-				}
-
-				updateRelations();
-				return;
-			} else {
-				const currentIndex = timelineNodes.findIndex(a => a.id === baseTimeline.id);
-				const newTimelineNodes = [...timelineNodes];
-				newTimelineNodes.splice(currentIndex + 1, 0, newTimeline);
-				setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
-			}
+		let parent: GroupTimeline;
+		if (Settings.maybeGroupTimeline(baseTimeline)) {
+			parent = baseTimeline;
 		} else {
-			const newTimelineNodes = [
-				...timelineNodes,
+			parent = Arrays.last(groups);
+		}
+
+		if (Settings.maybeGroupTimeline(baseTimeline)) {
+			// グループの場合、そのグループの末っ子に設定
+			parent.children = [
+				...parent.children,
 				newTimeline,
 			];
-
-			setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
+		} else {
+			// タスクの場合、次に設定する
+			const currentIndex = parent.children.findIndex(a => a.id === baseTimeline.id);
+			const newChildren = [...parent.children];
+			newChildren.splice(currentIndex + 1, 0, newTimeline);
+			parent.children = newChildren;
 		}
+
+		if (groups.length === 1) {
+			setRootChildren(parent.children);
+			return;
+		}
+
+		updateRelations();
 	}
 
 	function handleUpdateTimeline(timeline: AnyTimeline): void {
 		//
-		const source = Timelines.findTimeline(timeline.id, timelineNodes);
+		const source = Timelines.findTimeline(timeline.id, rootChildren);
 		if (!source) {
 			return;
 		}
@@ -384,7 +377,10 @@ const Component: NextPage<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		const timelineMap = Timelines.getTimelinesMap(timelineNodes);
+		const timelineMap = Timelines.getTimelinesMap({
+			...Timelines.createRootGroup(),
+			children: rootChildren,
+		});
 
 		const prevSource = { ...source };
 		Object.assign(source, timeline);
@@ -410,8 +406,8 @@ const Component: NextPage<Props> = (props: Props) => {
 			const src = prevSource as TaskTimeline;
 
 			// 先祖グループに対してふわーっと処理
-			const groups = Timelines.getParentGroup(timeline, timelineNodes);
-			if (groups) {
+			const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
+			if (groups.length) {
 				const reversedGroups = groups.reverse();
 				// 工数
 				if (timeline.workload !== src.workload) {
@@ -439,35 +435,30 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleMoveTimeline(moveUp: boolean, timeline: AnyTimeline): void {
-		const groups = Timelines.getParentGroup(timeline, timelineNodes);
-		if (!groups) {
-			return;
-		}
+		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
 
-		if (groups.length) {
+		if (groups.length === 1) {
+			const newRootChildren = [...rootChildren];
+			Timelines.moveTimelineOrder(newRootChildren, moveUp, timeline);
+			setRootChildren(props.editData.setting.rootTimeline.children = newRootChildren);
+		} else {
 			const group = Arrays.last(groups);
-			const newChildren = [...group.children];
-			Timelines.moveTimelineOrder(newChildren, moveUp, timeline);
+			const newRootChildren = [...group.children];
+			Timelines.moveTimelineOrder(newRootChildren, moveUp, timeline);
 			//group.children = newChildren;
 			timelineStore.updateTimeline({
 				...group,
-				children: newChildren,
+				children: newRootChildren,
 			});
-		} else {
-			const newChildren = [...timelineNodes];
-			Timelines.moveTimelineOrder(newChildren, moveUp, timeline);
-			setTimelineNodes(props.editData.setting.timelineNodes = newChildren);
 		}
 	}
 
 	function handleRemoveTimeline(timeline: AnyTimeline): void {
-		const groups = Timelines.getParentGroup(timeline, timelineNodes);
-		if (!groups) {
-			return;
-		}
+		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
 
 		// 前工程を破棄
-		const timelineMap = Timelines.getTimelinesMap(timelineNodes);
+		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.rootTimeline);
+
 		for (const [_, value] of timelineMap) {
 			if (Settings.maybeTaskTimeline(value)) {
 				if (value.previous.includes(timeline.id)) {
@@ -477,15 +468,15 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 
 		// データから破棄
-		if (groups.length) {
+		if (1 < groups.length) {
 			const group = Arrays.last(groups);
 			const newChildren = group.children.filter(a => a.id !== timeline.id);
 			group.children = newChildren;
 			// 直接置き換えた値はちまちま反映するのではなくリセット
 			updateRelations();
 		} else {
-			const newTimelineNodes = timelineNodes.filter(a => a.id !== timeline.id);
-			setTimelineNodes(props.editData.setting.timelineNodes = newTimelineNodes);
+			const newRootChildren = rootChildren.filter(a => a.id !== timeline.id);
+			setRootChildren(props.editData.setting.rootTimeline.children = newRootChildren);
 		}
 	}
 
@@ -518,8 +509,8 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function canSelectCore(targetTimeline: AnyTimeline, currentTimeline: AnyTimeline): boolean {
-		const groups = Timelines.getParentGroup(currentTimeline, timelineNodes);
-		if (groups && groups.length) {
+		const groups = Timelines.getParentGroups(currentTimeline, props.editData.setting.rootTimeline);
+		if (groups.length) {
 			return !groups.some(a => a.id === targetTimeline.id);
 		}
 

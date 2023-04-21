@@ -6,20 +6,18 @@ export interface DropTimeline {
 	 */
 	timeline: GroupTimeline | TaskTimeline;
 	/**
-	 * `dropTimeline` が所属していたグループ。
-	 * 最上位の場合は `null`
+	 * `timeline` が所属していたグループ。
 	 */
-	sourceGroupTimeline: GroupTimeline | null;
+	sourceGroupTimeline: GroupTimeline;
 	/**
 	 * `sourceGroupTimeline` から見た位置。
 	 * 最上位の場合はノードの位置(意味的に同じ)
 	 */
 	sourceIndex: number;
 	/**
-	 * `dropTimeline` が新たに所属するグループ。
-	 * 最上位の場合は `null`
+	 * `timeline` が新たに所属するグループ。
 	 */
-	destinationGroupTimeline: GroupTimeline | null;
+	destinationGroupTimeline: GroupTimeline;
 	/**
 	 * `destinationGroupTimeline` の何番目に挿入されるか。
 	 * `-1` は最後尾。

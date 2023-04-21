@@ -7,6 +7,8 @@ import { MemberId, TimelineId } from "@/models/data/Setting";
  */
 export abstract class IdFactory {
 
+	public static readonly rootTimelineId = "00000000-0000-0000-0000-000000000000";
+
 	/**
 	 * React 表示要素のキー生成。
 	 * @returns
@@ -30,5 +32,4 @@ export abstract class IdFactory {
 	public static createTimelineId(): TimelineId {
 		return v4();
 	}
-
 }

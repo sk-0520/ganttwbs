@@ -54,18 +54,16 @@ export abstract class Charts {
 		return result;
 	}
 
-	public static getGroupBackground(timeline: GroupTimeline, nodes: ReadonlyArray<GroupTimeline | TaskTimeline>, theme: Theme): string {
+	public static getGroupBackground(timeline: GroupTimeline, rootGroupTimeline: Readonly<GroupTimeline>, theme: Theme): string {
 		// 未設定とグループラインの扱いが微妙過ぎる
-		const parents = Timelines.getParentGroup(timeline, nodes);
-		if (parents) {
-			if (parents.length < theme.groups.length) {
-				// これはこれで正しいのだ(-1 したい気持ちは抑えるべし)
-				const index = parents.length;
-				if (index in theme.groups) {
-					return theme.groups[index];
-				}
-				return theme.timeline.defaultGroup;
+		const parents = Timelines.getParentGroups(timeline, rootGroupTimeline);
+		if (parents.length < theme.groups.length) {
+			// これはこれで正しいのだ(-1 したい気持ちは抑えるべし)
+			const index = parents.length;
+			if (index in theme.groups) {
+				return theme.groups[index];
 			}
+			return theme.timeline.defaultGroup;
 		}
 
 		return theme.timeline.group;

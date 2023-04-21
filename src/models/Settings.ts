@@ -1,4 +1,5 @@
-import { AnyTimeline, GroupTimeline, TaskTimeline, WeekDay, WeekIndex } from "@/models/data/Setting";
+import { IdFactory } from "@/models/IdFactory";
+import { AnyTimeline, GroupTimeline, RootTimeline, TaskTimeline, WeekDay, WeekIndex } from "@/models/data/Setting";
 
 export abstract class Settings {
 
@@ -73,6 +74,15 @@ export abstract class Settings {
 
 	}
 
+	/**
+	 * `timeline` は `RootTimeline` か。
+	 * 本処理は型ガードではあるものの型チェックは行わない。すでに型ガードを通過していることを想定している。
+	 * @param timeline
+	 * @returns
+	 */
+	public static maybeRootTimeline(timeline: AnyTimeline): timeline is RootTimeline {
+		return timeline.id === IdFactory.rootTimelineId;
+	}
 	/**
 	 * `timeline` は `GroupTimeline` か。
 	 * 本処理は型ガードではあるものの型チェックは行わない。すでに型ガードを通過していることを想定している。

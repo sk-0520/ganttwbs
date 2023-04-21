@@ -1,14 +1,14 @@
 import { NextPage } from "next";
+import { useState } from "react";
 
+import InputTimelinesDialog from "@/components/elements/pages/editor/timeline/InputTimelinesDialog";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
+import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { EditProps } from "@/models/data/props/EditProps";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
-import { useState } from "react";
-import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
-import InputTimelinesDialog from "@/components/elements/pages/editor/timeline/InputTimelinesDialog";
 
 interface Props extends EditProps {
 	calendarInfo: CalendarInfo;
@@ -21,7 +21,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	function addEmptyTimeline(kind: TimelineKind) {
 		props.timelineStore.addEmptyTimeline(
-			props.timelineStore.nodeItems.length ? props.timelineStore.nodeItems[props.timelineStore.nodeItems.length - 1] : null,
+			props.timelineStore.rootGroupTimeline,
 			{
 				position: NewTimelinePosition.Next,
 				timelineKind: kind,
@@ -54,7 +54,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	function handleInput(timeline: GroupTimeline | null) {
 		if (timeline) {
-			props.timelineStore.addNewTimeline(null, timeline, NewTimelinePosition.Next);
+			props.timelineStore.addNewTimeline(props.timelineStore.rootGroupTimeline, timeline, NewTimelinePosition.Next);
 		}
 
 		setVisibleInputDialog(false);
