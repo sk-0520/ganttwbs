@@ -66,8 +66,10 @@ const Component: NextPage<Props> = (props: Props) => {
 					<table className="panel">
 						<tbody>
 							<tr>
-								<th>移動</th>
-								<td>
+								<th className="col-header">
+									移動
+								</th>
+								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleMoveItem(true)}
@@ -78,7 +80,7 @@ const Component: NextPage<Props> = (props: Props) => {
 										上へ
 									</button>
 								</td>
-								<td>
+								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleMoveItem(false)}
@@ -91,7 +93,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								</td>
 							</tr>
 							<tr>
-								<th>
+								<th className="col-header">
 									追加
 									(
 									{
@@ -101,7 +103,7 @@ const Component: NextPage<Props> = (props: Props) => {
 									}
 									)
 								</th>
-								<td>
+								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleAddItem("group")}
@@ -112,7 +114,7 @@ const Component: NextPage<Props> = (props: Props) => {
 										グループ
 									</button>
 								</td>
-								<td>
+								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleAddItem("task")}
@@ -123,11 +125,18 @@ const Component: NextPage<Props> = (props: Props) => {
 										タスク
 									</button>
 								</td>
+								<td className="col-cell">
+									<button>
+										一括
+									</button>
+								</td>
 							</tr>
 							<tr>
-								<th>削除</th>
-								<td></td>
-								<td>
+								<th className="col-header">
+									削除
+								</th>
+								<td className="col-cell" />
+								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleDeleteItem()}
