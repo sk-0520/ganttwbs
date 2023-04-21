@@ -11,8 +11,8 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { MemberId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
-import { TimeSpan } from "@/models/TimeSpan";
 import { Timelines } from "@/models/Timelines";
+import { TimeSpan } from "@/models/TimeSpan";
 
 
 

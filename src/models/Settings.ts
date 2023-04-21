@@ -1,5 +1,5 @@
-import { IdFactory } from "@/models/IdFactory";
 import { AnyTimeline, GroupTimeline, RootTimeline, TaskTimeline, WeekDay, WeekIndex } from "@/models/data/Setting";
+import { IdFactory } from "@/models/IdFactory";
 
 export abstract class Settings {
 
