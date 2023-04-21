@@ -16,7 +16,6 @@
 	"scripts": {
 		"code:typescript": "tsc",
 		"code:lint": "next lint --dir .",
-		"lint-fix": "next lint --fix --dir .",
 		"code": "npm-run-all --sequential code:typescript code:lint",
 		"test:script": "jest --runInBand",
 		"test": "npm-run-all --sequential test:script",
@@ -24,6 +23,7 @@
 		"dev-win": "set NODE_OPTIONS=--inspect && next dev",
 		"build": "next build",
 		"start": "next start",
+		"lint-fix": "next lint --fix --dir .",
 		"check": "ncu",
 		"update": "ncu -u && npm install"
 	},
