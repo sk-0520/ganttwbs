@@ -25,6 +25,10 @@ interface Props {
 const Component: NextPage<Props> = (props: Props) => {
 	const className = "_dynamic_programmable_indexNumber_level-" + props.timelineIndex.level;
 
+	const canSelect = props.selectingBeginDate && (
+		props.selectingBeginDate.timeline.id !== props.currentTimeline.id && props.selectingBeginDate.canSelect(props.currentTimeline)
+	);
+
 	return (
 		<td
 			className={
@@ -43,18 +47,21 @@ const Component: NextPage<Props> = (props: Props) => {
 			<label>
 				{props.selectingBeginDate
 					? (
-						<input
-							id={props.selectingId}
-							type="checkbox"
-							disabled={
-								(Settings.maybeGroupTimeline(props.currentTimeline) && !props.selectingBeginDate.canSelect(props.currentTimeline))
-								||
-								props.selectingBeginDate.timeline.id === props.currentTimeline.id || !props.selectingBeginDate.canSelect(props.currentTimeline)
-							}
-							value={props.currentTimeline.id}
-							checked={props.isSelectedPrevious}
-							onChange={ev => props.callbackChangePrevious(ev.target.checked)}
-						/>
+						<>
+							<input
+								id={props.selectingId}
+								className="previous"
+								type="checkbox"
+								disabled={!canSelect}
+								value={props.currentTimeline.id}
+								checked={props.isSelectedPrevious}
+								onChange={ev => props.callbackChangePrevious(ev.target.checked)}
+							/>
+							<Icon
+								kind={props.isSelectedPrevious ? IconKind.CheckBoxTimelinePreviousOn : IconKind.CheckBoxTimelinePreviousOff}
+								fill={canSelect ? undefined : "gray"}
+							/>
+						</>
 					) :
 					(
 						Settings.maybeGroupTimeline(props.currentTimeline)

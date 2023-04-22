@@ -22,6 +22,8 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.RelationJoin]: (props) => <Md.MdLink {...convertParameter(props)} />,
 	[IconKind.RelationClear]: (props) => <Md.MdLinkOff {...convertParameter(props)} />,
 
+	[IconKind.CheckBoxTimelinePreviousOn]: (props) => <Md.MdOutlineCheckBox {...convertParameter(props)} />,
+	[IconKind.CheckBoxTimelinePreviousOff]: (props) => <Md.MdOutlineCheckBoxOutlineBlank {...convertParameter(props)} />,
 
 	[IconKind.MoveUp]: (props) => <Md.MdArrowUpward {...convertParameter(props)} />,
 	[IconKind.MoveDown]: (props) => <Md.MdArrowDownward {...convertParameter(props)} />,

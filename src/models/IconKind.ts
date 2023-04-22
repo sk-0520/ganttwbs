@@ -6,6 +6,9 @@ export const enum IconKind {
 	TimelineAddGroup,
 	TimelineImport,
 
+	CheckBoxTimelinePreviousOn,
+	CheckBoxTimelinePreviousOff,
+
 	RelationMix,
 	RelationStatic,
 	RelationPrevious,

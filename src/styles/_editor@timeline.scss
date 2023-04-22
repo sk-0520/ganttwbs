@@ -268,7 +268,6 @@
 
 				background-color: $prompt-background-color;
 				outline: $prompt-outline-width $prompt-background-color solid;
-				height: fit-content;
 				z-index: 4;
 
 				.tools {
@@ -310,32 +309,56 @@
 				}
 			}
 
-			.timeline-id[draggable="true"] {
-				$cursor: grab;
+			.timeline-id {
+				&[draggable="true"] {
+					$cursor: grab;
 
-				cursor: $cursor;
+					cursor: $cursor;
 
-				&.dragging {
-					opacity: 1;
-					color: black;
-					border: 1px solid gray;
+					&.dragging {
+						opacity: 1;
+						color: black;
+						border: 1px solid gray;
+					}
+
+					* {
+						cursor: $cursor;
+					}
 				}
 
-				* {
-					cursor: $cursor;
+				.previous {
+					display: none;
 				}
 			}
 
 			.timeline-range-area.prompt {
 				.contents {
 					display: flex;
+					flex-direction: row;
 					align-items: center;
+					justify-content: center;
 
 					.main {
 						flex: content;
 
 						input {
+							@include control.reset();
+							background: white;
+							color: black;
 							width: 100%;
+						}
+					}
+
+					li {
+						display: flex;
+						button {
+							align-items: center;
+							justify-content: center;
+
+							@include control.reset();
+							border: 1px solid black;
+							width: 2em;
+							background: gainsboro;
 						}
 					}
 				}
