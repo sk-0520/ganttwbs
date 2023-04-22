@@ -1,16 +1,16 @@
 import { NextPage } from "next";
 import { useState } from "react";
 
+import Icon from "@/components/elements/Icon";
 import InputTimelinesDialog from "@/components/elements/pages/editor/timeline/InputTimelinesDialog";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { EditProps } from "@/models/data/props/EditProps";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
+import { IconKind } from "@/models/IconKind";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
-import Icon from "@/components/elements/Icon";
-import { IconKind } from "@/models/IconKind";
 
 interface Props extends EditProps {
 	calendarInfo: CalendarInfo;

@@ -4,9 +4,9 @@ import { useState } from "react";
 
 import Icon from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
+import InputTimelinesDialog from "@/components/elements/pages/editor/timeline/InputTimelinesDialog";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { IconKind } from "@/models/IconKind";
-import InputTimelinesDialog from "@/components/elements/pages/editor/timeline/InputTimelinesDialog";
 
 interface Props {
 	currentTimelineKind: TimelineKind;
