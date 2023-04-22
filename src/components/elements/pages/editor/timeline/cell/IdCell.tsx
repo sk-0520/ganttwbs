@@ -3,18 +3,18 @@ import { NextPage } from "next";
 import { DragEvent } from "react";
 
 import Icon from "@/components/elements/Icon";
-import IndexNumber from "@/components/elements/IndexNumber";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { AnyTimeline } from "@/models/data/Setting";
+import { TimelineIndex } from "@/models/data/TimelineIndex";
 import { IconKind } from "@/models/IconKind";
 import { Settings } from "@/models/Settings";
+import { Timelines } from "@/models/Timelines";
 
 interface Props {
 	selectingId: string,
 	isSelectedPrevious: boolean;
-	treeIndexes: ReadonlyArray<number>;
-	currentIndex: number;
+	timelineIndex: TimelineIndex;
 	readonly currentTimeline: Readonly<AnyTimeline>;
 	selectingBeginDate: SelectingBeginDate | null;
 	draggingTimeline: DraggingTimeline | null;
@@ -23,6 +23,8 @@ interface Props {
 }
 
 const Component: NextPage<Props> = (props: Props) => {
+	const className = "_dynamic_programmable_indexNumber_level-" + props.timelineIndex.level;
+
 	return (
 		<div
 			className={
@@ -60,7 +62,9 @@ const Component: NextPage<Props> = (props: Props) => {
 							: <Icon kind={IconKind.TimelineTask} />
 					)
 				}
-				<IndexNumber treeIndexes={props.treeIndexes} currentIndex={props.currentIndex} />
+				<span className={className}>
+					{Timelines.toIndexNumber(props.timelineIndex)}
+				</span>
 			</label>
 		</div>
 	);

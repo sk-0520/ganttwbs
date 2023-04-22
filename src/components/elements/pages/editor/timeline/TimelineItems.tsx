@@ -31,9 +31,6 @@ const Component: NextPage<Props> = (props: Props) => {
 							<AnyTimelineEditor
 								configuration={props.configuration}
 								editData={props.editData}
-								treeIndexes={[]}
-								currentIndex={i}
-								parentGroup={props.timelineStore.rootGroupTimeline}
 								currentTimeline={a}
 								timelineStore={props.timelineStore}
 								draggingTimeline={props.draggingTimeline}

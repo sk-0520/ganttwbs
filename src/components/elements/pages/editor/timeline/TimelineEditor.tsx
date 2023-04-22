@@ -18,6 +18,7 @@ import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { EditProps } from "@/models/data/props/EditProps";
 import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, TimelineId, TimelineKind } from "@/models/data/Setting";
+import { TimelineIndex } from "@/models/data/TimelineIndex";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
@@ -72,6 +73,8 @@ const Component: NextPage<Props> = (props: Props) => {
 
 			hoverItem: hoverTimeline,
 			activeItem: activeTimeline,
+
+			getIndex: handleGetIndex,
 
 			addEmptyTimeline: handleAddEmptyTimeline,
 			addNewTimeline: handleAddNewTimeline,
@@ -322,6 +325,17 @@ const Component: NextPage<Props> = (props: Props) => {
 		setDraggingTimeline(dragging);
 	}
 
+	function handleGetIndex(timeline: AnyTimeline): TimelineIndex {
+		//TODO: とりあえず実行可能であればよい
+		console.debug("本処理はスタブ");
+		const result: TimelineIndex = {
+			level: 1,
+			tree: [1, 2, 9],
+		};
+
+		return result;
+	}
+
 	function handleAddEmptyTimeline(baseTimeline: AnyTimeline, options: NewTimelineOptions): void {
 		const newTimeline = createEmptyTimeline(options.timelineKind);
 
@@ -452,7 +466,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			}
 		}
 
-	// データから破棄
+		// データから破棄
 		const group = Arrays.last(groups);
 		const newChildren = group.children.filter(a => a.id !== timeline.id);
 		group.children = newChildren;

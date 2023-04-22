@@ -1,4 +1,5 @@
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, WeekIndex } from "@/models/data/Setting";
+import { TimelineIndex } from "@/models/data/TimelineIndex";
 import { SuccessWorkRange, WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
@@ -81,14 +82,8 @@ export abstract class Timelines {
 		return item;
 	}
 
-	public static toIndexNumber(indexTree: ReadonlyArray<number>, currentIndex: number): string {
-		const currentNumber = currentIndex + 1;
-
-		if (indexTree.length) {
-			return indexTree.map(a => a + 1).join(".") + "." + currentNumber;
-		}
-
-		return currentNumber.toString();
+	public static toIndexNumber(index: TimelineIndex): string {
+		return index.tree.join(".");
 	}
 
 	private static flatCore(timeline: AnyTimeline): Array<AnyTimeline> {

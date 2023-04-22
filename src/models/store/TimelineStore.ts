@@ -3,6 +3,7 @@ import { DragEvent } from "react";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { AnyTimeline, GroupTimeline, TimelineId } from "@/models/data/Setting";
+import { TimelineIndex } from "@/models/data/TimelineIndex";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
 
@@ -29,6 +30,11 @@ export interface TimelineStore {
 	readonly hoverItem: AnyTimeline | null;
 	/** アクティブ状態タイムライン */
 	readonly activeItem: AnyTimeline | null;
+
+	/**
+	 * タイムラインの表示上IDを取得。
+	 */
+	getIndex(timeline: AnyTimeline): TimelineIndex;
 
 	/**
 	 * タイムライン追加。

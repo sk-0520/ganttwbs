@@ -27,9 +27,6 @@ import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends EditProps {
-	treeIndexes: Array<number>;
-	parentGroup: GroupTimeline;
-	currentIndex: number;
 	currentTimeline: AnyTimeline;
 	timelineStore: TimelineStore;
 	draggingTimeline: DraggingTimeline | null;
@@ -218,12 +215,13 @@ const Component: NextPage<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		if (!props.currentIndex) {
-			return;
-		}
+		// if (!props.currentIndex) {
+		// 	return;
+		// }
 
-		const prevTimeline = props.parentGroup.children[props.currentIndex - 1];
-		props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([prevTimeline.id]));
+		// const prevTimeline = props.parentGroup.children[props.currentIndex - 1];
+		// props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([prevTimeline.id]));
+		console.debug("ここのロジック変更は必須");
 	}
 
 	function handleClearPrevious() {
@@ -265,6 +263,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.beginDateCallbacks.cancelSelectBeginDate(props.currentTimeline);
 	}
 
+	const timelineIndex = props.timelineStore.getIndex(props.currentTimeline);
 	const className = props.currentTimeline.kind;
 
 	return (
@@ -274,12 +273,11 @@ const Component: NextPage<Props> = (props: Props) => {
 				selectingBeginDate={props.selectingBeginDate}
 				draggingTimeline={props.draggingTimeline}
 				timelineStore={props.timelineStore}
-				level={props.treeIndexes.length + 1}
+				level={timelineIndex.level}
 			>
 				<IdCell
 					selectingId={selectingId}
-					treeIndexes={props.treeIndexes}
-					currentIndex={props.currentIndex}
+					timelineIndex={timelineIndex}
 					currentTimeline={props.currentTimeline}
 					isSelectedPrevious={isSelectedPrevious}
 					draggingTimeline={props.draggingTimeline}
