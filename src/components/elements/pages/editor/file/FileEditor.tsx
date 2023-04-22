@@ -116,7 +116,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					options={{
 						readOnly: true,
 						quickSuggestions: false,
-						fontFamily: CssHelper.toFontFamily(locale.font.editor.fontFamilies),
+						fontFamily: CssHelper.toFontFamily(locale.styles.editor.fontFamilies),
 					}}
 				/>
 			</dd>

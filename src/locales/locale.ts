@@ -26,7 +26,7 @@ export interface Locale {
 			};
 		}
 	};
-	font: {
+	styles: {
 		editor: {
 			fontFamilies: Array<string>;
 		};

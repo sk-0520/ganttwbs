@@ -38,7 +38,7 @@ const locale: Locale = {
 		}
 	},
 
-	font: {
+	styles: {
 		editor: {
 			fontFamilies: [
 				"MigMix 1M",
