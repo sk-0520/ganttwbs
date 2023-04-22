@@ -300,7 +300,11 @@ const Component: NextPage<Props> = (props: Props) => {
 
 		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
 		if (!groups.length) {
-			throw new Error();
+			// 削除時に呼ばれた場合、すでに存在しない
+			return {
+				level: 0,
+				tree: [],
+			};
 		}
 
 		const tree = new Array<number>();

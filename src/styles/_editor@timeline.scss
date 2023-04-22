@@ -402,22 +402,32 @@
 					height: 100%;
 				}
 
-				.panel {
-					color: #000;
-					table-layout: fixed;
+				.tools {
+					&.before {
 
-					.col-header {
-						padding-right: 1em;
 					}
 
-					.col-cell {
-						width: 5em;
-					}
-				}
+					&.after {
+						.panel {
+							color: #000;
+							table-layout: fixed;
+							width: 300px;
 
-				button.simple {
-					//width: $timeline-header-controls-item-width;
-					padding: 0;
+							.col-header {
+								width: 5em;
+								padding-right: 1em;
+							}
+
+							.col-cell {
+								//width: 6em;
+							}
+
+							button.simple {
+								text-align: left;
+								padding: 0;
+							}
+						}
+					}
 				}
 			}
 		}

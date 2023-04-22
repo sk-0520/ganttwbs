@@ -11,6 +11,5 @@ $overlay-index: 10;
 }
 
 .children {
-	position: relative;
 	z-index: $overlay-index + 1;
 }
