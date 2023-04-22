@@ -332,46 +332,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleGetBeforeTimeline(timeline: AnyTimeline): AnyTimeline | undefined {
-		const index = sequenceTimelines.findIndex(a => a.id === timeline.id);
-		if (index === -1) {
-			throw new Error();
-		}
-
-		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
-		const group = Arrays.last(groups);
-
-		for (let i = index - 1; 0 <= i; i--) {
-			const beforeTimeline = sequenceTimelines[i];
-			if (Settings.maybeGroupTimeline(beforeTimeline)) {
-				// 前項目が自身の属するグループの場合、直近タイムラインにはなりえない
-				if (groups.find(a => a.id === beforeTimeline.id)) {
-					continue;
-				}
-				return beforeTimeline;
-			}
-			if (Settings.maybeTaskTimeline(beforeTimeline)) {
-				const beforeGroups = Timelines.getParentGroups(beforeTimeline, props.editData.setting.rootTimeline);
-				const beforeGroup = Arrays.last(beforeGroups);
-				// 前項目のグループと自身のグループが同じ場合、兄弟として直近として扱える
-				if (beforeGroup.id === group.id) {
-					return beforeTimeline;
-				}
-
-				if (canSelectCore(beforeTimeline, timeline)) {
-					// タスク自体は直近として扱える場合でも、異なるグループのためそのグループ自体を選択する
-					if (1 < beforeGroups.length) {
-						const target = beforeGroup;
-						if (canSelectCore(target, timeline)) {
-							return target;
-						}
-					}
-
-					return beforeTimeline;
-				}
-			}
-		}
-
-		return undefined;
+		return Timelines.getBeforeTimeline(timeline, props.editData.setting.rootTimeline);
 	}
 
 	function handleAddEmptyTimeline(baseTimeline: AnyTimeline, options: NewTimelineOptions): void {
@@ -406,6 +367,15 @@ const Component: NextPage<Props> = (props: Props) => {
 			const newChildren = [...parent.children];
 			newChildren.splice(currentIndex + 1, 0, newTimeline);
 			parent.children = newChildren;
+		}
+
+		// 前工程の設定されていないタスクに対して可能であれば直近項目を前項目として設定
+		const newTaskTimeline = Timelines.getFirstTaskTimeline(newTimeline);
+		if (newTaskTimeline) {
+			const beforeTimeline = Timelines.getBeforeTimeline(newTaskTimeline, props.editData.setting.rootTimeline);
+			if (beforeTimeline) {
+				newTaskTimeline.previous = [beforeTimeline.id];
+			}
 		}
 
 		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
@@ -534,12 +504,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function canSelectCore(targetTimeline: AnyTimeline, currentTimeline: AnyTimeline): boolean {
-		const groups = Timelines.getParentGroups(currentTimeline, props.editData.setting.rootTimeline);
-		if (groups.length) {
-			return !groups.some(a => a.id === targetTimeline.id);
-		}
-
-		return true;
+		return Timelines.canSelectCore(targetTimeline, currentTimeline, props.editData.setting.rootTimeline);
 	}
 
 	function handleSubmitSelectBeginDate(timeline: TaskTimeline): void {

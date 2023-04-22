@@ -1,3 +1,4 @@
+import { Arrays } from "@/models/Arrays";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, WeekIndex } from "@/models/data/Setting";
 import { TimelineIndex } from "@/models/data/TimelineIndex";
 import { SuccessWorkRange, WorkRange } from "@/models/data/WorkRange";
@@ -500,14 +501,57 @@ export abstract class Timelines {
 		return null;
 	}
 
-	/**
-	 * 直近のタイムラインを取得。
-	 * @param timeline 基準タイムライン。
-	 * @param rootGroupTimeline ノード状態全タイムライン。
-	 * @returns 直近のタイムライン、あかんときは `null`
-	 */
-	public static getPrevTimeline(timeline: AnyTimeline, rootGroupTimeline: GroupTimeline): AnyTimeline | null {
-		throw new Error("未実装");
+	public static canSelectCore(targetTimeline: AnyTimeline, currentTimeline: AnyTimeline, rootTimeline: GroupTimeline): boolean {
+		const groups = Timelines.getParentGroups(currentTimeline, rootTimeline);
+		if (groups.length) {
+			return !groups.some(a => a.id === targetTimeline.id);
+		}
+
+		return true;
 	}
 
+	public static getBeforeTimeline(timeline: AnyTimeline, rootTimeline: GroupTimeline): AnyTimeline | undefined {
+		const sequenceTimelines = this.flat(rootTimeline.children);
+
+		const index = sequenceTimelines.findIndex(a => a.id === timeline.id);
+		if (index === -1) {
+			throw new Error();
+		}
+
+		const groups = Timelines.getParentGroups(timeline, rootTimeline);
+		const group = Arrays.last(groups);
+
+		for (let i = index - 1; 0 <= i; i--) {
+			const beforeTimeline = sequenceTimelines[i];
+			if (Settings.maybeGroupTimeline(beforeTimeline)) {
+				// 前項目が自身の属するグループの場合、直近タイムラインにはなりえない
+				if (groups.find(a => a.id === beforeTimeline.id)) {
+					continue;
+				}
+				return beforeTimeline;
+			}
+			if (Settings.maybeTaskTimeline(beforeTimeline)) {
+				const beforeGroups = Timelines.getParentGroups(beforeTimeline, rootTimeline);
+				const beforeGroup = Arrays.last(beforeGroups);
+				// 前項目のグループと自身のグループが同じ場合、兄弟として直近として扱える
+				if (beforeGroup.id === group.id) {
+					return beforeTimeline;
+				}
+
+				if (this.canSelectCore(beforeTimeline, timeline, rootTimeline)) {
+					// タスク自体は直近として扱える場合でも、異なるグループのためそのグループ自体を選択する
+					if (1 < beforeGroups.length) {
+						const target = beforeGroup;
+						if (this.canSelectCore(target, timeline, rootTimeline)) {
+							return target;
+						}
+					}
+
+					return beforeTimeline;
+				}
+			}
+		}
+
+		return undefined;
+	}
 }
