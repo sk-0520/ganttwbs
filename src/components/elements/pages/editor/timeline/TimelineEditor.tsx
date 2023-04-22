@@ -581,13 +581,14 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 			},
 
 			groups: {
-				...Array.from(Array(design.programmable.group.maximum), (_, index) => index + 1)
-					.map(a => {
-						const backgroundColor = (a - 1) in theme.groups ? theme.groups[a - 1] : theme.timeline.group;
+				...Arrays.range(1, design.programmable.group.maximum)
+					.map(level => {
+						const index = level - 1;
+						const backgroundColor = index in theme.groups ? theme.groups[index] : theme.timeline.group;
 						const foregroundColor = Colors.getAutoColor(backgroundColor);
 
 						return {
-							[`level-${a}`]: {
+							[`level-${level}`]: {
 								color: foregroundColor.toHexString(),
 								background: backgroundColor,
 							}
@@ -597,12 +598,49 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 			},
 
 			indexNumber: {
-				...Array.from(Array(design.programmable.indexNumber.maximum), (_, index) => index + 1)
-					.map(a => {
+				...Arrays.range(1, design.programmable.group.maximum)
+					.map(level => {
+						const paddingWidth = `${((level - 1) * design.programmable.indexNumber.paddingLeft.value) + design.programmable.indexNumber.paddingLeft.unit}`;
+
+						const index = level - 2;
+						//let paddingColor = "transparent";
+						let gradient: string | undefined;
+						if(0 <= index) {
+							//paddingColor = index in theme.groups ? theme.groups[index] : theme.timeline.group;
+
+							// グラデーションの生成
+							const colors = new Array<string>();
+							for(let i = 0; i <= index; i++) {
+								const color = i in theme.groups ? theme.groups[i] : theme.timeline.group;
+								colors.push(color);
+							}
+							const gradients = colors
+								.map((a, i) => {
+									const from = (i / colors.length);
+									const to = from + (1 / colors.length);
+									return `${a} ${from * 100}% ${to * 100}%`;
+								})
+							;
+							gradient = `linear-gradient(to right, ${gradients.join(",")})`;
+						}
+
+
 						return {
-							[`level-${a}`]: {
+							[`level-${level}`]: {
 								display: "inline-block",
-								paddingLeft: (a * design.programmable.indexNumber.paddingLeft.value) + design.programmable.indexNumber.paddingLeft.unit,
+								position: "relative",
+								paddingLeft: paddingWidth,
+							},
+							[`level-${level}::before`]: {
+								content: "''",
+								position: "absolute",
+								display: "block",
+								background: gradient,
+								top: 0,
+								left: 0,
+								maxWidth: paddingWidth,
+								minWidth: paddingWidth,
+								height: "100%",
 							}
 						};
 					})
