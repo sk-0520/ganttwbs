@@ -4,19 +4,21 @@ import { useState } from "react";
 
 import Icon from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
-import { TimelineKind } from "@/models/data/Setting";
+import InputTimelinesDialog from "@/components/elements/pages/editor/timeline/InputTimelinesDialog";
+import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { IconKind } from "@/models/IconKind";
 
 interface Props {
 	currentTimelineKind: TimelineKind;
 	disabled: boolean,
 	moveItem: (moveUp: boolean) => void;
-	addItem: (kind: TimelineKind) => void;
+	addItem: (kindOrTimeline: TimelineKind | GroupTimeline) => void;
 	deleteItem: () => void;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
 	const [visibleControls, setVisibleControls] = useState(false);
+	const [visibleInputTimelinesDialog, setVisibleInputTimelinesDialog] = useState(false);
 
 	function handleStartControls() {
 		setVisibleControls(true);
@@ -38,6 +40,19 @@ const Component: NextPage<Props> = (props: Props) => {
 	function handleDeleteItem() {
 		props.deleteItem();
 		handleHideControls();
+	}
+
+	function handleShowInputTimeline() {
+		setVisibleInputTimelinesDialog(true);
+		handleHideControls();
+	}
+
+	function handleInputTimelines(timeline: GroupTimeline | null) {
+		if (timeline) {
+			props.addItem(timeline);
+		}
+
+		setVisibleInputTimelinesDialog(false);
 	}
 
 	return (
@@ -66,8 +81,10 @@ const Component: NextPage<Props> = (props: Props) => {
 					<table className="panel">
 						<tbody>
 							<tr>
-								<th>移動</th>
-								<td>
+								<th className="col-header">
+									移動
+								</th>
+								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleMoveItem(true)}
@@ -78,7 +95,7 @@ const Component: NextPage<Props> = (props: Props) => {
 										上へ
 									</button>
 								</td>
-								<td>
+								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleMoveItem(false)}
@@ -91,17 +108,17 @@ const Component: NextPage<Props> = (props: Props) => {
 								</td>
 							</tr>
 							<tr>
-								<th>
-									追加
-									(
-									{
+								<th
+									className="col-header"
+									title={
 										props.currentTimelineKind === "group"
 											? "終端"
 											: "直近"
 									}
-									)
+								>
+									追加
 								</th>
-								<td>
+								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleAddItem("group")}
@@ -112,7 +129,7 @@ const Component: NextPage<Props> = (props: Props) => {
 										グループ
 									</button>
 								</td>
-								<td>
+								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleAddItem("task")}
@@ -123,11 +140,24 @@ const Component: NextPage<Props> = (props: Props) => {
 										タスク
 									</button>
 								</td>
+								<td className="col-cell">
+									<button
+										className="simple"
+										onClick={_ => handleShowInputTimeline()}
+									>
+										<Icon
+											kind={IconKind.TimelineImport}
+										/>
+										一括
+									</button>
+								</td>
 							</tr>
 							<tr>
-								<th>削除</th>
-								<td></td>
-								<td>
+								<th className="col-header">
+									削除
+								</th>
+								<td className="col-cell" />
+								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleDeleteItem()}
@@ -143,6 +173,11 @@ const Component: NextPage<Props> = (props: Props) => {
 					</table>
 				</div>
 			</Overlay>
+			{visibleInputTimelinesDialog && (
+				<InputTimelinesDialog
+					callbackClose={handleInputTimelines}
+				/>
+			)}
 		</div>
 	);
 };

@@ -278,7 +278,7 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 				},
 			})),
 		})),
-		timelineNodes: source.timelineNodes,
+		rootTimeline: source.rootTimeline,
 		versions: []
 	};
 }

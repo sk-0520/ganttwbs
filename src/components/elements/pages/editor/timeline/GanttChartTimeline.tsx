@@ -58,7 +58,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					<GroupChart
 						configuration={props.configuration}
 						currentTimeline={props.currentTimeline}
-						background={Charts.getGroupBackground(props.currentTimeline, props.editData.setting.timelineNodes, props.editData.setting.theme)}
+						background={Charts.getGroupBackground(props.currentTimeline, props.editData.setting.rootTimeline, props.editData.setting.theme)}
 						foreground="#ffffff"
 						borderColor="#000000"
 						borderThickness={4}

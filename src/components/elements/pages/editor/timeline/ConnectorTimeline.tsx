@@ -70,7 +70,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				}
 
 				const previewColor = Settings.maybeGroupTimeline(previousTimeline)
-					? Charts.getGroupBackground(previousTimeline, props.timelineStore.nodeItems, props.editData.setting.theme)
+					? Charts.getGroupBackground(previousTimeline, props.timelineStore.rootGroupTimeline, props.editData.setting.theme)
 					: Charts.getTaskBackground(previousTimeline, props.memberMap, props.editData.setting.theme)
 					;
 

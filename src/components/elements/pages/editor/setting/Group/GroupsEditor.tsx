@@ -1,6 +1,6 @@
 import { random } from "@ctrl/tinycolor";
 import { NextPage } from "next";
-import { useContext, MouseEvent, useState } from "react";
+import { useContext, MouseEvent, useState, Fragment } from "react";
 
 import GroupColorsDialog from "@/components/elements/pages/editor/setting/Group/GroupColorsDialog";
 import MemberEditor from "@/components/elements/pages/editor/setting/Group/MemberEditor";
@@ -8,6 +8,7 @@ import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/conte
 import { Color, MemberId } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
 
+//TODO: data属性の使用はやめれるはず
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
@@ -124,8 +125,8 @@ const Component: NextPage = () => {
 					};
 
 					return (
-						<>
-							<dt key={"group-" + a.key} className="group">
+						<Fragment key={a.key}>
+							<dt className="group">
 								<ul className="inline">
 									<li>
 										<label>
@@ -154,11 +155,9 @@ const Component: NextPage = () => {
 										</button>
 									</li>
 								</ul>
-
-
 							</dt>
 
-							<dd key={"member-" + a.key} className="member">
+							<dd className="member">
 								<table className="members">
 									<thead>
 										<tr>
@@ -202,7 +201,7 @@ const Component: NextPage = () => {
 									</tfoot>
 								</table>
 							</dd>
-						</>
+						</Fragment>
 					);
 				})}
 
@@ -219,7 +218,7 @@ const Component: NextPage = () => {
 			{choiceColorGroup && (
 				<GroupColorsDialog
 					choiceColorGroup={choiceColorGroup}
-					callbackClose={a => {
+					callbackClosed={a => {
 						//if (type === "submit") {
 						//const map = new Map<MemberId, Color>([...choiceColors.entries()].map(([k, v]) => [k, v.toHexString()]));
 						setUpdatedColors(a);

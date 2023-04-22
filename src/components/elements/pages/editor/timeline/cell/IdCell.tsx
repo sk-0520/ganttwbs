@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import { DragEvent } from "react";
 
 import Icon from "@/components/elements/Icon";
-import IndexNumber from "@/components/elements/pages/editor/timeline/IndexNumber";
+import IndexNumber from "@/components/elements/IndexNumber";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { AnyTimeline } from "@/models/data/Setting";

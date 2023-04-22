@@ -379,6 +379,14 @@
 				.panel {
 					color: #000;
 					table-layout: fixed;
+
+					.col-header {
+						padding-right: 1em;
+					}
+
+					.col-cell {
+						width: 5em;
+					}
 				}
 
 				button.simple {

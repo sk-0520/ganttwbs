@@ -1,9 +1,14 @@
 import { NextPage } from "next";
+import { useState } from "react";
 
+import Icon from "@/components/elements/Icon";
+import InputTimelinesDialog from "@/components/elements/pages/editor/timeline/InputTimelinesDialog";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
+import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { EditProps } from "@/models/data/props/EditProps";
-import { TimelineKind } from "@/models/data/Setting";
+import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
+import { IconKind } from "@/models/IconKind";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 
@@ -14,22 +19,28 @@ interface Props extends EditProps {
 
 const Component: NextPage<Props> = (props: Props) => {
 
-	function addTimeline(kind: TimelineKind) {
-		props.timelineStore.addTimeline(
-			props.timelineStore.nodeItems.length ? props.timelineStore.nodeItems[props.timelineStore.nodeItems.length - 1]: null,
+	const [visibleInputTimelinesDialog, setVisibleInputTimelinesDialog] = useState(false);
+
+	function addEmptyTimeline(kind: TimelineKind) {
+		props.timelineStore.addEmptyTimeline(
+			props.timelineStore.rootGroupTimeline,
 			{
-				position: "next",
+				position: NewTimelinePosition.Next,
 				timelineKind: kind,
 			}
 		);
 	}
 
-	function handleAddNewGroup() {
-		addTimeline("group");
+	function handleAddEmptyGroup() {
+		addEmptyTimeline("group");
 	}
 
-	function handleAddNewTask() {
-		addTimeline("task");
+	function handleAddEmptyTask() {
+		addEmptyTimeline("task");
+	}
+
+	function handleShowInputTimeline() {
+		setVisibleInputTimelinesDialog(true);
 	}
 
 	function scrollFromDate(date: DateTime): void {
@@ -43,6 +54,14 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 	}
 
+	function handleInputTimelines(timeline: GroupTimeline | null) {
+		if (timeline) {
+			props.timelineStore.addNewTimeline(props.timelineStore.rootGroupTimeline, timeline, NewTimelinePosition.Next);
+		}
+
+		setVisibleInputTimelinesDialog(false);
+	}
+
 	return (
 		<div id='cross-header'>
 			<div className="header">
@@ -52,13 +71,45 @@ const Component: NextPage<Props> = (props: Props) => {
 				<div className='operation'>
 					<ul className="inline">
 						<li>
-							<button type='button' onClick={handleAddNewGroup}>add new group</button>
+							<button
+								type='button'
+								onClick={handleAddEmptyGroup}
+							>
+								<Icon
+									kind={IconKind.TimelineAddGroup}
+								/>
+								add new group
+							</button>
 						</li>
 						<li>
-							<button type='button' onClick={handleAddNewTask}>add new task</button>
+							<button
+								type='button'
+								onClick={handleAddEmptyTask}
+							>
+								<Icon
+									kind={IconKind.TimelineAddTask}
+								/>
+								add new task
+							</button>
 						</li>
 						<li>
-							<button onClick={ev => scrollFromDate(DateTime.today(props.calendarInfo.timeZone))}>
+							<button
+								type='button'
+								onClick={handleShowInputTimeline}
+							>
+								<Icon
+									kind={IconKind.TimelineImport}
+								/>
+								add timelines
+							</button>
+						</li>
+						<li>
+							<button
+								onClick={ev => scrollFromDate(DateTime.today(props.calendarInfo.timeZone))}
+							>
+								<Icon
+									kind={IconKind.CalendarToday}
+								/>
 								けふ
 							</button>
 						</li>
@@ -78,6 +129,11 @@ const Component: NextPage<Props> = (props: Props) => {
 					<div className='timeline-cell timeline-controls'>操作</div>
 				</div>
 			</div>
+			{visibleInputTimelinesDialog && (
+				<InputTimelinesDialog
+					callbackClose={handleInputTimelines}
+				/>
+			)}
 		</div>
 	);
 };

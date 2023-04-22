@@ -1,14 +1,15 @@
 import { DragEvent } from "react";
 
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
-import { AnyTimeline, TimelineId } from "@/models/data/Setting";
+import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
+import { AnyTimeline, GroupTimeline, TimelineId } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
 
 export interface TimelineStore {
 
-	/** ノード状態全アイテム */
-	readonly nodeItems: ReadonlyArray<AnyTimeline>;
+	/** 最上位(こいつ自身はどうでもよくて、子を使用する) */
+	readonly rootGroupTimeline: GroupTimeline;
 
 	/** 全てのタイムライン(ノード状態ではない) */
 	readonly totalItemMap: ReadonlyMap<TimelineId, AnyTimeline>;
@@ -31,10 +32,17 @@ export interface TimelineStore {
 
 	/**
 	 * タイムライン追加。
-	 * @param timeline 追加するタイムラインの基準タイムライン。
+	 * @param baseTimeline 追加するタイムラインの基準タイムライン。
 	 * @param options 追加方法。
 	 */
-	addTimeline(timeline: AnyTimeline | null, options: NewTimelineOptions): void;
+	addEmptyTimeline(baseTimeline: AnyTimeline, options: NewTimelineOptions): void;
+	/**
+	 * タイムライン追加。
+	 * @param baseTimeline
+	 * @param newTimeline
+	 * @param position
+	 */
+	addNewTimeline(baseTimeline: AnyTimeline, newTimeline: AnyTimeline, position: NewTimelinePosition): void;
 	/**
 	 * タイムラインを更新。
 	 * @param timeline

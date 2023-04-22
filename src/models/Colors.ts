@@ -4,6 +4,11 @@ import { Color } from "@/models/data/Setting";
 
 export default abstract class Colors {
 
+	/**
+	 * 指定の色に対して読みやすい(?)色を取得
+	 * @param color
+	 * @returns
+	 */
 	public static getAutoColor(color: Color | TinyColor): TinyColor {
 		const textColors = ["#000", "#fff"];
 		const result = mostReadable(

@@ -175,7 +175,7 @@ function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 			timeline: DefaultSettings.getTimelineTheme(),
 		},
 		groups: [],
-		timelineNodes: [],
+		rootTimeline: Timelines.createRootGroup(),
 		versions: [],
 	};
 
@@ -257,8 +257,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 		],
 	});
 
-
-	setting.timelineNodes = [
+	setting.rootTimeline.children = [
 		{
 			"kind": "task",
 			"id": "680e27c0-7320-441e-9ec1-cf485996824e",

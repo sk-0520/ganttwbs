@@ -14,6 +14,7 @@ import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/Workl
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
+import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { EditProps } from "@/models/data/props/EditProps";
 import { AnyTimeline, GroupTimeline, MemberId, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
@@ -27,7 +28,7 @@ import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends EditProps {
 	treeIndexes: Array<number>;
-	parentGroup: GroupTimeline | null;
+	parentGroup: GroupTimeline;
 	currentIndex: number;
 	currentTimeline: AnyTimeline;
 	timelineStore: TimelineStore;
@@ -142,14 +143,24 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.timelineStore.moveTimeline(moveUp, props.currentTimeline);
 	}
 
-	function handleControlAddItem(kind: TimelineKind) {
-		props.timelineStore.addTimeline(
-			props.currentTimeline,
-			{
-				position: "next",
-				timelineKind: kind,
-			}
-		);
+	function handleControlAddItem(kindOrTimeline: TimelineKind | GroupTimeline): void {
+		if (kindOrTimeline === "group" || kindOrTimeline === "task") {
+			// 空タイムライン
+			props.timelineStore.addEmptyTimeline(
+				props.currentTimeline,
+				{
+					position: NewTimelinePosition.Next,
+					timelineKind: kindOrTimeline,
+				}
+			);
+		} else {
+			// グループ
+			props.timelineStore.addNewTimeline(
+				props.currentTimeline,
+				kindOrTimeline,
+				NewTimelinePosition.Next
+			);
+		}
 	}
 
 	function handleControlDeleteItem() {
@@ -214,8 +225,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			return;
 		}
 
-		const nodes = props.parentGroup ? props.parentGroup.children : props.editData.setting.timelineNodes;
-		const prevTimeline = nodes[props.currentIndex - 1];
+		const prevTimeline = props.parentGroup.children[props.currentIndex - 1];
 		props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([prevTimeline.id]));
 	}
 

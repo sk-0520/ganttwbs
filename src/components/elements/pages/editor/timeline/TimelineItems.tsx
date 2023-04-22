@@ -25,7 +25,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div id='timelines'>
 			<ul>
-				{props.timelineStore.nodeItems.map((a, i) => {
+				{props.timelineStore.rootGroupTimeline.children.map((a, i) => {
 					return (
 						<li key={a.id}>
 							<AnyTimelineEditor
@@ -33,7 +33,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								editData={props.editData}
 								treeIndexes={[]}
 								currentIndex={i}
-								parentGroup={null}
+								parentGroup={props.timelineStore.rootGroupTimeline}
 								currentTimeline={a}
 								timelineStore={props.timelineStore}
 								draggingTimeline={props.draggingTimeline}

@@ -1,3 +1,4 @@
+import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { TimelineKind } from "@/models/data/Setting";
 
 export interface NewTimelineOptions {
@@ -5,5 +6,5 @@ export interface NewTimelineOptions {
 	/**
 	 * 対象タイムラインから見た追加位置。
 	 */
-	position: "next";
+	position: NewTimelinePosition;
 }

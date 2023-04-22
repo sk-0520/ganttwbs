@@ -4,6 +4,7 @@ export const enum IconKind {
 	TimelineGroup,
 	TimelineAddTask,
 	TimelineAddGroup,
+	TimelineImport,
 
 	RelationMix,
 	RelationStatic,
@@ -13,6 +14,8 @@ export const enum IconKind {
 	MoveDown,
 	MovePrev,
 	MoveNext,
+
+	CalendarToday,
 
 	ConfirmPositive,
 	ConfirmNegative,

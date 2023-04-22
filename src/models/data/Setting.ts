@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { IdFactory } from "@/models/IdFactory";
+
 const ColorSchema = z.string();
 export type Color = z.infer<typeof ColorSchema>;
 
@@ -83,6 +85,10 @@ const TimelineIdSchema = z.string();
 /** @inheritdoc */
 export type TimelineId = z.infer<typeof TimelineIdSchema>;
 
+const RootTimelineIdSchema = z.literal(IdFactory.rootTimelineId);
+/** @inheritdoc */
+export type RootTimelineId = z.infer<typeof RootTimelineIdSchema>;
+
 /** 0-1 */
 const ProgressSchema = z.number();
 /** @inheritdoc */
@@ -102,6 +108,10 @@ interface IGroupTimeline extends Timeline {
 	children: Array<IGroupTimeline | ITaskTimeline>;
 }
 
+interface IRootTimeline extends IGroupTimeline {
+	id: RootTimelineId,
+}
+
 interface ITaskTimeline extends Timeline {
 	kind: "task";
 	memberId: MemberId;
@@ -117,6 +127,15 @@ const GroupTimelineSchema: z.ZodSchema<IGroupTimeline> = z.lazy(() => TimelineSc
 }));
 /** @inheritdoc */
 export type GroupTimeline = z.infer<typeof GroupTimelineSchema>;
+
+const RootTimelineSchema: z.ZodSchema<IRootTimeline> = z.lazy(() => TimelineSchema.extend({
+	id: RootTimelineIdSchema,
+	kind: z.literal("group"),
+	children: z.array(z.union([GroupTimelineSchema, TaskTimelineSchema])),
+}));
+/** @inheritdoc */
+export type RootTimeline = z.infer<typeof RootTimelineSchema>;
+
 
 const TaskTimelineSchema = TimelineSchema.extend({
 	kind: z.literal("task"),
@@ -203,7 +222,7 @@ export const SettingSchema = z.object({
 	calendar: CalendarSchema,
 	theme: ThemeSchema,
 	groups: z.array(GroupSchema),
-	timelineNodes: z.array(AnyTimelineSchema),
+	rootTimeline: RootTimelineSchema,
 	versions: z.array(VersionItemSchema),
 });
 export type Setting = z.infer<typeof SettingSchema>;
