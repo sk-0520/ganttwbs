@@ -42,7 +42,7 @@ export abstract class Timelines {
 		return date.format("yyyy-MM-dd");
 	}
 
-	public static createRootGroup(): RootTimeline {
+	public static createRootTimeline(): RootTimeline {
 		const item: RootTimeline = {
 			id: IdFactory.rootTimelineId,
 			kind: "group",
@@ -54,7 +54,7 @@ export abstract class Timelines {
 		return item;
 	}
 
-	public static createNewGroup(): GroupTimeline {
+	public static createGroupTimeline(): GroupTimeline {
 		const item: GroupTimeline = {
 			id: IdFactory.createTimelineId(),
 			kind: "group",
@@ -66,7 +66,7 @@ export abstract class Timelines {
 		return item;
 	}
 
-	public static createNewTask(): TaskTimeline {
+	public static createTaskTimeline(): TaskTimeline {
 		const workload = TimeSpan.fromDays(1);
 		const item: TaskTimeline = {
 			id: IdFactory.createTimelineId(),
@@ -108,30 +108,6 @@ export abstract class Timelines {
 
 	public static toIndexes(timelines: ReadonlyArray<AnyTimeline>): Map<TimelineId, number> {
 		return new Map(timelines.map((a, i) => [a.id, i]));
-	}
-
-	public static moveTimelineOrder(timelines: Array<AnyTimeline>, moveUp: boolean, currentTimeline: AnyTimeline): boolean {
-		const currentIndex = timelines.findIndex(a => a === currentTimeline);
-
-		if (moveUp) {
-			if (currentIndex && timelines.length) {
-				const nextIndex = currentIndex - 1;
-				const tempTimeline = timelines[nextIndex];
-				timelines[nextIndex] = currentTimeline;
-				timelines[currentIndex] = tempTimeline;
-				return true;
-			}
-		} else {
-			if (currentIndex < timelines.length - 1) {
-				const nextIndex = currentIndex + 1;
-				const tempTimeline = timelines[nextIndex];
-				timelines[nextIndex] = currentTimeline;
-				timelines[currentIndex] = tempTimeline;
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	public static displayWorkload(workload: number): string {

@@ -442,7 +442,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
 
 		const group = Arrays.last(groups);
-		Timelines.moveTimelineOrder(group.children, moveUp, timeline);
+		Arrays.replaceOrderInPlace(group.children, !moveUp, timeline);
 
 		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
 	}
@@ -659,10 +659,10 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 function createEmptyTimeline(timelineKind: TimelineKind): AnyTimeline {
 	switch (timelineKind) {
 		case "group":
-			return Timelines.createNewGroup();
+			return Timelines.createGroupTimeline();
 
 		case "task":
-			return Timelines.createNewTask();
+			return Timelines.createTaskTimeline();
 
 		default:
 			throw new Error();
