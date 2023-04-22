@@ -38,7 +38,7 @@ export interface TimelineStore {
 	/**
 	 * 指定タイムラインの直近のタイムラインを取得。
 	 */
-	getBeforeTimeline(timeline: AnyTimeline): AnyTimeline | undefined;
+	searchBeforeTimeline(timeline: AnyTimeline): AnyTimeline | undefined;
 
 	/**
 	 * タイムライン追加。

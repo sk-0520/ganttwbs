@@ -215,7 +215,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		const beforeTimeline = props.timelineStore.getBeforeTimeline(props.currentTimeline);
+		const beforeTimeline = props.timelineStore.searchBeforeTimeline(props.currentTimeline);
 		if (beforeTimeline) {
 			props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([beforeTimeline.id]));
 		}
@@ -226,7 +226,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		const beforeTimeline = props.timelineStore.getBeforeTimeline(props.currentTimeline);
+		const beforeTimeline = props.timelineStore.searchBeforeTimeline(props.currentTimeline);
 		if (beforeTimeline) {
 			props.currentTimeline.static = undefined;
 			props.currentTimeline.previous = [beforeTimeline.id];

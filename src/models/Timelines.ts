@@ -501,8 +501,15 @@ export abstract class Timelines {
 		return null;
 	}
 
-	public static canSelectCore(targetTimeline: AnyTimeline, currentTimeline: AnyTimeline, rootTimeline: GroupTimeline): boolean {
-		const groups = Timelines.getParentGroups(currentTimeline, rootTimeline);
+	/**
+	 * 指定タイムラインは前工程タイムラインとして選択可能か
+	 * @param targetTimeline 前工程になりうるかチェックするタイムライン。
+	 * @param baseTimeline 基準となるタイムライン。
+	 * @param rootTimeline
+	 * @returns
+	 */
+	public static canSelect(targetTimeline: AnyTimeline, baseTimeline: AnyTimeline, rootTimeline: GroupTimeline): boolean {
+		const groups = Timelines.getParentGroups(baseTimeline, rootTimeline);
 		if (groups.length) {
 			return !groups.some(a => a.id === targetTimeline.id);
 		}
@@ -510,7 +517,13 @@ export abstract class Timelines {
 		return true;
 	}
 
-	public static getBeforeTimeline(timeline: AnyTimeline, rootTimeline: GroupTimeline): AnyTimeline | undefined {
+	/**
+	 * 前工程タイムラインを検索。
+	 * @param timeline タイムライン。
+	 * @param rootTimeline
+	 * @returns
+	 */
+	public static searchBeforeTimeline(timeline: AnyTimeline, rootTimeline: GroupTimeline): AnyTimeline | undefined {
 		const sequenceTimelines = this.flat(rootTimeline.children);
 
 		const index = sequenceTimelines.findIndex(a => a.id === timeline.id);
@@ -538,11 +551,11 @@ export abstract class Timelines {
 					return beforeTimeline;
 				}
 
-				if (this.canSelectCore(beforeTimeline, timeline, rootTimeline)) {
+				if (this.canSelect(beforeTimeline, timeline, rootTimeline)) {
 					// タスク自体は直近として扱える場合でも、異なるグループのためそのグループ自体を選択する
 					if (1 < beforeGroups.length) {
 						const target = beforeGroup;
-						if (this.canSelectCore(target, timeline, rootTimeline)) {
+						if (this.canSelect(target, timeline, rootTimeline)) {
 							return target;
 						}
 					}

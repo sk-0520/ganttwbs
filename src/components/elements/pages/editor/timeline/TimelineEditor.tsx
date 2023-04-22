@@ -75,7 +75,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			activeItem: activeTimeline,
 
 			getIndex: handleGetIndex,
-			getBeforeTimeline: handleGetBeforeTimeline,
+			searchBeforeTimeline: handleSearchBeforeTimeline,
 
 			addEmptyTimeline: handleAddEmptyTimeline,
 			addNewTimeline: handleAddNewTimeline,
@@ -331,8 +331,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		return result;
 	}
 
-	function handleGetBeforeTimeline(timeline: AnyTimeline): AnyTimeline | undefined {
-		return Timelines.getBeforeTimeline(timeline, props.editData.setting.rootTimeline);
+	function handleSearchBeforeTimeline(timeline: AnyTimeline): AnyTimeline | undefined {
+		return Timelines.searchBeforeTimeline(timeline, props.editData.setting.rootTimeline);
 	}
 
 	function handleAddEmptyTimeline(baseTimeline: AnyTimeline, options: NewTimelineOptions): void {
@@ -372,7 +372,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		// 前工程の設定されていないタスクに対して可能であれば直近項目を前項目として設定
 		const newTaskTimeline = Timelines.getFirstTaskTimeline(newTimeline);
 		if (newTaskTimeline) {
-			const beforeTimeline = Timelines.getBeforeTimeline(newTaskTimeline, props.editData.setting.rootTimeline);
+			const beforeTimeline = Timelines.searchBeforeTimeline(newTaskTimeline, props.editData.setting.rootTimeline);
 			if (beforeTimeline) {
 				newTaskTimeline.previous = [beforeTimeline.id];
 			}
@@ -481,7 +481,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			timeline: timeline,
 			beginDate: timeline.static ? DateTime.parse(timeline.static, calendarInfo.timeZone) : null,
 			previous: new Set(timeline.previous),
-			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
+			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editData.setting.rootTimeline),
 		});
 	}
 
@@ -490,7 +490,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			timeline: timeline,
 			beginDate: clearDate ? null : c?.beginDate ?? null,
 			previous: clearPrevious ? new Set() : c?.previous ?? new Set(),
-			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
+			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editData.setting.rootTimeline),
 		}));
 	}
 
@@ -499,12 +499,8 @@ const Component: NextPage<Props> = (props: Props) => {
 			timeline: timeline,
 			beginDate: c?.beginDate ?? null,
 			previous: new Set(set),
-			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
+			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editData.setting.rootTimeline)
 		}));
-	}
-
-	function canSelectCore(targetTimeline: AnyTimeline, currentTimeline: AnyTimeline): boolean {
-		return Timelines.canSelectCore(targetTimeline, currentTimeline, props.editData.setting.rootTimeline);
 	}
 
 	function handleSubmitSelectBeginDate(timeline: TaskTimeline): void {
