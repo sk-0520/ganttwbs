@@ -210,7 +210,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		setSelectedBeginDate(props.selectingBeginDate.beginDate);
 	}
 
-	function handleAttachPrevTimeline() {
+	function handleAttachBeforeTimeline() {
 		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
 			throw new Error();
 		}
@@ -219,6 +219,20 @@ const Component: NextPage<Props> = (props: Props) => {
 		if (beforeTimeline) {
 			props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([beforeTimeline.id]));
 		}
+	}
+
+	function handleSubmitAttachBeforeTimeline() {
+		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
+			throw new Error();
+		}
+
+		const beforeTimeline = props.timelineStore.getBeforeTimeline(props.currentTimeline);
+		if (beforeTimeline) {
+			props.currentTimeline.static = undefined;
+			props.currentTimeline.previous = [beforeTimeline.id];
+		}
+
+		props.beginDateCallbacks.submitSelectBeginDate(props.currentTimeline);
 	}
 
 	function handleClearPrevious() {
@@ -338,11 +352,48 @@ const Component: NextPage<Props> = (props: Props) => {
 										</li>
 									</ul>
 									<div className="tools after">
-										<ul>
-											<li><button onClick={handleAttachPrevTimeline}>直近項目に紐づける</button></li>
-											<li><button onClick={handleClearPrevious}>紐づけを解除</button></li>
-											<li><button onClick={handleClearStatic}>固定日付をクリア</button></li>
-										</ul>
+										<fieldset>
+											<legend>即時実行</legend>
+											<ul>
+												<li>
+													<button onClick={handleSubmitAttachBeforeTimeline}>
+														<Icon
+															kind={IconKind.RelationJoin}
+														/>
+														直近項目に紐づける
+													</button>
+												</li>
+											</ul>
+										</fieldset>
+										<fieldset>
+											<legend>連続作業</legend>
+											<ul>
+												<li>
+													<button onClick={handleAttachBeforeTimeline}>
+														<Icon
+															kind={IconKind.RelationJoin}
+														/>
+														直近項目に紐づける
+													</button>
+												</li>
+												<li>
+													<button onClick={handleClearPrevious}>
+														<Icon
+															kind={IconKind.RelationClear}
+														/>
+														紐づけを解除
+													</button>
+												</li>
+												<li>
+													<button onClick={handleClearStatic}>
+														<Icon
+															kind={IconKind.Clear}
+														/>
+														固定日付をクリア
+													</button>
+												</li>
+											</ul>
+										</fieldset>
 									</div>
 								</div>
 							</>

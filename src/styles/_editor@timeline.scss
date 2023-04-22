@@ -262,15 +262,17 @@
 
 			.prompt {
 				$prompt-background-color: palegoldenrod;
+				$prompt-outline-width: 2px;
 
 				position: relative;
 
 				background-color: $prompt-background-color;
-				outline: 2px $prompt-background-color solid;
+				outline: $prompt-outline-width $prompt-background-color solid;
 				height: fit-content;
+				z-index: 4;
 
 				.tools {
-					outline: 2px $prompt-background-color solid;
+					outline: $prompt-outline-width $prompt-background-color solid;
 					height: fit-content;
 					background-color: $prompt-background-color;
 
@@ -278,13 +280,13 @@
 
 					&.before {
 						position: absolute;
-						right: 0;
+						right: 100%;
 						top: 0;
 					}
 
 					&.after {
 						position: absolute;
-						left: 100%;
+						left: calc(100% + $prompt-outline-width);
 						top: 0;
 					}
 
@@ -335,6 +337,11 @@
 						input {
 							width: 100%;
 						}
+					}
+				}
+				.tools {
+					button {
+						text-align: left;
 					}
 				}
 			}

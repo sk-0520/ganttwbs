@@ -9,6 +9,8 @@ export const enum IconKind {
 	RelationMix,
 	RelationStatic,
 	RelationPrevious,
+	RelationJoin,
+	RelationClear,
 
 	MoveUp,
 	MoveDown,
@@ -21,6 +23,7 @@ export const enum IconKind {
 	ConfirmNegative,
 	ConfirmCancel,
 
+	Clear,
 	Operation,
 	Remove,
 }
