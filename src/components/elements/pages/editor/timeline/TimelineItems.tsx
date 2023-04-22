@@ -25,7 +25,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div id='timelines'>
 			<ul>
-				{props.timelineStore.rootGroupTimeline.children.map((a, i) => {
+				{props.timelineStore.sequenceItems.map((a, i) => {
 					return (
 						<li key={a.id}>
 							<AnyTimelineEditor

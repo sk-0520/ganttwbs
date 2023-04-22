@@ -222,13 +222,17 @@ export abstract class Timelines {
 		return result;
 	}
 
-	public static findTimeline(timelineId: TimelineId, timelineNodes: ReadonlyArray<AnyTimeline>): AnyTimeline | null {
-		for (const node of timelineNodes) {
+	public static findTimeline(timelineId: TimelineId, groupTimeline: Readonly<GroupTimeline>): AnyTimeline | null {
+		if(timelineId === groupTimeline.id) {
+			return groupTimeline;
+		}
+
+		for (const node of groupTimeline.children) {
 			if (node.id === timelineId) {
 				return node;
 			}
 			if (Settings.maybeGroupTimeline(node)) {
-				const result = this.findTimeline(timelineId, node.children);
+				const result = this.findTimeline(timelineId, node);
 				if (result) {
 					return result;
 				}

@@ -48,7 +48,6 @@ const Component: NextPage<Props> = (props: Props) => {
 	const [beginDate, setBeginDate] = useState<DateTime | null>(null);
 	const [endDate, setEndDate] = useState<DateTime | null>(null);
 	const [progress, setProgress] = useState(0);
-	const [children, setChildren] = useState(Settings.maybeGroupTimeline(props.currentTimeline) ? [...props.currentTimeline.children] : []);
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
 	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
 
@@ -64,8 +63,6 @@ const Component: NextPage<Props> = (props: Props) => {
 
 				const progress = Timelines.sumProgressByGroup(timelineItem.timeline);
 				setProgress(progress);
-
-				setChildren(timelineItem.timeline.children);
 
 			} else if (Settings.maybeTaskTimeline(timelineItem.timeline)) {
 				const workload = TimeSpan.parse(timelineItem.timeline.workload).totalDays;
@@ -271,140 +268,115 @@ const Component: NextPage<Props> = (props: Props) => {
 	const className = props.currentTimeline.kind;
 
 	return (
-		<>
-			<div className={className}>
-				<TimelineHeaderRow
+		<div className={className}>
+			<TimelineHeaderRow
+				currentTimeline={props.currentTimeline}
+				selectingBeginDate={props.selectingBeginDate}
+				draggingTimeline={props.draggingTimeline}
+				timelineStore={props.timelineStore}
+				level={props.treeIndexes.length + 1}
+			>
+				<IdCell
+					selectingId={selectingId}
+					treeIndexes={props.treeIndexes}
+					currentIndex={props.currentIndex}
 					currentTimeline={props.currentTimeline}
-					selectingBeginDate={props.selectingBeginDate}
+					isSelectedPrevious={isSelectedPrevious}
 					draggingTimeline={props.draggingTimeline}
-					timelineStore={props.timelineStore}
-					level={props.treeIndexes.length + 1}
-				>
-					<IdCell
-						selectingId={selectingId}
-						treeIndexes={props.treeIndexes}
-						currentIndex={props.currentIndex}
-						currentTimeline={props.currentTimeline}
-						isSelectedPrevious={isSelectedPrevious}
-						draggingTimeline={props.draggingTimeline}
-						selectingBeginDate={props.selectingBeginDate}
-						callbackStartDragTimeline={handleStartDragTimeline}
-						callbackChangePrevious={handleChangePrevious}
-					/>
-					<SubjectCell
-						value={subject}
-						disabled={props.selectingBeginDate !== null}
-						readOnly={false}
-						callbackChangeValue={handleChangeSubject}
-					/>
-					<WorkloadCell
-						readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-						disabled={props.selectingBeginDate !== null}
-						value={workload}
-						callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeWorkload : undefined}
-					/>
-					<ResourceCell
-						currentTimeline={props.currentTimeline}
-						groups={props.editData.setting.groups}
-						selectedMemberId={memberId}
-						disabled={props.selectingBeginDate !== null}
-						callbackChangeMember={handleChangeMember}
-					/>
-					<RelationCell
-						currentTimeline={props.currentTimeline}
-						selectable={props.selectingBeginDate !== null}
-						htmlFor={selectingId}
-					/>
-					{
-						props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
-							? (
-								<>
-									<div className='timeline-cell timeline-range-area prompt'>
-										<ul className="contents">
-											<li className="main">
-												<input
-													type="date"
-													value={selectedBeginDate ? selectedBeginDate.format("yyyy-MM-dd") : ""}
-													onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
+					selectingBeginDate={props.selectingBeginDate}
+					callbackStartDragTimeline={handleStartDragTimeline}
+					callbackChangePrevious={handleChangePrevious}
+				/>
+				<SubjectCell
+					value={subject}
+					disabled={props.selectingBeginDate !== null}
+					readOnly={false}
+					callbackChangeValue={handleChangeSubject}
+				/>
+				<WorkloadCell
+					readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
+					disabled={props.selectingBeginDate !== null}
+					value={workload}
+					callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeWorkload : undefined}
+				/>
+				<ResourceCell
+					currentTimeline={props.currentTimeline}
+					groups={props.editData.setting.groups}
+					selectedMemberId={memberId}
+					disabled={props.selectingBeginDate !== null}
+					callbackChangeMember={handleChangeMember}
+				/>
+				<RelationCell
+					currentTimeline={props.currentTimeline}
+					selectable={props.selectingBeginDate !== null}
+					htmlFor={selectingId}
+				/>
+				{
+					props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
+						? (
+							<>
+								<div className='timeline-cell timeline-range-area prompt'>
+									<ul className="contents">
+										<li className="main">
+											<input
+												type="date"
+												value={selectedBeginDate ? selectedBeginDate.format("yyyy-MM-dd") : ""}
+												onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
+											/>
+										</li>
+										<li>
+											<button type="button" onClick={handleSubmitPrevious}>
+												<Icon
+													kind={IconKind.ConfirmPositive}
+													fill="green"
+													title="確定"
 												/>
-											</li>
-											<li>
-												<button type="button" onClick={handleSubmitPrevious}>
-													<Icon
-														kind={IconKind.ConfirmPositive}
-														fill="green"
-														title="確定"
-													/>
-												</button>
-											</li>
-											<li>
-												<button type="button" onClick={handleCancelPrevious}>
-													<Icon
-														kind={IconKind.ConfirmCancel}
-														title="キャンセル"
-													/>
-												</button>
-											</li>
+											</button>
+										</li>
+										<li>
+											<button type="button" onClick={handleCancelPrevious}>
+												<Icon
+													kind={IconKind.ConfirmCancel}
+													title="キャンセル"
+												/>
+											</button>
+										</li>
+									</ul>
+									<div className="tools after">
+										<ul>
+											<li><button onClick={handleAttachPrevTimeline}>直近項目に紐づける</button></li>
+											<li><button onClick={handleClearPrevious}>紐づけを解除</button></li>
+											<li><button onClick={handleClearStatic}>固定日付をクリア</button></li>
 										</ul>
-										<div className="tools after">
-											<ul>
-												<li><button onClick={handleAttachPrevTimeline}>直近項目に紐づける</button></li>
-												<li><button onClick={handleClearPrevious}>紐づけを解除</button></li>
-												<li><button onClick={handleClearStatic}>固定日付をクリア</button></li>
-											</ul>
-										</div>
 									</div>
-								</>
-							) : (
-								<TimeRangeCells
-									workRangeKind={beginKind}
-									selectable={props.selectingBeginDate !== null}
-									beginDate={beginDate}
-									endDate={endDate}
-									htmlFor={selectingId}
-									callbackClickBeginDate={Settings.maybeTaskTimeline(props.currentTimeline) ? handleClickBeginDate : undefined}
-								/>
-							)
-					}
-					<ProgressCell
-						readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-						disabled={props.selectingBeginDate !== null}
-						progress={progress}
-						callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
-					/>
-					<ControlsCell
-						currentTimelineKind={props.currentTimeline.kind}
-						disabled={props.selectingBeginDate !== null}
-						moveItem={handleControlMoveItem}
-						addItem={handleControlAddItem}
-						deleteItem={handleControlDeleteItem}
-					/>
-				</TimelineHeaderRow>
-			</div >
-			{Settings.maybeGroupTimeline(props.currentTimeline) && 0 < children.length && (
-				<ul>
-					{children.map((a, i) => {
-						return (
-							<li key={a.id}>
-								<Component
-									configuration={props.configuration}
-									editData={props.editData}
-									treeIndexes={[...props.treeIndexes, props.currentIndex]}
-									currentIndex={i}
-									parentGroup={props.currentTimeline as GroupTimeline}
-									currentTimeline={a}
-									timelineStore={props.timelineStore}
-									draggingTimeline={props.draggingTimeline}
-									selectingBeginDate={props.selectingBeginDate}
-									beginDateCallbacks={props.beginDateCallbacks}
-									calendarInfo={props.calendarInfo}
-								/>
-							</li>
-						);
-					})}
-				</ul>
-			)}
-		</>
+								</div>
+							</>
+						) : (
+							<TimeRangeCells
+								workRangeKind={beginKind}
+								selectable={props.selectingBeginDate !== null}
+								beginDate={beginDate}
+								endDate={endDate}
+								htmlFor={selectingId}
+								callbackClickBeginDate={Settings.maybeTaskTimeline(props.currentTimeline) ? handleClickBeginDate : undefined}
+							/>
+						)
+				}
+				<ProgressCell
+					readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
+					disabled={props.selectingBeginDate !== null}
+					progress={progress}
+					callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
+				/>
+				<ControlsCell
+					currentTimelineKind={props.currentTimeline.kind}
+					disabled={props.selectingBeginDate !== null}
+					moveItem={handleControlMoveItem}
+					addItem={handleControlAddItem}
+					deleteItem={handleControlDeleteItem}
+				/>
+			</TimelineHeaderRow>
+		</div>
 	);
 };
 

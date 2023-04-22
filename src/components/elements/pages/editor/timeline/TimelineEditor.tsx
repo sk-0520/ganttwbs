@@ -36,7 +36,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	let hoverTimeline: AnyTimeline | null = null;
 	let activeTimeline: AnyTimeline | null = null;
 
-	const [rootChildren, setRootChildren] = useState([...props.editData.setting.rootTimeline.children]);
+	const [sequenceTimelines, setSequenceTimelines] = useState(Timelines.flat(props.editData.setting.rootTimeline.children));
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map(), new Map()));
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
@@ -51,7 +51,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	useEffect(() => {
 		updateRelations();
-	}, [rootChildren]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [sequenceTimelines]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	function createTimelineStore(totalItems: ReadonlyMap<TimelineId, AnyTimeline>, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
 
@@ -61,13 +61,11 @@ const Component: NextPage<Props> = (props: Props) => {
 			}
 		}
 
-		const timelineSequence = Timelines.flat(props.editData.setting.rootTimeline.children);
-
 		const result: TimelineStore = {
 			rootGroupTimeline: props.editData.setting.rootTimeline,
 			totalItemMap: totalItems,
-			sequenceItems: timelineSequence,
-			indexItemMap: Timelines.toIndexes(timelineSequence),
+			sequenceItems: sequenceTimelines,
+			indexItemMap: Timelines.toIndexes(sequenceTimelines),
 
 			changedItemMap: changedItems,
 			workRanges: workRangesCache,
@@ -163,7 +161,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		setDropTimeline(null);
 		setDraggingTimeline(null);
 
-		setRootChildren(props.editData.setting.rootTimeline.children);
+		setSequenceTimelines(props.editData.setting.rootTimeline.children);
 	}
 
 	function handleSetPointerTimeline(timeline: AnyTimeline | null, property: "isHover" | "isActive"): void {
@@ -359,17 +357,12 @@ const Component: NextPage<Props> = (props: Props) => {
 			parent.children = newChildren;
 		}
 
-		if (groups.length === 1) {
-			setRootChildren(parent.children);
-			return;
-		}
-
-		updateRelations();
+		setSequenceTimelines(props.editData.setting.rootTimeline.children);
 	}
 
 	function handleUpdateTimeline(timeline: AnyTimeline): void {
 		//
-		const source = Timelines.findTimeline(timeline.id, rootChildren);
+		const source = Timelines.findTimeline(timeline.id, props.editData.setting.rootTimeline);
 		if (!source) {
 			return;
 		}
@@ -377,10 +370,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		const timelineMap = Timelines.getTimelinesMap({
-			...Timelines.createRootGroup(),
-			children: rootChildren,
-		});
+		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.rootTimeline);
 
 		const prevSource = { ...source };
 		Object.assign(source, timeline);
@@ -438,19 +428,14 @@ const Component: NextPage<Props> = (props: Props) => {
 		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
 
 		if (groups.length === 1) {
-			const newRootChildren = [...rootChildren];
-			Timelines.moveTimelineOrder(newRootChildren, moveUp, timeline);
-			setRootChildren(props.editData.setting.rootTimeline.children = newRootChildren);
+			Timelines.moveTimelineOrder(props.editData.setting.rootTimeline.children, moveUp, timeline);
 		} else {
 			const group = Arrays.last(groups);
 			const newRootChildren = [...group.children];
 			Timelines.moveTimelineOrder(newRootChildren, moveUp, timeline);
-			//group.children = newChildren;
-			timelineStore.updateTimeline({
-				...group,
-				children: newRootChildren,
-			});
 		}
+
+		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
 	}
 
 	function handleRemoveTimeline(timeline: AnyTimeline): void {
@@ -467,17 +452,11 @@ const Component: NextPage<Props> = (props: Props) => {
 			}
 		}
 
-		// データから破棄
-		if (1 < groups.length) {
-			const group = Arrays.last(groups);
-			const newChildren = group.children.filter(a => a.id !== timeline.id);
-			group.children = newChildren;
-			// 直接置き換えた値はちまちま反映するのではなくリセット
-			updateRelations();
-		} else {
-			const newRootChildren = rootChildren.filter(a => a.id !== timeline.id);
-			setRootChildren(props.editData.setting.rootTimeline.children = newRootChildren);
-		}
+	// データから破棄
+		const group = Arrays.last(groups);
+		const newChildren = group.children.filter(a => a.id !== timeline.id);
+		group.children = newChildren;
+		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
 	}
 
 	function handleStartSelectBeginDate(timeline: TaskTimeline): void {
