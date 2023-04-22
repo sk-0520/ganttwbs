@@ -3,9 +3,12 @@ import { NextPage } from "next";
 import { ReactNode, useContext } from "react";
 
 import { SettingContext } from "@/models/data/context/SettingContext";
+import { CssHelper } from "@/models/CssHelper";
+import { useLocale } from "@/locales/locale";
 
 const Component: NextPage = () => {
 	const settingContext = useContext(SettingContext);
+	const locale = useLocale();
 
 	function renderEditor(value: string, callbackChanged: (value: string) => void): ReactNode {
 		return (
@@ -17,8 +20,11 @@ const Component: NextPage = () => {
 				onChange={ev => callbackChanged(ev ?? "")}
 				options={{
 					lineNumbers: "off",
-					tabSize: 2,
+					tabSize: 8,
 					insertSpaces: false,
+					renderWhitespace: "all",
+					fontFamily: CssHelper.toFontFamily(locale.font.editor.fontFamilies),
+					quickSuggestions: false,
 				}}
 			/>
 		);

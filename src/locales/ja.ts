@@ -37,6 +37,15 @@ const locale: Locale = {
 			}
 		}
 	},
+
+	font: {
+		editor: {
+			fontFamilies: [
+				"MigMix 1M",
+				"MS ゴシック",
+			]
+		}
+	}
 };
 
 export default locale;

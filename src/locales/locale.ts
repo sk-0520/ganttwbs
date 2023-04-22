@@ -25,7 +25,12 @@ export interface Locale {
 				yearMonth: string;
 			};
 		}
-	},
+	};
+	font: {
+		editor: {
+			fontFamilies: Array<string>;
+		};
+	};
 }
 
 export function useLocale(): Locale {

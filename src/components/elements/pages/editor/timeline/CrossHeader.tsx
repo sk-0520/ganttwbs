@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import { useState } from "react";
 
 import Icon from "@/components/elements/Icon";
-import InputTimelinesDialog from "@/components/elements/pages/editor/timeline/InputTimelinesDialog";
+import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { EditProps } from "@/models/data/props/EditProps";
@@ -19,7 +19,7 @@ interface Props extends EditProps {
 
 const Component: NextPage<Props> = (props: Props) => {
 
-	const [visibleInputTimelinesDialog, setVisibleInputTimelinesDialog] = useState(false);
+	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 
 	function addEmptyTimeline(kind: TimelineKind) {
 		props.timelineStore.addEmptyTimeline(
@@ -40,7 +40,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleShowInputTimeline() {
-		setVisibleInputTimelinesDialog(true);
+		setVisibleTimelinesImportDialog(true);
 	}
 
 	function scrollFromDate(date: DateTime): void {
@@ -59,7 +59,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			props.timelineStore.addNewTimeline(props.timelineStore.rootGroupTimeline, timeline, NewTimelinePosition.Next);
 		}
 
-		setVisibleInputTimelinesDialog(false);
+		setVisibleTimelinesImportDialog(false);
 	}
 
 	return (
@@ -129,8 +129,8 @@ const Component: NextPage<Props> = (props: Props) => {
 					<div className='timeline-cell timeline-controls'>操作</div>
 				</div>
 			</div>
-			{visibleInputTimelinesDialog && (
-				<InputTimelinesDialog
+			{visibleTimelinesImportDialog && (
+				<TimelinesImportDialog
 					callbackClose={handleInputTimelines}
 				/>
 			)}

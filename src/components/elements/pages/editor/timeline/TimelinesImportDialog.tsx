@@ -9,12 +9,15 @@ import { IdFactory } from "@/models/IdFactory";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
+import { useLocale } from "@/locales/locale";
+import { CssHelper } from "@/models/CssHelper";
 
 interface Props {
 	callbackClose(timeline: GroupTimeline | null): void;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
+	const locale = useLocale();
 
 	const [subject, setSubject] = useState("新規タスク");
 	const [contents, setContents] = useState("");
@@ -105,7 +108,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							minimap: {
 								enabled: false
 							},
-							fontFamily: "monospace",
+							fontFamily: CssHelper.toFontFamily(locale.font.editor.fontFamilies),
 							quickSuggestions: false,
 						}}
 					/>

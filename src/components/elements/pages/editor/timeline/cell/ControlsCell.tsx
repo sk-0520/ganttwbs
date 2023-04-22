@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import Icon from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
-import InputTimelinesDialog from "@/components/elements/pages/editor/timeline/InputTimelinesDialog";
+import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { IconKind } from "@/models/IconKind";
 
@@ -18,7 +18,7 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 	const [visibleControls, setVisibleControls] = useState(false);
-	const [visibleInputTimelinesDialog, setVisibleInputTimelinesDialog] = useState(false);
+	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 
 	function handleStartControls() {
 		setVisibleControls(true);
@@ -42,17 +42,17 @@ const Component: NextPage<Props> = (props: Props) => {
 		handleHideControls();
 	}
 
-	function handleShowInputTimeline() {
-		setVisibleInputTimelinesDialog(true);
+	function handleShowTimelinesImportDialog() {
+		setVisibleTimelinesImportDialog(true);
 		handleHideControls();
 	}
 
-	function handleInputTimelines(timeline: GroupTimeline | null) {
+	function handleCloseTimelinesImport(timeline: GroupTimeline | null) {
 		if (timeline) {
 			props.addItem(timeline);
 		}
 
-		setVisibleInputTimelinesDialog(false);
+		setVisibleTimelinesImportDialog(false);
 	}
 
 	return (
@@ -143,7 +143,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleShowInputTimeline()}
+										onClick={_ => handleShowTimelinesImportDialog()}
 									>
 										<Icon
 											kind={IconKind.TimelineImport}
@@ -173,9 +173,9 @@ const Component: NextPage<Props> = (props: Props) => {
 					</table>
 				</div>
 			</Overlay>
-			{visibleInputTimelinesDialog && (
-				<InputTimelinesDialog
-					callbackClose={handleInputTimelines}
+			{visibleTimelinesImportDialog && (
+				<TimelinesImportDialog
+					callbackClose={handleCloseTimelinesImport}
 				/>
 			)}
 		</div>
