@@ -441,13 +441,8 @@ const Component: NextPage<Props> = (props: Props) => {
 	function handleMoveTimeline(moveUp: boolean, timeline: AnyTimeline): void {
 		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
 
-		if (groups.length === 1) {
-			Timelines.moveTimelineOrder(props.editData.setting.rootTimeline.children, moveUp, timeline);
-		} else {
-			const group = Arrays.last(groups);
-			const newRootChildren = [...group.children];
-			Timelines.moveTimelineOrder(newRootChildren, moveUp, timeline);
-		}
+		const group = Arrays.last(groups);
+		Timelines.moveTimelineOrder(group.children, moveUp, timeline);
 
 		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
 	}
