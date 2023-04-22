@@ -345,6 +345,7 @@ const Component: NextPage<Props> = (props: Props) => {
 		handleAddNewTimeline(baseTimeline, newTimeline, options.position);
 	}
 
+	//TODO: 一括登録時になんか反映されない(ん～ってなる)
 	function handleAddNewTimeline(baseTimeline: AnyTimeline, newTimeline: AnyTimeline, position: NewTimelinePosition): void {
 		// 将来追加した場合の安全弁
 		if (position !== NewTimelinePosition.Next) {
