@@ -80,6 +80,7 @@
 		width: $app-header-width;
 		height: $app-header-height;
 		border-bottom: 1px solid black;
+		border-right: 1px solid black;
 
 		.header {
 			h1 {
@@ -121,12 +122,13 @@
 			table-layout: fixed;
 			border-collapse: collapse;
 			@include box.height($app-header-height);
-			border: none;
+			// Firefox だと大丈夫だけど Chrome がずれる。根本解決が全然分からんのでお茶を濁した
+			transform: translateY(-1px);
 		}
 
-		.cell {
-			//filter: invert(100%) grayscale(100%) contrast(100);
-			//filter: grayscale(1) contrast(9999) invert(1);
+		@mixin cell {
+			border-right: 1px solid black;
+			border-bottom: 1px solid black;
 		}
 
 		.year-month {
@@ -134,10 +136,7 @@
 				position: sticky;
 				top: 0;
 				left: $app-header-width;
-				// border: 1px solid black;
 				background: $days-header-background;
-
-				border: none;
 
 				time {
 					border-left: 1px dotted black;
@@ -150,8 +149,7 @@
 			text-align: center;
 
 			td {
-				border-right: 1px solid black;
-				border-bottom: 1px solid black;
+				@include cell();
 			}
 		}
 
@@ -159,8 +157,7 @@
 			text-align: center;
 
 			td {
-				border-right: 1px solid black;
-				border-bottom: 1px solid black;
+				@include cell();
 			}
 		}
 
@@ -168,8 +165,7 @@
 			text-align: center;
 
 			td {
-				border-right: 1px solid black;
-				border-bottom: 1px solid black;
+				@include cell();
 			}
 		}
 	}
