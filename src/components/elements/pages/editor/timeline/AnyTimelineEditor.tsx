@@ -9,7 +9,7 @@ import RelationCell from "@/components/elements/pages/editor/timeline/cell/Relat
 import ResourceCell from "@/components/elements/pages/editor/timeline/cell/ResourceCell";
 import SubjectCell from "@/components/elements/pages/editor/timeline/cell/SubjectCell";
 import TimelineHeaderRow from "@/components/elements/pages/editor/timeline/cell/TimelineHeaderRow";
-import TimeRangeCells from "@/components/elements/pages/editor/timeline/cell/TimeRangeCells";
+import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/WorkloadCell";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
@@ -350,7 +350,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								</div>
 							</>
 						) : (
-							<TimeRangeCells
+							<WorkRangeCells
 								workRangeKind={beginKind}
 								selectable={props.selectingBeginDate !== null}
 								beginDate={beginDate}
