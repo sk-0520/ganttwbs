@@ -348,12 +348,11 @@ const Component: NextPage<Props> = (props: Props) => {
 			throw new Error(position);
 		}
 
-		const groups = Timelines.getParentGroups(baseTimeline, props.editData.setting.rootTimeline);
-
 		let parent: GroupTimeline;
 		if (Settings.maybeGroupTimeline(baseTimeline)) {
 			parent = baseTimeline;
 		} else {
+			const groups = Timelines.getParentGroups(baseTimeline, props.editData.setting.rootTimeline);
 			parent = Arrays.last(groups);
 		}
 
