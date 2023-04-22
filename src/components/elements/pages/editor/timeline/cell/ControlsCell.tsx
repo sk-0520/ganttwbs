@@ -175,7 +175,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			</Overlay>
 			{visibleInputTimelinesDialog && (
 				<InputTimelinesDialog
-					callback={handleInputTimelines}
+					callbackClose={handleInputTimelines}
 				/>
 			)}
 		</div>

@@ -11,7 +11,7 @@ import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 
 interface Props {
-	callback(timeline: GroupTimeline | null): void;
+	callbackClose(timeline: GroupTimeline | null): void;
 }
 
 const Component: NextPage<Props> = (props: Props) => {
@@ -32,7 +32,7 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	function handleClose(isSubmit: boolean): void {
 		if (!isSubmit) {
-			props.callback(null);
+			props.callbackClose(null);
 			return;
 		}
 
@@ -64,7 +64,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			groupTimeline.children.push(taskTimeline);
 		}
 
-		props.callback(groupTimeline);
+		props.callbackClose(groupTimeline);
 	}
 
 

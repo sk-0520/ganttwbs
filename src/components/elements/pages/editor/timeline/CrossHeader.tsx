@@ -131,7 +131,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			</div>
 			{visibleInputTimelinesDialog && (
 				<InputTimelinesDialog
-					callback={handleInputTimelines}
+					callbackClose={handleInputTimelines}
 				/>
 			)}
 		</div>

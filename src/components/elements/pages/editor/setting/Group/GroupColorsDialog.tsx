@@ -11,7 +11,7 @@ type ColorKind = "same" | "analogy" | "monochrome" | "random";
 
 interface Props {
 	choiceColorGroup: GroupSetting;
-	callbackClose(colors: Map<MemberId, Color>): void
+	callbackClosed(colors: Map<MemberId, Color>): void
 }
 
 const Component: NextPage<Props> = (props: Props) => {
@@ -77,9 +77,9 @@ const Component: NextPage<Props> = (props: Props) => {
 			callbackClose={(type) => {
 				if (type === "submit") {
 					const map = new Map([...choiceColors.entries()].map(([k, v]) => [k, v.toHexString()]));
-					props.callbackClose(map);
+					props.callbackClosed(map);
 				} else {
-					props.callbackClose(new Map());
+					props.callbackClosed(new Map());
 				}
 			}}
 		>
