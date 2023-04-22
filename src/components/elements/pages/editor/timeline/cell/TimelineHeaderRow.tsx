@@ -47,9 +47,10 @@ const Component: NextPage<Props> = (props: Props) => {
 	// }
 
 	return (
-		<div
+		<tr
 			className={
 				classNames(
+					props.currentTimeline.kind,
 					"timeline-cell timeline-header",
 					"_dynamic_programmable_cell_height",
 					mouseEnterClassName,
@@ -68,7 +69,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			onMouseEnter={handleMouseEnter}
 		>
 			{props.children}
-		</div>
+		</tr>
 	);
 };
 

@@ -275,154 +275,149 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	const timelineIndex = props.timelineStore.getIndex(props.currentTimeline);
-	const className = props.currentTimeline.kind;
 
 	return (
-		<div className={className}>
-			<TimelineHeaderRow
+		<TimelineHeaderRow
+			currentTimeline={props.currentTimeline}
+			selectingBeginDate={props.selectingBeginDate}
+			draggingTimeline={props.draggingTimeline}
+			timelineStore={props.timelineStore}
+			level={timelineIndex.level}
+		>
+			<IdCell
+				selectingId={selectingId}
+				timelineIndex={timelineIndex}
 				currentTimeline={props.currentTimeline}
-				selectingBeginDate={props.selectingBeginDate}
+				isSelectedPrevious={isSelectedPrevious}
 				draggingTimeline={props.draggingTimeline}
-				timelineStore={props.timelineStore}
-				level={timelineIndex.level}
-			>
-				<IdCell
-					selectingId={selectingId}
-					timelineIndex={timelineIndex}
-					currentTimeline={props.currentTimeline}
-					isSelectedPrevious={isSelectedPrevious}
-					draggingTimeline={props.draggingTimeline}
-					selectingBeginDate={props.selectingBeginDate}
-					callbackStartDragTimeline={handleStartDragTimeline}
-					callbackChangePrevious={handleChangePrevious}
-				/>
-				<SubjectCell
-					value={subject}
-					disabled={props.selectingBeginDate !== null}
-					readOnly={false}
-					callbackChangeValue={handleChangeSubject}
-				/>
-				<WorkloadCell
-					readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-					disabled={props.selectingBeginDate !== null}
-					value={workload}
-					callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeWorkload : undefined}
-				/>
-				<ResourceCell
-					currentTimeline={props.currentTimeline}
-					groups={props.editData.setting.groups}
-					selectedMemberId={memberId}
-					disabled={props.selectingBeginDate !== null}
-					callbackChangeMember={handleChangeMember}
-				/>
-				<RelationCell
-					currentTimeline={props.currentTimeline}
-					selectable={props.selectingBeginDate !== null}
-					htmlFor={selectingId}
-				/>
-				{
-					props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
-						? (
-							<>
-								<div className='timeline-cell timeline-range-area prompt'>
-									<ul className="contents">
-										<li className="main">
-											<input
-												type="date"
-												value={selectedBeginDate ? selectedBeginDate.format("yyyy-MM-dd") : ""}
-												onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
-											/>
-										</li>
+				selectingBeginDate={props.selectingBeginDate}
+				callbackStartDragTimeline={handleStartDragTimeline}
+				callbackChangePrevious={handleChangePrevious}
+			/>
+			<SubjectCell
+				value={subject}
+				disabled={props.selectingBeginDate !== null}
+				readOnly={false}
+				callbackChangeValue={handleChangeSubject}
+			/>
+			<WorkloadCell
+				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
+				disabled={props.selectingBeginDate !== null}
+				value={workload}
+				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeWorkload : undefined}
+			/>
+			<ResourceCell
+				currentTimeline={props.currentTimeline}
+				groups={props.editData.setting.groups}
+				selectedMemberId={memberId}
+				disabled={props.selectingBeginDate !== null}
+				callbackChangeMember={handleChangeMember}
+			/>
+			<RelationCell
+				currentTimeline={props.currentTimeline}
+				selectable={props.selectingBeginDate !== null}
+				htmlFor={selectingId}
+			/>
+			{
+				props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
+					? (
+						<td className='timeline-cell timeline-range-area prompt' colSpan={2}>
+							<ul className="contents">
+								<li className="main">
+									<input
+										type="date"
+										value={selectedBeginDate ? selectedBeginDate.format("yyyy-MM-dd") : ""}
+										onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
+									/>
+								</li>
+								<li>
+									<button type="button" onClick={handleSubmitPrevious}>
+										<Icon
+											kind={IconKind.ConfirmPositive}
+											fill="green"
+											title="確定"
+										/>
+									</button>
+								</li>
+								<li>
+									<button type="button" onClick={handleCancelPrevious}>
+										<Icon
+											kind={IconKind.ConfirmCancel}
+											title="キャンセル"
+										/>
+									</button>
+								</li>
+							</ul>
+							<div className="tools after">
+								<fieldset>
+									<legend>即時実行</legend>
+									<ul>
 										<li>
-											<button type="button" onClick={handleSubmitPrevious}>
+											<button onClick={handleSubmitAttachBeforeTimeline}>
 												<Icon
-													kind={IconKind.ConfirmPositive}
-													fill="green"
-													title="確定"
+													kind={IconKind.RelationJoin}
 												/>
-											</button>
-										</li>
-										<li>
-											<button type="button" onClick={handleCancelPrevious}>
-												<Icon
-													kind={IconKind.ConfirmCancel}
-													title="キャンセル"
-												/>
+												直近項目に紐づける
 											</button>
 										</li>
 									</ul>
-									<div className="tools after">
-										<fieldset>
-											<legend>即時実行</legend>
-											<ul>
-												<li>
-													<button onClick={handleSubmitAttachBeforeTimeline}>
-														<Icon
-															kind={IconKind.RelationJoin}
-														/>
-														直近項目に紐づける
-													</button>
-												</li>
-											</ul>
-										</fieldset>
-										<fieldset>
-											<legend>連続作業</legend>
-											<ul>
-												<li>
-													<button onClick={handleAttachBeforeTimeline}>
-														<Icon
-															kind={IconKind.RelationJoin}
-														/>
-														直近項目に紐づける
-													</button>
-												</li>
-												<li>
-													<button onClick={handleClearPrevious}>
-														<Icon
-															kind={IconKind.RelationClear}
-														/>
-														紐づけを解除
-													</button>
-												</li>
-												<li>
-													<button onClick={handleClearStatic}>
-														<Icon
-															kind={IconKind.Clear}
-														/>
-														固定日付をクリア
-													</button>
-												</li>
-											</ul>
-										</fieldset>
-									</div>
-								</div>
-							</>
-						) : (
-							<WorkRangeCells
-								workRangeKind={beginKind}
-								selectable={props.selectingBeginDate !== null}
-								beginDate={beginDate}
-								endDate={endDate}
-								htmlFor={selectingId}
-								callbackClickBeginDate={Settings.maybeTaskTimeline(props.currentTimeline) ? handleClickBeginDate : undefined}
-							/>
-						)
-				}
-				<ProgressCell
-					readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-					disabled={props.selectingBeginDate !== null}
-					progress={progress}
-					callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
-				/>
-				<ControlsCell
-					currentTimelineKind={props.currentTimeline.kind}
-					disabled={props.selectingBeginDate !== null}
-					moveItem={handleControlMoveItem}
-					addItem={handleControlAddItem}
-					deleteItem={handleControlDeleteItem}
-				/>
-			</TimelineHeaderRow>
-		</div>
+								</fieldset>
+								<fieldset>
+									<legend>連続作業</legend>
+									<ul>
+										<li>
+											<button onClick={handleAttachBeforeTimeline}>
+												<Icon
+													kind={IconKind.RelationJoin}
+												/>
+												直近項目に紐づける
+											</button>
+										</li>
+										<li>
+											<button onClick={handleClearPrevious}>
+												<Icon
+													kind={IconKind.RelationClear}
+												/>
+												紐づけを解除
+											</button>
+										</li>
+										<li>
+											<button onClick={handleClearStatic}>
+												<Icon
+													kind={IconKind.Clear}
+												/>
+												固定日付をクリア
+											</button>
+										</li>
+									</ul>
+								</fieldset>
+							</div>
+						</td>
+					) : (
+						<WorkRangeCells
+							workRangeKind={beginKind}
+							selectable={props.selectingBeginDate !== null}
+							beginDate={beginDate}
+							endDate={endDate}
+							htmlFor={selectingId}
+							callbackClickBeginDate={Settings.maybeTaskTimeline(props.currentTimeline) ? handleClickBeginDate : undefined}
+						/>
+					)
+			}
+			<ProgressCell
+				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
+				disabled={props.selectingBeginDate !== null}
+				progress={progress}
+				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
+			/>
+			<ControlsCell
+				currentTimelineKind={props.currentTimeline.kind}
+				disabled={props.selectingBeginDate !== null}
+				moveItem={handleControlMoveItem}
+				addItem={handleControlAddItem}
+				deleteItem={handleControlDeleteItem}
+			/>
+		</TimelineHeaderRow>
 	);
 };
 

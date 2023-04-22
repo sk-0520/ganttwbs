@@ -34,7 +34,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	return (
-		<div className="timeline-cell timeline-relation">
+		<td className="timeline-cell timeline-relation">
 			<DynamicLabel
 				wrap={props.selectable}
 				htmlFor={props.htmlFor}
@@ -51,7 +51,7 @@ const Component: NextPage<Props> = (props: Props) => {
 									: "💩"
 				}
 			</DynamicLabel>
-		</div>
+		</td>
 	);
 };
 

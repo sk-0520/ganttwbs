@@ -56,7 +56,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	return (
-		<div className={
+		<td className={
 			classNames(
 				"timeline-cell timeline-controls",
 				{
@@ -178,7 +178,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					callbackClose={handleCloseTimelinesImport}
 				/>
 			)}
-		</div>
+		</td>
 	);
 };
 

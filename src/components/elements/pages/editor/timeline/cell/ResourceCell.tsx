@@ -40,7 +40,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	return (
-		<div className='timeline-cell timeline-resource'>
+		<td className='timeline-cell timeline-resource'>
 			{Settings.maybeTaskTimeline(props.currentTimeline) && (
 				<select
 					className="edit"
@@ -67,7 +67,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					})}
 				</select>
 			)}
-		</div>
+		</td>
 	);
 };
 

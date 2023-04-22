@@ -26,7 +26,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	const className = "_dynamic_programmable_indexNumber_level-" + props.timelineIndex.level;
 
 	return (
-		<div
+		<td
 			className={
 				classNames(
 					"timeline-cell timeline-id",
@@ -66,7 +66,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					{Timelines.toIndexNumber(props.timelineIndex)}
 				</span>
 			</label>
-		</div>
+		</td>
 	);
 };
 
