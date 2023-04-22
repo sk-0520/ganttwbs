@@ -116,55 +116,25 @@ const Component: NextPage<Props> = (props: Props) => {
 	function fireDropTimeline(dropTimeline: DropTimeline) {
 		console.debug("FIRE");
 
-		const sourceIsRoot = Settings.maybeRootTimeline(dropTimeline.sourceGroupTimeline);
-		const destinationIsRoot = Settings.maybeRootTimeline(dropTimeline.destinationGroupTimeline);
 		const sameGroup = dropTimeline.sourceGroupTimeline.id === dropTimeline.destinationGroupTimeline.id;
 
 		if (sameGroup) {
 			// 同一グループ内移動
-			const newChildren = [...dropTimeline.sourceGroupTimeline.children];
-			Arrays.moveIndexInPlace(newChildren, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
+			Arrays.moveIndexInPlace(dropTimeline.sourceGroupTimeline.children, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
 
-			if (sourceIsRoot) {
-				// 最上位は設定だけ変えて後続で状態変更
-				props.editData.setting.rootTimeline.children = newChildren;
-			} else {
-				// 子孫は連携だけ
-				timelineStore.updateTimeline({
-					...dropTimeline.sourceGroupTimeline,
-					children: newChildren,
-				});
-			}
 		} else {
 			// グループから破棄
 			const newSourceChildren = dropTimeline.sourceGroupTimeline.children.filter(a => a.id !== dropTimeline.timeline.id);
+			dropTimeline.sourceGroupTimeline.children = newSourceChildren;
 
 			// 別グループに追加
-			const newDestinationChildren = [...dropTimeline.destinationGroupTimeline.children];
-			newDestinationChildren.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
-
-			if (sourceIsRoot) {
-				props.editData.setting.rootTimeline.children = newSourceChildren;
-			} else {
-				timelineStore.updateTimeline({
-					...dropTimeline.sourceGroupTimeline,
-					children: newSourceChildren,
-				});
-			}
-			if (destinationIsRoot) {
-				props.editData.setting.rootTimeline.children = newDestinationChildren;
-			} else {
-				timelineStore.updateTimeline({
-					...dropTimeline.destinationGroupTimeline,
-					children: newDestinationChildren,
-				});
-			}
+			dropTimeline.destinationGroupTimeline.children.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
 		}
 
 		setDropTimeline(null);
 		setDraggingTimeline(null);
 
-		setSequenceTimelines(props.editData.setting.rootTimeline.children);
+		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
 	}
 
 	function handleSetPointerTimeline(timeline: AnyTimeline | null, property: "isHover" | "isActive"): void {
