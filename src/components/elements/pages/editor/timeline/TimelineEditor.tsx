@@ -371,7 +371,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			parent.children = newChildren;
 		}
 
-		setSequenceTimelines(props.editData.setting.rootTimeline.children);
+		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
 	}
 
 	function handleUpdateTimeline(timeline: AnyTimeline): void {
