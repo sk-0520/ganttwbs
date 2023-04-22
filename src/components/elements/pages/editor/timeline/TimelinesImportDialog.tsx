@@ -3,14 +3,14 @@ import { NextPage } from "next";
 import { useId, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
+import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
+import { CssHelper } from "@/models/CssHelper";
 import { GroupTimeline, TaskTimeline } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
-import { useLocale } from "@/locales/locale";
-import { CssHelper } from "@/models/CssHelper";
 
 interface Props {
 	callbackClose(timeline: GroupTimeline | null): void;

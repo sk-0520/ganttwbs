@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { useLocale } from "@/locales/locale";
+import { CssHelper } from "@/models/CssHelper";
 import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
 import { TimeSpan } from "@/models/TimeSpan";
-import { useLocale } from "@/locales/locale";
-import { CssHelper } from "@/models/CssHelper";
 
 interface Input {
 	fileName: string;
