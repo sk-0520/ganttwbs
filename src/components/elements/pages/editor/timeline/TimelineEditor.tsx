@@ -75,6 +75,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			activeItem: activeTimeline,
 
 			getIndex: handleGetIndex,
+			getBeforeTimeline: handleGetBeforeTimeline,
 
 			addEmptyTimeline: handleAddEmptyTimeline,
 			addNewTimeline: handleAddNewTimeline,
@@ -328,6 +329,49 @@ const Component: NextPage<Props> = (props: Props) => {
 		};
 
 		return result;
+	}
+
+	function handleGetBeforeTimeline(timeline: AnyTimeline): AnyTimeline | undefined {
+		const index = sequenceTimelines.findIndex(a => a.id === timeline.id);
+		if (index === -1) {
+			throw new Error();
+		}
+
+		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
+		const group = Arrays.last(groups);
+
+		for (let i = index - 1; 0 <= i; i--) {
+			const beforeTimeline = sequenceTimelines[i];
+			if (Settings.maybeGroupTimeline(beforeTimeline)) {
+				// 前項目が自身の属するグループの場合、直近タイムラインにはなりえない
+				if (groups.find(a => a.id === beforeTimeline.id)) {
+					continue;
+				}
+				return beforeTimeline;
+			}
+			if (Settings.maybeTaskTimeline(beforeTimeline)) {
+				const beforeGroups = Timelines.getParentGroups(beforeTimeline, props.editData.setting.rootTimeline);
+				const beforeGroup = Arrays.last(beforeGroups);
+				// 前項目のグループと自身のグループが同じ場合、兄弟として直近として扱える
+				if (beforeGroup.id === group.id) {
+					return beforeTimeline;
+				}
+
+				if (canSelectCore(beforeTimeline, timeline)) {
+					// タスク自体は直近として扱える場合でも、異なるグループのためそのグループ自体を選択する
+					if (1 < beforeGroups.length) {
+						const target = beforeGroup;
+						if (canSelectCore(target, timeline)) {
+							return target;
+						}
+					}
+
+					return beforeTimeline;
+				}
+			}
+		}
+
+		return undefined;
 	}
 
 	function handleAddEmptyTimeline(baseTimeline: AnyTimeline, options: NewTimelineOptions): void {
@@ -605,12 +649,12 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 						const index = level - 2;
 						//let paddingColor = "transparent";
 						let gradient: string | undefined;
-						if(0 <= index) {
+						if (0 <= index) {
 							//paddingColor = index in theme.groups ? theme.groups[index] : theme.timeline.group;
 
 							// グラデーションの生成
 							const colors = new Array<string>();
-							for(let i = 0; i <= index; i++) {
+							for (let i = 0; i <= index; i++) {
 								const color = i in theme.groups ? theme.groups[i] : theme.timeline.group;
 								colors.push(color);
 							}
@@ -620,7 +664,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 									const to = from + (1 / colors.length);
 									return `${a} ${from * 100}% ${to * 100}%`;
 								})
-							;
+								;
 							gradient = `linear-gradient(to right, ${gradients.join(",")})`;
 						}
 

@@ -215,13 +215,10 @@ const Component: NextPage<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		// if (!props.currentIndex) {
-		// 	return;
-		// }
-
-		// const prevTimeline = props.parentGroup.children[props.currentIndex - 1];
-		// props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([prevTimeline.id]));
-		console.debug("ここのロジック変更は必須");
+		const beforeTimeline = props.timelineStore.getBeforeTimeline(props.currentTimeline);
+		if (beforeTimeline) {
+			props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([beforeTimeline.id]));
+		}
 	}
 
 	function handleClearPrevious() {

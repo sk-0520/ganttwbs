@@ -35,6 +35,10 @@ export interface TimelineStore {
 	 * タイムラインの表示上IDを取得。
 	 */
 	getIndex(timeline: AnyTimeline): TimelineIndex;
+	/**
+	 * 指定タイムラインの直近のタイムラインを取得。
+	 */
+	getBeforeTimeline(timeline: AnyTimeline): AnyTimeline | undefined;
 
 	/**
 	 * タイムライン追加。
