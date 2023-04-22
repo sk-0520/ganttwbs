@@ -194,7 +194,7 @@ export abstract class Timelines {
 	}
 
 	public static findTimeline(timelineId: TimelineId, groupTimeline: Readonly<GroupTimeline>): AnyTimeline | null {
-		if(timelineId === groupTimeline.id) {
+		if (timelineId === groupTimeline.id) {
 			return groupTimeline;
 		}
 
@@ -221,21 +221,23 @@ export abstract class Timelines {
 	 */
 	public static getParentGroups(timeline: AnyTimeline, groupTimeline: GroupTimeline): Array<GroupTimeline> {
 
-		if (groupTimeline.children.some(a => a.id === timeline.id)) {
-			return [groupTimeline];
+		for (const child of groupTimeline.children) {
+			if (child.id === timeline.id) {
+				return [groupTimeline];
+			}
 		}
 
-		const rootChildren = groupTimeline.children.filter(Settings.maybeGroupTimeline);
-		for (const groupTimeline of rootChildren) {
+		const groupChildren = groupTimeline.children.filter(Settings.maybeGroupTimeline);
 
-			const nodes = this.getParentGroups(timeline, groupTimeline);
-			if (!nodes.length) {
-				continue;
+		for (const child of groupChildren) {
+			const nodes = this.getParentGroups(timeline, child);
+			if (nodes && nodes.length) {
+				return [groupTimeline, ...nodes];
 			}
-			return [groupTimeline, ...nodes];
 		}
 
 		return [];
+
 	}
 
 

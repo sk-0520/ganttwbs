@@ -296,11 +296,35 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	function handleGetIndex(timeline: AnyTimeline): TimelineIndex {
-		//TODO: とりあえず実行可能であればよい
-		console.debug("本処理はスタブ");
+
+		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
+		if (!groups.length) {
+			throw new Error();
+		}
+
+		const tree = new Array<number>();
+
+		// 子孫のレベル設定
+		for (let i = 1; i < groups.length; i++) {
+			const parent = groups[i - 1];
+			const group = groups[i];
+			const index = parent.children.findIndex(a => a.id === group.id);
+			if (index === -1) {
+				throw new Error();
+			}
+			tree.push(index + 1);
+		}
+		// 最終アイテム・ルートのレベル設定
+		const last = Arrays.last(groups);
+		const index = last.children.findIndex(a => a.id === timeline.id);
+		if (index === -1) {
+			throw new Error();
+		}
+		tree.push(index + 1);
+
 		const result: TimelineIndex = {
-			level: 1,
-			tree: [1, 2, 9],
+			level: tree.length,
+			tree: tree,
 		};
 
 		return result;
