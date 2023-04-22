@@ -143,14 +143,24 @@ const Component: NextPage<Props> = (props: Props) => {
 		props.timelineStore.moveTimeline(moveUp, props.currentTimeline);
 	}
 
-	function handleControlAddItem(kind: TimelineKind) {
-		props.timelineStore.addEmptyTimeline(
-			props.currentTimeline,
-			{
-				position: NewTimelinePosition.Next,
-				timelineKind: kind,
-			}
-		);
+	function handleControlAddItem(kindOrTimeline: TimelineKind | GroupTimeline): void {
+		if (kindOrTimeline === "group" || kindOrTimeline === "task") {
+			// 空タイムライン
+			props.timelineStore.addEmptyTimeline(
+				props.currentTimeline,
+				{
+					position: NewTimelinePosition.Next,
+					timelineKind: kindOrTimeline,
+				}
+			);
+		} else {
+			// グループ
+			props.timelineStore.addNewTimeline(
+				props.currentTimeline,
+				kindOrTimeline,
+				NewTimelinePosition.Next
+			);
+		}
 	}
 
 	function handleControlDeleteItem() {

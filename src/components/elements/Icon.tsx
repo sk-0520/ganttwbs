@@ -14,6 +14,7 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.TimelineGroup]: (props) => <Md.MdFolder {...convertParameter(props)} />,
 	[IconKind.TimelineAddTask]: (props) => <Md.MdOutlineAddTask {...convertParameter(props)} />,
 	[IconKind.TimelineAddGroup]: (props) => <Md.MdCreateNewFolder {...convertParameter(props)} />,
+	[IconKind.TimelineImport]: (props) => <Md.MdOutlineEditNote {...convertParameter(props)} />,
 
 	[IconKind.RelationMix]: (props) => <Md.MdOutlineStart {...convertParameter(props)} />,
 	[IconKind.RelationStatic]: (props) => <Md.MdOutlineCalendarMonth {...convertParameter(props)} />,
@@ -23,6 +24,8 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.MoveDown]: (props) => <Md.MdArrowDownward {...convertParameter(props)} />,
 	[IconKind.MovePrev]: (props) => <Md.MdArrowBack {...convertParameter(props)} />,
 	[IconKind.MoveNext]: (props) => <Md.MdArrowForward {...convertParameter(props)} />,
+
+	[IconKind.CalendarToday]: (props) => <Md.MdToday {...convertParameter(props)} />,
 
 	[IconKind.ConfirmPositive]: (props) => <Md.MdCheck {...convertParameter(props)} />,
 	[IconKind.ConfirmNegative]: (props) => <Md.MdOutlineBlock {...convertParameter(props)} />,

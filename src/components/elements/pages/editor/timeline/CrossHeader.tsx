@@ -9,6 +9,8 @@ import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
+import Icon from "@/components/elements/Icon";
+import { IconKind } from "@/models/IconKind";
 
 interface Props extends EditProps {
 	calendarInfo: CalendarInfo;
@@ -17,7 +19,7 @@ interface Props extends EditProps {
 
 const Component: NextPage<Props> = (props: Props) => {
 
-	const [visibleInputDialog, setVisibleInputDialog] = useState(false);
+	const [visibleInputTimelinesDialog, setVisibleInputTimelinesDialog] = useState(false);
 
 	function addEmptyTimeline(kind: TimelineKind) {
 		props.timelineStore.addEmptyTimeline(
@@ -37,8 +39,8 @@ const Component: NextPage<Props> = (props: Props) => {
 		addEmptyTimeline("task");
 	}
 
-	function handleShowNewTimeline() {
-		setVisibleInputDialog(true);
+	function handleShowInputTimeline() {
+		setVisibleInputTimelinesDialog(true);
 	}
 
 	function scrollFromDate(date: DateTime): void {
@@ -52,12 +54,12 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 	}
 
-	function handleInput(timeline: GroupTimeline | null) {
+	function handleInputTimelines(timeline: GroupTimeline | null) {
 		if (timeline) {
 			props.timelineStore.addNewTimeline(props.timelineStore.rootGroupTimeline, timeline, NewTimelinePosition.Next);
 		}
 
-		setVisibleInputDialog(false);
+		setVisibleInputTimelinesDialog(false);
 	}
 
 	return (
@@ -69,16 +71,45 @@ const Component: NextPage<Props> = (props: Props) => {
 				<div className='operation'>
 					<ul className="inline">
 						<li>
-							<button type='button' onClick={handleAddEmptyGroup}>add new group</button>
+							<button
+								type='button'
+								onClick={handleAddEmptyGroup}
+							>
+								<Icon
+									kind={IconKind.TimelineAddGroup}
+								/>
+								add new group
+							</button>
 						</li>
 						<li>
-							<button type='button' onClick={handleAddEmptyTask}>add new task</button>
+							<button
+								type='button'
+								onClick={handleAddEmptyTask}
+							>
+								<Icon
+									kind={IconKind.TimelineAddTask}
+								/>
+								add new task
+							</button>
 						</li>
 						<li>
-							<button type='button' onClick={handleShowNewTimeline}>add timelines</button>
+							<button
+								type='button'
+								onClick={handleShowInputTimeline}
+							>
+								<Icon
+									kind={IconKind.TimelineImport}
+								/>
+								add timelines
+							</button>
 						</li>
 						<li>
-							<button onClick={ev => scrollFromDate(DateTime.today(props.calendarInfo.timeZone))}>
+							<button
+								onClick={ev => scrollFromDate(DateTime.today(props.calendarInfo.timeZone))}
+							>
+								<Icon
+									kind={IconKind.CalendarToday}
+								/>
 								けふ
 							</button>
 						</li>
@@ -98,9 +129,9 @@ const Component: NextPage<Props> = (props: Props) => {
 					<div className='timeline-cell timeline-controls'>操作</div>
 				</div>
 			</div>
-			{visibleInputDialog && (
+			{visibleInputTimelinesDialog && (
 				<InputTimelinesDialog
-					callback={handleInput}
+					callback={handleInputTimelines}
 				/>
 			)}
 		</div>
