@@ -103,30 +103,26 @@ export abstract class Arrays {
 	/**
 	 * 配列内の指定要素を前後に置き換え(破壊的)。
 	 * @param array 対象配列。
-	 * @param toPrev 前(-1)に移動するか。
+	 * @param toNext 次(+1)に移動するか。
 	 * @param element 対象要素。
 	 * @returns 移動できたか。
 	 */
-	public static replaceOrderInPlace<T>(array: Array<T>, toPrev: boolean, element: T): boolean {
-		const currentIndex = array.findIndex(a => a === element);
-		if (currentIndex === -1) {
+	public static replaceOrderInPlace<T>(array: Array<T>, toNext: boolean, element: T): boolean {
+		const sourceIndex = array.findIndex(a => a === element);
+		if (sourceIndex === -1) {
 			return false;
 		}
 
-		if (toPrev) {
-			if (currentIndex && array.length) {
-				const nextIndex = currentIndex - 1;
-				const tempElement = array[nextIndex];
-				array[nextIndex] = element;
-				array[currentIndex] = tempElement;
+		if (toNext) {
+			if (sourceIndex < array.length - 1) {
+				const destinationIndex = sourceIndex + 1;
+				this.replaceIndexInPlace(array, sourceIndex, destinationIndex);
 				return true;
 			}
 		} else {
-			if (currentIndex < array.length - 1) {
-				const nextIndex = currentIndex + 1;
-				const tempElement = array[nextIndex];
-				array[nextIndex] = element;
-				array[currentIndex] = tempElement;
+			if (sourceIndex && array.length) {
+				const destinationIndex = sourceIndex - 1;
+				this.replaceIndexInPlace(array, sourceIndex, destinationIndex);
 				return true;
 			}
 		}

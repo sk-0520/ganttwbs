@@ -1,4 +1,6 @@
+import { Arrays } from "@/models/Arrays";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, WeekIndex } from "@/models/data/Setting";
+import { TimelineIndex } from "@/models/data/TimelineIndex";
 import { SuccessWorkRange, WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
@@ -41,7 +43,7 @@ export abstract class Timelines {
 		return date.format("yyyy-MM-dd");
 	}
 
-	public static createRootGroup(): RootTimeline {
+	public static createRootTimeline(): RootTimeline {
 		const item: RootTimeline = {
 			id: IdFactory.rootTimelineId,
 			kind: "group",
@@ -53,7 +55,7 @@ export abstract class Timelines {
 		return item;
 	}
 
-	public static createNewGroup(): GroupTimeline {
+	public static createGroupTimeline(): GroupTimeline {
 		const item: GroupTimeline = {
 			id: IdFactory.createTimelineId(),
 			kind: "group",
@@ -65,7 +67,7 @@ export abstract class Timelines {
 		return item;
 	}
 
-	public static createNewTask(): TaskTimeline {
+	public static createTaskTimeline(): TaskTimeline {
 		const workload = TimeSpan.fromDays(1);
 		const item: TaskTimeline = {
 			id: IdFactory.createTimelineId(),
@@ -81,14 +83,8 @@ export abstract class Timelines {
 		return item;
 	}
 
-	public static toIndexNumber(indexTree: ReadonlyArray<number>, currentIndex: number): string {
-		const currentNumber = currentIndex + 1;
-
-		if (indexTree.length) {
-			return indexTree.map(a => a + 1).join(".") + "." + currentNumber;
-		}
-
-		return currentNumber.toString();
+	public static toIndexNumber(index: TimelineIndex): string {
+		return index.tree.join(".");
 	}
 
 	private static flatCore(timeline: AnyTimeline): Array<AnyTimeline> {
@@ -113,30 +109,6 @@ export abstract class Timelines {
 
 	public static toIndexes(timelines: ReadonlyArray<AnyTimeline>): Map<TimelineId, number> {
 		return new Map(timelines.map((a, i) => [a.id, i]));
-	}
-
-	public static moveTimelineOrder(timelines: Array<AnyTimeline>, moveUp: boolean, currentTimeline: AnyTimeline): boolean {
-		const currentIndex = timelines.findIndex(a => a === currentTimeline);
-
-		if (moveUp) {
-			if (currentIndex && timelines.length) {
-				const nextIndex = currentIndex - 1;
-				const tempTimeline = timelines[nextIndex];
-				timelines[nextIndex] = currentTimeline;
-				timelines[currentIndex] = tempTimeline;
-				return true;
-			}
-		} else {
-			if (currentIndex < timelines.length - 1) {
-				const nextIndex = currentIndex + 1;
-				const tempTimeline = timelines[nextIndex];
-				timelines[nextIndex] = currentTimeline;
-				timelines[currentIndex] = tempTimeline;
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	public static displayWorkload(workload: number): string {
@@ -222,13 +194,17 @@ export abstract class Timelines {
 		return result;
 	}
 
-	public static findTimeline(timelineId: TimelineId, timelineNodes: ReadonlyArray<AnyTimeline>): AnyTimeline | null {
-		for (const node of timelineNodes) {
+	public static findTimeline(timelineId: TimelineId, groupTimeline: Readonly<GroupTimeline>): AnyTimeline | null {
+		if (timelineId === groupTimeline.id) {
+			return groupTimeline;
+		}
+
+		for (const node of groupTimeline.children) {
 			if (node.id === timelineId) {
 				return node;
 			}
 			if (Settings.maybeGroupTimeline(node)) {
-				const result = this.findTimeline(timelineId, node.children);
+				const result = this.findTimeline(timelineId, node);
 				if (result) {
 					return result;
 				}
@@ -246,21 +222,23 @@ export abstract class Timelines {
 	 */
 	public static getParentGroups(timeline: AnyTimeline, groupTimeline: GroupTimeline): Array<GroupTimeline> {
 
-		if (groupTimeline.children.some(a => a.id === timeline.id)) {
-			return [groupTimeline];
+		for (const child of groupTimeline.children) {
+			if (child.id === timeline.id) {
+				return [groupTimeline];
+			}
 		}
 
-		const rootChildren = groupTimeline.children.filter(Settings.maybeGroupTimeline);
-		for (const groupTimeline of rootChildren) {
+		const groupChildren = groupTimeline.children.filter(Settings.maybeGroupTimeline);
 
-			const nodes = this.getParentGroups(timeline, groupTimeline);
-			if (!nodes.length) {
-				continue;
+		for (const child of groupChildren) {
+			const nodes = this.getParentGroups(timeline, child);
+			if (nodes && nodes.length) {
+				return [groupTimeline, ...nodes];
 			}
-			return [groupTimeline, ...nodes];
 		}
 
 		return [];
+
 	}
 
 
@@ -524,13 +502,69 @@ export abstract class Timelines {
 	}
 
 	/**
-	 * 直近のタイムラインを取得。
-	 * @param timeline 基準タイムライン。
-	 * @param rootGroupTimeline ノード状態全タイムライン。
-	 * @returns 直近のタイムライン、あかんときは `null`
+	 * 指定タイムラインは前工程タイムラインとして選択可能か
+	 * @param targetTimeline 前工程になりうるかチェックするタイムライン。
+	 * @param baseTimeline 基準となるタイムライン。
+	 * @param rootTimeline
+	 * @returns
 	 */
-	public static getPrevTimeline(timeline: AnyTimeline, rootGroupTimeline: GroupTimeline): AnyTimeline | null {
-		throw new Error("未実装");
+	public static canSelect(targetTimeline: AnyTimeline, baseTimeline: AnyTimeline, rootTimeline: GroupTimeline): boolean {
+		const groups = Timelines.getParentGroups(baseTimeline, rootTimeline);
+		if (groups.length) {
+			return !groups.some(a => a.id === targetTimeline.id);
+		}
+
+		return true;
 	}
 
+	/**
+	 * 前工程タイムラインを検索。
+	 * @param timeline タイムライン。
+	 * @param rootTimeline
+	 * @returns
+	 */
+	public static searchBeforeTimeline(timeline: AnyTimeline, rootTimeline: GroupTimeline): AnyTimeline | undefined {
+		const sequenceTimelines = this.flat(rootTimeline.children);
+
+		const index = sequenceTimelines.findIndex(a => a.id === timeline.id);
+		if (index === -1) {
+			throw new Error();
+		}
+
+		const groups = Timelines.getParentGroups(timeline, rootTimeline);
+		const group = Arrays.last(groups);
+
+		for (let i = index - 1; 0 <= i; i--) {
+			const beforeTimeline = sequenceTimelines[i];
+			if (Settings.maybeGroupTimeline(beforeTimeline)) {
+				// 前項目が自身の属するグループの場合、直近タイムラインにはなりえない
+				if (groups.find(a => a.id === beforeTimeline.id)) {
+					continue;
+				}
+				return beforeTimeline;
+			}
+			if (Settings.maybeTaskTimeline(beforeTimeline)) {
+				const beforeGroups = Timelines.getParentGroups(beforeTimeline, rootTimeline);
+				const beforeGroup = Arrays.last(beforeGroups);
+				// 前項目のグループと自身のグループが同じ場合、兄弟として直近として扱える
+				if (beforeGroup.id === group.id) {
+					return beforeTimeline;
+				}
+
+				if (this.canSelect(beforeTimeline, timeline, rootTimeline)) {
+					// タスク自体は直近として扱える場合でも、異なるグループのためそのグループ自体を選択する
+					if (1 < beforeGroups.length) {
+						const target = beforeGroup;
+						if (this.canSelect(target, timeline, rootTimeline)) {
+							return target;
+						}
+					}
+
+					return beforeTimeline;
+				}
+			}
+		}
+
+		return undefined;
+	}
 }

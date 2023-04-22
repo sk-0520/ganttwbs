@@ -23,7 +23,7 @@ const Component: NextPage = () => {
 					tabSize: 8,
 					insertSpaces: false,
 					renderWhitespace: "all",
-					fontFamily: CssHelper.toFontFamily(locale.font.editor.fontFamilies),
+					fontFamily: CssHelper.toFontFamily(locale.styles.editor.fontFamilies),
 					quickSuggestions: false,
 				}}
 			/>

@@ -56,7 +56,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	}
 
 	return (
-		<div className={
+		<td className={
 			classNames(
 				"timeline-cell timeline-controls",
 				{
@@ -77,6 +77,16 @@ const Component: NextPage<Props> = (props: Props) => {
 				isVisible={visibleControls}
 				callBackHidden={handleHideControls}
 			>
+				<div className="tools before">
+					<div className="panel">
+						<ul>
+							<li>
+								<button>詳細設定</button>
+							</li>
+						</ul>
+					</div>
+				</div>
+
 				<div className="tools after">
 					<table className="panel">
 						<tbody>
@@ -106,6 +116,7 @@ const Component: NextPage<Props> = (props: Props) => {
 										下へ
 									</button>
 								</td>
+								<td className="col-cell" />
 							</tr>
 							<tr>
 								<th
@@ -168,6 +179,7 @@ const Component: NextPage<Props> = (props: Props) => {
 										削除
 									</button>
 								</td>
+								<td className="col-cell" />
 							</tr>
 						</tbody>
 					</table>
@@ -178,7 +190,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					callbackClose={handleCloseTimelinesImport}
 				/>
 			)}
-		</div>
+		</td>
 	);
 };
 

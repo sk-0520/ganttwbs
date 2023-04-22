@@ -9,7 +9,7 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 	return (
-		<div className='timeline-cell timeline-subject'>
+		<td className='timeline-cell timeline-subject'>
 			<input
 				className="edit"
 				type='text'
@@ -18,7 +18,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				disabled={props.disabled}
 				onChange={ev => props.callbackChangeValue(ev.target.value)}
 			/>
-		</div>
+		</td>
 	);
 };
 

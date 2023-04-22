@@ -12,7 +12,7 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 	return (
-		<div className="timeline-cell timeline-progress">
+		<td className="timeline-cell timeline-progress">
 			<input
 				className="edit"
 				type="number"
@@ -24,7 +24,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				value={Timelines.displayProgress(props.progress)}
 				onChange={ev => props.callbackChangeValue ? props.callbackChangeValue(ev.target.valueAsNumber) : undefined}
 			/>
-		</div>
+		</td>
 	);
 };
 

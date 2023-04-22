@@ -80,6 +80,7 @@
 		width: $app-header-width;
 		height: $app-header-height;
 		border-bottom: 1px solid black;
+		border-right: 1px solid black;
 
 		.header {
 			h1 {
@@ -121,12 +122,13 @@
 			table-layout: fixed;
 			border-collapse: collapse;
 			@include box.height($app-header-height);
-			border: none;
+			// Firefox だと大丈夫だけど Chrome がずれる。根本解決が全然分からんのでお茶を濁した
+			transform: translateY(-1px);
 		}
 
-		.cell {
-			//filter: invert(100%) grayscale(100%) contrast(100);
-			//filter: grayscale(1) contrast(9999) invert(1);
+		@mixin cell {
+			border-right: 1px solid black;
+			border-bottom: 1px solid black;
 		}
 
 		.year-month {
@@ -134,10 +136,7 @@
 				position: sticky;
 				top: 0;
 				left: $app-header-width;
-				// border: 1px solid black;
 				background: $days-header-background;
-
-				border: none;
 
 				time {
 					border-left: 1px dotted black;
@@ -150,8 +149,7 @@
 			text-align: center;
 
 			td {
-				border-right: 1px solid black;
-				border-bottom: 1px solid black;
+				@include cell();
 			}
 		}
 
@@ -159,8 +157,7 @@
 			text-align: center;
 
 			td {
-				border-right: 1px solid black;
-				border-bottom: 1px solid black;
+				@include cell();
 			}
 		}
 
@@ -168,8 +165,7 @@
 			text-align: center;
 
 			td {
-				border-right: 1px solid black;
-				border-bottom: 1px solid black;
+				@include cell();
 			}
 		}
 	}
@@ -262,15 +258,16 @@
 
 			.prompt {
 				$prompt-background-color: palegoldenrod;
+				$prompt-outline-width: 2px;
 
 				position: relative;
 
 				background-color: $prompt-background-color;
-				outline: 2px $prompt-background-color solid;
-				height: fit-content;
+				outline: $prompt-outline-width $prompt-background-color solid;
+				z-index: 4;
 
 				.tools {
-					outline: 2px $prompt-background-color solid;
+					outline: $prompt-outline-width $prompt-background-color solid;
 					height: fit-content;
 					background-color: $prompt-background-color;
 
@@ -278,13 +275,13 @@
 
 					&.before {
 						position: absolute;
-						right: 0;
+						right: 100%;
 						top: 0;
 					}
 
 					&.after {
 						position: absolute;
-						left: 100%;
+						left: calc(100% + $prompt-outline-width);
 						top: 0;
 					}
 
@@ -308,33 +305,62 @@
 				}
 			}
 
-			.timeline-id[draggable="true"] {
-				$cursor: grab;
+			.timeline-id {
+				&[draggable="true"] {
+					$cursor: grab;
 
-				cursor: $cursor;
+					cursor: $cursor;
 
-				&.dragging {
-					opacity: 1;
-					color: black;
-					border: 1px solid gray;
+					&.dragging {
+						opacity: 1;
+						color: black;
+						border: 1px solid gray;
+					}
+
+					* {
+						cursor: $cursor;
+					}
 				}
 
-				* {
-					cursor: $cursor;
+				.previous {
+					display: none;
 				}
 			}
 
 			.timeline-range-area.prompt {
 				.contents {
 					display: flex;
+					flex-direction: row;
 					align-items: center;
+					justify-content: center;
 
 					.main {
 						flex: content;
 
 						input {
+							@include control.reset();
+							background: white;
+							color: black;
 							width: 100%;
 						}
+					}
+
+					li {
+						display: flex;
+						button {
+							align-items: center;
+							justify-content: center;
+
+							@include control.reset();
+							border: 1px solid black;
+							width: 2em;
+							background: gainsboro;
+						}
+					}
+				}
+				.tools {
+					button {
+						text-align: left;
 					}
 				}
 			}
@@ -376,22 +402,32 @@
 					height: 100%;
 				}
 
-				.panel {
-					color: #000;
-					table-layout: fixed;
+				.tools {
+					&.before {
 
-					.col-header {
-						padding-right: 1em;
 					}
 
-					.col-cell {
-						width: 5em;
-					}
-				}
+					&.after {
+						.panel {
+							color: #000;
+							table-layout: fixed;
+							width: 300px;
 
-				button.simple {
-					//width: $timeline-header-controls-item-width;
-					padding: 0;
+							.col-header {
+								width: 5em;
+								padding-right: 1em;
+							}
+
+							.col-cell {
+								//width: 6em;
+							}
+
+							button.simple {
+								text-align: left;
+								padding: 0;
+							}
+						}
+					}
 				}
 			}
 		}

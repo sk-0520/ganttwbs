@@ -11,7 +11,7 @@ interface Props {
 
 const Component: NextPage<Props> = (props: Props) => {
 	return (
-		<div className='timeline-cell timeline-workload'>
+		<td className='timeline-cell timeline-workload'>
 			<input
 				className="edit"
 				type="number"
@@ -22,7 +22,7 @@ const Component: NextPage<Props> = (props: Props) => {
 				value={Timelines.displayWorkload(props.value)}
 				onChange={ev => props.callbackChangeValue ? props.callbackChangeValue(ev.target.valueAsNumber) : undefined}
 			/>
-		</div>
+		</td>
 	);
 };
 

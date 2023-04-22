@@ -86,8 +86,8 @@ describe("Arrays", () => {
 	});
 
 	test.each([
-		[true, [20, 10, 30], [10, 20, 30], true, 20],
-		[true, [10, 30, 20], [10, 20, 30], false, 20],
+		[true, [20, 10, 30], [10, 20, 30], false, 20],
+		[true, [10, 30, 20], [10, 20, 30], true, 20],
 	])("replaceOrderInPlace", (expectedResult: boolean, expectedArray: Array<number>, array: Array<number>, toPrev: boolean, element: number) => {
 		const actual = Arrays.replaceOrderInPlace(array, toPrev, element);
 		expect(actual).toBe(expectedResult);

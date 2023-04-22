@@ -22,7 +22,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return props.workRangeKind === "success"
 		? (
 			<>
-				<div
+				<td
 					className={
 						classNames(
 							"timeline-cell timeline-range-from",
@@ -34,8 +34,8 @@ const Component: NextPage<Props> = (props: Props) => {
 					<DynamicLabel htmlFor={props.htmlFor} wrap={props.selectable}>
 						<Timestamp format="date" date={props.beginDate} />
 					</DynamicLabel>
-				</div>
-				<div
+				</td>
+				<td
 					className={
 						classNames(
 							"timeline-cell timeline-range-to",
@@ -47,22 +47,23 @@ const Component: NextPage<Props> = (props: Props) => {
 					<DynamicLabel htmlFor={props.htmlFor} wrap={props.selectable}>
 						<Timestamp format="date" date={props.endDate} />
 					</DynamicLabel>
-				</div>
+				</td>
 			</>
 		) : (
-			<div
+			<td
 				className={
 					classNames(
 						"timeline-cell timeline-range-area",
 						selectOrClickClassName
 					)
 				}
+				colSpan={2}
 				onClick={props.callbackClickBeginDate}
 			>
 				<DynamicLabel htmlFor={props.htmlFor} wrap={props.selectable}>
 					{props.workRangeKind}
 				</DynamicLabel>
-			</div>
+			</td>
 		);
 };
 

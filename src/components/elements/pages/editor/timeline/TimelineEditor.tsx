@@ -18,6 +18,7 @@ import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { EditProps } from "@/models/data/props/EditProps";
 import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, TimelineId, TimelineKind } from "@/models/data/Setting";
+import { TimelineIndex } from "@/models/data/TimelineIndex";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
@@ -36,7 +37,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	let hoverTimeline: AnyTimeline | null = null;
 	let activeTimeline: AnyTimeline | null = null;
 
-	const [rootChildren, setRootChildren] = useState([...props.editData.setting.rootTimeline.children]);
+	const [sequenceTimelines, setSequenceTimelines] = useState(Timelines.flat(props.editData.setting.rootTimeline.children));
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map(), new Map()));
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
@@ -44,14 +45,14 @@ const Component: NextPage<Props> = (props: Props) => {
 
 	const calendarInfo = Calendars.createCalendarInfo(props.editData.setting.timeZone, props.editData.setting.calendar);
 
-	// 初回のみ
-	useEffect(() => {
-		updateRelations();
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+	// // 初回のみ
+	// useEffect(() => {
+	// 	updateRelations();
+	// }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		updateRelations();
-	}, [rootChildren]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [sequenceTimelines]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	function createTimelineStore(totalItems: ReadonlyMap<TimelineId, AnyTimeline>, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
 
@@ -61,19 +62,20 @@ const Component: NextPage<Props> = (props: Props) => {
 			}
 		}
 
-		const timelineSequence = Timelines.flat(props.editData.setting.rootTimeline.children);
-
 		const result: TimelineStore = {
 			rootGroupTimeline: props.editData.setting.rootTimeline,
 			totalItemMap: totalItems,
-			sequenceItems: timelineSequence,
-			indexItemMap: Timelines.toIndexes(timelineSequence),
+			sequenceItems: sequenceTimelines,
+			indexItemMap: Timelines.toIndexes(sequenceTimelines),
 
 			changedItemMap: changedItems,
 			workRanges: workRangesCache,
 
 			hoverItem: hoverTimeline,
 			activeItem: activeTimeline,
+
+			getIndex: handleGetIndex,
+			searchBeforeTimeline: handleSearchBeforeTimeline,
 
 			addEmptyTimeline: handleAddEmptyTimeline,
 			addNewTimeline: handleAddNewTimeline,
@@ -115,55 +117,25 @@ const Component: NextPage<Props> = (props: Props) => {
 	function fireDropTimeline(dropTimeline: DropTimeline) {
 		console.debug("FIRE");
 
-		const sourceIsRoot = Settings.maybeRootTimeline(dropTimeline.sourceGroupTimeline);
-		const destinationIsRoot = Settings.maybeRootTimeline(dropTimeline.destinationGroupTimeline);
 		const sameGroup = dropTimeline.sourceGroupTimeline.id === dropTimeline.destinationGroupTimeline.id;
 
 		if (sameGroup) {
 			// 同一グループ内移動
-			const newChildren = [...dropTimeline.sourceGroupTimeline.children];
-			Arrays.moveIndexInPlace(newChildren, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
+			Arrays.moveIndexInPlace(dropTimeline.sourceGroupTimeline.children, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
 
-			if (sourceIsRoot) {
-				// 最上位は設定だけ変えて後続で状態変更
-				props.editData.setting.rootTimeline.children = newChildren;
-			} else {
-				// 子孫は連携だけ
-				timelineStore.updateTimeline({
-					...dropTimeline.sourceGroupTimeline,
-					children: newChildren,
-				});
-			}
 		} else {
 			// グループから破棄
 			const newSourceChildren = dropTimeline.sourceGroupTimeline.children.filter(a => a.id !== dropTimeline.timeline.id);
+			dropTimeline.sourceGroupTimeline.children = newSourceChildren;
 
 			// 別グループに追加
-			const newDestinationChildren = [...dropTimeline.destinationGroupTimeline.children];
-			newDestinationChildren.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
-
-			if (sourceIsRoot) {
-				props.editData.setting.rootTimeline.children = newSourceChildren;
-			} else {
-				timelineStore.updateTimeline({
-					...dropTimeline.sourceGroupTimeline,
-					children: newSourceChildren,
-				});
-			}
-			if (destinationIsRoot) {
-				props.editData.setting.rootTimeline.children = newDestinationChildren;
-			} else {
-				timelineStore.updateTimeline({
-					...dropTimeline.destinationGroupTimeline,
-					children: newDestinationChildren,
-				});
-			}
+			dropTimeline.destinationGroupTimeline.children.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
 		}
 
 		setDropTimeline(null);
 		setDraggingTimeline(null);
 
-		setRootChildren(props.editData.setting.rootTimeline.children);
+		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
 	}
 
 	function handleSetPointerTimeline(timeline: AnyTimeline | null, property: "isHover" | "isActive"): void {
@@ -324,24 +296,67 @@ const Component: NextPage<Props> = (props: Props) => {
 		setDraggingTimeline(dragging);
 	}
 
+	function handleGetIndex(timeline: AnyTimeline): TimelineIndex {
+
+		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
+		if (!groups.length) {
+			// 削除時に呼ばれた場合、すでに存在しない
+			return {
+				level: 0,
+				tree: [],
+			};
+		}
+
+		const tree = new Array<number>();
+
+		// 子孫のレベル設定
+		for (let i = 1; i < groups.length; i++) {
+			const parent = groups[i - 1];
+			const group = groups[i];
+			const index = parent.children.findIndex(a => a.id === group.id);
+			if (index === -1) {
+				throw new Error();
+			}
+			tree.push(index + 1);
+		}
+		// 最終アイテム・ルートのレベル設定
+		const last = Arrays.last(groups);
+		const index = last.children.findIndex(a => a.id === timeline.id);
+		if (index === -1) {
+			throw new Error();
+		}
+		tree.push(index + 1);
+
+		const result: TimelineIndex = {
+			level: tree.length,
+			tree: tree,
+		};
+
+		return result;
+	}
+
+	function handleSearchBeforeTimeline(timeline: AnyTimeline): AnyTimeline | undefined {
+		return Timelines.searchBeforeTimeline(timeline, props.editData.setting.rootTimeline);
+	}
+
 	function handleAddEmptyTimeline(baseTimeline: AnyTimeline, options: NewTimelineOptions): void {
 		const newTimeline = createEmptyTimeline(options.timelineKind);
 
 		handleAddNewTimeline(baseTimeline, newTimeline, options.position);
 	}
 
+	//TODO: 一括登録時になんか反映されない(ん～ってなる)
 	function handleAddNewTimeline(baseTimeline: AnyTimeline, newTimeline: AnyTimeline, position: NewTimelinePosition): void {
 		// 将来追加した場合の安全弁
 		if (position !== NewTimelinePosition.Next) {
 			throw new Error(position);
 		}
 
-		const groups = Timelines.getParentGroups(baseTimeline, props.editData.setting.rootTimeline);
-
 		let parent: GroupTimeline;
 		if (Settings.maybeGroupTimeline(baseTimeline)) {
 			parent = baseTimeline;
 		} else {
+			const groups = Timelines.getParentGroups(baseTimeline, props.editData.setting.rootTimeline);
 			parent = Arrays.last(groups);
 		}
 
@@ -359,17 +374,21 @@ const Component: NextPage<Props> = (props: Props) => {
 			parent.children = newChildren;
 		}
 
-		if (groups.length === 1) {
-			setRootChildren(parent.children);
-			return;
+		// 前工程の設定されていないタスクに対して可能であれば直近項目を前項目として設定
+		const newTaskTimeline = Timelines.getFirstTaskTimeline(newTimeline);
+		if (newTaskTimeline) {
+			const beforeTimeline = Timelines.searchBeforeTimeline(newTaskTimeline, props.editData.setting.rootTimeline);
+			if (beforeTimeline) {
+				newTaskTimeline.previous = [beforeTimeline.id];
+			}
 		}
 
-		updateRelations();
+		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
 	}
 
 	function handleUpdateTimeline(timeline: AnyTimeline): void {
 		//
-		const source = Timelines.findTimeline(timeline.id, rootChildren);
+		const source = Timelines.findTimeline(timeline.id, props.editData.setting.rootTimeline);
 		if (!source) {
 			return;
 		}
@@ -377,10 +396,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		const timelineMap = Timelines.getTimelinesMap({
-			...Timelines.createRootGroup(),
-			children: rootChildren,
-		});
+		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.rootTimeline);
 
 		const prevSource = { ...source };
 		Object.assign(source, timeline);
@@ -437,20 +453,10 @@ const Component: NextPage<Props> = (props: Props) => {
 	function handleMoveTimeline(moveUp: boolean, timeline: AnyTimeline): void {
 		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
 
-		if (groups.length === 1) {
-			const newRootChildren = [...rootChildren];
-			Timelines.moveTimelineOrder(newRootChildren, moveUp, timeline);
-			setRootChildren(props.editData.setting.rootTimeline.children = newRootChildren);
-		} else {
-			const group = Arrays.last(groups);
-			const newRootChildren = [...group.children];
-			Timelines.moveTimelineOrder(newRootChildren, moveUp, timeline);
-			//group.children = newChildren;
-			timelineStore.updateTimeline({
-				...group,
-				children: newRootChildren,
-			});
-		}
+		const group = Arrays.last(groups);
+		Arrays.replaceOrderInPlace(group.children, !moveUp, timeline);
+
+		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
 	}
 
 	function handleRemoveTimeline(timeline: AnyTimeline): void {
@@ -468,16 +474,10 @@ const Component: NextPage<Props> = (props: Props) => {
 		}
 
 		// データから破棄
-		if (1 < groups.length) {
-			const group = Arrays.last(groups);
-			const newChildren = group.children.filter(a => a.id !== timeline.id);
-			group.children = newChildren;
-			// 直接置き換えた値はちまちま反映するのではなくリセット
-			updateRelations();
-		} else {
-			const newRootChildren = rootChildren.filter(a => a.id !== timeline.id);
-			setRootChildren(props.editData.setting.rootTimeline.children = newRootChildren);
-		}
+		const group = Arrays.last(groups);
+		const newChildren = group.children.filter(a => a.id !== timeline.id);
+		group.children = newChildren;
+		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
 	}
 
 	function handleStartSelectBeginDate(timeline: TaskTimeline): void {
@@ -486,7 +486,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			timeline: timeline,
 			beginDate: timeline.static ? DateTime.parse(timeline.static, calendarInfo.timeZone) : null,
 			previous: new Set(timeline.previous),
-			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
+			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editData.setting.rootTimeline),
 		});
 	}
 
@@ -495,7 +495,7 @@ const Component: NextPage<Props> = (props: Props) => {
 			timeline: timeline,
 			beginDate: clearDate ? null : c?.beginDate ?? null,
 			previous: clearPrevious ? new Set() : c?.previous ?? new Set(),
-			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
+			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editData.setting.rootTimeline),
 		}));
 	}
 
@@ -504,17 +504,8 @@ const Component: NextPage<Props> = (props: Props) => {
 			timeline: timeline,
 			beginDate: c?.beginDate ?? null,
 			previous: new Set(set),
-			canSelect: (targetTimeline) => canSelectCore(targetTimeline, timeline),
+			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editData.setting.rootTimeline)
 		}));
-	}
-
-	function canSelectCore(targetTimeline: AnyTimeline, currentTimeline: AnyTimeline): boolean {
-		const groups = Timelines.getParentGroups(currentTimeline, props.editData.setting.rootTimeline);
-		if (groups.length) {
-			return !groups.some(a => a.id === targetTimeline.id);
-		}
-
-		return true;
 	}
 
 	function handleSubmitSelectBeginDate(timeline: TaskTimeline): void {
@@ -600,13 +591,14 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 			},
 
 			groups: {
-				...Array.from(Array(design.programmable.group.maximum), (_, index) => index + 1)
-					.map(a => {
-						const backgroundColor = (a - 1) in theme.groups ? theme.groups[a - 1] : theme.timeline.group;
+				...Arrays.range(1, design.programmable.group.maximum)
+					.map(level => {
+						const index = level - 1;
+						const backgroundColor = index in theme.groups ? theme.groups[index] : theme.timeline.group;
 						const foregroundColor = Colors.getAutoColor(backgroundColor);
 
 						return {
-							[`level-${a}`]: {
+							[`level-${level}`]: {
 								color: foregroundColor.toHexString(),
 								background: backgroundColor,
 							}
@@ -616,12 +608,49 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 			},
 
 			indexNumber: {
-				...Array.from(Array(design.programmable.indexNumber.maximum), (_, index) => index + 1)
-					.map(a => {
+				...Arrays.range(1, design.programmable.group.maximum)
+					.map(level => {
+						const paddingWidth = `${((level - 1) * design.programmable.indexNumber.paddingLeft.value) + design.programmable.indexNumber.paddingLeft.unit}`;
+
+						const index = level - 2;
+						//let paddingColor = "transparent";
+						let gradient: string | undefined;
+						if (0 <= index) {
+							//paddingColor = index in theme.groups ? theme.groups[index] : theme.timeline.group;
+
+							// グラデーションの生成
+							const colors = new Array<string>();
+							for (let i = 0; i <= index; i++) {
+								const color = i in theme.groups ? theme.groups[i] : theme.timeline.group;
+								colors.push(color);
+							}
+							const gradients = colors
+								.map((a, i) => {
+									const from = (i / colors.length);
+									const to = from + (1 / colors.length);
+									return `${a} ${from * 100}% ${to * 100}%`;
+								})
+								;
+							gradient = `linear-gradient(to right, ${gradients.join(",")})`;
+						}
+
+
 						return {
-							[`level-${a}`]: {
+							[`level-${level}`]: {
 								display: "inline-block",
-								paddingLeft: (a * design.programmable.indexNumber.paddingLeft.value) + design.programmable.indexNumber.paddingLeft.unit,
+								position: "relative",
+								paddingLeft: paddingWidth,
+							},
+							[`level-${level}::before`]: {
+								content: "''",
+								position: "absolute",
+								display: "block",
+								background: gradient,
+								top: 0,
+								left: 0,
+								maxWidth: paddingWidth,
+								minWidth: paddingWidth,
+								height: "100%",
 							}
 						};
 					})
@@ -671,10 +700,10 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 function createEmptyTimeline(timelineKind: TimelineKind): AnyTimeline {
 	switch (timelineKind) {
 		case "group":
-			return Timelines.createNewGroup();
+			return Timelines.createGroupTimeline();
 
 		case "task":
-			return Timelines.createNewTask();
+			return Timelines.createTaskTimeline();
 
 		default:
 			throw new Error();

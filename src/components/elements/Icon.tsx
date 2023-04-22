@@ -19,6 +19,11 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.RelationMix]: (props) => <Md.MdOutlineStart {...convertParameter(props)} />,
 	[IconKind.RelationStatic]: (props) => <Md.MdOutlineCalendarMonth {...convertParameter(props)} />,
 	[IconKind.RelationPrevious]: (props) => <Md.MdSubdirectoryArrowRight {...convertParameter(props)} />,
+	[IconKind.RelationJoin]: (props) => <Md.MdLink {...convertParameter(props)} />,
+	[IconKind.RelationClear]: (props) => <Md.MdLinkOff {...convertParameter(props)} />,
+
+	[IconKind.CheckBoxTimelinePreviousOn]: (props) => <Md.MdOutlineCheckBox {...convertParameter(props)} />,
+	[IconKind.CheckBoxTimelinePreviousOff]: (props) => <Md.MdOutlineCheckBoxOutlineBlank {...convertParameter(props)} />,
 
 	[IconKind.MoveUp]: (props) => <Md.MdArrowUpward {...convertParameter(props)} />,
 	[IconKind.MoveDown]: (props) => <Md.MdArrowDownward {...convertParameter(props)} />,
@@ -31,6 +36,7 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.ConfirmNegative]: (props) => <Md.MdOutlineBlock {...convertParameter(props)} />,
 	[IconKind.ConfirmCancel]: (props) => <Md.MdOutlineRemoveCircleOutline {...convertParameter(props)} />,
 
+	[IconKind.Clear]: (props) => <Md.MdOutlineClear {...convertParameter(props)} />,
 	[IconKind.Operation]: (props) => <Md.MdBuild {...convertParameter(props)} />,
 	[IconKind.Remove]: (props) => <Md.MdOutlineDelete {...convertParameter(props)} />,
 } as const;

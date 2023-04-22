@@ -58,7 +58,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	return (
 		<div id='days-header'>
 			<table>
-				<thead>
+				<tbody>
 					<tr className='year-month'>
 						{yearMonthBucket.map(a => {
 							const year = a.year;
@@ -100,8 +100,6 @@ const Component: NextPage<Props> = (props: Props) => {
 							);
 						})}
 					</tr>
-				</thead>
-				<tbody>
 					<tr className='pin'>
 						{dates.map(a => {
 							const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);

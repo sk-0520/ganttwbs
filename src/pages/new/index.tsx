@@ -175,7 +175,7 @@ function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 			timeline: DefaultSettings.getTimelineTheme(),
 		},
 		groups: [],
-		rootTimeline: Timelines.createRootGroup(),
+		rootTimeline: Timelines.createRootTimeline(),
 		versions: [],
 	};
 

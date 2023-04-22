@@ -108,7 +108,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							minimap: {
 								enabled: false
 							},
-							fontFamily: CssHelper.toFontFamily(locale.font.editor.fontFamilies),
+							fontFamily: CssHelper.toFontFamily(locale.styles.editor.fontFamilies),
 							quickSuggestions: false,
 						}}
 					/>
