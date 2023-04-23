@@ -2,12 +2,11 @@ import classNames from "classnames";
 import { NextPage } from "next";
 import { DragEvent } from "react";
 
-import Icon from "@/components/elements/Icon";
+import Icon, { IconKind } from "@/components/elements/Icon";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { AnyTimeline } from "@/models/data/Setting";
 import { TimelineIndex } from "@/models/data/TimelineIndex";
-import { IconKind } from "@/models/IconKind";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 

@@ -2,11 +2,10 @@ import classNames from "classnames";
 import { NextPage } from "next";
 import { useState } from "react";
 
-import Icon from "@/components/elements/Icon";
+import Icon, { IconKind } from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
-import { IconKind } from "@/models/IconKind";
 
 interface Props {
 	currentTimelineKind: TimelineKind;

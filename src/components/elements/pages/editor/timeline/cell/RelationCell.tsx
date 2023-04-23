@@ -1,9 +1,8 @@
 import { NextPage } from "next";
 
 import DynamicLabel from "@/components/elements/DynamicLabel";
-import Icon from "@/components/elements/Icon";
+import Icon, { IconKind } from "@/components/elements/Icon";
 import { AnyTimeline } from "@/models/data/Setting";
-import { IconKind } from "@/models/IconKind";
 import { Settings } from "@/models/Settings";
 
 const enum Relations {
