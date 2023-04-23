@@ -33,7 +33,9 @@ const Overlay: FC<Props> = (props: Props) => {
 					<div className={style.overlay} onClick={handleHide}>
 						{props.customClassName && <div className={props.customClassName} />}
 					</div>
-					<span className={style.children}>{props.children}</span>
+					<span className={style.children}>
+						{props.children}
+					</span>
 				</>
 			)}
 		</>
