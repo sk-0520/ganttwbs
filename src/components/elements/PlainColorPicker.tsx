@@ -4,7 +4,7 @@ import { SketchPicker } from "react-color";
 import { PresetColor } from "react-color/lib/components/sketch/Sketch";
 
 import Overlay from "@/components/elements/Overlay";
-import Colors from "@/models/Colors";
+import { Colors } from "@/models/Colors";
 import { Color } from "@/models/data/Setting";
 import style from "@/styles/modules/components/elements/PlainColorPicker.module.scss";
 

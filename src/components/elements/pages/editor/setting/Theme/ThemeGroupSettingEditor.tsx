@@ -3,7 +3,7 @@ import { FC, useContext, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
-import Colors from "@/models/Colors";
+import { Colors } from "@/models/Colors";
 import { SettingContext, UUID } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";

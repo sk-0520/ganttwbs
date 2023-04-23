@@ -8,7 +8,7 @@ import TimelineItems from "@/components/elements/pages/editor/timeline/TimelineI
 import TimelineViewer from "@/components/elements/pages/editor/timeline/TimelineViewer";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
-import Colors from "@/models/Colors";
+import { Colors } from "@/models/Colors";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";

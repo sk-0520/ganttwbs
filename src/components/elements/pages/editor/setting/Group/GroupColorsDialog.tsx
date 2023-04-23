@@ -2,7 +2,7 @@ import { TinyColor, random } from "@ctrl/tinycolor";
 import { CSSProperties, FC, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
-import Colors from "@/models/Colors";
+import { Colors } from "@/models/Colors";
 import { GroupSetting } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
 

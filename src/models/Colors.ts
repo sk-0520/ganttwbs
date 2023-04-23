@@ -2,7 +2,7 @@ import { TinyColor, mostReadable } from "@ctrl/tinycolor";
 
 import { Color } from "@/models/data/Setting";
 
-export default abstract class Colors {
+export abstract class Colors {
 
 	/**
 	 * 指定の色に対して読みやすい(?)色を取得

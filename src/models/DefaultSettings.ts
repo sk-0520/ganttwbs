@@ -1,4 +1,4 @@
-import Colors from "@/models/Colors";
+import { Colors } from "@/models/Colors";
 import { Color, HolidayKind, TimelineTheme, WeekDay } from "@/models/data/Setting";
 
 /**
