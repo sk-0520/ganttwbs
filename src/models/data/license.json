@@ -1,0 +1,172 @@
+{
+  "@ctrl/tinycolor": {
+    "module": "@ctrl/tinycolor@3.6.0",
+    "version": "3.6.0",
+    "publisher": "Scott Cooper",
+    "licenses": "MIT",
+    "repository": "https://github.com/scttcper/tinycolor"
+  },
+  "@types/jest": {
+    "module": "@types/jest@29.5.1",
+    "version": "29.5.1",
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
+  },
+  "@types/license-checker": {
+    "module": "@types/license-checker@25.0.3",
+    "version": "25.0.3",
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
+  },
+  "@types/node": {
+    "module": "@types/node@18.16.0",
+    "version": "18.16.0",
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
+  },
+  "@types/react-color": {
+    "module": "@types/react-color@3.0.6",
+    "version": "3.0.6",
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
+  },
+  "@types/react-dom": {
+    "module": "@types/react-dom@18.0.11",
+    "version": "18.0.11",
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
+  },
+  "@types/react": {
+    "module": "@types/react@18.0.38",
+    "version": "18.0.38",
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
+  },
+  "@types/uuid": {
+    "module": "@types/uuid@9.0.1",
+    "version": "9.0.1",
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
+  },
+  "@typescript-eslint/eslint-plugin": {
+    "module": "@typescript-eslint/eslint-plugin@5.59.0",
+    "version": "5.59.0",
+    "licenses": "MIT",
+    "repository": "https://github.com/typescript-eslint/typescript-eslint"
+  },
+  "@typescript-eslint/parser": {
+    "module": "@typescript-eslint/parser@5.59.0",
+    "version": "5.59.0",
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/typescript-eslint/typescript-eslint"
+  },
+  "eslint-config-next": {
+    "module": "eslint-config-next@13.3.1",
+    "version": "13.3.1",
+    "licenses": "MIT",
+    "repository": "https://github.com/vercel/next.js"
+  },
+  "eslint-import-resolver-typescript": {
+    "module": "eslint-import-resolver-typescript@3.5.5",
+    "version": "3.5.5",
+    "publisher": "Alex Gorbatchev",
+    "licenses": "ISC",
+    "repository": "https://github.com/import-js/eslint-import-resolver-typescript"
+  },
+  "eslint-plugin-import": {
+    "module": "eslint-plugin-import@2.27.5",
+    "version": "2.27.5",
+    "publisher": "Ben Mosher",
+    "licenses": "MIT",
+    "repository": "https://github.com/import-js/eslint-plugin-import"
+  },
+  "eslint-plugin-no-relative-import-paths": {
+    "module": "eslint-plugin-no-relative-import-paths@1.5.2",
+    "version": "1.5.2",
+    "publisher": "Melvin Vermeer",
+    "licenses": "ISC",
+    "repository": "https://github.com/MelvinVermeer/eslint-plugin-no-relative-import-paths"
+  },
+  "eslint-plugin-unused-imports": {
+    "module": "eslint-plugin-unused-imports@2.0.0",
+    "version": "2.0.0",
+    "publisher": "Mikkel Holmer Pedersen",
+    "licenses": "MIT",
+    "repository": "https://github.com/sweepline/eslint-plugin-unused-imports"
+  },
+  "eslint": {
+    "module": "eslint@8.39.0",
+    "version": "8.39.0",
+    "publisher": "Nicholas C. Zakas",
+    "licenses": "MIT",
+    "repository": "https://github.com/eslint/eslint"
+  },
+  "jest-environment-jsdom": {
+    "module": "jest-environment-jsdom@29.5.0",
+    "version": "29.5.0",
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/jest"
+  },
+  "jest": {
+    "module": "jest@29.5.0",
+    "version": "29.5.0",
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/jest"
+  },
+  "license-checker": {
+    "module": "license-checker@25.0.1",
+    "version": "25.0.1",
+    "publisher": "Dav Glass",
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/davglass/license-checker"
+  },
+  "npm-check-updates": {
+    "module": "npm-check-updates@16.10.9",
+    "version": "16.10.9",
+    "publisher": "Tomas Junnonen",
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/raineorshine/npm-check-updates"
+  },
+  "npm-run-all": {
+    "module": "npm-run-all@4.1.5",
+    "version": "4.1.5",
+    "publisher": "Toru Nagashima",
+    "licenses": "MIT",
+    "repository": "https://github.com/mysticatea/npm-run-all"
+  },
+  "reset-css": {
+    "module": "reset-css@5.0.1",
+    "version": "5.0.1",
+    "publisher": "Eric Meyer",
+    "licenses": "Unlicense",
+    "repository": "https://github.com/shannonmoeller/reset-css"
+  },
+  "sass": {
+    "module": "sass@1.62.0",
+    "version": "1.62.0",
+    "publisher": "Natalie Weizenbaum",
+    "licenses": "MIT",
+    "repository": "https://github.com/sass/dart-sass"
+  },
+  "ts-jest": {
+    "module": "ts-jest@29.1.0",
+    "version": "29.1.0",
+    "publisher": "Kulshekhar Kabra",
+    "licenses": "MIT",
+    "repository": "https://github.com/kulshekhar/ts-jest"
+  },
+  "ts-node": {
+    "module": "ts-node@10.9.1",
+    "version": "10.9.1",
+    "publisher": "Blake Embrey",
+    "licenses": "MIT",
+    "repository": "https://github.com/TypeStrong/ts-node"
+  },
+  "typescript": {
+    "module": "typescript@5.0.4",
+    "version": "5.0.4",
+    "publisher": "Microsoft Corp.",
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/Microsoft/TypeScript"
+  }
+}
