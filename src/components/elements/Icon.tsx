@@ -34,6 +34,7 @@ export const enum IconKind {
 	ConfirmNegative,
 	ConfirmCancel,
 
+	Reset,
 	Clear,
 	Operation,
 	Remove,
@@ -66,6 +67,7 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.ConfirmNegative]: (props) => <Md.MdOutlineBlock {...convertParameter(props)} />,
 	[IconKind.ConfirmCancel]: (props) => <Md.MdOutlineRemoveCircleOutline {...convertParameter(props)} />,
 
+	[IconKind.Reset]: (props) => <Md.MdRestartAlt {...convertParameter(props)} />,
 	[IconKind.Clear]: (props) => <Md.MdOutlineClear {...convertParameter(props)} />,
 	[IconKind.Operation]: (props) => <Md.MdBuild {...convertParameter(props)} />,
 	[IconKind.Remove]: (props) => <Md.MdOutlineDelete {...convertParameter(props)} />,
