@@ -25,6 +25,7 @@ import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
+import { Types } from "@/models/Types";
 
 interface Props extends EditProps {
 	currentTimeline: AnyTimeline;
@@ -296,13 +297,13 @@ const Component: NextPage<Props> = (props: Props) => {
 			/>
 			<SubjectCell
 				value={subject}
-				disabled={props.selectingBeginDate !== null}
+				disabled={Types.toBoolean(props.selectingBeginDate)}
 				readOnly={false}
 				callbackChangeValue={handleChangeSubject}
 			/>
 			<WorkloadCell
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-				disabled={props.selectingBeginDate !== null}
+				disabled={Types.toBoolean(props.selectingBeginDate)}
 				value={workload}
 				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeWorkload : undefined}
 			/>
@@ -310,12 +311,12 @@ const Component: NextPage<Props> = (props: Props) => {
 				currentTimeline={props.currentTimeline}
 				groups={props.editData.setting.groups}
 				selectedMemberId={memberId}
-				disabled={props.selectingBeginDate !== null}
+				disabled={Types.toBoolean(props.selectingBeginDate)}
 				callbackChangeMember={handleChangeMember}
 			/>
 			<RelationCell
 				currentTimeline={props.currentTimeline}
-				selectable={props.selectingBeginDate !== null}
+				selectable={Types.toBoolean(props.selectingBeginDate)}
 				htmlFor={selectingId}
 			/>
 			{
@@ -396,7 +397,7 @@ const Component: NextPage<Props> = (props: Props) => {
 					) : (
 						<WorkRangeCells
 							workRangeKind={beginKind}
-							selectable={props.selectingBeginDate !== null}
+							selectable={Types.toBoolean(props.selectingBeginDate)}
 							beginDate={beginDate}
 							endDate={endDate}
 							htmlFor={selectingId}
@@ -406,13 +407,13 @@ const Component: NextPage<Props> = (props: Props) => {
 			}
 			<ProgressCell
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-				disabled={props.selectingBeginDate !== null}
+				disabled={Types.toBoolean(props.selectingBeginDate)}
 				progress={progress}
 				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
 			/>
 			<ControlsCell
 				currentTimelineKind={props.currentTimeline.kind}
-				disabled={props.selectingBeginDate !== null}
+				disabled={Types.toBoolean(props.selectingBeginDate)}
 				moveItem={handleControlMoveItem}
 				addItem={handleControlAddItem}
 				deleteItem={handleControlDeleteItem}

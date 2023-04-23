@@ -149,12 +149,4 @@ export abstract class Strings {
 		return source.split(/\r\n|\n|\r/);
 	}
 
-	public static toBoolean(s: string | null | undefined): boolean {
-		if (!s) {
-			return false;
-		}
-
-		return s.toLowerCase() === "true";
-	}
-
 }
