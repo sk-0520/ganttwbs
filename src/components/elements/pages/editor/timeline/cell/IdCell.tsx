@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { NextPage } from "next";
 import { DragEvent } from "react";
 
-import IconImage, { IconKind } from "@/components/elements/Icon";
+import { IconImage, IconKind } from "@/components/elements/Icon";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { AnyTimeline } from "@/models/data/Setting";

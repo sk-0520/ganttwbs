@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useState, useEffect, DragEvent } from "react";
 
-import IconImage, { IconKind } from "@/components/elements/Icon";
+import { IconImage, IconKind } from "@/components/elements/Icon";
 import ControlsCell from "@/components/elements/pages/editor/timeline/cell/ControlsCell";
 import IdCell from "@/components/elements/pages/editor/timeline/cell/IdCell";
 import ProgressCell from "@/components/elements/pages/editor/timeline/cell/ProgressCell";

@@ -1,5 +1,4 @@
-import { NextPage } from "next";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { IconBaseProps } from "react-icons";
 import * as Md from "react-icons/md";
 
@@ -113,7 +112,7 @@ interface Props {
 	title?: string;
 }
 
-const IconImage: NextPage<Props> = (props: Props) => {
+export const IconImage: FC<Props> = (props: Props) => {
 	const factory = Icons[props.kind];
 
 	return (
@@ -123,4 +122,4 @@ const IconImage: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default IconImage;
+

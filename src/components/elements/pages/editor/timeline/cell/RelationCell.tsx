@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 
 import DynamicLabel from "@/components/elements/DynamicLabel";
-import IconImage, { IconKind } from "@/components/elements/Icon";
+import { IconImage, IconKind } from "@/components/elements/Icon";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 
