@@ -56,7 +56,7 @@ export abstract class Charts {
 		return result;
 	}
 
-	public static getGroupBackground(timeline: DeepReadonly<GroupTimeline>, rootGroupTimeline: DeepReadonly<GroupTimeline>, theme: DeepReadonly<Theme>): string {
+	public static getGroupBackground(timeline: Readonly<GroupTimeline>, rootGroupTimeline: Readonly<GroupTimeline>, theme: Readonly<Theme>): string {
 		// 未設定とグループラインの扱いが微妙過ぎる
 		const parents = Timelines.getParentGroups(timeline, rootGroupTimeline);
 		if (parents.length <= theme.groups.length) {
