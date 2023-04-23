@@ -1,8 +1,6 @@
 @use "variable" as variable;
 
 main#editor {
-	user-select: none;
-
 	.tab {
 		&.panel {
 			display: none;
@@ -25,6 +23,7 @@ main#editor {
 
 		&.tab-timeline {
 			background: white;
+			user-select: none;
 		}
 
 		&.tab-setting {
