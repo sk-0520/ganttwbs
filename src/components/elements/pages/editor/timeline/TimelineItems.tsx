@@ -18,7 +18,6 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 	dropTimeline: DropTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
-	updateRelations: () => void;
 }
 
 const TimelineItems: FC<Props> = (props: Props) => {

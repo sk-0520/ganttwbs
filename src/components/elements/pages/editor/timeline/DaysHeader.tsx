@@ -3,15 +3,15 @@ import { FC } from "react";
 import { useLocale } from "@/locales/locale";
 import { Calendars } from "@/models/Calendars";
 import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { Holiday, Theme } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {

@@ -8,7 +8,6 @@ import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { Settings } from "@/models/Settings";
 import { WorkRanges } from "@/models/WorkRanges";
 
-
 interface Props extends GanttChartTimelineProps { }
 
 const GanttChartTimeline: FC<Props> = (props: Props) => {

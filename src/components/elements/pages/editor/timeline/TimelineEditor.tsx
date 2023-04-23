@@ -556,14 +556,12 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				dropTimeline={dropTimeline}
 				selectingBeginDate={selectingBeginDate}
 				beginDateCallbacks={beginDateCallbacks}
-				updateRelations={updateRelations}
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
 				setting={props.editorData.setting}
-				updateRelations={updateRelations}
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
 			/>

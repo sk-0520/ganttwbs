@@ -15,7 +15,5 @@ export interface GanttChartTimelineProps extends ConfigurationProps, SettingProp
 	chartSize: AreaSize;
 
 	memberMap: ReadonlyMap<MemberId, MemberMapValue>;
-
-	updateRelations: () => void;
 }
 

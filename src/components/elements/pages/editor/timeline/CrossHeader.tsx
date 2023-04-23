@@ -3,13 +3,13 @@ import { FC, useState } from "react";
 import { IconImage, IconKind } from "@/components/elements/Icon";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Timelines } from "@/models/Timelines";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 	//nop

@@ -14,7 +14,7 @@ import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
-	updateRelations: () => void;
+	//nop
 }
 
 const TimelineViewer: FC<Props> = (props: Props) => {
@@ -141,7 +141,6 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							calendarInfo={props.calendarInfo}
 							chartSize={chartSize}
 							memberMap={memberMap}
-							updateRelations={props.updateRelations}
 							timelineStore={props.timelineStore}
 						/>
 					);
@@ -160,7 +159,6 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							calendarInfo={props.calendarInfo}
 							chartSize={chartSize}
 							memberMap={memberMap}
-							updateRelations={props.updateRelations}
 							timelineStore={props.timelineStore}
 						/>
 					);

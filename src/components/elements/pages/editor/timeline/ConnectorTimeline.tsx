@@ -19,8 +19,6 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 	chartSize: AreaSize;
 
 	memberMap: ReadonlyMap<MemberId, MemberMapValue>;
-
-	updateRelations: () => void;
 }
 
 const ConnectorTimeline: FC<Props> = (props: Props) => {
