@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import Layout from "@/components/layout/Layout";
 
-const Page: NextPage = () => {
+const TopPage: NextPage = () => {
 	return (
 		<Layout mode='page' layoutId='home'>
 			<ul>
@@ -21,4 +21,4 @@ const Page: NextPage = () => {
 	);
 };
 
-export default Page;
+export default TopPage;

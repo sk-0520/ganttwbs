@@ -11,7 +11,7 @@ interface Input {
 	files: FileList;
 }
 
-const Page: NextPage = () => {
+const LoadPage: NextPage = () => {
 	const { register, handleSubmit, } = useForm<Input>();
 	const router = useRouter();
 
@@ -29,7 +29,7 @@ const Page: NextPage = () => {
 	);
 };
 
-export default Page;
+export default LoadPage;
 
 async function onSubmit(data: Input, router: NextRouter) {
 	console.log(data);

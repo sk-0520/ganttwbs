@@ -2,7 +2,7 @@ import { NextPage } from "next";
 
 import Layout from "@/components/layout/Layout";
 
-const Page: NextPage = () => {
+const AboutPage: NextPage = () => {
 	return (
 		<Layout title='これなに？' mode='page' layoutId='about'>
 			<p>ガントチャート的な何かをどうこうしたい。</p>
@@ -10,4 +10,4 @@ const Page: NextPage = () => {
 	);
 };
 
-export default Page;
+export default AboutPage;
