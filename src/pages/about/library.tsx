@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 
 import Layout from "@/components/layout/Layout";
-import license from "@/models/data/license.json";
+import license from "@/models/data/generator/license.json";
 
 interface License {
 	module: string,

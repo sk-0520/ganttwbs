@@ -6,6 +6,13 @@
     "licenses": "MIT",
     "repository": "https://github.com/scttcper/tinycolor"
   },
+  "@monaco-editor/react": {
+    "module": "@monaco-editor/react@4.5.0",
+    "version": "4.5.0",
+    "publisher": "Suren Atoyan",
+    "licenses": "MIT",
+    "repository": "https://github.com/suren-atoyan/monaco-react"
+  },
   "@types/jest": {
     "module": "@types/jest@29.5.1",
     "version": "29.5.1",
@@ -60,6 +67,20 @@
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/typescript-eslint/typescript-eslint"
   },
+  "cdate": {
+    "module": "cdate@0.0.5",
+    "version": "0.0.5",
+    "publisher": "@kawanet",
+    "licenses": "MIT",
+    "repository": "https://github.com/kawanet/cdate"
+  },
+  "classnames": {
+    "module": "classnames@2.3.2",
+    "version": "2.3.2",
+    "publisher": "Jed Watson",
+    "licenses": "MIT",
+    "repository": "https://github.com/JedWatson/classnames"
+  },
   "eslint-config-next": {
     "module": "eslint-config-next@13.3.1",
     "version": "13.3.1",
@@ -101,6 +122,13 @@
     "licenses": "MIT",
     "repository": "https://github.com/eslint/eslint"
   },
+  "i18next": {
+    "module": "i18next@22.4.15",
+    "version": "22.4.15",
+    "publisher": "Jan Mühlemann",
+    "licenses": "MIT",
+    "repository": "https://github.com/i18next/i18next"
+  },
   "jest-environment-jsdom": {
     "module": "jest-environment-jsdom@29.5.0",
     "version": "29.5.0",
@@ -120,6 +148,19 @@
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/davglass/license-checker"
   },
+  "next-i18next": {
+    "module": "next-i18next@13.2.2",
+    "version": "13.2.2",
+    "publisher": "i18next",
+    "licenses": "MIT",
+    "repository": "https://github.com/i18next/next-i18next"
+  },
+  "next": {
+    "module": "next@13.3.1",
+    "version": "13.3.1",
+    "licenses": "MIT",
+    "repository": "https://github.com/vercel/next.js"
+  },
   "npm-check-updates": {
     "module": "npm-check-updates@16.10.9",
     "version": "16.10.9",
@@ -133,6 +174,52 @@
     "publisher": "Toru Nagashima",
     "licenses": "MIT",
     "repository": "https://github.com/mysticatea/npm-run-all"
+  },
+  "react-color": {
+    "module": "react-color@2.19.3",
+    "version": "2.19.3",
+    "publisher": "case",
+    "licenses": "MIT",
+    "repository": "https://github.com/casesandberg/react-color"
+  },
+  "react-dom": {
+    "module": "react-dom@18.2.0",
+    "version": "18.2.0",
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react"
+  },
+  "react-hook-form": {
+    "module": "react-hook-form@7.43.9",
+    "version": "7.43.9",
+    "licenses": "MIT",
+    "repository": "https://github.com/react-hook-form/react-hook-form"
+  },
+  "react-i18next": {
+    "module": "react-i18next@12.2.0",
+    "version": "12.2.0",
+    "publisher": "Jan Mühlemann",
+    "licenses": "MIT",
+    "repository": "https://github.com/i18next/react-i18next"
+  },
+  "react-icons": {
+    "module": "react-icons@4.8.0",
+    "version": "4.8.0",
+    "publisher": "Goran Gajic",
+    "licenses": "MIT",
+    "repository": "https://github.com/react-icons/react-icons"
+  },
+  "react-tabs": {
+    "module": "react-tabs@6.0.1",
+    "version": "6.0.1",
+    "publisher": "Matt Zabriskie",
+    "licenses": "MIT",
+    "repository": "https://github.com/reactjs/react-tabs"
+  },
+  "react": {
+    "module": "react@18.2.0",
+    "version": "18.2.0",
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react"
   },
   "reset-css": {
     "module": "reset-css@5.0.1",
@@ -168,5 +255,18 @@
     "publisher": "Microsoft Corp.",
     "licenses": "Apache-2.0",
     "repository": "https://github.com/Microsoft/TypeScript"
+  },
+  "uuid": {
+    "module": "uuid@9.0.0",
+    "version": "9.0.0",
+    "licenses": "MIT",
+    "repository": "https://github.com/uuidjs/uuid"
+  },
+  "zod": {
+    "module": "zod@3.21.4",
+    "version": "3.21.4",
+    "publisher": "Colin McDonnell",
+    "licenses": "MIT",
+    "repository": "https://github.com/colinhacks/zod"
   }
 }

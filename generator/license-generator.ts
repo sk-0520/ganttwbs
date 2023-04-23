@@ -5,10 +5,13 @@ import * as checker from "license-checker";
 
 const rootDirectoryPath = path.resolve(__dirname, "..");
 const packageJsonFilePath = path.join(rootDirectoryPath, "package.json");
-const outputFilePath = path.join(rootDirectoryPath, "src", "models", "data", "license.json");
+const outputFilePath = path.join(rootDirectoryPath, "src", "models", "data", "generator", "license.json");
 
 const json = JSON.parse(fs.readFileSync(packageJsonFilePath).toString());
-const devDependencies = new Set(Object.keys(json["devDependencies"]));
+const devDependencies = new Set([
+	...Object.keys(json["dependencies"]),
+	...Object.keys(json["devDependencies"])
+]);
 
 checker.init({
 	start: rootDirectoryPath,
