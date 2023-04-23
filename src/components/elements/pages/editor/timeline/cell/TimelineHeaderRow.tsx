@@ -17,7 +17,7 @@ interface Props {
 	children: ReactNode;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const TimelineHeaderRow: NextPage<Props> = (props: Props) => {
 
 	const [dropEventClassName, setDropEventClassName] = useState("");
 	const [mouseEnterClassName/*, setMouseEnterClassName*/] = useState("");
@@ -73,4 +73,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default TimelineHeaderRow;

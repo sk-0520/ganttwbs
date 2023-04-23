@@ -15,7 +15,7 @@ interface Props {
 	callbackClickBeginDate?(): void;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const WorkRangeCells: NextPage<Props> = (props: Props) => {
 
 	const selectOrClickClassName = props.selectable ? "selectable" : "clickable";
 
@@ -67,4 +67,4 @@ const Component: NextPage<Props> = (props: Props) => {
 		);
 };
 
-export default Component;
+export default WorkRangeCells;

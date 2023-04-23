@@ -12,7 +12,7 @@ interface Props {
  * ラベルで囲ったり囲わなかったり。
  * @param props
  */
-const Component: NextPage<Props> = (props: Props) => {
+const DynamicLabel: NextPage<Props> = (props: Props) => {
 	return (
 		props.wrap
 			? (
@@ -25,4 +25,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default DynamicLabel;

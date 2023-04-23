@@ -7,7 +7,7 @@ import { SettingContext } from "@/models/data/context/SettingContext";
 import { Color, WeekDay } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 
-const Component: NextPage = () => {
+const ThemeCalendarSettingEditor: NextPage = () => {
 	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
@@ -87,4 +87,4 @@ const Component: NextPage = () => {
 	);
 };
 
-export default Component;
+export default ThemeCalendarSettingEditor;

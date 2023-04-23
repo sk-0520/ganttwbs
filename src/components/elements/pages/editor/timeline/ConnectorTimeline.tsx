@@ -25,7 +25,7 @@ interface Props extends EditProps {
 
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const ConnectorTimeline: NextPage<Props> = (props: Props) => {
 
 	if (!props.currentTimeline.previous.length) {
 		return null;
@@ -202,4 +202,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default ConnectorTimeline;

@@ -5,7 +5,7 @@ import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
 
-const Component: NextPage = () => {
+const ThemeTimelineSettingEditor: NextPage = () => {
 	const settingContext = useContext(SettingContext);
 
 	const [group, setGroup] = useState(settingContext.theme.timeline.group);
@@ -80,4 +80,4 @@ const Component: NextPage = () => {
 	);
 };
 
-export default Component;
+export default ThemeTimelineSettingEditor;

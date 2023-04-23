@@ -17,7 +17,7 @@ interface Props {
 	timelineStore: TimelineStore;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const HighlightTimeline: NextPage<Props> = (props: Props) => {
 
 	const [visible, setVisible] = useState(false);
 	const [y, setY] = useState(0);
@@ -61,4 +61,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	return <></>;
 };
 
-export default Component;
+export default HighlightTimeline;

@@ -12,7 +12,7 @@ interface Props {
 	callbackChangeMember(memberId: MemberId, memberName: string): void;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const ResourceCell: NextPage<Props> = (props: Props) => {
 	const groups = [...props.groups]
 		.sort((a, b) => a.name.localeCompare(b.name));
 	function toMemberOptions(members: ReadonlyArray<Member>): Array<ReactNode> {
@@ -71,4 +71,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default ResourceCell;

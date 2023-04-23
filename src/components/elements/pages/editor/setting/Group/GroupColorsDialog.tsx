@@ -14,7 +14,7 @@ interface Props {
 	callbackClosed(colors: Map<MemberId, Color>): void
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const GroupColorsDialog: NextPage<Props> = (props: Props) => {
 	const [choiceBaseColor, setChoiceBaseColor] = useState<Color>("#ff0000");
 	const [choiceColors, setChoiceColors] = useState<Map<MemberId, TinyColor>>(new Map(
 		props.choiceColorGroup.members.map(a => [a.id, new TinyColor(a.color)])
@@ -144,4 +144,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default GroupColorsDialog;

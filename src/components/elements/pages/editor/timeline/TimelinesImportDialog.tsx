@@ -16,7 +16,7 @@ interface Props {
 	callbackClose(timeline: GroupTimeline | null): void;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const TimelinesImportDialog: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
 
 	const [subject, setSubject] = useState("新規タスク");
@@ -118,7 +118,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default TimelinesImportDialog;
 
 function convertLines(contents: string) {
 	return Strings.splitLines(contents)

@@ -11,7 +11,7 @@ interface Props {
 	callbackRemoveMember(member: MemberSetting): void;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const MemberEditor: NextPage<Props> = (props: Props) => {
 
 	const [name, setName] = useState(props.member.name);
 	const [priceCost, setPriceCost] = useState(props.member.priceCost);
@@ -81,4 +81,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default MemberEditor;

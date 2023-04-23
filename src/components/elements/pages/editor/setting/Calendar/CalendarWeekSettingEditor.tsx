@@ -5,7 +5,7 @@ import { useLocale } from "@/locales/locale";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { Settings } from "@/models/Settings";
 
-const Component: NextPage = () => {
+const CalendarWeekSettingEditor: NextPage = () => {
 	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
@@ -29,4 +29,4 @@ const Component: NextPage = () => {
 	);
 };
 
-export default Component;
+export default CalendarWeekSettingEditor;

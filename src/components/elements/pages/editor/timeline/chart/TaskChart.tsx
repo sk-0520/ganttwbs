@@ -10,7 +10,7 @@ interface Props extends ChartProps {
 	progress: Progress;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const TaskChart: NextPage<Props> = (props: Props) => {
 
 	if (!props.area.timeSpanRange) {
 		const padding = props.area.height * 0.2;
@@ -58,4 +58,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default TaskChart;

@@ -12,7 +12,7 @@ import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends GanttChartTimelineProps { }
 
-const Component: NextPage<Props> = (props: Props) => {
+const GanttChartTimeline: NextPage<Props> = (props: Props) => {
 
 	const [successWorkRange, setSuccessWorkRange] = useState<SuccessWorkRange | null>();
 
@@ -77,4 +77,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default GanttChartTimeline;

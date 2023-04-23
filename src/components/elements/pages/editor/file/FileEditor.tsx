@@ -21,7 +21,7 @@ interface Props {
 	editData: EditorData;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const FileEditor: NextPage<Props> = (props: Props) => {
 	const { configuration, editData } = props;
 
 	const locale = useLocale();
@@ -139,4 +139,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default FileEditor;

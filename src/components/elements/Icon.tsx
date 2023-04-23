@@ -82,7 +82,7 @@ interface Props {
 	title?: string;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const Icon: NextPage<Props> = (props: Props) => {
 	const factory = Icons[props.kind];
 
 	return (
@@ -92,4 +92,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default Icon;

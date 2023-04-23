@@ -16,7 +16,7 @@ interface Props {
 	deleteItem: () => void;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const ControlsCell: NextPage<Props> = (props: Props) => {
 	const [visibleControls, setVisibleControls] = useState(false);
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 
@@ -194,4 +194,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default ControlsCell;

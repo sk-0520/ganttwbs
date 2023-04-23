@@ -21,7 +21,7 @@ interface Props extends EditProps {
 	updateRelations: () => void;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const TimelineItems: NextPage<Props> = (props: Props) => {
 	return (
 		<div id='timelines'>
 			<table>
@@ -68,4 +68,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default TimelineItems;

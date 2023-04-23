@@ -17,7 +17,7 @@ interface Props extends EditProps {
 	timelineStore: TimelineStore;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const CrossHeader: NextPage<Props> = (props: Props) => {
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 
@@ -138,4 +138,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default CrossHeader;

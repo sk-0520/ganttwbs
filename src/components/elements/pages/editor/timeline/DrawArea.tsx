@@ -15,7 +15,7 @@ interface Props {
 	timelineStore: TimelineStore;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const DrawArea: NextPage<Props> = (props: Props) => {
 
 	const crossHeader = document.getElementById("cross-header");
 	if (!crossHeader) {
@@ -46,4 +46,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default DrawArea;

@@ -16,7 +16,7 @@ interface Props {
 /**
  * @param props
  */
-const Component: NextPage<Props> = (props: Props) => {
+const Overlay: NextPage<Props> = (props: Props) => {
 
 	function handleHide() {
 		if(props.callBackHidden) {
@@ -38,4 +38,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default Overlay;

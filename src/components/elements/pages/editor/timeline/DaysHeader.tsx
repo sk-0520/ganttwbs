@@ -17,7 +17,7 @@ interface Props extends EditProps {
 	calendarInfo: CalendarInfo;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const DaysHeader: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
 
 	const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
@@ -119,7 +119,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default DaysHeader;
 
 function getWeekDayClassName(date: DateTime, regulars: Holiday["regulars"], theme: Theme): string {
 

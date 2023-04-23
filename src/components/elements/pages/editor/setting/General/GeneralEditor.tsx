@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { SettingContext } from "@/models/data/context/SettingContext";
 
 
-const Component: NextPage = () => {
+const GeneralEditor: NextPage = () => {
 	const settingContext = useContext(SettingContext);
 
 	return (
@@ -45,5 +45,5 @@ const Component: NextPage = () => {
 	);
 };
 
-export default Component;
+export default GeneralEditor;
 

@@ -10,7 +10,7 @@ interface Props {
 	callbackChangeValue?: (value: number) => void;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const ProgressCell: NextPage<Props> = (props: Props) => {
 	return (
 		<td className="timeline-cell timeline-progress">
 			<input
@@ -28,4 +28,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default ProgressCell;

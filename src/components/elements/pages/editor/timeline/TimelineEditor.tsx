@@ -30,7 +30,7 @@ import { Timelines } from "@/models/Timelines";
 
 interface Props extends EditProps { }
 
-const Component: NextPage<Props> = (props: Props) => {
+const TimelineEditor: NextPage<Props> = (props: Props) => {
 
 	const workRangesCache = new Map<TimelineId, WorkRange>();
 
@@ -570,7 +570,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default TimelineEditor;
 
 function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 

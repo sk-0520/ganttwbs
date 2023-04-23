@@ -36,7 +36,7 @@ interface Props extends EditProps {
 	calendarInfo: CalendarInfo;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const AnyTimelineEditor: NextPage<Props> = (props: Props) => {
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
@@ -422,4 +422,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default AnyTimelineEditor;

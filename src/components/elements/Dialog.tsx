@@ -14,7 +14,7 @@ interface Props {
 	children: React.ReactNode;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const Dialog: NextPage<Props> = (props: Props) => {
 	const refDialog = useRef<HTMLDialogElement>(null);
 
 	useEffect(() => {
@@ -64,4 +64,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default Dialog;

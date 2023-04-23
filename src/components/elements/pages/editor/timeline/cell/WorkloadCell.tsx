@@ -9,7 +9,7 @@ interface Props {
 	callbackChangeValue?: (value: number) => void;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const WorkloadCell: NextPage<Props> = (props: Props) => {
 	return (
 		<td className='timeline-cell timeline-workload'>
 			<input
@@ -26,4 +26,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default WorkloadCell;

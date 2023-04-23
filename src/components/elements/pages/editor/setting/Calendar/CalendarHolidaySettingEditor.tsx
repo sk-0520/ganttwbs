@@ -6,7 +6,7 @@ import { useLocale } from "@/locales/locale";
 import { CssHelper } from "@/models/CssHelper";
 import { SettingContext } from "@/models/data/context/SettingContext";
 
-const Component: NextPage = () => {
+const CalendarHolidaySettingEditor: NextPage = () => {
 	const settingContext = useContext(SettingContext);
 	const locale = useLocale();
 
@@ -59,4 +59,4 @@ const Component: NextPage = () => {
 	);
 };
 
-export default Component;
+export default CalendarHolidaySettingEditor;

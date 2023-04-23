@@ -21,7 +21,7 @@ interface Props extends EditProps {
 	updateRelations: () => void;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const TimelineViewer: NextPage<Props> = (props: Props) => {
 
 	const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
 
@@ -175,4 +175,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default TimelineViewer;

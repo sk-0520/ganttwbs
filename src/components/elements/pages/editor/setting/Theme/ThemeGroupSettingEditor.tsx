@@ -18,7 +18,7 @@ const reset = {
 	}
 } as const;
 
-const Component: NextPage = () => {
+const ThemeGroupSettingEditor: NextPage = () => {
 	const settingContext = useContext(SettingContext);
 
 	const [groups, setGroups] = useState(settingContext.theme.groups);
@@ -174,4 +174,4 @@ const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a.toHe
 
 };
 
-export default Component;
+export default ThemeGroupSettingEditor;

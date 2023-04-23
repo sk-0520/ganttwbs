@@ -10,7 +10,7 @@ import { IdFactory } from "@/models/IdFactory";
 
 //TODO: data属性の使用はやめれるはず
 
-const Component: NextPage = () => {
+const GroupsEditor: NextPage = () => {
 	const settingContext = useContext(SettingContext);
 
 	const [newGroupName, setNewGroupName] = useState("");
@@ -230,5 +230,5 @@ const Component: NextPage = () => {
 	);
 };
 
-export default Component;
+export default GroupsEditor;
 

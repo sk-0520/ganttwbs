@@ -22,7 +22,7 @@ interface Props {
 	callbackChangePrevious: (isSelected: boolean) => void;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const IdCell: NextPage<Props> = (props: Props) => {
 	const className = "_dynamic_programmable_indexNumber_level-" + props.timelineIndex.level;
 
 	const canSelect = props.selectingBeginDate && (
@@ -77,4 +77,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default IdCell;

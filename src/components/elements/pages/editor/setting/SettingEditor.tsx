@@ -28,7 +28,7 @@ interface Props {
 	editData: EditorData;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const SettingEditor: NextPage<Props> = (props: Props) => {
 	const initTabIndex = 0;
 	//const initTabIndex = 3;
 
@@ -106,7 +106,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default SettingEditor;
 
 function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnly]: HolidayEvent }, timeZone: TimeZone): string {
 	return Object.entries(items)

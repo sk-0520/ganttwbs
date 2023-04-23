@@ -19,7 +19,7 @@ interface Props {
 	htmlFor: string;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const RelationCell: NextPage<Props> = (props: Props) => {
 	let relations: Relations = Relations.Unknown;
 
 	if (Settings.maybeTaskTimeline(props.currentTimeline)) {
@@ -55,4 +55,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default RelationCell;

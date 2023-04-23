@@ -16,7 +16,7 @@ interface Props {
 	callbackChanged?: (color: Color) => void | undefined;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const PlainColorPicker: NextPage<Props> = (props: Props) => {
 
 	const [isVisible, setIsVisible] = useState(false);
 	const [color, setColor] = useState(props.color);
@@ -77,4 +77,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default PlainColorPicker;
