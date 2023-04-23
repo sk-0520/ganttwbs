@@ -12,9 +12,12 @@ import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
+import { SettingProps } from "@/models/data/props/SettingProps";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { DeepReadonly } from "ts-essentials";
 
 
-interface Props extends EditProps {
+interface Props extends ConfigurationProps, SettingProps {
 	timelineStore: TimelineStore;
 	calendarInfo: CalendarInfo;
 }
@@ -79,7 +82,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 					<tr className='day'>
 						{dates.map(a => {
 							const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
-							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday.regulars, holidayEventValue, props.editData.setting.theme);
+							const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
 							const className = getCellClassName(classNames);
 
 							return (
@@ -92,7 +95,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 					<tr className='week'>
 						{dates.map(a => {
 							const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
-							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday.regulars, holidayEventValue, props.editData.setting.theme);
+							const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
 							const className = getCellClassName(classNames);
 
 							return (
@@ -105,7 +108,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 					<tr className='pin'>
 						{dates.map(a => {
 							const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
-							const classNames = getDayClassNames(a, props.editData.setting.calendar.holiday.regulars, holidayEventValue, props.editData.setting.theme);
+							const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
 							const className = getCellClassName(classNames);
 
 							return (
@@ -123,7 +126,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 
 export default DaysHeader;
 
-function getWeekDayClassName(date: DateTime, regulars: Holiday["regulars"], theme: Theme): string {
+function getWeekDayClassName(date: DateTime, regulars: Readonly<Holiday["regulars"]>, theme: DeepReadonly<Theme>): string {
 
 	for (const regular of regulars) {
 		const weekday = Settings.toWeekDay(date.week);
@@ -135,7 +138,7 @@ function getWeekDayClassName(date: DateTime, regulars: Holiday["regulars"], them
 	return "";
 }
 
-function getHolidayClassName(date: DateTime, holidayEventValue: HolidayEventMapValue | null, theme: Theme): string {
+function getHolidayClassName(date: DateTime, holidayEventValue: HolidayEventMapValue | null, theme: DeepReadonly<Theme>): string {
 	if (holidayEventValue) {
 		if (holidayEventValue) {
 			return "_dynamic_theme_holiday_events_" + holidayEventValue.event.kind;
@@ -145,7 +148,7 @@ function getHolidayClassName(date: DateTime, holidayEventValue: HolidayEventMapV
 	return "";
 }
 
-function getDayClassNames(date: DateTime, regularHolidays: Holiday["regulars"], holidayEventValue: HolidayEventMapValue | null, theme: Theme): Array<string> {
+function getDayClassNames(date: DateTime, regularHolidays: Readonly<Holiday["regulars"]>, holidayEventValue: HolidayEventMapValue | null, theme: DeepReadonly<Theme>): Array<string> {
 	const weekClassName = getWeekDayClassName(date, regularHolidays, theme);
 	const holidayClassName = getHolidayClassName(date, holidayEventValue, theme);
 

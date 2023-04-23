@@ -9,8 +9,10 @@ import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
+import { SettingProps } from "@/models/data/props/SettingProps";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 
-interface Props extends EditProps {
+interface Props extends ConfigurationProps, SettingProps {
 	calendarInfo: CalendarInfo;
 	timelineStore: TimelineStore;
 }
@@ -63,7 +65,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	return (
 		<div id='cross-header'>
 			<div className="header">
-				<h1>{props.editData.setting.name}</h1>
+				<h1>{props.setting.name}</h1>
 			</div>
 			<div className="content">
 				<div className='operation'>

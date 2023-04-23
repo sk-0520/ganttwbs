@@ -4,6 +4,7 @@ import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 import { Calendar, Holiday } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
+import { DeepReadonly } from "ts-essentials";
 
 export abstract class Calendars {
 
@@ -47,7 +48,7 @@ export abstract class Calendars {
 	 * @param calendarRange
 	 * @returns
 	 */
-	public static getCalendarRangeDays(calendarRange: Readonly<CalendarRange>): number {
+	public static getCalendarRangeDays(calendarRange: DeepReadonly<CalendarRange>): number {
 		const diff = calendarRange.from.diff(calendarRange.to);
 		const days = diff.totalDays + 1;
 		return days;

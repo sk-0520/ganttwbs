@@ -24,14 +24,16 @@ import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Types } from "@/models/Types";
 import { WorkRanges } from "@/models/WorkRanges";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { SettingProps } from "@/models/data/props/SettingProps";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 
-interface Props extends EditProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
 	currentTimeline: AnyTimeline;
-	timelineStore: TimelineStore;
 	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
-	calendarInfo: CalendarInfo;
 }
 
 const AnyTimelineEditor: FC<Props> = (props: Props) => {
@@ -307,7 +309,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			/>
 			<ResourceCell
 				currentTimeline={props.currentTimeline}
-				groups={props.editData.setting.groups}
+				groups={props.setting.groups}
 				selectedMemberId={memberId}
 				disabled={Types.toBoolean(props.selectingBeginDate)}
 				callbackChangeMember={handleChangeMember}

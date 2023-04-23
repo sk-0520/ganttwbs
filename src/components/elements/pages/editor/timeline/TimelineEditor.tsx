@@ -531,13 +531,13 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 			<CrossHeader
 				configuration={props.configuration}
-				editData={props.editData}
+				setting={props.editData.setting}
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
 			/>
 			<DaysHeader
 				configuration={props.configuration}
-				editData={props.editData}
+				setting={props.editData.setting}
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
 			/>

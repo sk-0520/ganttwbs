@@ -10,21 +10,21 @@ import { MemberId, TaskTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { WorkRanges } from "@/models/WorkRanges";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { SettingProps } from "@/models/data/props/SettingProps";
 
 
-interface Props extends EditProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
 	currentIndex: number;
 	currentTimeline: TaskTimeline;
 
-	calendarInfo: CalendarInfo;
 	chartSize: AreaSize;
 
 	memberMap: ReadonlyMap<MemberId, MemberMapValue>;
 
 	updateRelations: () => void;
-
-	timelineStore: TimelineStore;
-
 }
 
 const ConnectorTimeline: FC<Props> = (props: Props) => {
@@ -56,7 +56,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 	const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.from, currentWorkRange);
 	const currentChartArea = Charts.createChartArea(currentTimeSpanRange, props.currentIndex, cell, props.chartSize);
 
-	const currentColor = Charts.getTaskBackground(props.currentTimeline, props.memberMap, props.editData.setting.theme);
+	const currentColor = Charts.getTaskBackground(props.currentTimeline, props.memberMap, props.setting.theme);
 
 	return (
 		<>
@@ -72,8 +72,8 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 				}
 
 				const previewColor = Settings.maybeGroupTimeline(previousTimeline)
-					? Charts.getGroupBackground(previousTimeline, props.timelineStore.rootGroupTimeline, props.editData.setting.theme)
-					: Charts.getTaskBackground(previousTimeline, props.memberMap, props.editData.setting.theme)
+					? Charts.getGroupBackground(previousTimeline, props.timelineStore.rootGroupTimeline, props.setting.theme)
+					: Charts.getTaskBackground(previousTimeline, props.memberMap, props.setting.theme)
 					;
 
 				const previewWorkRange = props.timelineStore.workRanges.get(previousTimeline.id);

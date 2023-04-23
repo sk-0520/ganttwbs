@@ -11,12 +11,13 @@ import { MemberId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { TimeSpan } from "@/models/TimeSpan";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { SettingProps } from "@/models/data/props/SettingProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 
 
-
-interface Props extends EditProps {
-	calendarInfo: CalendarInfo;
-	timelineStore: TimelineStore;
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
 	updateRelations: () => void;
 }
 
@@ -33,7 +34,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 
 	//TODO: for しなくてもできると思うけどパッと思いつかなんだ
 	const memberMap = new Map<MemberId, MemberMapValue>();
-	for (const group of props.editData.setting.groups) {
+	for (const group of props.setting.groups) {
 		for (const member of group.members) {
 			memberMap.set(member.id, { group: group, member: member });
 		}
@@ -137,7 +138,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 						<GanttChartTimeline
 							key={a.id}
 							configuration={props.configuration}
-							editData={props.editData}
+							setting={props.setting}
 							parentGroup={null}
 							currentTimeline={a}
 							currentIndex={i}
@@ -157,7 +158,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 						<ConnectorTimeline
 							key={a.id}
 							configuration={props.configuration}
-							editData={props.editData}
+							setting={props.setting}
 							currentTimeline={a}
 							currentIndex={i}
 							calendarInfo={props.calendarInfo}

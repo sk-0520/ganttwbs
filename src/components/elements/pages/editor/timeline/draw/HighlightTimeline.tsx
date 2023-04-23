@@ -5,15 +5,15 @@ import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { Configuration } from "@/models/data/Configuration";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Types } from "@/models/Types";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 
 type Highlight = "hover" | "active";
 
-interface Props {
-	configuration: Configuration;
+interface Props extends ConfigurationProps, TimelineStoreProps, CalendarInfoProps {
 	areaSize: AreaSize;
 	highlight: Highlight;
-	calendarInfo: CalendarInfo;
-	timelineStore: TimelineStore;
 }
 
 const HighlightTimeline: FC<Props> = (props: Props) => {

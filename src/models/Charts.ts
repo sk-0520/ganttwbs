@@ -8,6 +8,7 @@ import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
+import { DeepReadonly } from "ts-essentials";
 
 export abstract class Charts {
 
@@ -23,7 +24,7 @@ export abstract class Charts {
 		return "url(#" + target + ")";
 	}
 
-	public static getTimeSpanRange(startDate: DateTime, workRange: SuccessWorkRange): TimeSpanRange {
+	public static getTimeSpanRange(startDate: Readonly<DateTime>, workRange: SuccessWorkRange): TimeSpanRange {
 		const startDiffTime = workRange.begin.getTime() - startDate.getTime();
 		const startDiffSpan = TimeSpan.fromMilliseconds(startDiffTime);
 		//const startDiffDays = startDiffSpan.totalDays;
@@ -54,7 +55,7 @@ export abstract class Charts {
 		return result;
 	}
 
-	public static getGroupBackground(timeline: GroupTimeline, rootGroupTimeline: Readonly<GroupTimeline>, theme: Theme): string {
+	public static getGroupBackground(timeline: GroupTimeline, rootGroupTimeline: Readonly<GroupTimeline>, theme: DeepReadonly<Theme>): string {
 		// 未設定とグループラインの扱いが微妙過ぎる
 		const parents = Timelines.getParentGroups(timeline, rootGroupTimeline);
 		if (parents.length <= theme.groups.length) {
@@ -68,7 +69,7 @@ export abstract class Charts {
 		return theme.timeline.group;
 	}
 
-	public static getTaskBackground(timeline: TaskTimeline, memberMap: ReadonlyMap<MemberId, MemberMapValue>, theme: Theme): string {
+	public static getTaskBackground(timeline: TaskTimeline, memberMap: ReadonlyMap<MemberId, MemberMapValue>, theme: DeepReadonly<Theme>): string {
 		const member = memberMap.get(timeline.memberId);
 		if (member) {
 			return member.member.color;
