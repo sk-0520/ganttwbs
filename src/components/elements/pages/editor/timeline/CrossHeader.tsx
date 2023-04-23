@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useState } from "react";
 
-import Icon, { IconKind } from "@/components/elements/Icon";
+import IconImage, { IconKind } from "@/components/elements/Icon";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
@@ -74,7 +74,7 @@ const CrossHeader: NextPage<Props> = (props: Props) => {
 								type='button'
 								onClick={handleAddEmptyGroup}
 							>
-								<Icon
+								<IconImage
 									kind={IconKind.TimelineAddGroup}
 								/>
 								add new group
@@ -85,7 +85,7 @@ const CrossHeader: NextPage<Props> = (props: Props) => {
 								type='button'
 								onClick={handleAddEmptyTask}
 							>
-								<Icon
+								<IconImage
 									kind={IconKind.TimelineAddTask}
 								/>
 								add new task
@@ -96,7 +96,7 @@ const CrossHeader: NextPage<Props> = (props: Props) => {
 								type='button'
 								onClick={handleShowInputTimeline}
 							>
-								<Icon
+								<IconImage
 									kind={IconKind.TimelineImport}
 								/>
 								add timelines
@@ -106,7 +106,7 @@ const CrossHeader: NextPage<Props> = (props: Props) => {
 							<button
 								onClick={ev => scrollFromDate(DateTime.today(props.calendarInfo.timeZone))}
 							>
-								<Icon
+								<IconImage
 									kind={IconKind.CalendarToday}
 								/>
 								けふ

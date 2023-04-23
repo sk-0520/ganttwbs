@@ -113,7 +113,7 @@ interface Props {
 	title?: string;
 }
 
-const Icon: NextPage<Props> = (props: Props) => {
+const IconImage: NextPage<Props> = (props: Props) => {
 	const factory = Icons[props.kind];
 
 	return (
@@ -123,4 +123,4 @@ const Icon: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Icon;
+export default IconImage;

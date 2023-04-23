@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useState, useEffect, DragEvent } from "react";
 
-import Icon, { IconKind } from "@/components/elements/Icon";
+import IconImage, { IconKind } from "@/components/elements/Icon";
 import ControlsCell from "@/components/elements/pages/editor/timeline/cell/ControlsCell";
 import IdCell from "@/components/elements/pages/editor/timeline/cell/IdCell";
 import ProgressCell from "@/components/elements/pages/editor/timeline/cell/ProgressCell";
@@ -332,7 +332,7 @@ const AnyTimelineEditor: NextPage<Props> = (props: Props) => {
 								</li>
 								<li>
 									<button type="button" onClick={handleSubmitPrevious}>
-										<Icon
+										<IconImage
 											kind={IconKind.ConfirmPositive}
 											fill="green"
 											title="確定"
@@ -341,7 +341,7 @@ const AnyTimelineEditor: NextPage<Props> = (props: Props) => {
 								</li>
 								<li>
 									<button type="button" onClick={handleCancelPrevious}>
-										<Icon
+										<IconImage
 											kind={IconKind.ConfirmCancel}
 											title="キャンセル"
 										/>
@@ -354,7 +354,7 @@ const AnyTimelineEditor: NextPage<Props> = (props: Props) => {
 									<ul>
 										<li>
 											<button onClick={handleSubmitAttachBeforeTimeline}>
-												<Icon
+												<IconImage
 													kind={IconKind.RelationJoin}
 												/>
 												直近項目に紐づける
@@ -367,7 +367,7 @@ const AnyTimelineEditor: NextPage<Props> = (props: Props) => {
 									<ul>
 										<li>
 											<button onClick={handleAttachBeforeTimeline}>
-												<Icon
+												<IconImage
 													kind={IconKind.RelationJoin}
 												/>
 												直近項目に紐づける
@@ -375,7 +375,7 @@ const AnyTimelineEditor: NextPage<Props> = (props: Props) => {
 										</li>
 										<li>
 											<button onClick={handleClearPrevious}>
-												<Icon
+												<IconImage
 													kind={IconKind.RelationClear}
 												/>
 												紐づけを解除
@@ -383,7 +383,7 @@ const AnyTimelineEditor: NextPage<Props> = (props: Props) => {
 										</li>
 										<li>
 											<button onClick={handleClearStatic}>
-												<Icon
+												<IconImage
 													kind={IconKind.Clear}
 												/>
 												固定日付をクリア

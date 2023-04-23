@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { NextPage } from "next";
 import { DragEvent } from "react";
 
-import Icon, { IconKind } from "@/components/elements/Icon";
+import IconImage, { IconKind } from "@/components/elements/Icon";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { AnyTimeline } from "@/models/data/Setting";
@@ -56,7 +56,7 @@ const IdCell: NextPage<Props> = (props: Props) => {
 								checked={props.isSelectedPrevious}
 								onChange={ev => props.callbackChangePrevious(ev.target.checked)}
 							/>
-							<Icon
+							<IconImage
 								kind={props.isSelectedPrevious ? IconKind.CheckBoxTimelinePreviousOn : IconKind.CheckBoxTimelinePreviousOff}
 								fill={canSelect ? undefined : "gray"}
 							/>
@@ -64,8 +64,8 @@ const IdCell: NextPage<Props> = (props: Props) => {
 					) :
 					(
 						Settings.maybeGroupTimeline(props.currentTimeline)
-							? <Icon kind={IconKind.TimelineGroup} />
-							: <Icon kind={IconKind.TimelineTask} />
+							? <IconImage kind={IconKind.TimelineGroup} />
+							: <IconImage kind={IconKind.TimelineTask} />
 					)
 				}
 				<span className={className}>

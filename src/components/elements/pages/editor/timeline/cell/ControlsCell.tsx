@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { NextPage } from "next";
 import { useState } from "react";
 
-import Icon, { IconKind } from "@/components/elements/Icon";
+import IconImage, { IconKind } from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
@@ -68,7 +68,7 @@ const ControlsCell: NextPage<Props> = (props: Props) => {
 				disabled={props.disabled}
 				onClick={handleStartControls}
 			>
-				<Icon
+				<IconImage
 					kind={IconKind.Operation}
 				/>
 			</button>
@@ -98,7 +98,7 @@ const ControlsCell: NextPage<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleMoveItem(true)}
 									>
-										<Icon
+										<IconImage
 											kind={IconKind.MoveUp}
 										/>
 										上へ
@@ -109,7 +109,7 @@ const ControlsCell: NextPage<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleMoveItem(false)}
 									>
-										<Icon
+										<IconImage
 											kind={IconKind.MoveDown}
 										/>
 										下へ
@@ -133,7 +133,7 @@ const ControlsCell: NextPage<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleAddItem("group")}
 									>
-										<Icon
+										<IconImage
 											kind={IconKind.TimelineAddGroup}
 										/>
 										グループ
@@ -144,7 +144,7 @@ const ControlsCell: NextPage<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleAddItem("task")}
 									>
-										<Icon
+										<IconImage
 											kind={IconKind.TimelineAddTask}
 										/>
 										タスク
@@ -155,7 +155,7 @@ const ControlsCell: NextPage<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleShowTimelinesImportDialog()}
 									>
-										<Icon
+										<IconImage
 											kind={IconKind.TimelineImport}
 										/>
 										一括
@@ -172,7 +172,7 @@ const ControlsCell: NextPage<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleDeleteItem()}
 									>
-										<Icon
+										<IconImage
 											kind={IconKind.Remove}
 										/>
 										削除

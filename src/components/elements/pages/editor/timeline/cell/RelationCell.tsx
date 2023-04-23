@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 
 import DynamicLabel from "@/components/elements/DynamicLabel";
-import Icon, { IconKind } from "@/components/elements/Icon";
+import IconImage, { IconKind } from "@/components/elements/Icon";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 
@@ -40,13 +40,13 @@ const RelationCell: NextPage<Props> = (props: Props) => {
 			>
 				{
 					relations === (Relations.Static | Relations.Previous)
-						? <Icon kind={IconKind.RelationMix} fill={null} title="前工程 + 開始固定" />
+						? <IconImage kind={IconKind.RelationMix} fill={null} title="前工程 + 開始固定" />
 						: relations === Relations.Static
-							? <Icon kind={IconKind.RelationStatic} fill={null} title="開始固定" />
+							? <IconImage kind={IconKind.RelationStatic} fill={null} title="開始固定" />
 							: relations === Relations.Previous
-								? <Icon kind={IconKind.RelationPrevious} fill={null} title="前工程あり" />
+								? <IconImage kind={IconKind.RelationPrevious} fill={null} title="前工程あり" />
 								: relations === Relations.Empty
-									? <Icon kind={IconKind.TimelineGroup} fill={null} />
+									? <IconImage kind={IconKind.TimelineGroup} fill={null} />
 									: "💩"
 				}
 			</DynamicLabel>
