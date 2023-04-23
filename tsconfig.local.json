@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"module": "CommonJS",
+		"allowSyntheticDefaultImports": true,
+	},
+	"ts-node": {
+		"files": true
+	}
+}
