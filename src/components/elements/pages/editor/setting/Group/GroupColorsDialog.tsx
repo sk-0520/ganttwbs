@@ -1,6 +1,5 @@
 import { TinyColor, random } from "@ctrl/tinycolor";
-import { NextPage } from "next";
-import { CSSProperties, useState } from "react";
+import { CSSProperties, FC, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
 import Colors from "@/models/Colors";
@@ -14,7 +13,7 @@ interface Props {
 	callbackClosed(colors: Map<MemberId, Color>): void
 }
 
-const GroupColorsDialog: NextPage<Props> = (props: Props) => {
+const GroupColorsDialog: FC<Props> = (props: Props) => {
 	const [choiceBaseColor, setChoiceBaseColor] = useState<Color>("#ff0000");
 	const [choiceColors, setChoiceColors] = useState<Map<MemberId, TinyColor>>(new Map(
 		props.choiceColorGroup.members.map(a => [a.id, new TinyColor(a.color)])

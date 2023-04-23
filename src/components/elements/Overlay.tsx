@@ -1,6 +1,8 @@
-import { NextPage } from "next";
+
+import { FC } from "react";
 
 import style from "@/styles/modules/components/elements/Overlay.module.scss";
+
 
 interface Props {
 	isVisible: boolean;
@@ -16,7 +18,7 @@ interface Props {
 /**
  * @param props
  */
-const Overlay: NextPage<Props> = (props: Props) => {
+const Overlay: FC<Props> = (props: Props) => {
 
 	function handleHide() {
 		if(props.callBackHidden) {

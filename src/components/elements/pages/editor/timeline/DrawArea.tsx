@@ -1,4 +1,5 @@
-import { NextPage } from "next";
+
+import { FC } from "react";
 
 import HighlightTimeline from "@/components/elements/pages/editor/timeline/draw/HighlightTimeline";
 import { Calendars } from "@/models/Calendars";
@@ -8,6 +9,7 @@ import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
 import { TimelineStore } from "@/models/store/TimelineStore";
 
+
 interface Props {
 	configuration: Configuration;
 	editData: EditorData;
@@ -15,7 +17,7 @@ interface Props {
 	timelineStore: TimelineStore;
 }
 
-const DrawArea: NextPage<Props> = (props: Props) => {
+const DrawArea: FC<Props> = (props: Props) => {
 
 	const crossHeader = document.getElementById("cross-header");
 	if (!crossHeader) {

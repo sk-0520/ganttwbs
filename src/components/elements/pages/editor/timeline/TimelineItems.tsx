@@ -1,4 +1,5 @@
-import { NextPage } from "next";
+
+import { FC } from "react";
 
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
@@ -11,6 +12,7 @@ import { IdFactory } from "@/models/IdFactory";
 import { TimelineStore } from "@/models/store/TimelineStore";
 
 
+
 interface Props extends EditProps {
 	draggingTimeline: DraggingTimeline | null;
 	dropTimeline: DropTimeline | null;
@@ -21,7 +23,7 @@ interface Props extends EditProps {
 	updateRelations: () => void;
 }
 
-const TimelineItems: NextPage<Props> = (props: Props) => {
+const TimelineItems: FC<Props> = (props: Props) => {
 	return (
 		<div id='timelines'>
 			<table>

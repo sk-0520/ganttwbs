@@ -1,6 +1,5 @@
 import { random } from "@ctrl/tinycolor";
-import { NextPage } from "next";
-import { useContext, MouseEvent, useState, Fragment } from "react";
+import { useContext, MouseEvent, useState, Fragment, FC } from "react";
 
 import GroupColorsDialog from "@/components/elements/pages/editor/setting/Group/GroupColorsDialog";
 import MemberEditor from "@/components/elements/pages/editor/setting/Group/MemberEditor";
@@ -10,7 +9,7 @@ import { IdFactory } from "@/models/IdFactory";
 
 //TODO: data属性の使用はやめれるはず
 
-const GroupsEditor: NextPage = () => {
+const GroupsEditor: FC = () => {
 	const settingContext = useContext(SettingContext);
 
 	const [newGroupName, setNewGroupName] = useState("");

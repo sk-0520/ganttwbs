@@ -1,7 +1,9 @@
-import { NextPage } from "next";
+
+import { FC } from "react";
 
 import { Progress } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
+
 
 interface Props {
 	readOnly: boolean;
@@ -10,7 +12,7 @@ interface Props {
 	callbackChangeValue?: (value: number) => void;
 }
 
-const ProgressCell: NextPage<Props> = (props: Props) => {
+const ProgressCell: FC<Props> = (props: Props) => {
 	return (
 		<td className="timeline-cell timeline-progress">
 			<input

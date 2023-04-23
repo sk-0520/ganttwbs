@@ -1,6 +1,5 @@
 import classNames from "classnames";
-import { NextPage } from "next";
-import { ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -17,7 +16,7 @@ interface Props {
 	children: ReactNode;
 }
 
-const TimelineHeaderRow: NextPage<Props> = (props: Props) => {
+const TimelineHeaderRow: FC<Props> = (props: Props) => {
 
 	const [dropEventClassName, setDropEventClassName] = useState("");
 	const [mouseEnterClassName/*, setMouseEnterClassName*/] = useState("");

@@ -1,12 +1,11 @@
 import { Editor } from "@monaco-editor/react";
-import { NextPage } from "next";
-import { ReactNode, useContext } from "react";
+import { FC, ReactNode, useContext } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { CssHelper } from "@/models/CssHelper";
 import { SettingContext } from "@/models/data/context/SettingContext";
 
-const CalendarHolidaySettingEditor: NextPage = () => {
+const CalendarHolidaySettingEditor: FC = () => {
 	const settingContext = useContext(SettingContext);
 	const locale = useLocale();
 

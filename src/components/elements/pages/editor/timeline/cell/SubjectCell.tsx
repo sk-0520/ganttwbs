@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { FC } from "react";
 
 interface Props {
 	readOnly: boolean;
@@ -7,7 +7,7 @@ interface Props {
 	callbackChangeValue: (value: string) => void;
 }
 
-const SubjectCell: NextPage<Props> = (props: Props) => {
+const SubjectCell: FC<Props> = (props: Props) => {
 	return (
 		<td className='timeline-cell timeline-subject'>
 			<input

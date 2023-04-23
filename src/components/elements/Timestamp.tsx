@@ -1,13 +1,15 @@
-import { NextPage } from "next";
+
+import { FC } from "react";
 
 import { DateTime } from "@/models/DateTime";
+
 
 interface Props {
 	date: DateTime | null;
 	format: "date" | "time" | "datetime"
 }
 
-const Timestamp: NextPage<Props> = (props: Props) => {
+const Timestamp: FC<Props> = (props: Props) => {
 	if (props.date) {
 		const values = convert(props.format);
 

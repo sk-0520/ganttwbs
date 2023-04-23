@@ -1,9 +1,8 @@
-import { NextPage } from "next";
-import { useContext } from "react";
+import { FC, useContext } from "react";
 
 import { SettingContext } from "@/models/data/context/SettingContext";
 
-const CalendarRangeSettingEditor: NextPage = () => {
+const CalendarRangeSettingEditor: FC = () => {
 	const settingContext = useContext(SettingContext);
 
 	return (

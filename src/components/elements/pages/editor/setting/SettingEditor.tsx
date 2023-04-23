@@ -1,5 +1,4 @@
-import { NextPage } from "next";
-import { FormEvent } from "react";
+import { FC, FormEvent } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
 import CalendarHolidaySettingEditor from "@/components/elements/pages/editor/setting/Calendar/CalendarHolidaySettingEditor";
@@ -28,7 +27,7 @@ interface Props {
 	editData: EditorData;
 }
 
-const SettingEditor: NextPage<Props> = (props: Props) => {
+const SettingEditor: FC<Props> = (props: Props) => {
 	const initTabIndex = 0;
 	//const initTabIndex = 3;
 

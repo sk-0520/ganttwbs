@@ -1,5 +1,4 @@
-import { NextPage } from "next";
-import { useState } from "react";
+import { FC, useState } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
@@ -16,7 +15,7 @@ interface Props extends EditProps {
 	timelineStore: TimelineStore;
 }
 
-const CrossHeader: NextPage<Props> = (props: Props) => {
+const CrossHeader: FC<Props> = (props: Props) => {
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 

@@ -1,6 +1,5 @@
 import { TinyColor, random } from "@ctrl/tinycolor";
-import { NextPage } from "next";
-import { useContext, useState } from "react";
+import { FC, useContext, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
@@ -18,7 +17,7 @@ const reset = {
 	}
 } as const;
 
-const ThemeGroupSettingEditor: NextPage = () => {
+const ThemeGroupSettingEditor: FC = () => {
 	const settingContext = useContext(SettingContext);
 
 	const [groups, setGroups] = useState(settingContext.theme.groups);

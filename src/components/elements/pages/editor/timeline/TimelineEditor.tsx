@@ -1,6 +1,5 @@
 import { TinyColor } from "@ctrl/tinycolor";
-import { NextPage } from "next";
-import { DragEvent } from "react";
+import { DragEvent, FC } from "react";
 import { ReactNode, useEffect, useState } from "react";
 
 import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
@@ -30,7 +29,7 @@ import { Timelines } from "@/models/Timelines";
 
 interface Props extends EditProps { }
 
-const TimelineEditor: NextPage<Props> = (props: Props) => {
+const TimelineEditor: FC<Props> = (props: Props) => {
 
 	const workRangesCache = new Map<TimelineId, WorkRange>();
 

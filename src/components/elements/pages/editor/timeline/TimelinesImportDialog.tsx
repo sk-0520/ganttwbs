@@ -1,6 +1,5 @@
 import { Editor } from "@monaco-editor/react";
-import { NextPage } from "next";
-import { useId, useState } from "react";
+import { FC, useId, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
 import { useLocale } from "@/locales/locale";
@@ -16,7 +15,7 @@ interface Props {
 	callbackClose(timeline: GroupTimeline | null): void;
 }
 
-const TimelinesImportDialog: NextPage<Props> = (props: Props) => {
+const TimelinesImportDialog: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
 	const [subject, setSubject] = useState("新規タスク");

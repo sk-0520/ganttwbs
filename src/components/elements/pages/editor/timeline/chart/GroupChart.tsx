@@ -1,15 +1,17 @@
-import { NextPage } from "next";
+
+import { FC } from "react";
 
 import { ChartProps } from "@/models/data/props/ChartProps";
 import { GroupTimeline } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
 
 
+
 interface Props extends ChartProps {
 	currentTimeline: GroupTimeline;
 }
 
-const GroupChart: NextPage<Props> = (props: Props) => {
+const GroupChart: FC<Props> = (props: Props) => {
 
 	if (!props.area.timeSpanRange) {
 		const padding = props.area.height * 0.2;

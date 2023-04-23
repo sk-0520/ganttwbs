@@ -1,5 +1,4 @@
-import { NextPage } from "next";
-import { useState, useEffect, DragEvent } from "react";
+import { useState, useEffect, DragEvent, FC } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
 import ControlsCell from "@/components/elements/pages/editor/timeline/cell/ControlsCell";
@@ -23,8 +22,8 @@ import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
-import { WorkRanges } from "@/models/WorkRanges";
 import { Types } from "@/models/Types";
+import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends EditProps {
 	currentTimeline: AnyTimeline;
@@ -35,7 +34,7 @@ interface Props extends EditProps {
 	calendarInfo: CalendarInfo;
 }
 
-const AnyTimelineEditor: NextPage<Props> = (props: Props) => {
+const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);

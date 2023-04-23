@@ -1,6 +1,5 @@
 import classNames from "classnames";
-import { NextPage } from "next";
-import { DragEvent } from "react";
+import { DragEvent, FC } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
@@ -21,7 +20,7 @@ interface Props {
 	callbackChangePrevious: (isSelected: boolean) => void;
 }
 
-const IdCell: NextPage<Props> = (props: Props) => {
+const IdCell: FC<Props> = (props: Props) => {
 	const className = "_dynamic_programmable_indexNumber_level-" + props.timelineIndex.level;
 
 	const canSelect = props.selectingBeginDate && (

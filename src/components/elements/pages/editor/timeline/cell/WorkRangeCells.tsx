@@ -1,10 +1,11 @@
 import classNames from "classnames";
-import { NextPage } from "next";
+import { FC } from "react";
 
 import DynamicLabel from "@/components/elements/DynamicLabel";
 import Timestamp from "@/components/elements/Timestamp";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
+
 
 interface Props {
 	workRangeKind: WorkRangeKind;
@@ -15,7 +16,7 @@ interface Props {
 	callbackClickBeginDate?(): void;
 }
 
-const WorkRangeCells: NextPage<Props> = (props: Props) => {
+const WorkRangeCells: FC<Props> = (props: Props) => {
 
 	const selectOrClickClassName = props.selectable ? "selectable" : "clickable";
 

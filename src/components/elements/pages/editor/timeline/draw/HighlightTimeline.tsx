@@ -1,5 +1,4 @@
-import { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import { AreaSize } from "@/models/data/AreaSize";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
@@ -17,7 +16,7 @@ interface Props {
 	timelineStore: TimelineStore;
 }
 
-const HighlightTimeline: NextPage<Props> = (props: Props) => {
+const HighlightTimeline: FC<Props> = (props: Props) => {
 
 	const [visible, setVisible] = useState(false);
 	const [y, setY] = useState(0);

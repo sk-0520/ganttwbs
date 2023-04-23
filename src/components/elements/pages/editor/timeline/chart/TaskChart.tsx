@@ -1,8 +1,10 @@
-import { NextPage } from "next";
+
+import { FC } from "react";
 
 import { ChartProps } from "@/models/data/props/ChartProps";
 import { Progress, TaskTimeline } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
+
 
 
 interface Props extends ChartProps {
@@ -10,7 +12,7 @@ interface Props extends ChartProps {
 	progress: Progress;
 }
 
-const TaskChart: NextPage<Props> = (props: Props) => {
+const TaskChart: FC<Props> = (props: Props) => {
 
 	if (!props.area.timeSpanRange) {
 		const padding = props.area.height * 0.2;

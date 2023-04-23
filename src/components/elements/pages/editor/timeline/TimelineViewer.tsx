@@ -1,5 +1,4 @@
-import { NextPage } from "next";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/ConnectorTimeline";
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
@@ -21,7 +20,7 @@ interface Props extends EditProps {
 	updateRelations: () => void;
 }
 
-const TimelineViewer: NextPage<Props> = (props: Props) => {
+const TimelineViewer: FC<Props> = (props: Props) => {
 
 	const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
 

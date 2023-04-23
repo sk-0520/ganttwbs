@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { FC } from "react";
 
 interface Props {
 	htmlFor?: string;
@@ -12,7 +12,7 @@ interface Props {
  * ラベルで囲ったり囲わなかったり。
  * @param props
  */
-const DynamicLabel: NextPage<Props> = (props: Props) => {
+const DynamicLabel: FC<Props> = (props: Props) => {
 	return (
 		props.wrap
 			? (

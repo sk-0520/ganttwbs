@@ -1,4 +1,5 @@
-import { NextPage } from "next";
+
+import { FC } from "react";
 
 import { Charts } from "@/models/Charts";
 import { AreaSize } from "@/models/data/AreaSize";
@@ -9,6 +10,7 @@ import { MemberId, TaskTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { WorkRanges } from "@/models/WorkRanges";
+
 
 interface Props extends EditProps {
 	currentIndex: number;
@@ -25,7 +27,7 @@ interface Props extends EditProps {
 
 }
 
-const ConnectorTimeline: NextPage<Props> = (props: Props) => {
+const ConnectorTimeline: FC<Props> = (props: Props) => {
 
 	if (!props.currentTimeline.previous.length) {
 		return null;

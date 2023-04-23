@@ -1,6 +1,5 @@
 import classNames from "classnames";
-import { NextPage } from "next";
-import { useState } from "react";
+import { FC, useState } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
@@ -15,7 +14,7 @@ interface Props {
 	deleteItem: () => void;
 }
 
-const ControlsCell: NextPage<Props> = (props: Props) => {
+const ControlsCell: FC<Props> = (props: Props) => {
 	const [visibleControls, setVisibleControls] = useState(false);
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 

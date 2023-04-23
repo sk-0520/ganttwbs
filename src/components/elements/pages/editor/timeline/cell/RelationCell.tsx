@@ -1,9 +1,11 @@
-import { NextPage } from "next";
+
+import { FC } from "react";
 
 import DynamicLabel from "@/components/elements/DynamicLabel";
 import { IconImage, IconKind } from "@/components/elements/Icon";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
+
 
 const enum Relations {
 	Unknown = 0,
@@ -18,7 +20,7 @@ interface Props {
 	htmlFor: string;
 }
 
-const RelationCell: NextPage<Props> = (props: Props) => {
+const RelationCell: FC<Props> = (props: Props) => {
 	let relations: Relations = Relations.Unknown;
 
 	if (Settings.maybeTaskTimeline(props.currentTimeline)) {
