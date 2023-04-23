@@ -2,18 +2,17 @@ import { FC, useState } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
-import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 
-interface Props extends ConfigurationProps, SettingProps {
-	calendarInfo: CalendarInfo;
-	timelineStore: TimelineStore;
+interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
+	//nop
 }
 
 const CrossHeader: FC<Props> = (props: Props) => {

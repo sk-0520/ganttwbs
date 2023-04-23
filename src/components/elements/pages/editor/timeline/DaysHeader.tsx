@@ -2,21 +2,20 @@ import { FC } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { Calendars } from "@/models/Calendars";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { Holiday, Theme } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Settings } from "@/models/Settings";
-import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 
 
-interface Props extends ConfigurationProps, SettingProps {
-	timelineStore: TimelineStore;
-	calendarInfo: CalendarInfo;
+interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
+	//nop
 }
 
 const DaysHeader: FC<Props> = (props: Props) => {

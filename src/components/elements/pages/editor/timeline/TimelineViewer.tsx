@@ -13,7 +13,6 @@ import { MemberId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 
-
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
 	updateRelations: () => void;
 }

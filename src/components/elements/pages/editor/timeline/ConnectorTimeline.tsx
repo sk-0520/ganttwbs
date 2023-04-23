@@ -12,7 +12,6 @@ import { MemberId, TaskTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { WorkRanges } from "@/models/WorkRanges";
 
-
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
 	currentIndex: number;
 	currentTimeline: TaskTimeline;

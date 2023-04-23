@@ -13,7 +13,6 @@ import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { IdFactory } from "@/models/IdFactory";
 
 
-
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
 	draggingTimeline: DraggingTimeline | null;
 	dropTimeline: DropTimeline | null;

@@ -13,9 +13,10 @@ import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate"
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
+import { EditorData } from "@/models/data/EditorData";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
-import { EditProps } from "@/models/data/props/EditProps";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { TimelineIndex } from "@/models/data/TimelineIndex";
 import { TimelineItem } from "@/models/data/TimelineItem";
@@ -26,8 +27,15 @@ import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 
+/*
+心臓部
 
-interface Props extends EditProps { }
+この子から色んなバグが生まれる。
+*/
+
+interface Props extends ConfigurationProps {
+	editorData: EditorData;
+}
 
 const TimelineEditor: FC<Props> = (props: Props) => {
 
@@ -36,13 +44,13 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	let hoverTimeline: AnyTimeline | null = null;
 	let activeTimeline: AnyTimeline | null = null;
 
-	const [sequenceTimelines, setSequenceTimelines] = useState(Timelines.flat(props.editData.setting.rootTimeline.children));
+	const [sequenceTimelines, setSequenceTimelines] = useState(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(new Map(), new Map()));
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 
-	const calendarInfo = Calendars.createCalendarInfo(props.editData.setting.timeZone, props.editData.setting.calendar);
+	const calendarInfo = Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
 
 	// // 初回のみ
 	// useEffect(() => {
@@ -62,7 +70,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		}
 
 		const result: TimelineStore = {
-			rootGroupTimeline: props.editData.setting.rootTimeline,
+			rootGroupTimeline: props.editorData.setting.rootTimeline,
 			totalItemMap: totalItems,
 			sequenceItems: sequenceTimelines,
 			indexItemMap: Timelines.toIndexes(sequenceTimelines),
@@ -94,8 +102,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	function updateRelations() {
 		console.debug("全体へ通知");
 
-		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.rootTimeline);
-		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], props.editData.setting.calendar.holiday, props.editData.setting.recursive, calendarInfo.timeZone);
+		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
+		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], props.editorData.setting.calendar.holiday, props.editorData.setting.recursive, calendarInfo.timeZone);
 
 		const changedItems = new Map(
 			[...timelineMap.entries()]
@@ -134,7 +142,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		setDropTimeline(null);
 		setDraggingTimeline(null);
 
-		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
+		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}
 
 	function handleSetPointerTimeline(timeline: AnyTimeline | null, property: "isHover" | "isActive"): void {
@@ -165,7 +173,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			activeTimeline = timeline;
 		}
 
-		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.rootTimeline);
+		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
 
 		const store = createTimelineStore(timelineMap, changedItems);
 
@@ -230,8 +238,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			onDrop: (ev, targetTimeline) => {
 				console.debug("DROP", ev, targetTimeline);
 
-				const sourceGroupTimelines = Timelines.getParentGroups(sourceTimeline, props.editData.setting.rootTimeline);
-				const targetGroupTimelines = Timelines.getParentGroups(targetTimeline, props.editData.setting.rootTimeline);
+				const sourceGroupTimelines = Timelines.getParentGroups(sourceTimeline, props.editorData.setting.rootTimeline);
+				const targetGroupTimelines = Timelines.getParentGroups(targetTimeline, props.editorData.setting.rootTimeline);
 
 				if (!sourceGroupTimelines.length || !targetGroupTimelines.length) {
 					// ツリーにいない場合はどうにもならん
@@ -297,7 +305,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleGetIndex(timeline: AnyTimeline): TimelineIndex {
 
-		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
+		const groups = Timelines.getParentGroups(timeline, props.editorData.setting.rootTimeline);
 		if (!groups.length) {
 			// 削除時に呼ばれた場合、すでに存在しない
 			return {
@@ -335,7 +343,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleSearchBeforeTimeline(timeline: AnyTimeline): AnyTimeline | undefined {
-		return Timelines.searchBeforeTimeline(timeline, props.editData.setting.rootTimeline);
+		return Timelines.searchBeforeTimeline(timeline, props.editorData.setting.rootTimeline);
 	}
 
 	function handleAddEmptyTimeline(baseTimeline: AnyTimeline, options: NewTimelineOptions): void {
@@ -355,7 +363,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		if (Settings.maybeGroupTimeline(baseTimeline)) {
 			parent = baseTimeline;
 		} else {
-			const groups = Timelines.getParentGroups(baseTimeline, props.editData.setting.rootTimeline);
+			const groups = Timelines.getParentGroups(baseTimeline, props.editorData.setting.rootTimeline);
 			parent = Arrays.last(groups);
 		}
 
@@ -376,18 +384,18 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		// 前工程の設定されていないタスクに対して可能であれば直近項目を前項目として設定
 		const newTaskTimeline = Timelines.getFirstTaskTimeline(newTimeline);
 		if (newTaskTimeline) {
-			const beforeTimeline = Timelines.searchBeforeTimeline(newTaskTimeline, props.editData.setting.rootTimeline);
+			const beforeTimeline = Timelines.searchBeforeTimeline(newTaskTimeline, props.editorData.setting.rootTimeline);
 			if (beforeTimeline) {
 				newTaskTimeline.previous = [beforeTimeline.id];
 			}
 		}
 
-		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
+		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}
 
 	function handleUpdateTimeline(timeline: AnyTimeline): void {
 		//
-		const source = Timelines.findTimeline(timeline.id, props.editData.setting.rootTimeline);
+		const source = Timelines.findTimeline(timeline.id, props.editorData.setting.rootTimeline);
 		if (!source) {
 			return;
 		}
@@ -395,7 +403,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.rootTimeline);
+		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
 
 		const prevSource = { ...source };
 		Object.assign(source, timeline);
@@ -421,7 +429,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			const src = prevSource as TaskTimeline;
 
 			// 先祖グループに対してふわーっと処理
-			const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
+			const groups = Timelines.getParentGroups(timeline, props.editorData.setting.rootTimeline);
 			if (groups.length) {
 				const reversedGroups = groups.reverse();
 				// 工数
@@ -450,19 +458,19 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleMoveTimeline(moveUp: boolean, timeline: AnyTimeline): void {
-		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
+		const groups = Timelines.getParentGroups(timeline, props.editorData.setting.rootTimeline);
 
 		const group = Arrays.last(groups);
 		Arrays.replaceOrderInPlace(group.children, !moveUp, timeline);
 
-		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
+		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}
 
 	function handleRemoveTimeline(timeline: AnyTimeline): void {
-		const groups = Timelines.getParentGroups(timeline, props.editData.setting.rootTimeline);
+		const groups = Timelines.getParentGroups(timeline, props.editorData.setting.rootTimeline);
 
 		// 前工程を破棄
-		const timelineMap = Timelines.getTimelinesMap(props.editData.setting.rootTimeline);
+		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
 
 		for (const [_, value] of timelineMap) {
 			if (Settings.maybeTaskTimeline(value)) {
@@ -476,7 +484,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		const group = Arrays.last(groups);
 		const newChildren = group.children.filter(a => a.id !== timeline.id);
 		group.children = newChildren;
-		setSequenceTimelines(Timelines.flat(props.editData.setting.rootTimeline.children));
+		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}
 
 	function handleStartSelectBeginDate(timeline: TaskTimeline): void {
@@ -485,7 +493,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			timeline: timeline,
 			beginDate: timeline.static ? DateTime.parse(timeline.static, calendarInfo.timeZone) : null,
 			previous: new Set(timeline.previous),
-			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editData.setting.rootTimeline),
+			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editorData.setting.rootTimeline),
 		});
 	}
 
@@ -494,7 +502,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			timeline: timeline,
 			beginDate: clearDate ? null : c?.beginDate ?? null,
 			previous: clearPrevious ? new Set() : c?.previous ?? new Set(),
-			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editData.setting.rootTimeline),
+			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editorData.setting.rootTimeline),
 		}));
 	}
 
@@ -503,7 +511,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			timeline: timeline,
 			beginDate: c?.beginDate ?? null,
 			previous: new Set(set),
-			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editData.setting.rootTimeline)
+			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editorData.setting.rootTimeline)
 		}));
 	}
 
@@ -527,23 +535,23 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	return (
 		<div id='timeline'>
-			{renderDynamicStyle(props.configuration.design, props.editData.setting.theme)}
+			{renderDynamicStyle(props.configuration.design, props.editorData.setting.theme)}
 
 			<CrossHeader
 				configuration={props.configuration}
-				setting={props.editData.setting}
+				setting={props.editorData.setting}
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
 			/>
 			<DaysHeader
 				configuration={props.configuration}
-				setting={props.editData.setting}
+				setting={props.editorData.setting}
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
 			/>
 			<TimelineItems
 				configuration={props.configuration}
-				setting={props.editData.setting}
+				setting={props.editorData.setting}
 				draggingTimeline={draggingTimeline}
 				dropTimeline={dropTimeline}
 				selectingBeginDate={selectingBeginDate}
@@ -554,7 +562,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
-				setting={props.editData.setting}
+				setting={props.editorData.setting}
 				updateRelations={updateRelations}
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
