@@ -1,5 +1,4 @@
-import { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { MemberSetting } from "@/models/data/context/SettingContext";
@@ -11,7 +10,7 @@ interface Props {
 	callbackRemoveMember(member: MemberSetting): void;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const MemberEditor: FC<Props> = (props: Props) => {
 
 	const [name, setName] = useState(props.member.name);
 	const [priceCost, setPriceCost] = useState(props.member.priceCost);
@@ -81,4 +80,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default MemberEditor;

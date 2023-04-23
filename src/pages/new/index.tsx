@@ -21,7 +21,7 @@ interface Input {
 	mode: "empty" | "sample";
 }
 
-const Page: NextPage = () => {
+const NewPage: NextPage = () => {
 	const router = useRouter();
 	//const { register, handleSubmit, formState: { errors } } = useForm();
 	const { register, handleSubmit, } = useForm<Input>();
@@ -118,7 +118,7 @@ const Page: NextPage = () => {
 	);
 };
 
-export default Page;
+export default NewPage;
 
 function onSubmit(data: Input, timeZone: TimeZone, router: NextRouter) {
 	console.debug(data);

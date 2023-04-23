@@ -1,4 +1,5 @@
-import { NextPage } from "next";
+
+import { FC } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { Calendars } from "@/models/Calendars";
@@ -12,12 +13,13 @@ import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 
+
 interface Props extends EditProps {
 	timelineStore: TimelineStore;
 	calendarInfo: CalendarInfo;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const DaysHeader: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
 	const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
@@ -119,7 +121,7 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default DaysHeader;
 
 function getWeekDayClassName(date: DateTime, regulars: Holiday["regulars"], theme: Theme): string {
 

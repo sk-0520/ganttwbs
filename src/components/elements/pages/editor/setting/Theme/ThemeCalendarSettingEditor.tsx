@@ -1,5 +1,4 @@
-import { NextPage } from "next";
-import { useContext, useState } from "react";
+import { FC, useContext, useState } from "react";
 
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
@@ -7,7 +6,7 @@ import { SettingContext } from "@/models/data/context/SettingContext";
 import { Color, WeekDay } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 
-const Component: NextPage = () => {
+const ThemeCalendarSettingEditor: FC = () => {
 	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
@@ -87,4 +86,4 @@ const Component: NextPage = () => {
 	);
 };
 
-export default Component;
+export default ThemeCalendarSettingEditor;

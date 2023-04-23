@@ -1,13 +1,43 @@
-import { NextPage } from "next";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { IconBaseProps } from "react-icons";
 import * as Md from "react-icons/md";
 
-import { IconKind } from "@/models/IconKind";
 import { Types } from "@/models/Types";
 
 // 基本的に Material Design icons を使用する
 // https://react-icons.github.io/react-icons/icons?name=md
+
+export const enum IconKind {
+	TimelineTask,
+	TimelineGroup,
+	TimelineAddTask,
+	TimelineAddGroup,
+	TimelineImport,
+
+	CheckBoxTimelinePreviousOn,
+	CheckBoxTimelinePreviousOff,
+
+	RelationMix,
+	RelationStatic,
+	RelationPrevious,
+	RelationJoin,
+	RelationClear,
+
+	MoveUp,
+	MoveDown,
+	MovePrev,
+	MoveNext,
+
+	CalendarToday,
+
+	ConfirmPositive,
+	ConfirmNegative,
+	ConfirmCancel,
+
+	Clear,
+	Operation,
+	Remove,
+}
 
 const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.TimelineTask]: (props) => <Md.MdTaskAlt {...convertParameter(props)} />,
@@ -82,7 +112,7 @@ interface Props {
 	title?: string;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+export const IconImage: FC<Props> = (props: Props) => {
 	const factory = Icons[props.kind];
 
 	return (
@@ -92,4 +122,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+

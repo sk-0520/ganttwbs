@@ -1,5 +1,4 @@
-import { NextPage } from "next";
-import { ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 
 import GroupChart from "@/components/elements/pages/editor/timeline/chart/GroupChart";
 import TaskChart from "@/components/elements/pages/editor/timeline/chart/TaskChart";
@@ -12,7 +11,7 @@ import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends GanttChartTimelineProps { }
 
-const Component: NextPage<Props> = (props: Props) => {
+const GanttChartTimeline: FC<Props> = (props: Props) => {
 
 	const [successWorkRange, setSuccessWorkRange] = useState<SuccessWorkRange | null>();
 
@@ -77,4 +76,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default GanttChartTimeline;

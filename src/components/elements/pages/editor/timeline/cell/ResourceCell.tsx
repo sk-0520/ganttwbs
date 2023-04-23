@@ -1,5 +1,4 @@
-import { NextPage } from "next";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 import { AnyTimeline, Group, Member, MemberId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
@@ -12,7 +11,7 @@ interface Props {
 	callbackChangeMember(memberId: MemberId, memberName: string): void;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const ResourceCell: FC<Props> = (props: Props) => {
 	const groups = [...props.groups]
 		.sort((a, b) => a.name.localeCompare(b.name));
 	function toMemberOptions(members: ReadonlyArray<Member>): Array<ReactNode> {
@@ -71,4 +70,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default ResourceCell;

@@ -1,7 +1,6 @@
 import { Editor } from "@monaco-editor/react";
-import { NextPage } from "next";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useLocale } from "@/locales/locale";
@@ -21,7 +20,7 @@ interface Props {
 	editData: EditorData;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const FileEditor: FC<Props> = (props: Props) => {
 	const { configuration, editData } = props;
 
 	const locale = useLocale();
@@ -139,4 +138,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default FileEditor;

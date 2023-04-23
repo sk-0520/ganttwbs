@@ -12,7 +12,7 @@ import { EditorData } from "@/models/data/EditorData";
 import { Storage } from "@/models/Storage";
 import { TimeSpan } from "@/models/TimeSpan";
 
-const Page: NextPage = () => {
+const EditorPage: NextPage = () => {
 	const initTabIndex = 1;
 	//const initTabIndex = 2;
 
@@ -62,7 +62,7 @@ const Page: NextPage = () => {
 	);
 };
 
-export default Page;
+export default EditorPage;
 
 function createConfiguration(): Configuration {
 	const cell = {

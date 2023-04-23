@@ -1,6 +1,8 @@
-import { NextPage } from "next";
+
+import { FC } from "react";
 
 import style from "@/styles/modules/components/elements/Overlay.module.scss";
+
 
 interface Props {
 	isVisible: boolean;
@@ -16,7 +18,7 @@ interface Props {
 /**
  * @param props
  */
-const Component: NextPage<Props> = (props: Props) => {
+const Overlay: FC<Props> = (props: Props) => {
 
 	function handleHide() {
 		if(props.callBackHidden) {
@@ -31,11 +33,13 @@ const Component: NextPage<Props> = (props: Props) => {
 					<div className={style.overlay} onClick={handleHide}>
 						{props.customClassName && <div className={props.customClassName} />}
 					</div>
-					<span className={style.children}>{props.children}</span>
+					<span className={style.children}>
+						{props.children}
+					</span>
 				</>
 			)}
 		</>
 	);
 };
 
-export default Component;
+export default Overlay;

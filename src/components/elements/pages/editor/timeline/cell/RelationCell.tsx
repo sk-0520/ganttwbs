@@ -1,10 +1,11 @@
-import { NextPage } from "next";
+
+import { FC } from "react";
 
 import DynamicLabel from "@/components/elements/DynamicLabel";
-import Icon from "@/components/elements/Icon";
+import { IconImage, IconKind } from "@/components/elements/Icon";
 import { AnyTimeline } from "@/models/data/Setting";
-import { IconKind } from "@/models/IconKind";
 import { Settings } from "@/models/Settings";
+
 
 const enum Relations {
 	Unknown = 0,
@@ -19,7 +20,7 @@ interface Props {
 	htmlFor: string;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const RelationCell: FC<Props> = (props: Props) => {
 	let relations: Relations = Relations.Unknown;
 
 	if (Settings.maybeTaskTimeline(props.currentTimeline)) {
@@ -41,13 +42,13 @@ const Component: NextPage<Props> = (props: Props) => {
 			>
 				{
 					relations === (Relations.Static | Relations.Previous)
-						? <Icon kind={IconKind.RelationMix} fill={null} title="前工程 + 開始固定" />
+						? <IconImage kind={IconKind.RelationMix} fill={null} title="前工程 + 開始固定" />
 						: relations === Relations.Static
-							? <Icon kind={IconKind.RelationStatic} fill={null} title="開始固定" />
+							? <IconImage kind={IconKind.RelationStatic} fill={null} title="開始固定" />
 							: relations === Relations.Previous
-								? <Icon kind={IconKind.RelationPrevious} fill={null} title="前工程あり" />
+								? <IconImage kind={IconKind.RelationPrevious} fill={null} title="前工程あり" />
 								: relations === Relations.Empty
-									? <Icon kind={IconKind.TimelineGroup} fill={null} />
+									? <IconImage kind={IconKind.TimelineGroup} fill={null} />
 									: "💩"
 				}
 			</DynamicLabel>
@@ -55,4 +56,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default RelationCell;

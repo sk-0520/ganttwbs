@@ -1,7 +1,6 @@
-import { NextPage } from "next";
-import { useState, useEffect, DragEvent } from "react";
+import { useState, useEffect, DragEvent, FC } from "react";
 
-import Icon from "@/components/elements/Icon";
+import { IconImage, IconKind } from "@/components/elements/Icon";
 import ControlsCell from "@/components/elements/pages/editor/timeline/cell/ControlsCell";
 import IdCell from "@/components/elements/pages/editor/timeline/cell/IdCell";
 import ProgressCell from "@/components/elements/pages/editor/timeline/cell/ProgressCell";
@@ -19,13 +18,12 @@ import { EditProps } from "@/models/data/props/EditProps";
 import { AnyTimeline, GroupTimeline, MemberId, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
-import { IconKind } from "@/models/IconKind";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
-import { WorkRanges } from "@/models/WorkRanges";
 import { Types } from "@/models/Types";
+import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends EditProps {
 	currentTimeline: AnyTimeline;
@@ -36,7 +34,7 @@ interface Props extends EditProps {
 	calendarInfo: CalendarInfo;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
@@ -333,7 +331,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								</li>
 								<li>
 									<button type="button" onClick={handleSubmitPrevious}>
-										<Icon
+										<IconImage
 											kind={IconKind.ConfirmPositive}
 											fill="green"
 											title="確定"
@@ -342,7 +340,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								</li>
 								<li>
 									<button type="button" onClick={handleCancelPrevious}>
-										<Icon
+										<IconImage
 											kind={IconKind.ConfirmCancel}
 											title="キャンセル"
 										/>
@@ -355,7 +353,7 @@ const Component: NextPage<Props> = (props: Props) => {
 									<ul>
 										<li>
 											<button onClick={handleSubmitAttachBeforeTimeline}>
-												<Icon
+												<IconImage
 													kind={IconKind.RelationJoin}
 												/>
 												直近項目に紐づける
@@ -368,7 +366,7 @@ const Component: NextPage<Props> = (props: Props) => {
 									<ul>
 										<li>
 											<button onClick={handleAttachBeforeTimeline}>
-												<Icon
+												<IconImage
 													kind={IconKind.RelationJoin}
 												/>
 												直近項目に紐づける
@@ -376,7 +374,7 @@ const Component: NextPage<Props> = (props: Props) => {
 										</li>
 										<li>
 											<button onClick={handleClearPrevious}>
-												<Icon
+												<IconImage
 													kind={IconKind.RelationClear}
 												/>
 												紐づけを解除
@@ -384,7 +382,7 @@ const Component: NextPage<Props> = (props: Props) => {
 										</li>
 										<li>
 											<button onClick={handleClearStatic}>
-												<Icon
+												<IconImage
 													kind={IconKind.Clear}
 												/>
 												固定日付をクリア
@@ -422,4 +420,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default AnyTimelineEditor;

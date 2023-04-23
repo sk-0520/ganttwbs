@@ -1,6 +1,8 @@
-import { NextPage } from "next";
+
+import { FC } from "react";
 
 import { Timelines } from "@/models/Timelines";
+
 
 interface Props {
 	readOnly: boolean;
@@ -9,7 +11,7 @@ interface Props {
 	callbackChangeValue?: (value: number) => void;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const WorkloadCell: FC<Props> = (props: Props) => {
 	return (
 		<td className='timeline-cell timeline-workload'>
 			<input
@@ -26,4 +28,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default WorkloadCell;

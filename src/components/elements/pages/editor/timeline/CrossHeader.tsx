@@ -1,14 +1,12 @@
-import { NextPage } from "next";
-import { useState } from "react";
+import { FC, useState } from "react";
 
-import Icon from "@/components/elements/Icon";
+import { IconImage, IconKind } from "@/components/elements/Icon";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { EditProps } from "@/models/data/props/EditProps";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
-import { IconKind } from "@/models/IconKind";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 
@@ -17,7 +15,7 @@ interface Props extends EditProps {
 	timelineStore: TimelineStore;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const CrossHeader: FC<Props> = (props: Props) => {
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 
@@ -75,7 +73,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								type='button'
 								onClick={handleAddEmptyGroup}
 							>
-								<Icon
+								<IconImage
 									kind={IconKind.TimelineAddGroup}
 								/>
 								add new group
@@ -86,7 +84,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								type='button'
 								onClick={handleAddEmptyTask}
 							>
-								<Icon
+								<IconImage
 									kind={IconKind.TimelineAddTask}
 								/>
 								add new task
@@ -97,7 +95,7 @@ const Component: NextPage<Props> = (props: Props) => {
 								type='button'
 								onClick={handleShowInputTimeline}
 							>
-								<Icon
+								<IconImage
 									kind={IconKind.TimelineImport}
 								/>
 								add timelines
@@ -107,7 +105,7 @@ const Component: NextPage<Props> = (props: Props) => {
 							<button
 								onClick={ev => scrollFromDate(DateTime.today(props.calendarInfo.timeZone))}
 							>
-								<Icon
+								<IconImage
 									kind={IconKind.CalendarToday}
 								/>
 								けふ
@@ -138,4 +136,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default CrossHeader;

@@ -1,11 +1,10 @@
-import { NextPage } from "next";
-import { useContext } from "react";
+import { FC, useContext } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { Settings } from "@/models/Settings";
 
-const Component: NextPage = () => {
+const CalendarWeekSettingEditor: FC = () => {
 	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
@@ -29,4 +28,4 @@ const Component: NextPage = () => {
 	);
 };
 
-export default Component;
+export default CalendarWeekSettingEditor;

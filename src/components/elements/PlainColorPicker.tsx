@@ -1,6 +1,5 @@
 import { TinyColor } from "@ctrl/tinycolor";
-import { NextPage } from "next";
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, FC, useEffect, useState } from "react";
 import { SketchPicker } from "react-color";
 import { PresetColor } from "react-color/lib/components/sketch/Sketch";
 
@@ -16,7 +15,7 @@ interface Props {
 	callbackChanged?: (color: Color) => void | undefined;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const PlainColorPicker: FC<Props> = (props: Props) => {
 
 	const [isVisible, setIsVisible] = useState(false);
 	const [color, setColor] = useState(props.color);
@@ -77,4 +76,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default PlainColorPicker;

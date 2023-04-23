@@ -13,7 +13,7 @@ interface Props {
 	children?: React.ReactNode;
 }
 
-const Component: NextPage<Props> = (props: Props) => {
+const Layout: NextPage<Props> = (props: Props) => {
 	const headTitle = props.title ? `${props.title} - ${process.env.NEXT_PUBLIC_APP_NAME}` : process.env.NEXT_PUBLIC_APP_NAME;
 	const pageTitle = props.title ? props.title : process.env.NEXT_PUBLIC_APP_NAME;
 
@@ -63,4 +63,4 @@ const Component: NextPage<Props> = (props: Props) => {
 	);
 };
 
-export default Component;
+export default Layout;
