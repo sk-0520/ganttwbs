@@ -1,5 +1,3 @@
-import { DeepReadonly } from "ts-essentials";
-
 import { AreaSize } from "@/models/data/AreaSize";
 import { CellBox } from "@/models/data/CellBox";
 import { ChartArea } from "@/models/data/ChartArea";
@@ -70,7 +68,7 @@ export abstract class Charts {
 		return theme.timeline.group;
 	}
 
-	public static getTaskBackground(timeline: TaskTimeline, memberMap: ReadonlyMap<MemberId, MemberMapValue>, theme: DeepReadonly<Theme>): string {
+	public static getTaskBackground(timeline: TaskTimeline, memberMap: ReadonlyMap<MemberId, MemberMapValue>, theme: Readonly<Theme>): string {
 		const member = memberMap.get(timeline.memberId);
 		if (member) {
 			return member.member.color;

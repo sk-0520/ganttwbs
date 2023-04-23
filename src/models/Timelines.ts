@@ -1,5 +1,3 @@
-import { DeepReadonly } from "ts-essentials";
-
 import { Arrays } from "@/models/Arrays";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, WeekIndex } from "@/models/data/Setting";
 import { TimelineIndex } from "@/models/data/TimelineIndex";

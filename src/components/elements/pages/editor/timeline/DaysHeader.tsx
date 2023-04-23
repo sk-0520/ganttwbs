@@ -1,6 +1,4 @@
-
 import { FC } from "react";
-import { DeepReadonly } from "ts-essentials";
 
 import { useLocale } from "@/locales/locale";
 import { Calendars } from "@/models/Calendars";
@@ -125,7 +123,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 
 export default DaysHeader;
 
-function getWeekDayClassName(date: DateTime, regulars: Readonly<Holiday["regulars"]>, theme: DeepReadonly<Theme>): string {
+function getWeekDayClassName(date: DateTime, regulars: Readonly<Holiday["regulars"]>, theme: Readonly<Theme>): string {
 
 	for (const regular of regulars) {
 		const weekday = Settings.toWeekDay(date.week);
@@ -137,7 +135,7 @@ function getWeekDayClassName(date: DateTime, regulars: Readonly<Holiday["regular
 	return "";
 }
 
-function getHolidayClassName(date: DateTime, holidayEventValue: HolidayEventMapValue | null, theme: DeepReadonly<Theme>): string {
+function getHolidayClassName(date: DateTime, holidayEventValue: HolidayEventMapValue | null, theme: Readonly<Theme>): string {
 	if (holidayEventValue) {
 		if (holidayEventValue) {
 			return "_dynamic_theme_holiday_events_" + holidayEventValue.event.kind;
@@ -147,7 +145,7 @@ function getHolidayClassName(date: DateTime, holidayEventValue: HolidayEventMapV
 	return "";
 }
 
-function getDayClassNames(date: DateTime, regularHolidays: Readonly<Holiday["regulars"]>, holidayEventValue: HolidayEventMapValue | null, theme: DeepReadonly<Theme>): Array<string> {
+function getDayClassNames(date: DateTime, regularHolidays: Readonly<Holiday["regulars"]>, holidayEventValue: HolidayEventMapValue | null, theme: Readonly<Theme>): Array<string> {
 	const weekClassName = getWeekDayClassName(date, regularHolidays, theme);
 	const holidayClassName = getHolidayClassName(date, holidayEventValue, theme);
 

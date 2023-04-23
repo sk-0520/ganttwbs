@@ -1,5 +1,3 @@
-import { DeepReadonly } from "ts-essentials";
-
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
@@ -49,13 +47,13 @@ export abstract class Calendars {
 	 * @param calendarRange
 	 * @returns
 	 */
-	public static getCalendarRangeDays(calendarRange: DeepReadonly<CalendarRange>): number {
+	public static getCalendarRangeDays(calendarRange: Readonly<CalendarRange>): number {
 		const diff = calendarRange.from.diff(calendarRange.to);
 		const days = diff.totalDays + 1;
 		return days;
 	}
 
-	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<number, DeepReadonly<HolidayEventMapValue>>): DeepReadonly<HolidayEventMapValue> | null {
+	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<number, Readonly<HolidayEventMapValue>>): Readonly<HolidayEventMapValue> | null {
 		const value = eventMap.get(target.getTime());
 
 		if (!value) {

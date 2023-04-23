@@ -1,12 +1,11 @@
 import { FC, ReactNode } from "react";
-import { DeepReadonly } from "ts-essentials";
 
 import { AnyTimeline, Group, Member, MemberId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 
 interface Props {
 	readonly currentTimeline: Readonly<AnyTimeline>;
-	groups: ReadonlyArray<DeepReadonly<Group>>;
+	groups: ReadonlyArray<Readonly<Group>>;
 	selectedMemberId: MemberId;
 	disabled: boolean;
 	callbackChangeMember(memberId: MemberId, memberName: string): void;
