@@ -22,7 +22,7 @@ checker.init({
 
 	const map = new Map<string, object>();
 
-	for (const [key, value] of Object.entries(packages)) {
+	for (const [key, value] of Object.entries(packages).sort((a, b) => a[0].localeCompare(b[0]))) {
 		const versionSeparatorIndex = key.lastIndexOf("@");
 		const name = key.substring(0, versionSeparatorIndex);
 		const version = key.substring(versionSeparatorIndex + 1);

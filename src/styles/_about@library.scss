@@ -1,0 +1,20 @@
+#about-library {
+	.license {
+		margin: auto;
+
+		thead {
+			th {
+				background: gray;
+				color: white;
+				padding: 0.5em;
+				text-align: center;
+			}
+		}
+
+		tbody {
+			td {
+				padding: 0.25em 0.5em;
+			}
+		}
+	}
+}

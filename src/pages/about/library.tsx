@@ -11,7 +11,7 @@ interface License {
 }
 
 const AboutLibraryPage: NextPage = () => {
-	const getKeys = <T extends object>(json: T): Array<keyof T> => Object.keys(json).sort() as Array<keyof T>;
+	const getKeys = <T extends object>(json: T): Array<keyof T> => Object.keys(json) as Array<keyof T>;
 	const licenseItems = getKeys(license).map(a => {
 		const value = license[a];
 
@@ -27,17 +27,27 @@ const AboutLibraryPage: NextPage = () => {
 
 	return (
 		<Layout title='ライブラリ' mode='page' layoutId='about-library'>
-			<table>
+			<table className="license">
+				<thead>
+					<tr>
+						<th>モジュール</th>
+						<th>作者</th>
+						<th>ライセンス</th>
+					</tr>
+				</thead>
 				<tbody>
 					<>
 						{
 							licenseItems.map(a => {
 								return (
 									<tr key={a.module}>
-										<td>{a.module}</td>
-										<td>{a.repository}</td>
-										<td>{a.license}</td>
+										<td>
+											<a href={a.repository} target={a.module}>
+												{a.module}
+											</a>
+										</td>
 										<td>{a.publisher}</td>
+										<td>{a.license}</td>
 									</tr>
 								);
 							})
