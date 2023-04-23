@@ -2,17 +2,17 @@ import { FC, useState } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
-import { EditProps } from "@/models/data/props/EditProps";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { SettingProps } from "@/models/data/props/SettingProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
-import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends EditProps {
-	calendarInfo: CalendarInfo;
-	timelineStore: TimelineStore;
+interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
+	//nop
 }
 
 const CrossHeader: FC<Props> = (props: Props) => {
@@ -63,7 +63,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	return (
 		<div id='cross-header'>
 			<div className="header">
-				<h1>{props.editData.setting.name}</h1>
+				<h1>{props.setting.name}</h1>
 			</div>
 			<div className="content">
 				<div className='operation'>

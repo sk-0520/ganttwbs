@@ -220,7 +220,7 @@ export abstract class Timelines {
 	 * @param groupTimeline 検索対象のグループタイムライン(再帰的に参照される)。
 	 * @returns 親グループの配列。最小で1、何も見つからない場合は 空配列。
 	 */
-	public static getParentGroups(timeline: AnyTimeline, groupTimeline: GroupTimeline): Array<GroupTimeline> {
+	public static getParentGroups(timeline: Readonly<AnyTimeline>, groupTimeline: Readonly<GroupTimeline>): Array<GroupTimeline> {
 
 		for (const child of groupTimeline.children) {
 			if (child.id === timeline.id) {

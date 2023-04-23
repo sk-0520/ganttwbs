@@ -1,5 +1,5 @@
 
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 
 import style from "@/styles/modules/components/elements/Overlay.module.scss";
 
@@ -12,7 +12,7 @@ interface Props {
 	callBackHidden?: () => void;
 
 	/** 子要素 */
-	children: React.ReactNode;
+	children: ReactNode;
 }
 
 /**

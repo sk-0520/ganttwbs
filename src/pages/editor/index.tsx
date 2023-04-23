@@ -49,7 +49,7 @@ const EditorPage: NextPage = () => {
 						</TabPanel>
 						{/* ほんたい */}
 						<TabPanel className='tab panel tab-timeline' >
-							<TimelineEditor configuration={configuration} editData={editData} />
+							<TimelineEditor configuration={configuration} editorData={editData} />
 						</TabPanel>
 						{/* 設定 */}
 						<TabPanel className='tab panel tab-setting'>

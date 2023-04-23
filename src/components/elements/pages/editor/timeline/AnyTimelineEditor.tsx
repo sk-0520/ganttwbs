@@ -11,27 +11,26 @@ import TimelineHeaderRow from "@/components/elements/pages/editor/timeline/cell/
 import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/WorkloadCell";
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
-import { EditProps } from "@/models/data/props/EditProps";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { SettingProps } from "@/models/data/props/SettingProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline, GroupTimeline, MemberId, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Settings } from "@/models/Settings";
-import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Types } from "@/models/Types";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends EditProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
 	currentTimeline: AnyTimeline;
-	timelineStore: TimelineStore;
 	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
-	calendarInfo: CalendarInfo;
 }
 
 const AnyTimelineEditor: FC<Props> = (props: Props) => {
@@ -307,7 +306,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			/>
 			<ResourceCell
 				currentTimeline={props.currentTimeline}
-				groups={props.editData.setting.groups}
+				groups={props.setting.groups}
 				selectedMemberId={memberId}
 				disabled={Types.toBoolean(props.selectingBeginDate)}
 				callbackChangeMember={handleChangeMember}

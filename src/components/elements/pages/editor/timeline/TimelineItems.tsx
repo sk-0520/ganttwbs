@@ -4,23 +4,20 @@ import { FC } from "react";
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
-import { EditProps } from "@/models/data/props/EditProps";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { SettingProps } from "@/models/data/props/SettingProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { IdFactory } from "@/models/IdFactory";
-import { TimelineStore } from "@/models/store/TimelineStore";
 
 
-
-interface Props extends EditProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
 	draggingTimeline: DraggingTimeline | null;
 	dropTimeline: DropTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
-	calendarInfo: CalendarInfo;
-	timelineStore: TimelineStore;
-	updateRelations: () => void;
 }
 
 const TimelineItems: FC<Props> = (props: Props) => {
@@ -33,7 +30,7 @@ const TimelineItems: FC<Props> = (props: Props) => {
 							<AnyTimelineEditor
 								key={a.id}
 								configuration={props.configuration}
-								editData={props.editData}
+								setting={props.setting}
 								currentTimeline={a}
 								timelineStore={props.timelineStore}
 								draggingTimeline={props.draggingTimeline}

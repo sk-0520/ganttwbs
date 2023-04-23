@@ -5,7 +5,7 @@ import { Settings } from "@/models/Settings";
 
 interface Props {
 	readonly currentTimeline: Readonly<AnyTimeline>;
-	groups: ReadonlyArray<Group>;
+	groups: ReadonlyArray<Readonly<Group>>;
 	selectedMemberId: MemberId;
 	disabled: boolean;
 	callbackChangeMember(memberId: MemberId, memberName: string): void;

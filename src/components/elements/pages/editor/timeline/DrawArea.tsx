@@ -4,17 +4,14 @@ import { FC } from "react";
 import HighlightTimeline from "@/components/elements/pages/editor/timeline/draw/HighlightTimeline";
 import { Calendars } from "@/models/Calendars";
 import { AreaSize } from "@/models/data/AreaSize";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { Configuration } from "@/models/data/Configuration";
-import { EditorData } from "@/models/data/EditorData";
-import { TimelineStore } from "@/models/store/TimelineStore";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { SettingProps } from "@/models/data/props/SettingProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 
 
-interface Props {
-	configuration: Configuration;
-	editData: EditorData;
-	calendarInfo: CalendarInfo;
-	timelineStore: TimelineStore;
+interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
+	//nop
 }
 
 const DrawArea: FC<Props> = (props: Props) => {

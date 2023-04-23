@@ -1,19 +1,16 @@
 import { FC, useEffect, useState } from "react";
 
 import { AreaSize } from "@/models/data/AreaSize";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { Configuration } from "@/models/data/Configuration";
-import { TimelineStore } from "@/models/store/TimelineStore";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { Types } from "@/models/Types";
 
 type Highlight = "hover" | "active";
 
-interface Props {
-	configuration: Configuration;
+interface Props extends ConfigurationProps, TimelineStoreProps, CalendarInfoProps {
 	areaSize: AreaSize;
 	highlight: Highlight;
-	calendarInfo: CalendarInfo;
-	timelineStore: TimelineStore;
 }
 
 const HighlightTimeline: FC<Props> = (props: Props) => {

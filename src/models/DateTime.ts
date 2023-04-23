@@ -171,7 +171,7 @@ export class DateTime {
 	 * @param target
 	 * @returns
 	 */
-	public diff(target: DateTime): TimeSpan {
+	public diff(target: Readonly<DateTime>): TimeSpan {
 		const time = target.getTime() - this.getTime();
 		return TimeSpan.fromMilliseconds(time);
 	}

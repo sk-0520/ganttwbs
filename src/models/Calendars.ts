@@ -53,7 +53,7 @@ export abstract class Calendars {
 		return days;
 	}
 
-	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<number, HolidayEventMapValue>): HolidayEventMapValue | null {
+	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<number, Readonly<HolidayEventMapValue>>): Readonly<HolidayEventMapValue> | null {
 		const value = eventMap.get(target.getTime());
 
 		if (!value) {
