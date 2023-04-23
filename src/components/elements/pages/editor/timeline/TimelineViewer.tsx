@@ -4,17 +4,14 @@ import ConnectorTimeline from "@/components/elements/pages/editor/timeline/Conne
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
 import { Calendars } from "@/models/Calendars";
 import { AreaSize } from "@/models/data/AreaSize";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
-import { EditProps } from "@/models/data/props/EditProps";
-import { MemberId } from "@/models/data/Setting";
-import { Settings } from "@/models/Settings";
-import { TimelineStore } from "@/models/store/TimelineStore";
-import { TimeSpan } from "@/models/TimeSpan";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { MemberId } from "@/models/data/Setting";
+import { Settings } from "@/models/Settings";
+import { TimeSpan } from "@/models/TimeSpan";
 
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
@@ -89,13 +86,13 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 			// 祝日判定
 			const holidayEventValue = Calendars.getHolidayEventValue(date, props.calendarInfo.holidayEventMap);
 			if (holidayEventValue) {
-				color = props.editData.setting.theme.holiday.events[holidayEventValue.event.kind];
+				color = props.setting.theme.holiday.events[holidayEventValue.event.kind];
 			}
 			// 曜日判定
 			if (!color) {
 				const week = Settings.toWeekDay(date.week);
-				if (props.editData.setting.calendar.holiday.regulars.includes(week)) {
-					color = props.editData.setting.theme.holiday.regulars[week];
+				if (props.setting.calendar.holiday.regulars.includes(week)) {
+					color = props.setting.theme.holiday.regulars[week];
 				}
 			}
 			if (color) {

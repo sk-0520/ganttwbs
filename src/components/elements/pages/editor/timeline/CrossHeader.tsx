@@ -4,13 +4,12 @@ import { IconImage, IconKind } from "@/components/elements/Icon";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
-import { EditProps } from "@/models/data/props/EditProps";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { SettingProps } from "@/models/data/props/SettingProps";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
-import { SettingProps } from "@/models/data/props/SettingProps";
-import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 
 interface Props extends ConfigurationProps, SettingProps {
 	calendarInfo: CalendarInfo;

@@ -1,10 +1,11 @@
+import { DeepReadonly } from "ts-essentials";
+
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 import { Calendar, Holiday } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
-import { DeepReadonly } from "ts-essentials";
 
 export abstract class Calendars {
 
@@ -54,7 +55,7 @@ export abstract class Calendars {
 		return days;
 	}
 
-	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<number, HolidayEventMapValue>): HolidayEventMapValue | null {
+	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<number, DeepReadonly<HolidayEventMapValue>>): DeepReadonly<HolidayEventMapValue> | null {
 		const value = eventMap.get(target.getTime());
 
 		if (!value) {

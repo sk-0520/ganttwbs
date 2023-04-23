@@ -1,3 +1,5 @@
+import { DeepReadonly } from "ts-essentials";
+
 import { Arrays } from "@/models/Arrays";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, WeekIndex } from "@/models/data/Setting";
 import { TimelineIndex } from "@/models/data/TimelineIndex";
@@ -220,7 +222,7 @@ export abstract class Timelines {
 	 * @param groupTimeline 検索対象のグループタイムライン(再帰的に参照される)。
 	 * @returns 親グループの配列。最小で1、何も見つからない場合は 空配列。
 	 */
-	public static getParentGroups(timeline: AnyTimeline, groupTimeline: GroupTimeline): Array<GroupTimeline> {
+	public static getParentGroups(timeline: DeepReadonly<AnyTimeline>, groupTimeline: GroupTimeline): Array<GroupTimeline> {
 
 		for (const child of groupTimeline.children) {
 			if (child.id === timeline.id) {

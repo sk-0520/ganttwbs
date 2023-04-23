@@ -1,3 +1,5 @@
+import { DeepReadonly } from "ts-essentials";
+
 import { AreaSize } from "@/models/data/AreaSize";
 import { CellBox } from "@/models/data/CellBox";
 import { ChartArea } from "@/models/data/ChartArea";
@@ -8,7 +10,6 @@ import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
-import { DeepReadonly } from "ts-essentials";
 
 export abstract class Charts {
 
@@ -55,7 +56,7 @@ export abstract class Charts {
 		return result;
 	}
 
-	public static getGroupBackground(timeline: GroupTimeline, rootGroupTimeline: Readonly<GroupTimeline>, theme: DeepReadonly<Theme>): string {
+	public static getGroupBackground(timeline: DeepReadonly<GroupTimeline>, rootGroupTimeline: DeepReadonly<GroupTimeline>, theme: DeepReadonly<Theme>): string {
 		// 未設定とグループラインの扱いが微妙過ぎる
 		const parents = Timelines.getParentGroups(timeline, rootGroupTimeline);
 		if (parents.length <= theme.groups.length) {

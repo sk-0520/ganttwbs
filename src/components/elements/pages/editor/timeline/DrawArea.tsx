@@ -4,14 +4,10 @@ import { FC } from "react";
 import HighlightTimeline from "@/components/elements/pages/editor/timeline/draw/HighlightTimeline";
 import { Calendars } from "@/models/Calendars";
 import { AreaSize } from "@/models/data/AreaSize";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { Configuration } from "@/models/data/Configuration";
-import { EditorData } from "@/models/data/EditorData";
-import { TimelineStore } from "@/models/store/TimelineStore";
-import { SettingProps } from "@/models/data/props/SettingProps";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { SettingProps } from "@/models/data/props/SettingProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {

@@ -1,13 +1,10 @@
 import { FC, useEffect, useState } from "react";
 
 import { AreaSize } from "@/models/data/AreaSize";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { Configuration } from "@/models/data/Configuration";
-import { TimelineStore } from "@/models/store/TimelineStore";
-import { Types } from "@/models/Types";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { Types } from "@/models/Types";
 
 type Highlight = "hover" | "active";
 

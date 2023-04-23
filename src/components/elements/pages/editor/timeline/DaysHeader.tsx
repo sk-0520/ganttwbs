@@ -1,20 +1,19 @@
 
 import { FC } from "react";
+import { DeepReadonly } from "ts-essentials";
 
 import { useLocale } from "@/locales/locale";
 import { Calendars } from "@/models/Calendars";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
-import { EditProps } from "@/models/data/props/EditProps";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { SettingProps } from "@/models/data/props/SettingProps";
 import { Holiday, Theme } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
-import { SettingProps } from "@/models/data/props/SettingProps";
-import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { DeepReadonly } from "ts-essentials";
 
 
 interface Props extends ConfigurationProps, SettingProps {

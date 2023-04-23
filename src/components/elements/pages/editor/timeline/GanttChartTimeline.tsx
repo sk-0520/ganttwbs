@@ -45,8 +45,8 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 					<TaskChart
 						configuration={props.configuration}
 						currentTimeline={props.currentTimeline}
-						background={Charts.getTaskBackground(props.currentTimeline, props.memberMap, props.editData.setting.theme)}
-						foreground={props.editData.setting.theme.timeline.completed}
+						background={Charts.getTaskBackground(props.currentTimeline, props.memberMap, props.setting.theme)}
+						foreground={props.setting.theme.timeline.completed}
 						borderColor="#000000"
 						borderThickness={1}
 						area={area}
@@ -57,7 +57,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 					<GroupChart
 						configuration={props.configuration}
 						currentTimeline={props.currentTimeline}
-						background={Charts.getGroupBackground(props.currentTimeline, props.editData.setting.rootTimeline, props.editData.setting.theme)}
+						background={Charts.getGroupBackground(props.currentTimeline, props.setting.rootTimeline, props.setting.theme)}
 						foreground="#ffffff"
 						borderColor="#000000"
 						borderThickness={4}

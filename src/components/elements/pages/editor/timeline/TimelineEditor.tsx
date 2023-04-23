@@ -543,7 +543,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			/>
 			<TimelineItems
 				configuration={props.configuration}
-				editData={props.editData}
+				setting={props.editData.setting}
 				draggingTimeline={draggingTimeline}
 				dropTimeline={dropTimeline}
 				selectingBeginDate={selectingBeginDate}
@@ -554,7 +554,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
-				editData={props.editData}
+				setting={props.editData.setting}
 				updateRelations={updateRelations}
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}

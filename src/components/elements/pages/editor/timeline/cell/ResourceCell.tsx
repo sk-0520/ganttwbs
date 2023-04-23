@@ -1,8 +1,8 @@
 import { FC, ReactNode } from "react";
+import { DeepReadonly } from "ts-essentials";
 
 import { AnyTimeline, Group, Member, MemberId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
-import { DeepReadonly } from "ts-essentials";
 
 interface Props {
 	readonly currentTimeline: Readonly<AnyTimeline>;

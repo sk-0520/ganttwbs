@@ -3,17 +3,14 @@ import { FC } from "react";
 
 import { Charts } from "@/models/Charts";
 import { AreaSize } from "@/models/data/AreaSize";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { MemberMapValue } from "@/models/data/MemberMapValue";
-import { EditProps } from "@/models/data/props/EditProps";
-import { MemberId, TaskTimeline } from "@/models/data/Setting";
-import { Settings } from "@/models/Settings";
-import { TimelineStore } from "@/models/store/TimelineStore";
-import { WorkRanges } from "@/models/WorkRanges";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { MemberId, TaskTimeline } from "@/models/data/Setting";
+import { Settings } from "@/models/Settings";
+import { WorkRanges } from "@/models/WorkRanges";
 
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
