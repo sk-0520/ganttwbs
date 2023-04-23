@@ -272,7 +272,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		props.beginDateCallbacks.cancelSelectBeginDate(props.currentTimeline);
 	}
 
-	const timelineIndex = props.timelineStore.getIndex(props.currentTimeline);
+	const timelineIndex = props.timelineStore.calcDisplayId(props.currentTimeline);
 
 	return (
 		<TimelineHeaderRow

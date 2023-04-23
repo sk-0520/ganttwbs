@@ -1,6 +1,6 @@
 import { Arrays } from "@/models/Arrays";
+import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, WeekIndex } from "@/models/data/Setting";
-import { TimelineIndex } from "@/models/data/TimelineIndex";
 import { SuccessWorkRange, WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
@@ -83,7 +83,7 @@ export abstract class Timelines {
 		return item;
 	}
 
-	public static toIndexNumber(index: TimelineIndex): string {
+	public static toIndexNumber(index: DisplayTimelineId): string {
 		return index.tree.join(".");
 	}
 
@@ -241,6 +241,44 @@ export abstract class Timelines {
 
 	}
 
+	public static calcDisplayId(timeline: Readonly<AnyTimeline>, rootTimeline: Readonly<GroupTimeline>): DisplayTimelineId {
+
+		const groups = Timelines.getParentGroups(timeline, rootTimeline);
+		if (!groups.length) {
+			// 削除時に呼ばれた場合、すでに存在しない
+			return {
+				level: 0,
+				tree: [],
+			};
+		}
+
+		const tree = new Array<number>();
+
+		// 子孫のレベル設定
+		for (let i = 1; i < groups.length; i++) {
+			const parent = groups[i - 1];
+			const group = groups[i];
+			const index = parent.children.findIndex(a => a.id === group.id);
+			if (index === -1) {
+				throw new Error();
+			}
+			tree.push(index + 1);
+		}
+		// 最終アイテム・ルートのレベル設定
+		const last = Arrays.last(groups);
+		const index = last.children.findIndex(a => a.id === timeline.id);
+		if (index === -1) {
+			throw new Error();
+		}
+		tree.push(index + 1);
+
+		const result: DisplayTimelineId = {
+			level: tree.length,
+			tree: tree,
+		};
+
+		return result;
+	}
 
 	private static convertDatesByHolidayEvents(events: { [key: DateOnly]: HolidayEvent }, timeZone: TimeZone): Array<DateTime> {
 		const result = new Array<DateTime>();

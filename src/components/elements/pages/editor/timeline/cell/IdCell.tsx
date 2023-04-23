@@ -3,16 +3,16 @@ import { DragEvent, FC } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
+import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { AnyTimeline } from "@/models/data/Setting";
-import { TimelineIndex } from "@/models/data/TimelineIndex";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 
 interface Props {
 	selectingId: string,
 	isSelectedPrevious: boolean;
-	timelineIndex: TimelineIndex;
+	timelineIndex: DisplayTimelineId;
 	readonly currentTimeline: Readonly<AnyTimeline>;
 	selectingBeginDate: SelectingBeginDate | null;
 	draggingTimeline: DraggingTimeline | null;
