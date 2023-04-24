@@ -1,10 +1,19 @@
-import { FC, useContext } from "react";
+import { FC, useContext, useState } from "react";
 
+import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import { SettingContext } from "@/models/data/context/SettingContext";
+import { DefaultSettings } from "@/models/DefaultSettings";
 
 
 const GeneralEditor: FC = () => {
 	const settingContext = useContext(SettingContext);
+
+	const [recursive, setRecursive] = useState(settingContext.general.recursive);
+
+	function handleChangeRecursive(value: number): void {
+		setRecursive(value);
+		settingContext.general.recursive = value;
+	}
 
 	return (
 		<dl className="inputs">
@@ -25,9 +34,10 @@ const GeneralEditor: FC = () => {
 					required
 					min={1}
 					max={999999}
-					defaultValue={settingContext.general.recursive}
-					onChange={ev => settingContext.general.recursive = ev.target.valueAsNumber}
+					value={recursive}
+					onChange={ev => handleChangeRecursive(ev.target.valueAsNumber)}
 				/>
+				<DefaultButton callbackClick={() => setRecursive(DefaultSettings.RecursiveMaxCount)} />
 			</dd>
 
 			<dt>タイムゾーン</dt>
