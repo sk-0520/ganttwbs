@@ -1,5 +1,6 @@
-import { IconImage, IconKind } from "@/components/elements/Icon";
 import { FC } from "react";
+
+import { IconImage, IconKind } from "@/components/elements/Icon";
 
 interface Props {
 	visibleLabel?: boolean;

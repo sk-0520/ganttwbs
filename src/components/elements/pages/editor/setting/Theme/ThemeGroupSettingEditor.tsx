@@ -2,14 +2,14 @@ import { TinyColor, random } from "@ctrl/tinycolor";
 import { FC, useContext, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
+import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
+import { Arrays } from "@/models/Arrays";
 import { Colors } from "@/models/Colors";
 import { SettingContext, UUID } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
-import { IdFactory } from "@/models/IdFactory";
 import { DefaultSettings } from "@/models/DefaultSettings";
-import { Arrays } from "@/models/Arrays";
-import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
+import { IdFactory } from "@/models/IdFactory";
 
 const groupThemeColors = DefaultSettings.getGroupThemeColors();
 

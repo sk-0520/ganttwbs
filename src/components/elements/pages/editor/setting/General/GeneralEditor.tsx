@@ -1,7 +1,7 @@
 import { FC, useContext, useState } from "react";
 
-import { SettingContext } from "@/models/data/context/SettingContext";
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
+import { SettingContext } from "@/models/data/context/SettingContext";
 import { DefaultSettings } from "@/models/DefaultSettings";
 
 

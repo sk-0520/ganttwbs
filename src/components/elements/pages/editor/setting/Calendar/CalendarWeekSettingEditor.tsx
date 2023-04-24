@@ -1,11 +1,11 @@
 import { FC, useContext, useState } from "react";
 
+import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import { useLocale } from "@/locales/locale";
 import { SettingContext } from "@/models/data/context/SettingContext";
-import { Settings } from "@/models/Settings";
 import { WeekDay } from "@/models/data/Setting";
-import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import { DefaultSettings } from "@/models/DefaultSettings";
+import { Settings } from "@/models/Settings";
 
 const CalendarWeekSettingEditor: FC = () => {
 	const locale = useLocale();

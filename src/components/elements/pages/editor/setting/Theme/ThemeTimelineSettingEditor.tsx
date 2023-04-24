@@ -1,9 +1,9 @@
 import { FC, useContext, useState } from "react";
 
+import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
-import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import { DefaultSettings } from "@/models/DefaultSettings";
 
 const ThemeTimelineSettingEditor: FC = () => {

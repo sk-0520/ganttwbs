@@ -1,12 +1,12 @@
 import { FC, useContext, useState } from "react";
 
+import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { Color, WeekDay } from "@/models/data/Setting";
-import { Settings } from "@/models/Settings";
-import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import { DefaultSettings } from "@/models/DefaultSettings";
+import { Settings } from "@/models/Settings";
 
 const ThemeCalendarSettingEditor: FC = () => {
 	const locale = useLocale();
@@ -49,7 +49,7 @@ const ThemeCalendarSettingEditor: FC = () => {
 
 	function handleResetHoliday() {
 		setHolidayEvents(
-			settingContext.theme.holiday.events = DefaultSettings.getEventHolidayColors(),
+			settingContext.theme.holiday.events = {...DefaultSettings.getEventHolidayColors()},
 		);
 	}
 
