@@ -6,7 +6,7 @@ import { Colors } from "@/models/Colors";
 import { GroupSetting } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
 
-type ColorKind = "same" | "analogy" | "monochrome" | "random";
+type ColorKind = "same" | "analogy" | "monochrome" | "gradient" | "random";
 
 interface Props {
 	choiceColorGroup: GroupSetting;
@@ -15,6 +15,7 @@ interface Props {
 
 const GroupColorsDialog: FC<Props> = (props: Props) => {
 	const [choiceBaseColor, setChoiceBaseColor] = useState<Color>("#ff0000");
+	const [choiceGradientColor, setChoiceGradientColor] = useState<Color>("#0000ff");
 	const [choiceColors, setChoiceColors] = useState<Map<MemberId, TinyColor>>(new Map(
 		props.choiceColorGroup.members.map(a => [a.id, new TinyColor(a.color)])
 	));
@@ -23,6 +24,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 		"same",
 		"analogy",
 		"monochrome",
+		"gradient",
 		"random",
 	];
 
@@ -51,6 +53,19 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 					const colors = baseColor.monochromatic(group.members.length);
 					for (let i = 0; i < colors.length; i++) {
 						colorMap.set(group.members[i].id, colors[i]);
+					}
+				}
+				break;
+
+			case "gradient":
+				{
+					if (group.members.length <= 1) {
+						colorMap.set(group.members[0].id, baseColor);
+					} else {
+						const colors = Colors.generateGradient(baseColor, new TinyColor(choiceGradientColor), group.members.length);
+						for (let i = 0; i < colors.length; i++) {
+							colorMap.set(group.members[i].id, colors[i]);
+						}
 					}
 				}
 				break;
@@ -89,6 +104,14 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 						type="color"
 						value={choiceBaseColor}
 						onChange={ev => setChoiceBaseColor(ev.target.value)}
+					/>
+				</label>
+				<label>
+					グラデーション
+					<input
+						type="color"
+						value={choiceGradientColor}
+						onChange={ev => setChoiceGradientColor(ev.target.value)}
 					/>
 				</label>
 

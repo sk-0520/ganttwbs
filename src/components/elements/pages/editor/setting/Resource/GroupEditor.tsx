@@ -47,8 +47,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 			priceSales: 50000,
 		};
 
-		members.push(newMember);
-		setMembers([...members]);
+		setMembers(props.group.members = [...members, newMember]);
 		setNewMemberName("");
 	}
 
