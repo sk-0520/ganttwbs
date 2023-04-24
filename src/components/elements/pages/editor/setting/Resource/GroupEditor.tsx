@@ -74,6 +74,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 						<button
 							type="button"
 							onClick={ev => handleStartChoiceColor()}
+							disabled={members.length <= 1}
 						>
 							色を割り振り
 						</button>
