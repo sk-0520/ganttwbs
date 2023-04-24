@@ -80,7 +80,7 @@ const ThemeCalendarSettingEditor: FC = () => {
 									renderWeek(a)
 								) : (
 									<>
-										<td className="header" rowSpan={weekDays.length}>
+										<td className="header" rowSpan={weekDays.length + 1}>
 											{locale.common.calendar.week.name}
 										</td>
 										{renderWeek(a)}
@@ -91,7 +91,6 @@ const ThemeCalendarSettingEditor: FC = () => {
 					);
 				})}
 				<tr>
-					<td className="header"></td>
 					<td className="subject"></td>
 					<td className="theme">
 						<DefaultButton
