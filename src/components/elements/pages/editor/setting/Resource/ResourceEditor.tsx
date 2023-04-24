@@ -9,7 +9,7 @@ import { IdFactory } from "@/models/IdFactory";
 
 //TODO: data属性の使用はやめれるはず
 
-const GroupsEditor: FC = () => {
+const ResourceEditor: FC = () => {
 	const settingContext = useContext(SettingContext);
 
 	const [newGroupName, setNewGroupName] = useState("");
@@ -218,16 +218,14 @@ const GroupsEditor: FC = () => {
 				<GroupColorsDialog
 					choiceColorGroup={choiceColorGroup}
 					callbackClosed={a => {
-						//if (type === "submit") {
-						//const map = new Map<MemberId, Color>([...choiceColors.entries()].map(([k, v]) => [k, v.toHexString()]));
 						setUpdatedColors(a);
-						//}
 						setChoiceColorGroup(null);
-					}} />
+					}}
+				/>
 			)}
 		</>
 	);
 };
 
-export default GroupsEditor;
+export default ResourceEditor;
 
