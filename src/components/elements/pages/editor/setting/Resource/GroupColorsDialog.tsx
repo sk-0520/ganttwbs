@@ -5,6 +5,7 @@ import Dialog from "@/components/elements/Dialog";
 import { Colors } from "@/models/Colors";
 import { GroupSetting } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
+import { Arrays } from "@/models/Arrays";
 
 type ColorKind = "same" | "analogy" | "monochrome" | "gradient" | "random";
 
@@ -14,8 +15,8 @@ interface Props {
 }
 
 const GroupColorsDialog: FC<Props> = (props: Props) => {
-	const [choiceBaseColor, setChoiceBaseColor] = useState<Color>("#ff0000");
-	const [choiceGradientColor, setChoiceGradientColor] = useState<Color>("#0000ff");
+	const [choiceBaseColor, setChoiceBaseColor] = useState<Color>(Arrays.first(props.choiceColorGroup.members).color);
+	const [choiceGradientColor, setChoiceGradientColor] = useState<Color>(Arrays.last(props.choiceColorGroup.members).color);
 	const [choiceColors, setChoiceColors] = useState<Map<MemberId, TinyColor>>(new Map(
 		props.choiceColorGroup.members.map(a => [a.id, new TinyColor(a.color)])
 	));
