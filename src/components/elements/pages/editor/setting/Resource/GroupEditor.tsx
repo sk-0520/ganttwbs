@@ -14,31 +14,14 @@ interface Props {
 
 const GroupsEditor: FC<Props> = (props: Props) => {
 
-	const [name, setName] = useState(props.group.name);
+	const [groupName, setGroupName] = useState(props.group.name);
 	const [members, setMembers] = useState(props.group.members);
-	const [visibleDialog, setVisibleDialog] = useState(false);
 	const [updatedColors, setUpdatedColors] = useState<Map<MemberId, Color>>(new Map());
 	const [newMemberName, setNewMemberName] = useState("");
-
-	function removeMember(member: MemberSetting) {
-		const targetMember = props.group.members.find(a => a.key === member.key);
-		if (!targetMember) {
-			throw new Error();
-		}
-
-		const members = [];
-		for (const member of props.group.members) {
-			if (member === targetMember) {
-				continue;
-			}
-			members.push(member);
-		}
-
-		setMembers(props.group.members = members);
-	}
+	const [visibleDialog, setVisibleDialog] = useState(false);
 
 	function handleChangeName(name: string): void {
-		setName(props.group.name = name);
+		setGroupName(props.group.name = name);
 	}
 
 	function handleStartChoiceColor(): void {
@@ -66,10 +49,13 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 
 		members.push(newMember);
 		setMembers([...members]);
+		setNewMemberName("");
 	}
 
 	const handleRemoveMember = (member: MemberSetting) => {
-		removeMember(member);
+		const newMembers = members.filter(a => a.id !== member.id);
+
+		setMembers(props.group.members = newMembers);
 	};
 
 	return (
@@ -80,7 +66,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 						<label>
 							グループ名
 							<input
-								value={name}
+								value={groupName}
 								onChange={ev => handleChangeName(ev.target.value)}
 							/>
 							<span className="count">{members.length}</span>
@@ -118,10 +104,10 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 					</thead>
 
 					<tbody>
-						{members.map(b =>
+						{members.map(a =>
 							<MemberEditor
-								key={b.key}
-								member={b}
+								key={a.key}
+								member={a}
 								updatedColors={updatedColors}
 								callbackRemoveMember={handleRemoveMember}
 							/>
