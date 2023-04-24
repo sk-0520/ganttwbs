@@ -1,12 +1,8 @@
-import { random } from "@ctrl/tinycolor";
-import { useContext, MouseEvent, useState, Fragment, FC } from "react";
+import { useContext, MouseEvent, useState, FC } from "react";
 
-import GroupColorsDialog from "@/components/elements/pages/editor/setting/Resource/GroupColorsDialog";
-import MemberEditor from "@/components/elements/pages/editor/setting/Resource/MemberEditor";
-import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
-import { Color, MemberId } from "@/models/data/Setting";
-import { IdFactory } from "@/models/IdFactory";
 import GroupsEditor from "@/components/elements/pages/editor/setting/Resource/GroupEditor";
+import { GroupSetting, SettingContext } from "@/models/data/context/SettingContext";
+import { IdFactory } from "@/models/IdFactory";
 
 //TODO: data属性の使用はやめれるはず
 
@@ -51,38 +47,6 @@ const ResourceEditor: FC = () => {
 		}
 
 		setEditGroups(settingContext.groups = groups);
-	}
-
-	function handleAddMember(group: GroupSetting, memberName: string, event: MouseEvent<HTMLButtonElement>) {
-		const targetGroup = editGroups.find(a => a.key === group.key);
-		if (!targetGroup) {
-			throw new Error();
-		}
-
-		const name = memberName.trim();
-		if (!name) {
-			return;
-		}
-
-		if (targetGroup.members.some(a => a.name === name)) {
-			return;
-		}
-
-		const newMember: MemberSetting = {
-			key: IdFactory.createReactKey(),
-			id: IdFactory.createMemberId(),
-			name: name,
-			color: random().toHexString(),
-			priceCost: 40000,
-			priceSales: 50000,
-		};
-		targetGroup.members.push(newMember);
-
-		setEditGroups([...editGroups]);
-		const element = event.currentTarget.closest("[data-new-member]")?.querySelector("[name=\"member-name\"]") as HTMLInputElement | undefined;
-		if (element) {
-			element.value = "";
-		}
 	}
 
 	return (

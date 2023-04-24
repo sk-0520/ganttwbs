@@ -1,10 +1,11 @@
-import GroupColorsDialog from "@/components/elements/pages/editor/setting/Resource/GroupColorsDialog";
-import MemberEditor from "@/components/elements/pages/editor/setting/Resource/MemberEditor";
-import { IdFactory } from "@/models/IdFactory";
-import { Color, MemberId } from "@/models/data/Setting";
-import { GroupSetting, MemberSetting } from "@/models/data/context/SettingContext";
 import { random } from "@ctrl/tinycolor";
 import { FC, useState } from "react";
+
+import GroupColorsDialog from "@/components/elements/pages/editor/setting/Resource/GroupColorsDialog";
+import MemberEditor from "@/components/elements/pages/editor/setting/Resource/MemberEditor";
+import { GroupSetting, MemberSetting } from "@/models/data/context/SettingContext";
+import { Color, MemberId } from "@/models/data/Setting";
+import { IdFactory } from "@/models/IdFactory";
 
 interface Props {
 	group: GroupSetting;
