@@ -49,7 +49,7 @@ const ThemeCalendarSettingEditor: FC = () => {
 
 	function handleResetHoliday() {
 		setHolidayEvents(
-			settingContext.theme.holiday.events = {...DefaultSettings.getEventHolidayColors()},
+			settingContext.theme.holiday.events = DefaultSettings.getEventHolidayColors(),
 		);
 	}
 

@@ -23,11 +23,9 @@ const PlainColorPicker: FC<Props> = (props: Props) => {
 
 	const presetColors = new Array<PresetColor>();
 
-	/*
 	useEffect(() => {
 		setColor(props.color);
 	}, [props.color]);
-	*/
 
 	useEffect(() => {
 		if (refPicker.current) {
