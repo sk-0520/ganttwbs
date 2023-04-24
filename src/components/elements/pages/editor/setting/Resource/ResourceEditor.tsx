@@ -6,6 +6,7 @@ import MemberEditor from "@/components/elements/pages/editor/setting/Resource/Me
 import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
+import GroupsEditor from "@/components/elements/pages/editor/setting/Resource/GroupEditor";
 
 //TODO: data属性の使用はやめれるはず
 
@@ -14,31 +15,6 @@ const ResourceEditor: FC = () => {
 
 	const [newGroupName, setNewGroupName] = useState("");
 	const [editGroups, setEditGroups] = useState(settingContext.groups);
-	const [choiceColorGroup, setChoiceColorGroup] = useState<GroupSetting | null>(null);
-	const [updatedColors, setUpdatedColors] = useState<Map<MemberId, Color>>(new Map());
-
-	function removeMember(group: GroupSetting, member: MemberSetting) {
-		const targetGroup = editGroups.find(a => a.key === group.key);
-		if (!targetGroup) {
-			throw new Error();
-		}
-
-		const targetMember = targetGroup.members.find(a => a.key === member.key);
-		if (!targetMember) {
-			throw new Error();
-		}
-
-		const members = [];
-		for (const member of targetGroup.members) {
-			if (member === targetMember) {
-				continue;
-			}
-			members.push(member);
-		}
-		targetGroup.members = members;
-
-		setEditGroups([...editGroups]);
-	}
 
 	function handleAddGroup(event: MouseEvent<HTMLButtonElement>) {
 		const groupName = newGroupName.trim();
@@ -58,10 +34,6 @@ const ResourceEditor: FC = () => {
 		};
 		setEditGroups(settingContext.groups = [...editGroups, newGroup]);
 		setNewGroupName("");
-	}
-
-	function handleStartChoiceColor(group: GroupSetting): void {
-		setChoiceColorGroup(group);
 	}
 
 	function handleRemoveGroup(group: GroupSetting) {
@@ -117,90 +89,12 @@ const ResourceEditor: FC = () => {
 		<>
 			<dl className="inputs">
 				{editGroups.map(a => {
-					let memberName = "";
-
-					const handleRemoveMember = (member: MemberSetting) => {
-						removeMember(a, member);
-					};
-
 					return (
-						<Fragment key={a.key}>
-							<dt className="group">
-								<ul className="inline">
-									<li>
-										<label>
-											グループ名
-											<input
-												defaultValue={a.name}
-												onChange={ev => a.name = ev.target.value}
-											/>
-											<span className="count">{a.members.length}</span>
-										</label>
-									</li>
-									<li>
-										<button
-											type="button"
-											onClick={ev => handleStartChoiceColor(a)}
-										>
-											色を割り振り
-										</button>
-									</li>
-									<li className="remove">
-										<button
-											type="button"
-											onClick={ev => handleRemoveGroup(a)}
-										>
-											remove
-										</button>
-									</li>
-								</ul>
-							</dt>
-
-							<dd className="member">
-								<table className="members">
-									<thead>
-										<tr>
-											<th className="name">名前</th>
-											<th className="cost">原価</th>
-											<th className="sales">売上</th>
-											<th className="theme">テーマ</th>
-											<th className="remove">削除</th>
-										</tr>
-									</thead>
-
-									<tbody>
-										{a.members.map(b =>
-											<MemberEditor
-												key={b.key}
-												member={b}
-												updatedColors={updatedColors}
-												callbackRemoveMember={handleRemoveMember}
-											/>
-										)}
-									</tbody>
-
-									<tfoot data-new-member>
-										<tr>
-											<td className="name">
-												<input
-													name='member-name'
-													defaultValue={memberName}
-													onChange={ev => memberName = ev.target.value}
-												/>
-											</td>
-											<td className="add">
-												<button
-													type="button"
-													onClick={ev => handleAddMember(a, memberName, ev)}
-												>
-													add
-												</button>
-											</td>
-										</tr>
-									</tfoot>
-								</table>
-							</dd>
-						</Fragment>
+						<GroupsEditor
+							key={a.name}
+							group={a}
+							callbackRemove={a => handleRemoveGroup(a)}
+						/>
 					);
 				})}
 
@@ -213,16 +107,6 @@ const ResourceEditor: FC = () => {
 					<button type="button" onClick={handleAddGroup}>add</button>
 				</dd>
 			</dl>
-
-			{choiceColorGroup && (
-				<GroupColorsDialog
-					choiceColorGroup={choiceColorGroup}
-					callbackClosed={a => {
-						setUpdatedColors(a);
-						setChoiceColorGroup(null);
-					}}
-				/>
-			)}
 		</>
 	);
 };

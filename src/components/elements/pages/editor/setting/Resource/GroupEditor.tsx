@@ -1,3 +1,4 @@
+import GroupColorsDialog from "@/components/elements/pages/editor/setting/Resource/GroupColorsDialog";
 import MemberEditor from "@/components/elements/pages/editor/setting/Resource/MemberEditor";
 import { IdFactory } from "@/models/IdFactory";
 import { Color, MemberId } from "@/models/data/Setting";
@@ -14,7 +15,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 
 	const [name, setName] = useState(props.group.name);
 	const [members, setMembers] = useState(props.group.members);
-	const [choiceColorGroup, setChoiceColorGroup] = useState(props.group);
+	const [visibleDialog, setVisibleDialog] = useState(false);
 	const [updatedColors, setUpdatedColors] = useState<Map<MemberId, Color>>(new Map());
 	const [newMemberName, setNewMemberName] = useState("");
 
@@ -39,8 +40,8 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 		setName(props.group.name = name);
 	}
 
-	function handleStartChoiceColor(group: GroupSetting): void {
-		setChoiceColorGroup(group);
+	function handleStartChoiceColor(): void {
+		setVisibleDialog(true);
 	}
 
 	function handleAddMember() {
@@ -87,7 +88,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 					<li>
 						<button
 							type="button"
-							onClick={ev => handleStartChoiceColor(props.group)}
+							onClick={ev => handleStartChoiceColor()}
 						>
 							色を割り振り
 						</button>
@@ -147,6 +148,15 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 					</tfoot>
 				</table>
 			</dd>
+			{visibleDialog && (
+				<GroupColorsDialog
+					choiceColorGroup={props.group}
+					callbackClosed={a => {
+						setUpdatedColors(a);
+						setVisibleDialog(false);
+					}}
+				/>
+			)}
 		</>
 	);
 };
