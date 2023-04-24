@@ -164,6 +164,7 @@ const ThemeGroupSettingEditor: FC = () => {
 
 						<dt>色</dt>
 						<dd>
+							{/* ブラウザに任せる, ダイアログ内でぶわってするとぶわってなる */}
 							<input
 								type="color"
 								value={resetColorBegin}
