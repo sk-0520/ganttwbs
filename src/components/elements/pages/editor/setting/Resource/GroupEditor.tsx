@@ -15,7 +15,7 @@ interface Props {
 const GroupsEditor: FC<Props> = (props: Props) => {
 
 	const [groupName, setGroupName] = useState(props.group.name);
-	const [members, setMembers] = useState(props.group.members);
+	const [members, setMembers] = useState(sortMembers(props.group.members));
 	const [updatedColors, setUpdatedColors] = useState<Map<MemberId, Color>>(new Map());
 	const [newMemberName, setNewMemberName] = useState("");
 	const [visibleDialog, setVisibleDialog] = useState(false);
@@ -47,15 +47,13 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 			priceSales: 50000,
 		};
 
-		members.push(newMember);
-		setMembers([...members]);
+		setMembers(props.group.members = sortMembers([...members, newMember]));
 		setNewMemberName("");
 	}
 
 	const handleRemoveMember = (member: MemberSetting) => {
 		const newMembers = members.filter(a => a.id !== member.id);
-
-		setMembers(props.group.members = newMembers);
+		setMembers(props.group.members = sortMembers(newMembers));
 	};
 
 	return (
@@ -76,6 +74,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 						<button
 							type="button"
 							onClick={ev => handleStartChoiceColor()}
+							disabled={members.length <= 1}
 						>
 							色を割り振り
 						</button>
@@ -149,3 +148,11 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 };
 
 export default GroupsEditor;
+
+function sortMemberCore(a: Readonly<MemberSetting>, b: Readonly<MemberSetting>): number {
+	return a.name.localeCompare(b.name);
+}
+
+function sortMembers(member: Array<Readonly<MemberSetting>>): Array<MemberSetting> {
+	return member.sort((a, b) => sortMemberCore(a, b));
+}

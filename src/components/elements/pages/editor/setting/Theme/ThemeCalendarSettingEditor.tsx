@@ -23,8 +23,8 @@ const ThemeCalendarSettingEditor: FC = () => {
 	}
 
 	function handleSetHolidayEventColor(event: "holiday" | "special", color: Color) {
-		holidayEvents[event] = color;
-		setHolidayEvents(holidayEvents);
+		settingContext.theme.holiday.events[event] = color;
+		setHolidayEvents({...holidayEvents});
 	}
 
 	function handleResetRegular() {
@@ -49,7 +49,7 @@ const ThemeCalendarSettingEditor: FC = () => {
 
 	function handleResetHoliday() {
 		setHolidayEvents(
-			settingContext.theme.holiday.events = DefaultSettings.getEventHolidayColors(),
+			settingContext.theme.holiday.events = {...DefaultSettings.getEventHolidayColors()},
 		);
 	}
 

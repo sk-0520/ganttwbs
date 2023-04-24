@@ -1,19 +1,29 @@
 import { FC, useContext, useState } from "react";
 
+import { IconImage, IconKind } from "@/components/elements/Icon";
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { DefaultSettings } from "@/models/DefaultSettings";
+import { TimeZone } from "@/models/TimeZone";
 
 
 const GeneralEditor: FC = () => {
 	const settingContext = useContext(SettingContext);
 
 	const [recursive, setRecursive] = useState(settingContext.general.recursive);
+	const [timeZone, setTimeZone] = useState(settingContext.general.timeZone.serialize());
 
 	function handleChangeRecursive(value: number): void {
 		setRecursive(value);
 		settingContext.general.recursive = value;
 	}
+
+	function handleChangeTimeZone(tz: TimeZone): void {
+		setTimeZone(tz.serialize());
+		settingContext.general.timeZone = tz;
+	}
+
+	const currentTimeZone = TimeZone.getClientTimeZone();
 
 	return (
 		<dl className="inputs">
@@ -45,9 +55,34 @@ const GeneralEditor: FC = () => {
 				<input
 					type="text"
 					required
-					defaultValue={settingContext.general.timeZone}
-					onChange={ev => settingContext.general.timeZone = ev.target.value}
+					readOnly
+					value={timeZone}
+				/>
+				<button
+					type="button"
+					onClick={_ => handleChangeTimeZone(currentTimeZone)}
+				>
+					<IconImage
+						kind={IconKind.Reset}
 					/>
+					現在タイムゾーン
+					({TimeZone.getClientTimeZone().serialize()})
+				</button>
+				<ul className="timezone-selector">
+					{TimeZone.getTimeZones().map(a => {
+						return (
+							<li key={a.serialize()}>
+								<button
+									type="button"
+									onClick={_ => handleChangeTimeZone(a)}
+									className={currentTimeZone.serialize() === a.serialize() ? "current" : ""}
+								>
+									{a.serialize()}
+								</button>
+							</li>
+						);
+					})}
+				</ul>
 			</dd>
 
 		</dl>

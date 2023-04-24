@@ -28,8 +28,8 @@ interface Props {
 }
 
 const SettingEditor: FC<Props> = (props: Props) => {
-	//const initTabIndex = 0;
-	const initTabIndex = 1;
+	const initTabIndex = 0;
+	//const initTabIndex = 1;
 
 	const setting = toContext(props.editData.setting);
 
@@ -117,14 +117,14 @@ function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnl
 }
 
 function toContext(setting: Setting): SettingContext {
-	const timeZone = TimeZone.parse(setting.timeZone) ?? TimeZone.getClientTimeZone();
+	const timeZone = TimeZone.tryParse(setting.timeZone) ?? TimeZone.getClientTimeZone();
 
 	return {
 		general: {
 			name: setting.name,
 			recursive: setting.recursive,
 			version: setting.version,
-			timeZone: setting.timeZone,
+			timeZone: timeZone,
 		},
 		groups: setting.groups.map(a => ({
 			key: IdFactory.createReactKey(),
@@ -213,13 +213,13 @@ function fromCalendarHolidayEventsContext(kind: HolidayKind, context: string, ti
 }
 
 function fromContext(source: Readonly<Setting>, context: SettingContext): Setting {
-	const timeZone = TimeZone.parse(context.general.timeZone) ?? TimeZone.getClientTimeZone();
+	const timeZone = context.general.timeZone;
 
 	return {
 		name: context.general.name,
 		recursive: context.general.recursive,
 		version: context.general.version,
-		timeZone: context.general.timeZone,
+		timeZone: timeZone.serialize(),
 		calendar: {
 			range: {
 				from: context.calendar.range.from,
