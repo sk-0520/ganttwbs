@@ -5,6 +5,8 @@ import { useLocale } from "@/locales/locale";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { Color, WeekDay } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
+import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
+import { DefaultSettings } from "@/models/DefaultSettings";
 
 const ThemeCalendarSettingEditor: FC = () => {
 	const locale = useLocale();
@@ -17,12 +19,36 @@ const ThemeCalendarSettingEditor: FC = () => {
 
 	function handleSetRegularColor(week: WeekDay, color: Color) {
 		holidayRegulars[week] = color;
-		setHolidayRegulars(holidayRegulars);
+		setHolidayRegulars(settingContext.theme.holiday.regulars = { ...holidayRegulars });
 	}
 
 	function handleSetHolidayEventColor(event: "holiday" | "special", color: Color) {
 		holidayEvents[event] = color;
 		setHolidayEvents(holidayEvents);
+	}
+
+	function handleResetRegular() {
+		const weekDays = Settings.getWeekDays()
+			.map(a => ({ [a]: DefaultSettings.BusinessWeekdayColor }))
+			.reduce((r, a) => ({ ...r, ...a }))
+			;
+		const defaultRegulars = [...DefaultSettings.getRegularHolidays()]
+			.map(([k, v]) => ({ [k]: v }))
+			.reduce((r, a) => ({ ...r, ...a }))
+			;
+
+		const defaultWeeks = {
+			...weekDays,
+			...defaultRegulars,
+		} as  { [key in WeekDay]: Color };
+
+		setHolidayRegulars(
+			settingContext.theme.holiday.regulars = defaultWeeks
+		);
+	}
+
+	function handleResetHoliday() {
+		//
 	}
 
 	return (
@@ -63,6 +89,17 @@ const ThemeCalendarSettingEditor: FC = () => {
 					);
 				})}
 				<tr>
+					<td className="header"></td>
+					<td className="subject"></td>
+					<td className="theme">
+						<DefaultButton
+							visibleLabel={true}
+							callbackClick={handleResetRegular}
+						/>
+					</td>
+				</tr>
+
+				<tr>
 					<td className="header" rowSpan={2}>祝日</td>
 					<td className="subject">通常</td>
 					<td className="theme">
@@ -78,6 +115,16 @@ const ThemeCalendarSettingEditor: FC = () => {
 						<PlainColorPicker
 							color={holidayEvents.special}
 							callbackChanged={c => handleSetHolidayEventColor("special", c)}
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td className="header"></td>
+					<td className="subject"></td>
+					<td className="theme">
+						<DefaultButton
+							visibleLabel={true}
+							callbackClick={handleResetHoliday}
 						/>
 					</td>
 				</tr>

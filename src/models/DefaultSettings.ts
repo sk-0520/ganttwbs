@@ -15,6 +15,8 @@ export abstract class DefaultSettings {
 	 */
 	public static readonly SettingVersion = 0;
 
+	public static readonly BusinessWeekdayColor = "#000000";
+
 	/**
 	 * 週定休日とその色を取得。
 	 */
