@@ -2,6 +2,7 @@ import { IconImage, IconKind } from "@/components/elements/Icon";
 import { FC } from "react";
 
 interface Props {
+	visibleLabel?: boolean;
 	callbackClick(): void;
 }
 
@@ -15,6 +16,7 @@ const DefaultButton: FC<Props> = (props: Props) => {
 			<IconImage
 				kind={IconKind.Reset}
 			/>
+			{props.visibleLabel && "デフォルト設定"}
 		</button>
 	);
 };

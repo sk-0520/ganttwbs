@@ -28,8 +28,8 @@ interface Props {
 }
 
 const SettingEditor: FC<Props> = (props: Props) => {
-	const initTabIndex = 0;
-	//const initTabIndex = 3;
+	//const initTabIndex = 0;
+	const initTabIndex = 2;
 
 	const setting = toContext(props.editData.setting);
 
