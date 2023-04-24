@@ -5,7 +5,7 @@ import CalendarHolidaySettingEditor from "@/components/elements/pages/editor/set
 import CalendarRangeSettingEditor from "@/components/elements/pages/editor/setting/Calendar/CalendarRangeSettingEditor";
 import CalendarWeekSettingEditor from "@/components/elements/pages/editor/setting/Calendar/CalendarWeekSettingEditor";
 import GeneralEditor from "@/components/elements/pages/editor/setting/General/GeneralEditor";
-import GroupsEditor from "@/components/elements/pages/editor/setting/Group/GroupsEditor";
+import ResourceEditor from "@/components/elements/pages/editor/setting/Resource/ResourceEditor";
 import ThemeCalendarSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeCalendarSettingEditor";
 import ThemeGroupSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeGroupSettingEditor";
 import ThemeTimelineSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeTimelineSettingEditor";
@@ -49,7 +49,7 @@ const SettingEditor: FC<Props> = (props: Props) => {
 				<Tabs defaultIndex={initTabIndex} forceRenderTabPanel={true}>
 					<TabList>
 						<Tab>基本</Tab>
-						<Tab>人員</Tab>
+						<Tab>リソース</Tab>
 						<Tab>カレンダー</Tab>
 						<Tab>テーマ</Tab>
 					</TabList>
@@ -58,8 +58,8 @@ const SettingEditor: FC<Props> = (props: Props) => {
 						<GeneralEditor />
 					</TabPanel>
 
-					<TabPanel className='setting-tab-item group'>
-						<GroupsEditor />
+					<TabPanel className='setting-tab-item resource'>
+						<ResourceEditor />
 					</TabPanel>
 
 					<TabPanel className='setting-tab-item calendar'>

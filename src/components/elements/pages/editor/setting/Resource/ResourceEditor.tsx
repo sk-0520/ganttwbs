@@ -1,8 +1,8 @@
 import { random } from "@ctrl/tinycolor";
 import { useContext, MouseEvent, useState, Fragment, FC } from "react";
 
-import GroupColorsDialog from "@/components/elements/pages/editor/setting/Group/GroupColorsDialog";
-import MemberEditor from "@/components/elements/pages/editor/setting/Group/MemberEditor";
+import GroupColorsDialog from "@/components/elements/pages/editor/setting/Resource/GroupColorsDialog";
+import MemberEditor from "@/components/elements/pages/editor/setting/Resource/MemberEditor";
 import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
