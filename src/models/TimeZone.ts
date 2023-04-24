@@ -62,12 +62,111 @@ export abstract class TimeZone {
 		return ResultFactory.success(new OffsetTimeZone(TimeSpan.fromMinutes(totalMinutes)));
 	}
 
+	public static getTimeZones(): Array<TimeZone> {
+		const baseTimeZoneNames = [
+			"Pacific/Kiritimati",
+			"Pacific/Enderbury",
+			"Pacific/Tongatapu",
+			"Pacific/Chatham",
+			"Asia/Kamchatka",
+			"Pacific/Auckland",
+			"Pacific/Fiji",
+			"Pacific/Norfolk",
+			"Pacific/Guadalcanal",
+			"Australia/Lord_Howe",
+			"Australia/Queensland",
+			"Australia/NSW",
+			"Australia/South",
+			"Australia/North",
+			"Asia/Seoul",
+			"Asia/Tokyo",
+			"Asia/Hong_Kong",
+			"Asia/Kuala_Lumpur",
+			"Asia/Manila",
+			"Asia/Shanghai",
+			"Asia/Singapore",
+			"Asia/Taipei",
+			"Antarctica/Casey",
+			"Asia/Bangkok",
+			"Asia/Jakarta",
+			"Asia/Saigon",
+			"Asia/Rangoon",
+			"Asia/Dacca",
+			"Asia/Katmandu",
+			"Asia/Calcutta",
+			"Asia/Colombo",
+			"Asia/Karachi",
+			"Asia/Tashkent",
+			"Asia/Yekaterinburg",
+			"Asia/Kabul",
+			"Asia/Dubai",
+			"Asia/Tbilisi",
+			"Asia/Tehran",
+			"Africa/Nairobi",
+			"Asia/Baghdad",
+			"Asia/Kuwait",
+			"Asia/Riyadh",
+			"Europe/Moscow",
+			"Africa/Cairo",
+			"Africa/Johannesburg",
+			"Asia/Jerusalem",
+			"Europe/Athens",
+			"Europe/Bucharest",
+			"Europe/Helsinki",
+			"Europe/Istanbul",
+			"Europe/Minsk",
+			"Europe/Amsterdam",
+			"Europe/Stockholm",
+			"Europe/Berlin",
+			"Europe/Brussels",
+			"Europe/Paris",
+			"Europe/Prague",
+			"Europe/Rome",
+			"Europe/Dublin",
+			"Europe/Lisbon",
+			"Europe/London",
+			"Atlantic/Cape_Verde",
+			"Atlantic/South_Georgia",
+			"America/Buenos_Aires",
+			"America/Sao_Paulo",
+			"America/St_Johns",
+			"America/Halifax",
+			"America/Puerto_Rico",
+			"America/Santiago",
+			"Atlantic/Bermuda",
+			"America/Caracas",
+			"America/Bogota",
+			"America/Indianapolis",
+			"America/Lima",
+			"America/New_York",
+			"America/Panama",
+			"America/Chicago",
+			"America/El_Salvador",
+			"America/Mexico_City",
+			"America/Denver",
+			"America/Phoenix",
+			"America/Los_Angeles",
+			"America/Tijuana",
+			"America/Anchorage",
+			"Pacific/Honolulu",
+			"Pacific/Niue",
+			"Pacific/Pago_Pago",
+		];
+
+		const timeZoneNames = [
+			...baseTimeZoneNames.sort(),
+			//"UTC",
+		];
+
+		return timeZoneNames.map(a => new IanaTimeZone(a));
+	}
+
 	/**
 	 *
 	 * @param s
 	 * @returns パース成功時はタイムゾーン。失敗時は `null`。
 	 */
-	public static tryParse(s: string): TimeZone|null {
+	public static tryParse(s: string): TimeZone | null {
 		return ResultFactory.parseErrorIsReturnNull(s, this.parseCore);
 	}
 
