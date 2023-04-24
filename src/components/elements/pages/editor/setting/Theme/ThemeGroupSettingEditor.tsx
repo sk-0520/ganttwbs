@@ -7,13 +7,19 @@ import { Colors } from "@/models/Colors";
 import { SettingContext, UUID } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
+import { DefaultSettings } from "@/models/DefaultSettings";
+import { Arrays } from "@/models/Arrays";
+import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
+
+const groupThemeColors = DefaultSettings.getGroupThemeColors();
 
 const reset = {
 	minimum: 1,
-	maximum: 100,
+	maximum: groupThemeColors.length * 3,
+	default: Math.round((groupThemeColors.length * 3) / 2),
 	color: {
-		begin: "#ff0000" as string,
-		end: "#ffff00" as string,
+		begin: Arrays.first(groupThemeColors),
+		end: Arrays.last(groupThemeColors),
 	}
 } as const;
 
@@ -21,8 +27,8 @@ const ThemeGroupSettingEditor: FC = () => {
 	const settingContext = useContext(SettingContext);
 
 	const [groups, setGroups] = useState(settingContext.theme.groups);
-	const [showResetColor, setShowResetColor] = useState(false);
-	const [resetCount, setResetCount] = useState(0);
+	const [visibleResetColor, setVisibleResetColor] = useState(false);
+	const [resetCount, setResetCount] = useState(reset.default);
 	const [resetColorBegin, setResetColorBegin] = useState(reset.color.begin);
 	const [resetColorEnd, setResetColorEnd] = useState(reset.color.end);
 
@@ -60,7 +66,13 @@ const ThemeGroupSettingEditor: FC = () => {
 			setResetColorBegin(reset.color.begin);
 			setResetColorEnd(reset.color.end);
 		}
-		setShowResetColor(true);
+		setVisibleResetColor(true);
+	}
+
+	function handleResetGroups() {
+		setResetCount(reset.default);
+		setResetColorBegin(reset.color.begin);
+		setResetColorEnd(reset.color.end);
 	}
 
 	return (
@@ -112,7 +124,7 @@ const ThemeGroupSettingEditor: FC = () => {
 				</tfoot>
 			</table>
 
-			{showResetColor && (
+			{visibleResetColor && (
 				<Dialog
 					button="submit"
 					title="一括設定"
@@ -120,27 +132,27 @@ const ThemeGroupSettingEditor: FC = () => {
 						if (r === "submit") {
 							const colors = resetCount <= 1
 								? [new TinyColor(resetColorBegin)]
-								: Colors.generateGradient(resetColorBegin, resetColorEnd, resetCount);
-const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a.toHexString() }));
+								: Colors.generateGradient(resetColorBegin, resetColorEnd, resetCount)
+								;
+							const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a.toHexString() }));
 							setGroups(settingContext.theme.groups = groups);
 						}
-						setShowResetColor(false);
+						setVisibleResetColor(false);
 					}}
 				>
 					<dl className="inputs">
 						<dt>
-							件数
+							件数(無限)
 						</dt>
 						<dd>
 							<input
 								type="number"
 								min={reset.minimum}
-								max={reset.maximum}
 								value={resetCount}
 								onChange={ev => setResetCount(ev.target.valueAsNumber)}
 							/>
 						</dd>
-						<dd>
+						<dd title={`有限(${reset.maximum})`}>
 							<input
 								type="range"
 								min={reset.minimum}
@@ -162,6 +174,14 @@ const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a.toHe
 								type="color"
 								value={resetColorEnd}
 								onChange={ev => setResetColorEnd(ev.target.value)}
+							/>
+						</dd>
+
+						<dt>初期化</dt>
+						<dd>
+							<DefaultButton
+								visibleLabel={true}
+								callbackClick={handleResetGroups}
 							/>
 						</dd>
 
