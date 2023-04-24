@@ -3,6 +3,8 @@ import { FC, useContext, useState } from "react";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
+import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
+import { DefaultSettings } from "@/models/DefaultSettings";
 
 const ThemeTimelineSettingEditor: FC = () => {
 	const settingContext = useContext(SettingContext);
@@ -30,6 +32,15 @@ const ThemeTimelineSettingEditor: FC = () => {
 	function handleChangeCompleted(color: Color) {
 		setCompleted(color);
 		settingContext.theme.timeline.completed = color;
+	}
+
+	function handleReset() {
+		settingContext.theme.timeline = DefaultSettings.getTimelineTheme();
+
+		setGroup(settingContext.theme.timeline.group);
+		setDefaultGroup(settingContext.theme.timeline.defaultGroup);
+		setDefaultTask(settingContext.theme.timeline.defaultTask);
+		setCompleted(settingContext.theme.timeline.completed);
 	}
 
 	return (
@@ -71,6 +82,16 @@ const ThemeTimelineSettingEditor: FC = () => {
 						<PlainColorPicker
 							color={completed}
 							callbackChanged={c => handleChangeCompleted(c)}
+						/>
+					</td>
+				</tr>
+
+				<tr>
+					<td></td>
+					<td>
+						<DefaultButton
+							visibleLabel={true}
+							callbackClick={handleReset}
 						/>
 					</td>
 				</tr>
