@@ -3,8 +3,8 @@
 @use "./common/box" as box;
 
 $cross-header-z-index: 5;
-$days-header-z-index: 4;
-$timelines-z-index: 3;
+$days-header-z-index: 3;
+$timelines-z-index: 4;
 $viewer-z-index: 2;
 
 #timeline {
@@ -127,8 +127,9 @@ $viewer-z-index: 2;
 			table-layout: fixed;
 			border-collapse: collapse;
 			@include box.height($app-header-height);
-			// Firefox だと大丈夫だけど Chrome がずれる。根本解決が全然分からんのでお茶を濁した
-			transform: translateY(-1px);
+			// DPI が 96 超えてるとあかんわ・・・
+			// // Firefox だと大丈夫だけど Chrome がずれる。根本解決が全然分からんのでお茶を濁した
+			// transform: translateY(-1px);
 		}
 
 		@mixin cell {
