@@ -292,8 +292,18 @@ export abstract class Timelines {
 	}
 
 	private static createSuccessWorkRange(holidays: Holidays, timeline: AnyTimeline, beginDate: DateTime, workload: TimeSpan, timeZone: TimeZone): SuccessWorkRange {
-		//TODO: 非稼働日を考慮（開始から足す感じいいはず）
-		const endDate = DateTime.convert(beginDate.getTime() + workload.totalMilliseconds, timeZone);
+		let endDate = DateTime.convert(beginDate.getTime() + workload.totalMilliseconds, timeZone);
+
+		const days = beginDate.diff(endDate).totalDays;
+		for (let i = 0; i < days; i++) {
+			const start = beginDate.add(i, "day");
+			if (holidays.dates.some(a => a.getTime() === start.toDateOnly().getTime())) {
+				endDate = endDate.add(1, "day");
+			} else if (holidays.weeks.includes(start.week as WeekIndex)) {
+				endDate = endDate.add(1, "day");
+			}
+		}
+
 		const result: SuccessWorkRange = {
 			kind: "success",
 			timeline: timeline,

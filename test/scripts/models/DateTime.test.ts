@@ -63,6 +63,14 @@ describe("DateTime", () => {
 		expect(expected.equals(actual)).toBeTruthy();
 	});
 
+	test.each([
+		[DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc)],
+		[DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T01:02:03", TimeZone.utc)],
+	])("toDateOnly", (expected, input) => {
+		const actual = input.toDateOnly();
+		expect(actual.getTime()).toBe(expected.getTime());
+	});
+
 
 	test.each([
 		["4321", "yyyy"],

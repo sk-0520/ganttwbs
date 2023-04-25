@@ -67,7 +67,7 @@ export class DateTime {
 
 	//#endregion
 
-	//#region property
+	//#region function
 
 	private static parseCore(input: string | Date | number | undefined, timeZone: TimeZone): DateTimeParseResult {
 		let create = cdate;
@@ -182,6 +182,26 @@ export class DateTime {
 	 */
 	public getTime(): number {
 		return this.date.toDate().getTime();
+	}
+
+	public toDateOnly(): DateTime {
+		let create = cdate;
+		if (this.timeZone.hasName) {
+			create = cdate().tz(this.timeZone.serialize()).cdateFn();
+		} else if (this.timeZone.hasOffset) {
+			create = cdate().utcOffset(this.timeZone.serialize()).cdateFn();
+		}
+
+		const date = create()
+			.set("year", this.year)
+			.set("month", this.month - 1)
+			.set("date", this.day)
+			.set("hour", 0)
+			.set("minute", 0)
+			.set("second", 0)
+			.set("millisecond", 0)
+			;
+		return new DateTime(date, this.timeZone);
 	}
 
 	/**
