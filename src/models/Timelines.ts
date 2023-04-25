@@ -294,19 +294,35 @@ export abstract class Timelines {
 	private static createSuccessWorkRange(holidays: Holidays, timeline: AnyTimeline, beginDate: DateTime, workload: TimeSpan, timeZone: TimeZone): SuccessWorkRange {
 		// 開始が定休日・祝日に当たる場合は平日まで移動
 		let begin = beginDate;
-		while(true) {
+		while (true) {
 			const date = begin.toDateOnly();
-			if(holidays.weeks.includes(date.week as WeekIndex)) {
+			if (holidays.weeks.includes(date.week as WeekIndex)) {
 				begin = date.add(1, "day");
 				continue;
-			} else if(holidays.dates.some(a => a.getTime() === date.getTime())) {
+			} else if (holidays.dates.some(a => a.getTime() === date.getTime())) {
 				begin = date.add(1, "day");
 				continue;
 			}
 			break;
 		}
 
-		let end = DateTime.convert(begin.getTime() + workload.totalMilliseconds, timeZone);
+		// 補正された開始日に対して工数を追加
+		let end = begin.add(TimeSpan.fromMilliseconds(workload.totalMilliseconds));
+
+		// 開始日から終了日までにある休日を加算
+		let count = Math.ceil(begin.diff(end).totalDays);
+		let add = 0;
+		for (let i = 0; i < count; i++) {
+			const date = begin.toDateOnly().add(i, "day");
+			if (holidays.weeks.includes(date.week as WeekIndex)) {
+				add += 1;
+				count += 1;
+			} else if (holidays.dates.some(a => a.getTime() === date.toDateOnly().getTime())) {
+				add += 1;
+				count += 1;
+			}
+		}
+		end = end.add(add, "day");
 
 		const result: SuccessWorkRange = {
 			kind: "success",
