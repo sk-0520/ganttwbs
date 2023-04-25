@@ -1,8 +1,8 @@
 import { Arrays } from "@/models/Arrays";
 import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
-import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, WeekIndex } from "@/models/data/Setting";
+import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId } from "@/models/data/Setting";
 import { SuccessWorkRange, WorkRange } from "@/models/data/WorkRange";
-import { DateTime } from "@/models/DateTime";
+import { DateTime, WeekIndex } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
@@ -296,7 +296,7 @@ export abstract class Timelines {
 		let begin = beginDate;
 		while (true) {
 			const date = begin.toDateOnly();
-			if (holidays.weeks.includes(date.week as WeekIndex)) {
+			if (holidays.weeks.includes(date.week)) {
 				begin = date.add(1, "day");
 				continue;
 			} else if (holidays.dates.some(a => a.getTime() === date.getTime())) {
@@ -314,7 +314,7 @@ export abstract class Timelines {
 		let add = 0;
 		for (let i = 0; i < count; i++) {
 			const date = begin.toDateOnly().add(i, "day");
-			if (holidays.weeks.includes(date.week as WeekIndex)) {
+			if (holidays.weeks.includes(date.week)) {
 				add += 1;
 				count += 1;
 			} else if (holidays.dates.some(a => a.getTime() === date.toDateOnly().getTime())) {

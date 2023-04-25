@@ -8,6 +8,7 @@ export type Unit = "second" | "minute" | "hour" | "day" | "month" | "year";
 
 type DateTimeParseResult = ParseResult<DateTime, Error>;
 
+export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 /**
  * 日付のラッパー。
@@ -41,8 +42,8 @@ export class DateTime {
 	}
 
 	/** 曜日(0-6) */
-	public get week(): number {
-		return this.date.get("day");
+	public get week(): WeekIndex {
+		return this.date.get("day") as WeekIndex;
 	}
 
 	/** 時(0-23) */
