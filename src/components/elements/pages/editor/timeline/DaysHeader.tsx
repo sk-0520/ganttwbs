@@ -1,6 +1,7 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
 import { useLocale } from "@/locales/locale";
+import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
@@ -18,101 +19,129 @@ interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, Tim
 	//nop
 }
 
+type YearMonth = {
+	year: number,
+	month: number,
+	length: number,
+	date: DateTime,
+};
+
 const DaysHeader: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
-	const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
+	const { dates, yearMonthBucket } = useMemo(() => {
+		console.debug("DaysHeader - dates", new Date());
+		const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
+		const dates = Arrays
+			.range(0, days)
+			.map(a => props.calendarInfo.range.from.add(TimeSpan.fromDays(a)))
+			;
 
-	const dates = Array.from(Array(days), (_, index) => {
-		const date = props.calendarInfo.range.from.add(TimeSpan.fromDays(index));
-		return date;
-	});
-
-	type YearMonth = {
-		year: number,
-		month: number,
-		length: number,
-		date: DateTime,
-	};
-	const yearMonthBucket: Array<YearMonth> = [];
-	for (const date of dates) {
-		const yearTargets = yearMonthBucket.filter(a => a.year === date.year);
-		if (yearTargets.length) {
-			const target = yearTargets.find(a => a.month === date.month);
-			if (target) {
-				target.length += 1;
+		const yearMonthBucket = new Array<YearMonth>();
+		for (const date of dates) {
+			const yearTargets = yearMonthBucket.filter(a => a.year === date.year);
+			if (yearTargets.length) {
+				const target = yearTargets.find(a => a.month === date.month);
+				if (target) {
+					target.length += 1;
+				} else {
+					yearMonthBucket.push({ year: date.year, month: date.month, length: 1, date: date });
+				}
 			} else {
 				yearMonthBucket.push({ year: date.year, month: date.month, length: 1, date: date });
 			}
-		} else {
-			yearMonthBucket.push({ year: date.year, month: date.month, length: 1, date: date });
 		}
-	}
-	yearMonthBucket.sort((a, b) => {
-		const year = a.year - b.year;
-		if (year) {
-			return year;
-		}
-		return a.month - b.month;
-	});
+		yearMonthBucket.sort((a, b) => {
+			const year = a.year - b.year;
+			if (year) {
+				return year;
+			}
+			return a.month - b.month;
+		});
+
+		return {
+			dates,
+			yearMonthBucket
+		};
+	}, [props.calendarInfo]);
+
+	const yearMonthNodes = useMemo(() => {
+		console.debug("renderYearMonthrenderYearMonthrenderYearMonth");
+		return yearMonthBucket.map(a => {
+			const year = a.year;
+			const month = a.month;
+
+			const display = a.date.format(locale.common.calendar.format.yearMonth);
+			const dateTime = `${year}-${month}`;
+
+			return (
+				<td key={display} className="cell _dynamic_design_cell" colSpan={a.length}>
+					<time dateTime={dateTime}>{display}</time>
+				</td>
+			);
+		});
+	}, [locale, yearMonthBucket]);
+
+	const dayNodes = useMemo(() => {
+		console.debug("renderDayrenderDayrenderDayrenderDay");
+		return dates.map(a => {
+			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
+			const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
+			const className = getCellClassName(classNames);
+
+			return (
+				<td key={a.getTime()} id={Timelines.toDaysId(a)} title={holidayEventValue?.event.display} className={className}>
+					<time dateTime={a.format("U")}>{a.day}</time>
+				</td>
+			);
+		});
+	}, [dates, props.calendarInfo, props.setting]);
+
+	const weekNodes = useMemo(() => {
+		console.debug("renderWeekrenderWeekrenderWeek");
+		return dates.map(a => {
+			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
+			const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
+			const className = getCellClassName(classNames);
+
+			return (
+				<td key={a.getTime()} title={holidayEventValue?.event.display} className={className}>
+					{locale.common.calendar.week.short[Settings.toWeekDay(a.week)]}
+				</td>
+			);
+		});
+	}, [dates, locale, props.calendarInfo, props.setting]);
+
+	const pinNodes = useMemo(() => {
+		console.debug("renderPinrenderPinrenderPin");
+		return dates.map(a => {
+			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
+			const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
+			const className = getCellClassName(classNames);
+
+			return (
+				<td key={a.getTime()} title={holidayEventValue?.event.display} className={className}>
+					@
+				</td>
+			);
+		});
+	}, [dates, props.calendarInfo, props.setting]);
 
 	return (
 		<div id='days-header'>
 			<table>
 				<tbody>
 					<tr className='year-month'>
-						{yearMonthBucket.map(a => {
-							const year = a.year;
-							const month = a.month;
-
-							const display = a.date.format(locale.common.calendar.format.yearMonth);
-							const dateTime = `${year}-${month}`;
-
-							return (
-								<td key={display} className="cell _dynamic_design_cell" colSpan={a.length}>
-									<time dateTime={dateTime}>{display}</time>
-								</td>
-							);
-						})}
+						{yearMonthNodes}
 					</tr>
 					<tr className='day'>
-						{dates.map(a => {
-							const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
-							const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
-							const className = getCellClassName(classNames);
-
-							return (
-								<td key={a.getTime()} id={Timelines.toDaysId(a)} title={holidayEventValue?.event.display} className={className}>
-									<time dateTime={a.format("U")}>{a.day}</time>
-								</td>
-							);
-						})}
+						{dayNodes}
 					</tr>
 					<tr className='week'>
-						{dates.map(a => {
-							const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
-							const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
-							const className = getCellClassName(classNames);
-
-							return (
-								<td key={a.getTime()} title={holidayEventValue?.event.display} className={className}>
-									{locale.common.calendar.week.short[Settings.toWeekDay(a.week)]}
-								</td>
-							);
-						})}
+						{weekNodes}
 					</tr>
 					<tr className='pin'>
-						{dates.map(a => {
-							const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
-							const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
-							const className = getCellClassName(classNames);
-
-							return (
-								<td key={a.getTime()} title={holidayEventValue?.event.display} className={className}>
-									@
-								</td>
-							);
-						})}
+						{pinNodes}
 					</tr>
 				</tbody>
 			</table>

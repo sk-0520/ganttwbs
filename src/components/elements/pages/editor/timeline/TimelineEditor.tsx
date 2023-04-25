@@ -1,5 +1,5 @@
 import { TinyColor } from "@ctrl/tinycolor";
-import { DragEvent, FC, useLayoutEffect } from "react";
+import { DragEvent, FC, useLayoutEffect, useMemo } from "react";
 import { ReactNode, useState } from "react";
 
 import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
@@ -50,7 +50,11 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 
-	const calendarInfo = Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
+	const calendarInfo = useMemo(() => {
+		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
+	}, [props.editorData.setting]);
+
+	//TODO: クソ重いっぽいんやけどどう依存解決してメモ化するのか分からんので枝葉から対応するのです
 
 	// // 初回のみ
 	// useEffect(() => {

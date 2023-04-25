@@ -1,5 +1,5 @@
 
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
@@ -21,6 +21,26 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 }
 
 const TimelineItems: FC<Props> = (props: Props) => {
+
+	const dummyAreaNodes = useMemo(() => {
+		console.debug("dummyAreaNodedummyAreaNodedummyAreaNode");
+		return Arrays.create(props.configuration.design.dummy.height).map(_ => {
+			return (
+				<tr key={"dmy-" + IdFactory.createReactKey()} className="dummy timeline-cell timeline-header _dynamic_programmable_cell_height">
+					<td className='timeline-cell timeline-id'>&nbsp;</td>
+					<td className='timeline-cell timeline-subject' />
+					<td className='timeline-cell timeline-workload' />
+					<td className='timeline-cell timeline-resource' />
+					<td className="timeline-cell timeline-relation" />
+					<td className='timeline-cell timeline-range-from' />
+					<td className='timeline-cell timeline-range-to' />
+					<td className='timeline-cell timeline-progress' />
+					<td className='timeline-cell timeline-controls' />
+				</tr>
+			);
+		});
+	}, [props.configuration]);
+
 	return (
 		<div id='timelines'>
 			<table>
@@ -43,24 +63,7 @@ const TimelineItems: FC<Props> = (props: Props) => {
 				</tbody>
 
 				<tfoot>
-					{
-						// ダミー領域追加
-						Arrays.create(props.configuration.design.dummy.height).map(_ => {
-							return (
-								<tr key={"dmy-" + IdFactory.createReactKey()} className="dummy timeline-cell timeline-header _dynamic_programmable_cell_height">
-									<td className='timeline-cell timeline-id'>&nbsp;</td>
-									<td className='timeline-cell timeline-subject' />
-									<td className='timeline-cell timeline-workload' />
-									<td className='timeline-cell timeline-resource' />
-									<td className="timeline-cell timeline-relation" />
-									<td className='timeline-cell timeline-range-from' />
-									<td className='timeline-cell timeline-range-to' />
-									<td className='timeline-cell timeline-progress' />
-									<td className='timeline-cell timeline-controls' />
-								</tr>
-							);
-						})
-					}
+					{dummyAreaNodes}
 				</tfoot>
 			</table>
 		</div>
