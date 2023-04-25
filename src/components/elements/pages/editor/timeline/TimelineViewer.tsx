@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useMemo } from "react";
 
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/ConnectorTimeline";
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
@@ -19,25 +19,35 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 
 const TimelineViewer: FC<Props> = (props: Props) => {
 
-	const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
+	const { cell, days } = useMemo(() => {
+		const cell = props.configuration.design.honest.cell;
+		const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
+		return {
+			cell,
+			days,
+		};
+	}, [props.configuration, props.calendarInfo]);
 
-	const cell = props.configuration.design.honest.cell;
+	const chartSize = useMemo(() => {
+		const result: AreaSize = {
+			width: cell.width.value * days,
+			height: cell.height.value * props.timelineStore.totalItemMap.size,
+		};
+		return result;
+	}, [cell, days, props.timelineStore.totalItemMap.size]);
 
-	const chartSize: AreaSize = {
-		width: cell.width.value * days,
-		height: cell.height.value * props.timelineStore.totalItemMap.size,
-	};
-
-	//TODO: for しなくてもできると思うけどパッと思いつかなんだ
-	const memberMap = new Map<MemberId, MemberMapValue>();
-	for (const group of props.setting.groups) {
-		for (const member of group.members) {
-			memberMap.set(member.id, { group: group, member: member });
+	const memberMap = useMemo(() => {
+		//TODO: for しなくてもできると思うけどパッと思いつかなんだ
+		const memberMap = new Map<MemberId, MemberMapValue>();
+		for (const group of props.setting.groups) {
+			for (const member of group.members) {
+				memberMap.set(member.id, { group: group, member: member });
+			}
 		}
-	}
+		return memberMap;
+	}, [props.setting]);
 
-	function renderGrid(): ReactNode {
-
+	const gridNodes = useMemo(() => {
 		const width = cell.width.value * days;
 		const height = cell.height.value * (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height);
 
@@ -123,12 +133,12 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				</g>
 			</g>
 		);
-	}
+	}, [cell, days, props.calendarInfo, props.configuration, props.setting, props.timelineStore.totalItemMap.size]);
 
 	return (
 		<div id='viewer'>
 			<svg id="canvas" width={chartSize.width} height={chartSize.height}>
-				{renderGrid()}
+				{gridNodes}
 				{props.timelineStore.sequenceItems.map((a, i) => {
 					return (
 						<GanttChartTimeline
