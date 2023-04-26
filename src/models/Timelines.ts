@@ -174,12 +174,14 @@ export abstract class Timelines {
 	}
 
 	/**
-	 * 対象グループの子孫をマッピング
+	 * 対象グループとその子孫をマッピング
 	 * @param groupTimeline
-	 * @returns マップデータ(`groupTimeline` は含まれない)
+	 * @returns マップデータ
 	 */
 	public static getTimelinesMap(groupTimeline: GroupTimeline): Map<TimelineId, AnyTimeline> {
 		const result = new Map<TimelineId, AnyTimeline>();
+
+		result.set(groupTimeline.id, groupTimeline);
 
 		for (const timeline of groupTimeline.children) {
 			if (Settings.maybeGroupTimeline(timeline)) {
@@ -429,6 +431,7 @@ export abstract class Timelines {
 		}
 
 		// グループ・タスクをそれぞれ算出
+		console.time("反復");
 		const limiter = new Limiter(recursiveMaxCount);
 		const targetTimelines = new Set(flatTimelines.filter(a => !result.has(a.id)));
 		while (result.size < flatTimelines.length) {
@@ -559,6 +562,7 @@ export abstract class Timelines {
 			}
 		}
 
+		console.timeEnd("反復");
 		console.debug("反復実施数", limiter.count, "result", result.size, "flatTimelines", flatTimelines.length);
 
 		return result;

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
@@ -10,6 +10,7 @@ import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Timelines } from "@/models/Timelines";
+import { IdFactory } from "@/models/IdFactory";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 	//nop
@@ -18,6 +19,14 @@ interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, Tim
 const CrossHeader: FC<Props> = (props: Props) => {
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
+
+	useEffect(() => {
+		const timeline = props.timelineStore.changedItemMap.get(IdFactory.rootTimelineId);
+		if (timeline) {
+			console.debug(timeline);
+		}
+
+	}, [props.timelineStore]);
 
 	function addEmptyTimeline(kind: TimelineKind) {
 		props.timelineStore.addEmptyTimeline(
@@ -115,7 +124,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 				</div>
 			</div>
 			<div className="footer">
-				<div className='timeline-header'>
+				<div className='timeline-header header'>
 					<div className='timeline-cell timeline-id'>ID</div>
 					<div className='timeline-cell timeline-subject'>作業</div>
 					<div className='timeline-cell timeline-workload'>工数</div>
