@@ -291,15 +291,25 @@ export abstract class Timelines {
 		return result;
 	}
 
-	private static createSuccessWorkRange(holidays: Holidays, timeline: AnyTimeline, beginDate: DateTime, workload: TimeSpan, timeZone: TimeZone): SuccessWorkRange {
-		// 開始が定休日・祝日に当たる場合は平日まで移動
+	private static createSuccessWorkRange(holidays: Holidays, timeline: AnyTimeline, beginDate: DateTime, workload: TimeSpan, timeZone: TimeZone, recursiveMaxCount: number): SuccessWorkRange {
+
+		function isHoliday(dateOnly: DateTime): boolean {
+			if (holidays.weeks.includes(dateOnly.week)) {
+				return true;
+			}
+
+			if (holidays.dates.some(a => a.getTime() === dateOnly.getTime())) {
+				return true;
+			}
+
+			return false;
+		}
+
+		// 開始が休日に当たる場合は平日まで移動
 		let begin = beginDate;
 		while (true) {
 			const date = begin.toDateOnly();
-			if (holidays.weeks.includes(date.week)) {
-				begin = date.add(1, "day");
-				continue;
-			} else if (holidays.dates.some(a => a.getTime() === date.getTime())) {
+			if (isHoliday(date)) {
 				begin = date.add(1, "day");
 				continue;
 			}
@@ -310,14 +320,14 @@ export abstract class Timelines {
 		let end = begin.add(TimeSpan.fromMilliseconds(workload.totalMilliseconds));
 
 		// 開始日から終了日までにある休日を加算
-		let count = Math.ceil(begin.diff(end).totalDays);
+		let count = begin.toDateOnly().diff(begin).totalDays + begin.diff(end).totalDays;
+		console.debug("単純日付", count);
+		// let recursiveCount = 0;
 		let add = 0;
 		for (let i = 0; i < count; i++) {
-			const date = begin.toDateOnly().add(i, "day");
-			if (holidays.weeks.includes(date.week)) {
-				add += 1;
-				count += 1;
-			} else if (holidays.dates.some(a => a.getTime() === date.toDateOnly().getTime())) {
+			const date = begin.add(i, "day").toDateOnly();
+			console.debug("対象日", date.format("U"));
+			if (isHoliday(date)) {
 				add += 1;
 				count += 1;
 			}
@@ -363,7 +373,7 @@ export abstract class Timelines {
 			}
 			const beginDate = DateTime.parse(timeline.static, timeZone);
 			const workload = TimeSpan.parse(timeline.workload);
-			const successWorkRange = this.createSuccessWorkRange(holidays, timeline, beginDate, workload, timeZone);
+			const successWorkRange = this.createSuccessWorkRange(holidays, timeline, beginDate, workload, timeZone, recursiveMaxCount);
 			result.set(timeline.id, successWorkRange);
 			cache.statics.set(timeline.id, timeline);
 		}
@@ -397,7 +407,7 @@ export abstract class Timelines {
 
 			const workload = TimeSpan.parse(timeline.workload);
 
-			const successWorkRange = this.createSuccessWorkRange(holidays, timeline, prevRange.end, workload, timeZone);
+			const successWorkRange = this.createSuccessWorkRange(holidays, timeline, prevRange.end, workload, timeZone, recursiveMaxCount);
 			result.set(timeline.id, successWorkRange);
 		}
 
@@ -481,7 +491,7 @@ export abstract class Timelines {
 					}
 
 					const workload = TimeSpan.parse(timeline.workload);
-					const successWorkRange = this.createSuccessWorkRange(holidays, timeline, prevDate, workload, timeZone);
+					const successWorkRange = this.createSuccessWorkRange(holidays, timeline, prevDate, workload, timeZone, recursiveMaxCount);
 					result.set(timeline.id, successWorkRange);
 
 				} else if (Settings.maybeGroupTimeline(timeline)) {
