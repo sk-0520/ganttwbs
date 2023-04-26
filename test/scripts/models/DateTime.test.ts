@@ -36,6 +36,7 @@ describe("DateTime", () => {
 		[DateTime.parse("2000-01-02T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromDays(1)],
 	])("add - TimeSpan", (expected: DateTime, date: DateTime, diff: TimeSpan) => {
 		const actual = date.add(diff);
+		expect(actual.timeZone.serialize()).toEqual(date.timeZone.serialize());
 		expect(actual.getTime()).toEqual(expected.getTime());
 	});
 
@@ -50,6 +51,7 @@ describe("DateTime", () => {
 		[DateTime.parse("2001-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), 1, "year"],
 	])("add - unit", (expected: DateTime, date: DateTime, diff: number, unit: string) => {
 		const actual = date.add(diff, unit as Unit);
+		expect(actual.timeZone.serialize()).toEqual(date.timeZone.serialize());
 		expect(actual.getTime()).toEqual(expected.getTime());
 	});
 
@@ -70,6 +72,7 @@ describe("DateTime", () => {
 		[DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T01:02:03", TimeZone.create("Asia/Tokyo"))],
 	])("toDateOnly", (expected, input) => {
 		const actual = input.toDateOnly();
+		expect(actual.timeZone.serialize()).toBe(input.timeZone.serialize());
 		expect(actual.getTime()).toBe(expected.getTime());
 	});
 
