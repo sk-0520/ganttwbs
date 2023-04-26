@@ -26,8 +26,8 @@
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
   "@types/node": {
-    "module": "@types/node@18.16.0",
-    "version": "18.16.0",
+    "module": "@types/node@18.16.1",
+    "version": "18.16.1",
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
@@ -38,14 +38,14 @@
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
   "@types/react-dom": {
-    "module": "@types/react-dom@18.0.11",
-    "version": "18.0.11",
+    "module": "@types/react-dom@18.2.1",
+    "version": "18.2.1",
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
   "@types/react": {
-    "module": "@types/react@18.0.38",
-    "version": "18.0.38",
+    "module": "@types/react@18.2.0",
+    "version": "18.2.0",
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
@@ -56,14 +56,14 @@
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
   "@typescript-eslint/eslint-plugin": {
-    "module": "@typescript-eslint/eslint-plugin@5.59.0",
-    "version": "5.59.0",
+    "module": "@typescript-eslint/eslint-plugin@5.59.1",
+    "version": "5.59.1",
     "licenses": "MIT",
     "repository": "https://github.com/typescript-eslint/typescript-eslint"
   },
   "@typescript-eslint/parser": {
-    "module": "@typescript-eslint/parser@5.59.0",
-    "version": "5.59.0",
+    "module": "@typescript-eslint/parser@5.59.1",
+    "version": "5.59.1",
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/typescript-eslint/typescript-eslint"
   },
@@ -195,8 +195,8 @@
     "repository": "https://github.com/react-hook-form/react-hook-form"
   },
   "react-i18next": {
-    "module": "react-i18next@12.2.0",
-    "version": "12.2.0",
+    "module": "react-i18next@12.2.2",
+    "version": "12.2.2",
     "publisher": "Jan Mühlemann",
     "licenses": "MIT",
     "repository": "https://github.com/i18next/react-i18next"
@@ -229,8 +229,8 @@
     "repository": "https://github.com/shannonmoeller/reset-css"
   },
   "sass": {
-    "module": "sass@1.62.0",
-    "version": "1.62.0",
+    "module": "sass@1.62.1",
+    "version": "1.62.1",
     "publisher": "Natalie Weizenbaum",
     "licenses": "MIT",
     "repository": "https://github.com/sass/dart-sass"
