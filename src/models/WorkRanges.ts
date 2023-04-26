@@ -10,7 +10,7 @@ export class WorkRanges {
 	 */
 	public static maybeSuccessWorkRange(workRange: WorkRange | null | undefined): workRange is SuccessWorkRange {
 		if (workRange) {
-			return workRange.kind === "success";
+			return workRange.kind === WorkRangeKind.Success;
 		}
 
 		return false;
@@ -18,11 +18,11 @@ export class WorkRanges {
 
 	public static isError(workRange: WorkRange): boolean {
 		const errorKinds: Array<WorkRangeKind> = [
-			"no-input",
-			"relation-error",
-			"relation-no-input",
-			"recursive-error",
-			"unknown-error",
+			WorkRangeKind.NoInput,
+			WorkRangeKind.RelationError,
+			WorkRangeKind.RelationNoInput,
+			WorkRangeKind.RecursiveError,
+			WorkRangeKind.UnknownError,
 		];
 
 		return errorKinds.includes(workRange.kind);

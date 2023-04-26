@@ -39,7 +39,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
 	const [memberId, setMemberId] = useState(Settings.maybeTaskTimeline(props.currentTimeline) ? props.currentTimeline.memberId : "");
-	const [beginKind, setBeginKind] = useState<WorkRangeKind>("loading");
+	const [beginKind, setBeginKind] = useState(WorkRangeKind.Loading);
 	const [beginDate, setBeginDate] = useState<DateTime | null>(null);
 	const [endDate, setEndDate] = useState<DateTime | null>(null);
 	const [progress, setProgress] = useState(0);

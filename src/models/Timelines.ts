@@ -1,7 +1,7 @@
 import { Arrays } from "@/models/Arrays";
 import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId } from "@/models/data/Setting";
-import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange } from "@/models/data/WorkRange";
+import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime, WeekIndex } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
 import { Limiter } from "@/models/Limiter";
@@ -294,7 +294,7 @@ export abstract class Timelines {
 
 	private static createRecursiveCalculatorWorkRange(timeline: AnyTimeline): RecursiveCalculationErrorWorkRange {
 		return {
-			kind: "recursive-error",
+			kind: WorkRangeKind.RecursiveError,
 			timeline: timeline,
 		};
 	}
@@ -351,7 +351,7 @@ export abstract class Timelines {
 		end = end.add(endDays, "day");
 
 		const result: SuccessWorkRange = {
-			kind: "success",
+			kind: WorkRangeKind.Success,
 			timeline: timeline,
 			begin: begin,
 			end: end,
@@ -399,7 +399,7 @@ export abstract class Timelines {
 			.filter(a => !a.static && !a.previous.length);
 		for (const timeline of emptyTimelines) {
 			const range: WorkRange = {
-				kind: "no-input",
+				kind: WorkRangeKind.NoInput,
 				timeline: timeline,
 			};
 			result.set(timeline.id, range);
@@ -454,7 +454,7 @@ export abstract class Timelines {
 					if (timeline.previous.some(a => a === timeline.id)) {
 						// 前工程に自分がいればもうなんもできん
 						result.set(timeline.id, {
-							kind: "self-selected-error",
+							kind: WorkRangeKind.SelfSelectedError,
 							timeline: timeline,
 						});
 						continue;
@@ -463,7 +463,7 @@ export abstract class Timelines {
 					if (timeline.previous.some(a => cache.noInputs.has(a))) {
 						// 前工程に未入力項目があれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
-							kind: "relation-no-input",
+							kind: WorkRangeKind.RelationNoInput,
 							timeline: timeline,
 						});
 						continue;
@@ -480,7 +480,7 @@ export abstract class Timelines {
 					if (resultWorkRanges.some(a => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
-							kind: "relation-error",
+							kind: WorkRangeKind.RelationError,
 							timeline: timeline,
 						});
 						continue;
@@ -514,7 +514,7 @@ export abstract class Timelines {
 					if (!timeline.children.length) {
 						// 子がいないならエラっとっく
 						const range: WorkRange = {
-							kind: "no-children",
+							kind: WorkRangeKind.NoChildren,
 							timeline: timeline,
 						};
 						result.set(timeline.id, range);
@@ -538,7 +538,7 @@ export abstract class Timelines {
 					if (resultWorkRanges.some(a => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
-							kind: "relation-error",
+							kind: WorkRangeKind.RelationError,
 							timeline: timeline,
 						});
 						continue;
@@ -549,7 +549,7 @@ export abstract class Timelines {
 						const totalSuccessWorkRange = WorkRanges.getTotalSuccessWorkRange(items);
 						const successWorkRange: SuccessWorkRange = {
 							timeline: timeline,
-							kind: "success",
+							kind: WorkRangeKind.Success,
 							begin: totalSuccessWorkRange.minimum.begin,
 							end: totalSuccessWorkRange.maximum.end,
 						};
