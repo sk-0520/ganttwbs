@@ -1,14 +1,14 @@
 {
 	"name": "ganttwbs",
-	"version": "0.1.0",
+	"version": "0.0.0",
 	"private": true,
 	"description": "できるか知らんけどガントチャート的なものを表示・編集したい。",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/sk-0520/ganttwbs.git"
 	},
-	"author": "",
-	"license": "ISC",
+	"author": "sk",
+	"license": "WTFPL2",
 	"bugs": {
 		"url": "https://github.com/sk-0520/ganttwbs/issues"
 	},
