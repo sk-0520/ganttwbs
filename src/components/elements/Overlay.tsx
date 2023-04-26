@@ -1,5 +1,8 @@
-import { NextPage } from "next";
-import style from "../../styles/modules/components/elements/Overlay.module.scss";
+
+import { FC, ReactNode, useEffect, useRef, MouseEvent } from "react";
+
+import style from "@/styles/modules/components/elements/Overlay.module.scss";
+
 
 interface Props {
 	isVisible: boolean;
@@ -9,17 +12,34 @@ interface Props {
 	callBackHidden?: () => void;
 
 	/** 子要素 */
-	children: React.ReactNode;
+	children: ReactNode;
 }
 
 /**
  * @param props
  */
-const Component: NextPage<Props> = (props: Props) => {
+const Overlay: FC<Props> = (props: Props) => {
 
-	function handleHide() {
-		if(props.callBackHidden) {
+	const refChildren = useRef<HTMLSpanElement>(null);
+
+	useEffect(() => {
+		if (refChildren.current) {
+			refChildren.current.addEventListener("wheel", ev => {
+				ev.preventDefault();
+			}, { passive: false });
+		}
+	}, []);
+
+	function handleHide(): void {
+		if (props.callBackHidden) {
 			props.callBackHidden();
+		}
+	}
+
+	function handleMouseDown(ev: MouseEvent): void {
+		// ほんまかいな: https://developer.mozilla.org/ja/docs/Web/API/MouseEvent/button#%E5%80%A4
+		if (ev.button === 1) {
+			ev.preventDefault();
 		}
 	}
 
@@ -27,14 +47,24 @@ const Component: NextPage<Props> = (props: Props) => {
 		<>
 			{props.isVisible && (
 				<>
-					<div className={style.overlay} onClick={handleHide}>
+					<div
+						className={style.overlay}
+						onClick={handleHide}
+						onMouseDown={handleMouseDown}
+					>
 						{props.customClassName && <div className={props.customClassName} />}
 					</div>
-					<span className={style.children}>{props.children}</span>
+					<span
+						ref={refChildren}
+						className={style.children}
+						onMouseDown={handleMouseDown}
+					>
+						{props.children}
+					</span>
 				</>
 			)}
 		</>
 	);
-}
+};
 
-export default Component;
+export default Overlay;

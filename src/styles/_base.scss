@@ -1,10 +1,17 @@
 @use "variable" as variable;
 
+$font-family: "Meiryo UI", "Yu Gothic UI", "ヒラギノ角ゴシック", "Hiragino Sans", "klee", "Consolas", "Calibri",
+	sans-serif;
+
 html,
-html * {
-	font-family: 'Meiryo UI','Yu Gothic UI','ヒラギノ角ゴシック','Hiragino Sans','klee','Consolas','Calibri',sans-serif;
+body {
+	font-family: $font-family;
 	font-size: variable.$page-mode-font-size;
 	line-height: 1.2em;
+}
+
+input, textarea, select {
+	font-family: $font-family;
 }
 
 body {

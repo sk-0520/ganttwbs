@@ -1,4 +1,4 @@
-import { Strings } from "../../../src/models/Strings";
+import { Strings } from "@/models/Strings";
 
 describe("String", () => {
 	test.each([
@@ -91,20 +91,6 @@ describe("String", () => {
 	])("splitLines", (expected: Array<string>, input: string | null | undefined) => {
 		const actual = Strings.splitLines(input);
 		expect(actual).toEqual(expected);
-	});
-
-	test.each([
-		[false, null],
-		[false, undefined],
-		[false, ""],
-		[false, "t"],
-		[false, "on"],
-		[false, "yes"],
-		[true, "true"],
-		[true, "True"],
-		[true, "TRUE"],
-	])("toBoolean", (expected: boolean, input: string | null | undefined) => {
-		expect(Strings.toBoolean(input)).toBe(expected);
 	});
 
 });

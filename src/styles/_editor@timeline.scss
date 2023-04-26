@@ -1,0 +1,492 @@
+@use "variable" as variable;
+@use "./mixin/control" as control;
+@use "./common/box" as box;
+
+$cross-header-z-index: 5;
+$days-header-z-index: 3;
+$timelines-z-index: 4;
+$viewer-z-index: 2;
+
+#timeline {
+	$timeline-header-id-width: 14ch;
+	$timeline-header-subject-width: 15ch;
+	$timeline-header-workload-width: 9ch;
+	$timeline-header-resource-width: 10ch;
+	$timeline-header-relation-width: 4ch;
+	$timeline-header-range-from-width: 12ch;
+	$timeline-header-range-to-width: 12ch;
+	$timeline-header-progress-width: 7ch;
+	$timeline-header-controls-item-width: 5ch;
+
+	$app-header-height: 80px;
+	$app-header-width: $timeline-header-id-width + $timeline-header-subject-width + $timeline-header-workload-width +
+		$timeline-header-resource-width + $timeline-header-relation-width + $timeline-header-range-from-width +
+		$timeline-header-range-to-width + $timeline-header-progress-width + $timeline-header-controls-item-width;
+
+	display: grid;
+	width: max-content;
+
+	font-size: variable.$app-timeline-mode-font-size;
+
+	* {
+		font-size: variable.$app-timeline-mode-font-size;
+	}
+
+	.timeline-header {
+		display: inline-flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		justify-content: flex-start;
+
+		.timeline-id {
+			@include box.width($timeline-header-id-width);
+		}
+		.timeline-subject {
+			@include box.width($timeline-header-subject-width);
+		}
+		.timeline-workload {
+			@include box.width($timeline-header-workload-width);
+		}
+		.timeline-resource {
+			@include box.width($timeline-header-resource-width);
+		}
+		.timeline-relation {
+			@include box.width($timeline-header-relation-width);
+			text-align: center;
+		}
+		.timeline-range-from {
+			@include box.width($timeline-header-range-from-width);
+		}
+		.timeline-range-to {
+			@include box.width($timeline-header-range-to-width);
+		}
+		.timeline-range-area {
+			@include box.width($timeline-header-range-from-width + $timeline-header-range-to-width);
+		}
+		.timeline-progress {
+			@include box.width($timeline-header-progress-width);
+		}
+		.timeline-controls {
+			@include box.width($timeline-header-controls-item-width);
+		}
+	}
+
+	#cross-header {
+		display: flex;
+		flex-direction: column;
+		background: #dddddd;
+		z-index: $cross-header-z-index;
+		position: sticky;
+		top: 0;
+		left: 0;
+		grid-row-start: 1;
+		grid-column-start: 1;
+
+		width: $app-header-width;
+		height: $app-header-height;
+		border-bottom: 1px solid black;
+		border-right: 1px solid black;
+
+		.header {
+			h1 {
+				font-weight: bold;
+			}
+		}
+		.content {
+			flex: content;
+		}
+		.footer {
+			background: darkgrey;
+
+			.timeline-header {
+				text-align: center;
+
+				.timeline-cell {
+					border-right: 1px solid black;
+				}
+			}
+		}
+	}
+
+	#days-header {
+		$days-header-background: #eeeeee;
+
+		background: $days-header-background;
+		//border-bottom: 1px solid black;
+
+		z-index: $days-header-z-index;
+		position: sticky;
+		top: 0;
+		grid-row-start: 1;
+		grid-column-start: 2;
+
+		@include box.height($app-header-height);
+		//height: $app-header-height;
+
+		table {
+			table-layout: fixed;
+			border-collapse: collapse;
+			@include box.height($app-header-height);
+			// DPI が 96 超えてるとあかんわ・・・
+			// // Firefox だと大丈夫だけど Chrome がずれる。根本解決が全然分からんのでお茶を濁した
+			// transform: translateY(-1px);
+		}
+
+		@mixin cell {
+			border-right: 1px solid black;
+			border-bottom: 1px solid black;
+		}
+
+		.year-month {
+			td {
+				position: sticky;
+				top: 0;
+				left: $app-header-width;
+				background: $days-header-background;
+
+				time {
+					border-left: 1px dotted black;
+					padding-left: 10px;
+				}
+			}
+		}
+
+		.day {
+			text-align: center;
+
+			td {
+				@include cell();
+			}
+		}
+
+		.week {
+			text-align: center;
+
+			td {
+				@include cell();
+			}
+		}
+
+		.pin {
+			text-align: center;
+
+			td {
+				@include cell();
+			}
+		}
+	}
+
+	#timelines {
+		background: white;
+		z-index: $timelines-z-index;
+		position: sticky;
+		left: 0;
+		grid-row-start: 2;
+		grid-column-start: 1;
+		width: $app-header-width;
+
+		.task {
+			.timeline-range-from,
+			.timeline-range-to,
+			.timeline-range-area {
+				&.clickable {
+					cursor: pointer;
+				}
+			}
+		}
+
+		.timeline-range-from {
+			text-align: center;
+		}
+
+		.timeline-range-to {
+			text-align: center;
+		}
+
+		.timeline-range-area {
+			text-align: center;
+		}
+
+		.timeline-header {
+			border-bottom: 1px dotted black;
+
+			&.dragging {
+				opacity: 0.8;
+				filter: contrast(50%) grayscale(100%);
+			}
+
+			&.drag-over {
+				position: relative;
+				//mix-blend-mode: overlay;
+				outline: 1px solid red;
+				opacity: 0.8;
+			}
+
+			&.hover {
+				position: relative;
+				outline: 3px double rgba(255, 0, 0, 0.555);
+			}
+
+			.timeline-cell {
+				border-right: 1px dotted black;
+			}
+
+			.edit {
+				@mixin editing($border-color, $background) {
+					border: 1px solid $border-color;
+					background: $background;
+				}
+
+				background: rgba($color: #fff, $alpha: 0.5);
+				border: 1px solid transparent;
+				outline: none;
+
+				// @at-root {
+				// 	select.edit {
+				// 		outline: 10px solid lime !important;;
+				// 	}
+				// }
+
+				&:disabled,
+				&:read-only {
+					cursor: default;
+				}
+
+				&:not(:disabled):not(:read-only) {
+					&:hover {
+						@include editing(gray, rgba(white, 0.9));
+					}
+					&:focus {
+						@include editing(black, white);
+					}
+				}
+			}
+
+			.prompt {
+				$prompt-background-color: palegoldenrod;
+				$prompt-outline-width: 2px;
+
+				position: relative;
+
+				background-color: $prompt-background-color;
+				outline: $prompt-outline-width $prompt-background-color solid;
+				z-index: $timelines-z-index + 1;
+
+				.tools {
+					outline: $prompt-outline-width $prompt-background-color solid;
+					height: fit-content;
+					background-color: $prompt-background-color;
+
+					width: max-content;
+
+					&.before {
+						position: absolute;
+						//right: 100%;
+						top: 0;
+						transform: translateX(-100%);
+					}
+
+					&.after {
+						position: absolute;
+						left: calc(100% + $prompt-outline-width);
+						top: 0;
+					}
+
+					button {
+						width: 100%;
+					}
+				}
+
+				// .overlay {
+				// 	&::before {
+				// 		z-index: $timelines-z-index + 2;
+				// 		grid-row-start: 1;
+				// 		grid-column-start: 1;
+
+				// 		position: fixed;
+				// 		top: 0;
+				// 		left: 0;
+				// 		bottom: 0;
+				// 		right: 0;
+				// 	}
+				// }
+			}
+
+			.timeline-id {
+				&[draggable="true"] {
+					$cursor: grab;
+
+					cursor: $cursor;
+
+					&.dragging {
+						opacity: 1;
+						color: black;
+						border: 1px solid gray;
+					}
+
+					* {
+						cursor: $cursor;
+					}
+				}
+
+				.previous {
+					display: none;
+				}
+			}
+
+			.timeline-range-area.prompt {
+				.contents {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: center;
+
+					.main {
+						flex: content;
+
+						input {
+							@include control.reset();
+							background: white;
+							color: black;
+							width: 100%;
+						}
+					}
+
+					li {
+						display: flex;
+						button {
+							align-items: center;
+							justify-content: center;
+
+							@include control.reset();
+							border: 1px solid black;
+							width: 2em;
+							background: gainsboro;
+						}
+					}
+				}
+				.tools {
+					button {
+						text-align: left;
+					}
+				}
+			}
+
+			label {
+				display: block;
+			}
+
+			.timeline-subject {
+				input {
+					width: 100%;
+				}
+			}
+
+			.timeline-workload {
+				input[type="number"] {
+					width: 100%;
+				}
+			}
+
+			.timeline-resource {
+				select {
+					width: 100%;
+				}
+			}
+
+			.timeline-progress {
+				input[type="number"] {
+					width: 100%;
+				}
+			}
+
+			.timeline-controls {
+				button.cell {
+					@include control.reset();
+
+					display: inline-block;
+					width: 100%;
+					height: 100%;
+				}
+
+				.tools {
+					&.before {
+					}
+
+					&.after {
+						.panel {
+							color: #000;
+							table-layout: fixed;
+							width: 300px;
+
+							.col-header {
+								width: 5em;
+								padding-right: 1em;
+							}
+
+							.col-cell {
+								//width: 6em;
+							}
+
+							button.simple {
+								text-align: left;
+								padding: 0;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		dialog.selector {
+			table.previous {
+				tr {
+					&.self {
+					}
+				}
+
+				td {
+					white-space: nowrap;
+
+					& > label {
+						display: block;
+					}
+				}
+			}
+		}
+	}
+
+	#viewer {
+		z-index: $viewer-z-index;
+		width: 100%;
+		height: 100%;
+		// border-top: 1px solid black;
+
+		grid-row-start: 2;
+		grid-column-start: 2;
+
+		#canvas {
+			width: 100%;
+			height: 100%;
+		}
+
+		#connecters {
+			position: relative;
+		}
+	}
+
+	/*
+	#highlight {
+		position: absolute;
+		top: $app-header-height;
+		left: 0;
+		// width: 100vw;
+		// height: 100vh;
+		z-index: 3;
+
+		pointer-events: none;
+
+		background-color: rgba(255, 0, 0, 0.295);
+	}
+	*/
+}

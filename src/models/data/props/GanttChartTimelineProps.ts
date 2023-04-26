@@ -1,24 +1,19 @@
-import { GroupTimeline, MemberId, Timeline } from "../Setting";
-import { EditProps } from "./EditProps";
-import { MemberMapValue } from "../MemberMapValue";
-import { ChartSize } from "../ChartSize";
-import { TimelineStore } from "@/models/store/TimelineStore";
+import { AreaSize } from "@/models/data/AreaSize";
+import { MemberMapValue } from "@/models/data/MemberMapValue";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { SettingProps } from "@/models/data/props/SettingProps";
+import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { GroupTimeline, MemberId, AnyTimeline } from "@/models/data/Setting";
 
-export interface GanttChartTimelineProps extends EditProps {
+
+export interface GanttChartTimelineProps extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 	parentGroup: GroupTimeline | null;
-	currentTimeline: Timeline;
+	currentTimeline: AnyTimeline;
 	currentIndex: number;
 
-	range: {
-		from: Date,
-		to: Date,
-	};
-	chartSize: ChartSize;
+	chartSize: AreaSize;
 
 	memberMap: ReadonlyMap<MemberId, MemberMapValue>;
-
-	updateRelations: () => void;
-
-	timelineStore: TimelineStore;
 }
 

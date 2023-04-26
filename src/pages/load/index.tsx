@@ -3,15 +3,15 @@ import { NextRouter, useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import Layout from "@/components/layout/Layout";
+import { EditorData } from "@/models/data/EditorData";
+import { SettingSchema } from "@/models/data/Setting";
 import { Goto } from "@/models/Goto";
-import { EditData } from "@/models/data/EditData";
-import { Setting } from "@/models/data/Setting";
 
 interface Input {
 	files: FileList;
 }
 
-const Page: NextPage = () => {
+const LoadPage: NextPage = () => {
 	const { register, handleSubmit, } = useForm<Input>();
 	const router = useRouter();
 
@@ -29,7 +29,7 @@ const Page: NextPage = () => {
 	);
 };
 
-export default Page;
+export default LoadPage;
 
 async function onSubmit(data: Input, router: NextRouter) {
 	console.log(data);
@@ -39,14 +39,23 @@ async function onSubmit(data: Input, router: NextRouter) {
 
 	const json = await file.text();
 	const settingObject = JSON.parse(json);
-	//TODO: 型チェック
-	const setting = settingObject as Setting;
+
+	//TODO: バージョン確認
+	const settingSchemaResult = SettingSchema.parse(settingObject);
+	/*
+	if(!settingSchemaResult.success) {
+		console.error("error");
+		return;
+	}
+	const setting = settingSchemaResult.data;
+	*/
+	const setting = settingSchemaResult;
 	console.debug(setting);
 	console.debug(fileName);
 
-	const editData: EditData = {
+	const editData: EditorData = {
 		fileName: fileName,
 		setting: setting,
 	};
-	Goto.edit(editData, router);
+	Goto.editor(editData, router);
 }

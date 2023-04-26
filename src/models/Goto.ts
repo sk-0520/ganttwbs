@@ -1,13 +1,22 @@
 import { NextRouter } from "next/router";
 
+import { EditorData } from "@/models/data/EditorData";
 import { Storage } from "@/models/Storage";
-import { EditData } from "@/models/data/EditData";
 
+/**
+ * 画面遷移処理。
+ */
 export abstract class Goto {
 
-	public static edit(editData: EditData, router: NextRouter): Promise<boolean> {
-		Storage.saveEditData(editData);
-		return router.push("/edit");
+	/**
+	 * エディター(アプリ的に本体)に移動。
+	 * @param editData
+	 * @param router
+	 * @returns
+	 */
+	public static editor(editData: EditorData, router: NextRouter): Promise<boolean> {
+		Storage.saveEditorData(editData);
+		return router.push("/editor");
 	}
 
 }

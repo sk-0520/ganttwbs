@@ -121,6 +121,7 @@ export abstract class Strings {
 				? searchValue.flags
 				: searchValue.flags + "g"
 				;
+
 			return source.replace(new RegExp(searchValue.source, flags), replaceValue);
 		}
 
@@ -146,14 +147,6 @@ export abstract class Strings {
 		}
 
 		return source.split(/\r\n|\n|\r/);
-	}
-
-	public static toBoolean(s: string | null | undefined): boolean {
-		if (!s) {
-			return false;
-		}
-
-		return s.toLowerCase() === "true";
 	}
 
 }

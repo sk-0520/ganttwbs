@@ -1,8 +1,9 @@
-import { Locale } from "./locale";
+import { Locale } from "@/locales/locale";
 
 const locale: Locale = {
 	language: "日本語",
 	common: {
+
 		command: {
 			add: "追加",
 			remove: "削除",
@@ -30,8 +31,36 @@ const locale: Locale = {
 					"sunday": "日",
 				},
 			},
+
+			format: {
+				yearMonth: "yyyy/MM"
+			}
 		}
 	},
+
+	timeline: {
+		workRange: {
+			kind: {
+				loading: "読み込み中",
+				noInput: "未入力",
+				selfSelectedError: "自身を選択",
+				noChildren: "子タイムラインなし",
+				relationNoInput: "関係タイムライン未入力",
+				relationError: "関係タイムラインエラー",
+				recursiveError: "反復計算エラー",
+				unknownError: "エラー",
+			}
+		}
+	},
+
+	styles: {
+		editor: {
+			fontFamilies: [
+				"MigMix 1M",
+				"MS ゴシック",
+			]
+		}
+	}
 };
 
 export default locale;

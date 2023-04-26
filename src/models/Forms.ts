@@ -2,7 +2,7 @@ import { KeyboardEvent } from "react";
 
 export abstract class Forms {
 
-	public static handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+	public static handleKeyDownAcceptTab(event: KeyboardEvent<HTMLTextAreaElement>) {
 		if (event.key === "Tab") {
 			event.preventDefault();
 

@@ -1,7 +1,13 @@
-import { GroupTimeline, TaskTimeline, Timeline, WeekDay, WeekIndex } from "./data/Setting";
+import { AnyTimeline, GroupTimeline, RootTimeline, TaskTimeline, WeekDay } from "@/models/data/Setting";
+import { WeekIndex } from "@/models/DateTime";
+import { IdFactory } from "@/models/IdFactory";
 
 export abstract class Settings {
 
+	/**
+	 * 全ての `WeekDay` を取得。
+	 * @returns
+	 */
 	public static getWeekDays(): Array<WeekDay> {
 		return [
 			"monday",
@@ -14,6 +20,11 @@ export abstract class Settings {
 		];
 	}
 
+	/**
+	 * JS:Date の曜日から `WeekDay` に変換。
+	 * @param weekIndex
+	 * @returns
+	 */
 	public static toWeekDay(weekIndex: number): WeekDay {
 		switch (weekIndex) {
 			case 0:
@@ -36,6 +47,11 @@ export abstract class Settings {
 		}
 	}
 
+	/**
+	 * `WeekDay` から JS:Date の曜日に変換。
+	 * @param week
+	 * @returns
+	 */
 	public static toWeekIndex(week: WeekDay): WeekIndex {
 		switch (week) {
 			case "sunday":
@@ -60,21 +76,30 @@ export abstract class Settings {
 	}
 
 	/**
-	 * `Timeline` は `GroupTimeline` か。
-	 * 本処理は型ガードではあるものの方チェックは行わない。すでに型ガードを通過していることを想定している。
+	 * `timeline` は `RootTimeline` か。
+	 * 本処理は型ガードではあるものの型チェックは行わない。すでに型ガードを通過していることを想定している。
 	 * @param timeline
 	 * @returns
 	 */
-	public static maybeGroupTimeline(timeline: Timeline): timeline is GroupTimeline {
+	public static maybeRootTimeline(timeline: AnyTimeline): timeline is RootTimeline {
+		return timeline.id === IdFactory.rootTimelineId;
+	}
+	/**
+	 * `timeline` は `GroupTimeline` か。
+	 * 本処理は型ガードではあるものの型チェックは行わない。すでに型ガードを通過していることを想定している。
+	 * @param timeline
+	 * @returns
+	 */
+	public static maybeGroupTimeline(timeline: AnyTimeline): timeline is GroupTimeline {
 		return timeline.kind === "group";
 	}
 	/**
-	 * `Timeline` は `TaskTimeline` か。
-	 * 本処理は型ガードではあるものの方チェックは行わない。すでに型ガードを通過していることを想定している。
+	 * `timeline` は `TaskTimeline` か。
+	 * 本処理は型ガードではあるものの型チェックは行わない。すでに型ガードを通過していることを想定している。
 	 * @param timeline
 	 * @returns
 	 */
-	public static maybeTaskTimeline(timeline: Timeline): timeline is TaskTimeline {
+	public static maybeTaskTimeline(timeline: AnyTimeline): timeline is TaskTimeline {
 		return timeline.kind === "task";
 	}
 

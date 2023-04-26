@@ -1,5 +1,4 @@
-import { TimeSpan } from "../../../src/models/TimeSpan";
-
+import { TimeSpan } from "@/models/TimeSpan";
 
 describe("TimeSpan", () => {
 	test("fromMilliseconds", () => {
@@ -124,15 +123,5 @@ describe("TimeSpan", () => {
 		const dup = TimeSpan.parse(s1);
 		const s2 = dup.toString("readable");
 		expect(s1).toBe(s2);
-	});
-
-	test.each([
-		[TimeSpan.fromDays(1), new Date(2000, 6, 10), new Date(2000, 6, 9)],
-		[TimeSpan.fromDays(2), new Date(2000, 6, 10), new Date(2000, 6, 8)],
-		[TimeSpan.fromDays(-1), new Date(2000, 6, 9), new Date(2000, 6, 10)],
-		[TimeSpan.fromDays(-2), new Date(2000, 6, 8), new Date(2000, 6, 10)],
-	])("diff", (expected, a, b) => {
-		const actual = TimeSpan.diff(a, b);
-		expect(expected.equals(actual)).toBeTruthy();
 	});
 });

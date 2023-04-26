@@ -1,18 +1,18 @@
-import { NextPage } from "next";
+import { FC, ReactNode } from "react";
 
 interface Props {
 	htmlFor?: string;
 	/** label タグで囲うか */
 	wrap: boolean;
 	/** 子要素 明示的な指定不要。 */
-	children?: React.ReactNode;
+	children: ReactNode;
 }
 
 /**
  * ラベルで囲ったり囲わなかったり。
  * @param props
  */
-const Component: NextPage<Props> = (props: Props) => {
+const DynamicLabel: FC<Props> = (props: Props) => {
 	return (
 		props.wrap
 			? (
@@ -23,6 +23,6 @@ const Component: NextPage<Props> = (props: Props) => {
 				<>{props.children}</>
 			)
 	);
-}
+};
 
-export default Component;
+export default DynamicLabel;

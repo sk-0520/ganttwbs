@@ -1,5 +1,7 @@
 import { createContext } from "react";
-import { Color, DateOnly, MemberId, WeekDay } from "../Setting";
+
+import { Color, DateOnly, MemberId, WeekDay } from "@/models/data/Setting";
+import { TimeZone } from "@/models/TimeZone";
 
 
 export type UUID = string;
@@ -16,6 +18,8 @@ export interface MemberSetting {
 export interface GeneralSetting {
 	name: string;
 	recursive: number;
+	version: number;
+	timeZone: TimeZone;
 }
 
 export interface GroupSetting {

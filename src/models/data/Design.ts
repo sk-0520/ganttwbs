@@ -13,8 +13,7 @@ export function isValueUnit(args: unknown): args is ValueUnit {
 		&& "value" in args
 		&& "unit" in args
 		&& typeof (args.value) === "number"
-		&& typeof (args.unit) === "string"
-		;
+		&& typeof (args.unit) === "string";
 }
 
 export interface Design {
@@ -41,5 +40,11 @@ export interface Design {
 			/** 左余白基準 */
 			paddingLeft: ValueUnit;
 		};
+	},
+
+	/** 使用しない領域 */
+	dummy: {
+		width: number,
+		height: number,
 	}
 }
