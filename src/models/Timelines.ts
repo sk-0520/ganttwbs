@@ -344,7 +344,7 @@ export abstract class Timelines {
 				return this.createRecursiveCalculatorWorkRange(timeline);
 			}
 
-			const date = begin.add(TimeSpan.fromDays(1)).toDateOnly();
+			const date = begin.add(TimeSpan.fromDays(i)).toDateOnly();
 			if (isHoliday(date)) {
 				endDays += 1;
 				count += 1;
