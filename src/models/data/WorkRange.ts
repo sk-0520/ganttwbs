@@ -19,6 +19,15 @@ export interface WorkRange {
 	timeline: AnyTimeline;
 }
 
+export interface ErrorWorkRange {
+	kind: Omit<WorkRangeKind, "success" | "loading">;
+	timeline: AnyTimeline;
+}
+
+export interface RecursiveCalculationErrorWorkRange extends ErrorWorkRange {
+	kind: "recursive-error";
+}
+
 /** 有効工数範囲 */
 export interface SuccessWorkRange extends WorkRange {
 	kind: "success";
