@@ -8,6 +8,7 @@ export type Unit = "second" | "minute" | "hour" | "day" | "month" | "year";
 
 type DateTimeParseResult = ParseResult<DateTime, Error>;
 
+export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 /**
  * 日付のラッパー。
@@ -41,8 +42,8 @@ export class DateTime {
 	}
 
 	/** 曜日(0-6) */
-	public get week(): number {
-		return this.date.get("day");
+	public get week(): WeekIndex {
+		return this.date.get("day") as WeekIndex;
 	}
 
 	/** 時(0-23) */
@@ -67,7 +68,7 @@ export class DateTime {
 
 	//#endregion
 
-	//#region property
+	//#region function
 
 	private static parseCore(input: string | Date | number | undefined, timeZone: TimeZone): DateTimeParseResult {
 		let create = cdate;
@@ -182,6 +183,26 @@ export class DateTime {
 	 */
 	public getTime(): number {
 		return this.date.toDate().getTime();
+	}
+
+	public toDateOnly(): DateTime {
+		let create = cdate;
+		if (this.timeZone.hasName) {
+			create = cdate().tz(this.timeZone.serialize()).cdateFn();
+		} else if (this.timeZone.hasOffset) {
+			create = cdate().utcOffset(this.timeZone.serialize()).cdateFn();
+		}
+
+		const date = create()
+			.set("year", this.year)
+			.set("month", this.month - 1)
+			.set("date", this.day)
+			.set("hour", 0)
+			.set("minute", 0)
+			.set("second", 0)
+			.set("millisecond", 0)
+			;
+		return new DateTime(date, this.timeZone);
 	}
 
 	/**

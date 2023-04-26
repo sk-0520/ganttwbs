@@ -1,9 +1,10 @@
 import { Arrays } from "@/models/Arrays";
 import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
-import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, WeekIndex } from "@/models/data/Setting";
-import { SuccessWorkRange, WorkRange } from "@/models/data/WorkRange";
-import { DateTime } from "@/models/DateTime";
+import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId } from "@/models/data/Setting";
+import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
+import { DateTime, WeekIndex } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
+import { Limiter } from "@/models/Limiter";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
@@ -291,14 +292,69 @@ export abstract class Timelines {
 		return result;
 	}
 
-	private static createSuccessWorkRange(holidays: Holidays, timeline: AnyTimeline, beginDate: DateTime, workload: TimeSpan, timeZone: TimeZone): SuccessWorkRange {
-		//TODO: 非稼働日を考慮（開始から足す感じいいはず）
-		const endDate = DateTime.convert(beginDate.getTime() + workload.totalMilliseconds, timeZone);
-		const result: SuccessWorkRange = {
-			kind: "success",
+	private static createRecursiveCalculatorWorkRange(timeline: AnyTimeline): RecursiveCalculationErrorWorkRange {
+		return {
+			kind: WorkRangeKind.RecursiveError,
 			timeline: timeline,
-			begin: beginDate,
-			end: endDate,
+		};
+	}
+
+	private static createSuccessWorkRange(holidays: Holidays, timeline: AnyTimeline, beginDate: DateTime, workload: TimeSpan, timeZone: TimeZone, recursiveMaxCount: number): SuccessWorkRange | RecursiveCalculationErrorWorkRange {
+
+		function isHoliday(dateOnly: DateTime): boolean {
+			if (holidays.weeks.includes(dateOnly.week)) {
+				return true;
+			}
+
+			if (holidays.dates.some(a => a.getTime() === dateOnly.getTime())) {
+				return true;
+			}
+
+			return false;
+		}
+
+		const limiter = new Limiter(recursiveMaxCount);
+
+		// 開始が休日に当たる場合は平日まで移動
+		let begin = beginDate;
+		while (true) {
+			if (limiter.increment()) {
+				return this.createRecursiveCalculatorWorkRange(timeline);
+			}
+
+			const date = begin.toDateOnly();
+			if (isHoliday(date)) {
+				begin = date.add(1, "day");
+				continue;
+			}
+			break;
+		}
+
+		// 補正された開始日に対して工数を追加
+		let end = begin.add(TimeSpan.fromMilliseconds(workload.totalMilliseconds));
+
+		// 開始日から終了日までにある休日を加算
+		let count = begin.toDateOnly().diff(begin).totalDays + begin.diff(end).totalDays;
+		let endDays = 0;
+		limiter.reset();
+		for (let i = 0; i < count; i++) {
+			if (limiter.increment()) {
+				return this.createRecursiveCalculatorWorkRange(timeline);
+			}
+
+			const date = begin.add(i, "day").toDateOnly();
+			if (isHoliday(date)) {
+				endDays += 1;
+				count += 1;
+			}
+		}
+		end = end.add(endDays, "day");
+
+		const result: SuccessWorkRange = {
+			kind: WorkRangeKind.Success,
+			timeline: timeline,
+			begin: begin,
+			end: end,
 		};
 
 		return result;
@@ -326,14 +382,15 @@ export abstract class Timelines {
 			;
 		// 開始固定だけのタスクを算出
 		const staticTimelines = taskTimelines
-			.filter(a => a.static && !a.previous.length);
+			.filter(a => a.static && !a.previous.length)
+			;
 		for (const timeline of staticTimelines) {
 			if (!Types.isString(timeline.static)) {
 				throw new Error();
 			}
 			const beginDate = DateTime.parse(timeline.static, timeZone);
 			const workload = TimeSpan.parse(timeline.workload);
-			const successWorkRange = this.createSuccessWorkRange(holidays, timeline, beginDate, workload, timeZone);
+			const successWorkRange = this.createSuccessWorkRange(holidays, timeline, beginDate, workload, timeZone, recursiveMaxCount);
 			result.set(timeline.id, successWorkRange);
 			cache.statics.set(timeline.id, timeline);
 		}
@@ -342,7 +399,7 @@ export abstract class Timelines {
 			.filter(a => !a.static && !a.previous.length);
 		for (const timeline of emptyTimelines) {
 			const range: WorkRange = {
-				kind: "no-input",
+				kind: WorkRangeKind.NoInput,
 				timeline: timeline,
 			};
 			result.set(timeline.id, range);
@@ -367,24 +424,21 @@ export abstract class Timelines {
 
 			const workload = TimeSpan.parse(timeline.workload);
 
-			const successWorkRange = this.createSuccessWorkRange(holidays, timeline, prevRange.end, workload, timeZone);
+			const successWorkRange = this.createSuccessWorkRange(holidays, timeline, prevRange.end, workload, timeZone, recursiveMaxCount);
 			result.set(timeline.id, successWorkRange);
 		}
 
 		// グループ・タスクをそれぞれ算出
+		const limiter = new Limiter(recursiveMaxCount);
 		const targetTimelines = new Set(flatTimelines.filter(a => !result.has(a.id)));
-		let recursiveCount = 0;
 		while (result.size < flatTimelines.length) {
-			if (recursiveMaxCount <= ++recursiveCount) {
-				console.error("デバッグ制限超過");
+			if (limiter.increment()) {
 				for (const timeline of flatTimelines) {
 					if (!result.has(timeline.id)) {
-						result.set(timeline.id, {
-							kind: "recursive-error",
-							timeline: timeline,
-						});
+						result.set(timeline.id, this.createRecursiveCalculatorWorkRange(timeline));
 					}
 				}
+
 				break;
 			}
 
@@ -400,7 +454,7 @@ export abstract class Timelines {
 					if (timeline.previous.some(a => a === timeline.id)) {
 						// 前工程に自分がいればもうなんもできん
 						result.set(timeline.id, {
-							kind: "self-selected-error",
+							kind: WorkRangeKind.SelfSelectedError,
 							timeline: timeline,
 						});
 						continue;
@@ -409,7 +463,7 @@ export abstract class Timelines {
 					if (timeline.previous.some(a => cache.noInputs.has(a))) {
 						// 前工程に未入力項目があれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
-							kind: "relation-no-input",
+							kind: WorkRangeKind.RelationNoInput,
 							timeline: timeline,
 						});
 						continue;
@@ -426,7 +480,7 @@ export abstract class Timelines {
 					if (resultWorkRanges.some(a => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
-							kind: "relation-error",
+							kind: WorkRangeKind.RelationError,
 							timeline: timeline,
 						});
 						continue;
@@ -451,7 +505,7 @@ export abstract class Timelines {
 					}
 
 					const workload = TimeSpan.parse(timeline.workload);
-					const successWorkRange = this.createSuccessWorkRange(holidays, timeline, prevDate, workload, timeZone);
+					const successWorkRange = this.createSuccessWorkRange(holidays, timeline, prevDate, workload, timeZone, recursiveMaxCount);
 					result.set(timeline.id, successWorkRange);
 
 				} else if (Settings.maybeGroupTimeline(timeline)) {
@@ -460,7 +514,7 @@ export abstract class Timelines {
 					if (!timeline.children.length) {
 						// 子がいないならエラっとっく
 						const range: WorkRange = {
-							kind: "no-children",
+							kind: WorkRangeKind.NoChildren,
 							timeline: timeline,
 						};
 						result.set(timeline.id, range);
@@ -484,7 +538,7 @@ export abstract class Timelines {
 					if (resultWorkRanges.some(a => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
-							kind: "relation-error",
+							kind: WorkRangeKind.RelationError,
 							timeline: timeline,
 						});
 						continue;
@@ -495,7 +549,7 @@ export abstract class Timelines {
 						const totalSuccessWorkRange = WorkRanges.getTotalSuccessWorkRange(items);
 						const successWorkRange: SuccessWorkRange = {
 							timeline: timeline,
-							kind: "success",
+							kind: WorkRangeKind.Success,
 							begin: totalSuccessWorkRange.minimum.begin,
 							end: totalSuccessWorkRange.maximum.end,
 						};
@@ -505,7 +559,7 @@ export abstract class Timelines {
 			}
 		}
 
-		console.debug("反復実施数", recursiveCount, "result", result.size, "flatTimelines", flatTimelines.length);
+		console.debug("反復実施数", limiter.count, "result", result.size, "flatTimelines", flatTimelines.length);
 
 		return result;
 	}

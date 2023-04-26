@@ -1,4 +1,5 @@
-import { AnyTimeline, GroupTimeline, RootTimeline, TaskTimeline, WeekDay, WeekIndex } from "@/models/data/Setting";
+import { AnyTimeline, GroupTimeline, RootTimeline, TaskTimeline, WeekDay } from "@/models/data/Setting";
+import { WeekIndex } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
 
 export abstract class Settings {
