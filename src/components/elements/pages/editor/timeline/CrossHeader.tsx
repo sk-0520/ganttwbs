@@ -11,6 +11,9 @@ import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Timelines } from "@/models/Timelines";
 import { IdFactory } from "@/models/IdFactory";
+import { Settings } from "@/models/Settings";
+import { WorkRangeKind } from "@/models/data/WorkRange";
+import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 	//nop
@@ -19,13 +22,32 @@ interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, Tim
 const CrossHeader: FC<Props> = (props: Props) => {
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
+	const [workload, setWorkload] = useState(0);
+	const [workRangeKind, setWorkRangeKind] = useState(WorkRangeKind.Loading);
+	const [beginDate, setBeginDate] = useState<DateTime | null>(null);
+	const [endDate, setEndDate] = useState<DateTime | null>(null);
+	const [progress, setProgress] = useState(0);
 
 	useEffect(() => {
-		const timeline = props.timelineStore.changedItemMap.get(IdFactory.rootTimelineId);
-		if (timeline) {
-			console.debug(timeline);
-		}
+		const timelineItem = props.timelineStore.changedItemMap.get(IdFactory.rootTimelineId);
+		if (timelineItem && Settings.maybeGroupTimeline(timelineItem.timeline)) {
+			console.debug(timelineItem);
 
+			const workload = Timelines.sumWorkloadByGroup(timelineItem.timeline).totalDays;
+			setWorkload(workload);
+
+			const progress = Timelines.sumProgressByGroup(timelineItem.timeline);
+			setProgress(progress);
+
+			if (timelineItem.workRange) {
+				setWorkRangeKind(timelineItem.workRange.kind);
+				if (WorkRanges.maybeSuccessWorkRange(timelineItem.workRange)) {
+					setBeginDate(timelineItem.workRange.begin);
+					setEndDate(timelineItem.workRange.end);
+				}
+			}
+
+		}
 	}, [props.timelineStore]);
 
 	function addEmptyTimeline(kind: TimelineKind) {
