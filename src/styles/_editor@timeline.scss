@@ -97,11 +97,27 @@ $viewer-z-index: 2;
 		}
 		.footer {
 			.timeline-header {
-				background: darkgrey;
 				text-align: center;
+				position: relative;
 
-				.timeline-cell {
-					border-right: 1px solid black;
+				&.header {
+					background: darkgrey;
+
+					&:hover {
+						& > .tooltips {
+							display: flex;
+						}
+					}
+
+					& > .timeline-cell {
+						border-right: 1px solid black;
+					}
+				}
+
+				&.tooltips {
+					top: -100%;
+					position: absolute;
+					display: none;
 				}
 			}
 		}

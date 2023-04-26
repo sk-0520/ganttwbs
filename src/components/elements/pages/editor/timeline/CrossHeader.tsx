@@ -14,6 +14,7 @@ import { IdFactory } from "@/models/IdFactory";
 import { Settings } from "@/models/Settings";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { WorkRanges } from "@/models/WorkRanges";
+import Timestamp from "@/components/elements/Timestamp";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 	//nop
@@ -147,15 +148,71 @@ const CrossHeader: FC<Props> = (props: Props) => {
 			</div>
 			<div className="footer">
 				<div className='timeline-header header'>
-					<div className='timeline-cell timeline-id'>ID</div>
-					<div className='timeline-cell timeline-subject'>作業</div>
-					<div className='timeline-cell timeline-workload'>工数</div>
-					<div className='timeline-cell timeline-resource'>割当</div>
-					<div className="timeline-cell timeline-relation">💩</div>
-					<div className='timeline-cell timeline-range-from'>開始</div>
-					<div className='timeline-cell timeline-range-to'>終了</div>
-					<div className='timeline-cell timeline-progress'>進捗率</div>
-					<div className='timeline-cell timeline-controls'>操作</div>
+					<div className='timeline-header tooltips'>
+						<div className='timeline-cell timeline-id' />
+						<div className='timeline-cell timeline-subject' />
+						<div className='timeline-cell timeline-workload'>
+							{workload}
+						</div>
+						<div className='timeline-cell timeline-resource' />
+						<div className="timeline-cell timeline-relation" />
+						{
+							workRangeKind === WorkRangeKind.Success
+								? (
+									<>
+										<div className='timeline-cell timeline-range-from'>
+											<Timestamp
+												date={beginDate}
+												format="date"
+											/>
+										</div>
+										<div className='timeline-cell timeline-range-to'>
+											<Timestamp
+												date={endDate}
+												format="date"
+											/>
+										</div>
+									</>
+								) :
+								(
+									<div className='timeline-cell timeline-range-area'>
+										あかん
+									</div>
+								)
+						}
+						<div className='timeline-cell timeline-progress'>
+							{Timelines.displayProgress(progress)}%
+						</div>
+						<div className='timeline-cell timeline-controls' />
+					</div>
+
+					<div className='timeline-cell timeline-id'>
+						ID
+					</div>
+					<div className='timeline-cell timeline-subject'>
+						作業
+					</div>
+					<div className='timeline-cell timeline-workload'>
+						工数
+					</div>
+					<div className='timeline-cell timeline-resource'>
+						割当
+					</div>
+					<div className="timeline-cell timeline-relation">
+						💩
+					</div>
+					<div className='timeline-cell timeline-range-from'>
+						開始
+					</div>
+					<div className='timeline-cell timeline-range-to'>
+						終了
+					</div>
+					<div className='timeline-cell timeline-progress'>
+						進捗率
+					</div>
+					<div className='timeline-cell timeline-controls'>
+						操作
+					</div>
 				</div>
 			</div>
 			{visibleTimelinesImportDialog && (
