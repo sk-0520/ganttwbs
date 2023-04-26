@@ -5,6 +5,7 @@ import DynamicLabel from "@/components/elements/DynamicLabel";
 import Timestamp from "@/components/elements/Timestamp";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
+import { Locale, useLocale } from "@/locales/locale";
 
 
 interface Props {
@@ -17,10 +18,11 @@ interface Props {
 }
 
 const WorkRangeCells: FC<Props> = (props: Props) => {
+	const locale = useLocale();
 
 	const selectOrClickClassName = props.selectable ? "selectable" : "clickable";
 
-	return props.workRangeKind === "success"
+	return props.workRangeKind === WorkRangeKind.Success
 		? (
 			<>
 				<td
@@ -62,10 +64,43 @@ const WorkRangeCells: FC<Props> = (props: Props) => {
 				onClick={props.callbackClickBeginDate}
 			>
 				<DynamicLabel htmlFor={props.htmlFor} wrap={props.selectable}>
-					{props.workRangeKind}
+					{toDisplayWorkRangeKind(locale, props.workRangeKind)}
 				</DynamicLabel>
 			</td>
 		);
 };
 
 export default WorkRangeCells;
+
+function toDisplayWorkRangeKind(locale: Locale, kind: WorkRangeKind): string {
+	switch (kind) {
+		case WorkRangeKind.Loading:
+			return locale.timeline.workRange.kind.loading;
+
+		case WorkRangeKind.NoInput:
+			return locale.timeline.workRange.kind.noInput;
+
+		case WorkRangeKind.SelfSelectedError:
+			return locale.timeline.workRange.kind.selfSelectedError;
+
+		case WorkRangeKind.NoChildren:
+			return locale.timeline.workRange.kind.noChildren;
+
+		case WorkRangeKind.RelationNoInput:
+			return locale.timeline.workRange.kind.relationNoInput;
+
+		case WorkRangeKind.RelationError:
+			return locale.timeline.workRange.kind.relationError;
+
+		case WorkRangeKind.RecursiveError:
+			return locale.timeline.workRange.kind.recursiveError;
+
+		case WorkRangeKind.UnknownError:
+			return locale.timeline.workRange.kind.unknownError;
+
+		case WorkRangeKind.Success:
+		default:
+			throw new Error("WorkRangeKind: " + kind.toString());
+	}
+
+}
