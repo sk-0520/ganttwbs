@@ -30,4 +30,23 @@ describe("Limiter", () => {
 		expect(limiter.count).toBe(3);
 		expect(limiter.isLimit).toBeTruthy();
 	});
+
+	test("reset", () => {
+		const limiter = new Limiter(1);
+
+		expect(limiter.count).toBe(0);
+		expect(limiter.isLimit).toBeFalsy();
+
+		expect(limiter.increment()).toBeFalsy();
+		expect(limiter.count).toBe(1);
+		expect(limiter.isLimit).toBeTruthy();
+
+		expect(limiter.increment()).toBeTruthy();
+		expect(limiter.count).toBe(1);
+
+		limiter.reset();
+
+		expect(limiter.count).toBe(0);
+		expect(limiter.isLimit).toBeFalsy();
+	});
 });
