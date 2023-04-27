@@ -193,9 +193,6 @@ export class DateTime {
 
 	public toDateOnly(): DateTime {
 		const date = this.date
-			.set("year", this.year)
-			.set("month", this.month - 1)
-			.set("date", this.day)
 			.set("hour", 0)
 			.set("minute", 0)
 			.set("second", 0)

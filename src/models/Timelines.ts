@@ -326,7 +326,7 @@ export abstract class Timelines {
 
 			const date = begin.toDateOnly();
 			if (isHoliday(date)) {
-				begin = date.add(TimeSpan.fromDays(1));
+				begin = date.add(1, "day");
 				continue;
 			}
 			break;
@@ -344,13 +344,13 @@ export abstract class Timelines {
 				return this.createRecursiveCalculatorWorkRange(timeline);
 			}
 
-			const date = begin.add(TimeSpan.fromDays(i)).toDateOnly();
+			const date = begin.add(i, "day").toDateOnly();
 			if (isHoliday(date)) {
 				endDays += 1;
 				count += 1;
 			}
 		}
-		end = end.add(TimeSpan.fromDays(endDays));
+		end = end.add(endDays, "day");
 
 		const result: SuccessWorkRange = {
 			kind: WorkRangeKind.Success,
