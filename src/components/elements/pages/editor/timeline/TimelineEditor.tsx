@@ -24,7 +24,7 @@ import { WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
 import { Settings } from "@/models/Settings";
-import { TimelineStore } from "@/models/store/TimelineStore";
+import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 
 /*
@@ -141,7 +141,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			dropTimeline.sourceGroupTimeline.children = newSourceChildren;
 
 			// 別グループに追加
-			if(dropTimeline.destinationIndex === -1) {
+			if (dropTimeline.destinationIndex === -1) {
 				dropTimeline.destinationGroupTimeline.children.push(dropTimeline.timeline);
 			} else {
 				dropTimeline.destinationGroupTimeline.children.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
@@ -411,11 +411,24 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		setTimelineStore(store);
 	}
 
-	function handleMoveTimeline(moveUp: boolean, timeline: AnyTimeline): void {
+	function handleMoveTimeline(direction: MoveDirection, timeline: AnyTimeline): void {
 		const groups = Timelines.getParentGroups(timeline, props.editorData.setting.rootTimeline);
 
-		const group = Arrays.last(groups);
-		Arrays.replaceOrderInPlace(group.children, !moveUp, timeline);
+		if (direction === "parent") {
+			if (1 < groups.length) {
+				//TODO: 正直どこに配置すればいいのか分からん
+				const srcGroup = groups[groups.length - 1];
+				const destGroup = groups[groups.length - 2];
+				srcGroup.children = srcGroup.children.filter(a => a.id !== timeline.id);
+				destGroup.children.push(timeline);
+			} else {
+				console.debug("最上位項目は何もしない");
+				return;
+			}
+		} else {
+			const group = Arrays.last(groups);
+			Arrays.replaceOrderInPlace(group.children, direction === "down", timeline);
+		}
 
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}

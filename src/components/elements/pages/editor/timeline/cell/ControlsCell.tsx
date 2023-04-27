@@ -5,11 +5,12 @@ import { IconImage, IconKind } from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
+import { MoveDirection } from "@/models/store/TimelineStore";
 
 interface Props {
 	currentTimelineKind: TimelineKind;
 	disabled: boolean,
-	moveItem: (moveUp: boolean) => void;
+	moveItem: (direction: MoveDirection) => void;
 	addItem: (kindOrTimeline: TimelineKind | GroupTimeline) => void;
 	deleteItem: () => void;
 }
@@ -25,8 +26,8 @@ const ControlsCell: FC<Props> = (props: Props) => {
 		setVisibleControls(false);
 	}
 
-	function handleMoveItem(moveUp: boolean) {
-		props.moveItem(moveUp);
+	function handleMoveItem(direction: MoveDirection) {
+		props.moveItem(direction);
 		handleHideControls();
 	}
 
@@ -95,7 +96,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleMoveItem(true)}
+										onClick={_ => handleMoveItem("up")}
 									>
 										<IconImage
 											kind={IconKind.MoveUp}
@@ -106,7 +107,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleMoveItem(false)}
+										onClick={_ => handleMoveItem("down")}
 									>
 										<IconImage
 											kind={IconKind.MoveDown}
@@ -114,7 +115,17 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										下へ
 									</button>
 								</td>
-								<td className="col-cell" />
+								<td className="col-cell">
+									<button
+										className="simple"
+										onClick={_ => handleMoveItem("parent")}
+									>
+										<IconImage
+											kind={IconKind.MovePrev}
+										/>
+										下げる
+									</button>
+								</td>
 							</tr>
 							<tr>
 								<th
