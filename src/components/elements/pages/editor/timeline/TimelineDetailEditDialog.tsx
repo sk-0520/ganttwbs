@@ -1,16 +1,33 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
-import { AnyTimeline } from "@/models/data/Setting";
+import { AnyTimeline, MemberId, Progress } from "@/models/data/Setting";
+import { Settings } from "@/models/Settings";
+import { TimeSpan } from "@/models/TimeSpan";
+import { Timelines } from "@/models/Timelines";
+import { Editor } from "@monaco-editor/react";
+import { CssHelper } from "@/models/CssHelper";
+import { useLocale } from "@/locales/locale";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps {
+	timeline: AnyTimeline;
 	callbackSubmit(timeline: AnyTimeline | null): void;
 }
 
 const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
+	const locale = useLocale();
+
+	const [subject, setSubject] = useState(props.timeline.subject);
+	const [workload, setWorkload] = useState(Settings.maybeTaskTimeline(props.timeline) ? TimeSpan.parse(props.timeline.workload) : TimeSpan.zero);
+	const [memberId, setMemberId] = useState<MemberId>(Settings.maybeTaskTimeline(props.timeline) ? props.timeline.memberId : "");
+	const [progress, setProgress] = useState<Progress>(Settings.maybeTaskTimeline(props.timeline) ? props.timeline.progress : 0);
+	const [comment, setComment] = useState(props.timeline.comment);
+
+	const groups = [...props.setting.groups].sort((a, b) => a.name.localeCompare(b.name));
+
 	function handleSubmit() {
 		console.debug(1);
 	}
@@ -27,7 +44,94 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 				}
 			}}
 		>
-			<span>asd</span>
+			<dl className="inputs timeline-editor">
+				<dt>subject</dt>
+				<dd>
+					<input
+						value={subject}
+						onChange={ev => setSubject(ev.target.value)}
+					/>
+				</dd>
+
+				{
+					Settings.maybeTaskTimeline(props.timeline) && <>
+						<dt>workload</dt>
+						<dd>
+							<input
+								type="number"
+								min={0}
+								step={0.25}
+								value={Timelines.displayWorkload(workload.totalDays)}
+								onChange={ev => setWorkload(TimeSpan.fromDays(ev.target.valueAsNumber))}
+							/>
+						</dd>
+					</>
+				}
+
+				{
+					Settings.maybeTaskTimeline(props.timeline) && <>
+						<dt>member</dt>
+						<dd>
+							<select
+								value={memberId}
+								onChange={ev => setMemberId(ev.target.value)}
+							>
+								<option value="">
+									未設定
+								</option>
+								<>
+									{
+										groups.map(a => {
+											return [...a.members]
+												.sort((b, c) => b.name.localeCompare(c.name))
+												.map(b => {
+													return (
+														<option key={b.id} value={b.id}>
+															{a.name}: {b.name}
+														</option>
+													);
+												});
+										})
+									}
+								</>
+							</select>
+						</dd>
+					</>
+				}
+
+				{
+					Settings.maybeTaskTimeline(props.timeline) && <>
+						<dt>progress</dt>
+						<dd>
+							<input
+								type="number"
+								min={0}
+								max={100}
+								step={1}
+								value={Timelines.displayProgress(progress)}
+								onChange={ev => setProgress(ev.target.valueAsNumber / 100.0)}
+							/>
+						</dd>
+					</>
+				}
+
+				<dt>comment</dt>
+				<dd>
+					<Editor
+						width="100%"
+						height="10em"
+						value={comment}
+						onChange={ev => setComment(ev ?? "")}
+						options={{
+							fontFamily: CssHelper.toFontFamily(locale.styles.editor.fontFamilies),
+							lineNumbers: "off",
+							quickSuggestions: false,
+						}}
+					/>
+
+				</dd>
+
+			</dl>
 		</Dialog>
 	);
 };

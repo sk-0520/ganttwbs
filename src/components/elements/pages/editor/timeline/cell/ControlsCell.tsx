@@ -25,7 +25,6 @@ const ControlsCell: FC<Props> = (props: Props) => {
 	}
 	function handleHideControls() {
 		setVisibleControls(false);
-		props.showDetail();
 	}
 
 	function handleMoveItem(direction: MoveDirection) {
@@ -58,6 +57,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 
 	function handleShowDetail() {
 		handleHideControls();
+		props.showDetail();
 	}
 
 	return (

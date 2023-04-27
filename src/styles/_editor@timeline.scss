@@ -494,6 +494,15 @@ $viewer-z-index: 2;
 		}
 	}
 
+	.timeline-editor {
+		width: 40vw;
+
+		input,
+		select {
+			width: 100%;
+		}
+	}
+
 	/*
 	#highlight {
 		position: absolute;
