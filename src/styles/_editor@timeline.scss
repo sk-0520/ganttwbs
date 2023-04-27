@@ -425,9 +425,6 @@ $viewer-z-index: 2;
 				}
 
 				.tools {
-					&.before {
-					}
-
 					&.after {
 						.grid {
 							color: #000;
@@ -439,7 +436,7 @@ $viewer-z-index: 2;
 							}
 
 							.col-header {
-								width: 5em;
+								width: 4.5em;
 								padding-right: 1em;
 							}
 

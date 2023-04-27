@@ -75,7 +75,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 				onClick={handleStartControls}
 			>
 				<IconImage
-					kind={IconKind.Operation}
+					kind={IconKind.Option}
 				/>
 			</button>
 			<Overlay
@@ -177,6 +177,9 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleShowDetail()}
 									>
+										<IconImage
+											kind={IconKind.Edit}
+										/>
 										詳細設定
 									</button>
 								</td>
