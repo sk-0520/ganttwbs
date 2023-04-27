@@ -122,6 +122,34 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 								value={Timelines.displayProgress(progress)}
 								onChange={ev => setProgress(ev.target.valueAsNumber / 100.0)}
 							/>
+							<ul className="progress-fixed">
+								<li>
+									<button
+										type="button"
+										onClick={_ => setProgress(0)}
+									>
+										未対応
+									</button>
+								</li>
+								<li className="range">
+									<input
+										type="range"
+										min={0}
+										max={1}
+										step={0.01}
+										value={progress}
+										onChange={ev => setProgress(ev.target.valueAsNumber)}
+									/>
+								</li>
+								<li>
+									<button
+										type="button"
+										onClick={_ => setProgress(1)}
+									>
+										完了
+									</button>
+								</li>
+							</ul>
 						</dd>
 					</>
 				}
