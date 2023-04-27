@@ -160,6 +160,10 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		props.timelineStore.removeTimeline(props.currentTimeline);
 	}
 
+	function handleShowDetail() {
+		props.timelineStore.startDetailEdit(props.currentTimeline);
+	}
+
 	function handleChangeMember(memberId: MemberId): void {
 		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
 			throw new Error();
@@ -415,6 +419,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				moveItem={handleControlMoveItem}
 				addItem={handleControlAddItem}
 				deleteItem={handleControlDeleteItem}
+				showDetail={handleShowDetail}
 			/>
 		</TimelineHeaderRow >
 	);

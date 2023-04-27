@@ -429,10 +429,14 @@ $viewer-z-index: 2;
 					}
 
 					&.after {
-						.panel {
+						.grid {
 							color: #000;
 							table-layout: fixed;
 							width: 300px;
+
+							td {
+								padding: 1px;
+							}
 
 							.col-header {
 								width: 5em;

@@ -13,6 +13,7 @@ interface Props {
 	moveItem: (direction: MoveDirection) => void;
 	addItem: (kindOrTimeline: TimelineKind | GroupTimeline) => void;
 	deleteItem: () => void;
+	showDetail(): void;
 }
 
 const ControlsCell: FC<Props> = (props: Props) => {
@@ -24,6 +25,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 	}
 	function handleHideControls() {
 		setVisibleControls(false);
+		props.showDetail();
 	}
 
 	function handleMoveItem(direction: MoveDirection) {
@@ -54,6 +56,10 @@ const ControlsCell: FC<Props> = (props: Props) => {
 		setVisibleTimelinesImportDialog(false);
 	}
 
+	function handleShowDetail() {
+		handleHideControls();
+	}
+
 	return (
 		<td className={
 			classNames(
@@ -76,18 +82,8 @@ const ControlsCell: FC<Props> = (props: Props) => {
 				isVisible={visibleControls}
 				callBackHidden={handleHideControls}
 			>
-				<div className="tools before">
-					<div className="panel">
-						<ul>
-							<li>
-								<button>詳細設定</button>
-							</li>
-						</ul>
-					</div>
-				</div>
-
 				<div className="tools after">
-					<table className="panel">
+					<table className="panel grid">
 						<tbody>
 							<tr>
 								<th className="col-header">
@@ -174,8 +170,16 @@ const ControlsCell: FC<Props> = (props: Props) => {
 							</tr>
 							<tr>
 								<th className="col-header">
-									削除
+									その他
 								</th>
+								<td className="col-cell">
+									<button
+										className="simple"
+										onClick={_ => handleShowDetail()}
+									>
+										詳細設定
+									</button>
+								</td>
 								<td className="col-cell" />
 								<td className="col-cell">
 									<button
@@ -188,7 +192,6 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										削除
 									</button>
 								</td>
-								<td className="col-cell" />
 							</tr>
 						</tbody>
 					</table>

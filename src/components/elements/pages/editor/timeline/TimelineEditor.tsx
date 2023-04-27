@@ -26,6 +26,7 @@ import { Designs } from "@/models/Designs";
 import { Settings } from "@/models/Settings";
 import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
+import TimelineDetailEditDialog from "@/components/elements/pages/editor/timeline/TimelineDetailEditDialog";
 
 /*
 心臓部
@@ -49,6 +50,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
+	const [visibleDetailEditDialog, setVisibleDetailEditDialog] = useState<AnyTimeline>();
 
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
@@ -98,6 +100,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			setActiveTimeline: handleSetActiveTimeline,
 
 			startDragTimeline: handleStartDragTimeline,
+			startDetailEdit: handleStartDetailEdit,
 		};
 
 		return result;
@@ -289,6 +292,17 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		};
 
 		setDraggingTimeline(dragging);
+	}
+
+	function handleStartDetailEdit(timeline: AnyTimeline): void {
+		console.debug("詳細編集開始", timeline);
+		setVisibleDetailEditDialog(timeline);
+	}
+
+	function handleEndDetailEdit(timeline: AnyTimeline | null): void {
+		console.debug("詳細編集終了", timeline);
+
+		setVisibleDetailEditDialog(undefined);
 	}
 
 	function handleCalcDisplayId(timeline: Readonly<AnyTimeline>): DisplayTimelineId {
@@ -537,6 +551,12 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
 			/> */}
+			{visibleDetailEditDialog && <TimelineDetailEditDialog
+				configuration={props.configuration}
+				setting={props.editorData.setting}
+				calendarInfo={calendarInfo}
+				callbackSubmit={handleEndDetailEdit}
+			/>}
 		</div>
 	);
 };
