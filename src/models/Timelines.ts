@@ -326,7 +326,6 @@ export abstract class Timelines {
 
 			const date = begin.toDateOnly();
 			if (isHoliday(date)) {
-				console.debug("begin", date.format("U"));
 				begin = date.add(TimeSpan.fromDays(1));
 				continue;
 			}
@@ -335,26 +334,18 @@ export abstract class Timelines {
 
 		// 補正された開始日に対して工数を追加
 		let end = begin.add(TimeSpan.fromMilliseconds(workload.totalMilliseconds));
-		console.debug("end init", end.format("U"));
 
 		// 開始日から終了日までにある休日を加算
 		let count = begin.toDateOnly().diff(begin).totalDays + begin.diff(end).totalDays;
-		console.debug("end count@", count);
 		let endDays = 0;
 		limiter.reset();
 		for (let i = 0; i < count; i++) {
-			console.debug("end count+", count);
-
 			if (limiter.increment()) {
 				return this.createRecursiveCalculatorWorkRange(timeline);
 			}
 
-			const span = TimeSpan.fromDays(i);
-			const addDate = begin.add(span);
-			const date = addDate.toDateOnly();
-			console.debug("END", span.toString("readable"), addDate.format("U"), date.format("U"));
+			const date = begin.add(TimeSpan.fromDays(i)).toDateOnly();
 			if (isHoliday(date)) {
-				console.debug("end", date.format("U"));
 				endDays += 1;
 				count += 1;
 			}
@@ -367,15 +358,6 @@ export abstract class Timelines {
 			begin: begin,
 			end: end,
 		};
-
-		console.debug({
-			id: timeline.id,
-			subject: timeline.subject,
-			begin: begin.format("U"),
-			end: end.format("U"),
-			count,
-			endDays,
-		});
 
 		return result;
 	}
