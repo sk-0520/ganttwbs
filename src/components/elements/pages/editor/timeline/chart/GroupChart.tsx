@@ -66,6 +66,7 @@ const GroupChart: FC<Props> = (props: Props) => {
 					rx={height / 2}
 					ry={width / 2}
 					paintOrder="stroke"
+					onDoubleClick={_ => props.timelineStore.startDetailEdit(props.currentTimeline)}
 				/>
 			</g>
 		</g>
