@@ -10,6 +10,17 @@ type DateTimeParseResult = ParseResult<DateTime, Error>;
 
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
+function factory(timeZone: TimeZone): cdate.cdate {
+	let create = cdate;
+	if (timeZone.hasName) {
+		create = cdate().tz(timeZone.serialize()).cdateFn();
+	} else if (timeZone.hasOffset) {
+		create = cdate().utcOffset(timeZone.serialize()).cdateFn();
+	}
+
+	return create;
+}
+
 /**
  * 日付のラッパー。
  *
@@ -71,12 +82,7 @@ export class DateTime {
 	//#region function
 
 	private static parseCore(input: string | Date | number | undefined, timeZone: TimeZone): DateTimeParseResult {
-		let create = cdate;
-		if (timeZone.hasName) {
-			create = cdate().tz(timeZone.serialize()).cdateFn();
-		} else if (timeZone.hasOffset) {
-			create = cdate().utcOffset(timeZone.serialize()).cdateFn();
-		}
+		const create = factory(timeZone);
 
 		const date = create(input);
 		const raw = date as object;
@@ -186,12 +192,7 @@ export class DateTime {
 	}
 
 	public toDateOnly(): DateTime {
-		let create = cdate;
-		if (this.timeZone.hasName) {
-			create = cdate().tz(this.timeZone.serialize()).cdateFn();
-		} else if (this.timeZone.hasOffset) {
-			create = cdate().utcOffset(this.timeZone.serialize()).cdateFn();
-		}
+		const create = factory(this.timeZone);
 
 		const date = create()
 			.set("year", this.year)
@@ -202,6 +203,7 @@ export class DateTime {
 			.set("second", 0)
 			.set("millisecond", 0)
 			;
+
 		return new DateTime(date, this.timeZone);
 	}
 
