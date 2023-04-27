@@ -7,13 +7,15 @@ import { EditorData } from "@/models/data/EditorData";
  */
 export abstract class Storage {
 
+	private static readonly EditorKey = "editor";
+
 	/**
 	 * エディタ用データ保存。
 	 * @param editorData
 	 */
 	public static saveEditorData(editorData: EditorData) {
 		const sessionData = JSON.stringify(editorData);
-		sessionStorage.setItem("editor", sessionData);
+		sessionStorage.setItem(Storage.EditorKey, sessionData);
 	}
 
 	/**
@@ -21,7 +23,7 @@ export abstract class Storage {
 	 * @returns あかんときは `null`。
 	 */
 	public static loadEditorData(): EditorData | null {
-		const sessionData = sessionStorage.getItem("editor");
+		const sessionData = sessionStorage.getItem(Storage.EditorKey);
 		if (!sessionData) {
 			return null;
 		}
