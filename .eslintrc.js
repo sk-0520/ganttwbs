@@ -58,6 +58,12 @@ module.exports = {
 		"no-inner-declarations": [
 			"error",
 		],
+		"no-param-reassign": [
+			"error",
+			{
+				"props": false
+			}
+		],
 		"import/order": [
 			"warn",
 			{

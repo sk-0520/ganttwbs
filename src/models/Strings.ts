@@ -44,15 +44,15 @@ export abstract class Strings {
 	 * @param characters
 	 * @returns
 	 */
-	public static trimStart(s: string, characters: ReadonlySet<string> | null = null): string {
-		characters ??= this.TrimCharacters;
+	public static trimStart(s: string, characters?: ReadonlySet<string>): string {
+		const chars = characters ?? this.TrimCharacters;
 
-		if (!characters.size) {
+		if (!chars.size) {
 			return s;
 		}
 
 		for (let i = 0; i < s.length; i++) {
-			if (characters.has(s[i])) {
+			if (chars.has(s[i])) {
 				continue;
 			}
 
@@ -68,15 +68,15 @@ export abstract class Strings {
 	 * @param characters
 	 * @returns
 	 */
-	public static trimEnd(s: string, characters: ReadonlySet<string> | null = null): string {
-		characters ??= this.TrimCharacters;
+	public static trimEnd(s: string, characters?: ReadonlySet<string>): string {
+		const chars = characters ?? this.TrimCharacters;
 
-		if (!characters.size) {
+		if (!chars.size) {
 			return s;
 		}
 
 		for (let i = 0; i < s.length; i++) {
-			if (characters.has(s[s.length - i - 1])) {
+			if (chars.has(s[s.length - i - 1])) {
 				continue;
 			}
 
@@ -92,14 +92,14 @@ export abstract class Strings {
 	 * @param characters
 	 * @returns
 	 */
-	public static trim(s: string, characters: ReadonlySet<string> | null = null): string {
-		characters ??= this.TrimCharacters;
+	public static trim(s: string, characters?: ReadonlySet<string>): string {
+		const chars = characters ?? this.TrimCharacters;
 
-		if (!characters.size) {
+		if (!chars.size) {
 			return s;
 		}
 
-		return this.trimEnd(this.trimStart(s, characters), characters);
+		return this.trimEnd(this.trimStart(s, chars), chars);
 	}
 
 	private static readonly _escapeRegex = /[.*+?^${}()|[\]\\]/g;
