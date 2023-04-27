@@ -21,6 +21,7 @@ import { AnyTimeline, GroupTimeline, MemberId, TimelineKind } from "@/models/dat
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Settings } from "@/models/Settings";
+import { MoveDirection } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Types } from "@/models/Types";
@@ -131,8 +132,8 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		});
 	}
 
-	function handleControlMoveItem(moveUp: boolean) {
-		props.timelineStore.moveTimeline(moveUp, props.currentTimeline);
+	function handleControlMoveItem(direction: MoveDirection) {
+		props.timelineStore.moveTimeline(direction, props.currentTimeline);
 	}
 
 	function handleControlAddItem(kindOrTimeline: TimelineKind | GroupTimeline): void {
@@ -157,6 +158,10 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleControlDeleteItem() {
 		props.timelineStore.removeTimeline(props.currentTimeline);
+	}
+
+	function handleShowDetail() {
+		props.timelineStore.startDetailEdit(props.currentTimeline);
 	}
 
 	function handleChangeMember(memberId: MemberId): void {
@@ -414,6 +419,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				moveItem={handleControlMoveItem}
 				addItem={handleControlAddItem}
 				deleteItem={handleControlDeleteItem}
+				showDetail={handleShowDetail}
 			/>
 		</TimelineHeaderRow >
 	);

@@ -47,6 +47,7 @@ const TaskChart: FC<Props> = (props: Props) => {
 				stroke={props.borderColor}
 				strokeWidth={props.borderThickness}
 				paintOrder="stroke"
+				onDoubleClick={_ => props.timelineStore.startDetailEdit(props.currentTimeline)}
 			/>
 
 			<rect
@@ -55,6 +56,7 @@ const TaskChart: FC<Props> = (props: Props) => {
 				width={width * props.progress}
 				height={height * 0.8}
 				fill={props.foreground}
+				onDoubleClick={_ => props.timelineStore.startDetailEdit(props.currentTimeline)}
 			/>
 		</g>
 	);

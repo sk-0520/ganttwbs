@@ -4,6 +4,7 @@ import { ReactNode, useState } from "react";
 
 import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
 import DaysHeader from "@/components/elements/pages/editor/timeline/DaysHeader";
+import TimelineDetailEditDialog from "@/components/elements/pages/editor/timeline/TimelineDetailEditDialog";
 import TimelineItems from "@/components/elements/pages/editor/timeline/TimelineItems";
 import TimelineViewer from "@/components/elements/pages/editor/timeline/TimelineViewer";
 import { Arrays } from "@/models/Arrays";
@@ -24,7 +25,7 @@ import { WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
 import { Settings } from "@/models/Settings";
-import { TimelineStore } from "@/models/store/TimelineStore";
+import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 
 /*
@@ -49,6 +50,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
+	const [visibleDetailEditDialog, setVisibleDetailEditDialog] = useState<AnyTimeline>();
 
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
@@ -98,6 +100,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			setActiveTimeline: handleSetActiveTimeline,
 
 			startDragTimeline: handleStartDragTimeline,
+			startDetailEdit: handleStartDetailEdit,
 		};
 
 		return result;
@@ -141,7 +144,11 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			dropTimeline.sourceGroupTimeline.children = newSourceChildren;
 
 			// 別グループに追加
-			dropTimeline.destinationGroupTimeline.children.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
+			if (dropTimeline.destinationIndex === -1) {
+				dropTimeline.destinationGroupTimeline.children.push(dropTimeline.timeline);
+			} else {
+				dropTimeline.destinationGroupTimeline.children.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
+			}
 		}
 
 		setDropTimeline(null);
@@ -254,27 +261,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 					}));
 				}
 
-				// // 最上位から最上位
-				// if (sourceGroupTimelines.length === 1 && targetGroupTimelines.length === 1) {
-				// 	const sourceIndex = props.editData.setting.rootTimeline.children.findIndex(a => a.id === sourceTimeline.id);
-				// 	const destinationIndex = props.editData.setting.rootTimeline.children.findIndex(a => a.id === targetTimeline.id);
-				// 	if (sourceIndex === -1 || destinationIndex === -1) {
-				// 		throw new Error(JSON.stringify({
-				// 			sourceIndex,
-				// 			destinationIndex,
-				// 		}));
-				// 	}
-
-				// 	fireDropTimeline({
-				// 		timeline: sourceTimeline,
-				// 		sourceGroupTimeline: null,
-				// 		destinationGroupTimeline: null,
-				// 		sourceIndex: sourceIndex,
-				// 		destinationIndex: destinationIndex,
-				// 	});
-				// 	return;
-				// }
-
 				// 対象がグループの場合、そのグループへ移動
 				if (Settings.maybeGroupTimeline(targetTimeline)) {
 					const sourceGroupTimeline = sourceGroupTimelines[sourceGroupTimelines.length - 1];
@@ -308,6 +294,22 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		setDraggingTimeline(dragging);
 	}
 
+	function handleStartDetailEdit(timeline: AnyTimeline): void {
+		console.debug("詳細編集開始", timeline);
+		setVisibleDetailEditDialog(timeline);
+	}
+
+	function handleEndDetailEdit(sourceTimeline: AnyTimeline, changedTimeline: AnyTimeline | null): void {
+		console.debug("詳細編集終了", changedTimeline);
+
+		setVisibleDetailEditDialog(undefined);
+
+		if (changedTimeline) {
+			handleUpdateTimeline(changedTimeline);
+			updateRelations();
+		}
+	}
+
 	function handleCalcDisplayId(timeline: Readonly<AnyTimeline>): DisplayTimelineId {
 		return Timelines.calcDisplayId(timeline, props.editorData.setting.rootTimeline);
 	}
@@ -322,7 +324,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		handleAddNewTimeline(baseTimeline, newTimeline, options.position);
 	}
 
-	//TODO: 一括登録時になんか反映されない(ん～ってなる)
 	function handleAddNewTimeline(baseTimeline: AnyTimeline, newTimeline: AnyTimeline, position: NewTimelinePosition): void {
 		console.trace("ADD", newTimeline);
 
@@ -429,11 +430,24 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		setTimelineStore(store);
 	}
 
-	function handleMoveTimeline(moveUp: boolean, timeline: AnyTimeline): void {
+	function handleMoveTimeline(direction: MoveDirection, timeline: AnyTimeline): void {
 		const groups = Timelines.getParentGroups(timeline, props.editorData.setting.rootTimeline);
 
-		const group = Arrays.last(groups);
-		Arrays.replaceOrderInPlace(group.children, !moveUp, timeline);
+		if (direction === "parent") {
+			if (1 < groups.length) {
+				//TODO: 正直どこに配置すればいいのか分からん
+				const srcGroup = groups[groups.length - 1];
+				const destGroup = groups[groups.length - 2];
+				srcGroup.children = srcGroup.children.filter(a => a.id !== timeline.id);
+				destGroup.children.push(timeline);
+			} else {
+				console.debug("最上位項目は何もしない");
+				return;
+			}
+		} else {
+			const group = Arrays.last(groups);
+			Arrays.replaceOrderInPlace(group.children, direction === "down", timeline);
+		}
 
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}
@@ -542,6 +556,13 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
 			/> */}
+			{visibleDetailEditDialog && <TimelineDetailEditDialog
+				configuration={props.configuration}
+				setting={props.editorData.setting}
+				calendarInfo={calendarInfo}
+				timeline={visibleDetailEditDialog}
+				callbackSubmit={(timeline) => handleEndDetailEdit(visibleDetailEditDialog, timeline)}
+			/>}
 		</div>
 	);
 };

@@ -5,13 +5,15 @@ import { IconImage, IconKind } from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
+import { MoveDirection } from "@/models/store/TimelineStore";
 
 interface Props {
 	currentTimelineKind: TimelineKind;
 	disabled: boolean,
-	moveItem: (moveUp: boolean) => void;
+	moveItem: (direction: MoveDirection) => void;
 	addItem: (kindOrTimeline: TimelineKind | GroupTimeline) => void;
 	deleteItem: () => void;
+	showDetail(): void;
 }
 
 const ControlsCell: FC<Props> = (props: Props) => {
@@ -25,8 +27,8 @@ const ControlsCell: FC<Props> = (props: Props) => {
 		setVisibleControls(false);
 	}
 
-	function handleMoveItem(moveUp: boolean) {
-		props.moveItem(moveUp);
+	function handleMoveItem(direction: MoveDirection) {
+		props.moveItem(direction);
 		handleHideControls();
 	}
 
@@ -53,6 +55,11 @@ const ControlsCell: FC<Props> = (props: Props) => {
 		setVisibleTimelinesImportDialog(false);
 	}
 
+	function handleShowDetail() {
+		handleHideControls();
+		props.showDetail();
+	}
+
 	return (
 		<td className={
 			classNames(
@@ -68,25 +75,15 @@ const ControlsCell: FC<Props> = (props: Props) => {
 				onClick={handleStartControls}
 			>
 				<IconImage
-					kind={IconKind.Operation}
+					kind={IconKind.Option}
 				/>
 			</button>
 			<Overlay
 				isVisible={visibleControls}
 				callBackHidden={handleHideControls}
 			>
-				<div className="tools before">
-					<div className="panel">
-						<ul>
-							<li>
-								<button>詳細設定</button>
-							</li>
-						</ul>
-					</div>
-				</div>
-
 				<div className="tools after">
-					<table className="panel">
+					<table className="panel grid">
 						<tbody>
 							<tr>
 								<th className="col-header">
@@ -95,7 +92,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleMoveItem(true)}
+										onClick={_ => handleMoveItem("up")}
 									>
 										<IconImage
 											kind={IconKind.MoveUp}
@@ -106,7 +103,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleMoveItem(false)}
+										onClick={_ => handleMoveItem("down")}
 									>
 										<IconImage
 											kind={IconKind.MoveDown}
@@ -114,7 +111,17 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										下へ
 									</button>
 								</td>
-								<td className="col-cell" />
+								<td className="col-cell">
+									<button
+										className="simple"
+										onClick={_ => handleMoveItem("parent")}
+									>
+										<IconImage
+											kind={IconKind.MovePrev}
+										/>
+										下げる
+									</button>
+								</td>
 							</tr>
 							<tr>
 								<th
@@ -163,8 +170,19 @@ const ControlsCell: FC<Props> = (props: Props) => {
 							</tr>
 							<tr>
 								<th className="col-header">
-									削除
+									その他
 								</th>
+								<td className="col-cell">
+									<button
+										className="simple"
+										onClick={_ => handleShowDetail()}
+									>
+										<IconImage
+											kind={IconKind.Edit}
+										/>
+										詳細設定
+									</button>
+								</td>
 								<td className="col-cell" />
 								<td className="col-cell">
 									<button
@@ -177,7 +195,6 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										削除
 									</button>
 								</td>
-								<td className="col-cell" />
 							</tr>
 						</tbody>
 					</table>

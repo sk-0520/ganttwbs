@@ -425,17 +425,18 @@ $viewer-z-index: 2;
 				}
 
 				.tools {
-					&.before {
-					}
-
 					&.after {
-						.panel {
+						.grid {
 							color: #000;
 							table-layout: fixed;
 							width: 300px;
 
+							td {
+								padding: 1px;
+							}
+
 							.col-header {
-								width: 5em;
+								width: 4.5em;
 								padding-right: 1em;
 							}
 
@@ -487,6 +488,27 @@ $viewer-z-index: 2;
 
 		#connecters {
 			position: relative;
+		}
+	}
+
+	.timeline-editor {
+		width: 40vw;
+
+		input,
+		select {
+			width: 100%;
+		}
+
+		.progress-fixed {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			width: 100%;
+
+			.range {
+				flex: content;
+			}
 		}
 	}
 
