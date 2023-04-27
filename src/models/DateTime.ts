@@ -192,9 +192,7 @@ export class DateTime {
 	}
 
 	public toDateOnly(): DateTime {
-		const create = factory(this.timeZone);
-
-		const date = create()
+		const date = this.date
 			.set("year", this.year)
 			.set("month", this.month - 1)
 			.set("date", this.day)

@@ -37,6 +37,17 @@ describe("DateTime", () => {
 		[DateTime.parse("2000-01-31T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromDays(30)],
 		[DateTime.parse("2000-02-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromDays(31)],
 		[DateTime.parse("2001-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromDays(366)],
+
+		[DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), TimeSpan.zero],
+		[DateTime.parse("2000-01-01T00:00:00.001", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), TimeSpan.fromMilliseconds(1)],
+		[DateTime.parse("1999-12-31T23:59:59.999", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), TimeSpan.fromMilliseconds(-1)],
+		[DateTime.parse("2000-01-01T00:00:01", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), TimeSpan.fromSeconds(1)],
+		[DateTime.parse("2000-01-01T00:01:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), TimeSpan.fromMinutes(1)],
+		[DateTime.parse("2000-01-01T01:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), TimeSpan.fromHours(1)],
+		[DateTime.parse("2000-01-02T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), TimeSpan.fromDays(1)],
+		[DateTime.parse("2000-01-31T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), TimeSpan.fromDays(30)],
+		[DateTime.parse("2000-02-01T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), TimeSpan.fromDays(31)],
+		[DateTime.parse("2001-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), TimeSpan.fromDays(366)],
 	])("add - TimeSpan", (expected: DateTime, date: DateTime, diff: TimeSpan) => {
 		const actual = date.add(diff);
 		expect(actual.timeZone.serialize()).toEqual(date.timeZone.serialize());

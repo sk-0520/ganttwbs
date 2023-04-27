@@ -326,7 +326,6 @@ export abstract class Timelines {
 
 			const date = begin.toDateOnly();
 			if (isHoliday(date)) {
-				console.debug("begin", date.format("U"));
 				begin = date.add(TimeSpan.fromDays(1));
 				continue;
 			}
@@ -347,7 +346,6 @@ export abstract class Timelines {
 
 			const date = begin.add(TimeSpan.fromDays(i)).toDateOnly();
 			if (isHoliday(date)) {
-				console.debug("end", date.format("U"));
 				endDays += 1;
 				count += 1;
 			}
@@ -360,15 +358,6 @@ export abstract class Timelines {
 			begin: begin,
 			end: end,
 		};
-
-		console.debug({
-			id: timeline.id,
-			subject: timeline.subject,
-			begin: begin.format("U"),
-			end: end.format("U"),
-			count,
-			endDays,
-		});
 
 		return result;
 	}

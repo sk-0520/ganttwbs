@@ -43,7 +43,7 @@ export abstract class TimeZone {
 	}
 
 	private static parseCore(s: string): TimeZoneParseResult {
-		if (s.includes("/")) {
+		if (s.includes("/") || s === "UTC") {
 			return ResultFactory.success(new IanaTimeZone(s));
 		}
 
