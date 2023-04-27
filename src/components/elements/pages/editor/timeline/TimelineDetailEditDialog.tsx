@@ -14,7 +14,7 @@ import { useLocale } from "@/locales/locale";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps {
 	timeline: AnyTimeline;
-	callbackSubmit(timeline: AnyTimeline | null): void;
+	callbackSubmit(changedTimeline: AnyTimeline | null): void;
 }
 
 const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
@@ -29,7 +29,18 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 	const groups = [...props.setting.groups].sort((a, b) => a.name.localeCompare(b.name));
 
 	function handleSubmit() {
-		console.debug(1);
+		const editTimeline = {
+			...props.timeline,
+			subject,
+			comment,
+		};
+		if (Settings.maybeTaskTimeline(editTimeline)) {
+			editTimeline.workload = Timelines.serializeWorkload(workload);
+			editTimeline.memberId = memberId;
+			editTimeline.progress = progress;
+		}
+
+		props.callbackSubmit(editTimeline);
 	}
 
 	return (
@@ -128,9 +139,7 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 							quickSuggestions: false,
 						}}
 					/>
-
 				</dd>
-
 			</dl>
 		</Dialog>
 	);

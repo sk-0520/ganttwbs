@@ -299,10 +299,15 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		setVisibleDetailEditDialog(timeline);
 	}
 
-	function handleEndDetailEdit(timeline: AnyTimeline | null): void {
-		console.debug("詳細編集終了", timeline);
+	function handleEndDetailEdit(sourceTimeline: AnyTimeline, changedTimeline: AnyTimeline | null): void {
+		console.debug("詳細編集終了", changedTimeline);
 
 		setVisibleDetailEditDialog(undefined);
+
+		if (changedTimeline) {
+			handleUpdateTimeline(changedTimeline);
+			updateRelations();
+		}
 	}
 
 	function handleCalcDisplayId(timeline: Readonly<AnyTimeline>): DisplayTimelineId {
@@ -556,7 +561,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				setting={props.editorData.setting}
 				calendarInfo={calendarInfo}
 				timeline={visibleDetailEditDialog}
-				callbackSubmit={handleEndDetailEdit}
+				callbackSubmit={(timeline) => handleEndDetailEdit(visibleDetailEditDialog, timeline)}
 			/>}
 		</div>
 	);
