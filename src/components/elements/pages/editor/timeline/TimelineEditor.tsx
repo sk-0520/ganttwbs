@@ -141,7 +141,11 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			dropTimeline.sourceGroupTimeline.children = newSourceChildren;
 
 			// 別グループに追加
-			dropTimeline.destinationGroupTimeline.children.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
+			if(dropTimeline.destinationIndex === -1) {
+				dropTimeline.destinationGroupTimeline.children.push(dropTimeline.timeline);
+			} else {
+				dropTimeline.destinationGroupTimeline.children.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
+			}
 		}
 
 		setDropTimeline(null);
@@ -254,27 +258,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 					}));
 				}
 
-				// // 最上位から最上位
-				// if (sourceGroupTimelines.length === 1 && targetGroupTimelines.length === 1) {
-				// 	const sourceIndex = props.editData.setting.rootTimeline.children.findIndex(a => a.id === sourceTimeline.id);
-				// 	const destinationIndex = props.editData.setting.rootTimeline.children.findIndex(a => a.id === targetTimeline.id);
-				// 	if (sourceIndex === -1 || destinationIndex === -1) {
-				// 		throw new Error(JSON.stringify({
-				// 			sourceIndex,
-				// 			destinationIndex,
-				// 		}));
-				// 	}
-
-				// 	fireDropTimeline({
-				// 		timeline: sourceTimeline,
-				// 		sourceGroupTimeline: null,
-				// 		destinationGroupTimeline: null,
-				// 		sourceIndex: sourceIndex,
-				// 		destinationIndex: destinationIndex,
-				// 	});
-				// 	return;
-				// }
-
 				// 対象がグループの場合、そのグループへ移動
 				if (Settings.maybeGroupTimeline(targetTimeline)) {
 					const sourceGroupTimeline = sourceGroupTimelines[sourceGroupTimelines.length - 1];
@@ -322,7 +305,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		handleAddNewTimeline(baseTimeline, newTimeline, options.position);
 	}
 
-	//TODO: 一括登録時になんか反映されない(ん～ってなる)
 	function handleAddNewTimeline(baseTimeline: AnyTimeline, newTimeline: AnyTimeline, position: NewTimelinePosition): void {
 		console.trace("ADD", newTimeline);
 
