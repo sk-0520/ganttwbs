@@ -26,8 +26,8 @@
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
   "@types/node": {
-    "module": "@types/node@18.16.1",
-    "version": "18.16.1",
+    "module": "@types/node@18.16.2",
+    "version": "18.16.2",
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
