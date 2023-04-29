@@ -93,8 +93,9 @@ function createConfiguration(): Configuration {
 
 	const result: Configuration = {
 		autoSave: {
-			isEnabled: false,
-			span: TimeSpan.fromMinutes(3),
+			isEnabled: true,
+			//time: TimeSpan.fromMinutes(3),
+			time: TimeSpan.fromSeconds(3),
 		},
 		design: {
 			honest: {
