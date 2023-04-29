@@ -5,6 +5,7 @@ import { FC, useEffect, useRef, useState } from "react";
 
 import AutoSaveRow from "@/components/elements/pages/editor/file/AutoSaveRow";
 import { useLocale } from "@/locales/locale";
+import { Browsers } from "@/models/Browsers";
 import { CssHelper } from "@/models/CssHelper";
 import { AutoSaveKind } from "@/models/data/AutoSave";
 import { Configuration } from "@/models/data/Configuration";
@@ -24,7 +25,7 @@ interface Props {
 
 const FileEditor: FC<Props> = (props: Props) => {
 	const locale = useLocale();
-	const { configuration, editorData: editorData } = props;
+	const { configuration, editorData } = props;
 
 	const [fileName, setFileName] = useState(editorData.fileName);
 
@@ -140,7 +141,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleJsonCopy() {
-		navigator.clipboard.writeText(settingJson);
+		Browsers.copyText(settingJson);
 	}
 
 	return (
@@ -253,12 +254,5 @@ function formatAutoDownloadFileName(fileName: string, fileNameFormat: string, ti
 }
 
 function downloadJson(fileName: string, obj: object): void {
-	const json = JSON.stringify(obj);
-
-	// download
-	const blob = new Blob([json], { type: "application/json" });
-	const link = document.createElement("a");
-	link.href = window.URL.createObjectURL(blob);
-	link.download = fileName;
-	link.click();
+	Browsers.downloadJson(fileName, obj, "\t");
 }

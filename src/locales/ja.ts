@@ -72,7 +72,8 @@ const locale: Locale = {
 		editor: {
 			fontFamilies: [
 				"MigMix 1M",
-				"MS ゴシック",
+				"Consolas",
+				"MS Gothic",
 			]
 		}
 	}
