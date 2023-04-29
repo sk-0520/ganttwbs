@@ -6,6 +6,20 @@
     "licenses": "MIT",
     "repository": "https://github.com/scttcper/tinycolor"
   },
+  "@markuplint/jsx-parser": {
+    "module": "@markuplint/jsx-parser@3.6.1",
+    "version": "3.6.1",
+    "publisher": "Yusuke Hirao",
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/markuplint/markuplint"
+  },
+  "@markuplint/react-spec": {
+    "module": "@markuplint/react-spec@3.7.0",
+    "version": "3.7.0",
+    "publisher": "Yusuke Hirao",
+    "licenses": "MIT",
+    "repository": "https://github.com/markuplint/markuplint"
+  },
   "@monaco-editor/react": {
     "module": "@monaco-editor/react@4.5.0",
     "version": "4.5.0",
@@ -28,6 +42,12 @@
   "@types/node": {
     "module": "@types/node@18.16.2",
     "version": "18.16.2",
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
+  },
+  "@types/path-browserify": {
+    "module": "@types/path-browserify@1.0.0",
+    "version": "1.0.0",
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
@@ -148,6 +168,13 @@
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/davglass/license-checker"
   },
+  "markuplint": {
+    "module": "markuplint@3.8.0",
+    "version": "3.8.0",
+    "publisher": "Yusuke Hirao",
+    "licenses": "MIT",
+    "repository": "https://github.com/markuplint/markuplint"
+  },
   "next-i18next": {
     "module": "next-i18next@13.2.2",
     "version": "13.2.2",
@@ -174,6 +201,13 @@
     "publisher": "Toru Nagashima",
     "licenses": "MIT",
     "repository": "https://github.com/mysticatea/npm-run-all"
+  },
+  "path-browserify": {
+    "module": "path-browserify@1.0.1",
+    "version": "1.0.1",
+    "publisher": "James Halliday",
+    "licenses": "MIT",
+    "repository": "https://github.com/browserify/path-browserify"
   },
   "react-color": {
     "module": "react-color@2.19.3",

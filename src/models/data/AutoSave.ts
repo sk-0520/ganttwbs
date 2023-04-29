@@ -1,6 +1,19 @@
 import { TimeSpan } from "@/models/TimeSpan";
 
+export const enum AutoSaveKind {
+	Storage,
+	Download,
+}
+
+interface AutoSaveState {
+	isEnabled: boolean,
+	time: TimeSpan,
+	readonly step: number;
+}
+
 export interface AutoSave {
-	isEnabled: boolean;
-	span: TimeSpan;
+	/** ストレージへの保存設定 */
+	storage: AutoSaveState,
+	/** ダウンロード設定 */
+	download: AutoSaveState,
 }

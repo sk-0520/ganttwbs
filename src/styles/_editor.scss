@@ -19,6 +19,46 @@ main#editor {
 
 		&.tab-file {
 			background: variable.$app-timeline-default-background;
+
+			.auto-save {
+				table-layout: fixed;
+
+				th,
+				td {
+					padding: 0.2em;
+				}
+
+				th {
+					background: gray;
+
+					& + th {
+						border-left: 1px solid whitesmoke;
+					}
+				}
+
+				.kind-cell {
+				}
+				.enabled-cell {
+				}
+				.span-cell {
+					text-align: center;
+
+					.span {
+						width: 8ch;
+					}
+				}
+
+				.last-time-cell {
+
+				}
+				.next-time-cell {
+
+				}
+
+				.time {
+					font-family: monospace;
+				}
+			}
 		}
 
 		&.tab-timeline {

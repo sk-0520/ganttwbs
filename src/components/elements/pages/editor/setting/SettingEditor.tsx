@@ -14,7 +14,7 @@ import { EditorData } from "@/models/data/EditorData";
 import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
-import { Storage } from "@/models/Storage";
+import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
 import { TimeZone } from "@/models/TimeZone";
 
@@ -38,7 +38,7 @@ const SettingEditor: FC<Props> = (props: Props) => {
 
 		props.editData.setting = fromContext(props.editData.setting, setting);
 		console.debug(setting);
-		Storage.saveEditorData(props.editData);
+		Storages.saveEditorData(props.editData);
 
 		window.location.reload();
 	}

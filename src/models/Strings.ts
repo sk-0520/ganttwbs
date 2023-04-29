@@ -136,6 +136,40 @@ export abstract class Strings {
 		return source.replaceAll(searchValue, replaceValue);
 	}
 
+	public static replaceFunc(source: string, head: string, tail: string, func: (placeholder: string) => string): string {
+		if (!head || !tail) {
+			throw new Error(`head: ${head}, tail: ${tail}`);
+		}
+		if (!source) {
+			return "";
+		}
+
+		const escHead = this.escapeRegex(head);
+		const escTail = this.escapeRegex(tail);
+		const pattern = escHead + "(.+?)" + escTail;
+
+		const regex = new RegExp(pattern, "g");
+		const replacedText = source.replace(regex, (s, m) => func(m));
+
+		return replacedText;
+	}
+
+	public static replaceMap(source: string, map: ReadonlyMap<string, string> | Record<string, string>, head = "${", tail = "}"): string {
+
+		let func: (placeholder: string) => string;
+		if (map instanceof Map) {
+			func = (placeholder: string): string => {
+				return map.get(placeholder) ?? placeholder;
+			};
+		} else {
+			func = (placeholder: string): string => {
+				return placeholder in map ? (map as Record<string, string>)[placeholder] : placeholder;
+			};
+		}
+
+		return this.replaceFunc(source, head, tail, func);
+	}
+
 	/**
 	 * 改行分割。
 	 * @param source

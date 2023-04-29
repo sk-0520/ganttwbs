@@ -75,28 +75,28 @@ export default WorkRangeCells;
 function toDisplayWorkRangeKind(locale: Locale, kind: WorkRangeKind): string {
 	switch (kind) {
 		case WorkRangeKind.Loading:
-			return locale.timeline.workRange.kind.loading;
+			return locale.editor.timeline.workRange.kind.loading;
 
 		case WorkRangeKind.NoInput:
-			return locale.timeline.workRange.kind.noInput;
+			return locale.editor.timeline.workRange.kind.noInput;
 
 		case WorkRangeKind.SelfSelectedError:
-			return locale.timeline.workRange.kind.selfSelectedError;
+			return locale.editor.timeline.workRange.kind.selfSelectedError;
 
 		case WorkRangeKind.NoChildren:
-			return locale.timeline.workRange.kind.noChildren;
+			return locale.editor.timeline.workRange.kind.noChildren;
 
 		case WorkRangeKind.RelationNoInput:
-			return locale.timeline.workRange.kind.relationNoInput;
+			return locale.editor.timeline.workRange.kind.relationNoInput;
 
 		case WorkRangeKind.RelationError:
-			return locale.timeline.workRange.kind.relationError;
+			return locale.editor.timeline.workRange.kind.relationError;
 
 		case WorkRangeKind.RecursiveError:
-			return locale.timeline.workRange.kind.recursiveError;
+			return locale.editor.timeline.workRange.kind.recursiveError;
 
 		case WorkRangeKind.UnknownError:
-			return locale.timeline.workRange.kind.unknownError;
+			return locale.editor.timeline.workRange.kind.unknownError;
 
 		case WorkRangeKind.Success:
 		default:
