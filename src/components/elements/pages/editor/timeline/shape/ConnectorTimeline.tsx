@@ -110,16 +110,17 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 					draws.push(`${position.from.x - diff} ${position.to.y}`);
 					draws.push(`${position.to.x} ${position.to.y}`);
 				} else {
-					const diff = {
-						x: position.to.x - position.from.x,
-						y: position.to.y - position.from.y,
-					};
+					const width = position.to.x - position.from.x;
+					const begin = width * 0.7;
+					const curve = width * 0.1;
 
 					draws.push(`M ${position.from.x} ${position.from.y}`);
+					draws.push(`L ${position.from.x + begin} ${position.from.y}`);
 					draws.push("C");
-					draws.push(`${position.from.x} ${position.from.y}`);
-					draws.push(`${position.to.x - diff.x} ${position.to.y}`);
-					draws.push(`${position.to.x} ${position.to.y}`);
+					draws.push(`${position.from.x + begin + curve} ${position.from.y}`);
+					draws.push(`${position.from.x + begin} ${position.to.y}`);
+					draws.push(`${position.from.x + begin + curve} ${position.to.y}`);
+					draws.push(`L ${position.to.x} ${position.to.y}`);
 				}
 
 				const connecterColorId = Charts.toConnecterColorId(b, props.currentTimeline.id);
