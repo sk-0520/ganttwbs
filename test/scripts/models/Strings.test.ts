@@ -77,6 +77,33 @@ describe("String", () => {
 	});
 
 	test.each([
+		["", ""],
+	])("replaceFunc - throw", (head: string, tail: string) => {
+		expect(() => Strings.replaceFunc("", head, tail, s => s)).toThrowError();
+	});
+
+	test.each([
+		["", "", "<", ">", (s: string) => `${s}`],
+		["A", "<A>", "<", ">", (s: string) => `${s}`],
+		["<A>", "<A>", "(", ")", (s: string) => `${s}`],
+		["A", "(A)", "(", ")", (s: string) => `${s}`],
+		["<A>", "(A)", "(", ")", (s: string) => `<${s}>`],
+		["<A>-<B>-<C>", "(A)-(B)-<C>", "(", ")", (s: string) => `<${s}>`],
+		["<A>\r<B>\n<C>", "(A)\r(B)\n<C>", "(", ")", (s: string) => `<${s}>`],
+	])("replaceFunc", (expected: string, source: string, head: string, tail: string, func: (placeholder: string) => string) => {
+		expect(Strings.replaceFunc(source, head, tail, func)).toBe(expected);
+	});
+
+	test.each([
+		["ABC-abc-ABC", "ABC-abc-ABC", { "A": "[aa]" }, undefined, undefined],
+		["[aa]BC-abc-[aa]BC", "${A}BC-abc-${A}BC", { "A": "[aa]" }, undefined, undefined],
+		["[aa]BC-abc-[aa]BC", "${A}BC-abc-${A}BC", new Map([["A", "[aa]"]]), undefined, undefined],
+		["ABC-abc-ABC", "ABC-${abc}-ABC", { "ABC": "" }, undefined, undefined],
+	])("replaceMap", (expected: string, source: string, map: ReadonlyMap<string, string> | Record<string, string>, head: string | undefined, tail: string | undefined) => {
+		expect(Strings.replaceMap(source, map, head, tail)).toBe(expected);
+	});
+
+	test.each([
 		[[], null],
 		[[], undefined],
 		[[], ""],
