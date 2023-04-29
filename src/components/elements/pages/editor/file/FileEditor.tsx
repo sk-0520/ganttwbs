@@ -1,7 +1,6 @@
 import { Editor } from "@monaco-editor/react";
 import Link from "next/link";
 import { FC, useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 
 import { useLocale } from "@/locales/locale";
 import { CssHelper } from "@/models/CssHelper";
@@ -9,7 +8,8 @@ import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Types } from "@/models/Types";
-import { time } from "console";
+import { Storages } from "@/models/Storages";
+import { DateTime } from "@/models/DateTime";
 
 interface Props {
 	isVisible: boolean;
@@ -22,13 +22,19 @@ const FileEditor: FC<Props> = (props: Props) => {
 	const { configuration, editorData: editorData } = props;
 
 	const [fileName, setFileName] = useState(props.editorData.fileName);
-	const [autoSaveIsEnabled, setAutoSaveIsEnabled] = useState(props.configuration.autoSave.isEnabled);
-	const [autoSaveTime, setAutoSaveTime] = useState(props.configuration.autoSave.time);
+
+	const [autoSaveStorageIsEnabled, setAutoSaveStorageIsEnabled] = useState(props.configuration.autoSave.storage.isEnabled);
+	const [autoSaveStorageTime, setAutoSaveStorageTime] = useState(props.configuration.autoSave.storage.time);
+
+	const [autoSaveDownloadIsEnabled, setAutoSaveDownloadIsEnabled] = useState(props.configuration.autoSave.download.isEnabled);
+	const [autoSaveDownloadTime, setAutoSaveDownloadTime] = useState(props.configuration.autoSave.download.time);
 
 	const [settingJson, setSettingJson] = useState("");
 
-	const autoSaveIntervalId = useRef<number>();
+	const autoSaveStorageIntervalId = useRef(0);
+	const autoSaveDownloadIntervalId = useRef(0);
 
+	// 画面表示時の表示JSONの更新
 	useEffect(() => {
 		if (props.isVisible) {
 			const json = JSON.stringify(editorData.setting, undefined, 2);
@@ -36,37 +42,57 @@ const FileEditor: FC<Props> = (props: Props) => {
 		}
 	}, [editorData.setting, props.isVisible]);
 
+	// セッションストレージへの保存処理
 	useEffect(() => {
-		if (autoSaveIntervalId.current) {
-			window.clearInterval(autoSaveIntervalId.current);
-			autoSaveIntervalId.current = 0;
+		if (autoSaveStorageIntervalId.current) {
+			window.clearInterval(autoSaveStorageIntervalId.current);
+			autoSaveStorageIntervalId.current = 0;
 		}
 
-		if (!fileName || autoSaveTime.ticks <= 0) {
+		if (autoSaveStorageTime.ticks <= 0) {
 			return;
 		}
 
-		if (autoSaveIsEnabled) {
-			autoSaveIntervalId.current = window.setInterval(() => {
-				downloadJson(fileName, editorData.setting);
-			}, autoSaveTime.totalMilliseconds);
+		if (autoSaveStorageIsEnabled) {
+			autoSaveStorageIntervalId.current = window.setInterval(() => {
+				Storages.saveEditorData(editorData);
+			}, autoSaveStorageTime.totalMilliseconds);
 		}
-	}, [autoSaveIntervalId, editorData, fileName, autoSaveIsEnabled, autoSaveTime]);
+	}, [autoSaveStorageIntervalId, editorData, fileName, autoSaveStorageIsEnabled, autoSaveStorageTime]);
+
+	// 自動ダウンロード処理
+	useEffect(() => {
+		if (autoSaveDownloadIntervalId.current) {
+			window.clearInterval(autoSaveDownloadIntervalId.current);
+			autoSaveDownloadIntervalId.current = 0;
+		}
+
+		if (!fileName || autoSaveDownloadTime.ticks <= 0) {
+			return;
+		}
+
+		if (autoSaveDownloadIsEnabled) {
+			autoSaveDownloadIntervalId.current = window.setInterval(() => {
+				downloadJson(fileName, editorData.setting);
+			}, autoSaveDownloadTime.totalMilliseconds);
+		}
+	}, [autoSaveDownloadIntervalId, editorData, fileName, autoSaveDownloadIsEnabled, autoSaveDownloadTime]);
+
 
 	function handleChangeFileName(value: string): void {
 		setFileName(editorData.fileName = value);
 	}
 
-	function handleChangeAutoSaveIsEnable(checked: boolean): void {
-		setAutoSaveIsEnabled(configuration.autoSave.isEnabled = checked);
+	function handleChangeAutoDownloadIsEnable(checked: boolean): void {
+		setAutoSaveDownloadIsEnabled(configuration.autoSave.download.isEnabled = checked);
 	}
 
-	function handleChangeAutoSaveTime(minutes: number | undefined): void {
+	function handleChangeAutoDownloadTime(minutes: number | undefined): void {
 		if (Types.isUndefined(minutes)) {
 			return;
 		}
-		const time = fromAutoSaveTimeValue(minutes);
-		setAutoSaveTime(configuration.autoSave.time = time);
+		const time = fromAutoTimeValue(minutes);
+		setAutoSaveDownloadTime(configuration.autoSave.download.time = time);
 	}
 
 	function handleDownload() {
@@ -95,8 +121,8 @@ const FileEditor: FC<Props> = (props: Props) => {
 						<dd>
 							<label>
 								<input type='checkbox'
-									checked={autoSaveIsEnabled}
-									onChange={ev => handleChangeAutoSaveIsEnable(ev.target.checked)}
+									checked={autoSaveDownloadIsEnabled}
+									onChange={ev => handleChangeAutoDownloadIsEnable(ev.target.checked)}
 								/>
 								有効にする
 							</label>
@@ -104,8 +130,8 @@ const FileEditor: FC<Props> = (props: Props) => {
 						<dd>
 							<label>
 								<input type='number'
-									value={toAutoSaveTimeValue(autoSaveTime)}
-									onChange={ev => handleChangeAutoSaveTime(ev.target.valueAsNumber)}
+									value={toAutoTimeValue(autoSaveDownloadTime)}
+									onChange={ev => handleChangeAutoDownloadTime(ev.target.valueAsNumber)}
 								/>
 								分
 							</label>
@@ -154,14 +180,17 @@ const FileEditor: FC<Props> = (props: Props) => {
 
 export default FileEditor;
 
-function toAutoSaveTimeValue(time: TimeSpan) {
-	return time.totalSeconds;
+function toAutoTimeValue(time: TimeSpan) {
+	return time.totalMinutes;
 }
 
-function fromAutoSaveTimeValue(value: number): TimeSpan {
-	return TimeSpan.fromSeconds(value);
+function fromAutoTimeValue(value: number): TimeSpan {
+	return TimeSpan.fromMinutes(value);
 }
 
+function convertAutoDownloadName(fileName: string, timestamp: DateTime): string {
+	throw new Error();
+}
 
 function downloadJson(fileName: string, obj: object): void {
 	const json = JSON.stringify(obj);

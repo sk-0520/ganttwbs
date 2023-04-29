@@ -5,7 +5,7 @@ import { EditorData } from "@/models/data/EditorData";
  *
  * まぁブラウザ。
  */
-export abstract class Storage {
+export abstract class Storages {
 
 	private static readonly EditorKey = "editor";
 
@@ -15,7 +15,7 @@ export abstract class Storage {
 	 */
 	public static saveEditorData(editorData: EditorData) {
 		const sessionData = JSON.stringify(editorData);
-		sessionStorage.setItem(Storage.EditorKey, sessionData);
+		sessionStorage.setItem(Storages.EditorKey, sessionData);
 	}
 
 	/**
@@ -23,7 +23,7 @@ export abstract class Storage {
 	 * @returns あかんときは `null`。
 	 */
 	public static loadEditorData(): EditorData | null {
-		const sessionData = sessionStorage.getItem(Storage.EditorKey);
+		const sessionData = sessionStorage.getItem(Storages.EditorKey);
 		if (!sessionData) {
 			return null;
 		}

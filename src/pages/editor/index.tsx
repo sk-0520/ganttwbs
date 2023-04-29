@@ -9,7 +9,7 @@ import TimelineEditor from "@/components/elements/pages/editor/timeline/Timeline
 import Layout from "@/components/layout/Layout";
 import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
-import { Storage } from "@/models/Storage";
+import { Storages } from "@/models/Storages";
 import { TimeSpan } from "@/models/TimeSpan";
 
 const enum TabIndex {
@@ -32,7 +32,7 @@ const EditorPage: NextPage = () => {
 	}
 
 	useEffect(() => {
-		const editData = Storage.loadEditorData();
+		const editData = Storages.loadEditorData();
 		if (!editData) {
 			router.push("/");
 			return;
@@ -93,9 +93,14 @@ function createConfiguration(): Configuration {
 
 	const result: Configuration = {
 		autoSave: {
-			isEnabled: true,
-			//time: TimeSpan.fromMinutes(3),
-			time: TimeSpan.fromSeconds(3),
+			storage: {
+				isEnabled: true,
+				time: TimeSpan.fromSeconds(30),
+			},
+			download: {
+				isEnabled: false,
+				time: TimeSpan.fromMinutes(5),
+			}
 		},
 		design: {
 			honest: {
