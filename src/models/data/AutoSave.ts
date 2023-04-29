@@ -1,5 +1,10 @@
 import { TimeSpan } from "@/models/TimeSpan";
 
+export const enum AutoSaveKind {
+	Storage,
+	Download,
+}
+
 export interface AutoSave {
 	/** ストレージへの保存設定 */
 	storage: {
