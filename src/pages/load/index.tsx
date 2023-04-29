@@ -20,7 +20,9 @@ const LoadPage: NextPage = () => {
 			<form onSubmit={handleSubmit(data => onSubmit(data, router))}>
 				<dl className='inputs'>
 					<dt>ファイル</dt>
-					<input type='file' {...register("files")} />
+					<dd>
+						<input type='file' {...register("files")} />
+					</dd>
 				</dl>
 
 				<button className='action'>作業開始</button>

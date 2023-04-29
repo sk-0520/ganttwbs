@@ -6,6 +6,20 @@
     "licenses": "MIT",
     "repository": "https://github.com/scttcper/tinycolor"
   },
+  "@markuplint/jsx-parser": {
+    "module": "@markuplint/jsx-parser@3.6.1",
+    "version": "3.6.1",
+    "publisher": "Yusuke Hirao",
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/markuplint/markuplint"
+  },
+  "@markuplint/react-spec": {
+    "module": "@markuplint/react-spec@3.7.0",
+    "version": "3.7.0",
+    "publisher": "Yusuke Hirao",
+    "licenses": "MIT",
+    "repository": "https://github.com/markuplint/markuplint"
+  },
   "@monaco-editor/react": {
     "module": "@monaco-editor/react@4.5.0",
     "version": "4.5.0",
@@ -147,6 +161,13 @@
     "publisher": "Dav Glass",
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/davglass/license-checker"
+  },
+  "markuplint": {
+    "module": "markuplint@3.8.0",
+    "version": "3.8.0",
+    "publisher": "Yusuke Hirao",
+    "licenses": "MIT",
+    "repository": "https://github.com/markuplint/markuplint"
   },
   "next-i18next": {
     "module": "next-i18next@13.2.2",

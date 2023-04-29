@@ -83,7 +83,8 @@
 			"santacodes.santacodes-region-viewer",
 			"awwsky.region-marker",
 			"dbaeumer.vscode-eslint",
-			"firefox-devtools.vscode-firefox-debug"
+			"firefox-devtools.vscode-firefox-debug",
+			"yusukehirao.vscode-markuplint"
 		]
 	}
 }
