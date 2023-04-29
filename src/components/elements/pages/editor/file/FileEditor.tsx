@@ -1,5 +1,6 @@
 import { Editor } from "@monaco-editor/react";
 import Link from "next/link";
+import path from "path-browserify";
 import { FC, useEffect, useRef, useState } from "react";
 
 import AutoSaveRow from "@/components/elements/pages/editor/file/AutoSaveRow";
@@ -10,6 +11,7 @@ import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
 import { DateTime } from "@/models/DateTime";
 import { Storages } from "@/models/Storages";
+import { Strings } from "@/models/Strings";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 import { Types } from "@/models/Types";
@@ -87,11 +89,12 @@ const FileEditor: FC<Props> = (props: Props) => {
 
 		autoSaveDownloadIntervalId.current = window.setInterval(() => {
 			const now = DateTime.today(TimeZone.getClientTimeZone());
-			downloadJson(fileName, editorData.setting);
+			const autoSaveName = formatAutoDownloadFileName(fileName, locale.editor.file.autoSave.download.fileNameFormat, now);
+			downloadJson(autoSaveName, editorData.setting);
 			setAutoSaveDownloadLastTime(now);
 			setAutoSaveDownloadNextTime(now.add(autoSaveDownloadTime));
 		}, autoSaveDownloadTime.totalMilliseconds);
-	}, [autoSaveDownloadIntervalId, editorData, fileName, autoSaveDownloadIsEnabled, autoSaveDownloadTime]);
+	}, [autoSaveDownloadIntervalId, editorData, fileName, autoSaveDownloadIsEnabled, autoSaveDownloadTime, locale]);
 
 
 	function handleChangeFileName(value: string): void {
@@ -147,7 +150,8 @@ const FileEditor: FC<Props> = (props: Props) => {
 				<dl className="inputs">
 					<dt>ファイル名</dt>
 					<dd>
-						<input type="text"
+						<input
+							type="text"
 							value={editorData.fileName}
 							onChange={ev => handleChangeFileName(ev.target.value)}
 						/>
@@ -168,6 +172,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 							<tbody>
 								{/* eslint-disable-next-line */}
 								<AutoSaveRow
+									configuration={configuration}
 									kind={AutoSaveKind.Storage}
 									isEnabled={autoSaveStorageIsEnabled}
 									time={autoSaveStorageTime}
@@ -179,6 +184,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 									callbackChangeAutoSaveTime={handleChangeAutoSaveTime}
 								/>
 								<AutoSaveRow
+									configuration={configuration}
 									kind={AutoSaveKind.Download}
 									isEnabled={autoSaveDownloadIsEnabled}
 									time={autoSaveDownloadTime}
@@ -197,12 +203,12 @@ const FileEditor: FC<Props> = (props: Props) => {
 
 			<dt>出力</dt>
 			<dd>
-				<ul>
-					<li><button onClick={handleDownload}>DOWN LOAD</button></li>
+				<ul className="inline">
+					<li><button onClick={handleDownload}>DOWNLOAD</button></li>
+					<li><button onClick={handleJsonCopy}>copy</button></li>
 				</ul>
 			</dd>
 			<dd>
-				<button onClick={handleJsonCopy}>copy</button>
 				<Editor
 					value={settingJson}
 					defaultLanguage="json"
@@ -235,8 +241,15 @@ const FileEditor: FC<Props> = (props: Props) => {
 
 export default FileEditor;
 
-function convertAutoDownloadName(fileName: string, timestamp: DateTime): string {
-	throw new Error();
+function formatAutoDownloadFileName(fileName: string, fileNameFormat: string, timestamp: DateTime): string {
+	const parsedFileName = path.parse(fileName);
+	const map = new Map([
+		["ORIGINAL", fileName],
+		["ORIGINAL_NAME", parsedFileName.name],
+		["ORIGINAL_EXT", parsedFileName.ext.substring(1)],
+		["TIMESTAMP", timestamp.format("yyyy-MM-dd_HHmmss")],
+	]);
+	return Strings.replaceMap(fileNameFormat, map);
 }
 
 function downloadJson(fileName: string, obj: object): void {

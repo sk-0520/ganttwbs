@@ -45,6 +45,12 @@
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
+  "@types/path-browserify": {
+    "module": "@types/path-browserify@1.0.0",
+    "version": "1.0.0",
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
+  },
   "@types/react-color": {
     "module": "@types/react-color@3.0.6",
     "version": "3.0.6",
@@ -195,6 +201,13 @@
     "publisher": "Toru Nagashima",
     "licenses": "MIT",
     "repository": "https://github.com/mysticatea/npm-run-all"
+  },
+  "path-browserify": {
+    "module": "path-browserify@1.0.1",
+    "version": "1.0.1",
+    "publisher": "James Halliday",
+    "licenses": "MIT",
+    "repository": "https://github.com/browserify/path-browserify"
   },
   "react-color": {
     "module": "react-color@2.19.3",

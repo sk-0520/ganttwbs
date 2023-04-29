@@ -1,11 +1,14 @@
+import { FC, ReactNode } from "react";
+
 import { Locale, useLocale } from "@/locales/locale";
+import { AutoSaveKind } from "@/models/data/AutoSave";
+import { Configuration } from "@/models/data/Configuration";
 import { DateTime } from "@/models/DateTime";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Types } from "@/models/Types";
-import { AutoSaveKind } from "@/models/data/AutoSave";
-import { FC, ReactNode } from "react";
 
 interface Props {
+	configuration: Configuration;
 	kind: AutoSaveKind;
 	isEnabled: boolean;
 	time: TimeSpan;
@@ -19,16 +22,26 @@ interface Props {
 
 const AutoSaveRow: FC<Props> = (props: Props) => {
 	const locale = useLocale();
-	const localeKind = props.kind === AutoSaveKind.Storage
-		? locale.editor.file.autoSave.storage.kind
-		: locale.editor.file.autoSave.download.kind
+
+	type KindValues = {
+		kind: string;
+		step: number;
+	};
+	const kindValues: KindValues = props.kind === AutoSaveKind.Storage
+		? {
+			kind: locale.editor.file.autoSave.storage.kind,
+			step: props.configuration.autoSave.storage.step,
+		}
+		: {
+			kind: locale.editor.file.autoSave.download.kind,
+			step: props.configuration.autoSave.download.step,
+		}
 		;
-	const step = props.kind === AutoSaveKind.Storage ? 0.5 : 1;
 
 	return (
 		<tr>
 			<td className="kind-cell">
-				{localeKind}
+				{kindValues.kind}
 			</td>
 			<td className="enabled-cell">
 				<label>
@@ -45,7 +58,7 @@ const AutoSaveRow: FC<Props> = (props: Props) => {
 					className="span"
 					type='number'
 					min={0}
-					step={step}
+					step={kindValues.step}
 					value={toAutoSaveTimeValue(props.time)}
 					onChange={ev => props.callbackChangeAutoSaveTime(props.kind, fromAutoSaveTimeValue(ev.target.valueAsNumber))}
 				/>

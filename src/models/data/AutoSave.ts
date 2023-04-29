@@ -5,15 +5,15 @@ export const enum AutoSaveKind {
 	Download,
 }
 
+interface AutoSaveState {
+	isEnabled: boolean,
+	time: TimeSpan,
+	readonly step: number;
+}
+
 export interface AutoSave {
 	/** ストレージへの保存設定 */
-	storage: {
-		isEnabled: boolean,
-		time: TimeSpan,
-	},
+	storage: AutoSaveState,
 	/** ダウンロード設定 */
-	download: {
-		isEnabled: boolean,
-		time: TimeSpan,
-	},
+	download: AutoSaveState,
 }

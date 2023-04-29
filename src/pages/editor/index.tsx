@@ -96,10 +96,12 @@ function createConfiguration(): Configuration {
 			storage: {
 				isEnabled: true,
 				time: TimeSpan.fromSeconds(30),
+				step: 0.5,
 			},
 			download: {
 				isEnabled: false,
 				time: TimeSpan.fromMinutes(5),
+				step: 1,
 			}
 		},
 		design: {

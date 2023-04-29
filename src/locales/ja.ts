@@ -47,7 +47,7 @@ const locale: Locale = {
 				},
 				download: {
 					kind: "ダウンロード",
-					fileNameFormat: "${ORIGINAL_NAME}-${TIMESTAMP}.${ORIGINAL_EXT}"
+					fileNameFormat: "${ORIGINAL_NAME}(自動保存-${TIMESTAMP}).${ORIGINAL_EXT}"
 				},
 			}
 		},
