@@ -35,6 +35,16 @@ export interface Locale {
 				};
 				download: {
 					kind: string;
+					/**
+					 * 自動ダウンロードで使用するファイル名。
+					 *
+					 * 以下プレースホルダーの置き換えが行われる。
+					 * * ORIGINAL
+					 * * ORIGINAL_NAME
+					 * * ORIGINAL_EXT
+					 * * TIMESTAMP
+					 */
+					fileNameFormat: string,
 				}
 			}
 		};
