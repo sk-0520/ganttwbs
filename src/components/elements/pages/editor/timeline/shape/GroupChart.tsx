@@ -39,7 +39,7 @@ const GroupChart: FC<Props> = (props: Props) => {
 	}
 
 	const width = props.area.width;
-	const height = props.area.height * 0.2;
+	const height = props.area.height * 0.3;
 	const x = props.area.x;
 	const y = props.area.y + (props.area.height / 2 - height / 2);
 
@@ -67,6 +67,17 @@ const GroupChart: FC<Props> = (props: Props) => {
 					ry={width / 2}
 					paintOrder="stroke"
 					onDoubleClick={_ => props.timelineStore.startDetailEdit(props.currentTimeline)}
+				/>
+
+				<rect
+					className="progress"
+					x={x}
+					y={y + height * 0.1}
+					width={width * props.progress}
+					height={height * 0.8}
+					fill={props.foreground}
+					rx={height / 2}
+					ry={width / 2}
 				/>
 			</g>
 		</g>

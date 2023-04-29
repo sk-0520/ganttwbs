@@ -7,6 +7,7 @@ import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineP
 import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { Settings } from "@/models/Settings";
 import { WorkRanges } from "@/models/WorkRanges";
+import { Timelines } from "@/models/Timelines";
 
 interface Props extends GanttChartTimelineProps { }
 
@@ -57,12 +58,12 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 						configuration={props.configuration}
 						currentTimeline={props.currentTimeline}
 						background={Charts.getGroupBackground(props.currentTimeline, props.setting.rootTimeline, props.setting.theme)}
-						foreground="#ffffff"
+						foreground={props.setting.theme.timeline.completed}
 						borderColor="#000000"
-						borderThickness={4}
+						borderThickness={2}
 						area={area}
 						timelineStore={props.timelineStore}
-					// progress={props.currentTimeline.progress}
+					  progress={Timelines.sumProgressByGroup(props.currentTimeline)}
 					/>
 				) : null
 		);

@@ -2,14 +2,13 @@
 import { FC } from "react";
 
 import { ChartProps } from "@/models/data/props/ChartProps";
-import { Progress, TaskTimeline } from "@/models/data/Setting";
+import { TaskTimeline } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
 
 
 
 interface Props extends ChartProps {
 	currentTimeline: TaskTimeline;
-	progress: Progress;
 }
 
 const TaskChart: FC<Props> = (props: Props) => {
@@ -51,12 +50,12 @@ const TaskChart: FC<Props> = (props: Props) => {
 			/>
 
 			<rect
+				className="progress"
 				x={x}
 				y={y + height * 0.1}
 				width={width * props.progress}
 				height={height * 0.8}
 				fill={props.foreground}
-				onDoubleClick={_ => props.timelineStore.startDetailEdit(props.currentTimeline)}
 			/>
 		</g>
 	);
