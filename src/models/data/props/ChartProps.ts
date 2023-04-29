@@ -1,6 +1,6 @@
 import { ChartArea } from "@/models/data/ChartArea";
-import { Progress } from "@/models/data/Setting";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { Progress } from "@/models/data/Setting";
 import { TimelineStore } from "@/models/store/TimelineStore";
 
 

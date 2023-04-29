@@ -1,6 +1,7 @@
 
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
+import ErrorRow from "@/components/elements/pages/editor/timeline/shape/ErrorRow";
 import { ChartProps } from "@/models/data/props/ChartProps";
 import { GroupTimeline } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
@@ -13,26 +14,26 @@ interface Props extends ChartProps {
 
 const GroupChart: FC<Props> = (props: Props) => {
 
-	if (!props.area.timeSpanRange) {
-		const padding = props.area.height * 0.2;
+	const groupRowNodes = useMemo(() => {
+		return (
+			<rect
+				x={0}
+				y={props.area.y}
+				width={props.area.areaSize.width}
+				height={props.area.height}
+				fill={props.background}
+				fillOpacity={0.3}
+			/>
+		);
+	}, [props.area.areaSize.width, props.area.height, props.area.y, props.background]);
 
+	if (!props.area.timeSpanRange) {
 		return (
 			<g>
-				<rect
-					x={0}
-					y={props.area.y}
-					width={props.area.areaSize.width}
-					height={props.area.height}
-					fill={props.background}
-					fillOpacity={0.3}
-				/>
-				<rect
-					x={padding}
-					y={props.area.y + padding}
-					width={props.area.areaSize.width - padding * 2}
-					height={props.area.height - padding * 2}
-					fill="yellow"
-					fillOpacity={0.6}
+				{groupRowNodes}
+				<ErrorRow
+					area={props.area}
+					color="yellow"
 				/>
 			</g>
 		);
@@ -45,14 +46,7 @@ const GroupChart: FC<Props> = (props: Props) => {
 
 	return (
 		<g>
-			<rect
-				x={0}
-				y={props.area.y}
-				width={props.area.areaSize.width}
-				height={props.area.height}
-				fill={props.background}
-				fillOpacity={0.3}
-			/>
+			{groupRowNodes}
 			<g>
 				<rect
 					id={Timelines.toChartId(props.currentTimeline)}

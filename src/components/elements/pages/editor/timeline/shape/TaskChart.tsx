@@ -1,6 +1,7 @@
 
 import { FC } from "react";
 
+import ErrorRow from "@/components/elements/pages/editor/timeline/shape/ErrorRow";
 import { ChartProps } from "@/models/data/props/ChartProps";
 import { TaskTimeline } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
@@ -14,17 +15,11 @@ interface Props extends ChartProps {
 const TaskChart: FC<Props> = (props: Props) => {
 
 	if (!props.area.timeSpanRange) {
-		const padding = props.area.height * 0.2;
-
 		return (
 			<g>
-				<rect
-					x={padding}
-					y={props.area.y + padding}
-					width={props.area.areaSize.width - padding * 2}
-					height={props.area.height - padding * 2}
-					fill="red"
-					fillOpacity={0.6}
+				<ErrorRow
+					area={props.area}
+					color="red"
 				/>
 			</g>
 		);

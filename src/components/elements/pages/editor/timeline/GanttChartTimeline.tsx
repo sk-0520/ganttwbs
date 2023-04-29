@@ -6,8 +6,8 @@ import { Charts } from "@/models/Charts";
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
 import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { Settings } from "@/models/Settings";
-import { WorkRanges } from "@/models/WorkRanges";
 import { Timelines } from "@/models/Timelines";
+import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends GanttChartTimelineProps { }
 
