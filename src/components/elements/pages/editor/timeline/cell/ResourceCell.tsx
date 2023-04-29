@@ -13,14 +13,19 @@ interface Props {
 
 const ResourceCell: FC<Props> = (props: Props) => {
 	const groups = [...props.groups]
-		.sort((a, b) => a.name.localeCompare(b.name));
-	function toMemberOptions(members: ReadonlyArray<Member>): Array<ReactNode> {
+		.sort((a, b) => a.name.localeCompare(b.name))
+		;
+
+	function renderMemberOptions(members: ReadonlyArray<Member>): Array<ReactNode> {
 		return (
 			members.map(a => {
 				return (
 					<option
 						key={a.id}
 						value={a.id}
+						style={{
+							background: a.color,
+						}}
 					>
 						{a.name}
 					</option>
@@ -51,16 +56,18 @@ const ResourceCell: FC<Props> = (props: Props) => {
 
 					{groups.map(a => {
 						const members = [...a.members]
-							.sort((a2, b2) => a2.name.localeCompare(b2.name));
+							.sort((a2, b2) => a2.name.localeCompare(b2.name))
+							;
+
 						return (
 							a.name ?
 								(
 									<optgroup key={a.name} label={a.name}>
-										<>{toMemberOptions(members)}</>
+										<>{renderMemberOptions(members)}</>
 									</optgroup>
 								)
 								: (
-									<>{toMemberOptions(members)}</>
+									<>{renderMemberOptions(members)}</>
 								)
 						);
 					})}
