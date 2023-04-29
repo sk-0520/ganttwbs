@@ -19,7 +19,10 @@ interface Props {
 
 const AutoSaveRow: FC<Props> = (props: Props) => {
 	const locale = useLocale();
-	const localeKind = props.kind === AutoSaveKind.Storage ? "ストレージ" : "ダウンロード";
+	const localeKind = props.kind === AutoSaveKind.Storage
+		? locale.editor.file.autoSave.storage.kind
+		: locale.editor.file.autoSave.download.kind
+		;
 	const step = props.kind === AutoSaveKind.Storage ? 0.5 : 1;
 
 	return (

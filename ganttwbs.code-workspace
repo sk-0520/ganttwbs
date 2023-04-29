@@ -43,8 +43,7 @@
 			"node_modules",
 			"vscode-extension",
 			".git/objects",
-			".vscode",
-			".vscode-insiders"
+			".*"
 		],
 		"cSpell.words": [
 			"cdate",

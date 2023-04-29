@@ -26,20 +26,34 @@ export interface Locale {
 			};
 		}
 	};
-	timeline: {
-		workRange: {
-			kind: {
-				loading: string;
-				noInput: string;
-				selfSelectedError: string;
-				noChildren: string;
-				relationNoInput: string;
-				relationError: string;
-				recursiveError: string;
-				unknownError: string;
+
+	editor: {
+		file: {
+			autoSave: {
+				storage: {
+					kind: string;
+				};
+				download: {
+					kind: string;
+				}
+			}
+		};
+		timeline: {
+			workRange: {
+				kind: {
+					loading: string;
+					noInput: string;
+					selfSelectedError: string;
+					noChildren: string;
+					relationNoInput: string;
+					relationError: string;
+					recursiveError: string;
+					unknownError: string;
+				}
 			}
 		}
-	}
+	};
+
 	styles: {
 		editor: {
 			fontFamilies: Array<string>;
