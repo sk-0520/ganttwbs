@@ -1,7 +1,7 @@
 import { FC, ReactNode, useMemo } from "react";
 
-import ConnectorTimeline from "@/components/elements/pages/editor/timeline/ConnectorTimeline";
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
+import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
 import { Calendars } from "@/models/Calendars";
 import { AreaSize } from "@/models/data/AreaSize";
 import { MemberMapValue } from "@/models/data/MemberMapValue";

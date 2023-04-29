@@ -1,7 +1,7 @@
 import { FC, ReactNode, useLayoutEffect, useState } from "react";
 
-import GroupChart from "@/components/elements/pages/editor/timeline/chart/GroupChart";
-import TaskChart from "@/components/elements/pages/editor/timeline/chart/TaskChart";
+import GroupChart from "@/components/elements/pages/editor/timeline/shape/GroupChart";
+import TaskChart from "@/components/elements/pages/editor/timeline/shape/TaskChart";
 import { Charts } from "@/models/Charts";
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
 import { SuccessWorkRange } from "@/models/data/WorkRange";
