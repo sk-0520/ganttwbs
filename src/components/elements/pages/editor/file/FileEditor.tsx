@@ -16,12 +16,13 @@ interface Input {
 }
 
 interface Props {
+	isVisible: boolean;
 	configuration: Configuration;
-	editData: EditorData;
+	editorData: EditorData;
 }
 
 const FileEditor: FC<Props> = (props: Props) => {
-	const { configuration, editData } = props;
+	const { configuration, editorData: editData } = props;
 
 	const locale = useLocale();
 
@@ -30,8 +31,11 @@ const FileEditor: FC<Props> = (props: Props) => {
 	const [settingJson, setSettingJson] = useState("");
 
 	useEffect(() => {
-		handleJsonUpdate();
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+		if (props.isVisible) {
+			const json = JSON.stringify(editData.setting, undefined, 2);
+			setSettingJson(json);
+		}
+	}, [editData.setting, props.isVisible]);
 
 	function handleDownload() {
 		const json = JSON.stringify(editData.setting);
@@ -42,11 +46,6 @@ const FileEditor: FC<Props> = (props: Props) => {
 		link.href = window.URL.createObjectURL(blob);
 		link.download = editData.fileName;
 		link.click();
-	}
-
-	function handleJsonUpdate() {
-		const json = JSON.stringify(editData.setting, undefined, 2);
-		setSettingJson(json);
 	}
 
 	function handleJsonCopy() {
@@ -106,7 +105,6 @@ const FileEditor: FC<Props> = (props: Props) => {
 				</ul>
 			</dd>
 			<dd>
-				<button onClick={handleJsonUpdate}>update</button>
 				<button onClick={handleJsonCopy}>copy</button>
 				<Editor
 					value={settingJson}

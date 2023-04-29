@@ -12,13 +12,24 @@ import { EditorData } from "@/models/data/EditorData";
 import { Storage } from "@/models/Storage";
 import { TimeSpan } from "@/models/TimeSpan";
 
+const enum TabIndex {
+	File,
+	Editor,
+	Setting
+}
+
 const EditorPage: NextPage = () => {
 	const initTabIndex = 1;
 	//const initTabIndex = 2;
 
 	const router = useRouter();
 	const [configuration] = useState(createConfiguration());
-	const [editData, setEditData] = useState<EditorData | null>(null);
+	const [editorData, setEditorData] = useState<EditorData | null>(null);
+	const [selectedTabIndex, setSelectedTabIndex] = useState(initTabIndex);
+
+	function handleOnSelect(index: number, lastIndex: number, event: Event) {
+		setSelectedTabIndex(index);
+	}
 
 	useEffect(() => {
 		const editData = Storage.loadEditorData();
@@ -26,17 +37,21 @@ const EditorPage: NextPage = () => {
 			router.push("/");
 			return;
 		}
-		setEditData(editData);
+		setEditorData(editData);
 	}, [router]);
 
 	return (
 		<Layout mode='application' layoutId='editor'
-			title={editData ? editData.fileName + " 編集" : "編集"}
+			title={editorData ? editorData.fileName + " 編集" : "編集"}
 		>
 			<>
-				{!editData && <p>読み込み中</p>}
-				{editData && (
-					<Tabs defaultIndex={initTabIndex} forceRenderTabPanel={true} >
+				{!editorData && <p>読み込み中</p>}
+				{editorData && (
+					<Tabs
+						defaultIndex={initTabIndex}
+						forceRenderTabPanel={true}
+						onSelect={handleOnSelect}
+					>
 						<TabList>
 							<Tab>ファイル</Tab>
 							<Tab>編集</Tab>
@@ -45,15 +60,15 @@ const EditorPage: NextPage = () => {
 
 						{/* ファイル */}
 						<TabPanel className='tab panel tab-file'>
-							<FileEditor configuration={configuration} editData={editData} />
+							<FileEditor configuration={configuration} editorData={editorData} isVisible={selectedTabIndex === TabIndex.File} />
 						</TabPanel>
 						{/* ほんたい */}
 						<TabPanel className='tab panel tab-timeline' >
-							<TimelineEditor configuration={configuration} editorData={editData} />
+							<TimelineEditor configuration={configuration} editorData={editorData} />
 						</TabPanel>
 						{/* 設定 */}
 						<TabPanel className='tab panel tab-setting'>
-							<SettingEditor editData={editData} />
+							<SettingEditor editData={editorData} />
 						</TabPanel>
 					</Tabs>
 				)}
