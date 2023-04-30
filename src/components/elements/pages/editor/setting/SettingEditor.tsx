@@ -17,20 +17,18 @@ import { IdFactory } from "@/models/IdFactory";
 import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
 import { TimeZone } from "@/models/TimeZone";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 
 const NewLine = "\r\n";
 const ThemeHolidayRegularColor: Color = "#0f0";
 const ThemeHolidayEventHolidayColor: Color = "#0f0";
 const ThemeHolidayEventSpecialColor: Color = "#0f0";
 
-interface Props {
+interface Props extends ConfigurationProps {
 	editData: EditorData;
 }
 
 const SettingEditor: FC<Props> = (props: Props) => {
-	const initTabIndex = 0;
-	//const initTabIndex = 1;
-
 	const setting = toContext(props.editData.setting);
 
 	function handleSubmit(event: FormEvent) {
@@ -47,7 +45,7 @@ const SettingEditor: FC<Props> = (props: Props) => {
 	return (
 		<SettingContext.Provider value={setting}>
 			<form onSubmit={handleSubmit}>
-				<Tabs defaultIndex={initTabIndex} forceRenderTabPanel={true}>
+				<Tabs defaultIndex={props.configuration.tabIndex.setting} forceRenderTabPanel={true}>
 					<TabList>
 						<Tab>基本</Tab>
 						<Tab>リソース</Tab>

@@ -10,6 +10,30 @@ export abstract class Strings {
 		return typeof s === "string" && this.trim(s).length !== 0;
 	}
 
+	public static toUnique(source: string, items: ReadonlySet<string>, compare: (a: string, b: string) => boolean, converter: (source: string, number: number) => string): string {
+		let changeName = source;
+
+		let n = 1;
+
+		RETRY:
+		while(true) {
+			for (const value of items) {
+				if (compare(value, changeName)) {
+					changeName = converter(source, ++n);
+					continue RETRY;
+				}
+			}
+
+			break;
+		}
+
+		return changeName;
+	}
+
+	public static toUniqueDefault(source: string, items: ReadonlySet<string>): string {
+		return this.toUnique(source, items, (a, b) => a === b, (source, number) => `${source}(${number})`);
+	}
+
 	/**
 	 * トリムの未指定時の対象文字。
 	 */
