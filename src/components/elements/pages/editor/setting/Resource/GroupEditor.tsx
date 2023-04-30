@@ -105,14 +105,14 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 				<table className="members">
 					<thead>
 						<tr>
-							<th className="name">名前</th>
-							<th className="cost">原価</th>
-							<th className="sales">単価</th>
-							<th className="theme">テーマ</th>
-							<th className="month-cost">月原価</th>
-							<th className="month-sales">月単価</th>
-							<th className="rate">売上</th>
-							<th className="remove">削除</th>
+							<th className="name-cell">要員名</th>
+							<th className="cost-cell">原価</th>
+							<th className="sales-cell">単価</th>
+							<th className="theme-cell">テーマ</th>
+							<th className="month-cost-cell">月原価</th>
+							<th className="month-sales-cell">月単価</th>
+							<th className="rate-cell">売上</th>
+							<th className="remove-cell">削除</th>
 						</tr>
 					</thead>
 
@@ -130,14 +130,14 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 
 					<tfoot>
 						<tr>
-							<td className="name">
+							<td className="name-cell">
 								<input
 									name='member-name'
 									value={newMemberName}
 									onChange={ev => setNewMemberName(ev.target.value)}
 								/>
 							</td>
-							<td className="add">
+							<td className="add-cell">
 								<button
 									type="button"
 									onClick={ev => handleAddMember()}

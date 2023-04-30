@@ -152,48 +152,48 @@ main#editor {
 							}
 						}
 
-						.name {
+						.name-cell {
 							min-width: 20ch;
 						}
-						.cost,
-						.sales {
+						.cost-cell,
+						.sales-cell {
 							width: 10ch;
 						}
-						.theme {
+						.theme-cell {
 							width: 100px;
 						}
 
-						.month-cost,
-						.month-sales {
+						.month-cost-cell,
+						.month-sales-cell {
 							width: 10ch;
 						}
-						.rate {
+						.rate-cell {
 							width: 5ch;
 						}
 
-						.remove {
+						.remove-cell {
 							min-width: 6ch;
 						}
 
 						tbody {
-							.month-cost,
-							.month-sales {
+							.month-cost-cell,
+							.month-sales-cell {
 								padding-right: 1em;
 								font-family: monospace;
 								text-align: right;
 							}
 
-							.rate {
+							.rate-cell {
 								text-align: center;
 							}
 
-							.remove {
+							.remove-cell {
 								padding-left: 1em;
 							}
 						}
 
 						tfoot {
-							.add {
+							.add-cell {
 								//width: 12ch;
 							}
 						}

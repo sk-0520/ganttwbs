@@ -66,15 +66,19 @@ const MemberEditor: FC<Props> = (props: Props) => {
 		setPriceSales(props.member.priceSales = value);
 	}
 
+	function handleChangeTheme(color: Color): void {
+		setColor(props.member.color = color);
+	}
+
 	return (
 		<tr>
-			<td className="name">
+			<td className="name-cell">
 				<input
 					value={name}
 					onChange={ev => handleChangeName(ev.target.value)}
 				/>
 			</td>
-			<td className="cost">
+			<td className="cost-cell">
 				<input
 					type="number"
 					min={priceSetting.input.cost.minimum}
@@ -84,7 +88,7 @@ const MemberEditor: FC<Props> = (props: Props) => {
 					onChange={ev => handleChangePriceCost(ev.target.valueAsNumber)}
 				/>
 			</td>
-			<td className="sales">
+			<td className="sales-cell">
 				<input
 					type="number"
 					min={priceSetting.input.sales.minimum}
@@ -94,22 +98,22 @@ const MemberEditor: FC<Props> = (props: Props) => {
 					onChange={ev => handleChangePriceSales(ev.target.valueAsNumber)}
 				/>
 			</td>
-			<td className="theme">
+			<td className="theme-cell">
 				<PlainColorPicker
 					color={color}
-					callbackChanged={c => setColor(c)}
+					callbackChanged={c => handleChangeTheme(c)}
 				/>
 			</td>
-			<td className="month-cost">
+			<td className="month-cost-cell">
 				{monthCost}
 			</td>
-			<td className="month-sales">
+			<td className="month-sales-cell">
 				{monthSales}
 			</td>
-			<td className="rate">
+			<td className="rate-cell">
 				{displayRate}
 			</td>
-			<td className="remove">
+			<td className="remove-cell">
 				<button
 					type="button"
 					onClick={ev => props.callbackRemoveMember(props.member)}

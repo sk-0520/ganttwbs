@@ -36,7 +36,7 @@ export abstract class DefaultSettings {
 	 */
 	public static getEventHolidayColors(): Record<HolidayKind, Color> {
 		return {
-			holiday: "#ffffba",
+			holiday: "#baffff",
 			special: "#baffba",
 		};
 	}
