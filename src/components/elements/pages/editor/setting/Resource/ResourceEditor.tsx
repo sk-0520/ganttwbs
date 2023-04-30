@@ -4,8 +4,6 @@ import GroupsEditor from "@/components/elements/pages/editor/setting/Resource/Gr
 import { GroupSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { IdFactory } from "@/models/IdFactory";
 
-//TODO: data属性の使用はやめれるはず
-
 const ResourceEditor: FC = () => {
 	const settingContext = useContext(SettingContext);
 
@@ -56,6 +54,7 @@ const ResourceEditor: FC = () => {
 					return (
 						<GroupsEditor
 							key={a.name}
+							configuration={settingContext.configuration}
 							group={a}
 							groups={editGroups}
 							callbackRemove={a => handleRemoveGroup(a)}

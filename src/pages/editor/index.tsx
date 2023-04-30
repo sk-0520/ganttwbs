@@ -132,7 +132,20 @@ function createConfiguration(): Configuration {
 				width: 30,
 				height: 20,
 			},
+		},
+
+		price: {
+			input: {
+				minimum: 1000,
+				maximum: undefined,
+				step: 1000,
+			},
+			default: {
+				cost: 40000,
+				sales: 50000,
+			}
 		}
+
 	};
 
 	return result;

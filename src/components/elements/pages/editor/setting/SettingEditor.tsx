@@ -18,6 +18,7 @@ import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
 import { TimeZone } from "@/models/TimeZone";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { Configuration } from "@/models/data/Configuration";
 
 const NewLine = "\r\n";
 const ThemeHolidayRegularColor: Color = "#0f0";
@@ -29,7 +30,7 @@ interface Props extends ConfigurationProps {
 }
 
 const SettingEditor: FC<Props> = (props: Props) => {
-	const setting = toContext(props.editData.setting);
+	const setting = toContext(props.configuration, props.editData.setting);
 
 	function handleSubmit(event: FormEvent) {
 		event.preventDefault();
@@ -115,10 +116,12 @@ function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnl
 		.join(NewLine) + NewLine;
 }
 
-function toContext(setting: Setting): SettingContext {
+function toContext(configuration: Configuration, setting: Setting): SettingContext {
 	const timeZone = TimeZone.tryParse(setting.timeZone) ?? TimeZone.getClientTimeZone();
 
 	return {
+		configuration: configuration,
+
 		general: {
 			name: setting.name,
 			recursive: setting.recursive,

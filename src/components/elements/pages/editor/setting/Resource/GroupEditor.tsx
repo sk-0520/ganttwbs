@@ -7,8 +7,9 @@ import { GroupSetting, MemberSetting } from "@/models/data/context/SettingContex
 import { Color, MemberId } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
 import { Strings } from "@/models/Strings";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 
-interface Props {
+interface Props extends ConfigurationProps {
 	group: GroupSetting;
 	groups: ReadonlyArray<Readonly<GroupSetting>>,
 	callbackRemove(group: GroupSetting): void;

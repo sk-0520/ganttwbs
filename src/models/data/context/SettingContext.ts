@@ -2,6 +2,7 @@ import { createContext } from "react";
 
 import { Color, DateOnly, MemberId, WeekDay } from "@/models/data/Setting";
 import { TimeZone } from "@/models/TimeZone";
+import { Configuration } from "@/models/data/Configuration";
 
 
 export type UUID = string;
@@ -60,6 +61,7 @@ export interface ThemeSetting {
 }
 
 export interface SettingContext {
+	readonly configuration: Configuration;
 	general: GeneralSetting;
 	groups: Array<GroupSetting>,
 	calendar: CalendarSetting;

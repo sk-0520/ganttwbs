@@ -11,4 +11,16 @@ export interface Configuration {
 	},
 	autoSave: AutoSave;
 	design: Design;
+
+	price: {
+		input: {
+			minimum: number,
+			maximum: number | undefined,
+			step: number,
+		},
+		default: {
+			cost: number,
+			sales: number,
+		}
+	}
 }
