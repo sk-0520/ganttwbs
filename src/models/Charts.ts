@@ -1,7 +1,7 @@
 import { AreaSize } from "@/models/data/AreaSize";
 import { CellBox } from "@/models/data/CellBox";
 import { ChartArea } from "@/models/data/ChartArea";
-import { MemberMapValue } from "@/models/data/MemberMapValue";
+import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { GroupTimeline, MemberId, TaskTimeline, Theme, TimelineId } from "@/models/data/Setting";
 import { TimeSpanRange } from "@/models/data/TimeSpanRange";
 import { SuccessWorkRange } from "@/models/data/WorkRange";
@@ -68,7 +68,7 @@ export abstract class Charts {
 		return theme.timeline.group;
 	}
 
-	public static getTaskBackground(timeline: TaskTimeline, memberMap: ReadonlyMap<MemberId, MemberMapValue>, theme: Readonly<Theme>): string {
+	public static getTaskBackground(timeline: TaskTimeline, memberMap: ReadonlyMap<MemberId, MemberGroupPair>, theme: Readonly<Theme>): string {
 		const member = memberMap.get(timeline.memberId);
 		if (member) {
 			return member.member.color;

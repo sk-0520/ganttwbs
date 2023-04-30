@@ -24,6 +24,7 @@ import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
+import { Resources } from "@/models/Resources";
 import { Settings } from "@/models/Settings";
 import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
@@ -55,6 +56,11 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
 	}, [props.editorData.setting]);
+
+	const resourceInfo = useMemo(() => {
+		return Resources.createResourceInfo(props.editorData.setting.groups);
+	}, [props.editorData.setting]);
+
 
 	//TODO: クソ重いっぽいんやけどどう依存解決してメモ化するのか分からんので枝葉から対応するのです
 
@@ -541,14 +547,16 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				dropTimeline={dropTimeline}
 				selectingBeginDate={selectingBeginDate}
 				beginDateCallbacks={beginDateCallbacks}
-				timelineStore={timelineStore}
+				resourceInfo={resourceInfo}
 				calendarInfo={calendarInfo}
+				timelineStore={timelineStore}
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
 				setting={props.editorData.setting}
-				timelineStore={timelineStore}
+				resourceInfo={resourceInfo}
 				calendarInfo={calendarInfo}
+				timelineStore={timelineStore}
 			/>
 			{/* <DrawArea
 				configuration={props.configuration}
@@ -560,6 +568,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				configuration={props.configuration}
 				setting={props.editorData.setting}
 				calendarInfo={calendarInfo}
+				resourceInfo={resourceInfo}
 				timeline={visibleDetailEditDialog}
 				callbackSubmit={(timeline) => handleEndDetailEdit(visibleDetailEditDialog, timeline)}
 			/>}
