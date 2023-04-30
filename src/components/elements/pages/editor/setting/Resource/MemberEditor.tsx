@@ -17,7 +17,6 @@ interface Props {
 
 const MemberEditor: FC<Props> = (props: Props) => {
 
-
 	const [name, setName] = useState(props.member.name);
 	const [priceCost, setPriceCost] = useState(props.member.priceCost);
 	const [priceSales, setPriceSales] = useState(props.member.priceSales);

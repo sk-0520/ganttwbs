@@ -1,3 +1,4 @@
+import { As } from "@/models/As";
 import { Colors } from "@/models/Colors";
 import { PriceSetting } from "@/models/data/PriceSetting";
 import { Color, HolidayKind, TimelineTheme, WeekDay } from "@/models/data/Setting";
@@ -56,22 +57,27 @@ export abstract class DefaultSettings {
 	}
 
 	public static getPriceSetting(): PriceSetting {
+		let inputMax: number | undefined = As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MAXIMUM);
+		if (inputMax <= 0) {
+			inputMax = undefined;
+		}
+
 		return {
 			input: {
 				cost: {
-					minimum: 1000,
-					maximum: undefined,
-					step: 1000,
+					minimum: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MINIMUM),
+					maximum: inputMax,
+					step: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_STEP),
 				},
 				sales: {
-					minimum: 1000,
-					maximum: undefined,
-					step: 1000,
+					minimum: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MINIMUM),
+					maximum: inputMax,
+					step: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_STEP),
 				}
 			},
 			price: {
-				cost: 40000,
-				sales: 50000,
+				cost: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_DEFAULT_COST),
+				sales: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_DEFAULT_SALES),
 			}
 		};
 	}
