@@ -38,6 +38,7 @@ const SettingEditor: FC<Props> = (props: Props) => {
 
 		props.editData.setting = fromContext(props.editData.setting, setting);
 		console.debug(setting);
+		//TODO: 自動保存とぶつかる可能性あり、、、同一オブジェクトなので大丈夫、か？
 		Storages.saveEditorData(props.editData);
 
 		window.location.reload();
