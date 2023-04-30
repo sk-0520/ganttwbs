@@ -57,7 +57,8 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 					{
 						["_dynamic_programmable_groups_level-" + props.level.toString()]: Settings.maybeGroupTimeline(props.currentTimeline),
 						"hover": Settings.maybeTaskTimeline(props.currentTimeline) && props.selectingBeginDate?.timeline.id === props.currentTimeline.id,
-						"dragging": props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id
+						"dragging": props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id,
+						"selected-previous": props.selectingBeginDate?.previous.has(props.currentTimeline.id),
 					}
 				)
 			}
