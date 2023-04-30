@@ -6,6 +6,7 @@ import { Color, MemberId } from "@/models/data/Setting";
 
 interface Props {
 	member: MemberSetting;
+	members: ReadonlyArray<MemberSetting>,
 	updatedColors: ReadonlyMap<MemberId, Color>;
 	callbackRemoveMember(member: MemberSetting): void;
 }

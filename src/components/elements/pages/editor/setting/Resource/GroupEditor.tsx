@@ -107,6 +107,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 							<MemberEditor
 								key={a.key}
 								member={a}
+								members={members}
 								updatedColors={updatedColors}
 								callbackRemoveMember={handleRemoveMember}
 							/>

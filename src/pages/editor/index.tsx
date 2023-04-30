@@ -19,13 +19,11 @@ const enum TabIndex {
 }
 
 const EditorPage: NextPage = () => {
-	const initTabIndex = 1;
-	//const initTabIndex = 2;
-
 	const router = useRouter();
+
 	const [configuration] = useState(createConfiguration());
 	const [editorData, setEditorData] = useState<EditorData | null>(null);
-	const [selectedTabIndex, setSelectedTabIndex] = useState(initTabIndex);
+	const [selectedTabIndex, setSelectedTabIndex] = useState(configuration.tabIndex.application);
 
 	function handleOnSelect(index: number, lastIndex: number, event: Event) {
 		setSelectedTabIndex(index);
@@ -48,7 +46,7 @@ const EditorPage: NextPage = () => {
 				{!editorData && <p>読み込み中</p>}
 				{editorData && (
 					<Tabs
-						defaultIndex={initTabIndex}
+						defaultIndex={selectedTabIndex}
 						forceRenderTabPanel={true}
 						onSelect={handleOnSelect}
 					>
@@ -68,7 +66,7 @@ const EditorPage: NextPage = () => {
 						</TabPanel>
 						{/* 設定 */}
 						<TabPanel className='tab panel tab-setting'>
-							<SettingEditor editData={editorData} />
+							<SettingEditor configuration={configuration} editData={editorData} />
 						</TabPanel>
 					</Tabs>
 				)}
@@ -92,6 +90,13 @@ function createConfiguration(): Configuration {
 	};
 
 	const result: Configuration = {
+		tabIndex: {
+			// application: 1,
+			// setting: 0,
+			application: 2,
+			setting: 1,
+		},
+
 		autoSave: {
 			storage: {
 				isEnabled: true,
