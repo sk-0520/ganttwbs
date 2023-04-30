@@ -7,7 +7,7 @@ import { Strings } from "@/models/Strings";
 
 interface Props {
 	member: MemberSetting;
-	members: ReadonlyArray<MemberSetting>,
+	members: ReadonlyArray<Readonly<MemberSetting>>,
 	updatedColors: ReadonlyMap<MemberId, Color>;
 	callbackRemoveMember(member: MemberSetting): void;
 }

@@ -16,11 +16,15 @@ export abstract class Strings {
 		let n = 1;
 
 		RETRY:
-		for (const value of items) {
-			if (compare(value, changeName)) {
-				changeName = converter(source, ++n);
-				continue RETRY;
+		while(true) {
+			for (const value of items) {
+				if (compare(value, changeName)) {
+					changeName = converter(source, ++n);
+					continue RETRY;
+				}
 			}
+
+			break;
 		}
 
 		return changeName;

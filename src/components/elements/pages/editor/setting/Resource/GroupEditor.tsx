@@ -6,9 +6,11 @@ import MemberEditor from "@/components/elements/pages/editor/setting/Resource/Me
 import { GroupSetting, MemberSetting } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
+import { Strings } from "@/models/Strings";
 
 interface Props {
 	group: GroupSetting;
+	groups: ReadonlyArray<Readonly<GroupSetting>>,
 	callbackRemove(group: GroupSetting): void;
 }
 
@@ -20,7 +22,13 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 	const [newMemberName, setNewMemberName] = useState("");
 	const [visibleDialog, setVisibleDialog] = useState(false);
 
-	function handleChangeName(name: string): void {
+	function handleChangeName(value: string): void {
+		const groupNames = new Set(
+			props.groups
+				.filter(a => a !== props.group)
+				.map(a => a.name)
+		);
+		const name = Strings.toUniqueDefault(value, groupNames);
 		setGroupName(props.group.name = name);
 	}
 
