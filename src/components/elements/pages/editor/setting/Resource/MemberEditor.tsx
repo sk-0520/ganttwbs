@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from "react";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { MemberSetting } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
+import { Strings } from "@/models/Strings";
 
 interface Props {
 	member: MemberSetting;
@@ -26,7 +27,13 @@ const MemberEditor: FC<Props> = (props: Props) => {
 	}, [props.member, props.updatedColors]);
 
 	function handleChangeName(value: string) {
-		setName(props.member.name = value);
+		const memberNames = new Set(
+			props.members
+				.filter(a => a.id !== props.member.id)
+				.map(a => a.name)
+		);
+		const name = Strings.toUniqueDefault(value, memberNames);
+		setName(props.member.name = name);
 	}
 
 	function handleChangePriceCost(value: number) {
