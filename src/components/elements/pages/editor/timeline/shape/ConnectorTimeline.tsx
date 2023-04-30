@@ -30,7 +30,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 		return null;
 	}
 
-	const cell = props.configuration.design.honest.cell;
+	const cell = props.configuration.design.seed.cell;
 
 	const markerBox = {
 		width: cell.width.value * 0.3,

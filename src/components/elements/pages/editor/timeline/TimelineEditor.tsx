@@ -61,6 +61,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		return Resources.createResourceInfo(props.editorData.setting.groups);
 	}, [props.editorData.setting]);
 
+	const dynamicStyleNodes = useMemo(() => {
+		return renderDynamicStyle(props.configuration.design, props.editorData.setting.theme);
+	}, [props.configuration.design, props.editorData.setting.theme]);
+
 
 	//TODO: クソ重いっぽいんやけどどう依存解決してメモ化するのか分からんので枝葉から対応するのです
 
@@ -115,7 +119,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	function updateRelations() {
 		console.debug("全体へ通知");
 
-		const sequenceTimelines = Timelines.flat(props.editorData.setting.rootTimeline.children);
 		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
 		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], props.editorData.setting.calendar.holiday, props.editorData.setting.recursive, calendarInfo.timeZone);
 
@@ -191,11 +194,12 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			activeTimeline = timeline;
 		}
 
-		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
-
-		const store = createTimelineStore(sequenceTimelines, timelineMap, changedItems);
-
-		setTimelineStore(store);
+		const suppress = false;
+		if (suppress) {
+			const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
+			const store = createTimelineStore(sequenceTimelines, timelineMap, changedItems);
+			setTimelineStore(store);
+		}
 	}
 
 	function handleSetHoverTimeline(timeline: AnyTimeline | null): void {
@@ -526,7 +530,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	return (
 		<div id='timeline'>
-			{renderDynamicStyle(props.configuration.design, props.editorData.setting.theme)}
+			{dynamicStyleNodes}
 
 			<CrossHeader
 				configuration={props.configuration}
@@ -579,20 +583,29 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 export default TimelineEditor;
 
 function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
+	console.time("CSS");
 
 	// 動的なCSSクラス名をここでがっつり作るのです
 	const styleObject = {
-		design: design.honest,
+		design: {
+			cell: {
+				// なんかね、height,max-height 指定だけだと firefox は大丈夫だけど chromium が1px ずれたのよ。難しい話は知らん
+				minHeight: design.seed.cell.height,
+				maxHeight: design.seed.cell.height,
+				minWidth: design.seed.cell.width,
+				maxWidth: design.seed.cell.width,
+			}
+		},
 
 		programmable: {
 			cell: {
 				height: {
-					height: design.honest.cell.height,
-					maxHeight: design.honest.cell.height,
+					minHeight: design.seed.cell.height,
+					maxHeight: design.seed.cell.height,
 				},
 				width: {
-					width: design.honest.cell.width,
-					maxWidth: design.honest.cell.width,
+					minWidth: design.seed.cell.width,
+					maxWidth: design.seed.cell.width,
 				}
 			},
 
@@ -696,11 +709,17 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 	const styleClasses = Designs.convertStyleClasses(styleObject, ["_dynamic"]);
 	const style = Designs.convertStylesheet(styleClasses);
 
-	return (
-		<style>
-			{style}
-		</style>
-	);
+	console.timeLog("CSS", "作成");
+
+	try {
+		return (
+			<style>
+				{style}
+			</style>
+		);
+	} finally {
+		console.timeEnd("CSS");
+	}
 }
 
 function createEmptyTimeline(timelineKind: TimelineKind): AnyTimeline {
