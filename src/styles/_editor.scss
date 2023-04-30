@@ -177,10 +177,15 @@ main#editor {
 
 						tbody {
 							.month-cost,
+							.month-sales {
+								padding-right: 1em;
+							}
+
+							.month-cost,
 							.month-sales,
 							.rate {
-							font-family: monospace;
-							text-align: right;
+								font-family: monospace;
+								text-align: right;
 							}
 
 							.remove {

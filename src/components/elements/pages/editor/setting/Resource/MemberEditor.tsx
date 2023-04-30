@@ -5,6 +5,7 @@ import { MemberSetting } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
 import { DefaultSettings } from "@/models/DefaultSettings";
+import { Prices } from "@/models/data/Prices";
 
 const priceSetting = DefaultSettings.getPriceSetting();
 
@@ -24,7 +25,7 @@ const MemberEditor: FC<Props> = (props: Props) => {
 	const [priceSales, setPriceSales] = useState(props.member.priceSales);
 	const [monthCost, setMonthCost] = useState(props.member.priceCost * priceSetting.workingDays);
 	const [monthSales, setMonthSales] = useState(props.member.priceSales * priceSetting.workingDays);
-	const [rate, setRate] = useState(props.member.priceSales / props.member.priceCost);
+	const [displayRate, setDisplayRate] = useState("---%");
 	const [color, setColor] = useState(props.member.color);
 
 	useEffect(() => {
@@ -43,8 +44,8 @@ const MemberEditor: FC<Props> = (props: Props) => {
 	}, [priceSales, priceSetting]);
 
 	useEffect(() => {
-		const rate = priceSales / priceCost;
-		setRate(rate);
+		const rate = Prices.displayPercent(priceSales, priceCost);
+		setDisplayRate(rate);
 	}, [priceCost, priceSales]);
 
 	function handleChangeName(value: string) {
@@ -106,7 +107,7 @@ const MemberEditor: FC<Props> = (props: Props) => {
 				{monthSales}
 			</td>
 			<td className="rate">
-				{rate}
+				{displayRate}
 			</td>
 			<td className="remove">
 				<button
