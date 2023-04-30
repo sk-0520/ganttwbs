@@ -145,16 +145,16 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 						</tr>
 					</tfoot>
 				</table>
+				{visibleDialog && (
+					<GroupColorsDialog
+						choiceColorGroup={props.group}
+						callbackClosed={a => {
+							setUpdatedColors(a);
+							setVisibleDialog(false);
+						}}
+					/>
+				)}
 			</dd>
-			{visibleDialog && (
-				<GroupColorsDialog
-					choiceColorGroup={props.group}
-					callbackClosed={a => {
-						setUpdatedColors(a);
-						setVisibleDialog(false);
-					}}
-				/>
-			)}
 		</>
 	);
 };
