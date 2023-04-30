@@ -8,12 +8,13 @@ import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { IdFactory } from "@/models/IdFactory";
 
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	draggingTimeline: DraggingTimeline | null;
 	dropTimeline: DropTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
@@ -57,6 +58,7 @@ const TimelineItems: FC<Props> = (props: Props) => {
 								selectingBeginDate={props.selectingBeginDate}
 								beginDateCallbacks={props.beginDateCallbacks}
 								calendarInfo={props.calendarInfo}
+								resourceInfo={props.resourceInfo}
 							/>
 						);
 					})}

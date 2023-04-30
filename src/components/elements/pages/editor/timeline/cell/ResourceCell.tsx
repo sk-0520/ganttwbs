@@ -1,20 +1,19 @@
 import { FC, ReactNode } from "react";
 
-import { AnyTimeline, Group, Member, MemberId } from "@/models/data/Setting";
+import { MemberGroupPair } from "@/models/data/MemberGroupPair";
+import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
+import { AnyTimeline, Member, MemberId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 
-interface Props {
+interface Props extends ResourceInfoProps {
 	readonly currentTimeline: Readonly<AnyTimeline>;
-	groups: ReadonlyArray<Readonly<Group>>;
 	selectedMemberId: MemberId;
 	disabled: boolean;
-	callbackChangeMember(memberId: MemberId, memberName: string): void;
+	callbackChangeMember(memberGroupPair: MemberGroupPair | undefined): void;
 }
 
 const ResourceCell: FC<Props> = (props: Props) => {
-	const groups = [...props.groups]
-		.sort((a, b) => a.name.localeCompare(b.name))
-		;
+
 
 	function renderMemberOptions(members: ReadonlyArray<Member>): Array<ReactNode> {
 		return (
@@ -35,12 +34,8 @@ const ResourceCell: FC<Props> = (props: Props) => {
 	}
 
 	function handleChangeOption(memberId: MemberId) {
-		const member = groups
-			.flatMap(a => a.members)
-			.find(a => a.id === memberId)
-			;
-
-		props.callbackChangeMember(member?.id ?? "", member?.name ?? "");
+		const pair = props.resourceInfo.memberMap.get(memberId);
+		props.callbackChangeMember(pair);
 	}
 
 	return (
@@ -54,10 +49,11 @@ const ResourceCell: FC<Props> = (props: Props) => {
 				>
 					<option></option>
 
-					{groups.map(a => {
-						const members = [...a.members]
-							.sort((a2, b2) => a2.name.localeCompare(b2.name))
-							;
+					{props.resourceInfo.groupItems.map(a => {
+						const members = props.resourceInfo.memberItems.get(a);
+						if(!members) {
+							return null;
+						}
 
 						return (
 							a.name ?

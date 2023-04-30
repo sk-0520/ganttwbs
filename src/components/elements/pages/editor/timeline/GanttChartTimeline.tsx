@@ -45,7 +45,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 					<TaskChart
 						configuration={props.configuration}
 						currentTimeline={props.currentTimeline}
-						background={Charts.getTaskBackground(props.currentTimeline, props.memberMap, props.setting.theme)}
+						background={Charts.getTaskBackground(props.currentTimeline, props.resourceInfo.memberMap, props.setting.theme)}
 						foreground={props.setting.theme.timeline.completed}
 						borderColor="#000000"
 						borderThickness={1}
