@@ -5,10 +5,13 @@ interface PriceInputSetting {
 }
 
 export interface PriceSetting {
+	readonly workingDays: number;
+
 	readonly input: {
 		readonly cost: PriceInputSetting;
 		readonly sales: PriceInputSetting;
 	};
+
 	readonly price: {
 		readonly cost: number;
 		readonly sales: number;

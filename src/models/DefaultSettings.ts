@@ -63,6 +63,8 @@ export abstract class DefaultSettings {
 		}
 
 		return {
+			workingDays: As.integer(process.env.NEXT_PUBLIC_RESOURCE_MONTH_WORKING_DAYS),
+
 			input: {
 				cost: {
 					minimum: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MINIMUM),

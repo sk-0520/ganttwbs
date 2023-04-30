@@ -107,8 +107,11 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 						<tr>
 							<th className="name">名前</th>
 							<th className="cost">原価</th>
-							<th className="sales">売上</th>
+							<th className="sales">単価</th>
 							<th className="theme">テーマ</th>
+							<th className="month-cost">月原価</th>
+							<th className="month-sales">月単価</th>
+							<th className="rate">売上</th>
 							<th className="remove">削除</th>
 						</tr>
 					</thead>
@@ -125,7 +128,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 						)}
 					</tbody>
 
-					<tfoot data-new-member>
+					<tfoot>
 						<tr>
 							<td className="name">
 								<input

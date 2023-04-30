@@ -17,9 +17,14 @@ interface Props {
 
 const MemberEditor: FC<Props> = (props: Props) => {
 
+	const priceSetting = DefaultSettings.getPriceSetting();
+
 	const [name, setName] = useState(props.member.name);
 	const [priceCost, setPriceCost] = useState(props.member.priceCost);
 	const [priceSales, setPriceSales] = useState(props.member.priceSales);
+	const [monthCost, setMonthCost] = useState(props.member.priceCost * priceSetting.workingDays);
+	const [monthSales, setMonthSales] = useState(props.member.priceSales * priceSetting.workingDays);
+	const [rate, setRate] = useState(props.member.priceSales / props.member.priceCost);
 	const [color, setColor] = useState(props.member.color);
 
 	useEffect(() => {
@@ -28,6 +33,19 @@ const MemberEditor: FC<Props> = (props: Props) => {
 			setColor(props.member.color = color);
 		}
 	}, [props.member, props.updatedColors]);
+
+	useEffect(() => {
+		setMonthCost(priceCost * priceSetting.workingDays);
+	}, [priceCost, priceSetting]);
+
+	useEffect(() => {
+		setMonthSales(priceSales * priceSetting.workingDays);
+	}, [priceSales, priceSetting]);
+
+	useEffect(() => {
+		const rate = priceSales / priceCost;
+		setRate(rate);
+	}, [priceCost, priceSales]);
 
 	function handleChangeName(value: string) {
 		const memberNames = new Set(
@@ -80,6 +98,15 @@ const MemberEditor: FC<Props> = (props: Props) => {
 					color={color}
 					callbackChanged={c => setColor(c)}
 				/>
+			</td>
+			<td className="month-cost">
+				{monthCost}
+			</td>
+			<td className="month-sales">
+				{monthSales}
+			</td>
+			<td className="rate">
+				{rate}
 			</td>
 			<td className="remove">
 				<button
