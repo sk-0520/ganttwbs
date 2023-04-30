@@ -1,4 +1,5 @@
 import { Colors } from "@/models/Colors";
+import { PriceSetting } from "@/models/data/PriceSetting";
 import { Color, HolidayKind, TimelineTheme, WeekDay } from "@/models/data/Setting";
 
 /**
@@ -54,12 +55,19 @@ export abstract class DefaultSettings {
 		return result;
 	}
 
-	public static getPriceSetting() {
+	public static getPriceSetting(): PriceSetting {
 		return {
 			input: {
-				minimum: 1000,
-				maximum: undefined,
-				step: 1000,
+				cost: {
+					minimum: 1000,
+					maximum: undefined,
+					step: 1000,
+				},
+				sales: {
+					minimum: 1000,
+					maximum: undefined,
+					step: 1000,
+				}
 			},
 			price: {
 				cost: 40000,

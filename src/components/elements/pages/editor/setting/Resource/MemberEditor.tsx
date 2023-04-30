@@ -4,6 +4,9 @@ import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { MemberSetting } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
 import { Strings } from "@/models/Strings";
+import { DefaultSettings } from "@/models/DefaultSettings";
+
+const priceSetting = DefaultSettings.getPriceSetting();
 
 interface Props {
 	member: MemberSetting;
@@ -13,6 +16,7 @@ interface Props {
 }
 
 const MemberEditor: FC<Props> = (props: Props) => {
+
 
 	const [name, setName] = useState(props.member.name);
 	const [priceCost, setPriceCost] = useState(props.member.priceCost);
@@ -55,8 +59,9 @@ const MemberEditor: FC<Props> = (props: Props) => {
 			<td className="cost">
 				<input
 					type="number"
-					min={0}
-					step={1000}
+					min={priceSetting.input.cost.minimum}
+					max={priceSetting.input.cost.maximum}
+					step={priceSetting.input.cost.step}
 					value={priceCost}
 					onChange={ev => handleChangePriceCost(ev.target.valueAsNumber)}
 				/>
@@ -64,8 +69,9 @@ const MemberEditor: FC<Props> = (props: Props) => {
 			<td className="sales">
 				<input
 					type="number"
-					min={0}
-					step={1000}
+					min={priceSetting.input.sales.minimum}
+					max={priceSetting.input.sales.maximum}
+					step={priceSetting.input.sales.step}
 					value={priceSales}
 					onChange={ev => handleChangePriceSales(ev.target.valueAsNumber)}
 				/>

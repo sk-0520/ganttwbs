@@ -7,6 +7,7 @@ import { GroupSetting, MemberSetting } from "@/models/data/context/SettingContex
 import { Color, MemberId } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
 import { Strings } from "@/models/Strings";
+import { DefaultSettings } from "@/models/DefaultSettings";
 
 interface Props {
 	group: GroupSetting;
@@ -46,13 +47,15 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 			return;
 		}
 
+		const priceSetting = DefaultSettings.getPriceSetting();
+
 		const newMember: MemberSetting = {
 			key: IdFactory.createReactKey(),
 			id: IdFactory.createMemberId(),
 			name: name,
 			color: random().toHexString(),
-			priceCost: 40000,
-			priceSales: 50000,
+			priceCost: priceSetting.price.cost,
+			priceSales: priceSetting.price.sales,
 		};
 
 		setMembers(props.group.members = sortMembers([...members, newMember]));
