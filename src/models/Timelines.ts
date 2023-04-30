@@ -363,6 +363,9 @@ export abstract class Timelines {
 	}
 
 	public static getWorkRanges(flatTimelines: ReadonlyArray<AnyTimeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>, timeZone: TimeZone): Map<TimelineId, WorkRange> {
+		const LOG_GWR = "作業範囲算出";
+		console.time(LOG_GWR);
+
 		const result = new Map<TimelineId, WorkRange>();
 
 		const holidays: Holidays = {
@@ -431,7 +434,7 @@ export abstract class Timelines {
 		}
 
 		// グループ・タスクをそれぞれ算出
-		console.time("反復");
+		console.timeLog(LOG_GWR, "各グループ・タスク");
 		const limiter = new Limiter(recursiveMaxCount);
 		const targetTimelines = new Set(flatTimelines.filter(a => !result.has(a.id)));
 		while (result.size < flatTimelines.length) {
@@ -446,15 +449,15 @@ export abstract class Timelines {
 			}
 
 			for (const timeline of targetTimelines) {
+				// すでに結果セットに格納されているものは無視
 				if (result.has(timeline.id)) {
-					// すでに結果セットに格納されているものは無視
+					targetTimelines.delete(timeline); //NOTE: 列挙中に削除できることにカルチャーショック。多分動いてる
 					continue;
 				}
 
 				if (Settings.maybeTaskTimeline(timeline)) {
 					// タスク
-
-					if (timeline.previous.some(a => a === timeline.id)) {
+					if (timeline.previous.includes(timeline.id)) {
 						// 前工程に自分がいればもうなんもできん
 						result.set(timeline.id, {
 							kind: WorkRangeKind.SelfSelectedError,
@@ -479,7 +482,8 @@ export abstract class Timelines {
 
 					const resultWorkRanges = timeline.previous
 						.map(a => result.get(a))
-						.filter((a): a is WorkRange => a !== undefined);
+						.filter((a): a is WorkRange => a !== undefined)
+						;
 					if (resultWorkRanges.some(a => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
@@ -499,6 +503,7 @@ export abstract class Timelines {
 					const maxWorkRange = WorkRanges.maxByEndDate(successWorkRanges);
 					if (maxWorkRange === undefined) {
 						debugger;
+						continue;
 					}
 					let prevDate = maxWorkRange.end;
 					if (timeline.static) {
@@ -537,7 +542,8 @@ export abstract class Timelines {
 
 					const resultWorkRanges = resultChildren
 						.map(a => result.get(a.id))
-						.filter((a): a is WorkRange => a !== undefined);
+						.filter((a): a is WorkRange => a !== undefined)
+						;
 					if (resultWorkRanges.some(a => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
@@ -562,8 +568,8 @@ export abstract class Timelines {
 			}
 		}
 
-		console.timeEnd("反復");
-		console.debug("反復実施数", limiter.count, "result", result.size, "flatTimelines", flatTimelines.length);
+		console.timeEnd(LOG_GWR);
+		console.debug(LOG_GWR, "反復実施数", limiter.count, "result", result.size, "flatTimelines", flatTimelines.length);
 
 		return result;
 	}
