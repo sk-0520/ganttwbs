@@ -579,20 +579,29 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 export default TimelineEditor;
 
 function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
+	console.debug("CSS");
 
 	// 動的なCSSクラス名をここでがっつり作るのです
 	const styleObject = {
-		design: design.honest,
+		design: {
+			cell: {
+				// なんかね、height,max-height 指定だけだと firefox は大丈夫だけど chromium が1px ずれたのよ。難しい話は知らん
+				minHeight: design.seed.cell.height,
+				maxHeight: design.seed.cell.height,
+				minWidth: design.seed.cell.width,
+				maxWidth: design.seed.cell.width,
+			}
+		},
 
 		programmable: {
 			cell: {
 				height: {
-					height: design.honest.cell.height,
-					maxHeight: design.honest.cell.height,
+					minHeight: design.seed.cell.height,
+					maxHeight: design.seed.cell.height,
 				},
 				width: {
-					width: design.honest.cell.width,
-					maxWidth: design.honest.cell.width,
+					minWidth: design.seed.cell.width,
+					maxWidth: design.seed.cell.width,
 				}
 			},
 

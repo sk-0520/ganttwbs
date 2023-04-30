@@ -19,7 +19,7 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 const TimelineViewer: FC<Props> = (props: Props) => {
 
 	const { cell, days } = useMemo(() => {
-		const cell = props.configuration.design.honest.cell;
+		const cell = props.configuration.design.seed.cell;
 		const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
 		return {
 			cell,

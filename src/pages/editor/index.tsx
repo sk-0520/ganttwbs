@@ -105,12 +105,10 @@ function createConfiguration(): Configuration {
 			}
 		},
 		design: {
-			honest: {
+			seed: {
 				cell: {
 					width: cell.width,
-					maxWidth: cell.width,
 					height: cell.height,
-					maxHeight: cell.height,
 				}
 			},
 			programmable: {
