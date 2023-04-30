@@ -568,6 +568,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				configuration={props.configuration}
 				setting={props.editorData.setting}
 				calendarInfo={calendarInfo}
+				resourceInfo={resourceInfo}
 				timeline={visibleDetailEditDialog}
 				callbackSubmit={(timeline) => handleEndDetailEdit(visibleDetailEditDialog, timeline)}
 			/>}

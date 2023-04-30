@@ -2,17 +2,19 @@ import { Editor } from "@monaco-editor/react";
 import { FC, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
+import MemberSelector from "@/components/elements/pages/editor/timeline/MemberSelector";
 import { useLocale } from "@/locales/locale";
 import { CssHelper } from "@/models/CssHelper";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { AnyTimeline, MemberId, Progress } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 
-interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps {
+interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, ResourceInfoProps {
 	timeline: AnyTimeline;
 	callbackSubmit(changedTimeline: AnyTimeline | null): void;
 }
@@ -25,8 +27,6 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 	const [memberId, setMemberId] = useState<MemberId>(Settings.maybeTaskTimeline(props.timeline) ? props.timeline.memberId : "");
 	const [progress, setProgress] = useState<Progress>(Settings.maybeTaskTimeline(props.timeline) ? props.timeline.progress : 0);
 	const [comment, setComment] = useState(props.timeline.comment);
-
-	const groups = [...props.setting.groups].sort((a, b) => a.name.localeCompare(b.name));
 
 	function handleSubmit() {
 		const editTimeline = {
@@ -83,29 +83,11 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 					Settings.maybeTaskTimeline(props.timeline) && <>
 						<dt>member</dt>
 						<dd>
-							<select
-								value={memberId}
-								onChange={ev => setMemberId(ev.target.value)}
-							>
-								<option value="">
-									未設定
-								</option>
-								<>
-									{
-										groups.map(a => {
-											return [...a.members]
-												.sort((b, c) => b.name.localeCompare(c.name))
-												.map(b => {
-													return (
-														<option key={b.id} value={b.id}>
-															{a.name}: {b.name}
-														</option>
-													);
-												});
-										})
-									}
-								</>
-							</select>
+							<MemberSelector
+								defaultValue={memberId}
+								resourceInfo={props.resourceInfo}
+								callbackChangeMember={ev => setMemberId(ev?.member.id ?? "")}
+							/>
 						</dd>
 					</>
 				}
