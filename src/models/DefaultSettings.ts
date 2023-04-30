@@ -3,6 +3,8 @@ import { Color, HolidayKind, TimelineTheme, WeekDay } from "@/models/data/Settin
 
 /**
  * 設定項目の初期値。
+ *
+ * 完全な定数ではなく環境変数からもデータ取得を行うが外から見たら定数。
  */
 export abstract class DefaultSettings {
 

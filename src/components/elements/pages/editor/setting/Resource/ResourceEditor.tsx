@@ -54,7 +54,6 @@ const ResourceEditor: FC = () => {
 					return (
 						<GroupsEditor
 							key={a.name}
-							configuration={settingContext.configuration}
 							group={a}
 							groups={editGroups}
 							callbackRemove={a => handleRemoveGroup(a)}

@@ -120,8 +120,6 @@ function toContext(configuration: Configuration, setting: Setting): SettingConte
 	const timeZone = TimeZone.tryParse(setting.timeZone) ?? TimeZone.getClientTimeZone();
 
 	return {
-		configuration: configuration,
-
 		general: {
 			name: setting.name,
 			recursive: setting.recursive,
