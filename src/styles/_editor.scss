@@ -179,13 +179,12 @@ main#editor {
 							.month-cost,
 							.month-sales {
 								padding-right: 1em;
-							}
-
-							.month-cost,
-							.month-sales,
-							.rate {
 								font-family: monospace;
 								text-align: right;
+							}
+
+							.rate {
+								text-align: center;
 							}
 
 							.remove {
