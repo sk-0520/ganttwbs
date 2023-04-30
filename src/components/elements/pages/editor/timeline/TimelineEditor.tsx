@@ -119,7 +119,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	function updateRelations() {
 		console.debug("全体へ通知");
 
-		const sequenceTimelines = Timelines.flat(props.editorData.setting.rootTimeline.children);
 		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
 		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], props.editorData.setting.calendar.holiday, props.editorData.setting.recursive, calendarInfo.timeZone);
 
