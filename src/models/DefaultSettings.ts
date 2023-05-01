@@ -1,8 +1,12 @@
+import { As } from "@/models/As";
 import { Colors } from "@/models/Colors";
+import { PriceSetting } from "@/models/data/PriceSetting";
 import { Color, HolidayKind, TimelineTheme, WeekDay } from "@/models/data/Setting";
 
 /**
  * 設定項目の初期値。
+ *
+ * 完全な定数ではなく環境変数からもデータ取得を行うが外から見たら定数。
  */
 export abstract class DefaultSettings {
 
@@ -32,7 +36,7 @@ export abstract class DefaultSettings {
 	 */
 	public static getEventHolidayColors(): Record<HolidayKind, Color> {
 		return {
-			holiday: "#ffffba",
+			holiday: "#baffff",
 			special: "#baffba",
 		};
 	}
@@ -45,23 +49,37 @@ export abstract class DefaultSettings {
 		const result: TimelineTheme = {
 			group: "#ff00ff",
 			defaultGroup: "#ff0000",
-			defaultTask: "#00ff00",
+			defaultTask: "#ffffba",
 			completed: "#000000"
 		};
 
 		return result;
 	}
 
-	public static getPriceSetting() {
+	public static getPriceSetting(): PriceSetting {
+		let inputMax: number | undefined = As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MAXIMUM);
+		if (inputMax <= 0) {
+			inputMax = undefined;
+		}
+
 		return {
+			workingDays: As.integer(process.env.NEXT_PUBLIC_RESOURCE_MONTH_WORKING_DAYS),
+
 			input: {
-				minimum: 1000,
-				maximum: undefined,
-				step: 1000,
+				cost: {
+					minimum: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MINIMUM),
+					maximum: inputMax,
+					step: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_STEP),
+				},
+				sales: {
+					minimum: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MINIMUM),
+					maximum: inputMax,
+					step: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_STEP),
+				}
 			},
 			price: {
-				cost: 40000,
-				sales: 50000,
+				cost: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_DEFAULT_COST),
+				sales: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_DEFAULT_SALES),
 			}
 		};
 	}

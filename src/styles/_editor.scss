@@ -1,6 +1,10 @@
 @use "variable" as variable;
 
 main#editor {
+	.react-tabs__tab {
+		user-select: none;
+	}
+
 	.tab {
 		&.panel {
 			display: none;
@@ -49,10 +53,8 @@ main#editor {
 				}
 
 				.last-time-cell {
-
 				}
 				.next-time-cell {
-
 				}
 
 				.time {
@@ -130,6 +132,11 @@ main#editor {
 					.members {
 						margin-top: 1em;
 
+						th,
+						td {
+							padding-inline: 0.25ex;
+						}
+
 						thead {
 							th {
 								text-align: center;
@@ -149,25 +156,99 @@ main#editor {
 							}
 						}
 
-						.name {
+						.name-cell {
 							min-width: 20ch;
 						}
-						.cost,
-						.sales {
+						.cost-cell,
+						.sales-cell {
 							width: 10ch;
 						}
-						.theme {
+						.theme-cell {
 							width: 100px;
-							& > {
-								display: block;
+						}
+
+						.month-cost-cell,
+						.month-sales-cell {
+							width: 10ch;
+						}
+						.rate-cell {
+							width: 5ch;
+						}
+
+						.remove-cell {
+							min-width: 6ch;
+						}
+
+						tbody {
+							.month-cost-cell,
+							.month-sales-cell {
+								padding-right: 1em;
+								font-family: monospace;
+								text-align: right;
+							}
+
+							.rate-cell {
+								text-align: center;
+							}
+
+							.remove-cell {
+								padding-left: 1em;
 							}
 						}
-						.remove {
-							min-width: 6ch;
-							padding-left: 1em;
+
+						tfoot {
+							.add-cell {
+								//width: 12ch;
+							}
 						}
-						.add {
-							//width: 12ch;
+					}
+
+					.group-color {
+						border: 1px solid red;
+
+						.color-types {
+							display: flex;
+							flex-direction: row;
+							justify-content: space-around;
+						}
+
+						.color-table {
+							table-layout: fixed;
+							margin: 1em;
+
+							.member-cell {
+								min-width: 5ch;
+							}
+
+							.color-cell {
+								min-width: 12ch;
+							}
+
+							.member-cell,
+							.color-cell {
+								padding: 0.25em;
+								border-inline: 1px dashed darkgray;
+							}
+
+							thead {
+								.color-cell {
+									white-space: nowrap;
+									text-align: left;
+
+									label {
+										display: block;
+									}
+								}
+							}
+
+							tbody {
+								.color-cell {
+									border-radius: 1em;
+									text-align: center;
+									font-size: 0.8em;
+									font-family: Consolas, monospace;
+								}
+							}
 						}
 					}
 				}
