@@ -3,22 +3,20 @@ import { FC } from "react";
 
 import { Charts } from "@/models/Charts";
 import { AreaSize } from "@/models/data/AreaSize";
-import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { MemberId, TaskTimeline } from "@/models/data/Setting";
+import { TaskTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	currentIndex: number;
 	currentTimeline: TaskTimeline;
 
 	chartSize: AreaSize;
-
-	memberMap: ReadonlyMap<MemberId, MemberMapValue>;
 }
 
 const ConnectorTimeline: FC<Props> = (props: Props) => {
@@ -32,7 +30,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 		return null;
 	}
 
-	const cell = props.configuration.design.honest.cell;
+	const cell = props.configuration.design.seed.cell;
 
 	const markerBox = {
 		width: cell.width.value * 0.3,
@@ -50,7 +48,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 	const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.from, currentWorkRange);
 	const currentChartArea = Charts.createChartArea(currentTimeSpanRange, props.currentIndex, cell, props.chartSize);
 
-	const currentColor = Charts.getTaskBackground(props.currentTimeline, props.memberMap, props.setting.theme);
+	const currentColor = Charts.getTaskBackground(props.currentTimeline, props.resourceInfo.memberMap, props.setting.theme);
 
 	return (
 		<>
@@ -67,7 +65,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 
 				const previewColor = Settings.maybeGroupTimeline(previousTimeline)
 					? Charts.getGroupBackground(previousTimeline, props.timelineStore.rootGroupTimeline, props.setting.theme)
-					: Charts.getTaskBackground(previousTimeline, props.memberMap, props.setting.theme)
+					: Charts.getTaskBackground(previousTimeline, props.resourceInfo.memberMap, props.setting.theme)
 					;
 
 				const previewWorkRange = props.timelineStore.workRanges.get(previousTimeline.id);
@@ -110,16 +108,17 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 					draws.push(`${position.from.x - diff} ${position.to.y}`);
 					draws.push(`${position.to.x} ${position.to.y}`);
 				} else {
-					const diff = {
-						x: position.to.x - position.from.x,
-						y: position.to.y - position.from.y,
-					};
+					const width = position.to.x - position.from.x;
+					const begin = width * 0.7;
+					const curve = width * 0.1;
 
 					draws.push(`M ${position.from.x} ${position.from.y}`);
+					draws.push(`L ${position.from.x + begin} ${position.from.y}`);
 					draws.push("C");
-					draws.push(`${position.from.x} ${position.from.y}`);
-					draws.push(`${position.to.x - diff.x} ${position.to.y}`);
-					draws.push(`${position.to.x} ${position.to.y}`);
+					draws.push(`${position.from.x + begin + curve} ${position.from.y}`);
+					draws.push(`${position.from.x + begin} ${position.to.y}`);
+					draws.push(`${position.from.x + begin + curve} ${position.to.y}`);
+					draws.push(`L ${position.to.x} ${position.to.y}`);
 				}
 
 				const connecterColorId = Charts.toConnecterColorId(b, props.currentTimeline.id);

@@ -4,6 +4,7 @@ import { ReactNode, useState } from "react";
 
 import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
 import DaysHeader from "@/components/elements/pages/editor/timeline/DaysHeader";
+import TimelineDetailEditDialog from "@/components/elements/pages/editor/timeline/TimelineDetailEditDialog";
 import TimelineItems from "@/components/elements/pages/editor/timeline/TimelineItems";
 import TimelineViewer from "@/components/elements/pages/editor/timeline/TimelineViewer";
 import { Arrays } from "@/models/Arrays";
@@ -23,8 +24,9 @@ import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
+import { Resources } from "@/models/Resources";
 import { Settings } from "@/models/Settings";
-import { TimelineStore } from "@/models/store/TimelineStore";
+import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 
 /*
@@ -49,10 +51,20 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
+	const [visibleDetailEditDialog, setVisibleDetailEditDialog] = useState<AnyTimeline>();
 
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
 	}, [props.editorData.setting]);
+
+	const resourceInfo = useMemo(() => {
+		return Resources.createResourceInfo(props.editorData.setting.groups);
+	}, [props.editorData.setting]);
+
+	const dynamicStyleNodes = useMemo(() => {
+		return renderDynamicStyle(props.configuration.design, props.editorData.setting.theme);
+	}, [props.configuration.design, props.editorData.setting.theme]);
+
 
 	//TODO: クソ重いっぽいんやけどどう依存解決してメモ化するのか分からんので枝葉から対応するのです
 
@@ -98,6 +110,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			setActiveTimeline: handleSetActiveTimeline,
 
 			startDragTimeline: handleStartDragTimeline,
+			startDetailEdit: handleStartDetailEdit,
 		};
 
 		return result;
@@ -106,7 +119,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	function updateRelations() {
 		console.debug("全体へ通知");
 
-		const sequenceTimelines = Timelines.flat(props.editorData.setting.rootTimeline.children);
 		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
 		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], props.editorData.setting.calendar.holiday, props.editorData.setting.recursive, calendarInfo.timeZone);
 
@@ -141,7 +153,11 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			dropTimeline.sourceGroupTimeline.children = newSourceChildren;
 
 			// 別グループに追加
-			dropTimeline.destinationGroupTimeline.children.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
+			if (dropTimeline.destinationIndex === -1) {
+				dropTimeline.destinationGroupTimeline.children.push(dropTimeline.timeline);
+			} else {
+				dropTimeline.destinationGroupTimeline.children.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
+			}
 		}
 
 		setDropTimeline(null);
@@ -178,11 +194,12 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			activeTimeline = timeline;
 		}
 
-		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
-
-		const store = createTimelineStore(sequenceTimelines, timelineMap, changedItems);
-
-		setTimelineStore(store);
+		const suppress = false;
+		if (suppress) {
+			const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
+			const store = createTimelineStore(sequenceTimelines, timelineMap, changedItems);
+			setTimelineStore(store);
+		}
 	}
 
 	function handleSetHoverTimeline(timeline: AnyTimeline | null): void {
@@ -254,27 +271,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 					}));
 				}
 
-				// // 最上位から最上位
-				// if (sourceGroupTimelines.length === 1 && targetGroupTimelines.length === 1) {
-				// 	const sourceIndex = props.editData.setting.rootTimeline.children.findIndex(a => a.id === sourceTimeline.id);
-				// 	const destinationIndex = props.editData.setting.rootTimeline.children.findIndex(a => a.id === targetTimeline.id);
-				// 	if (sourceIndex === -1 || destinationIndex === -1) {
-				// 		throw new Error(JSON.stringify({
-				// 			sourceIndex,
-				// 			destinationIndex,
-				// 		}));
-				// 	}
-
-				// 	fireDropTimeline({
-				// 		timeline: sourceTimeline,
-				// 		sourceGroupTimeline: null,
-				// 		destinationGroupTimeline: null,
-				// 		sourceIndex: sourceIndex,
-				// 		destinationIndex: destinationIndex,
-				// 	});
-				// 	return;
-				// }
-
 				// 対象がグループの場合、そのグループへ移動
 				if (Settings.maybeGroupTimeline(targetTimeline)) {
 					const sourceGroupTimeline = sourceGroupTimelines[sourceGroupTimelines.length - 1];
@@ -308,6 +304,22 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		setDraggingTimeline(dragging);
 	}
 
+	function handleStartDetailEdit(timeline: AnyTimeline): void {
+		console.debug("詳細編集開始", timeline);
+		setVisibleDetailEditDialog(timeline);
+	}
+
+	function handleEndDetailEdit(sourceTimeline: AnyTimeline, changedTimeline: AnyTimeline | null): void {
+		console.debug("詳細編集終了", changedTimeline);
+
+		setVisibleDetailEditDialog(undefined);
+
+		if (changedTimeline) {
+			handleUpdateTimeline(changedTimeline);
+			updateRelations();
+		}
+	}
+
 	function handleCalcDisplayId(timeline: Readonly<AnyTimeline>): DisplayTimelineId {
 		return Timelines.calcDisplayId(timeline, props.editorData.setting.rootTimeline);
 	}
@@ -322,7 +334,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		handleAddNewTimeline(baseTimeline, newTimeline, options.position);
 	}
 
-	//TODO: 一括登録時になんか反映されない(ん～ってなる)
 	function handleAddNewTimeline(baseTimeline: AnyTimeline, newTimeline: AnyTimeline, position: NewTimelinePosition): void {
 		console.trace("ADD", newTimeline);
 
@@ -429,11 +440,24 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		setTimelineStore(store);
 	}
 
-	function handleMoveTimeline(moveUp: boolean, timeline: AnyTimeline): void {
+	function handleMoveTimeline(direction: MoveDirection, timeline: AnyTimeline): void {
 		const groups = Timelines.getParentGroups(timeline, props.editorData.setting.rootTimeline);
 
-		const group = Arrays.last(groups);
-		Arrays.replaceOrderInPlace(group.children, !moveUp, timeline);
+		if (direction === "parent") {
+			if (1 < groups.length) {
+				//TODO: 正直どこに配置すればいいのか分からん
+				const srcGroup = groups[groups.length - 1];
+				const destGroup = groups[groups.length - 2];
+				srcGroup.children = srcGroup.children.filter(a => a.id !== timeline.id);
+				destGroup.children.push(timeline);
+			} else {
+				console.debug("最上位項目は何もしない");
+				return;
+			}
+		} else {
+			const group = Arrays.last(groups);
+			Arrays.replaceOrderInPlace(group.children, direction === "down", timeline);
+		}
 
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}
@@ -506,7 +530,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	return (
 		<div id='timeline'>
-			{renderDynamicStyle(props.configuration.design, props.editorData.setting.theme)}
+			{dynamicStyleNodes}
 
 			<CrossHeader
 				configuration={props.configuration}
@@ -527,14 +551,16 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				dropTimeline={dropTimeline}
 				selectingBeginDate={selectingBeginDate}
 				beginDateCallbacks={beginDateCallbacks}
-				timelineStore={timelineStore}
+				resourceInfo={resourceInfo}
 				calendarInfo={calendarInfo}
+				timelineStore={timelineStore}
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
 				setting={props.editorData.setting}
-				timelineStore={timelineStore}
+				resourceInfo={resourceInfo}
 				calendarInfo={calendarInfo}
+				timelineStore={timelineStore}
 			/>
 			{/* <DrawArea
 				configuration={props.configuration}
@@ -542,6 +568,14 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
 			/> */}
+			{visibleDetailEditDialog && <TimelineDetailEditDialog
+				configuration={props.configuration}
+				setting={props.editorData.setting}
+				calendarInfo={calendarInfo}
+				resourceInfo={resourceInfo}
+				timeline={visibleDetailEditDialog}
+				callbackSubmit={(timeline) => handleEndDetailEdit(visibleDetailEditDialog, timeline)}
+			/>}
 		</div>
 	);
 };
@@ -549,20 +583,29 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 export default TimelineEditor;
 
 function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
+	console.time("CSS");
 
 	// 動的なCSSクラス名をここでがっつり作るのです
 	const styleObject = {
-		design: design.honest,
+		design: {
+			cell: {
+				// なんかね、height,max-height 指定だけだと firefox は大丈夫だけど chromium が1px ずれたのよ。難しい話は知らん
+				minHeight: design.seed.cell.height,
+				maxHeight: design.seed.cell.height,
+				minWidth: design.seed.cell.width,
+				maxWidth: design.seed.cell.width,
+			}
+		},
 
 		programmable: {
 			cell: {
 				height: {
-					height: design.honest.cell.height,
-					maxHeight: design.honest.cell.height,
+					minHeight: design.seed.cell.height,
+					maxHeight: design.seed.cell.height,
 				},
 				width: {
-					width: design.honest.cell.width,
-					maxWidth: design.honest.cell.width,
+					minWidth: design.seed.cell.width,
+					maxWidth: design.seed.cell.width,
 				}
 			},
 
@@ -666,11 +709,17 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 	const styleClasses = Designs.convertStyleClasses(styleObject, ["_dynamic"]);
 	const style = Designs.convertStylesheet(styleClasses);
 
-	return (
-		<style>
-			{style}
-		</style>
-	);
+	console.timeLog("CSS", "作成");
+
+	try {
+		return (
+			<style>
+				{style}
+			</style>
+		);
+	} finally {
+		console.timeEnd("CSS");
+	}
 }
 
 function createEmptyTimeline(timelineKind: TimelineKind): AnyTimeline {

@@ -1,26 +1,25 @@
 import { FC, ReactNode, useMemo } from "react";
 
-import ConnectorTimeline from "@/components/elements/pages/editor/timeline/ConnectorTimeline";
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
+import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
 import { Calendars } from "@/models/Calendars";
 import { AreaSize } from "@/models/data/AreaSize";
-import { MemberMapValue } from "@/models/data/MemberMapValue";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { MemberId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	//nop
 }
 
 const TimelineViewer: FC<Props> = (props: Props) => {
 
 	const { cell, days } = useMemo(() => {
-		const cell = props.configuration.design.honest.cell;
+		const cell = props.configuration.design.seed.cell;
 		const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
 		return {
 			cell,
@@ -36,16 +35,6 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 		return result;
 	}, [cell, days, props.timelineStore.totalItemMap.size]);
 
-	const memberMap = useMemo(() => {
-		//TODO: for しなくてもできると思うけどパッと思いつかなんだ
-		const memberMap = new Map<MemberId, MemberMapValue>();
-		for (const group of props.setting.groups) {
-			for (const member of group.members) {
-				memberMap.set(member.id, { group: group, member: member });
-			}
-		}
-		return memberMap;
-	}, [props.setting]);
 
 	const gridNodes = useMemo(() => {
 		const width = cell.width.value * days;
@@ -149,8 +138,8 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							currentTimeline={a}
 							currentIndex={i}
 							calendarInfo={props.calendarInfo}
+							resourceInfo={props.resourceInfo}
 							chartSize={chartSize}
-							memberMap={memberMap}
 							timelineStore={props.timelineStore}
 						/>
 					);
@@ -167,8 +156,8 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							currentTimeline={a}
 							currentIndex={i}
 							calendarInfo={props.calendarInfo}
+							resourceInfo={props.resourceInfo}
 							chartSize={chartSize}
-							memberMap={memberMap}
 							timelineStore={props.timelineStore}
 						/>
 					);

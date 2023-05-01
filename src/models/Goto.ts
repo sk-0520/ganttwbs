@@ -1,7 +1,7 @@
 import { NextRouter } from "next/router";
 
 import { EditorData } from "@/models/data/EditorData";
-import { Storage } from "@/models/Storage";
+import { Storages } from "@/models/Storages";
 
 /**
  * 画面遷移処理。
@@ -15,7 +15,7 @@ export abstract class Goto {
 	 * @returns
 	 */
 	public static editor(editData: EditorData, router: NextRouter): Promise<boolean> {
-		Storage.saveEditorData(editData);
+		Storages.saveEditorData(editData);
 		return router.push("/editor");
 	}
 

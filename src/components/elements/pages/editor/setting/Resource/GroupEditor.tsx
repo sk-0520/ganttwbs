@@ -5,10 +5,13 @@ import GroupColorsDialog from "@/components/elements/pages/editor/setting/Resour
 import MemberEditor from "@/components/elements/pages/editor/setting/Resource/MemberEditor";
 import { GroupSetting, MemberSetting } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
+import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
+import { Strings } from "@/models/Strings";
 
 interface Props {
 	group: GroupSetting;
+	groups: ReadonlyArray<Readonly<GroupSetting>>,
 	callbackRemove(group: GroupSetting): void;
 }
 
@@ -20,7 +23,13 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 	const [newMemberName, setNewMemberName] = useState("");
 	const [visibleDialog, setVisibleDialog] = useState(false);
 
-	function handleChangeName(name: string): void {
+	function handleChangeName(value: string): void {
+		const groupNames = new Set(
+			props.groups
+				.filter(a => a !== props.group)
+				.map(a => a.name)
+		);
+		const name = Strings.toUniqueDefault(value, groupNames);
 		setGroupName(props.group.name = name);
 	}
 
@@ -38,13 +47,15 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 			return;
 		}
 
+		const priceSetting = DefaultSettings.getPriceSetting();
+
 		const newMember: MemberSetting = {
 			key: IdFactory.createReactKey(),
 			id: IdFactory.createMemberId(),
 			name: name,
 			color: random().toHexString(),
-			priceCost: 40000,
-			priceSales: 50000,
+			priceCost: priceSetting.price.cost,
+			priceSales: priceSetting.price.sales,
 		};
 
 		setMembers(props.group.members = sortMembers([...members, newMember]));
@@ -94,11 +105,14 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 				<table className="members">
 					<thead>
 						<tr>
-							<th className="name">名前</th>
-							<th className="cost">原価</th>
-							<th className="sales">売上</th>
-							<th className="theme">テーマ</th>
-							<th className="remove">削除</th>
+							<th className="name-cell">要員名</th>
+							<th className="cost-cell">原価(日)</th>
+							<th className="sales-cell">単価(日)</th>
+							<th className="theme-cell">テーマ</th>
+							<th className="month-cost-cell">原価(月)</th>
+							<th className="month-sales-cell">単価(月)</th>
+							<th className="rate-cell">売上</th>
+							<th className="remove-cell">削除</th>
 						</tr>
 					</thead>
 
@@ -107,22 +121,23 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 							<MemberEditor
 								key={a.key}
 								member={a}
+								members={members}
 								updatedColors={updatedColors}
 								callbackRemoveMember={handleRemoveMember}
 							/>
 						)}
 					</tbody>
 
-					<tfoot data-new-member>
+					<tfoot>
 						<tr>
-							<td className="name">
+							<td className="name-cell">
 								<input
 									name='member-name'
 									value={newMemberName}
 									onChange={ev => setNewMemberName(ev.target.value)}
 								/>
 							</td>
-							<td className="add">
+							<td className="add-cell">
 								<button
 									type="button"
 									onClick={ev => handleAddMember()}
@@ -133,16 +148,18 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 						</tr>
 					</tfoot>
 				</table>
+				{visibleDialog && (
+					<GroupColorsDialog
+						choiceColorGroup={props.group}
+						callbackClosed={a => {
+							if(a) {
+								setUpdatedColors(a);
+							}
+							setVisibleDialog(false);
+						}}
+					/>
+				)}
 			</dd>
-			{visibleDialog && (
-				<GroupColorsDialog
-					choiceColorGroup={props.group}
-					callbackClosed={a => {
-						setUpdatedColors(a);
-						setVisibleDialog(false);
-					}}
-				/>
-			)}
 		</>
 	);
 };

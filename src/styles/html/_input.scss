@@ -17,3 +17,7 @@ button.action {
 input[type="number"] {
 	text-align: right;
 }
+
+button {
+	user-select: none;
+}

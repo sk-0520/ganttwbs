@@ -9,36 +9,34 @@ import ResourceEditor from "@/components/elements/pages/editor/setting/Resource/
 import ThemeCalendarSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeCalendarSettingEditor";
 import ThemeGroupSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeGroupSettingEditor";
 import ThemeTimelineSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeTimelineSettingEditor";
+import { Configuration } from "@/models/data/Configuration";
 import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { EditorData } from "@/models/data/EditorData";
-import { Color, DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
+import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
-import { Storage } from "@/models/Storage";
+import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
 import { TimeZone } from "@/models/TimeZone";
 
 const NewLine = "\r\n";
-const ThemeHolidayRegularColor: Color = "#0f0";
-const ThemeHolidayEventHolidayColor: Color = "#0f0";
-const ThemeHolidayEventSpecialColor: Color = "#0f0";
 
-interface Props {
+interface Props extends ConfigurationProps {
 	editData: EditorData;
 }
 
 const SettingEditor: FC<Props> = (props: Props) => {
-	const initTabIndex = 0;
-	//const initTabIndex = 1;
-
-	const setting = toContext(props.editData.setting);
+	const setting = toContext(props.configuration, props.editData.setting);
 
 	function handleSubmit(event: FormEvent) {
 		event.preventDefault();
 
 		props.editData.setting = fromContext(props.editData.setting, setting);
 		console.debug(setting);
-		Storage.saveEditorData(props.editData);
+		//TODO: 自動保存とぶつかる可能性あり、、、同一オブジェクトなので大丈夫、か？
+		Storages.saveEditorData(props.editData);
 
 		window.location.reload();
 	}
@@ -46,7 +44,7 @@ const SettingEditor: FC<Props> = (props: Props) => {
 	return (
 		<SettingContext.Provider value={setting}>
 			<form onSubmit={handleSubmit}>
-				<Tabs defaultIndex={initTabIndex} forceRenderTabPanel={true}>
+				<Tabs defaultIndex={props.configuration.tabIndex.setting} forceRenderTabPanel={true}>
 					<TabList>
 						<Tab>基本</Tab>
 						<Tab>リソース</Tab>
@@ -116,8 +114,14 @@ function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnl
 		.join(NewLine) + NewLine;
 }
 
-function toContext(setting: Setting): SettingContext {
+function toContext(configuration: Configuration, setting: Setting): SettingContext {
 	const timeZone = TimeZone.tryParse(setting.timeZone) ?? TimeZone.getClientTimeZone();
+	const colors = {
+		holiday: {
+			regular: DefaultSettings.getRegularHolidays(),
+			event: DefaultSettings.getEventHolidayColors(),
+		},
+	};
 
 	return {
 		general: {
@@ -162,17 +166,17 @@ function toContext(setting: Setting): SettingContext {
 		theme: {
 			holiday: {
 				regulars: {
-					monday: setting.theme.holiday.regulars.monday ?? ThemeHolidayRegularColor,
-					tuesday: setting.theme.holiday.regulars.tuesday ?? ThemeHolidayRegularColor,
-					wednesday: setting.theme.holiday.regulars.wednesday ?? ThemeHolidayRegularColor,
-					thursday: setting.theme.holiday.regulars.thursday ?? ThemeHolidayRegularColor,
-					friday: setting.theme.holiday.regulars.friday ?? ThemeHolidayRegularColor,
-					saturday: setting.theme.holiday.regulars.saturday ?? ThemeHolidayRegularColor,
-					sunday: setting.theme.holiday.regulars.sunday ?? ThemeHolidayRegularColor,
+					monday: setting.theme.holiday.regulars.monday ?? colors.holiday.regular.get("monday") ?? DefaultSettings.BusinessWeekdayColor,
+					tuesday: setting.theme.holiday.regulars.tuesday ?? colors.holiday.regular.get("tuesday") ?? DefaultSettings.BusinessWeekdayColor,
+					wednesday: setting.theme.holiday.regulars.wednesday ?? colors.holiday.regular.get("wednesday") ?? DefaultSettings.BusinessWeekdayColor,
+					thursday: setting.theme.holiday.regulars.thursday ?? colors.holiday.regular.get("thursday") ?? DefaultSettings.BusinessWeekdayColor,
+					friday: setting.theme.holiday.regulars.friday ?? colors.holiday.regular.get("friday") ?? DefaultSettings.BusinessWeekdayColor,
+					saturday: setting.theme.holiday.regulars.saturday ?? colors.holiday.regular.get("saturday") ?? DefaultSettings.BusinessWeekdayColor,
+					sunday: setting.theme.holiday.regulars.sunday ?? colors.holiday.regular.get("sunday") ?? DefaultSettings.BusinessWeekdayColor,
 				},
 				events: {
-					holiday: setting.theme.holiday.events.holiday ?? ThemeHolidayEventHolidayColor,
-					special: setting.theme.holiday.events.special ?? ThemeHolidayEventSpecialColor,
+					holiday: setting.theme.holiday.events.holiday ?? colors.holiday.event.holiday,
+					special: setting.theme.holiday.events.special ?? colors.holiday.event.special,
 				}
 			},
 			groups: setting.theme.groups.map(a => ({

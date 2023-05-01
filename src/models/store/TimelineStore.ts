@@ -7,6 +7,8 @@ import { AnyTimeline, GroupTimeline, TimelineId } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
 
+export type MoveDirection = "up" | "down" | "parent";
+
 export interface TimelineStore {
 
 	/** 最上位(こいつ自身はどうでもよくて、子を使用する) */
@@ -60,10 +62,10 @@ export interface TimelineStore {
 	updateTimeline(timeline: AnyTimeline): void;
 	/**
 	 * タイムラインをグループ内で上下移動。
-	 * @param moveUp 上へ移動するか。
+	 * @param direction 移動方向。
 	 * @param timeline 対象タイムライン。
 	 */
-	moveTimeline(moveUp: boolean, timeline: AnyTimeline): void;
+	moveTimeline(direction: MoveDirection, timeline: AnyTimeline): void;
 	/**
 	 * タイムラインを破棄。
 	 * @param timeline
@@ -87,6 +89,8 @@ export interface TimelineStore {
 	 * @param sourceTimeline
 	 */
 	startDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void;
+
+	startDetailEdit(timeline: AnyTimeline): void;
 }
 
 

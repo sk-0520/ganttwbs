@@ -10,6 +10,30 @@ export abstract class Strings {
 		return typeof s === "string" && this.trim(s).length !== 0;
 	}
 
+	public static toUnique(source: string, items: ReadonlySet<string>, compare: (a: string, b: string) => boolean, converter: (source: string, number: number) => string): string {
+		let changeName = source;
+
+		let n = 1;
+
+		RETRY:
+		while(true) {
+			for (const value of items) {
+				if (compare(value, changeName)) {
+					changeName = converter(source, ++n);
+					continue RETRY;
+				}
+			}
+
+			break;
+		}
+
+		return changeName;
+	}
+
+	public static toUniqueDefault(source: string, items: ReadonlySet<string>): string {
+		return this.toUnique(source, items, (a, b) => a === b, (source, number) => `${source}(${number})`);
+	}
+
 	/**
 	 * トリムの未指定時の対象文字。
 	 */
@@ -44,15 +68,15 @@ export abstract class Strings {
 	 * @param characters
 	 * @returns
 	 */
-	public static trimStart(s: string, characters: ReadonlySet<string> | null = null): string {
-		characters ??= this.TrimCharacters;
+	public static trimStart(s: string, characters?: ReadonlySet<string>): string {
+		const chars = characters ?? this.TrimCharacters;
 
-		if (!characters.size) {
+		if (!chars.size) {
 			return s;
 		}
 
 		for (let i = 0; i < s.length; i++) {
-			if (characters.has(s[i])) {
+			if (chars.has(s[i])) {
 				continue;
 			}
 
@@ -68,15 +92,15 @@ export abstract class Strings {
 	 * @param characters
 	 * @returns
 	 */
-	public static trimEnd(s: string, characters: ReadonlySet<string> | null = null): string {
-		characters ??= this.TrimCharacters;
+	public static trimEnd(s: string, characters?: ReadonlySet<string>): string {
+		const chars = characters ?? this.TrimCharacters;
 
-		if (!characters.size) {
+		if (!chars.size) {
 			return s;
 		}
 
 		for (let i = 0; i < s.length; i++) {
-			if (characters.has(s[s.length - i - 1])) {
+			if (chars.has(s[s.length - i - 1])) {
 				continue;
 			}
 
@@ -92,14 +116,14 @@ export abstract class Strings {
 	 * @param characters
 	 * @returns
 	 */
-	public static trim(s: string, characters: ReadonlySet<string> | null = null): string {
-		characters ??= this.TrimCharacters;
+	public static trim(s: string, characters?: ReadonlySet<string>): string {
+		const chars = characters ?? this.TrimCharacters;
 
-		if (!characters.size) {
+		if (!chars.size) {
 			return s;
 		}
 
-		return this.trimEnd(this.trimStart(s, characters), characters);
+		return this.trimEnd(this.trimStart(s, chars), chars);
 	}
 
 	private static readonly _escapeRegex = /[.*+?^${}()|[\]\\]/g;
@@ -134,6 +158,40 @@ export abstract class Strings {
 		}
 
 		return source.replaceAll(searchValue, replaceValue);
+	}
+
+	public static replaceFunc(source: string, head: string, tail: string, func: (placeholder: string) => string): string {
+		if (!head || !tail) {
+			throw new Error(`head: ${head}, tail: ${tail}`);
+		}
+		if (!source) {
+			return "";
+		}
+
+		const escHead = this.escapeRegex(head);
+		const escTail = this.escapeRegex(tail);
+		const pattern = escHead + "(.+?)" + escTail;
+
+		const regex = new RegExp(pattern, "g");
+		const replacedText = source.replace(regex, (s, m) => func(m));
+
+		return replacedText;
+	}
+
+	public static replaceMap(source: string, map: ReadonlyMap<string, string> | Record<string, string>, head = "${", tail = "}"): string {
+
+		let func: (placeholder: string) => string;
+		if (map instanceof Map) {
+			func = (placeholder: string): string => {
+				return map.get(placeholder) ?? placeholder;
+			};
+		} else {
+			func = (placeholder: string): string => {
+				return placeholder in map ? (map as Record<string, string>)[placeholder] : placeholder;
+			};
+		}
+
+		return this.replaceFunc(source, head, tail, func);
 	}
 
 	/**

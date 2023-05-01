@@ -17,13 +17,11 @@ export function isValueUnit(args: unknown): args is ValueUnit {
 }
 
 export interface Design {
-	/** 単純なスタイルシート */
-	honest: {
+	/** デザイン元データ */
+	seed: {
 		cell: {
 			width: ValueUnit;
-			maxWidth: ValueUnit;
 			height: ValueUnit;
-			maxHeight: ValueUnit;
 		}
 	},
 

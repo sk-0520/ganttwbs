@@ -12,21 +12,24 @@ import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/Workl
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
+import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { AnyTimeline, GroupTimeline, MemberId, TimelineKind } from "@/models/data/Setting";
+import { AnyTimeline, GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Settings } from "@/models/Settings";
+import { MoveDirection } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Types } from "@/models/Types";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	currentTimeline: AnyTimeline;
 	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
@@ -39,7 +42,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
 	const [memberId, setMemberId] = useState(Settings.maybeTaskTimeline(props.currentTimeline) ? props.currentTimeline.memberId : "");
-	const [beginKind, setBeginKind] = useState(WorkRangeKind.Loading);
+	const [workRangeKind, setWorkRangeKind] = useState(WorkRangeKind.Loading);
 	const [beginDate, setBeginDate] = useState<DateTime | null>(null);
 	const [endDate, setEndDate] = useState<DateTime | null>(null);
 	const [progress, setProgress] = useState(0);
@@ -73,7 +76,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			}
 
 			if (timelineItem.workRange) {
-				setBeginKind(timelineItem.workRange.kind);
+				setWorkRangeKind(timelineItem.workRange.kind);
 				if (WorkRanges.maybeSuccessWorkRange(timelineItem.workRange)) {
 					setBeginDate(timelineItem.workRange.begin);
 					setEndDate(timelineItem.workRange.end);
@@ -131,8 +134,8 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		});
 	}
 
-	function handleControlMoveItem(moveUp: boolean) {
-		props.timelineStore.moveTimeline(moveUp, props.currentTimeline);
+	function handleControlMoveItem(direction: MoveDirection) {
+		props.timelineStore.moveTimeline(direction, props.currentTimeline);
 	}
 
 	function handleControlAddItem(kindOrTimeline: TimelineKind | GroupTimeline): void {
@@ -159,14 +162,18 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		props.timelineStore.removeTimeline(props.currentTimeline);
 	}
 
-	function handleChangeMember(memberId: MemberId): void {
+	function handleShowDetail() {
+		props.timelineStore.startDetailEdit(props.currentTimeline);
+	}
+
+	function handleChangeMember(memberGroupPair: MemberGroupPair | undefined): void {
 		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
 			throw new Error();
 		}
 
 		props.timelineStore.updateTimeline({
 			...props.currentTimeline,
-			memberId: memberId,
+			memberId: memberGroupPair?.member.id ?? "",
 		});
 	}
 
@@ -306,9 +313,9 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			/>
 			<ResourceCell
 				currentTimeline={props.currentTimeline}
-				groups={props.setting.groups}
 				selectedMemberId={memberId}
 				disabled={Types.toBoolean(props.selectingBeginDate)}
+				resourceInfo={props.resourceInfo}
 				callbackChangeMember={handleChangeMember}
 			/>
 			<RelationCell
@@ -393,7 +400,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 						</td>
 					) : (
 						<WorkRangeCells
-							workRangeKind={beginKind}
+							workRangeKind={workRangeKind}
 							selectable={Types.toBoolean(props.selectingBeginDate)}
 							beginDate={beginDate}
 							endDate={endDate}
@@ -414,6 +421,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				moveItem={handleControlMoveItem}
 				addItem={handleControlAddItem}
 				deleteItem={handleControlDeleteItem}
+				showDetail={handleShowDetail}
 			/>
 		</TimelineHeaderRow >
 	);

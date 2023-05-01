@@ -1,6 +1,6 @@
 import { Group, Member } from "@/models/data/Setting";
 
-export interface MemberMapValue {
+export interface MemberGroupPair {
 	group: Readonly<Group>;
 	member: Member;
 }

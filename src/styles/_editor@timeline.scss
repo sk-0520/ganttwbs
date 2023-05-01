@@ -96,13 +96,28 @@ $viewer-z-index: 2;
 			flex: content;
 		}
 		.footer {
-			background: darkgrey;
-
 			.timeline-header {
 				text-align: center;
+				position: relative;
 
-				.timeline-cell {
-					border-right: 1px solid black;
+				&.header {
+					background: darkgrey;
+
+					&:hover {
+						& > .tooltips {
+							display: flex;
+						}
+					}
+
+					& > .timeline-cell {
+						border-right: 1px solid black;
+					}
+				}
+
+				&.tooltips {
+					top: -100%;
+					position: absolute;
+					display: none;
 				}
 			}
 		}
@@ -132,12 +147,21 @@ $viewer-z-index: 2;
 			// transform: translateY(-1px);
 		}
 
+		@mixin row {
+			&,
+			* {
+				vertical-align: middle;
+			}
+		}
+
 		@mixin cell {
 			border-right: 1px solid black;
 			border-bottom: 1px solid black;
 		}
 
 		.year-month {
+			@include row();
+
 			td {
 				position: sticky;
 				top: 0;
@@ -147,19 +171,32 @@ $viewer-z-index: 2;
 				time {
 					border-left: 1px dotted black;
 					padding-left: 10px;
+					display: block;
+					width: 100%;
+					height: 100%;
 				}
 			}
 		}
 
 		.day {
+			@include row();
+
 			text-align: center;
 
 			td {
 				@include cell();
+
+				time {
+					display: block;
+					width: 100%;
+					height: 100%;
+				}
 			}
 		}
 
 		.week {
+			@include row();
+
 			text-align: center;
 
 			td {
@@ -168,6 +205,8 @@ $viewer-z-index: 2;
 		}
 
 		.pin {
+			@include row();
+
 			text-align: center;
 
 			td {
@@ -225,6 +264,12 @@ $viewer-z-index: 2;
 			&.hover {
 				position: relative;
 				outline: 3px double rgba(255, 0, 0, 0.555);
+			}
+
+			&.selected-previous {
+				text-shadow: 0px 0px 1px;
+				outline: 2px dashed orange;
+				outline-offset: -2px;
 			}
 
 			.timeline-cell {
@@ -410,17 +455,18 @@ $viewer-z-index: 2;
 				}
 
 				.tools {
-					&.before {
-					}
-
 					&.after {
-						.panel {
+						.grid {
 							color: #000;
 							table-layout: fixed;
 							width: 300px;
 
+							td {
+								padding: 1px;
+							}
+
 							.col-header {
-								width: 5em;
+								width: 4.5em;
 								padding-right: 1em;
 							}
 
@@ -468,10 +514,35 @@ $viewer-z-index: 2;
 		#canvas {
 			width: 100%;
 			height: 100%;
+
+			.progress {
+				pointer-events: none;
+			}
 		}
 
 		#connecters {
 			position: relative;
+		}
+	}
+
+	.timeline-editor {
+		width: 40vw;
+
+		input,
+		select {
+			width: 100%;
+		}
+
+		.progress-fixed {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			width: 100%;
+
+			.range {
+				flex: content;
+			}
 		}
 	}
 

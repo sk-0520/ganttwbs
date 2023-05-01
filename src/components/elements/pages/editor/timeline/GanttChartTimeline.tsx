@@ -1,11 +1,12 @@
 import { FC, ReactNode, useLayoutEffect, useState } from "react";
 
-import GroupChart from "@/components/elements/pages/editor/timeline/chart/GroupChart";
-import TaskChart from "@/components/elements/pages/editor/timeline/chart/TaskChart";
+import GroupChart from "@/components/elements/pages/editor/timeline/shape/GroupChart";
+import TaskChart from "@/components/elements/pages/editor/timeline/shape/TaskChart";
 import { Charts } from "@/models/Charts";
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
 import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { Settings } from "@/models/Settings";
+import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends GanttChartTimelineProps { }
@@ -29,7 +30,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 
 
 	function renderCurrentTimeline(): ReactNode {
-		const cell = props.configuration.design.honest.cell;
+		const cell = props.configuration.design.seed.cell;
 
 		const timeSpanRange = successWorkRange
 			? Charts.getTimeSpanRange(props.calendarInfo.range.from, successWorkRange)
@@ -44,7 +45,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 					<TaskChart
 						configuration={props.configuration}
 						currentTimeline={props.currentTimeline}
-						background={Charts.getTaskBackground(props.currentTimeline, props.memberMap, props.setting.theme)}
+						background={Charts.getTaskBackground(props.currentTimeline, props.resourceInfo.memberMap, props.setting.theme)}
 						foreground={props.setting.theme.timeline.completed}
 						borderColor="#000000"
 						borderThickness={1}
@@ -57,12 +58,12 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 						configuration={props.configuration}
 						currentTimeline={props.currentTimeline}
 						background={Charts.getGroupBackground(props.currentTimeline, props.setting.rootTimeline, props.setting.theme)}
-						foreground="#ffffff"
+						foreground={props.setting.theme.timeline.completed}
 						borderColor="#000000"
-						borderThickness={4}
+						borderThickness={2}
 						area={area}
 						timelineStore={props.timelineStore}
-					// progress={props.currentTimeline.progress}
+					  progress={Timelines.sumProgressByGroup(props.currentTimeline)}
 					/>
 				) : null
 		);

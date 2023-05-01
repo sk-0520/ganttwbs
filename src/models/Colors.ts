@@ -1,6 +1,7 @@
 import { TinyColor, mostReadable } from "@ctrl/tinycolor";
 
 import { Color } from "@/models/data/Setting";
+import { Types } from "@/models/Types";
 
 export abstract class Colors {
 
@@ -30,21 +31,25 @@ export abstract class Colors {
 	 * @returns グラデーション配列
 	 */
 	public static generateGradient(start: Color | TinyColor, end: Color | TinyColor, count: number): Array<TinyColor> {
-		if (typeof start === "string") {
-			start = new TinyColor(start);
-		}
-		if (typeof end === "string") {
-			end = new TinyColor(end);
-		}
+		// if (typeof start === "string") {
+		// 	start = new TinyColor(start);
+		// }
+		// if (typeof end === "string") {
+		// 	end = new TinyColor(end);
+		// }
 		if (count <= 1) {
 			throw new Error(`${count}`);
 		}
+		const color = {
+			start: Types.isString(start) ? new TinyColor(start) : start,
+			end: Types.isString(end) ? new TinyColor(end) : end
+		};
 
 		// RGB と HSL で処理できるようにした方がいいかも
 		// RGB だと灰色がなぁ
 
-		const a = start.toRgb();
-		const z = end.toRgb();
+		const a = color.start.toRgb();
+		const z = color.end.toRgb();
 
 		const result = new Array<TinyColor>();
 

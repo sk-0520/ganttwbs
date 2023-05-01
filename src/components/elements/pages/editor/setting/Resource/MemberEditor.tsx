@@ -2,19 +2,28 @@ import { FC, useEffect, useState } from "react";
 
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { MemberSetting } from "@/models/data/context/SettingContext";
+import { Prices } from "@/models/data/Prices";
 import { Color, MemberId } from "@/models/data/Setting";
+import { DefaultSettings } from "@/models/DefaultSettings";
+import { Strings } from "@/models/Strings";
 
 interface Props {
 	member: MemberSetting;
+	members: ReadonlyArray<Readonly<MemberSetting>>,
 	updatedColors: ReadonlyMap<MemberId, Color>;
 	callbackRemoveMember(member: MemberSetting): void;
 }
 
 const MemberEditor: FC<Props> = (props: Props) => {
 
+	const priceSetting = DefaultSettings.getPriceSetting();
+
 	const [name, setName] = useState(props.member.name);
 	const [priceCost, setPriceCost] = useState(props.member.priceCost);
 	const [priceSales, setPriceSales] = useState(props.member.priceSales);
+	const [monthCost, setMonthCost] = useState(props.member.priceCost * priceSetting.workingDays);
+	const [monthSales, setMonthSales] = useState(props.member.priceSales * priceSetting.workingDays);
+	const [displayRate, setDisplayRate] = useState("---%");
 	const [color, setColor] = useState(props.member.color);
 
 	useEffect(() => {
@@ -24,8 +33,27 @@ const MemberEditor: FC<Props> = (props: Props) => {
 		}
 	}, [props.member, props.updatedColors]);
 
+	useEffect(() => {
+		setMonthCost(priceCost * priceSetting.workingDays);
+	}, [priceCost, priceSetting]);
+
+	useEffect(() => {
+		setMonthSales(priceSales * priceSetting.workingDays);
+	}, [priceSales, priceSetting]);
+
+	useEffect(() => {
+		const rate = Prices.displayPercent(priceSales, priceCost);
+		setDisplayRate(rate);
+	}, [priceCost, priceSales]);
+
 	function handleChangeName(value: string) {
-		setName(props.member.name = value);
+		const memberNames = new Set(
+			props.members
+				.filter(a => a.id !== props.member.id)
+				.map(a => a.name)
+		);
+		const name = Strings.toUniqueDefault(value, memberNames);
+		setName(props.member.name = name);
 	}
 
 	function handleChangePriceCost(value: number) {
@@ -36,39 +64,54 @@ const MemberEditor: FC<Props> = (props: Props) => {
 		setPriceSales(props.member.priceSales = value);
 	}
 
+	function handleChangeTheme(color: Color): void {
+		setColor(props.member.color = color);
+	}
+
 	return (
 		<tr>
-			<td className="name">
+			<td className="name-cell">
 				<input
 					value={name}
 					onChange={ev => handleChangeName(ev.target.value)}
 				/>
 			</td>
-			<td className="cost">
+			<td className="cost-cell">
 				<input
 					type="number"
-					min={0}
-					step={1000}
+					min={priceSetting.input.cost.minimum}
+					max={priceSetting.input.cost.maximum}
+					step={priceSetting.input.cost.step}
 					value={priceCost}
 					onChange={ev => handleChangePriceCost(ev.target.valueAsNumber)}
 				/>
 			</td>
-			<td className="sales">
+			<td className="sales-cell">
 				<input
 					type="number"
-					min={0}
-					step={1000}
+					min={priceSetting.input.sales.minimum}
+					max={priceSetting.input.sales.maximum}
+					step={priceSetting.input.sales.step}
 					value={priceSales}
 					onChange={ev => handleChangePriceSales(ev.target.valueAsNumber)}
 				/>
 			</td>
-			<td className="theme">
+			<td className="theme-cell">
 				<PlainColorPicker
 					color={color}
-					callbackChanged={c => setColor(c)}
+					callbackChanged={c => handleChangeTheme(c)}
 				/>
 			</td>
-			<td className="remove">
+			<td className="month-cost-cell">
+				{monthCost.toLocaleString()}
+			</td>
+			<td className="month-sales-cell">
+				{monthSales.toLocaleString()}
+			</td>
+			<td className="rate-cell">
+				{displayRate}
+			</td>
+			<td className="remove-cell">
 				<button
 					type="button"
 					onClick={ev => props.callbackRemoveMember(props.member)}

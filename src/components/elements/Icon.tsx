@@ -36,7 +36,8 @@ export const enum IconKind {
 
 	Reset,
 	Clear,
-	Operation,
+	Option,
+	Edit,
 	Remove,
 }
 
@@ -69,7 +70,8 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 
 	[IconKind.Reset]: (props) => <Md.MdRestartAlt {...convertParameter(props)} />,
 	[IconKind.Clear]: (props) => <Md.MdOutlineClear {...convertParameter(props)} />,
-	[IconKind.Operation]: (props) => <Md.MdBuild {...convertParameter(props)} />,
+	[IconKind.Option]: (props) => <Md.MdBuild {...convertParameter(props)} />,
+	[IconKind.Edit]: (props) => <Md.MdModeEdit {...convertParameter(props)} />,
 	[IconKind.Remove]: (props) => <Md.MdOutlineDelete {...convertParameter(props)} />,
 } as const;
 
@@ -87,6 +89,10 @@ function convertColor(kind: IconKind, color: string | null | undefined): string 
 			case IconKind.TimelineTask:
 			case IconKind.TimelineAddTask:
 				return "green";
+
+			case IconKind.ConfirmCancel:
+				return "red";
+
 
 			default:
 				break;
