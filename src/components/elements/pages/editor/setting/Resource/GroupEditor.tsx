@@ -5,9 +5,9 @@ import GroupColorsDialog from "@/components/elements/pages/editor/setting/Resour
 import MemberEditor from "@/components/elements/pages/editor/setting/Resource/MemberEditor";
 import { GroupSetting, MemberSetting } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
+import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
 import { Strings } from "@/models/Strings";
-import { DefaultSettings } from "@/models/DefaultSettings";
 
 interface Props {
 	group: GroupSetting;
