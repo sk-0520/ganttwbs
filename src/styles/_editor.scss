@@ -198,6 +198,16 @@ main#editor {
 							}
 						}
 					}
+
+					.group-color {
+						border: 1px solid red;
+						.color-types {
+							display: flex;
+
+						}
+						.color-table {
+						}
+					}
 				}
 
 				&.calendar {
