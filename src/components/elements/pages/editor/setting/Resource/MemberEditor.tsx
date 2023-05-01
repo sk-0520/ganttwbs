@@ -105,10 +105,10 @@ const MemberEditor: FC<Props> = (props: Props) => {
 				/>
 			</td>
 			<td className="month-cost-cell">
-				{monthCost}
+				{monthCost.toLocaleString()}
 			</td>
 			<td className="month-sales-cell">
-				{monthSales}
+				{monthSales.toLocaleString()}
 			</td>
 			<td className="rate-cell">
 				{displayRate}
