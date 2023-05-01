@@ -106,8 +106,8 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 					<thead>
 						<tr>
 							<th className="name-cell">要員名</th>
-							<th className="cost-cell">原価</th>
-							<th className="sales-cell">単価</th>
+							<th className="cost-cell">日原価</th>
+							<th className="sales-cell">日単価</th>
 							<th className="theme-cell">テーマ</th>
 							<th className="month-cost-cell">月原価</th>
 							<th className="month-sales-cell">月単価</th>
@@ -152,7 +152,9 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 					<GroupColorsDialog
 						choiceColorGroup={props.group}
 						callbackClosed={a => {
-							setUpdatedColors(a);
+							if(a) {
+								setUpdatedColors(a);
+							}
 							setVisibleDialog(false);
 						}}
 					/>

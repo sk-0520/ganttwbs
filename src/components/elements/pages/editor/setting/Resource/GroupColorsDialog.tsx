@@ -6,6 +6,7 @@ import { Arrays } from "@/models/Arrays";
 import { Colors } from "@/models/Colors";
 import { GroupSetting } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
+import { Types } from "@/models/Types";
 
 const ColorKinds = [
 	"same",
@@ -18,7 +19,7 @@ type ColorKind = typeof ColorKinds[number];
 
 interface Props {
 	choiceColorGroup: GroupSetting;
-	callbackClosed(colors: Map<MemberId, Color>): void
+	callbackClosed(colors: Map<MemberId, Color> | undefined): void
 }
 
 const GroupColorsDialog: FC<Props> = (props: Props) => {
@@ -72,14 +73,15 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 		<Dialog
 			button="submit"
 			title="色選択"
+			preSubmit={() => Types.toBoolean(selectedColorType)}
 			callbackClose={(type) => {
-				//TODO: あとまわし
-				if (type === "submit") {
-					// const map = new Map([...choiceColors.entries()].map(([k, v]) => [k, v.toHexString()]));
-					// props.callbackClosed(map);
+				if (selectedColorType && type === "submit") {
+					props.callbackClosed(
+						new Map([...colorTable[selectedColorType]].map(([k, v]) => [k, v.toHexString()]))
+					);
 				} else {
+					props.callbackClosed(undefined);
 				}
-				props.callbackClosed(new Map());
 			}}
 		>
 			<div className="group-color">
@@ -121,7 +123,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 							<th className="member-cell" />
 							{ColorKinds.map(a => {
 								return (
-									<th key={a}>
+									<th key={a} className="color-cell">
 										<label>
 											<input
 												type="radio"
@@ -171,8 +173,6 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 						})}
 					</tbody>
 				</table>
-
-
 			</div>
 		</Dialog>
 	);

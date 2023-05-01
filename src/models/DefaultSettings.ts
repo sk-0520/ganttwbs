@@ -49,7 +49,7 @@ export abstract class DefaultSettings {
 		const result: TimelineTheme = {
 			group: "#ff00ff",
 			defaultGroup: "#ff0000",
-			defaultTask: "#00ff00",
+			defaultTask: "#ffffba",
 			completed: "#000000"
 		};
 
