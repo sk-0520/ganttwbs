@@ -90,6 +90,10 @@ function convertColor(kind: IconKind, color: string | null | undefined): string 
 			case IconKind.TimelineAddTask:
 				return "green";
 
+			case IconKind.ConfirmCancel:
+				return "red";
+
+
 			default:
 				break;
 		}

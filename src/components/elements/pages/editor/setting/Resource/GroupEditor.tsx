@@ -106,11 +106,11 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 					<thead>
 						<tr>
 							<th className="name-cell">要員名</th>
-							<th className="cost-cell">日原価</th>
-							<th className="sales-cell">日単価</th>
+							<th className="cost-cell">原価(日)</th>
+							<th className="sales-cell">単価(日)</th>
 							<th className="theme-cell">テーマ</th>
-							<th className="month-cost-cell">月原価</th>
-							<th className="month-sales-cell">月単価</th>
+							<th className="month-cost-cell">原価(月)</th>
+							<th className="month-sales-cell">単価(月)</th>
 							<th className="rate-cell">売上</th>
 							<th className="remove-cell">削除</th>
 						</tr>

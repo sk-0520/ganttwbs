@@ -89,12 +89,15 @@ function createConfiguration(): Configuration {
 		}
 	};
 
+	const defaultTabIndex = {
+		application: 1,
+		setting: 0,
+	} as const;
+
 	const result: Configuration = {
 		tabIndex: {
-			// application: 1,
-			// setting: 0,
-			application: 2,
-			setting: 1,
+			application: defaultTabIndex.application,
+			setting: defaultTabIndex.setting,
 		},
 
 		autoSave: {

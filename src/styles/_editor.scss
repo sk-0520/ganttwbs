@@ -1,6 +1,10 @@
 @use "variable" as variable;
 
 main#editor {
+	.react-tabs__tab {
+		user-select: none;
+	}
+
 	.tab {
 		&.panel {
 			display: none;
