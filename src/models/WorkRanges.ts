@@ -1,4 +1,5 @@
 import { Arrays } from "@/models/Arrays";
+import { IdFactory } from "@/models/IdFactory";
 import { TimelineId } from "@/models/data/Setting";
 import { TotalSuccessWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind, SuccessTimelineIdRange } from "@/models/data/WorkRange";
 
@@ -30,9 +31,10 @@ export class WorkRanges {
 		return errorKinds.includes(workRange.kind);
 	}
 
-	public static getSuccessTimelineIdRange(workRanges: ReadonlyMap<TimelineId, Readonly<WorkRange>>): SuccessTimelineIdRange {
+	public static getSuccessTimelineIdRange(workRanges: ReadonlyMap<TimelineId, Readonly<WorkRange>>, includeRoot?: boolean): SuccessTimelineIdRange {
 		const successPairs = [...workRanges]
-			.filter(([k, v]) => this.maybeSuccessWorkRange(v))
+			.filter(([k, _]) => includeRoot ? true : k !== IdFactory.rootTimelineId)
+			.filter(([_, v]) => this.maybeSuccessWorkRange(v))
 			.map(([k, v]) => ({ timelineId: k, workRange: v as SuccessWorkRange }))
 			;
 
