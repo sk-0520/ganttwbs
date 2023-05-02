@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 
-import { IconImage, IconKind } from "@/components/elements/Icon";
+import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import Timestamp from "@/components/elements/Timestamp";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
@@ -11,10 +11,12 @@ import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
+import { Editors } from "@/models/Editors";
 import { IdFactory } from "@/models/IdFactory";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
+import locale from "@/locales/ja";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 	//nop
@@ -73,16 +75,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 		setVisibleTimelinesImportDialog(true);
 	}
 
-	function scrollFromDate(date: DateTime): void {
-		const daysId = Timelines.toDaysId(date);
-		const targetElement = document.getElementById(daysId);
-		const mainContentElement = document.querySelector(".tab-timeline");
-		if (targetElement && mainContentElement) {
-			mainContentElement.scrollTo({
-				left: targetElement.offsetLeft
-			});
-		}
-	}
+
 
 	function handleInputTimelines(timeline: GroupTimeline | null) {
 		if (timeline) {
@@ -90,6 +83,24 @@ const CrossHeader: FC<Props> = (props: Props) => {
 		}
 
 		setVisibleTimelinesImportDialog(false);
+	}
+
+	function handleClickNavigateToday(): void {
+		Editors.scrollView(undefined, DateTime.today(props.calendarInfo.timeZone));
+	}
+
+	function handleClickNavigatePrev(): void {
+		const range = WorkRanges.getSuccessTimelineIdRange(props.timelineStore.workRanges);
+		if (range.begin) {
+			Editors.scrollView(range.begin.timelineId, range.begin.workRange.begin);
+		}
+	}
+
+	function handleClickNavigateNext(): void {
+		const range = WorkRanges.getSuccessTimelineIdRange(props.timelineStore.workRanges);
+		if (range.end) {
+			Editors.scrollView(range.end.timelineId, range.end.workRange.begin);
+		}
 	}
 
 	return (
@@ -135,12 +146,32 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						</li>
 						<li>
 							<button
-								onClick={ev => scrollFromDate(DateTime.today(props.calendarInfo.timeZone))}
+								onClick={ev => handleClickNavigatePrev()}
 							>
 								<IconImage
-									kind={IconKind.CalendarToday}
+									kind={IconKind.NavigatePrev}
+									title="最初"
 								/>
-								けふ
+							</button>
+						</li>
+						<li>
+							<button
+								onClick={ev => handleClickNavigateToday()}
+							>
+								<IconLabel
+									kind={IconKind.CalendarToday}
+									label="けふ"
+								/>
+							</button>
+						</li>
+						<li>
+							<button
+								onClick={ev => handleClickNavigateNext()}
+							>
+								<IconImage
+									kind={IconKind.NavigateNext}
+									title="最後"
+								/>
 							</button>
 						</li>
 					</ul>
@@ -149,24 +180,41 @@ const CrossHeader: FC<Props> = (props: Props) => {
 			<div className="footer">
 				<div className='timeline-header header'>
 					<div className='timeline-header tooltips'>
-						<div className='timeline-cell timeline-id' />
-						<div className='timeline-cell timeline-subject' />
-						<div className='timeline-cell timeline-workload'>
+						<div className='timeline-cell timeline-id'>
+							{locale.editor.timeline.header.columns.id}
+						</div>
+						<div className='timeline-cell timeline-subject'>
+							{locale.editor.timeline.header.columns.subject}
+						</div>
+						<div
+							className='timeline-cell timeline-workload'
+							title={locale.editor.timeline.header.columns.workload}
+						>
 							{workload}
 						</div>
-						<div className='timeline-cell timeline-resource' />
-						<div className="timeline-cell timeline-relation" />
+						<div className='timeline-cell timeline-resource'>
+							{locale.editor.timeline.header.columns.resource}
+						</div>
+						<div className="timeline-cell timeline-relation">
+							{locale.editor.timeline.header.columns.relation}
+						</div>
 						{
 							workRangeKind === WorkRangeKind.Success
 								? (
 									<>
-										<div className='timeline-cell timeline-range-from'>
+										<div
+											className='timeline-cell timeline-range-from'
+											title={locale.editor.timeline.header.columns.workRangeFrom}
+										>
 											<Timestamp
 												date={beginDate}
 												format="date"
 											/>
 										</div>
-										<div className='timeline-cell timeline-range-to'>
+										<div
+											className='timeline-cell timeline-range-to'
+											title={locale.editor.timeline.header.columns.workRangeTo}
+										>
 											<Timestamp
 												date={endDate}
 												format="date"
@@ -176,42 +224,47 @@ const CrossHeader: FC<Props> = (props: Props) => {
 								) :
 								(
 									<div className='timeline-cell timeline-range-area'>
-										あかん
+										{locale.editor.timeline.header.columns.workRangeError}
 									</div>
 								)
 						}
-						<div className='timeline-cell timeline-progress'>
+						<div
+							className='timeline-cell timeline-progress'
+							title={locale.editor.timeline.header.columns.progress}
+						>
 							{Timelines.displayProgress(progress)}%
 						</div>
-						<div className='timeline-cell timeline-controls' />
+						<div className='timeline-cell timeline-controls'>
+							{locale.editor.timeline.header.columns.controls}
+						</div>
 					</div>
 
 					<div className='timeline-cell timeline-id'>
-						ID
+						{locale.editor.timeline.header.columns.id}
 					</div>
 					<div className='timeline-cell timeline-subject'>
-						作業
+						{locale.editor.timeline.header.columns.subject}
 					</div>
 					<div className='timeline-cell timeline-workload'>
-						工数
+						{locale.editor.timeline.header.columns.workload}
 					</div>
 					<div className='timeline-cell timeline-resource'>
-						割当
+						{locale.editor.timeline.header.columns.resource}
 					</div>
 					<div className="timeline-cell timeline-relation">
-						💩
+						{locale.editor.timeline.header.columns.relation}
 					</div>
 					<div className='timeline-cell timeline-range-from'>
-						開始
+						{locale.editor.timeline.header.columns.workRangeFrom}
 					</div>
 					<div className='timeline-cell timeline-range-to'>
-						終了
+						{locale.editor.timeline.header.columns.workRangeTo}
 					</div>
 					<div className='timeline-cell timeline-progress'>
-						進捗率
+						{locale.editor.timeline.header.columns.progress}
 					</div>
 					<div className='timeline-cell timeline-controls'>
-						操作
+						{locale.editor.timeline.header.columns.controls}
 					</div>
 				</div>
 			</div>
@@ -225,3 +278,5 @@ const CrossHeader: FC<Props> = (props: Props) => {
 };
 
 export default CrossHeader;
+
+

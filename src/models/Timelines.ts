@@ -16,15 +16,19 @@ interface Holidays {
 	weeks: ReadonlyArray<WeekIndex>;
 }
 
-type TimeLineIdOrObject = TimelineId | AnyTimeline;
+export type TimelineIdOrObject = TimelineId | AnyTimeline;
 
 export abstract class Timelines {
 
-	private static getId(timeline: TimeLineIdOrObject): string {
+	private static getId(timeline: TimelineIdOrObject): string {
 		return typeof timeline === "string" ? timeline : timeline.id;
 	}
 
-	public static toNodePreviousId(timeline: TimeLineIdOrObject): string {
+	public static toRowId(timeline: TimelineIdOrObject): string {
+		return "timeline-row-" + this.getId(timeline);
+	}
+
+	public static toNodePreviousId(timeline: TimelineIdOrObject): string {
 		return "timeline-node-previous-" + this.getId(timeline);
 	}
 
@@ -32,7 +36,7 @@ export abstract class Timelines {
 		return "days-" + date.format("yyyy_MM_dd");
 	}
 
-	public static toChartId(timeline: TimeLineIdOrObject): string {
+	public static toChartId(timeline: TimelineIdOrObject): string {
 		return "timeline-chart-" + this.getId(timeline);
 	}
 

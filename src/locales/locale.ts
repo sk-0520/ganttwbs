@@ -6,35 +6,35 @@ import { WeekDay } from "@/models/data/Setting";
 
 export interface Locale {
 	/** 言語名 */
-	language: string;
+	language: string,
 	/** 共通項目 */
 	common: {
 		command: {
-			add: string;
-			remove: string;
-		};
+			add: string,
+			remove: string,
+		},
 
 		calendar: {
 			week: {
 				name: string,
-				long: { [key in WeekDay]: string };
-				short: { [key in WeekDay]: string };
-			};
+				long: { [key in WeekDay]: string },
+				short: { [key in WeekDay]: string },
+			},
 
 			format: {
-				yearMonth: string;
-			};
+				yearMonth: string,
+			},
 		}
-	};
+	},
 
 	editor: {
 		file: {
 			autoSave: {
 				storage: {
-					kind: string;
-				};
+					kind: string,
+				},
 				download: {
-					kind: string;
+					kind: string,
 					/**
 					 * 自動ダウンロードで使用するファイル名。
 					 *
@@ -47,28 +47,42 @@ export interface Locale {
 					fileNameFormat: string,
 				}
 			}
-		};
+		},
 		timeline: {
+			header: {
+				columns: {
+					id: string,
+					subject: string,
+					workload: string,
+					resource: string,
+					relation: string,
+					workRangeFrom: string,
+					workRangeTo: string,
+					workRangeError: string,
+					progress: string,
+					controls: string,
+				},
+			},
 			workRange: {
 				kind: {
-					loading: string;
-					noInput: string;
-					selfSelectedError: string;
-					noChildren: string;
-					relationNoInput: string;
-					relationError: string;
-					recursiveError: string;
-					unknownError: string;
+					loading: string,
+					noInput: string,
+					selfSelectedError: string,
+					noChildren: string,
+					relationNoInput: string,
+					relationError: string,
+					recursiveError: string,
+					unknownError: string,
 				}
-			}
+			},
 		}
-	};
+	},
 
 	styles: {
 		editor: {
-			fontFamilies: Array<string>;
-		};
-	};
+			fontFamilies: Array<string>,
+		},
+	},
 }
 
 export function useLocale(): Locale {

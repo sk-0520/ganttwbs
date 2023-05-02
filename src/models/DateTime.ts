@@ -191,6 +191,14 @@ export class DateTime {
 		return this.date.toDate().getTime();
 	}
 
+	public equals(date: DateTime): boolean {
+		return this.getTime() === date.getTime();
+	}
+
+	public compare(date: DateTime): number {
+		return this.getTime() - date.getTime();
+	}
+
 	public toDateOnly(): DateTime {
 		const date = this.date
 			.set("hour", 0)
