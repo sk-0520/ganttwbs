@@ -9,6 +9,7 @@ import ResourceEditor from "@/components/elements/pages/editor/setting/Resource/
 import ThemeCalendarSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeCalendarSettingEditor";
 import ThemeGroupSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeGroupSettingEditor";
 import ThemeTimelineSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeTimelineSettingEditor";
+import { useLocale } from "@/locales/locale";
 import { Configuration } from "@/models/data/Configuration";
 import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { EditorData } from "@/models/data/EditorData";
@@ -20,7 +21,6 @@ import { IdFactory } from "@/models/IdFactory";
 import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
 import { TimeZone } from "@/models/TimeZone";
-import { useLocale } from "@/locales/locale";
 
 const NewLine = "\r\n";
 

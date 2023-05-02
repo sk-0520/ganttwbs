@@ -225,12 +225,12 @@ const FileEditor: FC<Props> = (props: Props) => {
 				<ul className="inline">
 					<li>
 						<button onClick={handleDownload}>
-							{locale.common.download}
+							{locale.common.command.download}
 						</button>
 					</li>
 					<li>
 						<button onClick={handleJsonCopy}>
-							{locale.common.copy}
+							{locale.common.command.copy}
 						</button>
 					</li>
 				</ul>

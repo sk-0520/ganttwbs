@@ -1,9 +1,10 @@
 import classNames from "classnames";
 import { FC, useState } from "react";
 
-import { IconImage, IconKind } from "@/components/elements/Icon";
+import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
+import { useLocale } from "@/locales/locale";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { MoveDirection } from "@/models/store/TimelineStore";
 
@@ -17,6 +18,8 @@ interface Props {
 }
 
 const ControlsCell: FC<Props> = (props: Props) => {
+	const locale = useLocale();
+
 	const [visibleControls, setVisibleControls] = useState(false);
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 
@@ -87,17 +90,17 @@ const ControlsCell: FC<Props> = (props: Props) => {
 						<tbody>
 							<tr>
 								<th className="col-header">
-									移動
+									{locale.editor.timeline.timelines.controls.move.title}
 								</th>
 								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleMoveItem("up")}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.MoveUp}
+											label={locale.editor.timeline.timelines.controls.move.up}
 										/>
-										上へ
 									</button>
 								</td>
 								<td className="col-cell">
@@ -105,10 +108,10 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleMoveItem("down")}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.MoveDown}
+											label={locale.editor.timeline.timelines.controls.move.down}
 										/>
-										下へ
 									</button>
 								</td>
 								<td className="col-cell">
@@ -116,10 +119,10 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleMoveItem("parent")}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.MovePrev}
+											label={locale.editor.timeline.timelines.controls.move.parent}
 										/>
-										下げる
 									</button>
 								</td>
 							</tr>
@@ -132,17 +135,17 @@ const ControlsCell: FC<Props> = (props: Props) => {
 											: "直近"
 									}
 								>
-									追加
+									{locale.editor.timeline.timelines.controls.add.title}
 								</th>
 								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleAddItem("group")}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.TimelineAddGroup}
+											label={locale.editor.timeline.timelines.controls.add.group}
 										/>
-										グループ
 									</button>
 								</td>
 								<td className="col-cell">
@@ -150,10 +153,10 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleAddItem("task")}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.TimelineAddTask}
+											label={locale.editor.timeline.timelines.controls.add.task}
 										/>
-										タスク
 									</button>
 								</td>
 								<td className="col-cell">
@@ -161,26 +164,26 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleShowTimelinesImportDialog()}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.TimelineImport}
+											label={locale.editor.timeline.timelines.controls.add.import}
 										/>
-										一括
 									</button>
 								</td>
 							</tr>
 							<tr>
 								<th className="col-header">
-									その他
+									{locale.editor.timeline.timelines.controls.others.title}
 								</th>
 								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleShowDetail()}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.Edit}
+											label={locale.editor.timeline.timelines.controls.others.setting}
 										/>
-										詳細設定
 									</button>
 								</td>
 								<td className="col-cell" />
@@ -189,10 +192,10 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleDeleteItem()}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.Remove}
-										/>
-										削除
+											label={locale.common.command.remove}
+											/>
 									</button>
 								</td>
 							</tr>

@@ -66,15 +66,13 @@ const EditorPage: NextPage = () => {
 							</Tab>
 						</TabList>
 
-						{/* ファイル */}
 						<TabPanel className='tab panel tab-file'>
 							<FileEditor configuration={configuration} editorData={editorData} isVisible={selectedTabIndex === TabIndex.File} />
 						</TabPanel>
-						{/* ほんたい */}
+						{/* このアプリの本体 */}
 						<TabPanel className='tab panel tab-timeline' >
 							<TimelineEditor configuration={configuration} editorData={editorData} />
 						</TabPanel>
-						{/* 設定 */}
 						<TabPanel className='tab panel tab-setting'>
 							<SettingEditor configuration={configuration} editData={editorData} />
 						</TabPanel>

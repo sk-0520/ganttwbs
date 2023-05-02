@@ -12,13 +12,14 @@ export interface Locale {
 		enabled: string,
 		disabled: string,
 
-		download: string,
-		upload: string,
-		copy: string,
-
 		command: {
 			add: string,
 			remove: string,
+
+			download: string,
+			upload: string,
+
+			copy: string,
 		},
 
 		dialog: {
@@ -133,6 +134,28 @@ export interface Locale {
 					unknownError: string,
 				}
 			},
+			timelines: {
+				controls: {
+					move: {
+						title: string,
+						up: string,
+						down: string,
+						parent: string,
+					},
+					add: {
+						title: string,
+						group: string,
+						task: string,
+						import: string,
+					},
+					others: {
+						title: string,
+						setting: string,
+					},
+				}
+			},
+			// views: {
+			// },
 		},
 		setting: {
 			tabs: {

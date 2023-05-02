@@ -7,13 +7,14 @@ const locale: Locale = {
 		enabled: "有効",
 		disabled: "無効",
 
-		download: "ダウンロード",
-		upload: "アップロード",
-		copy: "コピー",
-
 		command: {
 			add: "追加",
 			remove: "削除",
+
+			download: "ダウンロード",
+			upload: "アップロード",
+
+			copy: "コピー",
 		},
 
 		dialog: {
@@ -136,7 +137,27 @@ const locale: Locale = {
 					recursiveError: "反復計算エラー",
 					unknownError: "エラー",
 				}
-			}
+			},
+			timelines: {
+				controls: {
+					move: {
+						title: "移動",
+						up: "上へ",
+						down: "下へ",
+						parent: "下げる",
+					},
+					add: {
+						title: "追加",
+						group: "グループ",
+						task: "タスク",
+						import: "追加",
+					},
+					others: {
+						title: "その他",
+						setting: "詳細設定",
+					},
+				}
+			},
 		},
 
 		setting: {
