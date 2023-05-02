@@ -7,6 +7,7 @@ import FileEditor from "@/components/elements/pages/editor/file/FileEditor";
 import SettingEditor from "@/components/elements/pages/editor/setting/SettingEditor";
 import TimelineEditor from "@/components/elements/pages/editor/timeline/TimelineEditor";
 import Layout from "@/components/layout/Layout";
+import { useLocale } from "@/locales/locale";
 import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
 import { Storages } from "@/models/Storages";
@@ -19,6 +20,7 @@ const enum TabIndex {
 }
 
 const EditorPage: NextPage = () => {
+	const locale = useLocale();
 	const router = useRouter();
 
 	const [configuration] = useState(createConfiguration());
@@ -39,8 +41,10 @@ const EditorPage: NextPage = () => {
 	}, [router]);
 
 	return (
-		<Layout mode='application' layoutId='editor'
-			title={editorData ? editorData.fileName + " 編集" : "編集"}
+		<Layout
+			mode='application'
+			layoutId='editor'
+			title={(editorData ? editorData.fileName + " " : "") + locale.page.editor}
 		>
 			<>
 				{!editorData && <p>読み込み中</p>}

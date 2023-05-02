@@ -226,13 +226,19 @@ const FileEditor: FC<Props> = (props: Props) => {
 			<dd>
 				<ul>
 					<li>
-						<Link href="/">トップ</Link>
+						<Link href="/">
+							{locale.page.top}
+						</Link>
 					</li>
 					<li>
-						<Link href="/new">新規</Link>
+						<Link href="/new">
+							{locale.page.new}
+						</Link>
 					</li>
 					<li>
-						<Link href="/load">読み込み</Link>
+						<Link href="/load">
+							{locale.page.load}
+						</Link>
 					</li>
 				</ul>
 			</dd>

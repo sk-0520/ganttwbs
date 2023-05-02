@@ -27,6 +27,15 @@ export interface Locale {
 		}
 	},
 
+	page: {
+		top: string,
+		new: string,
+		load: string,
+		editor: string,
+		about: string,
+		aboutLibrary: string
+	},
+
 	editor: {
 		file: {
 			autoSave: {

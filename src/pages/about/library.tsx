@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 
 import Layout from "@/components/layout/Layout";
+import { useLocale } from "@/locales/locale";
 import license from "@/models/data/generator/license.json";
 
 interface License {
@@ -11,6 +12,8 @@ interface License {
 }
 
 const AboutLibraryPage: NextPage = () => {
+	const locale = useLocale();
+
 	const getKeys = <T extends object>(json: T): Array<keyof T> => Object.keys(json) as Array<keyof T>;
 	const licenseItems = getKeys(license).map(a => {
 		const value = license[a];
@@ -26,7 +29,11 @@ const AboutLibraryPage: NextPage = () => {
 	});
 
 	return (
-		<Layout title='ライブラリ' mode='page' layoutId='about-library'>
+		<Layout
+			mode='page'
+			layoutId='about-library'
+			title={locale.page.aboutLibrary}
+		>
 			<table className="license">
 				<thead>
 					<tr>

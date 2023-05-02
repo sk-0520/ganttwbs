@@ -1,7 +1,7 @@
 import { Arrays } from "@/models/Arrays";
-import { IdFactory } from "@/models/IdFactory";
 import { TimelineId } from "@/models/data/Setting";
 import { TotalSuccessWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind, SuccessTimelineIdRange } from "@/models/data/WorkRange";
+import { IdFactory } from "@/models/IdFactory";
 
 export class WorkRanges {
 

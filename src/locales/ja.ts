@@ -39,6 +39,15 @@ const locale: Locale = {
 		}
 	},
 
+	page: {
+		top: "トップ",
+		new: "新規",
+		load: "読み込み",
+		editor: "編集",
+		about: "なにこれ？",
+		aboutLibrary: "ライブラリ",
+	},
+
 	editor: {
 		file: {
 			autoSave: {

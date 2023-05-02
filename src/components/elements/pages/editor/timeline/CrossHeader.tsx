@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { IconKind, IconLabel } from "@/components/elements/Icon";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import Timestamp from "@/components/elements/Timestamp";
+import locale from "@/locales/ja";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
@@ -16,7 +17,6 @@ import { IdFactory } from "@/models/IdFactory";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
-import locale from "@/locales/ja";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 	//nop
