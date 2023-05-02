@@ -53,6 +53,20 @@ const locale: Locale = {
 		},
 
 		timeline: {
+			header: {
+				columns: {
+					id: "ID",
+					subject: "作業",
+					workload: "工数",
+					resource: "割当",
+					relation: "💩",
+					workRangeFrom: "開始",
+					workRangeTo: "終了",
+					workRangeError: "あかん",
+					progress: "進捗率",
+					controls: "操作",
+				},
+			},
 			workRange: {
 				kind: {
 					loading: "読み込み中",

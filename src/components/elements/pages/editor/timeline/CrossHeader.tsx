@@ -16,6 +16,7 @@ import { IdFactory } from "@/models/IdFactory";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
+import locale from "@/locales/ja";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 	//nop
@@ -179,24 +180,41 @@ const CrossHeader: FC<Props> = (props: Props) => {
 			<div className="footer">
 				<div className='timeline-header header'>
 					<div className='timeline-header tooltips'>
-						<div className='timeline-cell timeline-id' />
-						<div className='timeline-cell timeline-subject' />
-						<div className='timeline-cell timeline-workload'>
+						<div className='timeline-cell timeline-id'>
+							{locale.editor.timeline.header.columns.id}
+						</div>
+						<div className='timeline-cell timeline-subject'>
+							{locale.editor.timeline.header.columns.subject}
+						</div>
+						<div
+							className='timeline-cell timeline-workload'
+							title={locale.editor.timeline.header.columns.workload}
+						>
 							{workload}
 						</div>
-						<div className='timeline-cell timeline-resource' />
-						<div className="timeline-cell timeline-relation" />
+						<div className='timeline-cell timeline-resource'>
+							{locale.editor.timeline.header.columns.resource}
+						</div>
+						<div className="timeline-cell timeline-relation">
+							{locale.editor.timeline.header.columns.relation}
+						</div>
 						{
 							workRangeKind === WorkRangeKind.Success
 								? (
 									<>
-										<div className='timeline-cell timeline-range-from'>
+										<div
+											className='timeline-cell timeline-range-from'
+											title={locale.editor.timeline.header.columns.workRangeFrom}
+										>
 											<Timestamp
 												date={beginDate}
 												format="date"
 											/>
 										</div>
-										<div className='timeline-cell timeline-range-to'>
+										<div
+											className='timeline-cell timeline-range-to'
+											title={locale.editor.timeline.header.columns.workRangeTo}
+										>
 											<Timestamp
 												date={endDate}
 												format="date"
@@ -206,42 +224,47 @@ const CrossHeader: FC<Props> = (props: Props) => {
 								) :
 								(
 									<div className='timeline-cell timeline-range-area'>
-										あかん
+										{locale.editor.timeline.header.columns.workRangeError}
 									</div>
 								)
 						}
-						<div className='timeline-cell timeline-progress'>
+						<div
+							className='timeline-cell timeline-progress'
+							title={locale.editor.timeline.header.columns.progress}
+						>
 							{Timelines.displayProgress(progress)}%
 						</div>
-						<div className='timeline-cell timeline-controls' />
+						<div className='timeline-cell timeline-controls'>
+							{locale.editor.timeline.header.columns.controls}
+						</div>
 					</div>
 
 					<div className='timeline-cell timeline-id'>
-						ID
+						{locale.editor.timeline.header.columns.id}
 					</div>
 					<div className='timeline-cell timeline-subject'>
-						作業
+						{locale.editor.timeline.header.columns.subject}
 					</div>
 					<div className='timeline-cell timeline-workload'>
-						工数
+						{locale.editor.timeline.header.columns.workload}
 					</div>
 					<div className='timeline-cell timeline-resource'>
-						割当
+						{locale.editor.timeline.header.columns.resource}
 					</div>
 					<div className="timeline-cell timeline-relation">
-						💩
+						{locale.editor.timeline.header.columns.relation}
 					</div>
 					<div className='timeline-cell timeline-range-from'>
-						開始
+						{locale.editor.timeline.header.columns.workRangeFrom}
 					</div>
 					<div className='timeline-cell timeline-range-to'>
-						終了
+						{locale.editor.timeline.header.columns.workRangeTo}
 					</div>
 					<div className='timeline-cell timeline-progress'>
-						進捗率
+						{locale.editor.timeline.header.columns.progress}
 					</div>
 					<div className='timeline-cell timeline-controls'>
-						操作
+						{locale.editor.timeline.header.columns.controls}
 					</div>
 				</div>
 			</div>
