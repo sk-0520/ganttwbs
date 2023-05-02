@@ -13,7 +13,7 @@ import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
 import { Settings } from "@/models/Settings";
-import { Timelines } from "@/models/Timelines";
+import { TimelineIdOrObject, Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
@@ -73,20 +73,19 @@ const CrossHeader: FC<Props> = (props: Props) => {
 		setVisibleTimelinesImportDialog(true);
 	}
 
-	function scrollView(date: DateTime): void {
+	function scrollView(timeline: TimelineIdOrObject | undefined, date: DateTime | undefined): void {
 		const mainContentElement = document.querySelector(".tab-timeline");
-		if(!mainContentElement) {
+		if (!mainContentElement) {
 			return;
 		}
 
-		const daysId = Timelines.toDaysId(date);
-		const targetDaysElement = document.getElementById(daysId);
+		const columnElement = date ? document.getElementById(Timelines.toDaysId(date)) : undefined;
+		const rowElement = timeline ? document.getElementById(Timelines.toRowId(timeline)) : undefined;
 
-		if (targetDaysElement) {
-			mainContentElement.scrollTo({
-				left: targetDaysElement?.offsetLeft
-			});
-		}
+		mainContentElement.scrollTo({
+			left: columnElement?.offsetLeft,
+			top: rowElement?.offsetTop,
+		});
 	}
 
 	function handleInputTimelines(timeline: GroupTimeline | null) {
@@ -98,20 +97,20 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	function handleClickNavigateToday(): void {
-		scrollView(DateTime.today(props.calendarInfo.timeZone));
+		scrollView(undefined, DateTime.today(props.calendarInfo.timeZone));
 	}
 
 	function handleClickNavigatePrev(): void {
 		const range = WorkRanges.getSuccessTimelineIdRange(props.timelineStore.workRanges);
 		if (range.begin) {
-			scrollView(range.begin.workRange.begin);
+			scrollView(range.begin.timelineId, range.begin.workRange.begin);
 		}
 	}
 
 	function handleClickNavigateNext(): void {
 		const range = WorkRanges.getSuccessTimelineIdRange(props.timelineStore.workRanges);
 		if (range.end) {
-			scrollView(range.end.workRange.begin);
+			scrollView(range.end.timelineId, range.end.workRange.begin);
 		}
 	}
 

@@ -6,6 +6,7 @@ import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
+import { Timelines } from "@/models/Timelines";
 
 interface Props {
 	level: number;
@@ -47,6 +48,7 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 
 	return (
 		<tr
+			id={Timelines.toRowId(props.currentTimeline)}
 			className={
 				classNames(
 					props.currentTimeline.kind,
