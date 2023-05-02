@@ -1,4 +1,6 @@
-import { TotalSuccessWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
+import { Arrays } from "@/models/Arrays";
+import { TimelineId } from "@/models/data/Setting";
+import { TotalSuccessWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind, SuccessTimelineIdRange } from "@/models/data/WorkRange";
 
 export class WorkRanges {
 
@@ -26,6 +28,23 @@ export class WorkRanges {
 		];
 
 		return errorKinds.includes(workRange.kind);
+	}
+
+	public static getSuccessTimelineIdRange(workRanges: ReadonlyMap<TimelineId, Readonly<WorkRange>>): SuccessTimelineIdRange {
+		const successPairs = [...workRanges]
+			.filter(([k, v]) => this.maybeSuccessWorkRange(v))
+			.map(([k, v]) => ({ timelineId: k, workRange: v as SuccessWorkRange }))
+			;
+
+		const begins = [...successPairs].sort((a, b) => a.workRange.begin.compare(b.workRange.begin));
+		const ends = [...successPairs].sort((a, b) => a.workRange.end.compare(b.workRange.end));
+
+		const result: SuccessTimelineIdRange = {
+			begin: begins.length ? begins[0] : undefined,
+			end: ends.length ? Arrays.last(ends) : undefined,
+		};
+
+		return result;
 	}
 
 	public static getTotalSuccessWorkRange(items: ReadonlyArray<SuccessWorkRange>): TotalSuccessWorkRange {

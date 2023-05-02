@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 
-import { IconImage, IconKind } from "@/components/elements/Icon";
+import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import Timestamp from "@/components/elements/Timestamp";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
@@ -73,13 +73,18 @@ const CrossHeader: FC<Props> = (props: Props) => {
 		setVisibleTimelinesImportDialog(true);
 	}
 
-	function scrollFromDate(date: DateTime): void {
-		const daysId = Timelines.toDaysId(date);
-		const targetElement = document.getElementById(daysId);
+	function scrollView(date: DateTime): void {
 		const mainContentElement = document.querySelector(".tab-timeline");
-		if (targetElement && mainContentElement) {
+		if(!mainContentElement) {
+			return;
+		}
+
+		const daysId = Timelines.toDaysId(date);
+		const targetDaysElement = document.getElementById(daysId);
+
+		if (targetDaysElement) {
 			mainContentElement.scrollTo({
-				left: targetElement.offsetLeft
+				left: targetDaysElement?.offsetLeft
 			});
 		}
 	}
@@ -90,6 +95,24 @@ const CrossHeader: FC<Props> = (props: Props) => {
 		}
 
 		setVisibleTimelinesImportDialog(false);
+	}
+
+	function handleClickNavigateToday(): void {
+		scrollView(DateTime.today(props.calendarInfo.timeZone));
+	}
+
+	function handleClickNavigatePrev(): void {
+		const range = WorkRanges.getSuccessTimelineIdRange(props.timelineStore.workRanges);
+		if (range.begin) {
+			scrollView(range.begin.workRange.begin);
+		}
+	}
+
+	function handleClickNavigateNext(): void {
+		const range = WorkRanges.getSuccessTimelineIdRange(props.timelineStore.workRanges);
+		if (range.end) {
+			scrollView(range.end.workRange.begin);
+		}
 	}
 
 	return (
@@ -135,12 +158,32 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						</li>
 						<li>
 							<button
-								onClick={ev => scrollFromDate(DateTime.today(props.calendarInfo.timeZone))}
+								onClick={ev => handleClickNavigatePrev()}
 							>
 								<IconImage
-									kind={IconKind.CalendarToday}
+									kind={IconKind.NavigatePrev}
+									title="最初"
 								/>
-								けふ
+							</button>
+						</li>
+						<li>
+							<button
+								onClick={ev => handleClickNavigateToday()}
+							>
+								<IconLabel
+									kind={IconKind.CalendarToday}
+									label="けふ"
+								/>
+							</button>
+						</li>
+						<li>
+							<button
+								onClick={ev => handleClickNavigateNext()}
+							>
+								<IconImage
+									kind={IconKind.NavigateNext}
+									title="最後"
+								/>
 							</button>
 						</li>
 					</ul>
@@ -225,3 +268,5 @@ const CrossHeader: FC<Props> = (props: Props) => {
 };
 
 export default CrossHeader;
+
+

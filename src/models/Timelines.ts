@@ -24,6 +24,10 @@ export abstract class Timelines {
 		return typeof timeline === "string" ? timeline : timeline.id;
 	}
 
+	public static toRowId(timeline: TimeLineIdOrObject): string {
+		return "timeline-row-" + this.getId(timeline);
+	}
+
 	public static toNodePreviousId(timeline: TimeLineIdOrObject): string {
 		return "timeline-node-previous-" + this.getId(timeline);
 	}

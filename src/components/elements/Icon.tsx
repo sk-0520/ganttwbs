@@ -3,6 +3,7 @@ import { IconBaseProps } from "react-icons";
 import * as Md from "react-icons/md";
 
 import { Types } from "@/models/Types";
+import classNames from "classnames";
 
 // 基本的に Material Design icons を使用する
 // https://react-icons.github.io/react-icons/icons?name=md
@@ -27,6 +28,9 @@ export const enum IconKind {
 	MoveDown,
 	MovePrev,
 	MoveNext,
+
+	NavigatePrev,
+	NavigateNext,
 
 	CalendarToday,
 
@@ -61,6 +65,9 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.MoveDown]: (props) => <Md.MdArrowDownward {...convertParameter(props)} />,
 	[IconKind.MovePrev]: (props) => <Md.MdArrowBack {...convertParameter(props)} />,
 	[IconKind.MoveNext]: (props) => <Md.MdArrowForward {...convertParameter(props)} />,
+
+	[IconKind.NavigatePrev]: (props) => <Md.MdNavigateBefore {...convertParameter(props)} />,
+	[IconKind.NavigateNext]: (props) => <Md.MdNavigateNext {...convertParameter(props)} />,
 
 	[IconKind.CalendarToday]: (props) => <Md.MdToday {...convertParameter(props)} />,
 
@@ -129,5 +136,35 @@ export const IconImage: FC<Props> = (props: Props) => {
 		</span>
 	);
 };
+
+interface LabelProps extends Props {
+	className?: string;
+	direction?: "inline" | "block";
+	label: string;
+}
+
+export const IconLabel: FC<LabelProps> = (props: LabelProps) => {
+	return (
+		<div
+			className={
+				classNames(
+					"icon-label-wrapper",
+					props.className,
+					props.direction ?? "inline"
+				)
+			}
+		>
+			<IconImage {...props} />
+			<span
+				className="label"
+				title={props.title}
+			>
+				{props.label}
+			</span>
+		</div>
+	);
+};
+
+
 
 

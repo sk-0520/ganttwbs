@@ -1,3 +1,16 @@
 .icon {
 	vertical-align: middle;
 }
+
+.icon-label-wrapper {
+	display: flex;
+	align-items: center;
+
+	&.inline {
+		flex-direction: row;
+	}
+
+	&.block {
+		flex-direction: column;
+	}
+}

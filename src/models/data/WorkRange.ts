@@ -1,4 +1,4 @@
-import { AnyTimeline } from "@/models/data/Setting";
+import { AnyTimeline, TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 
 /**
@@ -54,4 +54,14 @@ export interface SuccessWorkRange extends WorkRange {
 export interface TotalSuccessWorkRange {
 	minimum: SuccessWorkRange;
 	maximum: SuccessWorkRange;
+}
+
+export interface SuccessTimelineId {
+	timelineId: TimelineId;
+	workRange: SuccessWorkRange;
+}
+
+export interface SuccessTimelineIdRange {
+	begin: SuccessTimelineId | undefined;
+	end: SuccessTimelineId | undefined;
 }
