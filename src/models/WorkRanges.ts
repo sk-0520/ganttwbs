@@ -50,8 +50,8 @@ export class WorkRanges {
 	}
 
 	public static getTotalSuccessWorkRange(items: ReadonlyArray<SuccessWorkRange>): TotalSuccessWorkRange {
-		const minItems = [...items].sort((a, b) => a.begin.getTime() - b.begin.getTime());
-		const maxItems = [...items].sort((a, b) => a.end.getTime() - b.end.getTime());
+		const minItems = [...items].sort((a, b) => a.begin.compare(b.begin));
+		const maxItems = [...items].sort((a, b) => a.end.compare(b.end));
 
 		const result: TotalSuccessWorkRange = {
 			minimum: minItems[0],
@@ -62,7 +62,7 @@ export class WorkRanges {
 	}
 
 	public static maxByEndDate(items: ReadonlyArray<SuccessWorkRange>): SuccessWorkRange {
-		const sortedItems = [...items].sort((a, b) => a.end.getTime() - b.end.getTime());
+		const sortedItems = [...items].sort((a, b) => a.end.compare(b.end));
 		return sortedItems[sortedItems.length - 1];
 	}
 
