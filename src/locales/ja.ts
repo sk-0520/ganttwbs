@@ -4,6 +4,12 @@ const locale: Locale = {
 	language: "日本語",
 
 	common: {
+		enabled: "有効",
+		disabled: "無効",
+
+		download: "ダウンロード",
+		upload: "アップロード",
+		copy: "コピー",
 
 		command: {
 			add: "追加",
@@ -64,15 +70,36 @@ const locale: Locale = {
 		loading: "なうろ",
 
 		file: {
-			autoSave: {
-				storage: {
-					kind: "ストレージ",
+			save: {
+				title: "保存設定",
+				fileName: "ファイル名",
+
+				auto: {
+					title: "自動保存",
+
+					columns: {
+						kind: "対象",
+						enabled: "実施",
+						span: "間隔(分)",
+						last: "前回",
+						next: "次回",
+					},
+
+					storage: {
+						kind: "ストレージ",
+					},
+					download: {
+						kind: "ダウンロード",
+						fileNameFormat: "${ORIGINAL_NAME}(自動保存-${TIMESTAMP}).${ORIGINAL_EXT}"
+					},
 				},
-				download: {
-					kind: "ダウンロード",
-					fileNameFormat: "${ORIGINAL_NAME}(自動保存-${TIMESTAMP}).${ORIGINAL_EXT}"
+
+				export: {
+					title: "出力",
 				},
-			}
+			},
+
+			byebye: "さいなら",
 		},
 
 		timeline: {

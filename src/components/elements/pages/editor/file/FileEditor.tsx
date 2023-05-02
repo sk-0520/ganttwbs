@@ -90,7 +90,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 
 		autoSaveDownloadIntervalId.current = window.setInterval(() => {
 			const now = DateTime.today(TimeZone.getClientTimeZone());
-			const autoSaveName = formatAutoDownloadFileName(fileName, locale.editor.file.autoSave.download.fileNameFormat, now);
+			const autoSaveName = formatAutoDownloadFileName(fileName, locale.editor.file.save.auto.download.fileNameFormat, now);
 			downloadJson(autoSaveName, editorData.setting);
 			setAutoSaveDownloadLastTime(now);
 			setAutoSaveDownloadNextTime(now.add(autoSaveDownloadTime));
@@ -146,10 +146,14 @@ const FileEditor: FC<Props> = (props: Props) => {
 
 	return (
 		<dl className='inputs'>
-			<dt>設定</dt>
+			<dt>
+				{locale.editor.file.save.title}
+			</dt>
 			<dd>
 				<dl className="inputs">
-					<dt>ファイル名</dt>
+					<dt>
+						{locale.editor.file.save.fileName}
+					</dt>
 					<dd>
 						<input
 							type="text"
@@ -158,16 +162,28 @@ const FileEditor: FC<Props> = (props: Props) => {
 						/>
 					</dd>
 
-					<dt>自動保存</dt>
+					<dt>
+						{locale.editor.file.save.auto.title}
+					</dt>
 					<dd>
 						<table className="auto-save">
 							<thead>
 								<tr>
-									<th className="kind-cell">自動保存方法</th>
-									<th className="enabled-cell">定期実施</th>
-									<th className="span-cell">実施間隔(分)</th>
-									<th className="last-time-cell">前回</th>
-									<th className="next-time-cell">次回</th>
+									<th className="kind-cell">
+										{locale.editor.file.save.auto.columns.kind}
+									</th>
+									<th className="enabled-cell">
+										{locale.editor.file.save.auto.columns.enabled}
+									</th>
+									<th className="span-cell">
+										{locale.editor.file.save.auto.columns.span}
+									</th>
+									<th className="last-time-cell">
+										{locale.editor.file.save.auto.columns.last}
+									</th>
+									<th className="next-time-cell">
+										{locale.editor.file.save.auto.columns.next}
+									</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -202,11 +218,21 @@ const FileEditor: FC<Props> = (props: Props) => {
 				</dl>
 			</dd>
 
-			<dt>出力</dt>
+			<dt>
+				{locale.editor.file.save.export.title}
+			</dt>
 			<dd>
 				<ul className="inline">
-					<li><button onClick={handleDownload}>DOWNLOAD</button></li>
-					<li><button onClick={handleJsonCopy}>copy</button></li>
+					<li>
+						<button onClick={handleDownload}>
+							{locale.common.download}
+						</button>
+					</li>
+					<li>
+						<button onClick={handleJsonCopy}>
+							{locale.common.copy}
+						</button>
+					</li>
 				</ul>
 			</dd>
 			<dd>
@@ -222,7 +248,9 @@ const FileEditor: FC<Props> = (props: Props) => {
 				/>
 			</dd>
 
-			<dt>さいなら</dt>
+			<dt>
+				{locale.editor.file.byebye}
+			</dt>
 			<dd>
 				<ul>
 					<li>

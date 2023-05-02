@@ -9,6 +9,13 @@ export interface Locale {
 	language: string,
 	/** 共通項目 */
 	common: {
+		enabled: string,
+		disabled: string,
+
+		download: string,
+		upload: string,
+		copy: string,
+
 		command: {
 			add: string,
 			remove: string,
@@ -52,24 +59,44 @@ export interface Locale {
 		loading: string,
 
 		file: {
-			autoSave: {
-				storage: {
-					kind: string,
+			save: {
+				title: string,
+				fileName: string,
+
+				auto: {
+					title: string,
+
+					columns: {
+						kind: string,
+						enabled: string,
+						span: string,
+						last: string,
+						next: string,
+					},
+
+					storage: {
+						kind: string,
+					},
+					download: {
+						kind: string,
+						/**
+						 * 自動ダウンロードで使用するファイル名。
+						 *
+						 * 以下プレースホルダーの置き換えが行われる。
+						 * * ORIGINAL
+						 * * ORIGINAL_NAME
+						 * * ORIGINAL_EXT
+						 * * TIMESTAMP
+						 */
+						fileNameFormat: string,
+					}
 				},
-				download: {
-					kind: string,
-					/**
-					 * 自動ダウンロードで使用するファイル名。
-					 *
-					 * 以下プレースホルダーの置き換えが行われる。
-					 * * ORIGINAL
-					 * * ORIGINAL_NAME
-					 * * ORIGINAL_EXT
-					 * * TIMESTAMP
-					 */
-					fileNameFormat: string,
-				}
-			}
+
+				export: {
+					title: string,
+				},
+			},
+			byebye: string
 		},
 		timeline: {
 			header: {
