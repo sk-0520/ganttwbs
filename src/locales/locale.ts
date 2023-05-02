@@ -50,6 +50,14 @@ export interface Locale {
 		},
 		timeline: {
 			header: {
+				operations: {
+					addNewGroupTimeline: string,
+					addNewTaskTimeline: string,
+					importTimelines: string,
+					navigateFirst: string,
+					navigateToday: string,
+					navigateLast: string,
+				},
 				columns: {
 					id: string,
 					subject: string,

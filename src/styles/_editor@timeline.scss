@@ -94,6 +94,14 @@ $viewer-z-index: 2;
 		}
 		.content {
 			flex: content;
+
+			.inline {
+				hr {
+					display: block;
+					width: 1em;
+					visibility: hidden;
+				}
+			}
 		}
 		.footer {
 			.timeline-header {

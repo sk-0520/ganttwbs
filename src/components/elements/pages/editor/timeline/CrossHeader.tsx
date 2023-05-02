@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 
-import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
+import { IconKind, IconLabel } from "@/components/elements/Icon";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import Timestamp from "@/components/elements/Timestamp";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
@@ -116,10 +116,10 @@ const CrossHeader: FC<Props> = (props: Props) => {
 								type='button'
 								onClick={handleAddEmptyGroup}
 							>
-								<IconImage
+								<IconLabel
 									kind={IconKind.TimelineAddGroup}
+									label={locale.editor.timeline.header.operations.addNewGroupTimeline}
 								/>
-								add new group
 							</button>
 						</li>
 						<li>
@@ -127,10 +127,10 @@ const CrossHeader: FC<Props> = (props: Props) => {
 								type='button'
 								onClick={handleAddEmptyTask}
 							>
-								<IconImage
+								<IconLabel
 									kind={IconKind.TimelineAddTask}
+									label={locale.editor.timeline.header.operations.addNewTaskTimeline}
 								/>
-								add new task
 							</button>
 						</li>
 						<li>
@@ -138,19 +138,22 @@ const CrossHeader: FC<Props> = (props: Props) => {
 								type='button'
 								onClick={handleShowInputTimeline}
 							>
-								<IconImage
+								<IconLabel
 									kind={IconKind.TimelineImport}
+									label={locale.editor.timeline.header.operations.importTimelines}
 								/>
-								add timelines
 							</button>
+						</li>
+						<li>
+							<hr />
 						</li>
 						<li>
 							<button
 								onClick={ev => handleClickNavigatePrev()}
 							>
-								<IconImage
+								<IconLabel
 									kind={IconKind.NavigatePrev}
-									title="最初"
+									label={locale.editor.timeline.header.operations.navigateFirst}
 								/>
 							</button>
 						</li>
@@ -160,7 +163,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 							>
 								<IconLabel
 									kind={IconKind.CalendarToday}
-									label="けふ"
+									label={locale.editor.timeline.header.operations.navigateToday}
 								/>
 							</button>
 						</li>
@@ -168,9 +171,10 @@ const CrossHeader: FC<Props> = (props: Props) => {
 							<button
 								onClick={ev => handleClickNavigateNext()}
 							>
-								<IconImage
+								<IconLabel
 									kind={IconKind.NavigateNext}
-									title="最後"
+									direction="right"
+									label={locale.editor.timeline.header.operations.navigateLast}
 								/>
 							</button>
 						</li>

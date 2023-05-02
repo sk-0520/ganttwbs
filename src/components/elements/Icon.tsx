@@ -139,7 +139,7 @@ export const IconImage: FC<Props> = (props: Props) => {
 
 interface LabelProps extends Props {
 	className?: string;
-	direction?: "inline" | "block";
+	direction?: "left"| "right" | "bottom";
 	label: string;
 }
 
@@ -150,7 +150,7 @@ export const IconLabel: FC<LabelProps> = (props: LabelProps) => {
 				classNames(
 					"icon-label-wrapper",
 					props.className,
-					props.direction ?? "inline"
+					props.direction ?? "left"
 				)
 			}
 		>

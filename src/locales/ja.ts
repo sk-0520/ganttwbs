@@ -54,6 +54,14 @@ const locale: Locale = {
 
 		timeline: {
 			header: {
+				operations: {
+					addNewGroupTimeline: "グループ追加",
+					addNewTaskTimeline: "タスク追加",
+					importTimelines: "タイムライン追加",
+					navigateFirst: "先頭",
+					navigateToday: "けふ",
+					navigateLast: "最終",
+				},
 				columns: {
 					id: "ID",
 					subject: "作業",
