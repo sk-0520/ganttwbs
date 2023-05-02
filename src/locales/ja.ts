@@ -139,6 +139,18 @@ const locale: Locale = {
 				}
 			},
 			timelines: {
+				range: {
+					immediate: {
+						title: "即時実行",
+						attachBeforeTimeline: "直近項目に紐づける",
+					},
+					continue: {
+						title: "継続実行",
+						attachBeforeTimeline: "直近項目に紐づける",
+						clearRelation: "紐づけを解除",
+						clearDate: "固定日付を解除",
+					},
+				},
 				controls: {
 					move: {
 						title: "移動",

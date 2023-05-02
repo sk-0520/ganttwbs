@@ -135,6 +135,18 @@ export interface Locale {
 				}
 			},
 			timelines: {
+				range: {
+					immediate: {
+						title: string,
+						attachBeforeTimeline: string,
+					},
+					continue: {
+						title: string,
+						attachBeforeTimeline: string,
+						clearRelation: string,
+						clearDate: string,
+					},
+				},
 				controls: {
 					move: {
 						title: string,
