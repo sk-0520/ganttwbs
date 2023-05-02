@@ -14,6 +14,12 @@ export interface Locale {
 			remove: string,
 		},
 
+		dialog: {
+			submit: string,
+			cancel: string,
+			close: string,
+		},
+
 		calendar: {
 			week: {
 				name: string,
@@ -24,7 +30,7 @@ export interface Locale {
 			format: {
 				yearMonth: string,
 			},
-		}
+		},
 	},
 
 	page: {

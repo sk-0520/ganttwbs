@@ -10,6 +10,12 @@ const locale: Locale = {
 			remove: "削除",
 		},
 
+		dialog: {
+			submit: "OK",
+			cancel: "キャンセル",
+			close: "閉じる",
+		},
+
 		calendar: {
 			week: {
 				name: "曜日",
@@ -36,7 +42,7 @@ const locale: Locale = {
 			format: {
 				yearMonth: "yyyy/MM"
 			}
-		}
+		},
 	},
 
 	page: {
