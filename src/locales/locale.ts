@@ -43,6 +43,14 @@ export interface Locale {
 	},
 
 	editor: {
+		tabs: {
+			file: string,
+			timeline: string,
+			setting: string,
+		},
+
+		loading: string,
+
 		file: {
 			autoSave: {
 				storage: {
@@ -98,7 +106,15 @@ export interface Locale {
 					unknownError: string,
 				}
 			},
-		}
+		},
+		setting: {
+			tabs: {
+				general: string,
+				resource: string,
+				calendar: string,
+				theme: string,
+			}
+		},
 	},
 
 	styles: {

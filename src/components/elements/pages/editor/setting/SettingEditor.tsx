@@ -20,6 +20,7 @@ import { IdFactory } from "@/models/IdFactory";
 import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
 import { TimeZone } from "@/models/TimeZone";
+import { useLocale } from "@/locales/locale";
 
 const NewLine = "\r\n";
 
@@ -28,6 +29,8 @@ interface Props extends ConfigurationProps {
 }
 
 const SettingEditor: FC<Props> = (props: Props) => {
+	const locale = useLocale();
+
 	const setting = toContext(props.configuration, props.editData.setting);
 
 	function handleSubmit(event: FormEvent) {
@@ -46,10 +49,18 @@ const SettingEditor: FC<Props> = (props: Props) => {
 			<form onSubmit={handleSubmit}>
 				<Tabs defaultIndex={props.configuration.tabIndex.setting} forceRenderTabPanel={true}>
 					<TabList>
-						<Tab>基本</Tab>
-						<Tab>リソース</Tab>
-						<Tab>カレンダー</Tab>
-						<Tab>テーマ</Tab>
+						<Tab>
+							{locale.editor.setting.tabs.general}
+						</Tab>
+						<Tab>
+							{locale.editor.setting.tabs.resource}
+						</Tab>
+						<Tab>
+							{locale.editor.setting.tabs.calendar}
+						</Tab>
+						<Tab>
+							{locale.editor.setting.tabs.theme}
+						</Tab>
 					</TabList>
 
 					<TabPanel className='setting-tab-item general'>

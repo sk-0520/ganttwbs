@@ -47,7 +47,7 @@ const EditorPage: NextPage = () => {
 			title={(editorData ? editorData.fileName + " " : "") + locale.page.editor}
 		>
 			<>
-				{!editorData && <p>読み込み中</p>}
+				{!editorData && <p>{locale.editor.loading}</p>}
 				{editorData && (
 					<Tabs
 						defaultIndex={selectedTabIndex}
@@ -55,9 +55,15 @@ const EditorPage: NextPage = () => {
 						onSelect={handleOnSelect}
 					>
 						<TabList>
-							<Tab>ファイル</Tab>
-							<Tab>編集</Tab>
-							<Tab>設定</Tab>
+							<Tab>
+								{locale.editor.tabs.file}
+							</Tab>
+							<Tab>
+								{locale.editor.tabs.timeline}
+							</Tab>
+							<Tab>
+								{locale.editor.tabs.setting}
+							</Tab>
 						</TabList>
 
 						{/* ファイル */}

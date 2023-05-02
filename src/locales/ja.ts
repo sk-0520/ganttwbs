@@ -55,6 +55,14 @@ const locale: Locale = {
 	},
 
 	editor: {
+		tabs: {
+			file: "ファイル",
+			timeline: "タイムライン",
+			setting: "設定",
+		},
+
+		loading: "なうろ",
+
 		file: {
 			autoSave: {
 				storage: {
@@ -103,6 +111,16 @@ const locale: Locale = {
 				}
 			}
 		},
+
+		setting: {
+			tabs: {
+				general: "基本",
+				resource: "リソース",
+				calendar: "カレンダー",
+				theme: "テーマ",
+			}
+		}
+
 	},
 
 	styles: {
