@@ -26,6 +26,11 @@ const locale: Locale = {
 		calendar: {
 			timeZone: "タイムゾーン",
 
+			unit: {
+				month: "月",
+				day: "日",
+			},
+
 			week: {
 				name: "曜日",
 				long: {
@@ -48,9 +53,7 @@ const locale: Locale = {
 				},
 			},
 
-			format: {
-				yearMonth: "yyyy/MM"
-			}
+			yearMonthFormat: "yyyy/MM",
 		},
 	},
 
@@ -199,6 +202,34 @@ const locale: Locale = {
 				selectCurrentTimeZoneFormat: "現在のタイムゾーン(${TIMEZONE})"
 			},
 
+			resource: {
+				groupName: "グループ名",
+				choiceColor: "色を割り振り",
+				newGroup: "新規グループ",
+
+				columns: {
+					memberName: "要員名",
+					costFormat: "原価(${UNIT})",
+					salesFormat: "単価(${UNIT})",
+					theme: "テーマ",
+					rate: "売上率",
+				},
+
+				choiceColorDialog: {
+					title: "色選択",
+					baseColor: "基準色",
+					gradientColor: "グラデーション",
+					resetRandomColor: "ランダム再構築",
+
+					kinds: {
+						same: "同じ",
+						analogy: "類似",
+						monochrome: "モノクロ",
+						gradient: "グラデーション",
+						random: "ランダム",
+					},
+				}
+			},
 		}
 
 	},

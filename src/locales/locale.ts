@@ -31,15 +31,19 @@ export interface Locale {
 		calendar: {
 			timeZone: string,
 
+			unit: {
+				month: string,
+				day: string,
+			},
+
 			week: {
 				name: string,
 				long: { [key in WeekDay]: string },
 				short: { [key in WeekDay]: string },
 			},
 
-			format: {
-				yearMonth: string,
-			},
+			/** DateTime.format */
+			yearMonthFormat: string,
 		},
 	},
 
@@ -195,6 +199,42 @@ export interface Locale {
 				recursive: string,
 				selectCurrentTimeZoneFormat: string,
 			},
+
+			resource: {
+				groupName: string,
+				choiceColor: string,
+				newGroup: string,
+
+				columns: {
+					memberName: string,
+					/**
+					 * * UNIT
+					 */
+					costFormat: string,
+					/**
+					 * * UNIT
+					 */
+					salesFormat: string,
+					theme: string,
+					rate: string,
+				},
+
+				choiceColorDialog: {
+					title: string,
+					baseColor: string,
+					gradientColor: string,
+					resetRandomColor: string,
+
+					kinds: {
+						same: string,
+						analogy: string,
+						monochrome: string,
+						gradient: string,
+						random: string,
+					},
+				}
+			},
+
 		},
 	},
 

@@ -71,7 +71,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 			const year = a.year;
 			const month = a.month;
 
-			const display = a.date.format(locale.common.calendar.format.yearMonth);
+			const display = a.date.format(locale.common.calendar.yearMonthFormat);
 			const dateTime = `${year}-${month}`;
 
 			return (
