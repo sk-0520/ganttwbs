@@ -36,7 +36,7 @@ export abstract class DefaultSettings {
 	 */
 	public static getEventHolidayColors(): Record<HolidayKind, Color> {
 		return {
-			holiday: "#baffff",
+			normal: "#baffff",
 			special: "#baffba",
 		};
 	}
@@ -47,8 +47,7 @@ export abstract class DefaultSettings {
 
 	public static getTimelineTheme(): TimelineTheme {
 		const result: TimelineTheme = {
-			group: "#ff00ff",
-			defaultGroup: "#ff0000",
+			defaultGroup: "#ee00ee",
 			defaultTask: "#ffffba",
 			completed: "#000000"
 		};

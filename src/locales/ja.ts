@@ -286,9 +286,9 @@ const locale: Locale = {
 				timeline: {
 					title: "タイムライン",
 
-					notSetGroup: "未設定グループ",
-					notSetTask: "未設定タスク",
-					complete: "完了",
+					defaultGroup: "未設定グループ",
+					defaultTask: "未設定タスク",
+					completed: "完了",
 				},
 			},
 		}

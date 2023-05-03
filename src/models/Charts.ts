@@ -62,10 +62,9 @@ export abstract class Charts {
 			if (index in theme.groups) {
 				return theme.groups[index];
 			}
-			return theme.timeline.defaultGroup;
 		}
 
-		return theme.timeline.group;
+		return theme.timeline.defaultGroup;
 	}
 
 	public static getTaskBackground(timeline: TaskTimeline, memberMap: ReadonlyMap<MemberId, MemberGroupPair>, theme: Readonly<Theme>): string {

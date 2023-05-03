@@ -295,9 +295,9 @@ export interface Locale {
 				timeline: {
 					title: string,
 
-					notSetGroup: string,
-					notSetTask: string,
-					complete: string,
+					defaultGroup: string,
+					defaultTask: string,
+					completed: string,
 				},
 			},
 

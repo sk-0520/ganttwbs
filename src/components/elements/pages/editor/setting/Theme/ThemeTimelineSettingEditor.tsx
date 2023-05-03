@@ -11,15 +11,9 @@ const ThemeTimelineSettingEditor: FC = () => {
 	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
-	const [group, setGroup] = useState(settingContext.theme.timeline.group);
 	const [defaultGroup, setDefaultGroup] = useState(settingContext.theme.timeline.defaultGroup);
 	const [defaultTask, setDefaultTask] = useState(settingContext.theme.timeline.defaultTask);
 	const [completed, setCompleted] = useState(settingContext.theme.timeline.completed);
-
-	function handleChangeGroup(color: Color) {
-		setGroup(color);
-		settingContext.theme.timeline.group = color;
-	}
 
 	function handleChangeDefaultGroup(color: Color) {
 		setDefaultGroup(color);
@@ -39,7 +33,6 @@ const ThemeTimelineSettingEditor: FC = () => {
 	function handleReset() {
 		settingContext.theme.timeline = DefaultSettings.getTimelineTheme();
 
-		setGroup(settingContext.theme.timeline.group);
 		setDefaultGroup(settingContext.theme.timeline.defaultGroup);
 		setDefaultTask(settingContext.theme.timeline.defaultTask);
 		setCompleted(settingContext.theme.timeline.completed);
@@ -50,18 +43,8 @@ const ThemeTimelineSettingEditor: FC = () => {
 			<tbody>
 				<tr>
 					<td>
-						{locale.editor.setting.theme.timeline.notSetGroup}
+						{locale.editor.setting.theme.timeline.defaultGroup}
 					</td>
-					<td>
-						<PlainColorPicker
-							color={group}
-							callbackChanged={c => handleChangeGroup(c)}
-						/>
-					</td>
-				</tr>
-
-				<tr>
-					<td>グループライン</td>
 					<td>
 						<PlainColorPicker
 							color={defaultGroup}
@@ -72,7 +55,7 @@ const ThemeTimelineSettingEditor: FC = () => {
 
 				<tr>
 					<td>
-						{locale.editor.setting.theme.timeline.notSetTask}
+						{locale.editor.setting.theme.timeline.defaultTask}
 					</td>
 					<td>
 						<PlainColorPicker
@@ -84,7 +67,7 @@ const ThemeTimelineSettingEditor: FC = () => {
 
 				<tr>
 					<td>
-						{locale.editor.setting.theme.timeline.complete}
+						{locale.editor.setting.theme.timeline.completed}
 					</td>
 					<td>
 						<PlainColorPicker

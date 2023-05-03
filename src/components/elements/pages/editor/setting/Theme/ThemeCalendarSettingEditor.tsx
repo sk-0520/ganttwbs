@@ -22,7 +22,7 @@ const ThemeCalendarSettingEditor: FC = () => {
 		setHolidayRegulars(settingContext.theme.holiday.regulars = { ...holidayRegulars });
 	}
 
-	function handleSetHolidayEventColor(event: "holiday" | "special", color: Color) {
+	function handleSetHolidayEventColor(event: "normal" | "special", color: Color) {
 		settingContext.theme.holiday.events[event] = color;
 		setHolidayEvents({ ...holidayEvents });
 	}
@@ -109,8 +109,8 @@ const ThemeCalendarSettingEditor: FC = () => {
 					</td>
 					<td className="theme">
 						<PlainColorPicker
-							color={holidayEvents.holiday}
-							callbackChanged={c => handleSetHolidayEventColor("holiday", c)}
+							color={holidayEvents.normal}
+							callbackChanged={c => handleSetHolidayEventColor("normal", c)}
 						/>
 					</td>
 				</tr>

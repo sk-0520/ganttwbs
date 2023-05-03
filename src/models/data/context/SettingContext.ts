@@ -36,8 +36,8 @@ export interface CalendarSetting {
 	holiday: {
 		regulars: { [key in WeekDay]: boolean };
 		events: {
-			holidays: string;
-			specials: string;
+			normal: string;
+			special: string;
 		}
 	};
 }
@@ -46,13 +46,12 @@ export interface ThemeSetting {
 	holiday: {
 		regulars: { [key in WeekDay]: Color },
 		events: {
-			holiday: Color,
+			normal: Color,
 			special: Color,
 		}
 	};
 	groups: Array<{ key: UUID, value: Color }>;
 	timeline: {
-		group: Color;
 		defaultGroup: Color;
 		defaultTask: Color;
 		completed: Color;

@@ -25,7 +25,7 @@ const WeekDaySchema = z.enum([
 export type WeekDay = z.infer<typeof WeekDaySchema>;
 
 const HolidayKindSchema = z.enum([
-	"holiday",
+	"normal",
 	"special",
 ]);
 export type HolidayKind = z.infer<typeof HolidayKindSchema>;
@@ -171,7 +171,6 @@ const HolidayThemeSchema = z.object({
 export type HolidayTheme = z.infer<typeof HolidayThemeSchema>;
 
 const TimelineThemeSchema = z.object({
-	group: ColorSchema,
 	defaultGroup: ColorSchema,
 	defaultTask: ColorSchema,
 	completed: ColorSchema,

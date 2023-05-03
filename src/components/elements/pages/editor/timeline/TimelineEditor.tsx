@@ -613,7 +613,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 				...Arrays.range(1, design.programmable.group.maximum)
 					.map(level => {
 						const index = level - 1;
-						const backgroundColor = index in theme.groups ? theme.groups[index] : theme.timeline.group;
+						const backgroundColor = index in theme.groups ? theme.groups[index] : theme.timeline.defaultGroup;
 						const foregroundColor = Colors.getAutoColor(backgroundColor);
 
 						return {
@@ -640,7 +640,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 							// グラデーションの生成
 							const colors = new Array<string>();
 							for (let i = 0; i <= index; i++) {
-								const color = i in theme.groups ? theme.groups[i] : theme.timeline.group;
+								const color = i in theme.groups ? theme.groups[i] : theme.timeline.defaultGroup;
 								colors.push(color);
 							}
 							const gradients = colors

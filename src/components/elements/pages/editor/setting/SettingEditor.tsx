@@ -181,8 +181,8 @@ function toContext(configuration: Configuration, setting: Setting): SettingConte
 					sunday: setting.calendar.holiday.regulars.includes("sunday"),
 				},
 				events: {
-					holidays: toCalendarHolidayEventContext("holiday", setting.calendar.holiday.events, timeZone),
-					specials: toCalendarHolidayEventContext("special", setting.calendar.holiday.events, timeZone),
+					normal: toCalendarHolidayEventContext("normal", setting.calendar.holiday.events, timeZone),
+					special: toCalendarHolidayEventContext("special", setting.calendar.holiday.events, timeZone),
 				}
 			},
 		},
@@ -198,7 +198,7 @@ function toContext(configuration: Configuration, setting: Setting): SettingConte
 					sunday: setting.theme.holiday.regulars.sunday ?? colors.holiday.regular.get("sunday") ?? DefaultSettings.BusinessWeekdayColor,
 				},
 				events: {
-					holiday: setting.theme.holiday.events.holiday ?? colors.holiday.event.holiday,
+					normal: setting.theme.holiday.events.normal ?? colors.holiday.event.normal,
 					special: setting.theme.holiday.events.special ?? colors.holiday.event.special,
 				}
 			},
@@ -207,7 +207,6 @@ function toContext(configuration: Configuration, setting: Setting): SettingConte
 				value: a,
 			})),
 			timeline: {
-				group: setting.theme.timeline.group,
 				defaultGroup: setting.theme.timeline.defaultGroup,
 				defaultTask: setting.theme.timeline.defaultTask,
 				completed: setting.theme.timeline.completed,
@@ -263,8 +262,8 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 					{ week: "sunday", value: context.calendar.holiday.regulars.sunday },
 				]).filter(a => a.value).map(a => a.week),
 				events: {
-					...fromCalendarHolidayEventsContext("holiday", context.calendar.holiday.events.holidays, timeZone),
-					...fromCalendarHolidayEventsContext("special", context.calendar.holiday.events.specials, timeZone),
+					...fromCalendarHolidayEventsContext("normal", context.calendar.holiday.events.normal, timeZone),
+					...fromCalendarHolidayEventsContext("special", context.calendar.holiday.events.special, timeZone),
 				}
 			}
 		},
@@ -280,13 +279,12 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 					sunday: context.theme.holiday.regulars.sunday,
 				},
 				events: {
-					holiday: context.theme.holiday.events.holiday,
+					normal: context.theme.holiday.events.normal,
 					special: context.theme.holiday.events.special,
 				}
 			},
 			groups: context.theme.groups.map(a => a.value),
 			timeline: {
-				group: context.theme.timeline.group,
 				defaultGroup: context.theme.timeline.defaultGroup,
 				defaultTask: context.theme.timeline.defaultTask,
 				completed: context.theme.timeline.completed,
