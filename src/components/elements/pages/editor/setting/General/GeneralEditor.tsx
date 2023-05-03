@@ -2,11 +2,11 @@ import { FC, useContext, useState } from "react";
 
 import { IconKind, IconLabel } from "@/components/elements/Icon";
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
+import { useLocale } from "@/locales/locale";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { DefaultSettings } from "@/models/DefaultSettings";
-import { TimeZone } from "@/models/TimeZone";
-import { useLocale } from "@/locales/locale";
 import { Strings } from "@/models/Strings";
+import { TimeZone } from "@/models/TimeZone";
 
 
 const GeneralEditor: FC = () => {

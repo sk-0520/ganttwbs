@@ -2,10 +2,10 @@ import { FC, useContext, useState } from "react";
 
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
+import { useLocale } from "@/locales/locale";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
-import { useLocale } from "@/locales/locale";
 
 const ThemeTimelineSettingEditor: FC = () => {
 	const locale = useLocale();

@@ -1,12 +1,12 @@
 import { FC, useEffect, useState } from "react";
 
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
+import { useLocale } from "@/locales/locale";
 import { MemberSetting } from "@/models/data/context/SettingContext";
 import { Prices } from "@/models/data/Prices";
 import { Color, MemberId } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Strings } from "@/models/Strings";
-import { useLocale } from "@/locales/locale";
 
 interface Props {
 	member: MemberSetting;

@@ -2,12 +2,12 @@ import { TinyColor, random } from "@ctrl/tinycolor";
 import { CSSProperties, FC, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
+import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Colors } from "@/models/Colors";
 import { GroupSetting } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
 import { Types } from "@/models/Types";
-import { useLocale } from "@/locales/locale";
 
 const ColorKinds = [
 	"same",

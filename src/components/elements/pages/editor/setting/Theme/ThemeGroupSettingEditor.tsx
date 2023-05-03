@@ -4,13 +4,13 @@ import { FC, useContext, useState } from "react";
 import Dialog from "@/components/elements/Dialog";
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
+import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Colors } from "@/models/Colors";
 import { SettingContext, UUID } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
-import { useLocale } from "@/locales/locale";
 import { Strings } from "@/models/Strings";
 
 const groupThemeColors = DefaultSettings.getGroupThemeColors();

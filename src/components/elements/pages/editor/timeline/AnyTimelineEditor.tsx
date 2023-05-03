@@ -10,6 +10,7 @@ import SubjectCell from "@/components/elements/pages/editor/timeline/cell/Subjec
 import TimelineHeaderRow from "@/components/elements/pages/editor/timeline/cell/TimelineHeaderRow";
 import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/WorkloadCell";
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
+import { useLocale } from "@/locales/locale";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
@@ -28,7 +29,6 @@ import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Types } from "@/models/Types";
 import { WorkRanges } from "@/models/WorkRanges";
-import { useLocale } from "@/locales/locale";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	currentTimeline: AnyTimeline;
