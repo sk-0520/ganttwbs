@@ -98,15 +98,21 @@ const SettingEditor: FC<Props> = (props: Props) => {
 
 					<TabPanel className='setting-tab-item theme'>
 						<dl className='inputs'>
-							<dt>カレンダー</dt>
+							<dt>
+								{locale.editor.setting.theme.calendar.title}
+							</dt>
 							<dd>
 								<ThemeCalendarSettingEditor />
 							</dd>
-							<dt>グループ</dt>
+							<dt>
+								{locale.editor.setting.theme.group.title}
+							</dt>
 							<dd>
 								<ThemeGroupSettingEditor />
 							</dd>
-							<dt>タイムライン</dt>
+							<dt>
+								{locale.editor.setting.theme.timeline.title}
+							</dt>
 							<dd>
 								<ThemeTimelineSettingEditor />
 							</dd>

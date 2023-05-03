@@ -102,7 +102,7 @@ function createConfiguration(): Configuration {
 			// application: 1,
 			// setting: 0,
 			application: 2,
-			setting: 2,
+			setting: 3,
 		},
 
 		autoSave: {

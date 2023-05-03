@@ -29,6 +29,13 @@ const locale: Locale = {
 			unit: {
 				month: "月",
 				day: "日",
+				holiday: "祝日",
+			},
+
+			holiday: {
+				name: "祝日",
+				normal: "通常",
+				special: "特殊",
 			},
 
 			week: {
@@ -249,16 +256,41 @@ const locale: Locale = {
 					example: "YYYY-MM-DD<TAB>説明",
 
 					normal: {
-						title: "通常",
 						description: "国などが定める通常の祝日を設定してください。",
 					},
 					special: {
-						title: "特殊",
 						description: "会社の年末年始・夏季休暇などを設定してください。通常の祝日と重複する場合、こちらが優先されます。",
 					},
 				},
 
-			}
+			},
+
+			theme: {
+				calendar: {
+					title: "カレンダー",
+				},
+
+				group: {
+					title: "グループ",
+
+					levelFormat: "レベル ${LEVEL}",
+					collectiveSetting: "一括設定",
+					collectiveSettingDialog: {
+						title: "一括設定",
+						countInfinity: "件数(無限)",
+						countFiniteFormat: "件数(${COUNT})",
+						color: "色",
+					},
+				},
+
+				timeline: {
+					title: "タイムライン",
+
+					notSetGroup: "未設定グループ",
+					notSetTask: "未設定タスク",
+					complete: "完了",
+				},
+			},
 		}
 
 	},

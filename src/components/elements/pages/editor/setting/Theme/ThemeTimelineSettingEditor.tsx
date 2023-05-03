@@ -5,8 +5,10 @@ import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
+import { useLocale } from "@/locales/locale";
 
 const ThemeTimelineSettingEditor: FC = () => {
+	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
 	const [group, setGroup] = useState(settingContext.theme.timeline.group);
@@ -47,7 +49,9 @@ const ThemeTimelineSettingEditor: FC = () => {
 		<table className='timeline'>
 			<tbody>
 				<tr>
-					<td>未設定グループ</td>
+					<td>
+						{locale.editor.setting.theme.timeline.notSetGroup}
+					</td>
 					<td>
 						<PlainColorPicker
 							color={group}
@@ -67,7 +71,9 @@ const ThemeTimelineSettingEditor: FC = () => {
 				</tr>
 
 				<tr>
-					<td>タスクライン</td>
+					<td>
+						{locale.editor.setting.theme.timeline.notSetTask}
+					</td>
 					<td>
 						<PlainColorPicker
 							color={defaultTask}
@@ -77,7 +83,9 @@ const ThemeTimelineSettingEditor: FC = () => {
 				</tr>
 
 				<tr>
-					<td>完了</td>
+					<td>
+						{locale.editor.setting.theme.timeline.complete}
+					</td>
 					<td>
 						<PlainColorPicker
 							color={completed}

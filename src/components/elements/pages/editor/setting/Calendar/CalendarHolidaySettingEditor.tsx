@@ -38,7 +38,7 @@ const CalendarHolidaySettingEditor: FC = () => {
 			<div className="holiday">
 				<div className="holidays">
 					<h3>
-						{locale.editor.setting.calendar.holiday.normal.title}
+						{locale.common.calendar.holiday.normal}
 					</h3>
 					{renderEditor(settingContext.calendar.holiday.events.holidays, (s) => settingContext.calendar.holiday.events.holidays = s)}
 					<p>
@@ -48,7 +48,7 @@ const CalendarHolidaySettingEditor: FC = () => {
 
 				<div className="holidays">
 					<h3>
-						{locale.editor.setting.calendar.holiday.special.title}
+						{locale.common.calendar.holiday.special}
 					</h3>
 					{renderEditor(settingContext.calendar.holiday.events.specials, (s) => settingContext.calendar.holiday.events.specials = s)}
 					<p>

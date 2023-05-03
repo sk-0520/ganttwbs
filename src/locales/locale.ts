@@ -34,6 +34,13 @@ export interface Locale {
 			unit: {
 				month: string,
 				day: string,
+				holiday: string,
+			},
+
+			holiday: {
+				name: string,
+				normal: string,
+				special: string,
 			},
 
 			week: {
@@ -253,16 +260,46 @@ export interface Locale {
 					example: string,
 
 					normal: {
-						title: string,
 						description: string,
 					},
 					special: {
-						title: string,
 						description: string,
 					},
 				},
 
-			}
+			},
+
+			theme: {
+				calendar: {
+					title: string,
+				},
+
+				group: {
+					title: string,
+					/**
+					 * * LEVEL
+					 */
+					levelFormat: string,
+					collectiveSetting: string,
+					collectiveSettingDialog: {
+						title: string,
+						countInfinity: string,
+						/**
+						 * * COUNT
+						 */
+						countFiniteFormat: string,
+						color: string,
+					},
+				},
+
+				timeline: {
+					title: string,
+
+					notSetGroup: string,
+					notSetTask: string,
+					complete: string,
+				},
+			},
 
 		},
 	},

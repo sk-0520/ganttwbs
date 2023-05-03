@@ -10,6 +10,8 @@ import { SettingContext, UUID } from "@/models/data/context/SettingContext";
 import { Color } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
+import { useLocale } from "@/locales/locale";
+import { Strings } from "@/models/Strings";
 
 const groupThemeColors = DefaultSettings.getGroupThemeColors();
 
@@ -24,6 +26,7 @@ const reset = {
 } as const;
 
 const ThemeGroupSettingEditor: FC = () => {
+	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
 	const [groups, setGroups] = useState(settingContext.theme.groups);
@@ -82,7 +85,14 @@ const ThemeGroupSettingEditor: FC = () => {
 					{groups.map((a, i) => {
 						return (
 							<tr key={a.key}>
-								<td>レベル {i + 1}</td>
+								<td>
+									{Strings.replaceMap(
+										locale.editor.setting.theme.group.levelFormat,
+										{
+											"LEVEL": (i + 1).toString(),
+										}
+									)}
+								</td>
 								<td>
 									<PlainColorPicker
 										color={a.value}
@@ -94,7 +104,7 @@ const ThemeGroupSettingEditor: FC = () => {
 										type='button'
 										onClick={ev => handleRemoveColor(a.key)}
 									>
-										remove
+										{locale.common.command.remove}
 									</button>
 								</td>
 							</tr>
@@ -109,7 +119,7 @@ const ThemeGroupSettingEditor: FC = () => {
 								type='button'
 								onClick={handleAddColor}
 							>
-								末尾追加
+								{locale.common.command.add}
 							</button>
 						</td>
 						<td>
@@ -117,7 +127,7 @@ const ThemeGroupSettingEditor: FC = () => {
 								type='button'
 								onClick={handleStartResetColor}
 							>
-								一括設定
+								{locale.editor.setting.theme.group.collectiveSetting}
 							</button>
 						</td>
 					</tr>
@@ -127,7 +137,7 @@ const ThemeGroupSettingEditor: FC = () => {
 			{visibleResetColor && (
 				<Dialog
 					button="submit"
-					title="一括設定"
+					title={locale.editor.setting.theme.group.collectiveSettingDialog.title}
 					callbackClose={r => {
 						if (r === "submit") {
 							const colors = resetCount <= 1
@@ -142,7 +152,7 @@ const ThemeGroupSettingEditor: FC = () => {
 				>
 					<dl className="inputs">
 						<dt>
-							件数(無限)
+							{locale.editor.setting.theme.group.collectiveSettingDialog.countInfinity}
 						</dt>
 						<dd>
 							<input
@@ -152,7 +162,14 @@ const ThemeGroupSettingEditor: FC = () => {
 								onChange={ev => setResetCount(ev.target.valueAsNumber)}
 							/>
 						</dd>
-						<dd title={`有限(${reset.maximum})`}>
+						<dd
+							title={Strings.replaceMap(
+								locale.editor.setting.theme.group.collectiveSettingDialog.countFiniteFormat,
+								{
+									"COUNT": reset.maximum.toString(),
+								}
+							)}
+						>
 							<input
 								type="range"
 								min={reset.minimum}
@@ -162,7 +179,9 @@ const ThemeGroupSettingEditor: FC = () => {
 							/>
 						</dd>
 
-						<dt>色</dt>
+						<dt>
+							{locale.editor.setting.theme.group.collectiveSettingDialog.color}
+						</dt>
 						<dd>
 							{/* ブラウザに任せる, ダイアログ内でぶわってするとぶわってなる */}
 							<input
@@ -178,7 +197,7 @@ const ThemeGroupSettingEditor: FC = () => {
 							/>
 						</dd>
 
-						<dt>初期化</dt>
+						<dt>&nbsp;</dt>
 						<dd>
 							<DefaultButton
 								visibleLabel={true}
