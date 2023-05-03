@@ -9,6 +9,7 @@ import ResourceEditor from "@/components/elements/pages/editor/setting/Resource/
 import ThemeCalendarSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeCalendarSettingEditor";
 import ThemeGroupSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeGroupSettingEditor";
 import ThemeTimelineSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeTimelineSettingEditor";
+import { useLocale } from "@/locales/locale";
 import { Configuration } from "@/models/data/Configuration";
 import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { EditorData } from "@/models/data/EditorData";
@@ -28,6 +29,8 @@ interface Props extends ConfigurationProps {
 }
 
 const SettingEditor: FC<Props> = (props: Props) => {
+	const locale = useLocale();
+
 	const setting = toContext(props.configuration, props.editData.setting);
 
 	function handleSubmit(event: FormEvent) {
@@ -46,10 +49,18 @@ const SettingEditor: FC<Props> = (props: Props) => {
 			<form onSubmit={handleSubmit}>
 				<Tabs defaultIndex={props.configuration.tabIndex.setting} forceRenderTabPanel={true}>
 					<TabList>
-						<Tab>基本</Tab>
-						<Tab>リソース</Tab>
-						<Tab>カレンダー</Tab>
-						<Tab>テーマ</Tab>
+						<Tab>
+							{locale.editor.setting.tabs.general}
+						</Tab>
+						<Tab>
+							{locale.editor.setting.tabs.resource}
+						</Tab>
+						<Tab>
+							{locale.editor.setting.tabs.calendar}
+						</Tab>
+						<Tab>
+							{locale.editor.setting.tabs.theme}
+						</Tab>
 					</TabList>
 
 					<TabPanel className='setting-tab-item general'>
@@ -62,17 +73,23 @@ const SettingEditor: FC<Props> = (props: Props) => {
 
 					<TabPanel className='setting-tab-item calendar'>
 						<dl className="inputs">
-							<dt>日付範囲</dt>
+							<dt>
+								{locale.editor.setting.calendar.range.title}
+							</dt>
 							<dd className="range">
 								<CalendarRangeSettingEditor />
 							</dd>
 
-							<dt>曜日設定</dt>
+							<dt>
+								{locale.editor.setting.calendar.week.title}
+							</dt>
 							<dd className="week">
 								<CalendarWeekSettingEditor />
 							</dd>
 
-							<dt>祝日</dt>
+							<dt>
+								{locale.editor.setting.calendar.holiday.title}
+							</dt>
 							<dd className="holiday">
 								<CalendarHolidaySettingEditor />
 							</dd>
@@ -81,15 +98,21 @@ const SettingEditor: FC<Props> = (props: Props) => {
 
 					<TabPanel className='setting-tab-item theme'>
 						<dl className='inputs'>
-							<dt>カレンダー</dt>
+							<dt>
+								{locale.editor.setting.theme.calendar.title}
+							</dt>
 							<dd>
 								<ThemeCalendarSettingEditor />
 							</dd>
-							<dt>グループ</dt>
+							<dt>
+								{locale.editor.setting.theme.group.title}
+							</dt>
 							<dd>
 								<ThemeGroupSettingEditor />
 							</dd>
-							<dt>タイムライン</dt>
+							<dt>
+								{locale.editor.setting.theme.timeline.title}
+							</dt>
 							<dd>
 								<ThemeTimelineSettingEditor />
 							</dd>

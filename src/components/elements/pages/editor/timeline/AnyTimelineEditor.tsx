@@ -1,6 +1,6 @@
 import { useState, useEffect, DragEvent, FC } from "react";
 
-import { IconImage, IconKind } from "@/components/elements/Icon";
+import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
 import ControlsCell from "@/components/elements/pages/editor/timeline/cell/ControlsCell";
 import IdCell from "@/components/elements/pages/editor/timeline/cell/IdCell";
 import ProgressCell from "@/components/elements/pages/editor/timeline/cell/ProgressCell";
@@ -28,6 +28,7 @@ import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Types } from "@/models/Types";
 import { WorkRanges } from "@/models/WorkRanges";
+import { useLocale } from "@/locales/locale";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	currentTimeline: AnyTimeline;
@@ -37,6 +38,8 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 }
 
 const AnyTimelineEditor: FC<Props> = (props: Props) => {
+	const locale = useLocale();
+
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
@@ -336,62 +339,72 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 									/>
 								</li>
 								<li>
-									<button type="button" onClick={handleSubmitPrevious}>
+									<button
+										type="button"
+										title={locale.common.dialog.submit}
+										onClick={handleSubmitPrevious}
+									>
 										<IconImage
 											kind={IconKind.ConfirmPositive}
 											fill="green"
-											title="確定"
 										/>
 									</button>
 								</li>
 								<li>
-									<button type="button" onClick={handleCancelPrevious}>
+									<button
+										type="button"
+										title={locale.common.dialog.cancel}
+										onClick={handleCancelPrevious}
+									>
 										<IconImage
 											kind={IconKind.ConfirmCancel}
-											title="キャンセル"
 										/>
 									</button>
 								</li>
 							</ul>
 							<div className="tools after">
 								<fieldset>
-									<legend>即時実行</legend>
+									<legend>
+										{locale.editor.timeline.timelines.range.immediate.title}
+									</legend>
 									<ul>
 										<li>
 											<button onClick={handleSubmitAttachBeforeTimeline}>
-												<IconImage
+												<IconLabel
 													kind={IconKind.RelationJoin}
+													label={locale.editor.timeline.timelines.range.immediate.attachBeforeTimeline}
 												/>
-												直近項目に紐づける
 											</button>
 										</li>
 									</ul>
 								</fieldset>
 								<fieldset>
-									<legend>連続作業</legend>
+									<legend>
+										{locale.editor.timeline.timelines.range.continue.title}
+									</legend>
 									<ul>
 										<li>
 											<button onClick={handleAttachBeforeTimeline}>
-												<IconImage
+												<IconLabel
 													kind={IconKind.RelationJoin}
+													label={locale.editor.timeline.timelines.range.continue.attachBeforeTimeline}
 												/>
-												直近項目に紐づける
 											</button>
 										</li>
 										<li>
 											<button onClick={handleClearPrevious}>
-												<IconImage
+												<IconLabel
 													kind={IconKind.RelationClear}
+													label={locale.editor.timeline.timelines.range.continue.clearRelation}
 												/>
-												紐づけを解除
 											</button>
 										</li>
 										<li>
 											<button onClick={handleClearStatic}>
-												<IconImage
+												<IconLabel
 													kind={IconKind.Clear}
+													label={locale.editor.timeline.timelines.range.continue.clearDate}
 												/>
-												固定日付をクリア
 											</button>
 										</li>
 									</ul>

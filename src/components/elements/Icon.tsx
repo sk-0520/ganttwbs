@@ -1,9 +1,9 @@
+import classNames from "classnames";
 import { FC, ReactNode } from "react";
 import { IconBaseProps } from "react-icons";
 import * as Md from "react-icons/md";
 
 import { Types } from "@/models/Types";
-import classNames from "classnames";
 
 // 基本的に Material Design icons を使用する
 // https://react-icons.github.io/react-icons/icons?name=md
@@ -139,7 +139,7 @@ export const IconImage: FC<Props> = (props: Props) => {
 
 interface LabelProps extends Props {
 	className?: string;
-	direction?: "inline" | "block";
+	direction?: "left"| "right" | "bottom";
 	label: string;
 }
 
@@ -150,7 +150,7 @@ export const IconLabel: FC<LabelProps> = (props: LabelProps) => {
 				classNames(
 					"icon-label-wrapper",
 					props.className,
-					props.direction ?? "inline"
+					props.direction ?? "left"
 				)
 			}
 		>

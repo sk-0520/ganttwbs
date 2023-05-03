@@ -7,6 +7,7 @@ import FileEditor from "@/components/elements/pages/editor/file/FileEditor";
 import SettingEditor from "@/components/elements/pages/editor/setting/SettingEditor";
 import TimelineEditor from "@/components/elements/pages/editor/timeline/TimelineEditor";
 import Layout from "@/components/layout/Layout";
+import { useLocale } from "@/locales/locale";
 import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
 import { Storages } from "@/models/Storages";
@@ -19,6 +20,7 @@ const enum TabIndex {
 }
 
 const EditorPage: NextPage = () => {
+	const locale = useLocale();
 	const router = useRouter();
 
 	const [configuration] = useState(createConfiguration());
@@ -39,11 +41,13 @@ const EditorPage: NextPage = () => {
 	}, [router]);
 
 	return (
-		<Layout mode='application' layoutId='editor'
-			title={editorData ? editorData.fileName + " 編集" : "編集"}
+		<Layout
+			mode='application'
+			layoutId='editor'
+			title={(editorData ? editorData.fileName + " " : "") + locale.page.editor}
 		>
 			<>
-				{!editorData && <p>読み込み中</p>}
+				{!editorData && <p>{locale.editor.loading}</p>}
 				{editorData && (
 					<Tabs
 						defaultIndex={selectedTabIndex}
@@ -51,20 +55,24 @@ const EditorPage: NextPage = () => {
 						onSelect={handleOnSelect}
 					>
 						<TabList>
-							<Tab>ファイル</Tab>
-							<Tab>編集</Tab>
-							<Tab>設定</Tab>
+							<Tab>
+								{locale.editor.tabs.file}
+							</Tab>
+							<Tab>
+								{locale.editor.tabs.timeline}
+							</Tab>
+							<Tab>
+								{locale.editor.tabs.setting}
+							</Tab>
 						</TabList>
 
-						{/* ファイル */}
 						<TabPanel className='tab panel tab-file'>
 							<FileEditor configuration={configuration} editorData={editorData} isVisible={selectedTabIndex === TabIndex.File} />
 						</TabPanel>
-						{/* ほんたい */}
+						{/* このアプリの本体 */}
 						<TabPanel className='tab panel tab-timeline' >
 							<TimelineEditor configuration={configuration} editorData={editorData} />
 						</TabPanel>
-						{/* 設定 */}
 						<TabPanel className='tab panel tab-setting'>
 							<SettingEditor configuration={configuration} editData={editorData} />
 						</TabPanel>
@@ -89,15 +97,12 @@ function createConfiguration(): Configuration {
 		}
 	};
 
-	const defaultTabIndex = {
-		application: 1,
-		setting: 0,
-	} as const;
-
 	const result: Configuration = {
 		tabIndex: {
-			application: defaultTabIndex.application,
-			setting: defaultTabIndex.setting,
+			// application: 1,
+			// setting: 0,
+			application: 2,
+			setting: 3,
 		},
 
 		autoSave: {

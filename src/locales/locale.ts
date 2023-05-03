@@ -9,47 +9,119 @@ export interface Locale {
 	language: string,
 	/** 共通項目 */
 	common: {
+		enabled: string,
+		disabled: string,
+
 		command: {
 			add: string,
 			remove: string,
+
+			download: string,
+			upload: string,
+
+			copy: string,
+		},
+
+		dialog: {
+			submit: string,
+			cancel: string,
+			close: string,
 		},
 
 		calendar: {
+			timeZone: string,
+
+			unit: {
+				month: string,
+				day: string,
+				holiday: string,
+			},
+
+			holiday: {
+				name: string,
+				normal: string,
+				special: string,
+			},
+
 			week: {
 				name: string,
 				long: { [key in WeekDay]: string },
 				short: { [key in WeekDay]: string },
 			},
 
-			format: {
-				yearMonth: string,
-			},
-		}
+			/** DateTime.format */
+			yearMonthFormat: string,
+		},
+	},
+
+	page: {
+		top: string,
+		new: string,
+		load: string,
+		editor: string,
+		about: string,
+		aboutLibrary: string
 	},
 
 	editor: {
+		tabs: {
+			file: string,
+			timeline: string,
+			setting: string,
+		},
+
+		loading: string,
+
 		file: {
-			autoSave: {
-				storage: {
-					kind: string,
+			save: {
+				title: string,
+				fileName: string,
+
+				auto: {
+					title: string,
+
+					columns: {
+						kind: string,
+						enabled: string,
+						span: string,
+						last: string,
+						next: string,
+					},
+
+					storage: {
+						kind: string,
+					},
+					download: {
+						kind: string,
+						/**
+						 * 自動ダウンロードで使用するファイル名。
+						 *
+						 * 以下プレースホルダーの置き換えが行われる。
+						 * * ORIGINAL
+						 * * ORIGINAL_NAME
+						 * * ORIGINAL_EXT
+						 * * TIMESTAMP
+						 */
+						fileNameFormat: string,
+					}
 				},
-				download: {
-					kind: string,
-					/**
-					 * 自動ダウンロードで使用するファイル名。
-					 *
-					 * 以下プレースホルダーの置き換えが行われる。
-					 * * ORIGINAL
-					 * * ORIGINAL_NAME
-					 * * ORIGINAL_EXT
-					 * * TIMESTAMP
-					 */
-					fileNameFormat: string,
-				}
-			}
+
+				export: {
+					title: string,
+				},
+			},
+			byebye: string
 		},
 		timeline: {
 			header: {
+				operations: {
+					addNewGroupTimeline: string,
+					addNewTaskTimeline: string,
+					importTimelines: string,
+					navigateFirst: string,
+					navigateToday: string,
+					navigateLast: string,
+				},
 				columns: {
 					id: string,
 					subject: string,
@@ -75,7 +147,161 @@ export interface Locale {
 					unknownError: string,
 				}
 			},
-		}
+			timelines: {
+				range: {
+					immediate: {
+						title: string,
+						attachBeforeTimeline: string,
+					},
+					continue: {
+						title: string,
+						attachBeforeTimeline: string,
+						clearRelation: string,
+						clearDate: string,
+					},
+				},
+				controls: {
+					move: {
+						title: string,
+						up: string,
+						down: string,
+						parent: string,
+					},
+					add: {
+						title: string,
+						group: string,
+						task: string,
+						import: string,
+					},
+					others: {
+						title: string,
+						setting: string,
+					},
+				}
+			},
+			importDialog: {
+				title: string,
+				subject: string,
+				contents: string,
+			},
+			detailDialog: {
+				title: string,
+				progressMinimum: string,
+				progressMaximum: string,
+				comment: string,
+			}
+			// views: {
+			// },
+		},
+		setting: {
+			tabs: {
+				general: string,
+				resource: string,
+				calendar: string,
+				theme: string,
+			},
+
+			general: {
+				title: string,
+				recursive: string,
+				selectCurrentTimeZoneFormat: string,
+			},
+
+			resource: {
+				groupName: string,
+				choiceColor: string,
+				newGroup: string,
+
+				columns: {
+					memberName: string,
+					/**
+					 * * UNIT
+					 */
+					costFormat: string,
+					/**
+					 * * UNIT
+					 */
+					salesFormat: string,
+					theme: string,
+					rate: string,
+				},
+
+				choiceColorDialog: {
+					title: string,
+					baseColor: string,
+					gradientColor: string,
+					resetRandomColor: string,
+
+					kinds: {
+						same: string,
+						analogy: string,
+						monochrome: string,
+						gradient: string,
+						random: string,
+					},
+				}
+			},
+
+			calendar: {
+
+				range: {
+					title: string,
+					begin: string,
+					end: string,
+				},
+
+				week: {
+					title: string,
+				},
+
+				holiday: {
+					title: string,
+					description: string,
+					example: string,
+
+					normal: {
+						description: string,
+					},
+					special: {
+						description: string,
+					},
+				},
+
+			},
+
+			theme: {
+				calendar: {
+					title: string,
+				},
+
+				group: {
+					title: string,
+					/**
+					 * * LEVEL
+					 */
+					levelFormat: string,
+					collectiveSetting: string,
+					collectiveSettingDialog: {
+						title: string,
+						countInfinity: string,
+						/**
+						 * * COUNT
+						 */
+						countFiniteFormat: string,
+						color: string,
+					},
+				},
+
+				timeline: {
+					title: string,
+
+					notSetGroup: string,
+					notSetTask: string,
+					complete: string,
+				},
+			},
+
+		},
 	},
 
 	styles: {

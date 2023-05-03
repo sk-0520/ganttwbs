@@ -3,8 +3,10 @@ import { useContext, MouseEvent, useState, FC } from "react";
 import GroupsEditor from "@/components/elements/pages/editor/setting/Resource/GroupEditor";
 import { GroupSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { IdFactory } from "@/models/IdFactory";
+import { useLocale } from "@/locales/locale";
 
 const ResourceEditor: FC = () => {
+	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
 	const [newGroupName, setNewGroupName] = useState("");
@@ -61,13 +63,17 @@ const ResourceEditor: FC = () => {
 					);
 				})}
 
-				<dt className="group">新規グループ</dt>
+				<dt className="group">
+					{locale.editor.setting.resource.newGroup}
+				</dt>
 				<dd>
 					<input
 						value={newGroupName}
 						onChange={ev => setNewGroupName(ev.target.value)}
 					/>
-					<button type="button" onClick={handleAddGroup}>add</button>
+					<button type="button" onClick={handleAddGroup}>
+						{locale.common.command.add}
+					</button>
 				</dd>
 			</dl>
 		</>

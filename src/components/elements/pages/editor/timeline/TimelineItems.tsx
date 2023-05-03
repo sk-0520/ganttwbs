@@ -63,7 +63,6 @@ const TimelineItems: FC<Props> = (props: Props) => {
 						);
 					})}
 				</tbody>
-
 				<tfoot>
 					{dummyAreaNodes}
 				</tfoot>

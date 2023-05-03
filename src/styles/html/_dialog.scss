@@ -1,6 +1,8 @@
 dialog {
 	padding: 0;
 
+	font-size: 1rem;
+
 	&::backdrop {
 		backdrop-filter: blur(0.25ex);
 	}
@@ -42,21 +44,31 @@ dialog {
 
 			ul.buttons {
 				text-align: center;
+				display: flex;
 
 				& > li {
+					flex: 1;
 					display: inline-block;
 
 					& + li {
 						margin-left: 1rem;
 					}
-				}
 
-				button {
-					height: 2rem;
-					padding: 1rem 2rem 1rem;
-					text-align: center;
-					display: inline-flex;
-					align-items: center;
+					button {
+						$block: 2rem;
+
+						display: table-cell;
+						height: $block;
+						width: 70%;
+						padding: 1rem $block 1rem;
+						vertical-align: middle;
+						font-size: 1rem;
+						line-height: calc(100% - $block);
+
+						&[data-submit] {
+							font-weight: bold;
+						}
+					}
 				}
 			}
 		}

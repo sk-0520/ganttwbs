@@ -1,13 +1,16 @@
 import { FC, useContext, useState } from "react";
 
-import { IconImage, IconKind } from "@/components/elements/Icon";
+import { IconKind, IconLabel } from "@/components/elements/Icon";
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { TimeZone } from "@/models/TimeZone";
+import { useLocale } from "@/locales/locale";
+import { Strings } from "@/models/Strings";
 
 
 const GeneralEditor: FC = () => {
+	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
 	const [recursive, setRecursive] = useState(settingContext.general.recursive);
@@ -27,7 +30,9 @@ const GeneralEditor: FC = () => {
 
 	return (
 		<dl className="inputs">
-			<dt>タイトル</dt>
+			<dt>
+				{locale.editor.setting.general.title}
+			</dt>
 			<dd>
 				<input
 					type="text"
@@ -37,7 +42,9 @@ const GeneralEditor: FC = () => {
 				/>
 			</dd>
 
-			<dt>反復計算数</dt>
+			<dt>
+				{locale.editor.setting.general.recursive}
+			</dt>
 			<dd>
 				<input
 					type="number"
@@ -50,7 +57,9 @@ const GeneralEditor: FC = () => {
 				<DefaultButton callbackClick={() => setRecursive(DefaultSettings.RecursiveMaxCount)} />
 			</dd>
 
-			<dt>タイムゾーン</dt>
+			<dt>
+				{locale.common.calendar.timeZone}
+			</dt>
 			<dd>
 				<input
 					type="text"
@@ -62,11 +71,15 @@ const GeneralEditor: FC = () => {
 					type="button"
 					onClick={_ => handleChangeTimeZone(currentTimeZone)}
 				>
-					<IconImage
+					<IconLabel
 						kind={IconKind.Reset}
+						label={Strings.replaceMap(
+							locale.editor.setting.general.selectCurrentTimeZoneFormat,
+							{
+								"TIMEZONE": TimeZone.getClientTimeZone().serialize(),
+							}
+						)}
 					/>
-					現在タイムゾーン
-					({TimeZone.getClientTimeZone().serialize()})
 				</button>
 				<ul className="timezone-selector">
 					{TimeZone.getTimeZones().map(a => {

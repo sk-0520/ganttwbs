@@ -7,6 +7,7 @@ import { Colors } from "@/models/Colors";
 import { GroupSetting } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
 import { Types } from "@/models/Types";
+import { useLocale } from "@/locales/locale";
 
 const ColorKinds = [
 	"same",
@@ -23,6 +24,7 @@ interface Props {
 }
 
 const GroupColorsDialog: FC<Props> = (props: Props) => {
+	const locale = useLocale();
 	// const [choiceBaseColor, setChoiceBaseColor] = useState<Color>(Arrays.first(props.choiceColorGroup.members).color);
 	// const [choiceGradientColor, setChoiceGradientColor] = useState<Color>(Arrays.last(props.choiceColorGroup.members).color);
 	// const [choiceColors, setChoiceColors] = useState<Map<MemberId, TinyColor>>(new Map(
@@ -72,7 +74,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 	return (
 		<Dialog
 			button="submit"
-			title="色選択"
+			title={locale.editor.setting.resource.choiceColorDialog.title}
 			preSubmit={() => Types.toBoolean(selectedColorType)}
 			callbackClose={(type) => {
 				if (selectedColorType && type === "submit") {
@@ -88,7 +90,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 				<ul className="inline color-types">
 					<li>
 						<label>
-							基準色
+							{locale.editor.setting.resource.choiceColorDialog.baseColor}
 							<input
 								type="color"
 								value={baseColor.toHexString()}
@@ -99,7 +101,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 					</li>
 					<li>
 						<label>
-							グラデーション
+							{locale.editor.setting.resource.choiceColorDialog.gradientColor}
 							<input
 								type="color"
 								value={gradientColor.toHexString()}
@@ -112,7 +114,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 							type="button"
 							onClick={handleGenerateGradient}
 						>
-							ランダム
+							{locale.editor.setting.resource.choiceColorDialog.resetRandomColor}
 						</button>
 					</li>
 				</ul>
@@ -132,7 +134,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 												checked={selectedColorType === a}
 												onChange={ev => handleChangeColorType(a, ev.target.checked)}
 											/>
-											{a}
+											{locale.editor.setting.resource.choiceColorDialog.kinds[a]}
 										</label>
 									</th>
 								);

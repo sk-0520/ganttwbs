@@ -6,6 +6,7 @@ import { Prices } from "@/models/data/Prices";
 import { Color, MemberId } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Strings } from "@/models/Strings";
+import { useLocale } from "@/locales/locale";
 
 interface Props {
 	member: MemberSetting;
@@ -15,6 +16,7 @@ interface Props {
 }
 
 const MemberEditor: FC<Props> = (props: Props) => {
+	const locale = useLocale();
 
 	const priceSetting = DefaultSettings.getPriceSetting();
 
@@ -116,7 +118,7 @@ const MemberEditor: FC<Props> = (props: Props) => {
 					type="button"
 					onClick={ev => props.callbackRemoveMember(props.member)}
 				>
-					remove
+					{locale.common.command.remove}
 				</button>
 			</td>
 		</tr>

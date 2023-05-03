@@ -2,6 +2,8 @@ import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
+import { useLocale } from "@/locales/locale";
+
 interface Props {
 	/** タイトル */
 	title?: string;
@@ -14,6 +16,8 @@ interface Props {
 }
 
 const Layout: NextPage<Props> = (props: Props) => {
+	const locale = useLocale();
+
 	const headTitle = props.title ? `${props.title} - ${process.env.NEXT_PUBLIC_APP_NAME}` : process.env.NEXT_PUBLIC_APP_NAME;
 	const pageTitle = props.title ? props.title : process.env.NEXT_PUBLIC_APP_NAME;
 
@@ -38,16 +42,24 @@ const Layout: NextPage<Props> = (props: Props) => {
 								<nav>
 									<ul>
 										<li>
-											<Link href="/">トップ</Link>
+											<Link href="/">
+												{locale.page.top}
+											</Link>
 										</li>
 										<li>
-											<Link href="/new">新規</Link>
+											<Link href="/new">
+												{locale.page.new}
+											</Link>
 										</li>
 										<li>
-											<Link href="/load">読み込み</Link>
+											<Link href="/load">
+												{locale.page.load}
+											</Link>
 										</li>
 										<li>
-											<Link href="/about">これなに？</Link>
+											<Link href="/about">
+												{locale.page.about}
+											</Link>
 										</li>
 									</ul>
 								</nav>

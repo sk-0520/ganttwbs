@@ -3,6 +3,7 @@ import { NextRouter, useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import Layout from "@/components/layout/Layout";
+import { useLocale } from "@/locales/locale";
 import { EditorData } from "@/models/data/EditorData";
 import { SettingSchema } from "@/models/data/Setting";
 import { Goto } from "@/models/Goto";
@@ -12,11 +13,16 @@ interface Input {
 }
 
 const LoadPage: NextPage = () => {
-	const { register, handleSubmit, } = useForm<Input>();
+	const locale = useLocale();
 	const router = useRouter();
+	const { register, handleSubmit, } = useForm<Input>();
 
 	return (
-		<Layout title='読み込み' mode='page' layoutId='load'>
+		<Layout
+			mode='page'
+			layoutId='load'
+			title={locale.page.load}
+		>
 			<form onSubmit={handleSubmit(data => onSubmit(data, router))}>
 				<dl className='inputs'>
 					<dt>ファイル</dt>

@@ -3,6 +3,7 @@ import { NextRouter, useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import Layout from "@/components/layout/Layout";
+import { useLocale } from "@/locales/locale";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { EditorData } from "@/models/data/EditorData";
 import { DateOnly, Member, Setting } from "@/models/data/Setting";
@@ -22,6 +23,7 @@ interface Input {
 }
 
 const NewPage: NextPage = () => {
+	const locale = useLocale();
 	const router = useRouter();
 	//const { register, handleSubmit, formState: { errors } } = useForm();
 	const { register, handleSubmit, } = useForm<Input>();
@@ -31,7 +33,11 @@ const NewPage: NextPage = () => {
 	const toDate = fromDate.add(TimeSpan.fromDays(180));
 
 	return (
-		<Layout title='新規作成' mode='page' layoutId='new'>
+		<Layout
+			mode='page'
+			layoutId='new'
+			title={locale.page.new}
+		>
 			<p>ここで入力する内容は編集時に変更可能です。</p>
 
 			<form onSubmit={handleSubmit(data => onSubmit(data, timeZone, router))}>

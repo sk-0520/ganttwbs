@@ -8,6 +8,7 @@ import { Color, MemberId } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
 import { Strings } from "@/models/Strings";
+import { useLocale } from "@/locales/locale";
 
 interface Props {
 	group: GroupSetting;
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const GroupsEditor: FC<Props> = (props: Props) => {
+	const locale = useLocale();
 
 	const [groupName, setGroupName] = useState(props.group.name);
 	const [members, setMembers] = useState(sortMembers(props.group.members));
@@ -73,7 +75,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 				<ul className="inline">
 					<li>
 						<label>
-							グループ名
+							{locale.editor.setting.resource.groupName}
 							<input
 								value={groupName}
 								onChange={ev => handleChangeName(ev.target.value)}
@@ -87,7 +89,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 							onClick={ev => handleStartChoiceColor()}
 							disabled={members.length <= 1}
 						>
-							色を割り振り
+							{locale.editor.setting.resource.choiceColor}
 						</button>
 					</li>
 					<li className="remove">
@@ -95,7 +97,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 							type="button"
 							onClick={ev => props.callbackRemove(props.group)}
 						>
-							remove
+							{locale.common.command.remove}
 						</button>
 					</li>
 				</ul>
@@ -105,14 +107,50 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 				<table className="members">
 					<thead>
 						<tr>
-							<th className="name-cell">要員名</th>
-							<th className="cost-cell">原価(日)</th>
-							<th className="sales-cell">単価(日)</th>
-							<th className="theme-cell">テーマ</th>
-							<th className="month-cost-cell">原価(月)</th>
-							<th className="month-sales-cell">単価(月)</th>
-							<th className="rate-cell">売上</th>
-							<th className="remove-cell">削除</th>
+							<th className="name-cell">
+								{locale.editor.setting.resource.columns.memberName}
+							</th>
+							<th className="cost-cell">
+								{Strings.replaceMap(
+									locale.editor.setting.resource.columns.costFormat,
+									{
+										"UNIT": locale.common.calendar.unit.day,
+									}
+								)}
+							</th>
+							<th className="sales-cell">
+								{Strings.replaceMap(
+									locale.editor.setting.resource.columns.salesFormat,
+									{
+										"UNIT": locale.common.calendar.unit.day,
+									}
+								)}
+							</th>
+							<th className="theme-cell">
+								{locale.editor.setting.resource.columns.theme}
+							</th>
+							<th className="month-cost-cell">
+								{Strings.replaceMap(
+									locale.editor.setting.resource.columns.costFormat,
+									{
+										"UNIT": locale.common.calendar.unit.month,
+									}
+								)}
+							</th>
+							<th className="month-sales-cell">
+								{Strings.replaceMap(
+									locale.editor.setting.resource.columns.salesFormat,
+									{
+										"UNIT": locale.common.calendar.unit.month,
+									}
+								)}
+							</th>
+							<th className="rate-cell">
+								{locale.editor.setting.resource.columns.rate}
+							</th>
+							<th className="remove-cell">
+								{locale.common.command.remove}
+							</th>
 						</tr>
 					</thead>
 
@@ -142,7 +180,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 									type="button"
 									onClick={ev => handleAddMember()}
 								>
-									add
+									{locale.common.command.add}
 								</button>
 							</td>
 						</tr>
@@ -152,7 +190,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 					<GroupColorsDialog
 						choiceColorGroup={props.group}
 						callbackClosed={a => {
-							if(a) {
+							if (a) {
 								setUpdatedColors(a);
 							}
 							setVisibleDialog(false);
