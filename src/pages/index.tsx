@@ -12,7 +12,7 @@ const TopPage: NextPage = () => {
 			<ul>
 				<li>
 					<Link href="/new">
-						{locale.page.top}
+						{locale.page.new}
 					</Link>
 				</li>
 				<li>
