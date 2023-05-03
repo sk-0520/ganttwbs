@@ -29,6 +29,8 @@ export interface Locale {
 		},
 
 		calendar: {
+			timeZone: string,
+
 			week: {
 				name: string,
 				long: { [key in WeekDay]: string },
@@ -186,7 +188,13 @@ export interface Locale {
 				resource: string,
 				calendar: string,
 				theme: string,
-			}
+			},
+
+			general: {
+				title: string,
+				recursive: string,
+				selectCurrentTimeZoneFormat: string,
+			},
 		},
 	},
 

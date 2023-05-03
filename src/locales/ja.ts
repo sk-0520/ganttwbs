@@ -24,6 +24,8 @@ const locale: Locale = {
 		},
 
 		calendar: {
+			timeZone: "タイムゾーン",
+
 			week: {
 				name: "曜日",
 				long: {
@@ -189,7 +191,14 @@ const locale: Locale = {
 				resource: "リソース",
 				calendar: "カレンダー",
 				theme: "テーマ",
-			}
+			},
+
+			general: {
+				title: "タイトル",
+				recursive: "反復計算数",
+				selectCurrentTimeZoneFormat: "現在のタイムゾーン(${TIMEZONE})"
+			},
+
 		}
 
 	},
