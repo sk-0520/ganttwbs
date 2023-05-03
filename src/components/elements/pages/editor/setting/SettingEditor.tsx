@@ -73,17 +73,23 @@ const SettingEditor: FC<Props> = (props: Props) => {
 
 					<TabPanel className='setting-tab-item calendar'>
 						<dl className="inputs">
-							<dt>日付範囲</dt>
+							<dt>
+								{locale.editor.setting.calendar.range.title}
+							</dt>
 							<dd className="range">
 								<CalendarRangeSettingEditor />
 							</dd>
 
-							<dt>曜日設定</dt>
+							<dt>
+								{locale.editor.setting.calendar.week.title}
+							</dt>
 							<dd className="week">
 								<CalendarWeekSettingEditor />
 							</dd>
 
-							<dt>祝日</dt>
+							<dt>
+								{locale.editor.setting.calendar.holiday.title}
+							</dt>
 							<dd className="holiday">
 								<CalendarHolidaySettingEditor />
 							</dd>

@@ -230,6 +230,35 @@ const locale: Locale = {
 					},
 				}
 			},
+
+			calendar: {
+
+				range: {
+					title: "日付範囲",
+					begin: "開始",
+					end: "終了",
+				},
+
+				week: {
+					title: "曜日設定",
+				},
+
+				holiday: {
+					title: "祝日",
+					description: "以下の形式で祝日を入力してください。",
+					example: "YYYY-MM-DD<TAB>説明",
+
+					normal: {
+						title: "通常",
+						description: "国などが定める通常の祝日を設定してください。",
+					},
+					special: {
+						title: "特殊",
+						description: "会社の年末年始・夏季休暇などを設定してください。通常の祝日と重複する場合、こちらが優先されます。",
+					},
+				},
+
+			}
 		}
 
 	},

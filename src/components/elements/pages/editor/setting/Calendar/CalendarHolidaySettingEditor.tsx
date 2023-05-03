@@ -32,25 +32,27 @@ const CalendarHolidaySettingEditor: FC = () => {
 	return (
 		<>
 			<p>
-				<code className="example">YYYY-MM-DD&lt;TAB&gt;説明</code> の形で入力してください。
+				{locale.editor.setting.calendar.holiday.description}<br />
+				<code className="example">{locale.editor.setting.calendar.holiday.example}</code>
 			</p>
 			<div className="holiday">
 				<div className="holidays">
-					<h3>祝日</h3>
+					<h3>
+						{locale.editor.setting.calendar.holiday.normal.title}
+					</h3>
 					{renderEditor(settingContext.calendar.holiday.events.holidays, (s) => settingContext.calendar.holiday.events.holidays = s)}
 					<p>
-						国などが定める通常の祝日を設定してください。
+						{locale.editor.setting.calendar.holiday.normal.description}
 					</p>
 				</div>
 
 				<div className="holidays">
-					<h3>特殊</h3>
+					<h3>
+						{locale.editor.setting.calendar.holiday.special.title}
+					</h3>
 					{renderEditor(settingContext.calendar.holiday.events.specials, (s) => settingContext.calendar.holiday.events.specials = s)}
 					<p>
-						会社の年末年始・夏季休暇などを設定してください。
-					</p>
-					<p>
-						通常の祝日と重複する場合、こちらが優先されます。
+						{locale.editor.setting.calendar.holiday.special.description}
 					</p>
 				</div>
 			</div>

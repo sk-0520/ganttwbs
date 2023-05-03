@@ -235,6 +235,35 @@ export interface Locale {
 				}
 			},
 
+			calendar: {
+
+				range: {
+					title: string,
+					begin: string,
+					end: string,
+				},
+
+				week: {
+					title: string,
+				},
+
+				holiday: {
+					title: string,
+					description: string,
+					example: string,
+
+					normal: {
+						title: string,
+						description: string,
+					},
+					special: {
+						title: string,
+						description: string,
+					},
+				},
+
+			}
+
 		},
 	},
 
