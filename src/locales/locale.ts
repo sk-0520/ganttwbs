@@ -166,6 +166,11 @@ export interface Locale {
 					},
 				}
 			},
+			importDialog: {
+				title: string,
+				subject: string,
+				contents: string,
+			},
 			// views: {
 			// },
 		},

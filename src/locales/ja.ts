@@ -170,6 +170,11 @@ const locale: Locale = {
 					},
 				}
 			},
+			importDialog: {
+				title: "タイムライン追加",
+				subject: "グループ名",
+				contents: "タスクタイムライン",
+			},
 		},
 
 		setting: {
