@@ -175,6 +175,12 @@ const locale: Locale = {
 				subject: "グループ名",
 				contents: "タスクタイムライン",
 			},
+			detailDialog: {
+				title: "タイムライン設定",
+				progressMinimum: "未対応",
+				progressMaximum: "完了",
+				comment: "作業",
+			}
 		},
 
 		setting: {

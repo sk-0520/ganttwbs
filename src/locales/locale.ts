@@ -171,6 +171,12 @@ export interface Locale {
 				subject: string,
 				contents: string,
 			},
+			detailDialog: {
+				title: string,
+				progressMinimum: string,
+				progressMaximum: string,
+				comment: string,
+			}
 			// views: {
 			// },
 		},
