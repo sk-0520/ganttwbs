@@ -90,7 +90,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 			const className = getCellClassName(classNames);
 
 			return (
-				<td key={a.getTime()} id={Timelines.toDaysId(a)} title={holidayEventValue?.event.display} className={className}>
+				<td key={a.ticks} id={Timelines.toDaysId(a)} title={holidayEventValue?.event.display} className={className}>
 					<time dateTime={a.format("U")}>{a.day}</time>
 				</td>
 			);
@@ -105,7 +105,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 			const className = getCellClassName(classNames);
 
 			return (
-				<td key={a.getTime()} title={holidayEventValue?.event.display} className={className}>
+				<td key={a.ticks} title={holidayEventValue?.event.display} className={className}>
 					{locale.common.calendar.week.short[Settings.toWeekDay(a.week)]}
 				</td>
 			);
@@ -120,7 +120,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 			const className = getCellClassName(classNames);
 
 			return (
-				<td key={a.getTime()} title={holidayEventValue?.event.display} className={className}>
+				<td key={a.ticks} title={holidayEventValue?.event.display} className={className}>
 					@
 				</td>
 			);

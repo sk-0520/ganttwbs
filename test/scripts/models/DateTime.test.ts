@@ -9,7 +9,7 @@ describe("DateTime", () => {
 		[DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.create(TimeZone.create("Asia/Tokyo"), 2000, 1, 1, 0, 0, 0, 0)],
 	])("create", (expected: DateTime, actual: DateTime) => {
 		expect(actual.format("U")).toBe(expected.format("U"));
-		expect(actual.getTime()).toBe(expected.getTime());
+		expect(actual.ticks).toBe(expected.ticks);
 	});
 
 	test("parse", () => {
@@ -17,7 +17,7 @@ describe("DateTime", () => {
 		for (let i = 0; i < 20; i++) {
 			const offset = TimeSpan.fromHours(i);
 			const actual = DateTime.parse("2000-01-01T00:00:00", TimeZone.create(offset));
-			expect(actual.getTime() + offset.totalMilliseconds).toBe(expected.getTime());
+			expect(actual.ticks + offset.totalMilliseconds).toBe(expected.ticks);
 		}
 	});
 
@@ -60,7 +60,7 @@ describe("DateTime", () => {
 		const actual = date.add(diff);
 		expect(actual.timeZone.serialize()).toEqual(date.timeZone.serialize());
 		expect(actual.format("U")).toEqual(expected.format("U"));
-		expect(actual.getTime()).toEqual(expected.getTime());
+		expect(actual.ticks).toEqual(expected.ticks);
 	});
 
 	test.each([
@@ -75,7 +75,7 @@ describe("DateTime", () => {
 	])("add - unit", (expected: DateTime, date: DateTime, diff: number, unit: string) => {
 		const actual = date.add(diff, unit as Unit);
 		expect(actual.timeZone.serialize()).toEqual(date.timeZone.serialize());
-		expect(actual.getTime()).toEqual(expected.getTime());
+		expect(actual.ticks).toEqual(expected.ticks);
 	});
 
 	test.each([
@@ -97,7 +97,7 @@ describe("DateTime", () => {
 	])("toDateOnly", (expected, input) => {
 		const actual = input.toDateOnly();
 		expect(actual.timeZone.serialize()).toBe(input.timeZone.serialize());
-		expect(actual.getTime()).toBe(expected.getTime());
+		expect(actual.ticks).toBe(expected.ticks);
 	});
 
 	test.each([

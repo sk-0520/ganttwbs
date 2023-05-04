@@ -16,7 +16,7 @@ export abstract class Calendars {
 				date: date,
 				event: v,
 			};
-			result.set(date.getTime(), value);
+			result.set(date.ticks, value);
 		}
 
 		return result;
@@ -54,7 +54,7 @@ export abstract class Calendars {
 	}
 
 	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<number, Readonly<HolidayEventMapValue>>): Readonly<HolidayEventMapValue> | null {
-		const value = eventMap.get(target.getTime());
+		const value = eventMap.get(target.ticks);
 
 		if (!value) {
 			return null;

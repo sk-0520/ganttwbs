@@ -24,11 +24,11 @@ export abstract class Charts {
 	}
 
 	public static getTimeSpanRange(startDate: Readonly<DateTime>, workRange: SuccessWorkRange): TimeSpanRange {
-		const startDiffTime = workRange.begin.getTime() - startDate.getTime();
+		const startDiffTime = workRange.begin.ticks - startDate.ticks;
 		const startDiffSpan = TimeSpan.fromMilliseconds(startDiffTime);
 		//const startDiffDays = startDiffSpan.totalDays;
 
-		const endDiffTime = workRange.end.getTime() - workRange.begin.getTime();
+		const endDiffTime = workRange.end.ticks - workRange.begin.ticks;
 		const endDiffSpan = TimeSpan.fromMilliseconds(endDiffTime);
 		//const endDiffDays = endDiffSpan.totalDays;
 

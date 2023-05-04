@@ -77,6 +77,14 @@ export class DateTime {
 		return this.date.get("millisecond");
 	}
 
+	/**
+	 * UNIX時間のミリ秒取得。
+	 * @returns
+	 */
+	public get ticks(): number {
+		return +this.date;
+	}
+
 	//#endregion
 
 	//#region function
@@ -206,24 +214,16 @@ export class DateTime {
 	 * @returns
 	 */
 	public diff(target: Readonly<DateTime>): TimeSpan {
-		const time = target.getTime() - this.getTime();
+		const time = target.ticks - this.ticks;
 		return TimeSpan.fromMilliseconds(time);
 	}
 
-	/**
-	 * UNIX時間のミリ秒取得。
-	 * @returns
-	 */
-	public getTime(): number {
-		return this.date.toDate().getTime();
-	}
-
 	public equals(date: DateTime): boolean {
-		return this.getTime() === date.getTime();
+		return this.ticks === date.ticks;
 	}
 
 	public compare(date: DateTime): number {
-		return this.getTime() - date.getTime();
+		return this.ticks - date.ticks;
 	}
 
 	public toDateOnly(): DateTime {

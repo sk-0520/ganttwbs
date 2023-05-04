@@ -312,7 +312,7 @@ export abstract class Timelines {
 				return true;
 			}
 
-			if (holidays.dates.some(a => a.getTime() === dateOnly.getTime())) {
+			if (holidays.dates.some(a => a.ticks === dateOnly.ticks)) {
 				return true;
 			}
 
@@ -512,7 +512,7 @@ export abstract class Timelines {
 					let prevDate = maxWorkRange.end;
 					if (timeline.static) {
 						const staticDate = DateTime.parse(timeline.static, timeZone);
-						const targetTime = Math.max(staticDate.getTime(), maxWorkRange.end.getTime());
+						const targetTime = Math.max(staticDate.ticks, maxWorkRange.end.ticks);
 						prevDate = DateTime.convert(targetTime, timeZone);
 					}
 
