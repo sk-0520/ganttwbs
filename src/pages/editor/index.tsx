@@ -44,10 +44,10 @@ const EditorPage: NextPage = () => {
 		<Layout
 			mode='application'
 			layoutId='editor'
-			title={(editorData ? editorData.fileName + " " : "") + locale.page.editor}
+			title={(editorData ? editorData.fileName + " " : "") + locale.pages.editor.title}
 		>
 			<>
-				{!editorData && <p>{locale.editor.loading}</p>}
+				{!editorData && <p>{locale.pages.editor.loading}</p>}
 				{editorData && (
 					<Tabs
 						defaultIndex={selectedTabIndex}
@@ -56,13 +56,13 @@ const EditorPage: NextPage = () => {
 					>
 						<TabList>
 							<Tab>
-								{locale.editor.tabs.file}
+								{locale.pages.editor.tabs.file}
 							</Tab>
 							<Tab>
-								{locale.editor.tabs.timeline}
+								{locale.pages.editor.tabs.timeline}
 							</Tab>
 							<Tab>
-								{locale.editor.tabs.setting}
+								{locale.pages.editor.tabs.setting}
 							</Tab>
 						</TabList>
 

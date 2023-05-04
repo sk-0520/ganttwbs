@@ -90,7 +90,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 
 		autoSaveDownloadIntervalId.current = window.setInterval(() => {
 			const now = DateTime.today(TimeZone.getClientTimeZone());
-			const autoSaveName = formatAutoDownloadFileName(fileName, locale.editor.file.save.auto.download.fileNameFormat, now);
+			const autoSaveName = formatAutoDownloadFileName(fileName, locale.pages.editor.file.save.auto.download.fileNameFormat, now);
 			downloadJson(autoSaveName, editorData.setting);
 			setAutoSaveDownloadLastTime(now);
 			setAutoSaveDownloadNextTime(now.add(autoSaveDownloadTime));
@@ -147,12 +147,12 @@ const FileEditor: FC<Props> = (props: Props) => {
 	return (
 		<dl className='inputs'>
 			<dt>
-				{locale.editor.file.save.title}
+				{locale.pages.editor.file.save.title}
 			</dt>
 			<dd>
 				<dl className="inputs">
 					<dt>
-						{locale.editor.file.save.fileName}
+						{locale.pages.editor.file.save.fileName}
 					</dt>
 					<dd>
 						<input
@@ -163,26 +163,26 @@ const FileEditor: FC<Props> = (props: Props) => {
 					</dd>
 
 					<dt>
-						{locale.editor.file.save.auto.title}
+						{locale.pages.editor.file.save.auto.title}
 					</dt>
 					<dd>
 						<table className="auto-save">
 							<thead>
 								<tr>
 									<th className="kind-cell">
-										{locale.editor.file.save.auto.columns.kind}
+										{locale.pages.editor.file.save.auto.columns.kind}
 									</th>
 									<th className="enabled-cell">
-										{locale.editor.file.save.auto.columns.enabled}
+										{locale.pages.editor.file.save.auto.columns.enabled}
 									</th>
 									<th className="span-cell">
-										{locale.editor.file.save.auto.columns.span}
+										{locale.pages.editor.file.save.auto.columns.span}
 									</th>
 									<th className="last-time-cell">
-										{locale.editor.file.save.auto.columns.last}
+										{locale.pages.editor.file.save.auto.columns.last}
 									</th>
 									<th className="next-time-cell">
-										{locale.editor.file.save.auto.columns.next}
+										{locale.pages.editor.file.save.auto.columns.next}
 									</th>
 								</tr>
 							</thead>
@@ -219,7 +219,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 			</dd>
 
 			<dt>
-				{locale.editor.file.save.export.title}
+				{locale.pages.editor.file.save.export.title}
 			</dt>
 			<dd>
 				<ul className="inline">
@@ -249,23 +249,23 @@ const FileEditor: FC<Props> = (props: Props) => {
 			</dd>
 
 			<dt>
-				{locale.editor.file.byebye}
+				{locale.pages.editor.file.byebye}
 			</dt>
 			<dd>
 				<ul>
 					<li>
 						<Link href="/">
-							{locale.page.top}
+							{locale.pages.top.title}
 						</Link>
 					</li>
 					<li>
 						<Link href="/new">
-							{locale.page.new}
+							{locale.pages.new.title}
 						</Link>
 					</li>
 					<li>
 						<Link href="/load">
-							{locale.page.load}
+							{locale.pages.load.title}
 						</Link>
 					</li>
 				</ul>

@@ -64,235 +64,244 @@ const locale: Locale = {
 		},
 	},
 
-	page: {
-		top: "トップ",
-		new: "新規",
-		load: "読み込み",
-		editor: "編集",
-		about: "なにこれ？",
-		aboutLibrary: "ライブラリ",
-	},
-
-	editor: {
-		tabs: {
-			file: "ファイル",
-			timeline: "タイムライン",
-			setting: "設定",
+	pages: {
+		top: {
+			title: "トップ",
 		},
+		new: {
+			title: "新規",
+		},
+		load: {
+			title: "読み込み",
+		},
+		editor: {
+			title: "編集",
 
-		loading: "なうろ",
+			tabs: {
+				file: "ファイル",
+				timeline: "タイムライン",
+				setting: "設定",
+			},
 
-		file: {
-			save: {
-				title: "保存設定",
-				fileName: "ファイル名",
+			loading: "なうろ",
 
-				auto: {
-					title: "自動保存",
+			file: {
+				save: {
+					title: "保存設定",
+					fileName: "ファイル名",
+
+					auto: {
+						title: "自動保存",
+
+						columns: {
+							kind: "対象",
+							enabled: "実施",
+							span: "間隔(分)",
+							last: "前回",
+							next: "次回",
+						},
+
+						storage: {
+							kind: "ストレージ",
+						},
+						download: {
+							kind: "ダウンロード",
+							fileNameFormat: "${ORIGINAL_NAME}(自動保存-${TIMESTAMP}).${ORIGINAL_EXT}"
+						},
+					},
+
+					export: {
+						title: "出力",
+					},
+				},
+
+				byebye: "さいなら",
+			},
+
+			timeline: {
+				header: {
+					operations: {
+						addNewGroupTimeline: "グループ追加",
+						addNewTaskTimeline: "タスク追加",
+						importTimelines: "タイムライン追加",
+						navigateFirst: "先頭",
+						navigateToday: "けふ",
+						navigateLast: "最終",
+					},
+					columns: {
+						id: "ID",
+						subject: "作業",
+						workload: "工数",
+						resource: "割当",
+						relation: "💩",
+						workRangeFrom: "開始",
+						workRangeTo: "終了",
+						workRangeError: "あかん",
+						progress: "進捗率",
+						controls: "操作",
+					},
+				},
+				workRange: {
+					kind: {
+						loading: "読み込み中",
+						noInput: "未入力",
+						selfSelectedError: "自身を選択",
+						noChildren: "子タイムラインなし",
+						relationNoInput: "関係タイムライン未入力",
+						relationError: "関係タイムラインエラー",
+						recursiveError: "反復計算エラー",
+						unknownError: "エラー",
+					}
+				},
+				timelines: {
+					range: {
+						immediate: {
+							title: "即時実行",
+							attachBeforeTimeline: "直近項目に紐づける",
+						},
+						continue: {
+							title: "継続実行",
+							attachBeforeTimeline: "直近項目に紐づける",
+							clearRelation: "紐づけを解除",
+							clearDate: "固定日付を解除",
+						},
+					},
+					controls: {
+						move: {
+							title: "移動",
+							up: "上へ",
+							down: "下へ",
+							parent: "下げる",
+						},
+						add: {
+							title: "追加",
+							group: "グループ",
+							task: "タスク",
+							import: "追加",
+						},
+						others: {
+							title: "その他",
+							setting: "詳細設定",
+						},
+					}
+				},
+				importDialog: {
+					title: "タイムライン追加",
+					subject: "グループ名",
+					contents: "タスクタイムライン",
+				},
+				detailDialog: {
+					title: "タイムライン設定",
+					progressMinimum: "未対応",
+					progressMaximum: "完了",
+					comment: "作業",
+				}
+			},
+
+			setting: {
+				tabs: {
+					general: "基本",
+					resource: "リソース",
+					calendar: "カレンダー",
+					theme: "テーマ",
+				},
+
+				general: {
+					title: "タイトル",
+					recursive: "反復計算数",
+					selectCurrentTimeZoneFormat: "現在のタイムゾーン(${TIMEZONE})"
+				},
+
+				resource: {
+					groupName: "グループ名",
+					choiceColor: "色を割り振り",
+					newGroup: "新規グループ",
 
 					columns: {
-						kind: "対象",
-						enabled: "実施",
-						span: "間隔(分)",
-						last: "前回",
-						next: "次回",
+						memberName: "要員名",
+						costFormat: "原価(${UNIT})",
+						salesFormat: "単価(${UNIT})",
+						theme: "テーマ",
+						rate: "売上率",
 					},
 
-					storage: {
-						kind: "ストレージ",
-					},
-					download: {
-						kind: "ダウンロード",
-						fileNameFormat: "${ORIGINAL_NAME}(自動保存-${TIMESTAMP}).${ORIGINAL_EXT}"
-					},
+					choiceColorDialog: {
+						title: "色選択",
+						baseColor: "基準色",
+						gradientColor: "グラデーション",
+						resetRandomColor: "ランダム再構築",
+
+						kinds: {
+							same: "同じ",
+							analogy: "類似",
+							monochrome: "モノクロ",
+							gradient: "グラデーション",
+							random: "ランダム",
+						},
+					}
 				},
 
-				export: {
-					title: "出力",
-				},
-			},
-
-			byebye: "さいなら",
-		},
-
-		timeline: {
-			header: {
-				operations: {
-					addNewGroupTimeline: "グループ追加",
-					addNewTaskTimeline: "タスク追加",
-					importTimelines: "タイムライン追加",
-					navigateFirst: "先頭",
-					navigateToday: "けふ",
-					navigateLast: "最終",
-				},
-				columns: {
-					id: "ID",
-					subject: "作業",
-					workload: "工数",
-					resource: "割当",
-					relation: "💩",
-					workRangeFrom: "開始",
-					workRangeTo: "終了",
-					workRangeError: "あかん",
-					progress: "進捗率",
-					controls: "操作",
-				},
-			},
-			workRange: {
-				kind: {
-					loading: "読み込み中",
-					noInput: "未入力",
-					selfSelectedError: "自身を選択",
-					noChildren: "子タイムラインなし",
-					relationNoInput: "関係タイムライン未入力",
-					relationError: "関係タイムラインエラー",
-					recursiveError: "反復計算エラー",
-					unknownError: "エラー",
-				}
-			},
-			timelines: {
-				range: {
-					immediate: {
-						title: "即時実行",
-						attachBeforeTimeline: "直近項目に紐づける",
-					},
-					continue: {
-						title: "継続実行",
-						attachBeforeTimeline: "直近項目に紐づける",
-						clearRelation: "紐づけを解除",
-						clearDate: "固定日付を解除",
-					},
-				},
-				controls: {
-					move: {
-						title: "移動",
-						up: "上へ",
-						down: "下へ",
-						parent: "下げる",
-					},
-					add: {
-						title: "追加",
-						group: "グループ",
-						task: "タスク",
-						import: "追加",
-					},
-					others: {
-						title: "その他",
-						setting: "詳細設定",
-					},
-				}
-			},
-			importDialog: {
-				title: "タイムライン追加",
-				subject: "グループ名",
-				contents: "タスクタイムライン",
-			},
-			detailDialog: {
-				title: "タイムライン設定",
-				progressMinimum: "未対応",
-				progressMaximum: "完了",
-				comment: "作業",
-			}
-		},
-
-		setting: {
-			tabs: {
-				general: "基本",
-				resource: "リソース",
-				calendar: "カレンダー",
-				theme: "テーマ",
-			},
-
-			general: {
-				title: "タイトル",
-				recursive: "反復計算数",
-				selectCurrentTimeZoneFormat: "現在のタイムゾーン(${TIMEZONE})"
-			},
-
-			resource: {
-				groupName: "グループ名",
-				choiceColor: "色を割り振り",
-				newGroup: "新規グループ",
-
-				columns: {
-					memberName: "要員名",
-					costFormat: "原価(${UNIT})",
-					salesFormat: "単価(${UNIT})",
-					theme: "テーマ",
-					rate: "売上率",
-				},
-
-				choiceColorDialog: {
-					title: "色選択",
-					baseColor: "基準色",
-					gradientColor: "グラデーション",
-					resetRandomColor: "ランダム再構築",
-
-					kinds: {
-						same: "同じ",
-						analogy: "類似",
-						monochrome: "モノクロ",
-						gradient: "グラデーション",
-						random: "ランダム",
-					},
-				}
-			},
-
-			calendar: {
-
-				range: {
-					title: "日付範囲",
-					begin: "開始",
-					end: "終了",
-				},
-
-				week: {
-					title: "曜日設定",
-				},
-
-				holiday: {
-					title: "祝日",
-					description: "以下の形式で祝日を入力してください。",
-					example: "YYYY-MM-DD<TAB>説明",
-
-					normal: {
-						description: "国などが定める通常の祝日を設定してください。",
-					},
-					special: {
-						description: "会社の年末年始・夏季休暇などを設定してください。通常の祝日と重複する場合、こちらが優先されます。",
-					},
-				},
-
-			},
-
-			theme: {
 				calendar: {
-					title: "カレンダー",
+
+					range: {
+						title: "日付範囲",
+						begin: "開始",
+						end: "終了",
+					},
+
+					week: {
+						title: "曜日設定",
+					},
+
+					holiday: {
+						title: "祝日",
+						description: "以下の形式で祝日を入力してください。",
+						example: "YYYY-MM-DD<TAB>説明",
+
+						normal: {
+							description: "国などが定める通常の祝日を設定してください。",
+						},
+						special: {
+							description: "会社の年末年始・夏季休暇などを設定してください。通常の祝日と重複する場合、こちらが優先されます。",
+						},
+					},
+
 				},
 
-				group: {
-					title: "グループ",
+				theme: {
+					calendar: {
+						title: "カレンダー",
+					},
 
-					levelFormat: "レベル ${LEVEL}",
-					collectiveSetting: "一括設定",
-					collectiveSettingDialog: {
-						title: "一括設定",
-						countInfinity: "件数(無限)",
-						countFiniteFormat: "件数(${COUNT})",
-						color: "色",
+					group: {
+						title: "グループ",
+
+						levelFormat: "レベル ${LEVEL}",
+						collectiveSetting: "一括設定",
+						collectiveSettingDialog: {
+							title: "一括設定",
+							countInfinity: "件数(無限)",
+							countFiniteFormat: "件数(${COUNT})",
+							color: "色",
+						},
+					},
+
+					timeline: {
+						title: "タイムライン",
+
+						defaultGroup: "未設定グループ",
+						defaultTask: "未設定タスク",
+						completed: "完了",
 					},
 				},
-
-				timeline: {
-					title: "タイムライン",
-
-					defaultGroup: "未設定グループ",
-					defaultTask: "未設定タスク",
-					completed: "完了",
-				},
 			},
-		}
-
+		},
+		about: {
+			title: "なにこれ？",
+		},
+		aboutLibrary: {
+			title: "ライブラリ",
+		},
 	},
 
 	styles: {

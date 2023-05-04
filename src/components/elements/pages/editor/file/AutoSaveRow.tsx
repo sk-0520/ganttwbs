@@ -29,11 +29,11 @@ const AutoSaveRow: FC<Props> = (props: Props) => {
 	};
 	const kindValues: KindValues = props.kind === AutoSaveKind.Storage
 		? {
-			kind: locale.editor.file.save.auto.storage.kind,
+			kind: locale.pages.editor.file.save.auto.storage.kind,
 			step: props.configuration.autoSave.storage.step,
 		}
 		: {
-			kind: locale.editor.file.save.auto.download.kind,
+			kind: locale.pages.editor.file.save.auto.download.kind,
 			step: props.configuration.autoSave.download.step,
 		}
 		;

@@ -87,7 +87,7 @@ const ThemeGroupSettingEditor: FC = () => {
 							<tr key={a.key}>
 								<td>
 									{Strings.replaceMap(
-										locale.editor.setting.theme.group.levelFormat,
+										locale.pages.editor.setting.theme.group.levelFormat,
 										{
 											"LEVEL": (i + 1).toString(),
 										}
@@ -127,7 +127,7 @@ const ThemeGroupSettingEditor: FC = () => {
 								type='button'
 								onClick={handleStartResetColor}
 							>
-								{locale.editor.setting.theme.group.collectiveSetting}
+								{locale.pages.editor.setting.theme.group.collectiveSetting}
 							</button>
 						</td>
 					</tr>
@@ -137,7 +137,7 @@ const ThemeGroupSettingEditor: FC = () => {
 			{visibleResetColor && (
 				<Dialog
 					button="submit"
-					title={locale.editor.setting.theme.group.collectiveSettingDialog.title}
+					title={locale.pages.editor.setting.theme.group.collectiveSettingDialog.title}
 					callbackClose={r => {
 						if (r === "submit") {
 							const colors = resetCount <= 1
@@ -152,7 +152,7 @@ const ThemeGroupSettingEditor: FC = () => {
 				>
 					<dl className="inputs">
 						<dt>
-							{locale.editor.setting.theme.group.collectiveSettingDialog.countInfinity}
+							{locale.pages.editor.setting.theme.group.collectiveSettingDialog.countInfinity}
 						</dt>
 						<dd>
 							<input
@@ -164,7 +164,7 @@ const ThemeGroupSettingEditor: FC = () => {
 						</dd>
 						<dd
 							title={Strings.replaceMap(
-								locale.editor.setting.theme.group.collectiveSettingDialog.countFiniteFormat,
+								locale.pages.editor.setting.theme.group.collectiveSettingDialog.countFiniteFormat,
 								{
 									"COUNT": reset.maximum.toString(),
 								}
@@ -180,7 +180,7 @@ const ThemeGroupSettingEditor: FC = () => {
 						</dd>
 
 						<dt>
-							{locale.editor.setting.theme.group.collectiveSettingDialog.color}
+							{locale.pages.editor.setting.theme.group.collectiveSettingDialog.color}
 						</dt>
 						<dd>
 							{/* ブラウザに任せる, ダイアログ内でぶわってするとぶわってなる */}

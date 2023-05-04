@@ -90,7 +90,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 						<tbody>
 							<tr>
 								<th className="col-header">
-									{locale.editor.timeline.timelines.controls.move.title}
+									{locale.pages.editor.timeline.timelines.controls.move.title}
 								</th>
 								<td className="col-cell">
 									<button
@@ -99,7 +99,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 									>
 										<IconLabel
 											kind={IconKind.MoveUp}
-											label={locale.editor.timeline.timelines.controls.move.up}
+											label={locale.pages.editor.timeline.timelines.controls.move.up}
 										/>
 									</button>
 								</td>
@@ -110,7 +110,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 									>
 										<IconLabel
 											kind={IconKind.MoveDown}
-											label={locale.editor.timeline.timelines.controls.move.down}
+											label={locale.pages.editor.timeline.timelines.controls.move.down}
 										/>
 									</button>
 								</td>
@@ -121,7 +121,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 									>
 										<IconLabel
 											kind={IconKind.MovePrev}
-											label={locale.editor.timeline.timelines.controls.move.parent}
+											label={locale.pages.editor.timeline.timelines.controls.move.parent}
 										/>
 									</button>
 								</td>
@@ -135,7 +135,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 											: "直近"
 									}
 								>
-									{locale.editor.timeline.timelines.controls.add.title}
+									{locale.pages.editor.timeline.timelines.controls.add.title}
 								</th>
 								<td className="col-cell">
 									<button
@@ -144,7 +144,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 									>
 										<IconLabel
 											kind={IconKind.TimelineAddGroup}
-											label={locale.editor.timeline.timelines.controls.add.group}
+											label={locale.pages.editor.timeline.timelines.controls.add.group}
 										/>
 									</button>
 								</td>
@@ -155,7 +155,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 									>
 										<IconLabel
 											kind={IconKind.TimelineAddTask}
-											label={locale.editor.timeline.timelines.controls.add.task}
+											label={locale.pages.editor.timeline.timelines.controls.add.task}
 										/>
 									</button>
 								</td>
@@ -166,14 +166,14 @@ const ControlsCell: FC<Props> = (props: Props) => {
 									>
 										<IconLabel
 											kind={IconKind.TimelineImport}
-											label={locale.editor.timeline.timelines.controls.add.import}
+											label={locale.pages.editor.timeline.timelines.controls.add.import}
 										/>
 									</button>
 								</td>
 							</tr>
 							<tr>
 								<th className="col-header">
-									{locale.editor.timeline.timelines.controls.others.title}
+									{locale.pages.editor.timeline.timelines.controls.others.title}
 								</th>
 								<td className="col-cell">
 									<button
@@ -182,7 +182,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 									>
 										<IconLabel
 											kind={IconKind.Edit}
-											label={locale.editor.timeline.timelines.controls.others.setting}
+											label={locale.pages.editor.timeline.timelines.controls.others.setting}
 										/>
 									</button>
 								</td>

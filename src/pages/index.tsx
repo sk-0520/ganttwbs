@@ -12,17 +12,17 @@ const TopPage: NextPage = () => {
 			<ul>
 				<li>
 					<Link href="/new">
-						{locale.page.new}
+						{locale.pages.new.title}
 					</Link>
 				</li>
 				<li>
 					<Link href="/load">
-						{locale.page.load}
+						{locale.pages.load.title}
 					</Link>
 				</li>
 				<li>
 					<Link href="/about">
-						{locale.page.about}
+						{locale.pages.about.title}
 					</Link>
 				</li>
 			</ul>

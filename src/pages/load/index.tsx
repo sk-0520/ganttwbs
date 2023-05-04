@@ -21,7 +21,7 @@ const LoadPage: NextPage = () => {
 		<Layout
 			mode='page'
 			layoutId='load'
-			title={locale.page.load}
+			title={locale.pages.load.title}
 		>
 			<form onSubmit={handleSubmit(data => onSubmit(data, router))}>
 				<dl className='inputs'>

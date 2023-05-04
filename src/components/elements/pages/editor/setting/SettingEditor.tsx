@@ -50,16 +50,16 @@ const SettingEditor: FC<Props> = (props: Props) => {
 				<Tabs defaultIndex={props.configuration.tabIndex.setting} forceRenderTabPanel={true}>
 					<TabList>
 						<Tab>
-							{locale.editor.setting.tabs.general}
+							{locale.pages.editor.setting.tabs.general}
 						</Tab>
 						<Tab>
-							{locale.editor.setting.tabs.resource}
+							{locale.pages.editor.setting.tabs.resource}
 						</Tab>
 						<Tab>
-							{locale.editor.setting.tabs.calendar}
+							{locale.pages.editor.setting.tabs.calendar}
 						</Tab>
 						<Tab>
-							{locale.editor.setting.tabs.theme}
+							{locale.pages.editor.setting.tabs.theme}
 						</Tab>
 					</TabList>
 
@@ -74,21 +74,21 @@ const SettingEditor: FC<Props> = (props: Props) => {
 					<TabPanel className='setting-tab-item calendar'>
 						<dl className="inputs">
 							<dt>
-								{locale.editor.setting.calendar.range.title}
+								{locale.pages.editor.setting.calendar.range.title}
 							</dt>
 							<dd className="range">
 								<CalendarRangeSettingEditor />
 							</dd>
 
 							<dt>
-								{locale.editor.setting.calendar.week.title}
+								{locale.pages.editor.setting.calendar.week.title}
 							</dt>
 							<dd className="week">
 								<CalendarWeekSettingEditor />
 							</dd>
 
 							<dt>
-								{locale.editor.setting.calendar.holiday.title}
+								{locale.pages.editor.setting.calendar.holiday.title}
 							</dt>
 							<dd className="holiday">
 								<CalendarHolidaySettingEditor />
@@ -99,19 +99,19 @@ const SettingEditor: FC<Props> = (props: Props) => {
 					<TabPanel className='setting-tab-item theme'>
 						<dl className='inputs'>
 							<dt>
-								{locale.editor.setting.theme.calendar.title}
+								{locale.pages.editor.setting.theme.calendar.title}
 							</dt>
 							<dd>
 								<ThemeCalendarSettingEditor />
 							</dd>
 							<dt>
-								{locale.editor.setting.theme.group.title}
+								{locale.pages.editor.setting.theme.group.title}
 							</dt>
 							<dd>
 								<ThemeGroupSettingEditor />
 							</dd>
 							<dt>
-								{locale.editor.setting.theme.timeline.title}
+								{locale.pages.editor.setting.theme.timeline.title}
 							</dt>
 							<dd>
 								<ThemeTimelineSettingEditor />

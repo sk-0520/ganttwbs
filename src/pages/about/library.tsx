@@ -32,7 +32,7 @@ const AboutLibraryPage: NextPage = () => {
 		<Layout
 			mode='page'
 			layoutId='about-library'
-			title={locale.page.aboutLibrary}
+			title={locale.pages.aboutLibrary.title}
 		>
 			<table className="license">
 				<thead>

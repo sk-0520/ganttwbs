@@ -43,7 +43,7 @@ const ThemeTimelineSettingEditor: FC = () => {
 			<tbody>
 				<tr>
 					<td>
-						{locale.editor.setting.theme.timeline.defaultGroup}
+						{locale.pages.editor.setting.theme.timeline.defaultGroup}
 					</td>
 					<td>
 						<PlainColorPicker
@@ -55,7 +55,7 @@ const ThemeTimelineSettingEditor: FC = () => {
 
 				<tr>
 					<td>
-						{locale.editor.setting.theme.timeline.defaultTask}
+						{locale.pages.editor.setting.theme.timeline.defaultTask}
 					</td>
 					<td>
 						<PlainColorPicker
@@ -67,7 +67,7 @@ const ThemeTimelineSettingEditor: FC = () => {
 
 				<tr>
 					<td>
-						{locale.editor.setting.theme.timeline.completed}
+						{locale.pages.editor.setting.theme.timeline.completed}
 					</td>
 					<td>
 						<PlainColorPicker

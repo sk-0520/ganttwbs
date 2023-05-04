@@ -36,7 +36,7 @@ const NewPage: NextPage = () => {
 		<Layout
 			mode='page'
 			layoutId='new'
-			title={locale.page.new}
+			title={locale.pages.new.title}
 		>
 			<p>ここで入力する内容は編集時に変更可能です。</p>
 
