@@ -14,6 +14,7 @@ import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
+import { useId } from "react";
 
 interface DateRange {
 	begin: DateTime;
@@ -31,12 +32,20 @@ interface Input {
 const NewPage: NextPage = () => {
 	const locale = useLocale();
 	const router = useRouter();
-	//const { register, handleSubmit, formState: { errors } } = useForm();
+	const baseId = useId();
 	const { register, handleSubmit, } = useForm<Input>();
 
 	const timeZone = TimeZone.getClientTimeZone();
 	const fromDate = DateTime.today(timeZone);
-	const defaultMonthCount = 12;
+	const defaultMonthCount = 6;
+
+	const id = {
+		title: `${baseId}-title`,
+		rangeBeginYear: `${baseId}-rangeBeginYear`,
+		rangeBeginMonth: `${baseId}-rangeBeginMonth`,
+		rangeMonthCount: `${baseId}-rangeMonthCount`,
+	} as const;
+
 
 	return (
 		<Layout
@@ -51,17 +60,17 @@ const NewPage: NextPage = () => {
 			<form onSubmit={handleSubmit(data => onSubmit(data, timeZone, router))}>
 				<dl className='inputs'>
 					<dt>
-						{locale.pages.new.projectName}
+						<label htmlFor={id.title}>
+							{locale.pages.new.projectName}
+						</label>
 					</dt>
 					<dd>
 						<input
+							id={id.title}
 							type='text'
 							/*DEBUG*/ defaultValue={fromDate.format("L")}
 							{...register("title", {
-								required: {
-									value: true,
-									message: "必須"
-								}
+								required: true,
 							})}
 						/>
 					</dd>
@@ -74,51 +83,58 @@ const NewPage: NextPage = () => {
 							<tbody>
 								<tr>
 									<th>
-										{locale.pages.new.range.beginYear}
+										<label htmlFor={id.rangeBeginYear}>
+											{locale.pages.new.range.beginYear}
+										</label>
 									</th>
 									<td>
 										<input
+											id={id.rangeBeginYear}
 											type='number'
+											min={1900}
 											defaultValue={fromDate.year}
 											{...register("rangeBeginYear", {
-												required: {
-													value: true,
-													message: "必須"
-												}
+												valueAsNumber: true,
+												required: true,
 											})}
 										/>
 									</td>
 								</tr>
 								<tr>
 									<th>
-										{locale.pages.new.range.beginMonth}
+										<label htmlFor={id.rangeBeginMonth}>
+											{locale.pages.new.range.beginMonth}
+										</label>
 									</th>
 									<td>
 										<input
+											id={id.rangeBeginMonth}
 											type='number'
+											min={1}
+											max={12}
 											defaultValue={fromDate.month}
 											{...register("rangeBeginMonth", {
-												required: {
-													value: true,
-													message: "必須"
-												}
+												valueAsNumber: true,
+												required: true,
 											})}
 										/>
 									</td>
 								</tr>
 								<tr>
 									<th>
-										{locale.pages.new.range.monthCount}
+										<label htmlFor={id.rangeMonthCount}>
+											{locale.pages.new.range.monthCount}
+										</label>
 									</th>
 									<td>
 										<input
+											id={id.rangeMonthCount}
 											type='number'
+											min={1}
 											defaultValue={defaultMonthCount}
 											{...register("rangeMonthCount", {
-												required: {
-													value: true,
-													message: "必須"
-												}
+												valueAsNumber: true,
+												required: true,
 											})}
 										/>
 									</td>
@@ -198,9 +214,10 @@ function onSubmit(data: Input, timeZone: TimeZone, router: NextRouter) {
 }
 
 function convertDateRange(data: Input, timeZone: TimeZone): DateRange {
+	const begin = DateTime.create(timeZone, data.rangeBeginYear, data.rangeBeginMonth);
 	const result: DateRange = {
-		begin: DateTime.today(timeZone),
-		end: DateTime.today(timeZone),
+		begin: begin,
+		end: begin.add(data.rangeMonthCount, "month"),
 	};
 
 	return result;
