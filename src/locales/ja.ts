@@ -74,9 +74,19 @@ const locale: Locale = {
 			description: "ここで入力する内容は編集時に変更可能です。",
 			projectName: "タイトル",
 
-			createMode: "作成方法",
-			createModeEmpty: "空データ",
-			createModeSample: "サンプル",
+			range: {
+				title: "範囲",
+
+				beginYear: "開始年",
+				beginMonth: "開始月",
+				monthCount: "月数",
+			},
+
+			mode: {
+				title: "作成方法",
+				empty: "空データ",
+				sample: "サンプル",
+			},
 
 			submit: "作業開始",
 		},

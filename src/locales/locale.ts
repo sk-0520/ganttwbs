@@ -64,9 +64,20 @@ export interface Locale {
 			description: string,
 			projectName: string,
 
-			createMode: string,
-			createModeEmpty: string,
-			createModeSample: string,
+			range: {
+				title: string,
+
+				beginYear: string,
+				beginMonth: string,
+				monthCount: string,
+			},
+
+			mode: {
+				title: string,
+
+				empty: string,
+				sample: string,
+			}
 
 			submit: string,
 		},

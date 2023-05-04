@@ -6,7 +6,7 @@ import Layout from "@/components/layout/Layout";
 import { useLocale } from "@/locales/locale";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { EditorData } from "@/models/data/EditorData";
-import { DateOnly, Member, Setting } from "@/models/data/Setting";
+import { Member, Setting } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Goto } from "@/models/Goto";
@@ -15,10 +15,16 @@ import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 
+interface DateRange {
+	begin: DateTime;
+	end: DateTime;
+}
+
 interface Input {
 	title: string;
-	dateFrom: DateOnly;
-	dateTo: DateOnly;
+	rangeBeginYear: number,
+	rangeBeginMonth: number,
+	rangeMonthCount: number,
 	mode: "empty" | "sample";
 }
 
@@ -30,7 +36,7 @@ const NewPage: NextPage = () => {
 
 	const timeZone = TimeZone.getClientTimeZone();
 	const fromDate = DateTime.today(timeZone);
-	const toDate = fromDate.add(TimeSpan.fromDays(180));
+	const defaultMonthCount = 12;
 
 	return (
 		<Layout
@@ -60,39 +66,69 @@ const NewPage: NextPage = () => {
 						/>
 					</dd>
 
-					<dt>日付範囲</dt>
+					<dt>
+						{locale.pages.new.range.title}
+					</dt>
 					<dd>
-						<label>
-							開始
-							<input
-								type='date'
-								defaultValue={fromDate.format("yyyy-MM-dd")}
-								{...register("dateFrom", {
-									required: {
-										value: true,
-										message: "必須"
-									}
-								})}
-							/>
-						</label>
-						<span>～</span>
-						<label>
-							<input
-								type='date'
-								defaultValue={toDate.format("yyyy-MM-dd")}
-								{...register("dateTo", {
-									required: {
-										value: true,
-										message: "必須"
-									}
-								})}
-							/>
-							終了
-						</label>
+						<table className="date-range">
+							<tbody>
+								<tr>
+									<th>
+										{locale.pages.new.range.beginYear}
+									</th>
+									<td>
+										<input
+											type='number'
+											defaultValue={fromDate.year}
+											{...register("rangeBeginYear", {
+												required: {
+													value: true,
+													message: "必須"
+												}
+											})}
+										/>
+									</td>
+								</tr>
+								<tr>
+									<th>
+										{locale.pages.new.range.beginMonth}
+									</th>
+									<td>
+										<input
+											type='number'
+											defaultValue={fromDate.month}
+											{...register("rangeBeginMonth", {
+												required: {
+													value: true,
+													message: "必須"
+												}
+											})}
+										/>
+									</td>
+								</tr>
+								<tr>
+									<th>
+										{locale.pages.new.range.monthCount}
+									</th>
+									<td>
+										<input
+											type='number'
+											defaultValue={defaultMonthCount}
+											{...register("rangeMonthCount", {
+												required: {
+													value: true,
+													message: "必須"
+												}
+											})}
+										/>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</dd>
 
 					<dt>
-						{locale.pages.new.createMode}
+						{locale.pages.new.mode.title}
 					</dt>
 					<dd>
 						<ul className="inline">
@@ -105,7 +141,7 @@ const NewPage: NextPage = () => {
 											required: true
 										})}
 									/>
-									{locale.pages.new.createModeEmpty}
+									{locale.pages.new.mode.empty}
 								</label>
 							</li>
 							<li>
@@ -117,7 +153,7 @@ const NewPage: NextPage = () => {
 											required: true
 										})}
 									/>
-									{locale.pages.new.createModeSample}
+									{locale.pages.new.mode.sample}
 								</label>
 							</li>
 						</ul>
@@ -161,9 +197,20 @@ function onSubmit(data: Input, timeZone: TimeZone, router: NextRouter) {
 	Goto.editor(editData, router);
 }
 
+function convertDateRange(data: Input, timeZone: TimeZone): DateRange {
+	const result: DateRange = {
+		begin: DateTime.today(timeZone),
+		end: DateTime.today(timeZone),
+	};
+
+	return result;
+}
+
 function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 	const regularHolidays = DefaultSettings.getRegularHolidays();
 	const defaultWeekColors = Settings.getWeekDays().filter(a => !regularHolidays.has(a)).map(a => ({ [a]: "#000000" })).reduce((r, a) => ({ ...r, ...a }));
+
+	const range = convertDateRange(data, timeZone);
 
 	const setting: Setting = {
 		name: data.title,
@@ -176,8 +223,8 @@ function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 				events: {}
 			},
 			range: {
-				from: data.dateFrom,
-				to: data.dateTo
+				from: Timelines.serializeDateTime(range.begin),
+				to: Timelines.serializeDateTime(range.end),
 			},
 		},
 		theme: {
@@ -199,9 +246,11 @@ function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 	const setting = createEmptySetting(data, timeZone);
 
+	const range = convertDateRange(data, timeZone);
+
 	const calendarRange: CalendarRange = {
-		from: DateTime.parse(data.dateFrom, timeZone),
-		to: DateTime.parse(data.dateTo, timeZone),
+		from: range.begin,
+		to: range.end,
 	};
 	const お疲れ様 = calendarRange.from.add(2, "month");
 
