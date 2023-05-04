@@ -167,8 +167,8 @@ function toContext(configuration: Configuration, setting: Setting): SettingConte
 		})).sort((a, b) => a.name.localeCompare(b.name)),
 		calendar: {
 			range: {
-				from: setting.calendar.range.from,
-				to: setting.calendar.range.to,
+				begin: setting.calendar.range.begin,
+				end: setting.calendar.range.end,
 			},
 			holiday: {
 				regulars: {
@@ -248,8 +248,8 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 		timeZone: timeZone.serialize(),
 		calendar: {
 			range: {
-				from: context.calendar.range.from,
-				to: context.calendar.range.to,
+				begin: context.calendar.range.begin,
+				end: context.calendar.range.end,
 			},
 			holiday: {
 				regulars: new Array<{ week: WeekDay, value: boolean }>().concat([

@@ -32,10 +32,11 @@ export abstract class Charts {
 		const endDiffSpan = TimeSpan.fromMilliseconds(endDiffTime);
 		//const endDiffDays = endDiffSpan.totalDays;
 
-		return {
-			start: startDiffSpan,
+		const result: TimeSpanRange = {
+			begin: startDiffSpan,
 			end: endDiffSpan,
 		};
+		return result;
 	}
 
 	public static createChartArea(timeSpanRange: TimeSpanRange | null, index: number, cell: CellBox, chartSize: AreaSize): ChartArea {
@@ -44,7 +45,7 @@ export abstract class Charts {
 
 		const result: ChartArea = {
 			timeSpanRange: timeSpanRange,
-			x: timeSpanRange ? timeSpanRange.start.totalDays * width : 0,
+			x: timeSpanRange ? timeSpanRange.begin.totalDays * width : 0,
 			y: index * height,
 			width: timeSpanRange ? timeSpanRange.end.totalDays * width : 0,
 			height: height,

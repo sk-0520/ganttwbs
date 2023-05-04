@@ -30,8 +30,8 @@ export interface GroupSetting {
 
 export interface CalendarSetting {
 	range: {
-		from: DateOnly;
-		to: DateOnly;
+		begin: DateOnly;
+		end: DateOnly;
 	};
 	holiday: {
 		regulars: { [key in WeekDay]: boolean };

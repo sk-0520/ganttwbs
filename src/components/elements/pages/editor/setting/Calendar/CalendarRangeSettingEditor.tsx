@@ -13,16 +13,16 @@ const CalendarRangeSettingEditor: FC = () => {
 				{locale.pages.editor.setting.calendar.range.begin}
 				<input
 					type='date'
-					defaultValue={settingContext.calendar.range.from}
-					onChange={ev => settingContext.calendar.range.from = ev.target.value}
+					defaultValue={settingContext.calendar.range.begin}
+					onChange={ev => settingContext.calendar.range.begin = ev.target.value}
 				/>
 			</label>
 			<span>～</span>
 			<label>
 				<input
 					type='date'
-					defaultValue={settingContext.calendar.range.to}
-					onChange={ev => settingContext.calendar.range.to = ev.target.value}
+					defaultValue={settingContext.calendar.range.end}
+					onChange={ev => settingContext.calendar.range.end = ev.target.value}
 				/>
 				{locale.pages.editor.setting.calendar.range.end}
 			</label>

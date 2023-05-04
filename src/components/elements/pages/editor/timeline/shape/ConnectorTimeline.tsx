@@ -45,7 +45,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 		].map(([x, y]) => x + "," + y).join(" "),
 	};
 
-	const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.from, currentWorkRange);
+	const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.begin, currentWorkRange);
 	const currentChartArea = Charts.createChartArea(currentTimeSpanRange, props.currentIndex, cell, props.chartSize);
 
 	const currentColor = Charts.getTaskBackground(props.currentTimeline, props.resourceInfo.memberMap, props.setting.theme);
@@ -73,7 +73,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 					return null;
 				}
 
-				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.from, previewWorkRange);
+				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.begin, previewWorkRange);
 				const previousChartArea = Charts.createChartArea(previousTimeSpanRange, previousIndex, cell, props.chartSize);
 
 				// 基準座標を設定

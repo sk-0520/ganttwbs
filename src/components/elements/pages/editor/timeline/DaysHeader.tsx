@@ -34,7 +34,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 		const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
 		const dates = Arrays
 			.range(0, days)
-			.map(a => props.calendarInfo.range.from.add(TimeSpan.fromDays(a)))
+			.map(a => props.calendarInfo.range.begin.add(TimeSpan.fromDays(a)))
 			;
 
 		const yearMonthBucket = new Array<YearMonth>();

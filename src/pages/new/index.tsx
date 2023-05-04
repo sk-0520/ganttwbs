@@ -240,8 +240,8 @@ function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 				events: {}
 			},
 			range: {
-				from: Timelines.serializeDateTime(range.begin),
-				to: Timelines.serializeDateTime(range.end),
+				begin: Timelines.serializeDateTime(range.begin),
+				end: Timelines.serializeDateTime(range.end),
 			},
 		},
 		theme: {
@@ -266,10 +266,10 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 	const range = convertDateRange(data, timeZone);
 
 	const calendarRange: CalendarRange = {
-		from: range.begin,
-		to: range.end,
+		begin: range.begin,
+		end: range.end,
 	};
-	const お疲れ様 = calendarRange.from.add(2, "month");
+	const お疲れ様 = calendarRange.begin.add(2, "month");
 
 	const price = DefaultSettings.getPriceSetting();
 
@@ -342,7 +342,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 			"kind": "task",
 			"id": "680e27c0-7320-441e-9ec1-cf485996824e",
 			"previous": [],
-			"static": Timelines.serializeDateTime(calendarRange.from.add(TimeSpan.fromDays(10))),
+			"static": Timelines.serializeDateTime(calendarRange.begin.add(TimeSpan.fromDays(10))),
 			"progress": 0,
 			"workload": Timelines.serializeWorkload(TimeSpan.fromDays(1)),
 			"memberId": "",

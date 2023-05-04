@@ -62,7 +62,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
 		for (let i = 0; i < days; i++) {
-			const date = props.calendarInfo.range.from.add(TimeSpan.fromDays(i));
+			const date = props.calendarInfo.range.begin.add(TimeSpan.fromDays(i));
 
 			const gridX = cell.width.value + cell.width.value * i;
 

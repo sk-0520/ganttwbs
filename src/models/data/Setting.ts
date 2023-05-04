@@ -65,8 +65,8 @@ const HolidaySchema = z.object({
 export type Holiday = z.infer<typeof HolidaySchema>;
 
 const WorkDateRangeSchema = z.object({
-	from: DateOnlySchema,
-	to: DateOnlySchema,
+	begin: DateOnlySchema,
+	end: DateOnlySchema,
 });
 /** @inheritdoc */
 export type WorkDateRange = z.infer<typeof WorkDateRangeSchema>;

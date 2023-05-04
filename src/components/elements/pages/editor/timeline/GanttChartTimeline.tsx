@@ -33,7 +33,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 		const cell = props.configuration.design.seed.cell;
 
 		const timeSpanRange = successWorkRange
-			? Charts.getTimeSpanRange(props.calendarInfo.range.from, successWorkRange)
+			? Charts.getTimeSpanRange(props.calendarInfo.range.begin, successWorkRange)
 			: null
 			;
 
