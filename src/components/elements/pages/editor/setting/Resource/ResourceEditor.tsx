@@ -57,7 +57,6 @@ const ResourceEditor: FC = () => {
 						<GroupsEditor
 							key={a.name}
 							group={a}
-							groups={editGroups}
 							callbackRemove={a => handleRemoveGroup(a)}
 						/>
 					);

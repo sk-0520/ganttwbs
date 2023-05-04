@@ -1,10 +1,10 @@
 import { random } from "@ctrl/tinycolor";
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 
 import GroupColorsDialog from "@/components/elements/pages/editor/setting/Resource/GroupColorsDialog";
 import MemberEditor from "@/components/elements/pages/editor/setting/Resource/MemberEditor";
 import { useLocale } from "@/locales/locale";
-import { GroupSetting, MemberSetting } from "@/models/data/context/SettingContext";
+import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { Color, MemberId } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
@@ -12,12 +12,12 @@ import { Strings } from "@/models/Strings";
 
 interface Props {
 	group: GroupSetting;
-	groups: ReadonlyArray<Readonly<GroupSetting>>,
 	callbackRemove(group: GroupSetting): void;
 }
 
 const GroupsEditor: FC<Props> = (props: Props) => {
 	const locale = useLocale();
+	const settingContext = useContext(SettingContext);
 
 	const [groupName, setGroupName] = useState(props.group.name);
 	const [members, setMembers] = useState(sortMembers(props.group.members));
@@ -27,7 +27,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 
 	function handleChangeName(value: string): void {
 		const groupNames = new Set(
-			props.groups
+			settingContext.groups
 				.filter(a => a !== props.group)
 				.map(a => a.name)
 		);
