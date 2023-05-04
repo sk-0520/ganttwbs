@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import ja from "@/locales/ja";
 import { WeekDay } from "@/models/data/Setting";
 
-
 export interface Locale {
 	/** 言語名 */
 	language: string,
@@ -61,6 +60,15 @@ export interface Locale {
 		},
 		new: {
 			title: string,
+
+			description: string,
+			projectName: string,
+
+			createMode: string,
+			createModeEmpty: string,
+			createModeSample: string,
+
+			submit: string,
 		},
 		load: {
 			title: string,
@@ -206,7 +214,7 @@ export interface Locale {
 				},
 
 				general: {
-					title: string,
+					projectName: string,
 					recursive: string,
 					selectCurrentTimeZoneFormat: string,
 				},

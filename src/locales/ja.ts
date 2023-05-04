@@ -70,6 +70,15 @@ const locale: Locale = {
 		},
 		new: {
 			title: "新規",
+
+			description: "ここで入力する内容は編集時に変更可能です。",
+			projectName: "タイトル",
+
+			createMode: "作成方法",
+			createModeEmpty: "空データ",
+			createModeSample: "サンプル",
+
+			submit: "作業開始",
 		},
 		load: {
 			title: "読み込み",
@@ -207,7 +216,7 @@ const locale: Locale = {
 				},
 
 				general: {
-					title: "タイトル",
+					projectName: "タイトル",
 					recursive: "反復計算数",
 					selectCurrentTimeZoneFormat: "現在のタイムゾーン(${TIMEZONE})"
 				},

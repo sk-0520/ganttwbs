@@ -38,11 +38,15 @@ const NewPage: NextPage = () => {
 			layoutId='new'
 			title={locale.pages.new.title}
 		>
-			<p>ここで入力する内容は編集時に変更可能です。</p>
+			<p>
+				{locale.pages.new.description}
+			</p>
 
 			<form onSubmit={handleSubmit(data => onSubmit(data, timeZone, router))}>
 				<dl className='inputs'>
-					<dt>タイトル</dt>
+					<dt>
+						{locale.pages.new.projectName}
+					</dt>
 					<dd>
 						<input
 							type='text'
@@ -87,7 +91,9 @@ const NewPage: NextPage = () => {
 						</label>
 					</dd>
 
-					<dt>作成方法</dt>
+					<dt>
+						{locale.pages.new.createMode}
+					</dt>
 					<dd>
 						<ul className="inline">
 							<li>
@@ -99,7 +105,7 @@ const NewPage: NextPage = () => {
 											required: true
 										})}
 									/>
-									空データ
+									{locale.pages.new.createModeEmpty}
 								</label>
 							</li>
 							<li>
@@ -111,14 +117,16 @@ const NewPage: NextPage = () => {
 											required: true
 										})}
 									/>
-									サンプル
+									{locale.pages.new.createModeSample}
 								</label>
 							</li>
 						</ul>
 					</dd>
 				</dl>
 
-				<button className='action'>作業開始</button>
+				<button className='action'>
+					{locale.pages.new.submit}
+				</button>
 			</form>
 		</Layout>
 	);

@@ -31,7 +31,7 @@ const GeneralEditor: FC = () => {
 	return (
 		<dl className="inputs">
 			<dt>
-				{locale.pages.editor.setting.general.title}
+				{locale.pages.editor.setting.general.projectName}
 			</dt>
 			<dd>
 				<input
