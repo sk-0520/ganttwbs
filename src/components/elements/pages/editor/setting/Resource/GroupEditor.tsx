@@ -75,7 +75,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 				<ul className="inline">
 					<li>
 						<label>
-							{locale.editor.setting.resource.groupName}
+							{locale.pages.editor.setting.resource.groupName}
 							<input
 								value={groupName}
 								onChange={ev => handleChangeName(ev.target.value)}
@@ -89,7 +89,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 							onClick={ev => handleStartChoiceColor()}
 							disabled={members.length <= 1}
 						>
-							{locale.editor.setting.resource.choiceColor}
+							{locale.pages.editor.setting.resource.choiceColor}
 						</button>
 					</li>
 					<li className="remove">
@@ -108,11 +108,11 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 					<thead>
 						<tr>
 							<th className="name-cell">
-								{locale.editor.setting.resource.columns.memberName}
+								{locale.pages.editor.setting.resource.columns.memberName}
 							</th>
 							<th className="cost-cell">
 								{Strings.replaceMap(
-									locale.editor.setting.resource.columns.costFormat,
+									locale.pages.editor.setting.resource.columns.costFormat,
 									{
 										"UNIT": locale.common.calendar.unit.day,
 									}
@@ -120,18 +120,18 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 							</th>
 							<th className="sales-cell">
 								{Strings.replaceMap(
-									locale.editor.setting.resource.columns.salesFormat,
+									locale.pages.editor.setting.resource.columns.salesFormat,
 									{
 										"UNIT": locale.common.calendar.unit.day,
 									}
 								)}
 							</th>
 							<th className="theme-cell">
-								{locale.editor.setting.resource.columns.theme}
+								{locale.pages.editor.setting.resource.columns.theme}
 							</th>
 							<th className="month-cost-cell">
 								{Strings.replaceMap(
-									locale.editor.setting.resource.columns.costFormat,
+									locale.pages.editor.setting.resource.columns.costFormat,
 									{
 										"UNIT": locale.common.calendar.unit.month,
 									}
@@ -139,14 +139,14 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 							</th>
 							<th className="month-sales-cell">
 								{Strings.replaceMap(
-									locale.editor.setting.resource.columns.salesFormat,
+									locale.pages.editor.setting.resource.columns.salesFormat,
 									{
 										"UNIT": locale.common.calendar.unit.month,
 									}
 								)}
 							</th>
 							<th className="rate-cell">
-								{locale.editor.setting.resource.columns.rate}
+								{locale.pages.editor.setting.resource.columns.rate}
 							</th>
 							<th className="remove-cell">
 								{locale.common.command.remove}

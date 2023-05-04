@@ -118,7 +118,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 							>
 								<IconLabel
 									kind={IconKind.TimelineAddGroup}
-									label={locale.editor.timeline.header.operations.addNewGroupTimeline}
+									label={locale.pages.editor.timeline.header.operations.addNewGroupTimeline}
 								/>
 							</button>
 						</li>
@@ -129,7 +129,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 							>
 								<IconLabel
 									kind={IconKind.TimelineAddTask}
-									label={locale.editor.timeline.header.operations.addNewTaskTimeline}
+									label={locale.pages.editor.timeline.header.operations.addNewTaskTimeline}
 								/>
 							</button>
 						</li>
@@ -140,7 +140,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 							>
 								<IconLabel
 									kind={IconKind.TimelineImport}
-									label={locale.editor.timeline.header.operations.importTimelines}
+									label={locale.pages.editor.timeline.header.operations.importTimelines}
 								/>
 							</button>
 						</li>
@@ -153,7 +153,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 							>
 								<IconLabel
 									kind={IconKind.NavigatePrev}
-									label={locale.editor.timeline.header.operations.navigateFirst}
+									label={locale.pages.editor.timeline.header.operations.navigateFirst}
 								/>
 							</button>
 						</li>
@@ -163,7 +163,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 							>
 								<IconLabel
 									kind={IconKind.CalendarToday}
-									label={locale.editor.timeline.header.operations.navigateToday}
+									label={locale.pages.editor.timeline.header.operations.navigateToday}
 								/>
 							</button>
 						</li>
@@ -174,7 +174,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 								<IconLabel
 									kind={IconKind.NavigateNext}
 									direction="right"
-									label={locale.editor.timeline.header.operations.navigateLast}
+									label={locale.pages.editor.timeline.header.operations.navigateLast}
 								/>
 							</button>
 						</li>
@@ -185,22 +185,22 @@ const CrossHeader: FC<Props> = (props: Props) => {
 				<div className='timeline-header header'>
 					<div className='timeline-header tooltips'>
 						<div className='timeline-cell timeline-id'>
-							{locale.editor.timeline.header.columns.id}
+							{locale.pages.editor.timeline.header.columns.id}
 						</div>
 						<div className='timeline-cell timeline-subject'>
-							{locale.editor.timeline.header.columns.subject}
+							{locale.pages.editor.timeline.header.columns.subject}
 						</div>
 						<div
 							className='timeline-cell timeline-workload'
-							title={locale.editor.timeline.header.columns.workload}
+							title={locale.pages.editor.timeline.header.columns.workload}
 						>
 							{workload}
 						</div>
 						<div className='timeline-cell timeline-resource'>
-							{locale.editor.timeline.header.columns.resource}
+							{locale.pages.editor.timeline.header.columns.resource}
 						</div>
 						<div className="timeline-cell timeline-relation">
-							{locale.editor.timeline.header.columns.relation}
+							{locale.pages.editor.timeline.header.columns.relation}
 						</div>
 						{
 							workRangeKind === WorkRangeKind.Success
@@ -208,7 +208,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 									<>
 										<div
 											className='timeline-cell timeline-range-from'
-											title={locale.editor.timeline.header.columns.workRangeFrom}
+											title={locale.pages.editor.timeline.header.columns.workRangeFrom}
 										>
 											<Timestamp
 												date={beginDate}
@@ -217,7 +217,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 										</div>
 										<div
 											className='timeline-cell timeline-range-to'
-											title={locale.editor.timeline.header.columns.workRangeTo}
+											title={locale.pages.editor.timeline.header.columns.workRangeTo}
 										>
 											<Timestamp
 												date={endDate}
@@ -228,47 +228,47 @@ const CrossHeader: FC<Props> = (props: Props) => {
 								) :
 								(
 									<div className='timeline-cell timeline-range-area'>
-										{locale.editor.timeline.header.columns.workRangeError}
+										{locale.pages.editor.timeline.header.columns.workRangeError}
 									</div>
 								)
 						}
 						<div
 							className='timeline-cell timeline-progress'
-							title={locale.editor.timeline.header.columns.progress}
+							title={locale.pages.editor.timeline.header.columns.progress}
 						>
 							{Timelines.displayProgress(progress)}%
 						</div>
 						<div className='timeline-cell timeline-controls'>
-							{locale.editor.timeline.header.columns.controls}
+							{locale.pages.editor.timeline.header.columns.controls}
 						</div>
 					</div>
 
 					<div className='timeline-cell timeline-id'>
-						{locale.editor.timeline.header.columns.id}
+						{locale.pages.editor.timeline.header.columns.id}
 					</div>
 					<div className='timeline-cell timeline-subject'>
-						{locale.editor.timeline.header.columns.subject}
+						{locale.pages.editor.timeline.header.columns.subject}
 					</div>
 					<div className='timeline-cell timeline-workload'>
-						{locale.editor.timeline.header.columns.workload}
+						{locale.pages.editor.timeline.header.columns.workload}
 					</div>
 					<div className='timeline-cell timeline-resource'>
-						{locale.editor.timeline.header.columns.resource}
+						{locale.pages.editor.timeline.header.columns.resource}
 					</div>
 					<div className="timeline-cell timeline-relation">
-						{locale.editor.timeline.header.columns.relation}
+						{locale.pages.editor.timeline.header.columns.relation}
 					</div>
 					<div className='timeline-cell timeline-range-from'>
-						{locale.editor.timeline.header.columns.workRangeFrom}
+						{locale.pages.editor.timeline.header.columns.workRangeFrom}
 					</div>
 					<div className='timeline-cell timeline-range-to'>
-						{locale.editor.timeline.header.columns.workRangeTo}
+						{locale.pages.editor.timeline.header.columns.workRangeTo}
 					</div>
 					<div className='timeline-cell timeline-progress'>
-						{locale.editor.timeline.header.columns.progress}
+						{locale.pages.editor.timeline.header.columns.progress}
 					</div>
 					<div className='timeline-cell timeline-controls'>
-						{locale.editor.timeline.header.columns.controls}
+						{locale.pages.editor.timeline.header.columns.controls}
 					</div>
 				</div>
 			</div>

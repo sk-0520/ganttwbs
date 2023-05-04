@@ -64,7 +64,7 @@ const ResourceEditor: FC = () => {
 				})}
 
 				<dt className="group">
-					{locale.editor.setting.resource.newGroup}
+					{locale.pages.editor.setting.resource.newGroup}
 				</dt>
 				<dd>
 					<input

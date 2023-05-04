@@ -10,7 +10,7 @@ const CalendarRangeSettingEditor: FC = () => {
 	return (
 		<p>
 			<label>
-				{locale.editor.setting.calendar.range.begin}
+				{locale.pages.editor.setting.calendar.range.begin}
 				<input
 					type='date'
 					defaultValue={settingContext.calendar.range.from}
@@ -24,7 +24,7 @@ const CalendarRangeSettingEditor: FC = () => {
 					defaultValue={settingContext.calendar.range.to}
 					onChange={ev => settingContext.calendar.range.to = ev.target.value}
 				/>
-				{locale.editor.setting.calendar.range.end}
+				{locale.pages.editor.setting.calendar.range.end}
 			</label>
 		</p>
 	);

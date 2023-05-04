@@ -74,7 +74,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 	return (
 		<Dialog
 			button="submit"
-			title={locale.editor.setting.resource.choiceColorDialog.title}
+			title={locale.pages.editor.setting.resource.choiceColorDialog.title}
 			preSubmit={() => Types.toBoolean(selectedColorType)}
 			callbackClose={(type) => {
 				if (selectedColorType && type === "submit") {
@@ -90,7 +90,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 				<ul className="inline color-types">
 					<li>
 						<label>
-							{locale.editor.setting.resource.choiceColorDialog.baseColor}
+							{locale.pages.editor.setting.resource.choiceColorDialog.baseColor}
 							<input
 								type="color"
 								value={baseColor.toHexString()}
@@ -101,7 +101,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 					</li>
 					<li>
 						<label>
-							{locale.editor.setting.resource.choiceColorDialog.gradientColor}
+							{locale.pages.editor.setting.resource.choiceColorDialog.gradientColor}
 							<input
 								type="color"
 								value={gradientColor.toHexString()}
@@ -114,7 +114,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 							type="button"
 							onClick={handleGenerateGradient}
 						>
-							{locale.editor.setting.resource.choiceColorDialog.resetRandomColor}
+							{locale.pages.editor.setting.resource.choiceColorDialog.resetRandomColor}
 						</button>
 					</li>
 				</ul>
@@ -134,7 +134,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 												checked={selectedColorType === a}
 												onChange={ev => handleChangeColorType(a, ev.target.checked)}
 											/>
-											{locale.editor.setting.resource.choiceColorDialog.kinds[a]}
+											{locale.pages.editor.setting.resource.choiceColorDialog.kinds[a]}
 										</label>
 									</th>
 								);

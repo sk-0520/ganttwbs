@@ -31,7 +31,7 @@ const GeneralEditor: FC = () => {
 	return (
 		<dl className="inputs">
 			<dt>
-				{locale.editor.setting.general.title}
+				{locale.pages.editor.setting.general.projectName}
 			</dt>
 			<dd>
 				<input
@@ -43,7 +43,7 @@ const GeneralEditor: FC = () => {
 			</dd>
 
 			<dt>
-				{locale.editor.setting.general.recursive}
+				{locale.pages.editor.setting.general.recursive}
 			</dt>
 			<dd>
 				<input
@@ -74,7 +74,7 @@ const GeneralEditor: FC = () => {
 					<IconLabel
 						kind={IconKind.Reset}
 						label={Strings.replaceMap(
-							locale.editor.setting.general.selectCurrentTimeZoneFormat,
+							locale.pages.editor.setting.general.selectCurrentTimeZoneFormat,
 							{
 								"TIMEZONE": TimeZone.getClientTimeZone().serialize(),
 							}

@@ -4,6 +4,14 @@ import { TimeZone } from "@/models/TimeZone";
 
 describe("DateTime", () => {
 
+	test.each([
+		[DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), DateTime.create(TimeZone.utc, 2000, 1, 1, 0, 0, 0, 0)],
+		[DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.create(TimeZone.create("Asia/Tokyo"), 2000, 1, 1, 0, 0, 0, 0)],
+	])("create", (expected: DateTime, actual: DateTime) => {
+		expect(actual.format("U")).toBe(expected.format("U"));
+		expect(actual.getTime()).toBe(expected.getTime());
+	});
+
 	test("parse", () => {
 		const expected = DateTime.parse("2000-01-01T00:00:00", TimeZone.utc);
 		for (let i = 0; i < 20; i++) {

@@ -11,7 +11,7 @@ const AboutPage: NextPage = () => {
 		<Layout
 			mode='page'
 			layoutId='about'
-			title={locale.page.about}
+			title={locale.pages.about.title}
 		>
 			<>
 				<p>ガントチャート的な何かをどうこうしたい。</p>

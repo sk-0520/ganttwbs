@@ -43,22 +43,22 @@ const Layout: NextPage<Props> = (props: Props) => {
 									<ul>
 										<li>
 											<Link href="/">
-												{locale.page.top}
+												{locale.pages.top.title}
 											</Link>
 										</li>
 										<li>
 											<Link href="/new">
-												{locale.page.new}
+												{locale.pages.new.title}
 											</Link>
 										</li>
 										<li>
 											<Link href="/load">
-												{locale.page.load}
+												{locale.pages.load.title}
 											</Link>
 										</li>
 										<li>
 											<Link href="/about">
-												{locale.page.about}
+												{locale.pages.about.title}
 											</Link>
 										</li>
 									</ul>

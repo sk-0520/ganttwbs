@@ -72,7 +72,7 @@ const TimelinesImportDialog: FC<Props> = (props: Props) => {
 
 	return (
 		<Dialog
-			title={locale.editor.timeline.importDialog.title}
+			title={locale.pages.editor.timeline.importDialog.title}
 			button="submit"
 			preSubmit={handlePreSubmit}
 			callbackClose={a => handleClose(a === "submit")}
@@ -80,7 +80,7 @@ const TimelinesImportDialog: FC<Props> = (props: Props) => {
 			<dl className="inputs">
 				<dt>
 					<label htmlFor={id.subject}>
-						{locale.editor.timeline.importDialog.subject}
+						{locale.pages.editor.timeline.importDialog.subject}
 					</label>
 				</dt>
 				<dd>
@@ -93,7 +93,7 @@ const TimelinesImportDialog: FC<Props> = (props: Props) => {
 
 				<dt>
 					<label htmlFor={id.contents}>
-						{locale.editor.timeline.importDialog.contents}
+						{locale.pages.editor.timeline.importDialog.contents}
 					</label>
 				</dt>
 				<dd>

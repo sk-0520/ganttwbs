@@ -46,7 +46,7 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 	return (
 		<Dialog
 			button="submit"
-			title={locale.editor.timeline.detailDialog.title}
+			title={locale.pages.editor.timeline.detailDialog.title}
 			callbackClose={type => {
 				if (type === "submit") {
 					handleSubmit();
@@ -57,7 +57,7 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 		>
 			<dl className="inputs timeline-editor">
 				<dt>
-					{locale.editor.timeline.header.columns.subject}
+					{locale.pages.editor.timeline.header.columns.subject}
 				</dt>
 				<dd>
 					<input
@@ -69,7 +69,7 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 				{
 					Settings.maybeTaskTimeline(props.timeline) && <>
 						<dt>
-							{locale.editor.timeline.header.columns.workload}
+							{locale.pages.editor.timeline.header.columns.workload}
 						</dt>
 						<dd>
 							<input
@@ -86,7 +86,7 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 				{
 					Settings.maybeTaskTimeline(props.timeline) && <>
 						<dt>
-							{locale.editor.timeline.header.columns.resource}
+							{locale.pages.editor.timeline.header.columns.resource}
 						</dt>
 						<dd>
 							<MemberSelector
@@ -101,7 +101,7 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 				{
 					Settings.maybeTaskTimeline(props.timeline) && <>
 						<dt>
-							{locale.editor.timeline.header.columns.progress}
+							{locale.pages.editor.timeline.header.columns.progress}
 						</dt>
 						<dd>
 							<input
@@ -118,7 +118,7 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 										type="button"
 										onClick={_ => setProgress(0)}
 									>
-										{locale.editor.timeline.detailDialog.progressMinimum}
+										{locale.pages.editor.timeline.detailDialog.progressMinimum}
 									</button>
 								</li>
 								<li className="range">
@@ -136,7 +136,7 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 										type="button"
 										onClick={_ => setProgress(1)}
 									>
-										{locale.editor.timeline.detailDialog.progressMaximum}
+										{locale.pages.editor.timeline.detailDialog.progressMaximum}
 									</button>
 								</li>
 							</ul>
@@ -145,7 +145,7 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 				}
 
 				<dt>
-					{locale.editor.timeline.detailDialog.comment}
+					{locale.pages.editor.timeline.detailDialog.comment}
 				</dt>
 				<dd>
 					<Editor

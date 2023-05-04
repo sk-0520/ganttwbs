@@ -365,14 +365,14 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 							<div className="tools after">
 								<fieldset>
 									<legend>
-										{locale.editor.timeline.timelines.range.immediate.title}
+										{locale.pages.editor.timeline.timelines.range.immediate.title}
 									</legend>
 									<ul>
 										<li>
 											<button onClick={handleSubmitAttachBeforeTimeline}>
 												<IconLabel
 													kind={IconKind.RelationJoin}
-													label={locale.editor.timeline.timelines.range.immediate.attachBeforeTimeline}
+													label={locale.pages.editor.timeline.timelines.range.immediate.attachBeforeTimeline}
 												/>
 											</button>
 										</li>
@@ -380,14 +380,14 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 								</fieldset>
 								<fieldset>
 									<legend>
-										{locale.editor.timeline.timelines.range.continue.title}
+										{locale.pages.editor.timeline.timelines.range.continue.title}
 									</legend>
 									<ul>
 										<li>
 											<button onClick={handleAttachBeforeTimeline}>
 												<IconLabel
 													kind={IconKind.RelationJoin}
-													label={locale.editor.timeline.timelines.range.continue.attachBeforeTimeline}
+													label={locale.pages.editor.timeline.timelines.range.continue.attachBeforeTimeline}
 												/>
 											</button>
 										</li>
@@ -395,7 +395,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 											<button onClick={handleClearPrevious}>
 												<IconLabel
 													kind={IconKind.RelationClear}
-													label={locale.editor.timeline.timelines.range.continue.clearRelation}
+													label={locale.pages.editor.timeline.timelines.range.continue.clearRelation}
 												/>
 											</button>
 										</li>
@@ -403,7 +403,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 											<button onClick={handleClearStatic}>
 												<IconLabel
 													kind={IconKind.Clear}
-													label={locale.editor.timeline.timelines.range.continue.clearDate}
+													label={locale.pages.editor.timeline.timelines.range.continue.clearDate}
 												/>
 											</button>
 										</li>

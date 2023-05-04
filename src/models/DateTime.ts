@@ -93,6 +93,33 @@ export class DateTime {
 		return ResultFactory.success(new DateTime(date, timeZone));
 	}
 
+	public static create(
+		timeZone: TimeZone,
+		year: number,
+		month: number,
+		day?: number,
+		hour?: number,
+		minute?: number,
+		second?: number,
+		millisecond?: number
+	): DateTime {
+		// 指定された各数値で new Date(y,m,d...) 的な事したかったけど分からんかった,
+		// 自分でタイムゾーン計算したらライブラリの意味ない、、、とはいえこの手法もどうなんっていう
+
+		const date = {
+			year: year.toString().padStart(4, "0"),
+			month: month.toString().padStart(2, "0"),
+			day: (day ?? 1).toString().padStart(2, "0"),
+			hour: (hour ?? 0).toString().padStart(2, "0"),
+			minute: (minute ?? 0).toString().padStart(2, "0"),
+			second: (second ?? 0).toString().padStart(2, "0"),
+			millisecond: (millisecond ?? 0).toString(),
+		};
+		const iso8601WithoutTimezone = `${date.year}-${date.month}-${date.day}T${date.hour}:${date.minute}:${date.second}.${date.millisecond}`;
+
+		return this.parse(iso8601WithoutTimezone, timeZone);
+	}
+
 	/**
 	 * 今日という日を大切に。
 	 * @param timeZone
