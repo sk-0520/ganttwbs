@@ -1,4 +1,3 @@
-import { TinyColor, random } from "@ctrl/tinycolor";
 import { FC, useContext, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
@@ -6,9 +5,9 @@ import DefaultButton from "@/components/elements/pages/editor/setting/DefaultBut
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
+import { Color } from "@/models/Color";
 import { Colors } from "@/models/Colors";
 import { SettingContext, UUID } from "@/models/data/context/SettingContext";
-import { Color } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
 import { Strings } from "@/models/Strings";
@@ -51,7 +50,7 @@ const ThemeGroupSettingEditor: FC = () => {
 	function handleAddColor() {
 		groups.push({
 			key: IdFactory.createReactKey(),
-			value: random().toHexString(),
+			value: Colors.random(),
 		});
 		setGroups(settingContext.theme.groups = [...groups]);
 	}
@@ -63,7 +62,7 @@ const ThemeGroupSettingEditor: FC = () => {
 			if (1 < groups.length) {
 				setResetColorEnd(groups[groups.length - 1].value);
 			} else {
-				setResetColorEnd(random().toHexString());
+				setResetColorEnd(Colors.random());
 			}
 		} else {
 			setResetColorBegin(reset.color.begin);
@@ -141,10 +140,10 @@ const ThemeGroupSettingEditor: FC = () => {
 					callbackClose={r => {
 						if (r === "submit") {
 							const colors = resetCount <= 1
-								? [new TinyColor(resetColorBegin)]
+								? [resetColorBegin]
 								: Colors.generateGradient(resetColorBegin, resetColorEnd, resetCount)
 								;
-							const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a.toHexString() }));
+							const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a }));
 							setGroups(settingContext.theme.groups = groups);
 						}
 						setVisibleResetColor(false);
@@ -186,14 +185,14 @@ const ThemeGroupSettingEditor: FC = () => {
 							{/* ブラウザに任せる, ダイアログ内でぶわってするとぶわってなる */}
 							<input
 								type="color"
-								value={resetColorBegin}
-								onChange={ev => setResetColorBegin(ev.target.value)}
+								value={resetColorBegin.toHtml()}
+								onChange={ev => setResetColorBegin(Color.parse(ev.target.value))}
 							/>
 							～
 							<input
 								type="color"
-								value={resetColorEnd}
-								onChange={ev => setResetColorEnd(ev.target.value)}
+								value={resetColorEnd.toHtml()}
+								onChange={ev => setResetColorEnd(Color.parse(ev.target.value))}
 							/>
 						</dd>
 

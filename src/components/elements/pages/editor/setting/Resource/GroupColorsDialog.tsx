@@ -1,12 +1,12 @@
-import { TinyColor, random } from "@ctrl/tinycolor";
 import { CSSProperties, FC, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
+import { Color } from "@/models/Color";
 import { Colors } from "@/models/Colors";
 import { GroupSetting } from "@/models/data/context/SettingContext";
-import { Color, MemberId } from "@/models/data/Setting";
+import { MemberId } from "@/models/data/Setting";
 import { Types } from "@/models/Types";
 
 const ColorKinds = [
@@ -25,18 +25,14 @@ interface Props {
 
 const GroupColorsDialog: FC<Props> = (props: Props) => {
 	const locale = useLocale();
-	// const [choiceBaseColor, setChoiceBaseColor] = useState<Color>(Arrays.first(props.choiceColorGroup.members).color);
-	// const [choiceGradientColor, setChoiceGradientColor] = useState<Color>(Arrays.last(props.choiceColorGroup.members).color);
-	// const [choiceColors, setChoiceColors] = useState<Map<MemberId, TinyColor>>(new Map(
-	// 	props.choiceColorGroup.members.map(a => [a.id, new TinyColor(a.color)])
-	// ));
-	const [baseColor, setBaseColor] = useState(new TinyColor(Arrays.first(props.choiceColorGroup.members).color));
-	const [gradientColor, setGradientColor] = useState(new TinyColor(Arrays.last(props.choiceColorGroup.members).color));
+
+	const [baseColor, setBaseColor] = useState(Arrays.first(props.choiceColorGroup.members).color);
+	const [gradientColor, setGradientColor] = useState(Arrays.last(props.choiceColorGroup.members).color);
 	const [selectedColorType, setSelectedColorType] = useState<ColorKind>();
 
 	const [colorTable, setColorTable] = useState(createColorTable(props.choiceColorGroup, baseColor, gradientColor));
 
-	function asd(base: TinyColor, gradient: TinyColor) {
+	function changeInputColors(base: Color, gradient: Color) {
 		const baseColors = createBaseColorMaps(props.choiceColorGroup, base);
 		const gradientColor = createGradientMap(props.choiceColorGroup, base, gradient);
 		setColorTable({
@@ -52,23 +48,30 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 		}
 	}
 
-	function handleGenerateGradient(): void {
+	function handleGenerateRandom(): void {
 		setColorTable({
 			...colorTable,
 			random: createRandomMap(props.choiceColorGroup, baseColor, gradientColor),
 		});
+		setSelectedColorType("random");
 	}
 
 	function handleChangeBaseColor(value: string): void {
-		const color = new TinyColor(value);
+		const color = Color.parse(value);
 		setBaseColor(color);
-		asd(color, gradientColor);
+		changeInputColors(color, gradientColor);
+
+		const needChangeTypes: Array<ColorKind> = ["random", "gradient"];
+		if (!selectedColorType || needChangeTypes.includes(selectedColorType)) {
+			setSelectedColorType("analogy");
+		}
 	}
 
 	function handleChangeGradientColor(value: string): void {
-		const color = new TinyColor(value);
+		const color = Color.parse(value);
 		setGradientColor(color);
-		asd(baseColor, color);
+		changeInputColors(baseColor, color);
+		setSelectedColorType("gradient");
 	}
 
 	return (
@@ -78,9 +81,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 			preSubmit={() => Types.toBoolean(selectedColorType)}
 			callbackClose={(type) => {
 				if (selectedColorType && type === "submit") {
-					props.callbackClosed(
-						new Map([...colorTable[selectedColorType]].map(([k, v]) => [k, v.toHexString()]))
-					);
+					props.callbackClosed(colorTable[selectedColorType]);
 				} else {
 					props.callbackClosed(undefined);
 				}
@@ -93,7 +94,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 							{locale.pages.editor.setting.resource.choiceColorDialog.baseColor}
 							<input
 								type="color"
-								value={baseColor.toHexString()}
+								value={baseColor.toHtml()}
 								onChange={ev => handleChangeBaseColor(ev.target.value)}
 							/>
 						</label>
@@ -104,7 +105,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 							{locale.pages.editor.setting.resource.choiceColorDialog.gradientColor}
 							<input
 								type="color"
-								value={gradientColor.toHexString()}
+								value={gradientColor.toHtml()}
 								onChange={ev => handleChangeGradientColor(ev.target.value)}
 							/>
 						</label>
@@ -112,7 +113,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 					<li>
 						<button
 							type="button"
-							onClick={handleGenerateGradient}
+							onClick={handleGenerateRandom}
 						>
 							{locale.pages.editor.setting.resource.choiceColorDialog.resetRandomColor}
 						</button>
@@ -154,9 +155,9 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 											throw new Error(a.id);
 										}
 
-										const htmlColor = color.toHexString();
+										const htmlColor = color.toHtml();
 										const style: CSSProperties = {
-											color: Colors.getAutoColor(color).toHexString(),
+											color: Colors.getAutoColor(color).toHtml(),
 											background: htmlColor,
 										};
 
@@ -182,23 +183,23 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 
 export default GroupColorsDialog;
 
-function createBaseColorMaps(group: Readonly<GroupSetting>, baseColor: TinyColor): Record<"same" | "analogy" | "monochrome", Map<MemberId, TinyColor>> {
+function createBaseColorMaps(group: Readonly<GroupSetting>, baseColor: Color): Record<"same" | "analogy" | "monochrome", Map<MemberId, Color>> {
 	return {
 		["same"]: new Map(
 			group.members.map(a => [a.id, baseColor])
 		),
 		["analogy"]: new Map(
-			baseColor.analogous(group.members.length).map((a, i) => [group.members[i].id, a])
+			Colors.analogous(baseColor, group.members.length).map((a, i) => [group.members[i].id, a])
 		),
 		["monochrome"]: new Map(
-			baseColor.monochromatic(group.members.length).map((a, i) => [group.members[i].id, a])
+			Colors.monochromatic(baseColor, group.members.length).map((a, i) => [group.members[i].id, a])
 		)
 	};
 }
 
-function createColorTable(group: GroupSetting, baseColor: TinyColor, gradientColor: TinyColor): Record<ColorKind, Map<MemberId, TinyColor>> {
+function createColorTable(group: GroupSetting, baseColor: Color, gradientColor: Color): Record<ColorKind, Map<MemberId, Color>> {
 	const baseColors = createBaseColorMaps(group, baseColor);
-	const table: Record<ColorKind, Map<MemberId, TinyColor>> = {
+	const table: Record<ColorKind, Map<MemberId, Color>> = {
 		...baseColors,
 		["gradient"]: createGradientMap(group, baseColor, gradientColor),
 		["random"]: createRandomMap(group, baseColor, gradientColor),
@@ -207,7 +208,7 @@ function createColorTable(group: GroupSetting, baseColor: TinyColor, gradientCol
 	return table;
 }
 
-function createGradientMap(group: Readonly<GroupSetting>, baseColor: TinyColor, gradientColor: TinyColor): Map<MemberId, TinyColor> {
+function createGradientMap(group: Readonly<GroupSetting>, baseColor: Color, gradientColor: Color): Map<MemberId, Color> {
 
 	if (group.members.length <= 1) {
 		return new Map([
@@ -221,8 +222,8 @@ function createGradientMap(group: Readonly<GroupSetting>, baseColor: TinyColor, 
 	);
 }
 
-function createRandomMap(group: Readonly<GroupSetting>, baseColor: TinyColor, gradientColor: TinyColor): Map<MemberId, TinyColor> {
+function createRandomMap(group: Readonly<GroupSetting>, baseColor: Color, gradientColor: Color): Map<MemberId, Color> {
 	return new Map(
-		group.members.map(a => [a.id, random()])
+		group.members.map(a => [a.id, Colors.random()])
 	);
 }

@@ -1,7 +1,8 @@
 import { As } from "@/models/As";
+import { Color } from "@/models/Color";
 import { Colors } from "@/models/Colors";
 import { PriceSetting } from "@/models/data/PriceSetting";
-import { Color, HolidayKind, TimelineTheme, WeekDay } from "@/models/data/Setting";
+import { HolidayKind, TimelineTheme, WeekDay } from "@/models/data/Setting";
 
 /**
  * 設定項目の初期値。
@@ -19,16 +20,17 @@ export abstract class DefaultSettings {
 	 */
 	public static readonly SettingVersion = 0;
 
-	public static readonly BusinessWeekdayColor = "#000000";
+	public static readonly BusinessWeekdayColor = Color.parse("#000000");
+	public static readonly UnknownMemberColor = Color.parse("#000000");
 
 	/**
 	 * 週定休日とその色を取得。
 	 */
-	public static getRegularHolidays(): Map<WeekDay, Color> {
-		return new Map([
-			["saturday", "#babaff"],
-			["sunday", "#ffbaba"],
-		]);
+	public static getRegularHolidays(): { [K in WeekDay]?: Color } {
+		return {
+			"saturday": Color.parse("#babaff"),
+			"sunday": Color.parse("#ffbaba"),
+		};
 	}
 
 	/**
@@ -36,13 +38,14 @@ export abstract class DefaultSettings {
 	 */
 	public static getEventHolidayColors(): Record<HolidayKind, Color> {
 		return {
-			normal: "#baffff",
-			special: "#baffba",
+			normal: Color.parse("#baffff"),
+			special: Color.parse("#baffba"),
 		};
 	}
 
 	public static getGroupThemeColors(): Array<Color> {
-		return Colors.generateGradient("#5555ee", "#80ff00", 5).map(a => a.toHexString());
+		return Colors.generateGradient(Color.parse("#5555ee"), Color.parse("#80ff00"), 5)
+			;
 	}
 
 	public static getTimelineTheme(): TimelineTheme {

@@ -2,14 +2,15 @@ import { FC, useEffect, useState } from "react";
 
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
+import { Color } from "@/models/Color";
 import { MemberSetting } from "@/models/data/context/SettingContext";
 import { Prices } from "@/models/data/Prices";
-import { Color, MemberId } from "@/models/data/Setting";
+import { MemberId } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Strings } from "@/models/Strings";
 
 interface Props {
-	member: MemberSetting;
+	member: MemberSetting,
 	members: ReadonlyArray<Readonly<MemberSetting>>,
 	updatedColors: ReadonlyMap<MemberId, Color>;
 	callbackRemoveMember(member: MemberSetting): void;
@@ -29,9 +30,9 @@ const MemberEditor: FC<Props> = (props: Props) => {
 	const [color, setColor] = useState(props.member.color);
 
 	useEffect(() => {
-		const color = props.updatedColors.get(props.member.id);
-		if (color) {
-			setColor(props.member.color = color);
+		const updatedColor = props.updatedColors.get(props.member.id);
+		if (updatedColor) {
+			setColor(props.member.color = updatedColor);
 		}
 	}, [props.member, props.updatedColors]);
 

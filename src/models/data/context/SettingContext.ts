@@ -1,6 +1,7 @@
 import { createContext } from "react";
 
-import { Color, DateOnly, MemberId, WeekDay } from "@/models/data/Setting";
+import { Color } from "@/models/Color";
+import { DateOnly, MemberId, WeekDay } from "@/models/data/Setting";
 import { TimeZone } from "@/models/TimeZone";
 
 

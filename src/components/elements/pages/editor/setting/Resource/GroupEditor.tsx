@@ -1,11 +1,12 @@
-import { random } from "@ctrl/tinycolor";
 import { FC, useContext, useState } from "react";
 
 import GroupColorsDialog from "@/components/elements/pages/editor/setting/Resource/GroupColorsDialog";
 import MemberEditor from "@/components/elements/pages/editor/setting/Resource/MemberEditor";
 import { useLocale } from "@/locales/locale";
+import { Color } from "@/models/Color";
+import { Colors } from "@/models/Colors";
 import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
-import { Color, MemberId } from "@/models/data/Setting";
+import { MemberId } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
 import { Strings } from "@/models/Strings";
@@ -55,7 +56,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 			key: IdFactory.createReactKey(),
 			id: IdFactory.createMemberId(),
 			name: name,
-			color: random().toHexString(),
+			color: Colors.random(),
 			priceCost: priceSetting.price.cost,
 			priceSales: priceSetting.price.sales,
 		};

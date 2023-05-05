@@ -3,8 +3,9 @@ import { FC, useContext, useState } from "react";
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
+import { Color } from "@/models/Color";
 import { SettingContext } from "@/models/data/context/SettingContext";
-import { Color, WeekDay } from "@/models/data/Setting";
+import { WeekDay } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Settings } from "@/models/Settings";
 
@@ -32,7 +33,7 @@ const ThemeCalendarSettingEditor: FC = () => {
 			.map(a => ({ [a]: DefaultSettings.BusinessWeekdayColor }))
 			.reduce((r, a) => ({ ...r, ...a }))
 			;
-		const defaultRegulars = [...DefaultSettings.getRegularHolidays()]
+		const defaultRegulars = Object.entries(DefaultSettings.getRegularHolidays())
 			.map(([k, v]) => ({ [k]: v }))
 			.reduce((r, a) => ({ ...r, ...a }))
 			;

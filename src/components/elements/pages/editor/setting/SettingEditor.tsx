@@ -10,6 +10,7 @@ import ThemeCalendarSettingEditor from "@/components/elements/pages/editor/setti
 import ThemeGroupSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeGroupSettingEditor";
 import ThemeTimelineSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeTimelineSettingEditor";
 import { useLocale } from "@/locales/locale";
+import { Color } from "@/models/Color";
 import { Configuration } from "@/models/data/Configuration";
 import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { EditorData } from "@/models/data/EditorData";
@@ -144,6 +145,7 @@ function toContext(configuration: Configuration, setting: Setting): SettingConte
 			regular: DefaultSettings.getRegularHolidays(),
 			event: DefaultSettings.getEventHolidayColors(),
 		},
+		timeline: DefaultSettings.getTimelineTheme(),
 	};
 
 	return {
@@ -160,7 +162,7 @@ function toContext(configuration: Configuration, setting: Setting): SettingConte
 				key: IdFactory.createReactKey(),
 				id: b.id,
 				name: b.name,
-				color: b.color,
+				color: Color.parse(b.color),
 				priceCost: b.price.cost,
 				priceSales: b.price.sales,
 			})).sort((a, b) => a.name.localeCompare(b.name))
@@ -189,27 +191,27 @@ function toContext(configuration: Configuration, setting: Setting): SettingConte
 		theme: {
 			holiday: {
 				regulars: {
-					monday: setting.theme.holiday.regulars.monday ?? colors.holiday.regular.get("monday") ?? DefaultSettings.BusinessWeekdayColor,
-					tuesday: setting.theme.holiday.regulars.tuesday ?? colors.holiday.regular.get("tuesday") ?? DefaultSettings.BusinessWeekdayColor,
-					wednesday: setting.theme.holiday.regulars.wednesday ?? colors.holiday.regular.get("wednesday") ?? DefaultSettings.BusinessWeekdayColor,
-					thursday: setting.theme.holiday.regulars.thursday ?? colors.holiday.regular.get("thursday") ?? DefaultSettings.BusinessWeekdayColor,
-					friday: setting.theme.holiday.regulars.friday ?? colors.holiday.regular.get("friday") ?? DefaultSettings.BusinessWeekdayColor,
-					saturday: setting.theme.holiday.regulars.saturday ?? colors.holiday.regular.get("saturday") ?? DefaultSettings.BusinessWeekdayColor,
-					sunday: setting.theme.holiday.regulars.sunday ?? colors.holiday.regular.get("sunday") ?? DefaultSettings.BusinessWeekdayColor,
+					monday: Color.tryParse(setting.theme.holiday.regulars.monday || "") ?? colors.holiday.regular.monday ?? DefaultSettings.BusinessWeekdayColor,
+					tuesday: Color.tryParse(setting.theme.holiday.regulars.tuesday || "") ?? colors.holiday.regular.tuesday ?? DefaultSettings.BusinessWeekdayColor,
+					wednesday: Color.tryParse(setting.theme.holiday.regulars.wednesday || "") ?? colors.holiday.regular.wednesday ?? DefaultSettings.BusinessWeekdayColor,
+					thursday: Color.tryParse(setting.theme.holiday.regulars.thursday || "") ?? colors.holiday.regular.thursday ?? DefaultSettings.BusinessWeekdayColor,
+					friday: Color.tryParse(setting.theme.holiday.regulars.friday || "") ?? colors.holiday.regular.friday ?? DefaultSettings.BusinessWeekdayColor,
+					saturday: Color.tryParse(setting.theme.holiday.regulars.saturday || "") ?? colors.holiday.regular.saturday ?? DefaultSettings.BusinessWeekdayColor,
+					sunday: Color.tryParse(setting.theme.holiday.regulars.sunday || "") ?? colors.holiday.regular.sunday ?? DefaultSettings.BusinessWeekdayColor,
 				},
 				events: {
-					normal: setting.theme.holiday.events.normal ?? colors.holiday.event.normal,
-					special: setting.theme.holiday.events.special ?? colors.holiday.event.special,
+					normal: Color.tryParse(setting.theme.holiday.events.normal || "") ?? colors.holiday.event.normal,
+					special: Color.tryParse(setting.theme.holiday.events.special || "") ?? colors.holiday.event.special,
 				}
 			},
 			groups: setting.theme.groups.map(a => ({
 				key: IdFactory.createReactKey(),
-				value: a,
+				value: Color.tryParse(a) ?? DefaultSettings.UnknownMemberColor,
 			})),
 			timeline: {
-				defaultGroup: setting.theme.timeline.defaultGroup,
-				defaultTask: setting.theme.timeline.defaultTask,
-				completed: setting.theme.timeline.completed,
+				defaultGroup: Color.tryParse(setting.theme.timeline.defaultGroup) ?? Color.parse(colors.timeline.defaultGroup),
+				defaultTask: Color.tryParse(setting.theme.timeline.defaultTask) ?? Color.parse(colors.timeline.defaultTask),
+				completed: Color.tryParse(setting.theme.timeline.completed) ?? Color.parse(colors.timeline.completed),
 			}
 		}
 	};
@@ -270,24 +272,24 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 		theme: {
 			holiday: {
 				regulars: {
-					monday: context.theme.holiday.regulars.monday,
-					tuesday: context.theme.holiday.regulars.tuesday,
-					wednesday: context.theme.holiday.regulars.wednesday,
-					thursday: context.theme.holiday.regulars.thursday,
-					friday: context.theme.holiday.regulars.friday,
-					saturday: context.theme.holiday.regulars.saturday,
-					sunday: context.theme.holiday.regulars.sunday,
+					monday: context.theme.holiday.regulars.monday.toHtml(),
+					tuesday: context.theme.holiday.regulars.tuesday.toHtml(),
+					wednesday: context.theme.holiday.regulars.wednesday.toHtml(),
+					thursday: context.theme.holiday.regulars.thursday.toHtml(),
+					friday: context.theme.holiday.regulars.friday.toHtml(),
+					saturday: context.theme.holiday.regulars.saturday.toHtml(),
+					sunday: context.theme.holiday.regulars.sunday.toHtml(),
 				},
 				events: {
-					normal: context.theme.holiday.events.normal,
-					special: context.theme.holiday.events.special,
+					normal: context.theme.holiday.events.normal.toHtml(),
+					special: context.theme.holiday.events.special.toHtml(),
 				}
 			},
-			groups: context.theme.groups.map(a => a.value),
+			groups: context.theme.groups.map(a => a.value.toHtml()),
 			timeline: {
-				defaultGroup: context.theme.timeline.defaultGroup,
-				defaultTask: context.theme.timeline.defaultTask,
-				completed: context.theme.timeline.completed,
+				defaultGroup: context.theme.timeline.defaultGroup.toHtml(),
+				defaultTask: context.theme.timeline.defaultTask.toHtml(),
+				completed: context.theme.timeline.completed.toHtml(),
 			},
 		},
 		groups: context.groups.map(a => ({
@@ -295,7 +297,7 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 			members: a.members.map(b => ({
 				id: b.id,
 				name: b.name,
-				color: b.color,
+				color: b.color.toHtml(),
 				price: {
 					cost: b.priceCost,
 					sales: b.priceSales,

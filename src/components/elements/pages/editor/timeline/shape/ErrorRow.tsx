@@ -1,11 +1,11 @@
 import { FC } from "react";
 
 import { ChartArea } from "@/models/data/ChartArea";
-import { Color } from "@/models/data/Setting";
+import { ColorString } from "@/models/data/Setting";
 
 interface Props {
 	area: ChartArea;
-	color: Color;
+	color: ColorString;
 }
 
 const ErrorRow: FC<Props> = (props: Props) => {

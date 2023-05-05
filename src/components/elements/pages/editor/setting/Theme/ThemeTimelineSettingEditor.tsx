@@ -3,8 +3,8 @@ import { FC, useContext, useState } from "react";
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
+import { Color } from "@/models/Color";
 import { SettingContext } from "@/models/data/context/SettingContext";
-import { Color } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 
 const ThemeTimelineSettingEditor: FC = () => {
@@ -31,7 +31,12 @@ const ThemeTimelineSettingEditor: FC = () => {
 	}
 
 	function handleReset() {
-		settingContext.theme.timeline = DefaultSettings.getTimelineTheme();
+		const defaultTimelineTheme = DefaultSettings.getTimelineTheme();
+		settingContext.theme.timeline = {
+			defaultGroup: Color.parse(defaultTimelineTheme.defaultGroup),
+			defaultTask: Color.parse(defaultTimelineTheme.defaultTask),
+			completed: Color.parse(defaultTimelineTheme.completed),
+		};
 
 		setDefaultGroup(settingContext.theme.timeline.defaultGroup);
 		setDefaultTask(settingContext.theme.timeline.defaultTask);

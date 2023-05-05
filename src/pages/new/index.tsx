@@ -7,7 +7,7 @@ import Layout from "@/components/layout/Layout";
 import { useLocale } from "@/locales/locale";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { EditorData } from "@/models/data/EditorData";
-import { Member, Setting } from "@/models/data/Setting";
+import { Member, Setting, WeekDay } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Goto } from "@/models/Goto";
@@ -225,7 +225,7 @@ function convertDateRange(data: Input, timeZone: TimeZone): DateRange {
 
 function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 	const regularHolidays = DefaultSettings.getRegularHolidays();
-	const defaultWeekColors = Settings.getWeekDays().filter(a => !regularHolidays.has(a)).map(a => ({ [a]: "#000000" })).reduce((r, a) => ({ ...r, ...a }));
+	const defaultWeekColors = Settings.getWeekDays().filter(a => !(a in regularHolidays)).map(a => ({ [a]: DefaultSettings.BusinessWeekdayColor })).reduce((r, a) => ({ ...r, ...a }));
 
 	const range = convertDateRange(data, timeZone);
 
@@ -236,7 +236,7 @@ function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 		timeZone: timeZone.serialize(),
 		calendar: {
 			holiday: {
-				regulars: [...regularHolidays.keys()],
+				regulars: Object.keys(regularHolidays) as Array<WeekDay>, //TODO: 何か間違っているかも
 				events: {}
 			},
 			range: {
@@ -246,10 +246,10 @@ function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 		},
 		theme: {
 			holiday: {
-				regulars: { ...[...regularHolidays].map(([k, v]) => ({ [k]: v })).reduce((r, a) => ({ ...r, ...a })), ...defaultWeekColors },
-				events: DefaultSettings.getEventHolidayColors(),
+				regulars: { ...Object.entries(regularHolidays).map(([k, v]) => ({ [k]: v.toHtml() })).reduce((r, a) => ({ ...r, ...a })), ...Object.entries(defaultWeekColors).map(([k, v]) => ({ [k]: v.toHtml() })).reduce((r, a) => ({ ...r, ...a })) },
+				events: Object.entries(DefaultSettings.getEventHolidayColors()).map(([k, v]) => ({ [k]: v.toHtml() })).reduce((r, a) => ({ ...r, ...a })),
 			},
-			groups: DefaultSettings.getGroupThemeColors(),
+			groups: DefaultSettings.getGroupThemeColors().map(a => a.toHtml()),
 			timeline: DefaultSettings.getTimelineTheme(),
 		},
 		groups: [],

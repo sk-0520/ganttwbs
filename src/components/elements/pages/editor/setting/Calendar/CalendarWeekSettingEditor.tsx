@@ -27,7 +27,7 @@ const CalendarWeekSettingEditor: FC = () => {
 			.map(a => ({[a]: false}))
 			.reduce((r, a) => ({ ...r, ...a }))
 		;
-		const defaultRegulars = [...DefaultSettings.getRegularHolidays().keys()]
+		const defaultRegulars = Object.keys(DefaultSettings.getRegularHolidays())
 			.map(a => ({[a]: true}))
 			.reduce((r, a) => ({ ...r, ...a }))
 		;

@@ -2,8 +2,8 @@ import { z } from "zod";
 
 import { IdFactory } from "@/models/IdFactory";
 
-const ColorSchema = z.string();
-export type Color = z.infer<typeof ColorSchema>;
+const ColorStringSchema = z.string();
+export type ColorString = z.infer<typeof ColorStringSchema>;
 
 const TimestampSchema = z.string();
 export type Timestamp = z.infer<typeof TimestampSchema>;
@@ -165,21 +165,21 @@ const VersionItemSchema = z.object({
 export type VersionItem = z.infer<typeof VersionItemSchema>;
 
 const HolidayThemeSchema = z.object({
-	regulars: z.record(WeekDaySchema, ColorSchema),
-	events: z.record(HolidayKindSchema, ColorSchema),
+	regulars: z.record(WeekDaySchema, ColorStringSchema),
+	events: z.record(HolidayKindSchema, ColorStringSchema),
 });
 export type HolidayTheme = z.infer<typeof HolidayThemeSchema>;
 
 const TimelineThemeSchema = z.object({
-	defaultGroup: ColorSchema,
-	defaultTask: ColorSchema,
-	completed: ColorSchema,
+	defaultGroup: ColorStringSchema,
+	defaultTask: ColorStringSchema,
+	completed: ColorStringSchema,
 });
 export type TimelineTheme = z.infer<typeof TimelineThemeSchema>;
 
 const ThemeSchema = z.object({
 	holiday: HolidayThemeSchema,
-	groups: z.array(ColorSchema),
+	groups: z.array(ColorStringSchema),
 	timeline: TimelineThemeSchema,
 });
 export type Theme = z.infer<typeof ThemeSchema>;
@@ -197,7 +197,7 @@ export type Price = z.infer<typeof PriceSchema>;
 const MemberSchema = z.object({
 	id: MemberIdSchema,
 	name: z.string(),
-	color: ColorSchema,
+	color: ColorStringSchema,
 	price: PriceSchema,
 });
 export type Member = z.infer<typeof MemberSchema>;

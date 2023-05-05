@@ -1,5 +1,6 @@
 import { FC, ReactNode } from "react";
 
+import { Color } from "@/models/Color";
 import { Colors } from "@/models/Colors";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
@@ -23,7 +24,7 @@ const MemberSelector: FC<Props> = (props: Props) => {
 						key={a.id}
 						value={a.id}
 						style={{
-							color: Colors.getAutoColor(a.color).toHexString(),
+							color: Colors.getAutoColor(Color.parse(a.color)).toHtml(),
 							background: a.color,
 						}}
 					>

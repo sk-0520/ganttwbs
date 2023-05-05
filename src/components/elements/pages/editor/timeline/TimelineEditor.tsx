@@ -1,4 +1,3 @@
-import { TinyColor } from "@ctrl/tinycolor";
 import { DragEvent, FC, useLayoutEffect, useMemo } from "react";
 import { ReactNode, useState } from "react";
 
@@ -9,6 +8,7 @@ import TimelineItems from "@/components/elements/pages/editor/timeline/TimelineI
 import TimelineViewer from "@/components/elements/pages/editor/timeline/TimelineViewer";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
+import { Color } from "@/models/Color";
 import { Colors } from "@/models/Colors";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
@@ -614,11 +614,11 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 					.map(level => {
 						const index = level - 1;
 						const backgroundColor = index in theme.groups ? theme.groups[index] : theme.timeline.defaultGroup;
-						const foregroundColor = Colors.getAutoColor(backgroundColor);
+						const foregroundColor = Colors.getAutoColor(Color.parse(backgroundColor));
 
 						return {
 							[`level-${level}`]: {
-								color: foregroundColor.toHexString(),
+								color: foregroundColor.toHtml(),
 								background: backgroundColor,
 							}
 						};
@@ -682,22 +682,23 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 				regulars: Settings.getWeekDays()
 					.filter(a => a in theme.holiday.regulars)
 					.map(a => {
-						const backgroundColor = new TinyColor(theme.holiday.regulars[a]);
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						const backgroundColor = Color.parse(theme.holiday.regulars[a]!);
 						return {
 							[a]: {
-								color: Colors.getAutoColor(backgroundColor).toHexString(),
-								background: backgroundColor.toHexString(),
+								color: Colors.getAutoColor(backgroundColor).toHtml(),
+								background: backgroundColor.toHtml(),
 							}
 						};
 					})
 					.reduce((r, a) => ({ ...r, ...a })),
 				events: Object.entries(theme.holiday.events)
 					.map(([k, v]) => {
-						const backgroundColor = new TinyColor(v);
+						const backgroundColor = Color.parse(v);
 						return {
 							[k]: {
-								color: Colors.getAutoColor(backgroundColor).toHexString(),
-								background: `${backgroundColor.toHexString()} !important`
+								color: Colors.getAutoColor(backgroundColor).toHtml(),
+								background: `${backgroundColor.toHtml()} !important`
 							}
 						};
 					})
