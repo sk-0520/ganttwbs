@@ -7,7 +7,6 @@ import { Color } from "@/models/Color";
 import { Colors } from "@/models/Colors";
 import { GroupSetting } from "@/models/data/context/SettingContext";
 import { MemberId } from "@/models/data/Setting";
-import { Types } from "@/models/Types";
 
 const ColorKinds = [
 	"same",
@@ -19,22 +18,22 @@ const ColorKinds = [
 type ColorKind = typeof ColorKinds[number];
 
 interface Props {
-	choiceColorGroup: GroupSetting;
+	group: GroupSetting;
 	callbackClosed(colors: Map<MemberId, Color> | undefined): void
 }
 
 const GroupColorsDialog: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
-	const [baseColor, setBaseColor] = useState(Arrays.first(props.choiceColorGroup.members).color);
-	const [gradientColor, setGradientColor] = useState(Arrays.last(props.choiceColorGroup.members).color);
+	const [baseColor, setBaseColor] = useState(Arrays.first(props.group.members).color);
+	const [gradientColor, setGradientColor] = useState(Arrays.last(props.group.members).color);
 	const [selectedColorType, setSelectedColorType] = useState<ColorKind>();
 
-	const [colorTable, setColorTable] = useState(createColorTable(props.choiceColorGroup, baseColor, gradientColor));
+	const [colorTable, setColorTable] = useState(createColorTable(props.group, baseColor, gradientColor));
 
 	function changeInputColors(base: Color, gradient: Color) {
-		const baseColors = createBaseColorMaps(props.choiceColorGroup, base);
-		const gradientColor = createGradientMap(props.choiceColorGroup, base, gradient);
+		const baseColors = createBaseColorMaps(props.group, base);
+		const gradientColor = createGradientMap(props.group, base, gradient);
 		setColorTable({
 			...colorTable,
 			gradient: gradientColor,
@@ -51,7 +50,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 	function handleGenerateRandom(): void {
 		setColorTable({
 			...colorTable,
-			random: createRandomMap(props.choiceColorGroup, baseColor, gradientColor),
+			random: createRandomMap(props.group, baseColor, gradientColor),
 		});
 		setSelectedColorType("random");
 	}
@@ -78,7 +77,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 		<Dialog
 			button="submit"
 			title={locale.pages.editor.setting.resource.choiceColorDialog.title}
-			preSubmit={() => Types.toBoolean(selectedColorType)}
+			preSubmit={() => Boolean(selectedColorType)}
 			callbackClose={(type) => {
 				if (selectedColorType && type === "submit") {
 					props.callbackClosed(colorTable[selectedColorType]);
@@ -143,7 +142,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 						</tr>
 					</thead>
 					<tbody>
-						{props.choiceColorGroup.members.map((a, i) => {
+						{props.group.members.map((a, i) => {
 							return (
 								<tr key={a.id}>
 									<td className="member-cell">

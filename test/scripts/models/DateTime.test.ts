@@ -66,10 +66,12 @@ describe("DateTime", () => {
 	test.each([
 		[DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), 0, "year"],
 		[DateTime.parse("2000-01-02T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), 1, "day"],
+		[DateTime.parse("2000-01-08T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), 1, "week"],
 		[DateTime.parse("2000-02-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), 1, "month"],
 		[DateTime.parse("2001-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), 1, "year"],
 		[DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), 0, "year"],
 		[DateTime.parse("2000-01-02T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), 1, "day"],
+		[DateTime.parse("2000-01-08T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), 1, "week"],
 		[DateTime.parse("2000-02-01T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), 1, "month"],
 		[DateTime.parse("2001-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.create("Asia/Tokyo")), 1, "year"],
 	])("add - unit", (expected: DateTime, date: DateTime, diff: number, unit: string) => {
@@ -87,6 +89,18 @@ describe("DateTime", () => {
 		const actual = a.diff(b);
 		expect(expected.equals(actual)).toBeTruthy();
 	});
+
+	test.each([
+		[DateTime.parse("2019-02-28T00:00:00", TimeZone.utc), DateTime.parse("2019-02-01T12:34:56.789", TimeZone.utc)],
+		[DateTime.parse("2020-02-29T00:00:00", TimeZone.utc), DateTime.parse("2020-02-01T12:34:56.789", TimeZone.utc)],
+		[DateTime.parse("2019-02-28T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2019-02-01T12:34:56.789", TimeZone.create("Asia/Tokyo"))],
+		[DateTime.parse("2020-02-29T00:00:00", TimeZone.create("Asia/Tokyo")), DateTime.parse("2020-02-01T12:34:56.789", TimeZone.create("Asia/Tokyo"))],
+	])("getLastDayOfMonth", (expected: DateTime, input: DateTime) => {
+		const actual = input.getLastDayOfMonth();
+		expect(actual.format("U")).toBe(expected.format("U"));
+		expect(actual.ticks).toBe(expected.ticks);
+	});
+
 
 	test.each([
 		[DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc)],

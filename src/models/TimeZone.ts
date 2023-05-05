@@ -48,15 +48,15 @@ export abstract class TimeZone {
 		}
 
 		//TODO: +-HH:MM 形式のみ。 : なかったり、HHのみとかもうめんどい
-		const regex = /(?<signs>\+|-)(?<h>[0-2][0-9]):(?<m>[0-5][0-9])/;
+		const regex = /(?<SIGNS>\+|-)(?<H>[0-2][0-9]):(?<M>[0-5][0-9])/;
 		const match = s.match(regex);
 		if (!match || !match.groups) {
 			return ResultFactory.error(new Error(s));
 		}
 
-		const signs = match.groups["signs"] === "-" ? -1 : +1;
-		const h = Number.parseInt(match.groups["h"], 10);
-		const m = Number.parseInt(match.groups["m"], 10);
+		const signs = match.groups.SIGNS === "-" ? -1 : +1;
+		const h = Number.parseInt(match.groups.H, 10);
+		const m = Number.parseInt(match.groups.M, 10);
 		const totalMinutes = (h * 60 + m) * signs;
 
 		return ResultFactory.success(new OffsetTimeZone(TimeSpan.fromMinutes(totalMinutes)));
@@ -155,7 +155,7 @@ export abstract class TimeZone {
 
 		const timeZoneNames = [
 			...baseTimeZoneNames.sort(),
-			//"UTC",
+			"UTC",
 		];
 
 		return timeZoneNames.map(a => new IanaTimeZone(a));
@@ -181,7 +181,7 @@ export abstract class TimeZone {
 
 	/**
 	 * 生成。
-	 * @param input
+	 * @param input 全て信じる系。
 	 * @returns
 	 */
 	public static create(input: TimeSpan | string): TimeZone {

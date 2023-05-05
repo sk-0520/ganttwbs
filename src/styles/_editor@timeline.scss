@@ -1,6 +1,6 @@
 @use "variable" as variable;
 @use "./mixin/control" as control;
-@use "./common/box" as box;
+@use "./mixin/box" as box;
 
 $cross-header-z-index: 5;
 $days-header-z-index: 3;

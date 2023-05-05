@@ -6,8 +6,6 @@ import Overlay from "@/components/elements/Overlay";
 import { Color } from "@/models/Color";
 import { Colors } from "@/models/Colors";
 import { ColorString } from "@/models/data/Setting";
-import style from "@/styles/modules/components/elements/PlainColorPicker.module.scss";
-
 
 interface Props {
 	color: Color;
@@ -54,13 +52,13 @@ const PlainColorPicker: FC<Props> = (props: Props) => {
 
 	return (
 		<>
-			<span className={style.wrapper}>
+			<span className="color-picker-wrapper plain">
 				<button
-					className={style.button}
+					className="button"
 					type="button"
 					onClick={ev => setIsVisible(true)}
 				>
-					<span className={style.box} style={boxStyle}>&nbsp;</span>
+					<span className="box" style={boxStyle}>&nbsp;</span>
 					<code>{props.color.toHtml()}</code>
 				</button>
 				<Overlay
@@ -71,7 +69,7 @@ const PlainColorPicker: FC<Props> = (props: Props) => {
 						ref={refPicker}
 					>
 						<SketchPicker
-							className={style.picker}
+							className="picker"
 							color={props.color.toHtml()}
 							disableAlpha={false}
 							presetColors={presetColors}

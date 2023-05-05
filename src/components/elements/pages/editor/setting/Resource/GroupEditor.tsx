@@ -189,7 +189,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 				</table>
 				{visibleDialog && (
 					<GroupColorsDialog
-						choiceColorGroup={props.group}
+						group={props.group}
 						callbackClosed={a => {
 							if (a) {
 								setUpdatedColors(a);

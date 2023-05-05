@@ -27,7 +27,6 @@ import { Settings } from "@/models/Settings";
 import { MoveDirection } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
-import { Types } from "@/models/Types";
 import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
@@ -304,26 +303,26 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			/>
 			<SubjectCell
 				value={subject}
-				disabled={Types.toBoolean(props.selectingBeginDate)}
+				disabled={Boolean(props.selectingBeginDate)}
 				readOnly={false}
 				callbackChangeValue={handleChangeSubject}
 			/>
 			<WorkloadCell
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-				disabled={Types.toBoolean(props.selectingBeginDate)}
+				disabled={Boolean(props.selectingBeginDate)}
 				value={workload}
 				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeWorkload : undefined}
 			/>
 			<ResourceCell
 				currentTimeline={props.currentTimeline}
 				selectedMemberId={memberId}
-				disabled={Types.toBoolean(props.selectingBeginDate)}
+				disabled={Boolean(props.selectingBeginDate)}
 				resourceInfo={props.resourceInfo}
 				callbackChangeMember={handleChangeMember}
 			/>
 			<RelationCell
 				currentTimeline={props.currentTimeline}
-				selectable={Types.toBoolean(props.selectingBeginDate)}
+				selectable={Boolean(props.selectingBeginDate)}
 				htmlFor={selectingId}
 			/>
 			{
@@ -334,7 +333,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 								<li className="main">
 									<input
 										type="date"
-										value={selectedBeginDate ? selectedBeginDate.format("yyyy-MM-dd") : ""}
+										value={selectedBeginDate ? selectedBeginDate.toInput("date") : ""}
 										onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
 									/>
 								</li>
@@ -414,7 +413,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 					) : (
 						<WorkRangeCells
 							workRangeKind={workRangeKind}
-							selectable={Types.toBoolean(props.selectingBeginDate)}
+							selectable={Boolean(props.selectingBeginDate)}
 							beginDate={beginDate}
 							endDate={endDate}
 							htmlFor={selectingId}
@@ -424,13 +423,13 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			}
 			<ProgressCell
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-				disabled={Types.toBoolean(props.selectingBeginDate)}
+				disabled={Boolean(props.selectingBeginDate)}
 				progress={progress}
 				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
 			/>
 			<ControlsCell
 				currentTimelineKind={props.currentTimeline.kind}
-				disabled={Types.toBoolean(props.selectingBeginDate)}
+				disabled={Boolean(props.selectingBeginDate)}
 				moveItem={handleControlMoveItem}
 				addItem={handleControlAddItem}
 				deleteItem={handleControlDeleteItem}

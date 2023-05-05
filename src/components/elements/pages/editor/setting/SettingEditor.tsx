@@ -130,12 +130,18 @@ const SettingEditor: FC<Props> = (props: Props) => {
 export default SettingEditor;
 
 function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnly]: HolidayEvent }, timeZone: TimeZone): string {
-	return Object.entries(items)
+	let lines = Object.entries(items)
 		.filter(([k, v]) => v.kind === kind)
 		.map(([k, v]) => ({ date: DateTime.parse(k, timeZone), display: v.display }))
 		.sort((a, b) => a.date.compare(b.date))
 		.map(a => `${a.date.format("yyyy-MM-dd")}\t${a.display}`)
-		.join(NewLine) + NewLine;
+		.join(NewLine)
+		;
+	if (lines.length) {
+		lines += NewLine;
+	}
+
+	return lines;
 }
 
 function toContext(configuration: Configuration, setting: Setting): SettingContext {

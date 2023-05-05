@@ -4,10 +4,10 @@ import { ParseResult, ResultFactory } from "@/models/data/Result";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 
-export type Unit = "second" | "minute" | "hour" | "day" | "month" | "year";
 
 type DateTimeParseResult = ParseResult<DateTime, Error>;
 
+export type Unit = "second" | "minute" | "hour" | "day" | "week" | "month" | "year";
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 function factory(timeZone: TimeZone): cdate.cdate {
@@ -20,6 +20,24 @@ function factory(timeZone: TimeZone): cdate.cdate {
 
 	return create;
 }
+
+function toDateOnly(date: cdate.CDate): cdate.CDate {
+	return date
+		.set("hour", 0)
+		.set("minute", 0)
+		.set("second", 0)
+		.set("millisecond", 0)
+		;
+}
+
+function padStart(value: number, length: number, fillString: string): string {
+	return value.toString().padStart(length, fillString);
+}
+
+function padStart0(value: number, length: number): string {
+	return padStart(value, length, "0");
+}
+
 
 /**
  * 日付のラッパー。
@@ -82,7 +100,7 @@ export class DateTime {
 	 * @returns
 	 */
 	public get ticks(): number {
-		return +this.date;
+		return Number(this.date);
 	}
 
 	//#endregion
@@ -115,12 +133,12 @@ export class DateTime {
 		// 自分でタイムゾーン計算したらライブラリの意味ない、、、とはいえこの手法もどうなんっていう
 
 		const date = {
-			year: year.toString().padStart(4, "0"),
-			month: month.toString().padStart(2, "0"),
-			day: (day ?? 1).toString().padStart(2, "0"),
-			hour: (hour ?? 0).toString().padStart(2, "0"),
-			minute: (minute ?? 0).toString().padStart(2, "0"),
-			second: (second ?? 0).toString().padStart(2, "0"),
+			year: padStart0(year, 4),
+			month: padStart0(month, 2),
+			day: padStart0(day ?? 1, 2),
+			hour: padStart0(hour ?? 0, 2),
+			minute: padStart0(minute ?? 0, 2),
+			second: padStart0(second ?? 0, 2),
 			millisecond: (millisecond ?? 0).toString(),
 		};
 		const iso8601WithoutTimezone = `${date.year}-${date.month}-${date.day}T${date.hour}:${date.minute}:${date.second}.${date.millisecond}`;
@@ -227,14 +245,13 @@ export class DateTime {
 	}
 
 	public toDateOnly(): DateTime {
-		const date = this.date
-			.set("hour", 0)
-			.set("minute", 0)
-			.set("second", 0)
-			.set("millisecond", 0)
-			;
+		const date = toDateOnly(this.date);
 
 		return new DateTime(date, this.timeZone);
+	}
+
+	public getLastDayOfMonth(): DateTime {
+		return new DateTime(toDateOnly(this.date.endOf("month").endOf("day")), this.timeZone);
 	}
 
 	/**
@@ -263,23 +280,23 @@ export class DateTime {
 		}
 
 		const map = new Map([
-			["yyyy", this.year.toString().padStart(4, "0")],
-			["yyyyy", this.year.toString().padStart(5, "0")],
+			["yyyy", padStart0(this.year, 4)],
+			["yyyyy", padStart0(this.year, 5)],
 
 			["M", (this.month).toString()],
-			["MM", (this.month).toString().padStart(2, "0")],
+			["MM", padStart0(this.month, 2)],
 
 			["d", this.day.toString()],
-			["dd", this.day.toString().padStart(2, "0")],
+			["dd", padStart0(this.day, 2)],
 
 			["H", this.hour.toString()],
-			["HH", this.hour.toString().padStart(2, "0")],
+			["HH", padStart0(this.hour, 2)],
 
 			["m", this.minute.toString()],
-			["mm", this.minute.toString().padStart(2, "0")],
+			["mm", padStart0(this.minute, 2)],
 
 			["s", this.second.toString()],
-			["ss", this.second.toString().padStart(2, "0")],
+			["ss", padStart0(this.second, 2)],
 		]);
 
 		const pattern = Array.from(map.keys())
@@ -291,6 +308,21 @@ export class DateTime {
 			new RegExp("(" + pattern + ")", "g"),
 			m => map.get(m) ?? m
 		);
+	}
+
+	/**
+	 * HTML <input type="*" /> に合わせた入力文字列へ変換。
+	 * @param type
+	 * @returns
+	 */
+	public toInput(type: "date"): string {
+		switch (type) {
+			case "date":
+				return this.format("yyyy-MM-dd");
+
+			default:
+				throw new Error(type);
+		}
 	}
 
 	//#endregion

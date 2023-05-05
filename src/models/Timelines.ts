@@ -45,7 +45,7 @@ export abstract class Timelines {
 	}
 
 	public static serializeDateTime(date: DateTime): TimeOnly {
-		return date.format("yyyy-MM-dd");
+		return date.toInput("date");
 	}
 
 	public static createRootTimeline(): RootTimeline {

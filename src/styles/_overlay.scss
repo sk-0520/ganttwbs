@@ -1,6 +1,6 @@
 $overlay-index: 10;
 
-.overlay {
+.overlay-wrapper {
 	background-color: transparent;
 	position: fixed;
 	z-index: $overlay-index;
@@ -10,7 +10,7 @@ $overlay-index: 10;
 	height: 100vh;
 }
 
-.children {
+.overlay-children {
 	z-index: $overlay-index + 1;
 	position: relative;
 }

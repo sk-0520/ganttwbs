@@ -79,6 +79,6 @@ describe("Types", () => {
 		[true, { a: "A" }],
 		[true, () => undefined],
 	])("toBoolean", (expected: boolean, input: unknown) => {
-		expect(Types.toBoolean(input)).toBe(expected);
+		expect(Boolean(input)).toBe(expected);
 	});
 });
