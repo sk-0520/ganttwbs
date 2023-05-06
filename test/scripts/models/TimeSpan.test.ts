@@ -119,9 +119,29 @@ describe("TimeSpan", () => {
 		["365.23:34:45.1"],
 	])("parse-readable", (input) => {
 		const actual = TimeSpan.parse(input);
-		const s1 = actual.toString("readable");
+		const s1 = actual.serialize("readable");
 		const dup = TimeSpan.parse(s1);
-		const s2 = dup.toString("readable");
+		const s2 = dup.serialize("readable");
+		expect(s1).toBe(s2);
+	});
+
+
+	test.each([
+		["PT0S"],
+		["P1Y"],
+		["P1M"],
+		["P1D"],
+		["PT1H"],
+		["PT1M"],
+		["PT1S"],
+		["P1Y2M3D"],
+		["PT4H5M6S.7"],
+		["P1Y2M3DT4H5M6S.7"],
+	])("parse-iso8601", (input) => {
+		const actual = TimeSpan.parse(input);
+		const s1 = actual.serialize("iso8601");
+		const dup = TimeSpan.parse(s1);
+		const s2 = dup.serialize("iso8601");
 		expect(s1).toBe(s2);
 	});
 });

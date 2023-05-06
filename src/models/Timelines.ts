@@ -41,7 +41,7 @@ export abstract class Timelines {
 	}
 
 	public static serializeWorkload(workload: TimeSpan): TimeOnly {
-		return workload.toString("readable");
+		return workload.serialize("readable");
 	}
 
 	public static serializeDateTime(date: DateTime): TimeOnly {
