@@ -677,6 +677,16 @@ export abstract class Timelines {
 
 	public static calcDayInfos(totalItems: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlyMap<DateOnly, Readonly<WorkRange>>): Map<DateOnly, DayInfo> {
 
+		const successWorkRanges = new Map<DateOnly, Readonly<SuccessWorkRange>>([...workRanges]
+			.filter(([k, v]) => WorkRanges.maybeSuccessWorkRange(v))
+			.map(([k, v]) => [k, v as SuccessWorkRange])
+		);
+
+		if (!successWorkRanges.size) {
+			// 重複チェックするにはそもそも範囲算出が成功してないとなんもできない
+			return new Map();
+		}
+
 		throw new Error();
 	}
 
