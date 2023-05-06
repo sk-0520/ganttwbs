@@ -90,19 +90,6 @@ main#editor {
 				}
 
 				&.general {
-					.timezone-selector {
-						max-height: 8em;
-						width: fit-content;
-						overflow: auto;
-
-						button {
-							width: 100%;
-
-							&.current {
-								font-weight: bold;
-							}
-						}
-					}
 				}
 
 				&.resource {

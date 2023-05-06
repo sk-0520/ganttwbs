@@ -6,8 +6,50 @@ import { useLocale } from "@/locales/locale";
 import { SettingContext } from "@/models/data/context/SettingContext";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Strings } from "@/models/Strings";
+import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 
+const timeZoneOffsets = [
+	TimeSpan.fromHours(+1),
+	TimeSpan.fromHours(+2),
+	TimeSpan.fromHours(+3),
+	TimeSpan.fromHours(+3.5),
+	TimeSpan.fromHours(+4),
+	TimeSpan.fromHours(+4.5),
+	TimeSpan.fromHours(+5),
+	TimeSpan.fromHours(+5.5),
+	TimeSpan.fromHours(+5.75),
+	TimeSpan.fromHours(+6),
+	TimeSpan.fromHours(+6.5),
+	TimeSpan.fromHours(+7),
+	TimeSpan.fromHours(+8),
+	TimeSpan.fromHours(+8.75),
+	TimeSpan.fromHours(+9),
+	TimeSpan.fromHours(+9.5),
+	TimeSpan.fromHours(+10),
+	TimeSpan.fromHours(+10.5),
+	TimeSpan.fromHours(+11),
+	TimeSpan.fromHours(+11.5),
+	TimeSpan.fromHours(+12),
+	TimeSpan.fromHours(+12.75),
+	TimeSpan.fromHours(+13),
+	TimeSpan.fromHours(+14),
+	TimeSpan.fromHours(-1),
+	TimeSpan.fromHours(-2),
+	TimeSpan.fromHours(-3),
+	TimeSpan.fromHours(-3.5),
+	TimeSpan.fromHours(-4),
+	TimeSpan.fromHours(-4.5),
+	TimeSpan.fromHours(-5),
+	TimeSpan.fromHours(-6),
+	TimeSpan.fromHours(-7),
+	TimeSpan.fromHours(-8),
+	TimeSpan.fromHours(-9),
+	TimeSpan.fromHours(-9.5),
+	TimeSpan.fromHours(-10),
+	TimeSpan.fromHours(-11),
+	TimeSpan.fromHours(-12),
+] as const;
 
 const GeneralEditor: FC = () => {
 	const locale = useLocale();
@@ -61,12 +103,41 @@ const GeneralEditor: FC = () => {
 				{locale.common.calendar.timeZone}
 			</dt>
 			<dd>
-				<input
-					type="text"
-					required
-					readOnly
+				<select
 					value={timeZone}
-				/>
+					onChange={ev => handleChangeTimeZone(TimeZone.parse(ev.target.value))}
+				>
+					<optgroup
+						label={locale.pages.editor.setting.general.timeZoneKind.name}
+					>
+						{TimeZone.getTimeZones().map(a => {
+							return (
+								<option
+									key={a.serialize()}
+									value={a.serialize()}
+								>
+									{a.serialize()}
+								</option>
+							);
+						})}
+					</optgroup>
+					<optgroup
+						label={locale.pages.editor.setting.general.timeZoneKind.offset}
+					>
+						{timeZoneOffsets.map(a => {
+							const timeZone = TimeZone.create(a);
+
+							return (
+								<option
+									key={timeZone.serialize()}
+									value={timeZone.serialize()}
+								>
+									{timeZone.serialize()}
+								</option>
+							);
+						})}
+					</optgroup>
+				</select>
 				<button
 					type="button"
 					onClick={_ => handleChangeTimeZone(currentTimeZone)}
@@ -81,21 +152,6 @@ const GeneralEditor: FC = () => {
 						)}
 					/>
 				</button>
-				<ul className="timezone-selector">
-					{TimeZone.getTimeZones().map(a => {
-						return (
-							<li key={a.serialize()}>
-								<button
-									type="button"
-									onClick={_ => handleChangeTimeZone(a)}
-									className={currentTimeZone.serialize() === a.serialize() ? "current" : ""}
-								>
-									{a.serialize()}
-								</button>
-							</li>
-						);
-					})}
-				</ul>
 			</dd>
 
 		</dl>

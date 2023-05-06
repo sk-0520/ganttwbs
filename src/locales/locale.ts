@@ -227,6 +227,10 @@ export interface Locale {
 				general: {
 					projectName: string,
 					recursive: string,
+					timeZoneKind:{
+						name: string,
+						offset: string,
+					},
 					selectCurrentTimeZoneFormat: string,
 				},
 

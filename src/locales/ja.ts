@@ -228,6 +228,10 @@ const locale: Locale = {
 				general: {
 					projectName: "タイトル",
 					recursive: "反復計算数",
+					timeZoneKind:{
+						name: "タイムゾーン名",
+						offset: "オフセット",
+					},
 					selectCurrentTimeZoneFormat: "現在のタイムゾーン(${TIMEZONE})"
 				},
 
