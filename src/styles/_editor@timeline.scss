@@ -451,7 +451,11 @@ $viewer-z-index: 2;
 			}
 
 			.timeline-progress {
-				input[type="number"] {
+				&.readonly {
+					text-align: center;
+				}
+
+				select {
 					width: 100%;
 				}
 			}

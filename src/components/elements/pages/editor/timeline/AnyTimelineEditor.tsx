@@ -20,7 +20,7 @@ import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { AnyTimeline, GroupTimeline, TimelineKind } from "@/models/data/Setting";
+import { AnyTimeline, GroupTimeline, Progress, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Settings } from "@/models/Settings";
@@ -123,12 +123,12 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		});
 	}
 
-	function handleChangeProgress(n: number) {
+	function handleChangeProgress(progress: Progress) {
 		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
 			throw new Error();
 		}
 
-		const progress = n / 100.0;
+		//const progress = n / 100.0;
 
 		props.timelineStore.updateTimeline({
 			...props.currentTimeline,
