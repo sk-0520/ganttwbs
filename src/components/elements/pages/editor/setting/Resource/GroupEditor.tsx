@@ -4,7 +4,6 @@ import GroupColorsDialog from "@/components/elements/pages/editor/setting/Resour
 import MemberEditor from "@/components/elements/pages/editor/setting/Resource/MemberEditor";
 import { useLocale } from "@/locales/locale";
 import { Color } from "@/models/Color";
-import { Colors } from "@/models/Colors";
 import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { MemberId } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
@@ -56,7 +55,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 			key: IdFactory.createReactKey(),
 			id: IdFactory.createMemberId(),
 			name: name,
-			color: Colors.random(),
+			color: Color.random(),
 			priceCost: priceSetting.price.cost,
 			priceSales: priceSetting.price.sales,
 		};

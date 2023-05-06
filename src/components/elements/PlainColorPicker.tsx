@@ -4,7 +4,6 @@ import { PresetColor } from "react-color/lib/components/sketch/Sketch";
 
 import Overlay from "@/components/elements/Overlay";
 import { Color } from "@/models/Color";
-import { Colors } from "@/models/Colors";
 import { ColorString } from "@/models/data/Setting";
 
 interface Props {
@@ -47,7 +46,7 @@ const PlainColorPicker: FC<Props> = (props: Props) => {
 
 	const boxStyle: CSSProperties = {
 		background: props.color.toHtml(),
-		borderColor: Colors.getAutoColor(props.color).toHtml(),
+		borderColor: props.color.getAutoColor().toHtml(),
 	};
 
 	return (

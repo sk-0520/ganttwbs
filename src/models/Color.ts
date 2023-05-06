@@ -1,4 +1,4 @@
-import { TinyColor } from "@ctrl/tinycolor";
+import { mostReadable, random, TinyColor } from "@ctrl/tinycolor";
 
 import { ParseResult, ResultFactory } from "@/models/data/Result";
 import { ColorString } from "@/models/data/Setting";
@@ -8,7 +8,7 @@ type ColorParseResult = ParseResult<Color, Error>;
 
 export class Color {
 
-	public constructor(public readonly raw: TinyColor) {
+	private constructor(public readonly raw: TinyColor) {
 		if (!raw.isValid) {
 			throw new Error();
 		}
@@ -86,5 +86,74 @@ export class Color {
 		return this.raw.toHexString();
 	}
 
+	/**
+	 * 現在の色に対して読みやすい(?)色を取得
+	 * @param color
+	 * @returns
+	 */
+	public getAutoColor(): Color {
+		const autoColors = [Colors.black, Colors.white];
+		const result = mostReadable(
+			this.raw,
+			autoColors,
+			{
+				includeFallbackColors: true
+			}
+		);
+
+		return result ? new Color(result) : Colors.black;
+	}
+
+	/**
+	 * 単純グラデーションの作成
+	 * @param start 開始色
+	 * @param end 終了色
+	 * @param count 色数
+	 * @returns グラデーション配列
+	 */
+	public static generateGradient(start: Color, end: Color, count: number): Array<Color> {
+		if (count <= 1) {
+			throw new Error(`${count}`);
+		}
+
+		// RGB と HSL で処理できるようにした方がいいかも
+		// RGB だと灰色がなぁ
+
+		const a = start.raw.toRgb();
+		const z = end.raw.toRgb();
+
+		const result = new Array<Color>();
+
+		for (let i = 0; i < count; i++) {
+			const zp = (i / (count - 1)) * 100;
+			const ap = 100 - zp;
+			const color = new Color(new TinyColor({
+				r: (a.r * ap / 100) + (z.r * zp / 100),
+				g: (a.g * ap / 100) + (z.g * zp / 100),
+				b: (a.b * ap / 100) + (z.b * zp / 100),
+			}));
+			result.push(color);
+		}
+
+		return result;
+	}
+
+	public analogous(count: number): Array<Color> {
+		return this.raw.analogous(count).map(a => new Color(a));
+	}
+
+	public monochromatic(count: number): Array<Color> {
+		return this.raw.monochromatic(count).map(a => new Color(a));
+	}
+
+	public static random(): Color {
+		return new Color(random());
+	}
+
 	//#endregion
+}
+
+export abstract class Colors {
+	public static white = Color.create(0xff, 0xff, 0xff);
+	public static black = Color.create(0x00, 0x00, 0x00);
 }

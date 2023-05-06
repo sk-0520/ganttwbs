@@ -1,6 +1,5 @@
 import { As } from "@/models/As";
 import { Color } from "@/models/Color";
-import { Colors } from "@/models/Colors";
 import { PriceSetting } from "@/models/data/PriceSetting";
 import { HolidayKind, TimelineTheme, WeekDay } from "@/models/data/Setting";
 
@@ -44,8 +43,7 @@ export abstract class DefaultSettings {
 	}
 
 	public static getGroupThemeColors(): Array<Color> {
-		return Colors.generateGradient(Color.parse("#5555ee"), Color.parse("#80ff00"), 5)
-			;
+		return Color.generateGradient(Color.parse("#5555ee"), Color.parse("#80ff00"), 5);
 	}
 
 	public static getTimelineTheme(): TimelineTheme {

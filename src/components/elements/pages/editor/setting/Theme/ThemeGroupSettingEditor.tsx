@@ -6,7 +6,6 @@ import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
-import { Colors } from "@/models/Colors";
 import { SettingContext, UUID } from "@/models/data/context/SettingContext";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
@@ -50,7 +49,7 @@ const ThemeGroupSettingEditor: FC = () => {
 	function handleAddColor() {
 		groups.push({
 			key: IdFactory.createReactKey(),
-			value: Colors.random(),
+			value: Color.random(),
 		});
 		setGroups(settingContext.theme.groups = [...groups]);
 	}
@@ -62,7 +61,7 @@ const ThemeGroupSettingEditor: FC = () => {
 			if (1 < groups.length) {
 				setResetColorEnd(groups[groups.length - 1].value);
 			} else {
-				setResetColorEnd(Colors.random());
+				setResetColorEnd(Color.random());
 			}
 		} else {
 			setResetColorBegin(reset.color.begin);
@@ -141,7 +140,7 @@ const ThemeGroupSettingEditor: FC = () => {
 						if (r === "submit") {
 							const colors = resetCount <= 1
 								? [resetColorBegin]
-								: Colors.generateGradient(resetColorBegin, resetColorEnd, resetCount)
+								: Color.generateGradient(resetColorBegin, resetColorEnd, resetCount)
 								;
 							const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a }));
 							setGroups(settingContext.theme.groups = groups);

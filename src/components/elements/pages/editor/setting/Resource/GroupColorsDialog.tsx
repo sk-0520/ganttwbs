@@ -4,7 +4,6 @@ import Dialog from "@/components/elements/Dialog";
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
-import { Colors } from "@/models/Colors";
 import { GroupSetting } from "@/models/data/context/SettingContext";
 import { MemberId } from "@/models/data/Setting";
 
@@ -156,7 +155,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 
 										const htmlColor = color.toHtml();
 										const style: CSSProperties = {
-											color: Colors.getAutoColor(color).toHtml(),
+											color: color.getAutoColor().toHtml(),
 											background: htmlColor,
 										};
 
@@ -188,10 +187,10 @@ function createBaseColorMaps(group: Readonly<GroupSetting>, baseColor: Color): R
 			group.members.map(a => [a.id, baseColor])
 		),
 		["analogy"]: new Map(
-			Colors.analogous(baseColor, group.members.length).map((a, i) => [group.members[i].id, a])
+			baseColor.analogous(group.members.length).map((a, i) => [group.members[i].id, a])
 		),
 		["monochrome"]: new Map(
-			Colors.monochromatic(baseColor, group.members.length).map((a, i) => [group.members[i].id, a])
+			baseColor.monochromatic(group.members.length).map((a, i) => [group.members[i].id, a])
 		)
 	};
 }
@@ -216,13 +215,13 @@ function createGradientMap(group: Readonly<GroupSetting>, baseColor: Color, grad
 	}
 
 	return new Map(
-		Colors.generateGradient(baseColor, gradientColor, group.members.length)
+		Color.generateGradient(baseColor, gradientColor, group.members.length)
 			.map((a, i) => [group.members[i].id, a])
 	);
 }
 
 function createRandomMap(group: Readonly<GroupSetting>, baseColor: Color, gradientColor: Color): Map<MemberId, Color> {
 	return new Map(
-		group.members.map(a => [a.id, Colors.random()])
+		group.members.map(a => [a.id, Color.random()])
 	);
 }

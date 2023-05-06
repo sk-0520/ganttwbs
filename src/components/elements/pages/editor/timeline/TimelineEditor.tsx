@@ -9,7 +9,6 @@ import TimelineViewer from "@/components/elements/pages/editor/timeline/Timeline
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
-import { Colors } from "@/models/Colors";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
@@ -614,7 +613,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 					.map(level => {
 						const index = level - 1;
 						const backgroundColor = index in theme.groups ? theme.groups[index] : theme.timeline.defaultGroup;
-						const foregroundColor = Colors.getAutoColor(Color.parse(backgroundColor));
+						const foregroundColor = Color.parse(backgroundColor).getAutoColor();
 
 						return {
 							[`level-${level}`]: {
@@ -686,7 +685,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 						const backgroundColor = Color.parse(theme.holiday.regulars[a]!);
 						return {
 							[a]: {
-								color: Colors.getAutoColor(backgroundColor).toHtml(),
+								color: backgroundColor.getAutoColor().toHtml(),
 								background: backgroundColor.toHtml(),
 							}
 						};
@@ -697,7 +696,7 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 						const backgroundColor = Color.parse(v);
 						return {
 							[k]: {
-								color: Colors.getAutoColor(backgroundColor).toHtml(),
+								color: backgroundColor.getAutoColor().toHtml(),
 								background: `${backgroundColor.toHtml()} !important`
 							}
 						};
