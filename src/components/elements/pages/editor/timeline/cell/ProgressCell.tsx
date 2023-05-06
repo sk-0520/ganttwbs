@@ -17,8 +17,6 @@ interface Props {
 }
 
 const ProgressCell: FC<Props> = (props: Props) => {
-	console.debug(props.progress);
-
 	if(props.readOnly) {
 		return (
 			<td className="timeline-cell timeline-progress readonly">

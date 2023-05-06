@@ -112,7 +112,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 		});
 	}, [dates, locale, props.calendarInfo, props.setting]);
 
-	const pinNodes = useMemo(() => {
+	function renderPins() {
 		console.debug("renderPinrenderPinrenderPin");
 		return dates.map(a => {
 			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
@@ -121,11 +121,11 @@ const DaysHeader: FC<Props> = (props: Props) => {
 
 			return (
 				<td key={a.ticks} title={holidayEventValue?.event.display} className={className}>
-					@
+					&nbsp;
 				</td>
 			);
 		});
-	}, [dates, props.calendarInfo, props.setting]);
+	}
 
 	return (
 		<div id="days-header">
@@ -141,7 +141,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 						{weekNodes}
 					</tr>
 					<tr className="pin">
-						{pinNodes}
+						{renderPins()}
 					</tr>
 				</tbody>
 			</table>
