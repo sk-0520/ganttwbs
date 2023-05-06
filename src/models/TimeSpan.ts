@@ -244,5 +244,9 @@ export class TimeSpan {
 		}
 	}
 
+	public toString(): string {
+		return this.serialize("readable");
+	}
+
 	//#endregion
 }

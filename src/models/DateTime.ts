@@ -226,6 +226,12 @@ export class DateTime {
 		return new DateTime(date, this.timeZone);
 	}
 
+	public changeTimeZone(timeZone: TimeZone): DateTime {
+		const create = factory(timeZone);
+		const date = create(Number(this.date));
+		return new DateTime(date, timeZone);
+	}
+
 	/**
 	 * 差分取得。
 	 * @param target
@@ -242,6 +248,17 @@ export class DateTime {
 
 	public compare(date: DateTime): number {
 		return this.ticks - date.ticks;
+	}
+
+	/**
+	 * 閏年か。
+	 *
+	 * いるか？これ。
+	 * @param year
+	 * @returns
+	 */
+	public static isLeapYear(year: number): boolean {
+		return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
 	}
 
 	public toDateOnly(): DateTime {
@@ -323,6 +340,10 @@ export class DateTime {
 			default:
 				throw new Error(type);
 		}
+	}
+
+	public toString(): string {
+		return this.format("U");
 	}
 
 	//#endregion

@@ -1,5 +1,4 @@
 import { ParseResult, ResultFactory } from "@/models/data/Result";
-import { Strings } from "@/models/Strings";
 import { TimeSpan } from "@/models/TimeSpan";
 
 type TimeZoneParseResult = ParseResult<TimeZone, Error>;
@@ -181,18 +180,10 @@ export abstract class TimeZone {
 
 	/**
 	 * 生成。
-	 * @param input 全て信じる系。
 	 * @returns
 	 */
-	public static create(input: TimeSpan | string): TimeZone {
-		if (input instanceof TimeSpan) {
-			return new OffsetTimeZone(input);
-		}
-		if (Strings.isNotWhiteSpace(input)) {
-			return new IanaTimeZone(input);
-		}
-
-		throw new Error(input);
+	public static create(offset: TimeSpan): TimeZone {
+		return new OffsetTimeZone(offset);
 	}
 
 	/**
@@ -202,6 +193,9 @@ export abstract class TimeZone {
 	 */
 	public abstract serialize(): string;
 
+	public toString(): string {
+		return this.serialize();
+	}
 }
 
 /**
