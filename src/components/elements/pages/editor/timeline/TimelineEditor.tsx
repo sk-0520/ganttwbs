@@ -18,7 +18,7 @@ import { EditorData } from "@/models/data/EditorData";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { AnyTimeline, DateOnly, GroupTimeline, TaskTimeline, Theme, TimelineId, TimelineKind } from "@/models/data/Setting";
+import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
@@ -27,7 +27,6 @@ import { Resources } from "@/models/Resources";
 import { Settings } from "@/models/Settings";
 import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
-import { DayInfo } from "@/models/data/DayInfo";
 
 /*
 心臓部
@@ -77,7 +76,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		updateRelations();
 	}, [sequenceTimelines]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	function createTimelineStore(sequenceTimelines: ReadonlyArray<AnyTimeline>, totalItems: ReadonlyMap<TimelineId, AnyTimeline>, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
+	function createTimelineStore(sequenceTimelines: ReadonlyArray<AnyTimeline>, totalTimelineMap: ReadonlyMap<TimelineId, AnyTimeline>, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
 
 		for (const [k, v] of changedItems) {
 			if (v.workRange) {
@@ -85,12 +84,11 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			}
 		}
 
-		const dayInfos = new Map<DateOnly, DayInfo>();
-
+		const dayInfos = Timelines.calcDayInfos(totalTimelineMap, workRangesCache);
 
 		const result: TimelineStore = {
 			rootGroupTimeline: props.editorData.setting.rootTimeline,
-			totalItemMap: totalItems,
+			totalItemMap: totalTimelineMap,
 			sequenceItems: sequenceTimelines,
 			indexItemMap: Timelines.toIndexes(sequenceTimelines),
 

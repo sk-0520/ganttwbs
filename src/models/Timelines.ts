@@ -1,4 +1,5 @@
 import { Arrays } from "@/models/Arrays";
+import { DayInfo } from "@/models/data/DayInfo";
 import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId } from "@/models/data/Setting";
 import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
@@ -673,4 +674,10 @@ export abstract class Timelines {
 
 		return undefined;
 	}
+
+	public static calcDayInfos(totalItems: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlyMap<DateOnly, Readonly<WorkRange>>): Map<DateOnly, DayInfo> {
+
+		throw new Error();
+	}
+
 }
