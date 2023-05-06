@@ -1,7 +1,9 @@
 import { Arrays } from "@/models/Arrays";
+import { Calendars } from "@/models/Calendars";
+import { CalendarRange } from "@/models/data/CalendarRange";
 import { DayInfo } from "@/models/data/DayInfo";
 import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
-import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId } from "@/models/data/Setting";
+import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, MemberId, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId } from "@/models/data/Setting";
 import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime, WeekIndex } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
@@ -367,6 +369,103 @@ export abstract class Timelines {
 		return result;
 	}
 
+
+	/**
+	 * タイムラインから最初に見つかったタスクを返す。
+	 * ここでいう最初は層の浅い部分となる。
+	 * @param timeline
+	 * @returns
+	 */
+	public static getFirstTaskTimeline(timeline: AnyTimeline): TaskTimeline | null {
+		if (Settings.maybeTaskTimeline(timeline)) {
+			return timeline;
+		} else if (Settings.maybeGroupTimeline(timeline)) {
+			const taskChildren = timeline.children.filter(Settings.maybeTaskTimeline);
+			if (taskChildren.length) {
+				return taskChildren[0];
+			}
+
+			const groupChildren = timeline.children.filter(Settings.maybeGroupTimeline);
+			for (const groupTImeline of groupChildren) {
+				const taskTimeline = this.getFirstTaskTimeline(groupTImeline);
+				if (taskTimeline) {
+					return taskTimeline;
+				}
+			}
+		} else {
+			throw new Error();
+		}
+
+		return null;
+	}
+
+	/**
+	 * 指定タイムラインは前工程タイムラインとして選択可能か
+	 * @param targetTimeline 前工程になりうるかチェックするタイムライン。
+	 * @param baseTimeline 基準となるタイムライン。
+	 * @param rootTimeline
+	 * @returns
+	 */
+	public static canSelect(targetTimeline: AnyTimeline, baseTimeline: AnyTimeline, rootTimeline: GroupTimeline): boolean {
+		const groups = Timelines.getParentGroups(baseTimeline, rootTimeline);
+		if (groups.length) {
+			return !groups.some(a => a.id === targetTimeline.id);
+		}
+
+		return true;
+	}
+
+	/**
+	 * 前工程タイムラインを検索。
+	 * @param timeline タイムライン。
+	 * @param rootTimeline
+	 * @returns
+	 */
+	public static searchBeforeTimeline(timeline: AnyTimeline, rootTimeline: GroupTimeline): AnyTimeline | undefined {
+		const sequenceTimelines = this.flat(rootTimeline.children);
+
+		const index = sequenceTimelines.findIndex(a => a.id === timeline.id);
+		if (index === -1) {
+			throw new Error();
+		}
+
+		const groups = Timelines.getParentGroups(timeline, rootTimeline);
+		const group = Arrays.last(groups);
+
+		for (let i = index - 1; 0 <= i; i--) {
+			const beforeTimeline = sequenceTimelines[i];
+			if (Settings.maybeGroupTimeline(beforeTimeline)) {
+				// 前項目が自身の属するグループの場合、直近タイムラインにはなりえない
+				if (groups.find(a => a.id === beforeTimeline.id)) {
+					continue;
+				}
+				return beforeTimeline;
+			}
+			if (Settings.maybeTaskTimeline(beforeTimeline)) {
+				const beforeGroups = Timelines.getParentGroups(beforeTimeline, rootTimeline);
+				const beforeGroup = Arrays.last(beforeGroups);
+				// 前項目のグループと自身のグループが同じ場合、兄弟として直近として扱える
+				if (beforeGroup.id === group.id) {
+					return beforeTimeline;
+				}
+
+				if (this.canSelect(beforeTimeline, timeline, rootTimeline)) {
+					// タスク自体は直近として扱える場合でも、異なるグループのためそのグループ自体を選択する
+					if (1 < beforeGroups.length) {
+						const target = beforeGroup;
+						if (this.canSelect(target, timeline, rootTimeline)) {
+							return target;
+						}
+					}
+
+					return beforeTimeline;
+				}
+			}
+		}
+
+		return undefined;
+	}
+
 	public static getWorkRanges(flatTimelines: ReadonlyArray<AnyTimeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>, timeZone: TimeZone): Map<TimelineId, WorkRange> {
 		const LOG_GWR = "作業範囲算出";
 		console.time(LOG_GWR);
@@ -579,107 +678,21 @@ export abstract class Timelines {
 		return result;
 	}
 
-	/**
-	 * タイムラインから最初に見つかったタスクを返す。
-	 * ここでいう最初は層の浅い部分となる。
-	 * @param timeline
-	 * @returns
-	 */
-	public static getFirstTaskTimeline(timeline: AnyTimeline): TaskTimeline | null {
-		if (Settings.maybeTaskTimeline(timeline)) {
-			return timeline;
-		} else if (Settings.maybeGroupTimeline(timeline)) {
-			const taskChildren = timeline.children.filter(Settings.maybeTaskTimeline);
-			if (taskChildren.length) {
-				return taskChildren[0];
-			}
+	public static calcDayInfos(calendarRange: Readonly<CalendarRange>, workRanges: ReadonlySet<Readonly<WorkRange>>): Map<DateOnly, DayInfo> {
 
-			const groupChildren = timeline.children.filter(Settings.maybeGroupTimeline);
-			for (const groupTImeline of groupChildren) {
-				const taskTimeline = this.getFirstTaskTimeline(groupTImeline);
-				if (taskTimeline) {
-					return taskTimeline;
-				}
-			}
-		} else {
-			throw new Error();
+		type SuccessWorkRangeTimeline = Omit<SuccessWorkRange, "kind" | "timeline"> & {
+			timeline: TaskTimeline,
 		}
 
-		return null;
-	}
-
-	/**
-	 * 指定タイムラインは前工程タイムラインとして選択可能か
-	 * @param targetTimeline 前工程になりうるかチェックするタイムライン。
-	 * @param baseTimeline 基準となるタイムライン。
-	 * @param rootTimeline
-	 * @returns
-	 */
-	public static canSelect(targetTimeline: AnyTimeline, baseTimeline: AnyTimeline, rootTimeline: GroupTimeline): boolean {
-		const groups = Timelines.getParentGroups(baseTimeline, rootTimeline);
-		if (groups.length) {
-			return !groups.some(a => a.id === targetTimeline.id);
-		}
-
-		return true;
-	}
-
-	/**
-	 * 前工程タイムラインを検索。
-	 * @param timeline タイムライン。
-	 * @param rootTimeline
-	 * @returns
-	 */
-	public static searchBeforeTimeline(timeline: AnyTimeline, rootTimeline: GroupTimeline): AnyTimeline | undefined {
-		const sequenceTimelines = this.flat(rootTimeline.children);
-
-		const index = sequenceTimelines.findIndex(a => a.id === timeline.id);
-		if (index === -1) {
-			throw new Error();
-		}
-
-		const groups = Timelines.getParentGroups(timeline, rootTimeline);
-		const group = Arrays.last(groups);
-
-		for (let i = index - 1; 0 <= i; i--) {
-			const beforeTimeline = sequenceTimelines[i];
-			if (Settings.maybeGroupTimeline(beforeTimeline)) {
-				// 前項目が自身の属するグループの場合、直近タイムラインにはなりえない
-				if (groups.find(a => a.id === beforeTimeline.id)) {
-					continue;
-				}
-				return beforeTimeline;
-			}
-			if (Settings.maybeTaskTimeline(beforeTimeline)) {
-				const beforeGroups = Timelines.getParentGroups(beforeTimeline, rootTimeline);
-				const beforeGroup = Arrays.last(beforeGroups);
-				// 前項目のグループと自身のグループが同じ場合、兄弟として直近として扱える
-				if (beforeGroup.id === group.id) {
-					return beforeTimeline;
-				}
-
-				if (this.canSelect(beforeTimeline, timeline, rootTimeline)) {
-					// タスク自体は直近として扱える場合でも、異なるグループのためそのグループ自体を選択する
-					if (1 < beforeGroups.length) {
-						const target = beforeGroup;
-						if (this.canSelect(target, timeline, rootTimeline)) {
-							return target;
-						}
-					}
-
-					return beforeTimeline;
-				}
-			}
-		}
-
-		return undefined;
-	}
-
-	public static calcDayInfos(totalItems: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlyMap<DateOnly, Readonly<WorkRange>>): Map<DateOnly, DayInfo> {
-
-		const successWorkRanges = new Map<DateOnly, Readonly<SuccessWorkRange>>([...workRanges]
-			.filter(([k, v]) => WorkRanges.maybeSuccessWorkRange(v))
-			.map(([k, v]) => [k, v as SuccessWorkRange])
+		const successWorkRanges = new Set(
+			[...workRanges]
+				.filter(WorkRanges.maybeSuccessWorkRange)
+				.filter(a => Settings.maybeTaskTimeline(a.timeline))
+				.map(a => ({
+					begin: a.begin,
+					end: a.end,
+					timeline: a.timeline as TaskTimeline
+				} satisfies SuccessWorkRangeTimeline))
 		);
 
 		if (!successWorkRanges.size) {
@@ -687,7 +700,31 @@ export abstract class Timelines {
 			return new Map();
 		}
 
-		throw new Error();
+		const work = new Map<DateOnly, {
+			members: Array<MemberId>,
+		}>();
+
+		const calendarDays = Calendars.getCalendarRangeDays(calendarRange);
+		for (let i = 0; i < calendarDays; i++) {
+			const currentDate = calendarRange.begin.add(i, "day");
+			const currentDateOnly = currentDate.format("yyyy-MM-dd");
+			const dayValue = {
+				members: new Array<MemberId>(),
+			};
+			work.set(currentDateOnly, dayValue);
+
+			// 同一日の重複作業から重複メンバーを取得
+		}
+
+		// for (const workRange of successWorkRanges) {
+		// 	if (!Settings.maybeTaskTimeline(workRange.timeline)) {
+		// 		continue;
+		// 	}
+		// }
+
+		// 最後の調整はあとで
+		//const result = work;
+		return new Map();
 	}
 
 }

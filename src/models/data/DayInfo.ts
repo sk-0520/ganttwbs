@@ -1,3 +1,5 @@
+import { MemberId } from "@/models/data/Setting";
+
 export interface DayInfo {
-	messages: Array<string>;
+	duplicateMembers: Set<MemberId>;
 }
