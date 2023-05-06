@@ -55,11 +55,3 @@ const ProgressCell: FC<Props> = (props: Props) => {
 };
 
 export default ProgressCell;
-
-function getProgressItems(progress: Progress): Array<Progress> {
-	const progressSet = new Set<Progress>(defaultProgressItems);
-	progressSet.add(progress);
-	const progressItems = [...progressSet].sort();
-
-	return progressItems;
-}
