@@ -9,6 +9,7 @@ import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { ColorString } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 
@@ -79,7 +80,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				/>
 			);
 
-			let color: string | undefined = undefined;
+			let color: ColorString | undefined = undefined;
 
 			// 祝日判定
 			const holidayEventValue = Calendars.getHolidayEventValue(date, props.calendarInfo.holidayEventMap);
@@ -125,7 +126,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 	}, [cell, days, props.calendarInfo, props.configuration, props.setting, props.timelineStore.totalItemMap.size]);
 
 	return (
-		<div id='viewer'>
+		<div id="viewer">
 			<svg id="canvas" width={chartSize.width} height={chartSize.height}>
 				{gridNodes}
 				{props.timelineStore.sequenceItems.map((a, i) => {

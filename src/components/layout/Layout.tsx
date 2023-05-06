@@ -29,14 +29,14 @@ const Layout: NextPage<Props> = (props: Props) => {
 			{
 				props.mode === "application"
 					? (
-						<div id='mode-application'>
+						<div id="mode-application">
 							<main id={props.layoutId}>
 								{props.children}
 							</main>
 						</div>
 					)
 					: (
-						<div id='mode-page'>
+						<div id="mode-page">
 							<h1>{pageTitle}</h1>
 							<header>
 								<nav>

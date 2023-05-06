@@ -42,8 +42,8 @@ const EditorPage: NextPage = () => {
 
 	return (
 		<Layout
-			mode='application'
-			layoutId='editor'
+			mode="application"
+			layoutId="editor"
 			title={(editorData ? editorData.fileName + " " : "") + locale.pages.editor.title}
 		>
 			<>
@@ -66,14 +66,14 @@ const EditorPage: NextPage = () => {
 							</Tab>
 						</TabList>
 
-						<TabPanel className='tab panel tab-file'>
+						<TabPanel className="tab panel tab-file">
 							<FileEditor configuration={configuration} editorData={editorData} isVisible={selectedTabIndex === TabIndex.File} />
 						</TabPanel>
 						{/* このアプリの本体 */}
-						<TabPanel className='tab panel tab-timeline' >
+						<TabPanel className="tab panel tab-timeline" >
 							<TimelineEditor configuration={configuration} editorData={editorData} />
 						</TabPanel>
-						<TabPanel className='tab panel tab-setting'>
+						<TabPanel className="tab panel tab-setting">
 							<SettingEditor configuration={configuration} editData={editorData} />
 						</TabPanel>
 					</Tabs>

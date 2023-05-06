@@ -49,8 +49,8 @@ const NewPage: NextPage = () => {
 
 	return (
 		<Layout
-			mode='page'
-			layoutId='new'
+			mode="page"
+			layoutId="new"
 			title={locale.pages.new.title}
 		>
 			<p>
@@ -58,7 +58,7 @@ const NewPage: NextPage = () => {
 			</p>
 
 			<form onSubmit={handleSubmit(data => onSubmit(data, timeZone, router))}>
-				<dl className='inputs'>
+				<dl className="inputs">
 					<dt>
 						<label htmlFor={id.title}>
 							{locale.pages.new.projectName}
@@ -67,7 +67,7 @@ const NewPage: NextPage = () => {
 					<dd>
 						<input
 							id={id.title}
-							type='text'
+							type="text"
 							/*DEBUG*/ defaultValue={fromDate.format("L")}
 							{...register("title", {
 								required: true,
@@ -90,7 +90,7 @@ const NewPage: NextPage = () => {
 									<td>
 										<input
 											id={id.rangeBeginYear}
-											type='number'
+											type="number"
 											min={1900}
 											defaultValue={fromDate.year}
 											{...register("rangeBeginYear", {
@@ -109,7 +109,7 @@ const NewPage: NextPage = () => {
 									<td>
 										<input
 											id={id.rangeBeginMonth}
-											type='number'
+											type="number"
 											min={1}
 											max={12}
 											defaultValue={fromDate.month}
@@ -129,7 +129,7 @@ const NewPage: NextPage = () => {
 									<td>
 										<input
 											id={id.rangeMonthCount}
-											type='number'
+											type="number"
 											min={1}
 											defaultValue={defaultMonthCount}
 											{...register("rangeMonthCount", {
@@ -176,7 +176,7 @@ const NewPage: NextPage = () => {
 					</dd>
 				</dl>
 
-				<button className='action'>
+				<button className="action">
 					{locale.pages.new.submit}
 				</button>
 			</form>

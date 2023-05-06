@@ -28,22 +28,22 @@ const TimelineItems: FC<Props> = (props: Props) => {
 		return Arrays.create(props.configuration.design.dummy.height).map(_ => {
 			return (
 				<tr key={"dmy-" + IdFactory.createReactKey()} className="dummy timeline-cell timeline-header _dynamic_programmable_cell_height">
-					<td className='timeline-cell timeline-id'>&nbsp;</td>
-					<td className='timeline-cell timeline-subject' />
-					<td className='timeline-cell timeline-workload' />
-					<td className='timeline-cell timeline-resource' />
+					<td className="timeline-cell timeline-id">&nbsp;</td>
+					<td className="timeline-cell timeline-subject" />
+					<td className="timeline-cell timeline-workload" />
+					<td className="timeline-cell timeline-resource" />
 					<td className="timeline-cell timeline-relation" />
-					<td className='timeline-cell timeline-range-from' />
-					<td className='timeline-cell timeline-range-to' />
-					<td className='timeline-cell timeline-progress' />
-					<td className='timeline-cell timeline-controls' />
+					<td className="timeline-cell timeline-range-from" />
+					<td className="timeline-cell timeline-range-to" />
+					<td className="timeline-cell timeline-progress" />
+					<td className="timeline-cell timeline-controls" />
 				</tr>
 			);
 		});
 	}, [props.configuration]);
 
 	return (
-		<div id='timelines'>
+		<div id="timelines">
 			<table>
 				<tbody>
 					{props.timelineStore.sequenceItems.map((a, i) => {

@@ -19,19 +19,19 @@ const LoadPage: NextPage = () => {
 
 	return (
 		<Layout
-			mode='page'
-			layoutId='load'
+			mode="page"
+			layoutId="load"
 			title={locale.pages.load.title}
 		>
 			<form onSubmit={handleSubmit(data => onSubmit(data, router))}>
-				<dl className='inputs'>
+				<dl className="inputs">
 					<dt>ファイル</dt>
 					<dd>
-						<input type='file' {...register("files")} />
+						<input type="file" {...register("files")} />
 					</dd>
 				</dl>
 
-				<button className='action'>作業開始</button>
+				<button className="action">作業開始</button>
 			</form>
 		</Layout>
 	);

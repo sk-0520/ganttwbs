@@ -5,7 +5,7 @@ import Layout from "@/components/layout/Layout";
 
 const DebugPage: NextPage = () => {
 	return (
-		<Layout title='DEBUG' mode='page' layoutId='debug'>
+		<Layout title="DEBUG" mode="page" layoutId="debug">
 			<ul>
 				<li>
 					<Link href="/debug/datetime">DateTime</Link>

@@ -145,7 +145,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 	}
 
 	return (
-		<dl className='inputs'>
+		<dl className="inputs">
 			<dt>
 				{locale.pages.editor.file.save.title}
 			</dt>

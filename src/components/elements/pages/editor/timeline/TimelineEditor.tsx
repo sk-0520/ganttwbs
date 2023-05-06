@@ -528,7 +528,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	};
 
 	return (
-		<div id='timeline'>
+		<div id="timeline">
 			{dynamicStyleNodes}
 
 			<CrossHeader

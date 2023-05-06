@@ -9,10 +9,10 @@ interface Props {
 
 const SubjectCell: FC<Props> = (props: Props) => {
 	return (
-		<td className='timeline-cell timeline-subject'>
+		<td className="timeline-cell timeline-subject">
 			<input
 				className="edit"
-				type='text'
+				type="text"
 				value={props.value}
 				readOnly={props.readOnly}
 				disabled={props.disabled}

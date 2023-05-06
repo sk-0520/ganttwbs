@@ -328,7 +328,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			{
 				props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
 					? (
-						<td className='timeline-cell timeline-range-area prompt' colSpan={2}>
+						<td className="timeline-cell timeline-range-area prompt" colSpan={2}>
 							<ul className="contents">
 								<li className="main">
 									<input

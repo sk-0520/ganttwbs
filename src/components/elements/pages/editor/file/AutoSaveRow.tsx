@@ -46,7 +46,7 @@ const AutoSaveRow: FC<Props> = (props: Props) => {
 			<td className="enabled-cell">
 				<label>
 					<input
-						type='checkbox'
+						type="checkbox"
 						checked={props.isEnabled}
 						onChange={ev => props.callbackChangeAutoSaveIsEnable(props.kind, ev.target.checked)}
 					/>
@@ -56,7 +56,7 @@ const AutoSaveRow: FC<Props> = (props: Props) => {
 			<td className="span-cell">
 				<input
 					className="span"
-					type='number'
+					type="number"
 					min={0}
 					step={kindValues.step}
 					value={toAutoSaveTimeValue(props.time)}

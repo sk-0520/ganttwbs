@@ -128,19 +128,19 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	}, [dates, props.calendarInfo, props.setting]);
 
 	return (
-		<div id='days-header'>
+		<div id="days-header">
 			<table>
 				<tbody>
-					<tr className='year-month'>
+					<tr className="year-month">
 						{yearMonthNodes}
 					</tr>
-					<tr className='day'>
+					<tr className="day">
 						{dayNodes}
 					</tr>
-					<tr className='week'>
+					<tr className="week">
 						{weekNodes}
 					</tr>
-					<tr className='pin'>
+					<tr className="pin">
 						{pinNodes}
 					</tr>
 				</tbody>

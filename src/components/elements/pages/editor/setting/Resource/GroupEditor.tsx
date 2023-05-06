@@ -170,7 +170,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 						<tr>
 							<td className="name-cell">
 								<input
-									name='member-name'
+									name="member-name"
 									value={newMemberName}
 									onChange={ev => setNewMemberName(ev.target.value)}
 								/>

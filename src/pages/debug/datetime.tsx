@@ -42,7 +42,7 @@ const DebugDateTimePage: NextPage = () => {
 	];
 
 	return (
-		<Layout title='DateTime' mode='page' layoutId='debug-datetime'>
+		<Layout title="DateTime" mode="page" layoutId="debug-datetime">
 			<div>
 				{times.map(a => {
 					return DebugDateTimeItem({

@@ -121,6 +121,10 @@ module.exports = {
 		"unused-imports/no-unused-imports": [
 			"error"
 		],
+		"jsx-quotes": [
+			"error",
+			"prefer-double",
+		],
 		"react/jsx-indent": [
 			"error",
 			"tab"

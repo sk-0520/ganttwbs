@@ -8,7 +8,7 @@ const TopPage: NextPage = () => {
 	const locale = useLocale();
 
 	return (
-		<Layout mode='page' layoutId='home'>
+		<Layout mode="page" layoutId="home">
 			<ul>
 				<li>
 					<Link href="/new">

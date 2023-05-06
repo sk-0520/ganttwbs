@@ -104,16 +104,16 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	return (
-		<div id='cross-header'>
+		<div id="cross-header">
 			<div className="header">
 				<h1>{props.setting.name}</h1>
 			</div>
 			<div className="content">
-				<div className='operation'>
+				<div className="operation">
 					<ul className="inline">
 						<li>
 							<button
-								type='button'
+								type="button"
 								onClick={handleAddEmptyGroup}
 							>
 								<IconLabel
@@ -124,7 +124,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						</li>
 						<li>
 							<button
-								type='button'
+								type="button"
 								onClick={handleAddEmptyTask}
 							>
 								<IconLabel
@@ -135,7 +135,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						</li>
 						<li>
 							<button
-								type='button'
+								type="button"
 								onClick={handleShowInputTimeline}
 							>
 								<IconLabel
@@ -182,21 +182,21 @@ const CrossHeader: FC<Props> = (props: Props) => {
 				</div>
 			</div>
 			<div className="footer">
-				<div className='timeline-header header'>
-					<div className='timeline-header tooltips'>
-						<div className='timeline-cell timeline-id'>
+				<div className="timeline-header header">
+					<div className="timeline-header tooltips">
+						<div className="timeline-cell timeline-id">
 							{locale.pages.editor.timeline.header.columns.id}
 						</div>
-						<div className='timeline-cell timeline-subject'>
+						<div className="timeline-cell timeline-subject">
 							{locale.pages.editor.timeline.header.columns.subject}
 						</div>
 						<div
-							className='timeline-cell timeline-workload'
+							className="timeline-cell timeline-workload"
 							title={locale.pages.editor.timeline.header.columns.workload}
 						>
 							{workload}
 						</div>
-						<div className='timeline-cell timeline-resource'>
+						<div className="timeline-cell timeline-resource">
 							{locale.pages.editor.timeline.header.columns.resource}
 						</div>
 						<div className="timeline-cell timeline-relation">
@@ -207,7 +207,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 								? (
 									<>
 										<div
-											className='timeline-cell timeline-range-from'
+											className="timeline-cell timeline-range-from"
 											title={locale.pages.editor.timeline.header.columns.workRangeFrom}
 										>
 											<Timestamp
@@ -216,7 +216,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 											/>
 										</div>
 										<div
-											className='timeline-cell timeline-range-to'
+											className="timeline-cell timeline-range-to"
 											title={locale.pages.editor.timeline.header.columns.workRangeTo}
 										>
 											<Timestamp
@@ -227,47 +227,47 @@ const CrossHeader: FC<Props> = (props: Props) => {
 									</>
 								) :
 								(
-									<div className='timeline-cell timeline-range-area'>
+									<div className="timeline-cell timeline-range-area">
 										{locale.pages.editor.timeline.header.columns.workRangeError}
 									</div>
 								)
 						}
 						<div
-							className='timeline-cell timeline-progress'
+							className="timeline-cell timeline-progress"
 							title={locale.pages.editor.timeline.header.columns.progress}
 						>
 							{Timelines.displayProgress(progress)}%
 						</div>
-						<div className='timeline-cell timeline-controls'>
+						<div className="timeline-cell timeline-controls">
 							{locale.pages.editor.timeline.header.columns.controls}
 						</div>
 					</div>
 
-					<div className='timeline-cell timeline-id'>
+					<div className="timeline-cell timeline-id">
 						{locale.pages.editor.timeline.header.columns.id}
 					</div>
-					<div className='timeline-cell timeline-subject'>
+					<div className="timeline-cell timeline-subject">
 						{locale.pages.editor.timeline.header.columns.subject}
 					</div>
-					<div className='timeline-cell timeline-workload'>
+					<div className="timeline-cell timeline-workload">
 						{locale.pages.editor.timeline.header.columns.workload}
 					</div>
-					<div className='timeline-cell timeline-resource'>
+					<div className="timeline-cell timeline-resource">
 						{locale.pages.editor.timeline.header.columns.resource}
 					</div>
 					<div className="timeline-cell timeline-relation">
 						{locale.pages.editor.timeline.header.columns.relation}
 					</div>
-					<div className='timeline-cell timeline-range-from'>
+					<div className="timeline-cell timeline-range-from">
 						{locale.pages.editor.timeline.header.columns.workRangeFrom}
 					</div>
-					<div className='timeline-cell timeline-range-to'>
+					<div className="timeline-cell timeline-range-to">
 						{locale.pages.editor.timeline.header.columns.workRangeTo}
 					</div>
-					<div className='timeline-cell timeline-progress'>
+					<div className="timeline-cell timeline-progress">
 						{locale.pages.editor.timeline.header.columns.progress}
 					</div>
-					<div className='timeline-cell timeline-controls'>
+					<div className="timeline-cell timeline-controls">
 						{locale.pages.editor.timeline.header.columns.controls}
 					</div>
 				</div>

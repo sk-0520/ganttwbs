@@ -13,7 +13,7 @@ interface Props {
 
 const WorkloadCell: FC<Props> = (props: Props) => {
 	return (
-		<td className='timeline-cell timeline-workload'>
+		<td className="timeline-cell timeline-workload">
 			<input
 				className="edit"
 				type="number"

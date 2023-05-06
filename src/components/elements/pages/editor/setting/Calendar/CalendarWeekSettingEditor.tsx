@@ -50,7 +50,7 @@ const CalendarWeekSettingEditor: FC = () => {
 				<li key={a}>
 					<label>
 						<input
-							type='checkbox'
+							type="checkbox"
 							checked={weeks[a]}
 							onChange={ev => handleChange(a, ev.target.checked)}
 						/>

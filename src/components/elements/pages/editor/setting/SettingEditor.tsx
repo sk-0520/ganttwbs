@@ -64,15 +64,15 @@ const SettingEditor: FC<Props> = (props: Props) => {
 						</Tab>
 					</TabList>
 
-					<TabPanel className='setting-tab-item general'>
+					<TabPanel className="setting-tab-item general">
 						<GeneralEditor />
 					</TabPanel>
 
-					<TabPanel className='setting-tab-item resource'>
+					<TabPanel className="setting-tab-item resource">
 						<ResourceEditor />
 					</TabPanel>
 
-					<TabPanel className='setting-tab-item calendar'>
+					<TabPanel className="setting-tab-item calendar">
 						<dl className="inputs">
 							<dt>
 								{locale.pages.editor.setting.calendar.range.title}
@@ -97,8 +97,8 @@ const SettingEditor: FC<Props> = (props: Props) => {
 						</dl>
 					</TabPanel>
 
-					<TabPanel className='setting-tab-item theme'>
-						<dl className='inputs'>
+					<TabPanel className="setting-tab-item theme">
+						<dl className="inputs">
 							<dt>
 								{locale.pages.editor.setting.theme.calendar.title}
 							</dt>

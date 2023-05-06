@@ -12,7 +12,7 @@ const CalendarHolidaySettingEditor: FC = () => {
 	function renderEditor(value: string, callbackChanged: (value: string) => void): ReactNode {
 		return (
 			<Editor
-				className='editor'
+				className="editor"
 				width="40vw"
 				height="8em"
 				defaultValue={value}

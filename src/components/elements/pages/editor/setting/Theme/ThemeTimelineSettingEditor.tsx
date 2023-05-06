@@ -44,7 +44,7 @@ const ThemeTimelineSettingEditor: FC = () => {
 	}
 
 	return (
-		<table className='timeline'>
+		<table className="timeline">
 			<tbody>
 				<tr>
 					<td>

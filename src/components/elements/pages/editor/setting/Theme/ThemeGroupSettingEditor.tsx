@@ -99,7 +99,7 @@ const ThemeGroupSettingEditor: FC = () => {
 								</td>
 								<td>
 									<button
-										type='button'
+										type="button"
 										onClick={ev => handleRemoveColor(a.key)}
 									>
 										{locale.common.command.remove}
@@ -114,7 +114,7 @@ const ThemeGroupSettingEditor: FC = () => {
 						<td />
 						<td>
 							<button
-								type='button'
+								type="button"
 								onClick={handleAddColor}
 							>
 								{locale.common.command.add}
@@ -122,7 +122,7 @@ const ThemeGroupSettingEditor: FC = () => {
 						</td>
 						<td>
 							<button
-								type='button'
+								type="button"
 								onClick={handleStartResetColor}
 							>
 								{locale.pages.editor.setting.theme.group.collectiveSetting}

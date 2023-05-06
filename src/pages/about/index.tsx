@@ -9,8 +9,8 @@ const AboutPage: NextPage = () => {
 
 	return (
 		<Layout
-			mode='page'
-			layoutId='about'
+			mode="page"
+			layoutId="about"
 			title={locale.pages.about.title}
 		>
 			<>

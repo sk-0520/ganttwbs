@@ -16,7 +16,7 @@ interface Props extends ResourceInfoProps {
 const ResourceCell: FC<Props> = (props: Props) => {
 
 	return (
-		<td className='timeline-cell timeline-resource'>
+		<td className="timeline-cell timeline-resource">
 			{Settings.maybeTaskTimeline(props.currentTimeline) && (
 				<MemberSelector
 					className="edit"
