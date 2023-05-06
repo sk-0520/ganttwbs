@@ -250,6 +250,10 @@ export class DateTime {
 		return this.ticks - date.ticks;
 	}
 
+	public isIn(begin: DateTime, end: DateTime): boolean {
+		return begin.ticks <= this.ticks && this.ticks <= end.ticks;
+	}
+
 	/**
 	 * 閏年か。
 	 *

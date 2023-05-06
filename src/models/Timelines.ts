@@ -3,6 +3,7 @@ import { Calendars } from "@/models/Calendars";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { DayInfo } from "@/models/data/DayInfo";
 import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
+import { ResourceInfo } from "@/models/data/ResourceInfo";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, MemberId, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId } from "@/models/data/Setting";
 import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime, WeekIndex } from "@/models/DateTime";
@@ -678,7 +679,7 @@ export abstract class Timelines {
 		return result;
 	}
 
-	public static calcDayInfos(calendarRange: Readonly<CalendarRange>, workRanges: ReadonlySet<Readonly<WorkRange>>): Map<DateOnly, DayInfo> {
+	public static calcDayInfos(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>): Map<DateOnly, DayInfo> {
 
 		type SuccessWorkRangeTimeline = Omit<SuccessWorkRange, "kind" | "timeline"> & {
 			timeline: TaskTimeline,
@@ -704,16 +705,35 @@ export abstract class Timelines {
 			members: Array<MemberId>,
 		}>();
 
-		const calendarDays = Calendars.getCalendarRangeDays(calendarRange);
-		for (let i = 0; i < calendarDays; i++) {
-			const currentDate = calendarRange.begin.add(i, "day");
-			const currentDateOnly = currentDate.format("yyyy-MM-dd");
-			const dayValue = {
-				members: new Array<MemberId>(),
-			};
-			work.set(currentDateOnly, dayValue);
+		// const calendarDays = Calendars.getCalendarRangeDays(calendarRange);
+		// for (let i = 0; i < calendarDays; i++) {
+		// 	const currentDate = calendarRange.begin.add(i, "day");
+		// 	const currentDateOnly = currentDate.format("yyyy-MM-dd");
+		// 	const dayValue = {
+		// 		members: new Array<MemberId>(),
+		// 	};
+		// 	work.set(currentDateOnly, dayValue);
 
-			// 同一日の重複作業から重複メンバーを取得
+		// 	// 同一日の重複作業から重複メンバーを取得
+		// 	for (const workRange of successWorkRanges) {
+		// 		const rangeDays = workRange.begin.diff(workRange.end).totalDays;
+		// 		for (let j = 0; j < rangeDays; j++) {
+		// 			const currentWorkDate = workRange.begin.add(j, "day");
+		// 			if (currentWorkDate.equals(currentDate)) {
+		// 				if (workRange.timeline.memberId) {
+		// 					dayValue.members.push(workRange.timeline.memberId);
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
+
+		// 同一日の重複作業から重複メンバーを取得
+		for (const workRange of successWorkRanges) {
+			const rangeDays = workRange.begin.diff(workRange.end).totalDays;
+			for (let j = 0; j < rangeDays; j++) {
+				const currentWorkDate = workRange.begin.add(j, "day");
+			}
 		}
 
 		// for (const workRange of successWorkRanges) {
@@ -721,6 +741,8 @@ export abstract class Timelines {
 		// 		continue;
 		// 	}
 		// }
+
+		console.debug(work);
 
 		// 最後の調整はあとで
 		//const result = work;
