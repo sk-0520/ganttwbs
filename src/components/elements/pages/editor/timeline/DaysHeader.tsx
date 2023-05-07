@@ -1,21 +1,19 @@
-import { FC, useMemo, useRef, useState } from "react";
+import { FC, useMemo } from "react";
 
+import InformationDay from "@/components/elements/pages/editor/timeline/days/InformationDay";
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
-import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { Holiday, Theme } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
+import { Days } from "@/models/Days";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
-import { DayInfo } from "@/models/data/DayInfo";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
-import { Strings } from "@/models/Strings";
 
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps, ResourceInfoProps {
@@ -87,8 +85,8 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	const dayNodes = useMemo(() => {
 		return dates.map(a => {
 			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
-			const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
-			const className = getCellClassName(classNames);
+			const classNames = Days.getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
+			const className = Days.getCellClassName(classNames);
 
 			return (
 				<td key={a.ticks} id={Timelines.toDaysId(a)} title={holidayEventValue?.event.display} className={className}>
@@ -101,8 +99,8 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	const weekNodes = useMemo(() => {
 		return dates.map(a => {
 			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
-			const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
-			const className = getCellClassName(classNames);
+			const classNames = Days.getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
+			const className = Days.getCellClassName(classNames);
 
 			return (
 				<td key={a.ticks} title={holidayEventValue?.event.display} className={className}>
@@ -111,106 +109,6 @@ const DaysHeader: FC<Props> = (props: Props) => {
 			);
 		});
 	}, [dates, locale, props.calendarInfo, props.setting]);
-
-	function renderInformation() {
-		return dates.map(a => {
-			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
-			const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
-			const className = getCellClassName(classNames);
-
-			const mergedDayInfo: DayInfo = {
-				duplicateMembers: new Set(),
-				targetTimelines: new Set(),
-			};
-			const nextDay = a.add(1, "day");
-			for (const [ticks, info] of props.timelineStore.dayInfos) {
-				if (a.ticks <= ticks && ticks < nextDay.ticks) {
-					for (const memberId of info.duplicateMembers) {
-						mergedDayInfo.duplicateMembers.add(memberId);
-					}
-					for (const timelineId of info.targetTimelines) {
-						mergedDayInfo.targetTimelines.add(timelineId);
-					}
-				}
-			}
-
-			return (
-				<td
-					key={a.ticks}
-					title={holidayEventValue?.event.display}
-					className={className}
-				>
-					{0 < mergedDayInfo.duplicateMembers.size ? (
-						<details>
-							<summary>@</summary>
-							<div className="contents">
-								<dl>
-									<dt>
-										{a.format(locale.common.calendar.dateOnlyFormat)}
-									</dt>
-
-									<dt>
-										{locale.pages.editor.timeline.information.memberDuplication}
-									</dt>
-									<dd>
-										<ul>
-											{[...mergedDayInfo.duplicateMembers].map(b => {
-												const member = props.resourceInfo.memberMap.get(b);
-												if (!member) {
-													throw new Error();
-												}
-												return (
-													<li
-														key={member.member.id}
-														title={member.member.id}
-													>
-														{Strings.replaceMap(
-															locale.pages.editor.timeline.information.memberFormat,
-															{
-																"MEMBER": member.member.name,
-																"GROUP": member.group.name,
-															}
-														)}
-													</li>
-												);
-											})}
-										</ul>
-									</dd>
-
-									<dt>
-										{locale.pages.editor.timeline.information.timelineAffected}
-									</dt>
-									<dd>
-										<ul>
-											{[...mergedDayInfo.targetTimelines].map(b => {
-												const timeline = props.timelineStore.totalItemMap.get(b);
-												if (!timeline) {
-													throw new Error();
-												}
-
-												return (
-													<li
-														key={timeline.id}
-														title={timeline.id}
-													>
-														{Timelines.toIndexNumber(props.timelineStore.calcDisplayId(timeline))}
-														:
-														{timeline.subject}
-													</li>
-												);
-											})}
-										</ul>
-									</dd>
-								</dl>
-							</div>
-						</details>
-					) : (
-						<>&nbsp;</>
-					)}
-				</td>
-			);
-		});
-	}
 
 	return (
 		<div id="days-header">
@@ -226,7 +124,18 @@ const DaysHeader: FC<Props> = (props: Props) => {
 						{weekNodes}
 					</tr>
 					<tr className="information">
-						{renderInformation()}
+						{dates.map(a => {
+							return (
+								<InformationDay
+									key={a.ticks}
+									date={a}
+									calendarInfo={props.calendarInfo}
+									resourceInfo={props.resourceInfo}
+									setting={props.setting}
+									timelineStore={props.timelineStore}
+								/>
+							);
+						})}
 					</tr>
 				</tbody>
 			</table>
@@ -235,36 +144,3 @@ const DaysHeader: FC<Props> = (props: Props) => {
 };
 
 export default DaysHeader;
-
-function getWeekDayClassName(date: DateTime, regulars: Readonly<Holiday["regulars"]>, theme: Readonly<Theme>): string {
-
-	for (const regular of regulars) {
-		const weekday = Settings.toWeekDay(date.week);
-		if (regular === weekday) {
-			return "_dynamic_theme_holiday_regulars_" + regular;
-		}
-	}
-
-	return "";
-}
-
-function getHolidayClassName(date: DateTime, holidayEventValue: HolidayEventMapValue | null, theme: Readonly<Theme>): string {
-	if (holidayEventValue) {
-		if (holidayEventValue) {
-			return "_dynamic_theme_holiday_events_" + holidayEventValue.event.kind;
-		}
-	}
-
-	return "";
-}
-
-function getDayClassNames(date: DateTime, regularHolidays: Readonly<Holiday["regulars"]>, holidayEventValue: HolidayEventMapValue | null, theme: Readonly<Theme>): Array<string> {
-	const weekClassName = getWeekDayClassName(date, regularHolidays, theme);
-	const holidayClassName = getHolidayClassName(date, holidayEventValue, theme);
-
-	return [weekClassName, holidayClassName].filter(a => a);
-}
-
-function getCellClassName(customClassNames: ReadonlyArray<string>): string {
-	return ["cell", "_dynamic_design_cell", ...customClassNames].join(" ");
-}
