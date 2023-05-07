@@ -122,6 +122,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 
 			const mergedDayInfo: DayInfo = {
 				duplicateMembers: new Set(),
+				targetTimelines: new Set(),
 			};
 			const nextDay = a.add(1, "day");
 			for (const [ticks, info] of props.timelineStore.dayInfos) {

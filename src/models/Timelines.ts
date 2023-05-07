@@ -769,17 +769,31 @@ export abstract class Timelines {
 
 				if (range) {
 					if (currentWorkRange.timeline.memberId === otherWorkRange.timeline.memberId && resourceInfo.memberMap.has(currentWorkRange.timeline.memberId)) {
-						const length = range.begin.diff(range.end).totalDays;
-						for (let i = 0; i < length; i++) {
-							const date = range.begin.add(i, "day");
+						const setInfo = (date: DateTime) => {
 							let info = result.get(date.ticks);
 							if (!info) {
 								info = {
 									duplicateMembers: new Set(),
+									targetTimelines: new Set(),
 								};
 								result.set(date.ticks, info);
 							}
+
 							info.duplicateMembers.add(currentWorkRange.timeline.memberId);
+							info.targetTimelines.add(currentWorkRange.timeline.id);
+						};
+
+						const length = range.begin.diff(range.end).totalDays;
+						for (let i = 0; i < length; i++) {
+							const date = i
+								? range.begin.add(i, "day").toDateOnly()
+								: range.begin
+								;
+							setInfo(date);
+						}
+						// 終端(中途半端な終了時間を考慮)
+						if (!range.end.toDateOnly().equals(range.end)) {
+							setInfo(range.end);
 						}
 					}
 				}
