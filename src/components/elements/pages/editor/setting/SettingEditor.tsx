@@ -1,6 +1,7 @@
 import { FC, FormEvent } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
+import { IconKind, IconLabel } from "@/components/elements/Icon";
 import CalendarHolidaySettingEditor from "@/components/elements/pages/editor/setting/Calendar/CalendarHolidaySettingEditor";
 import CalendarRangeSettingEditor from "@/components/elements/pages/editor/setting/Calendar/CalendarRangeSettingEditor";
 import CalendarWeekSettingEditor from "@/components/elements/pages/editor/setting/Calendar/CalendarWeekSettingEditor";
@@ -121,7 +122,14 @@ const SettingEditor: FC<Props> = (props: Props) => {
 					</TabPanel>
 				</Tabs>
 
-				<button className="action setting-save">submit</button>
+				<div className="setting-save">
+					<button className="action">
+						<IconLabel
+							kind={IconKind.Save}
+							label={locale.pages.editor.setting.save}
+						/>
+					</button>
+				</div>
 			</form>
 		</SettingContext.Provider>
 	);

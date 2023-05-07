@@ -19,7 +19,7 @@ export abstract class DefaultSettings {
 	 */
 	public static readonly SettingVersion = 0;
 
-	public static readonly BusinessWeekdayColor = Color.parse("#000000");
+	public static readonly BusinessWeekdayColor = Color.parse("#ffffba");
 	public static readonly UnknownMemberColor = Color.parse("#000000");
 
 	/**

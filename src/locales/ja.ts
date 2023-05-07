@@ -240,6 +240,8 @@ const locale: Locale = {
 					theme: "テーマ",
 				},
 
+				save: "設定を保存",
+
 				general: {
 					projectName: "タイトル",
 					recursive: "反復計算数",
@@ -294,7 +296,7 @@ const locale: Locale = {
 					holiday: {
 						title: "祝日",
 						description: "以下の形式で祝日を入力してください。",
-						example: "YYYY-MM-DD<TAB>説明",
+						example: "説明",
 
 						normal: {
 							description: "国などが定める通常の祝日を設定してください。",

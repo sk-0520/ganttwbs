@@ -242,6 +242,8 @@ export interface Locale {
 					theme: string,
 				},
 
+				save: string;
+
 				general: {
 					projectName: string,
 					recursive: string,

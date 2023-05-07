@@ -75,6 +75,8 @@ main#editor {
 
 			.setting-tab-item {
 				display: none;
+				margin: 2px;
+				border-radius: 2px;
 
 				&.react-tabs__tab-panel--selected {
 					display: block;
@@ -292,7 +294,15 @@ main#editor {
 
 			.setting-save {
 				position: absolute;
+				display: flex;
 				bottom: 0;
+				width: 100%;
+				height: variable.$tab-editor-header-height;
+
+				.action {
+					text-align: center;
+					margin-inline: auto;
+				}
 			}
 		}
 	}

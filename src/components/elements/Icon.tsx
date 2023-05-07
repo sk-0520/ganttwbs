@@ -46,6 +46,7 @@ export const enum IconKind {
 	Option,
 	Edit,
 	Remove,
+	Save,
 }
 
 const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
@@ -86,6 +87,7 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.Option]: (props) => <Md.MdBuild {...convertParameter(props)} />,
 	[IconKind.Edit]: (props) => <Md.MdModeEdit {...convertParameter(props)} />,
 	[IconKind.Remove]: (props) => <Md.MdOutlineDelete {...convertParameter(props)} />,
+	[IconKind.Save]: (props) => <Md.MdOutlineSave {...convertParameter(props)} />,
 } as const;
 
 function convertColor(kind: IconKind, color: string | null | undefined): string | undefined {

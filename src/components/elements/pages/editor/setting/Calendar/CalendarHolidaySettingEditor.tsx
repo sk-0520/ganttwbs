@@ -33,7 +33,10 @@ const CalendarHolidaySettingEditor: FC = () => {
 		<>
 			<p>
 				{locale.pages.editor.setting.calendar.holiday.description}<br />
-				<code className="example">{locale.pages.editor.setting.calendar.holiday.example}</code>
+				<code className="example">
+					YYYY-MM-DD
+					&lt;TAB&gt;
+					{locale.pages.editor.setting.calendar.holiday.example}</code>
 			</p>
 			<div className="holiday">
 				<div className="holidays">
