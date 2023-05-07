@@ -38,7 +38,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 
 
 	const gridNodes = useMemo(() => {
-		const width = cell.width.value * days;
+		const width = cell.width.value * (days + props.configuration.design.dummy.width);
 		const height = cell.height.value * (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height);
 
 		// 横軸
@@ -62,7 +62,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 		// 縦軸
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
-		for (let i = 0; i < days; i++) {
+		for (let i = 0; i < (days + props.configuration.design.dummy.width); i++) {
 			const date = props.calendarInfo.range.begin.add(TimeSpan.fromDays(i));
 
 			const gridX = cell.width.value + cell.width.value * i;
@@ -76,9 +76,14 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 					y2={height}
 					stroke="gray"
 					strokeWidth={1}
-					strokeDasharray={2}
+					strokeDasharray={1.5}
 				/>
 			);
+
+			if (days < i) {
+				// 曜日とかの判定すらもういらない
+				continue;
+			}
 
 			let color: ColorString | undefined = undefined;
 
@@ -127,7 +132,11 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 
 	return (
 		<div id="viewer">
-			<svg id="canvas" width={chartSize.width} height={chartSize.height}>
+			<svg
+				id="canvas"
+				width={(chartSize.width + (cell.width.value * props.configuration.design.dummy.width)) + "px"}
+				height={(chartSize.height + (cell.height.value * (props.configuration.design.dummy.height - 1))) + "px"}
+			>
 				{gridNodes}
 				{props.timelineStore.sequenceItems.map((a, i) => {
 					return (

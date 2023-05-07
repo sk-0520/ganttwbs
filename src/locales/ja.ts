@@ -171,6 +171,7 @@ const locale: Locale = {
 						progress: "進捗率",
 						controls: "操作",
 					},
+					dummy: "----/--",
 				},
 				workRange: {
 					kind: {

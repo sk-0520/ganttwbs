@@ -110,18 +110,38 @@ const DaysHeader: FC<Props> = (props: Props) => {
 		});
 	}, [dates, locale, props.calendarInfo, props.setting]);
 
+	const dummyNodes = useMemo(() => {
+		const className = Days.getCellClassName([]);
+
+		return {
+			yearMonth: (
+				<td colSpan={props.configuration.design.dummy.width} className="cell _dynamic_design_cell">
+					<time dateTime={"invalid"}>
+						{locale.pages.editor.timeline.header.dummy}
+					</time>
+				</td>
+			),
+			columns: Arrays.range(0, props.configuration.design.dummy.width).map(a => {
+				return <td key={a} className={className}>&nbsp;</td>;
+			}),
+		};
+	}, [locale, props.configuration.design.dummy.width]);
+
 	return (
 		<div id="days-header">
 			<table>
 				<tbody>
 					<tr className="year-month">
 						{yearMonthNodes}
+						{dummyNodes.yearMonth}
 					</tr>
 					<tr className="day">
 						{dayNodes}
+						{dummyNodes.columns}
 					</tr>
 					<tr className="week">
 						{weekNodes}
+						{dummyNodes.columns}
 					</tr>
 					<tr className="information">
 						{dates.map(a => {
@@ -136,6 +156,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 								/>
 							);
 						})}
+						{dummyNodes.columns}
 					</tr>
 				</tbody>
 			</table>

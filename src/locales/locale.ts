@@ -172,6 +172,7 @@ export interface Locale {
 						progress: string,
 						controls: string,
 					},
+					dummy: string,
 				},
 				workRange: {
 					kind: {
