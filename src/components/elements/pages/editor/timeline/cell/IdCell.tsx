@@ -3,8 +3,8 @@ import { DragEvent, FC } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
-import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
+import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
@@ -12,7 +12,7 @@ import { Timelines } from "@/models/Timelines";
 interface Props {
 	selectingId: string,
 	isSelectedPrevious: boolean;
-	timelineIndex: DisplayTimelineId;
+	readableTimelineId: ReadableTimelineId;
 	readonly currentTimeline: Readonly<AnyTimeline>;
 	selectingBeginDate: SelectingBeginDate | null;
 	draggingTimeline: DraggingTimeline | null;
@@ -21,7 +21,7 @@ interface Props {
 }
 
 const IdCell: FC<Props> = (props: Props) => {
-	const className = Timelines.getTimelineIdClassName(props.timelineIndex);
+	const className = Timelines.getReadableTimelineIdClassName(props.readableTimelineId);
 
 	const canSelect = props.selectingBeginDate && (
 		props.selectingBeginDate.timeline.id !== props.currentTimeline.id && props.selectingBeginDate.canSelect(props.currentTimeline)
@@ -68,7 +68,7 @@ const IdCell: FC<Props> = (props: Props) => {
 					)
 				}
 				<span className={className}>
-					{Timelines.toIndexNumber(props.timelineIndex)}
+					{Timelines.toReadableTimelineId(props.readableTimelineId)}
 				</span>
 			</label>
 		</td>

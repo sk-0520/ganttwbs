@@ -32,7 +32,7 @@ export interface Design {
 			maximum: number;
 		};
 		/** 表示番号 */
-		indexNumber: {
+		readableTimelineId: {
 			/** 最大値 */
 			maximum: number;
 			/** 左余白基準 */

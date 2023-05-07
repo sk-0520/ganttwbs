@@ -11,13 +11,13 @@ import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
-import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
 import { EditorData } from "@/models/data/EditorData";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
@@ -101,7 +101,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			hoverItem: hoverTimeline,
 			activeItem: activeTimeline,
 
-			calcDisplayId: handleCalcDisplayId,
+			calcReadableTimelineId: handleCalcReadableTimelineId,
 			searchBeforeTimeline: handleSearchBeforeTimeline,
 
 			addEmptyTimeline: handleAddEmptyTimeline,
@@ -324,8 +324,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		}
 	}
 
-	function handleCalcDisplayId(timeline: Readonly<AnyTimeline>): DisplayTimelineId {
-		return Timelines.calcDisplayId(timeline, props.editorData.setting.rootTimeline);
+	function handleCalcReadableTimelineId(timeline: Readonly<AnyTimeline>): ReadableTimelineId {
+		return Timelines.calcReadableTimelineId(timeline, props.editorData.setting.rootTimeline);
 	}
 
 	function handleSearchBeforeTimeline(timeline: AnyTimeline): AnyTimeline | undefined {
@@ -631,10 +631,10 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 					.reduce((r, a) => ({ ...r, ...a })),
 			},
 
-			indexNumber: {
+			readableTimelineId: {
 				...Arrays.range(1, design.programmable.group.maximum)
 					.map(level => {
-						const paddingWidth = `${((level - 1) * design.programmable.indexNumber.paddingLeft.value) + design.programmable.indexNumber.paddingLeft.unit}`;
+						const paddingWidth = `${((level - 1) * design.programmable.readableTimelineId.paddingLeft.value) + design.programmable.readableTimelineId.paddingLeft.unit}`;
 
 						const index = level - 2;
 						//let paddingColor = "transparent";

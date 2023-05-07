@@ -1,9 +1,9 @@
 import { DragEvent } from "react";
 
 import { DayInfo } from "@/models/data/DayInfo";
-import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
+import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline, GroupTimeline, TimelineId } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
@@ -41,7 +41,7 @@ export interface TimelineStore {
 	/**
 	 * タイムラインの表示上IDを取得。
 	 */
-	calcDisplayId(timeline: AnyTimeline): DisplayTimelineId;
+	calcReadableTimelineId(timeline: AnyTimeline): ReadableTimelineId;
 	/**
 	 * 指定タイムラインの直近のタイムラインを取得。
 	 */

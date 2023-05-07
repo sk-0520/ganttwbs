@@ -1,6 +1,6 @@
 import { Arrays } from "@/models/Arrays";
 import { DayInfo } from "@/models/data/DayInfo";
-import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
+import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { ResourceInfo } from "@/models/data/ResourceInfo";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId } from "@/models/data/Setting";
 import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
@@ -42,8 +42,8 @@ export abstract class Timelines {
 		return "timeline-chart-" + this.getId(timeline);
 	}
 
-	public static getTimelineIdClassName(displayTimelineId: DisplayTimelineId): string {
-		return "_dynamic_programmable_indexNumber_level-" + displayTimelineId.level;
+	public static getReadableTimelineIdClassName(displayTimelineId: ReadableTimelineId): string {
+		return "_dynamic_programmable_readableTimelineId_level-" + displayTimelineId.level;
 	}
 
 
@@ -95,7 +95,7 @@ export abstract class Timelines {
 		return item;
 	}
 
-	public static toIndexNumber(index: DisplayTimelineId): string {
+	public static toReadableTimelineId(index: ReadableTimelineId): string {
 		return index.tree.join(".");
 	}
 
@@ -255,7 +255,7 @@ export abstract class Timelines {
 
 	}
 
-	public static calcDisplayId(timeline: Readonly<AnyTimeline>, rootTimeline: Readonly<GroupTimeline>): DisplayTimelineId {
+	public static calcReadableTimelineId(timeline: Readonly<AnyTimeline>, rootTimeline: Readonly<GroupTimeline>): ReadableTimelineId {
 
 		const groups = Timelines.getParentGroups(timeline, rootTimeline);
 		if (!groups.length) {
@@ -286,7 +286,7 @@ export abstract class Timelines {
 		}
 		tree.push(index + 1);
 
-		const result: DisplayTimelineId = {
+		const result: ReadableTimelineId = {
 			level: tree.length,
 			tree: tree,
 		};

@@ -128,7 +128,7 @@ function createConfiguration(): Configuration {
 				group: {
 					maximum: 10,
 				},
-				indexNumber: {
+				readableTimelineId: {
 					maximum: 10,
 					paddingLeft: {
 						value: 0.5,

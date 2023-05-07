@@ -281,7 +281,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		props.beginDateCallbacks.cancelSelectBeginDate(props.currentTimeline);
 	}
 
-	const timelineIndex = props.timelineStore.calcDisplayId(props.currentTimeline);
+	const timelineIndex = props.timelineStore.calcReadableTimelineId(props.currentTimeline);
 
 	return (
 		<TimelineHeaderRow
@@ -293,7 +293,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		>
 			<IdCell
 				selectingId={selectingId}
-				timelineIndex={timelineIndex}
+				readableTimelineId={timelineIndex}
 				currentTimeline={props.currentTimeline}
 				isSelectedPrevious={isSelectedPrevious}
 				draggingTimeline={props.draggingTimeline}

@@ -147,8 +147,8 @@ const InformationDay: FC<Props> = (props: Props) => {
 							<dd>
 								<ul>
 									{sortedTimelines.map(i => {
-										const timelineIndex = props.timelineStore.calcDisplayId(i);
-										const timelineClassName = Timelines.getTimelineIdClassName(timelineIndex);
+										const timelineIndex = props.timelineStore.calcReadableTimelineId(i);
+										const timelineClassName = Timelines.getReadableTimelineIdClassName(timelineIndex);
 
 										return (
 											<li
@@ -163,7 +163,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 													<span
 														className={timelineClassName}
 													>
-														{Timelines.toIndexNumber(timelineIndex)}
+														{Timelines.toReadableTimelineId(timelineIndex)}
 														<span className="separator">-</span>
 														{i.subject}
 													</span>
