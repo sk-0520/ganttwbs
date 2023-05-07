@@ -172,6 +172,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 								<input
 									name="member-name"
 									value={newMemberName}
+									placeholder={locale.pages.editor.setting.resource.newMember}
 									onChange={ev => setNewMemberName(ev.target.value)}
 								/>
 							</td>

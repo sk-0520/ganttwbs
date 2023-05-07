@@ -263,6 +263,7 @@ const locale: Locale = {
 					groupName: "グループ名",
 					choiceColor: "色を割り振り",
 					newGroup: "新規グループ",
+					newMember: "新規メンバー",
 
 					columns: {
 						memberName: "要員名",

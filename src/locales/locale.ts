@@ -265,6 +265,7 @@ export interface Locale {
 					groupName: string,
 					choiceColor: string,
 					newGroup: string,
+					newMember: string,
 
 					columns: {
 						memberName: string,
