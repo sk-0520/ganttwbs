@@ -3,7 +3,6 @@ import { FC } from "react";
 
 import { Timelines } from "@/models/Timelines";
 
-
 interface Props {
 	readOnly: boolean;
 	disabled: boolean;
@@ -12,13 +11,21 @@ interface Props {
 }
 
 const WorkloadCell: FC<Props> = (props: Props) => {
+
+	if (props.readOnly) {
+		return (
+			<td className="timeline-cell timeline-workload readonly">
+				{Timelines.displayWorkload(props.value)}
+			</td>
+		);
+	}
+
 	return (
 		<td className="timeline-cell timeline-workload">
 			<input
 				className="edit"
 				type="number"
 				disabled={props.disabled}
-				readOnly={props.readOnly}
 				step="0.25"
 				min={0}
 				value={Timelines.displayWorkload(props.value)}

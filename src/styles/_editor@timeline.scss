@@ -501,6 +501,10 @@ $viewer-z-index: 2;
 			}
 
 			.timeline-workload {
+				&.readonly {
+					text-align: center;
+				}
+
 				input[type="number"] {
 					width: 100%;
 				}
