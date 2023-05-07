@@ -9,6 +9,7 @@ type DateTimeParseResult = ParseResult<DateTime, Error>;
 
 export type Unit = "second" | "minute" | "hour" | "day" | "week" | "month" | "year";
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export type DateTimeTicks = number;
 
 function factory(timeZone: TimeZone): cdate.cdate {
 	let create = cdate;
@@ -37,8 +38,6 @@ function padStart(value: number, length: number, fillString: string): string {
 function padStart0(value: number, length: number): string {
 	return padStart(value, length, "0");
 }
-
-export type DateTimeTicks = number;
 
 /**
  * 日付のラッパー。
@@ -108,7 +107,7 @@ export class DateTime {
 
 	//#region function
 
-	private static parseCore(input: string | Date | number | undefined, timeZone: TimeZone): DateTimeParseResult {
+	private static parseCore(input: string | Date | DateTimeTicks | undefined, timeZone: TimeZone): DateTimeParseResult {
 		const create = factory(timeZone);
 
 		const date = create(input);
@@ -187,7 +186,7 @@ export class DateTime {
 	 * @param timeZone
 	 * @returns
 	 */
-	public static convert(input: Date | number, timeZone: TimeZone): DateTime {
+	public static convert(input: Date | DateTimeTicks, timeZone: TimeZone): DateTime {
 		return ResultFactory.parseErrorIsThrow("", _ => this.parseCore(input, timeZone));
 	}
 
