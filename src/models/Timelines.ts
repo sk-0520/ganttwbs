@@ -1,12 +1,10 @@
 import { Arrays } from "@/models/Arrays";
-import { Calendars } from "@/models/Calendars";
-import { CalendarRange } from "@/models/data/CalendarRange";
 import { DayInfo } from "@/models/data/DayInfo";
 import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
 import { ResourceInfo } from "@/models/data/ResourceInfo";
-import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, MemberId, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId } from "@/models/data/Setting";
+import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId } from "@/models/data/Setting";
 import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
-import { DateTime, WeekIndex } from "@/models/DateTime";
+import { DateTime, DateTimeTicks, WeekIndex } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
 import { Limiter } from "@/models/Limiter";
 import { Settings } from "@/models/Settings";
@@ -679,7 +677,9 @@ export abstract class Timelines {
 		return result;
 	}
 
-	public static calcDayInfos(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>): Map<DateOnly, DayInfo> {
+	public static calcDayInfos(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>): Map<DateTimeTicks, DayInfo> {
+		const LOG_CDI = "日情報算出";
+		console.time(LOG_CDI);
 
 		type SuccessWorkRangeTimeline = Omit<SuccessWorkRange, "kind" | "timeline"> & {
 			timeline: TaskTimeline,
@@ -698,55 +698,97 @@ export abstract class Timelines {
 
 		if (!successWorkRanges.size) {
 			// 重複チェックするにはそもそも範囲算出が成功してないとなんもできない
+			console.timeEnd(LOG_CDI);
 			return new Map();
 		}
 
-		const work = new Map<DateOnly, {
-			members: Array<MemberId>,
-		}>();
+		const result = new Map<DateTimeTicks, DayInfo>();
 
-		// const calendarDays = Calendars.getCalendarRangeDays(calendarRange);
-		// for (let i = 0; i < calendarDays; i++) {
-		// 	const currentDate = calendarRange.begin.add(i, "day");
-		// 	const currentDateOnly = currentDate.format("yyyy-MM-dd");
-		// 	const dayValue = {
-		// 		members: new Array<MemberId>(),
-		// 	};
-		// 	work.set(currentDateOnly, dayValue);
+		// 作業範囲一覧を総なめ
+		for (const currentWorkRange of successWorkRanges) {
+			for (const otherWorkRange of successWorkRanges) {
+				if (otherWorkRange === currentWorkRange) {
+					// 自分は無視
+					continue;
+				}
 
-		// 	// 同一日の重複作業から重複メンバーを取得
-		// 	for (const workRange of successWorkRanges) {
-		// 		const rangeDays = workRange.begin.diff(workRange.end).totalDays;
-		// 		for (let j = 0; j < rangeDays; j++) {
-		// 			const currentWorkDate = workRange.begin.add(j, "day");
-		// 			if (currentWorkDate.equals(currentDate)) {
-		// 				if (workRange.timeline.memberId) {
-		// 					dayValue.members.push(workRange.timeline.memberId);
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// }
+				let range: {
+					begin: DateTime;
+					end: DateTime;
+				} | undefined = undefined;
 
-		// 同一日の重複作業から重複メンバーを取得
-		for (const workRange of successWorkRanges) {
-			const rangeDays = workRange.begin.diff(workRange.end).totalDays;
-			for (let j = 0; j < rangeDays; j++) {
-				const currentWorkDate = workRange.begin.add(j, "day");
+				if (
+					// 自身の後半に対象が存在する
+					(currentWorkRange.begin.ticks < otherWorkRange.begin.ticks)
+					&&
+					(otherWorkRange.begin.ticks < currentWorkRange.end.ticks)
+					&&
+					(currentWorkRange.end.ticks < otherWorkRange.end.ticks)
+				) {
+					range = {
+						begin: otherWorkRange.begin,
+						end: currentWorkRange.end,
+					};
+				} else if (
+					// 自身の中に対象が存在する
+					(currentWorkRange.begin.ticks <= otherWorkRange.begin.ticks)
+					&&
+					(otherWorkRange.begin.ticks < otherWorkRange.end.ticks)
+					&&
+					(otherWorkRange.end.ticks <= currentWorkRange.end.ticks)
+				) {
+					range = {
+						begin: otherWorkRange.begin,
+						end: otherWorkRange.end,
+					};
+				} else if (
+					// 自身の前半に対象が存在する
+					(otherWorkRange.begin.ticks < currentWorkRange.begin.ticks)
+					&&
+					(currentWorkRange.begin.ticks < otherWorkRange.end.ticks)
+					&&
+					(otherWorkRange.end.ticks < currentWorkRange.end.ticks)
+				) {
+					range = {
+						begin: currentWorkRange.begin,
+						end: otherWorkRange.end,
+					};
+				} else if (
+					// 自身が対象の中に納まる
+					(otherWorkRange.begin.ticks <= currentWorkRange.begin.ticks)
+					&&
+					(currentWorkRange.begin.ticks < currentWorkRange.end.ticks)
+					&&
+					(currentWorkRange.end.ticks <= otherWorkRange.end.ticks)
+				) {
+					range = {
+						begin: currentWorkRange.begin,
+						end: currentWorkRange.end,
+					};
+				}
+
+				if (range) {
+					if (currentWorkRange.timeline.memberId === otherWorkRange.timeline.memberId && resourceInfo.memberMap.has(currentWorkRange.timeline.memberId)) {
+						const length = range.begin.diff(range.end).totalDays;
+						for (let i = 0; i < length; i++) {
+							const date = range.begin.add(i, "day");
+							let info = result.get(date.ticks);
+							if (!info) {
+								info = {
+									duplicateMembers: new Set(),
+								};
+								result.set(date.ticks, info);
+							}
+							info.duplicateMembers.add(currentWorkRange.timeline.memberId);
+						}
+					}
+				}
 			}
 		}
 
-		// for (const workRange of successWorkRanges) {
-		// 	if (!Settings.maybeTaskTimeline(workRange.timeline)) {
-		// 		continue;
-		// 	}
-		// }
+		console.timeEnd(LOG_CDI);
 
-		console.debug(work);
-
-		// 最後の調整はあとで
-		//const result = work;
-		return new Map();
+		return result;
 	}
 
 }

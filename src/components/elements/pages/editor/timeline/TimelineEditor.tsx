@@ -86,6 +86,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 		const dayInfos = Timelines.calcDayInfos(totalTimelineMap, new Set([...workRangesCache.values()]), resourceInfo);
 
+		console.debug("dayInfos", dayInfos);
+
 		const result: TimelineStore = {
 			rootGroupTimeline: props.editorData.setting.rootTimeline,
 			totalItemMap: totalTimelineMap,

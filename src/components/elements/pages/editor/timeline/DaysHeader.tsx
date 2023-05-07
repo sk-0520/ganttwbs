@@ -13,6 +13,7 @@ import { DateTime } from "@/models/DateTime";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
+import { DayInfo } from "@/models/data/DayInfo";
 
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
@@ -119,9 +120,26 @@ const DaysHeader: FC<Props> = (props: Props) => {
 			const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
 			const className = getCellClassName(classNames);
 
+			const mergedDayInfo: DayInfo = {
+				duplicateMembers: new Set(),
+			};
+			const nextDay = a.add(1, "day");
+			for (const [ticks, info] of props.timelineStore.dayInfos) {
+				if (a.ticks <= ticks && ticks < nextDay.ticks) {
+					console.debug(info);
+					for (const memberId of info.duplicateMembers) {
+						mergedDayInfo.duplicateMembers.add(memberId);
+					}
+				}
+			}
+
 			return (
 				<td key={a.ticks} title={holidayEventValue?.event.display} className={className}>
-					&nbsp;
+					{0 < mergedDayInfo.duplicateMembers.size ? (
+						"@"
+					) : (
+						<>&nbsp;</>
+					)}
 				</td>
 			);
 		});

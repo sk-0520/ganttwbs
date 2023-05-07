@@ -38,6 +38,7 @@ function padStart0(value: number, length: number): string {
 	return padStart(value, length, "0");
 }
 
+export type DateTimeTicks = number;
 
 /**
  * 日付のラッパー。
