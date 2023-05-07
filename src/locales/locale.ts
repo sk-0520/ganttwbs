@@ -50,6 +50,7 @@ export interface Locale {
 
 			/** DateTime.format */
 			yearMonthFormat: string,
+			dateOnlyFormat: string,
 		},
 	},
 
@@ -136,6 +137,15 @@ export interface Locale {
 				byebye: string
 			},
 			timeline: {
+				information: {
+					memberDuplication: string,
+					timelineAffected: string,
+					/**
+					 * * MEMBER
+					 * * GROUP
+					 */
+					memberFormat: string,
+				},
 				header: {
 					operations: {
 						addNewGroupTimeline: string,

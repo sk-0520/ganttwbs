@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, useRef, useState } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
@@ -14,9 +14,11 @@ import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { DayInfo } from "@/models/data/DayInfo";
+import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
+import { Strings } from "@/models/Strings";
 
 
-interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps, ResourceInfoProps {
 	//nop
 }
 
@@ -67,7 +69,6 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	}, [props.calendarInfo]);
 
 	const yearMonthNodes = useMemo(() => {
-		console.debug("renderYearMonthrenderYearMonthrenderYearMonth");
 		return yearMonthBucket.map(a => {
 			const year = a.year;
 			const month = a.month;
@@ -84,7 +85,6 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	}, [locale, yearMonthBucket]);
 
 	const dayNodes = useMemo(() => {
-		console.debug("renderDayrenderDayrenderDayrenderDay");
 		return dates.map(a => {
 			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
 			const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
@@ -99,7 +99,6 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	}, [dates, props.calendarInfo, props.setting]);
 
 	const weekNodes = useMemo(() => {
-		console.debug("renderWeekrenderWeekrenderWeek");
 		return dates.map(a => {
 			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
 			const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
@@ -113,8 +112,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 		});
 	}, [dates, locale, props.calendarInfo, props.setting]);
 
-	function renderPins() {
-		console.debug("renderPinrenderPinrenderPin");
+	function renderInformation() {
 		return dates.map(a => {
 			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
 			const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
@@ -127,17 +125,85 @@ const DaysHeader: FC<Props> = (props: Props) => {
 			const nextDay = a.add(1, "day");
 			for (const [ticks, info] of props.timelineStore.dayInfos) {
 				if (a.ticks <= ticks && ticks < nextDay.ticks) {
-					console.debug(info);
 					for (const memberId of info.duplicateMembers) {
 						mergedDayInfo.duplicateMembers.add(memberId);
+					}
+					for (const timelineId of info.targetTimelines) {
+						mergedDayInfo.targetTimelines.add(timelineId);
 					}
 				}
 			}
 
 			return (
-				<td key={a.ticks} title={holidayEventValue?.event.display} className={className}>
+				<td
+					key={a.ticks}
+					title={holidayEventValue?.event.display}
+					className={className}
+				>
 					{0 < mergedDayInfo.duplicateMembers.size ? (
-						"@"
+						<details>
+							<summary>@</summary>
+							<div className="contents">
+								<dl>
+									<dt>
+										{a.format(locale.common.calendar.dateOnlyFormat)}
+									</dt>
+
+									<dt>
+										{locale.pages.editor.timeline.information.memberDuplication}
+									</dt>
+									<dd>
+										<ul>
+											{[...mergedDayInfo.duplicateMembers].map(b => {
+												const member = props.resourceInfo.memberMap.get(b);
+												if (!member) {
+													throw new Error();
+												}
+												return (
+													<li
+														key={member.member.id}
+														title={member.member.id}
+													>
+														{Strings.replaceMap(
+															locale.pages.editor.timeline.information.memberFormat,
+															{
+																"MEMBER": member.member.name,
+																"GROUP": member.group.name,
+															}
+														)}
+													</li>
+												);
+											})}
+										</ul>
+									</dd>
+
+									<dt>
+										{locale.pages.editor.timeline.information.timelineAffected}
+									</dt>
+									<dd>
+										<ul>
+											{[...mergedDayInfo.targetTimelines].map(b => {
+												const timeline = props.timelineStore.totalItemMap.get(b);
+												if (!timeline) {
+													throw new Error();
+												}
+
+												return (
+													<li
+														key={timeline.id}
+														title={timeline.id}
+													>
+														{Timelines.toIndexNumber(props.timelineStore.calcDisplayId(timeline))}
+														:
+														{timeline.subject}
+													</li>
+												);
+											})}
+										</ul>
+									</dd>
+								</dl>
+							</div>
+						</details>
 					) : (
 						<>&nbsp;</>
 					)}
@@ -159,8 +225,8 @@ const DaysHeader: FC<Props> = (props: Props) => {
 					<tr className="week">
 						{weekNodes}
 					</tr>
-					<tr className="pin">
-						{renderPins()}
+					<tr className="information">
+						{renderInformation()}
 					</tr>
 				</tbody>
 			</table>

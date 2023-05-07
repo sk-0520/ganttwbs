@@ -61,6 +61,7 @@ const locale: Locale = {
 			},
 
 			yearMonthFormat: "yyyy/MM",
+			dateOnlyFormat: "yyyy/MM/dd"
 		},
 	},
 
@@ -138,6 +139,12 @@ const locale: Locale = {
 			},
 
 			timeline: {
+				information: {
+					memberDuplication: "メンバーが重複しています",
+					timelineAffected: "影響タイムライン",
+					memberFormat: "${MEMBER} (${GROUP})"
+				},
+
 				header: {
 					operations: {
 						addNewGroupTimeline: "グループ追加",

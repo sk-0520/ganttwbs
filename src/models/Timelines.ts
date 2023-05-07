@@ -781,6 +781,7 @@ export abstract class Timelines {
 
 							info.duplicateMembers.add(currentWorkRange.timeline.memberId);
 							info.targetTimelines.add(currentWorkRange.timeline.id);
+							console.warn("currentWorkRange.timeline.id", currentWorkRange.timeline.id);
 						};
 
 						const length = range.begin.diff(range.end).totalDays;

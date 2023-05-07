@@ -547,6 +547,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				setting={props.editorData.setting}
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
+				resourceInfo={resourceInfo}
 			/>
 			<TimelineItems
 				configuration={props.configuration}
