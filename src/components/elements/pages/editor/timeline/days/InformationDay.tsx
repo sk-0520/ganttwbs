@@ -120,14 +120,21 @@ const InformationDay: FC<Props> = (props: Props) => {
 							<dd>
 								<ul>
 									{sortedTimelines.map(i => {
+										const timelineIndex = props.timelineStore.calcDisplayId(i);
+										const timelineClassName = Timelines.getTimelineIdClassName(timelineIndex);
+
 										return (
 											<li
 												key={i.id}
 												title={i.id}
 											>
-												{Timelines.toIndexNumber(props.timelineStore.calcDisplayId(i))}
-												:
-												{i.subject}
+												<span
+													className={timelineClassName}
+												>
+													{Timelines.toIndexNumber(timelineIndex)}
+													<span className="separator">-</span>
+													{i.subject}
+												</span>
 											</li>
 										);
 									})}

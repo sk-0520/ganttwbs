@@ -234,6 +234,10 @@ $viewer-z-index: 2;
 					font-weight: initial !important;
 				}
 
+				&[open] > summary {
+					transform: scale(2)
+				}
+
 				& > .contents {
 					//@include box.width(initial);
 					z-index: $days-header-z-index + 1;
@@ -257,6 +261,11 @@ $viewer-z-index: 2;
 						}
 						& > dd {
 							margin-left: 1ex;
+
+							.separator {
+								margin-inline: 0.5ex;
+								color: gray;
+							}
 						}
 					}
 				}

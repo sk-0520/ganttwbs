@@ -42,6 +42,11 @@ export abstract class Timelines {
 		return "timeline-chart-" + this.getId(timeline);
 	}
 
+	public static getTimelineIdClassName(displayTimelineId: DisplayTimelineId): string {
+		return "_dynamic_programmable_indexNumber_level-" + displayTimelineId.level;
+	}
+
+
 	public static serializeWorkload(workload: TimeSpan): TimeOnly {
 		return workload.serialize("readable");
 	}
