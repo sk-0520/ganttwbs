@@ -61,6 +61,7 @@ const locale: Locale = {
 			},
 
 			yearMonthFormat: "yyyy/MM",
+			dateOnlyFormat: "yyyy/MM/dd"
 		},
 	},
 
@@ -138,14 +139,25 @@ const locale: Locale = {
 			},
 
 			timeline: {
+				information: {
+					memberDuplication: "メンバーが重複しています",
+					timelineAffected: "影響タイムライン",
+					memberFormat: "${MEMBER} (${GROUP})"
+				},
+
 				header: {
 					operations: {
 						addNewGroupTimeline: "グループ追加",
 						addNewTaskTimeline: "タスク追加",
 						importTimelines: "タイムライン追加",
-						navigateFirst: "先頭",
-						navigateToday: "けふ",
-						navigateLast: "最終",
+
+						calendarFirst: "最初",
+						calendarToday: "今日",
+						calendarLast: "最後",
+
+						informationFirst: "最初",
+						informationList: "情報",
+						informationLast: "最後",
 					},
 					columns: {
 						id: "ID",
@@ -204,6 +216,9 @@ const locale: Locale = {
 						},
 					}
 				},
+				informationDialog: {
+					title: "情報一覧",
+				},
 				importDialog: {
 					title: "タイムライン追加",
 					subject: "グループ名",
@@ -228,7 +243,7 @@ const locale: Locale = {
 				general: {
 					projectName: "タイトル",
 					recursive: "反復計算数",
-					timeZoneKind:{
+					timeZoneKind: {
 						name: "タイムゾーン名",
 						offset: "オフセット",
 					},

@@ -21,7 +21,7 @@ interface Props {
 }
 
 const IdCell: FC<Props> = (props: Props) => {
-	const className = "_dynamic_programmable_indexNumber_level-" + props.timelineIndex.level;
+	const className = Timelines.getTimelineIdClassName(props.timelineIndex);
 
 	const canSelect = props.selectingBeginDate && (
 		props.selectingBeginDate.timeline.id !== props.currentTimeline.id && props.selectingBeginDate.canSelect(props.currentTimeline)

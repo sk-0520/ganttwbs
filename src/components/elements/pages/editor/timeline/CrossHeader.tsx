@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 
-import { IconKind, IconLabel } from "@/components/elements/Icon";
+import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
+import InformationDialog from "@/components/elements/pages/editor/timeline/InformationDialog";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
@@ -30,6 +31,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	const [beginDate, setBeginDate] = useState<DateTime | null>(null);
 	const [endDate, setEndDate] = useState<DateTime | null>(null);
 	const [progress, setProgress] = useState(0);
+	const [visibleInformation, setVisibleInformation] = useState(false);
 
 	useEffect(() => {
 		const timelineItem = props.timelineStore.changedItemMap.get(IdFactory.rootTimelineId);
@@ -75,8 +77,6 @@ const CrossHeader: FC<Props> = (props: Props) => {
 		setVisibleTimelinesImportDialog(true);
 	}
 
-
-
 	function handleInputTimelines(timeline: GroupTimeline | null) {
 		if (timeline) {
 			props.timelineStore.addNewTimeline(props.timelineStore.rootGroupTimeline, timeline, NewTimelinePosition.Next);
@@ -85,21 +85,48 @@ const CrossHeader: FC<Props> = (props: Props) => {
 		setVisibleTimelinesImportDialog(false);
 	}
 
-	function handleClickNavigateToday(): void {
+	function handleClickCalendarToday(): void {
 		Editors.scrollView(undefined, DateTime.today(props.calendarInfo.timeZone));
 	}
 
-	function handleClickNavigatePrev(): void {
+	function handleClickCalendarFirst(): void {
 		const range = WorkRanges.getSuccessTimelineIdRange(props.timelineStore.workRanges);
 		if (range.begin) {
 			Editors.scrollView(range.begin.timelineId, range.begin.workRange.begin);
 		}
 	}
 
-	function handleClickNavigateNext(): void {
+	function handleClickCalendarLast(): void {
 		const range = WorkRanges.getSuccessTimelineIdRange(props.timelineStore.workRanges);
 		if (range.end) {
 			Editors.scrollView(range.end.timelineId, range.end.workRange.begin);
+		}
+	}
+
+	function handleClickInformationList(): void {
+		setVisibleInformation(true);
+	}
+
+	function handleCloseInformation(date: DateTime | undefined): void {
+		setVisibleInformation(false);
+		if(date) {
+			Editors.scrollView(undefined, date);
+		}
+	}
+
+	function handleClickInformationFirst(): void {
+		const keys = [...props.timelineStore.dayInfos.keys()].sort((a, b) => a - b);
+		if (keys.length) {
+			const date = DateTime.convert(keys[0], props.calendarInfo.timeZone).toDateOnly();
+			Editors.scrollView(undefined, date);
+		}
+	}
+
+	function handleClickInformationLast(): void {
+		const keys = [...props.timelineStore.dayInfos.keys()].sort((a, b) => b - a);
+		if (keys.length) {
+			const date = DateTime.convert(keys[0], props.calendarInfo.timeZone).toDateOnly();
+			Editors.scrollView(undefined, date);
 		}
 	}
 
@@ -149,32 +176,67 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						</li>
 						<li>
 							<button
-								onClick={ev => handleClickNavigatePrev()}
+								onClick={ev => handleClickCalendarFirst()}
+								title={locale.pages.editor.timeline.header.operations.calendarFirst}
 							>
-								<IconLabel
+								<IconImage
 									kind={IconKind.NavigatePrev}
-									label={locale.pages.editor.timeline.header.operations.navigateFirst}
 								/>
 							</button>
 						</li>
 						<li>
 							<button
-								onClick={ev => handleClickNavigateToday()}
+								onClick={ev => handleClickCalendarToday()}
 							>
 								<IconLabel
 									kind={IconKind.CalendarToday}
-									label={locale.pages.editor.timeline.header.operations.navigateToday}
+									label={locale.pages.editor.timeline.header.operations.calendarToday}
 								/>
 							</button>
 						</li>
 						<li>
 							<button
-								onClick={ev => handleClickNavigateNext()}
+								title={locale.pages.editor.timeline.header.operations.calendarLast}
+								onClick={ev => handleClickCalendarLast()}
+							>
+								<IconImage
+									kind={IconKind.NavigateNext}
+								/>
+							</button>
+						</li>
+						<li>
+							<hr />
+						</li>
+						<li>
+							<button
+								onClick={ev => handleClickInformationFirst()}
+								disabled={!props.timelineStore.dayInfos.size}
+								title={locale.pages.editor.timeline.header.operations.informationFirst}
+							>
+								<IconImage
+									kind={IconKind.NavigatePrev}
+								/>
+							</button>
+						</li>
+						<li>
+							<button
+								disabled={!props.timelineStore.dayInfos.size}
+								onClick={ev => handleClickInformationList()}
 							>
 								<IconLabel
+									kind={IconKind.CalendarToday}
+									label={locale.pages.editor.timeline.header.operations.informationList}
+								/>
+							</button>
+						</li>
+						<li>
+							<button
+								title={locale.pages.editor.timeline.header.operations.informationLast}
+								disabled={!props.timelineStore.dayInfos.size}
+								onClick={ev => handleClickInformationLast()}
+							>
+								<IconImage
 									kind={IconKind.NavigateNext}
-									direction="right"
-									label={locale.pages.editor.timeline.header.operations.navigateLast}
 								/>
 							</button>
 						</li>
@@ -275,6 +337,14 @@ const CrossHeader: FC<Props> = (props: Props) => {
 			{visibleTimelinesImportDialog && (
 				<TimelinesImportDialog
 					callbackClose={handleInputTimelines}
+				/>
+			)}
+			{visibleInformation && (
+				<InformationDialog
+					configuration={props.configuration}
+					calendarInfo={props.calendarInfo}
+					timelineStore={props.timelineStore}
+					callbackClose={handleCloseInformation}
 				/>
 			)}
 		</div>

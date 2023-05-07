@@ -45,13 +45,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	let hoverTimeline: AnyTimeline | null = null;
 	let activeTimeline: AnyTimeline | null = null;
 
-	const [sequenceTimelines, setSequenceTimelines] = useState(Timelines.flat(props.editorData.setting.rootTimeline.children));
-	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(sequenceTimelines, new Map(), new Map()));
-	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
-	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
-	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
-	const [visibleDetailEditDialog, setVisibleDetailEditDialog] = useState<AnyTimeline>();
-
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
 	}, [props.editorData.setting]);
@@ -59,6 +52,13 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const resourceInfo = useMemo(() => {
 		return Resources.createResourceInfo(props.editorData.setting.groups);
 	}, [props.editorData.setting]);
+
+	const [sequenceTimelines, setSequenceTimelines] = useState(Timelines.flat(props.editorData.setting.rootTimeline.children));
+	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(sequenceTimelines, new Map(), new Map()));
+	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
+	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
+	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
+	const [visibleDetailEditDialog, setVisibleDetailEditDialog] = useState<AnyTimeline>();
 
 	const dynamicStyleNodes = useMemo(() => {
 		return renderDynamicStyle(props.configuration.design, props.editorData.setting.theme);
@@ -76,7 +76,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		updateRelations();
 	}, [sequenceTimelines]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	function createTimelineStore(sequenceTimelines: ReadonlyArray<AnyTimeline>, totalItems: ReadonlyMap<TimelineId, AnyTimeline>, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
+	function createTimelineStore(sequenceTimelines: ReadonlyArray<AnyTimeline>, totalTimelineMap: ReadonlyMap<TimelineId, AnyTimeline>, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
 
 		for (const [k, v] of changedItems) {
 			if (v.workRange) {
@@ -84,14 +84,19 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			}
 		}
 
+		const dayInfos = Timelines.calcDayInfos(totalTimelineMap, new Set([...workRangesCache.values()]), resourceInfo);
+
+		console.debug("dayInfos", dayInfos);
+
 		const result: TimelineStore = {
 			rootGroupTimeline: props.editorData.setting.rootTimeline,
-			totalItemMap: totalItems,
+			totalItemMap: totalTimelineMap,
 			sequenceItems: sequenceTimelines,
 			indexItemMap: Timelines.toIndexes(sequenceTimelines),
 
 			changedItemMap: changedItems,
 			workRanges: workRangesCache,
+			dayInfos: dayInfos,
 
 			hoverItem: hoverTimeline,
 			activeItem: activeTimeline,
@@ -542,6 +547,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				setting={props.editorData.setting}
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
+				resourceInfo={resourceInfo}
 			/>
 			<TimelineItems
 				configuration={props.configuration}

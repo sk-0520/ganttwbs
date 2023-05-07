@@ -59,7 +59,7 @@ dialog {
 
 						display: table-cell;
 						height: $block;
-						width: 70%;
+						min-width: 70%;
 						padding: 1rem $block 1rem;
 						vertical-align: middle;
 						font-size: 1rem;

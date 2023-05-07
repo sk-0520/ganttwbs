@@ -96,6 +96,10 @@ $viewer-z-index: 2;
 			flex: content;
 
 			.inline {
+				button {
+					height: 2em;
+				}
+
 				hr {
 					display: block;
 					width: 1em;
@@ -215,13 +219,66 @@ $viewer-z-index: 2;
 			}
 		}
 
-		.pin {
+		.information {
 			@include row();
 
 			text-align: center;
 
 			td {
 				@include cell();
+			}
+
+			details {
+				position: relative;
+
+				& > summary {
+					cursor: pointer;
+					list-style: none;
+				}
+
+				&[open] > summary {
+					transform: scale(3);
+				}
+
+				& > .contents {
+					//@include box.width(initial);
+					z-index: $days-header-z-index + 1;
+
+					position: absolute;
+					display: block;
+					top: -100%;
+					left: 100%;
+					color: black;
+					background: white;
+					border: 1px solid gray;
+					border-radius: 0.5em;
+					box-shadow: 3px 3px 3px 0px rgba($color: black, $alpha: 0.8);
+					padding: 0.5em;
+					white-space: nowrap;
+					text-align: left;
+
+					& > dl {
+						& > dt {
+							font-weight: bold;
+						}
+						& > dd {
+							margin-left: 1ex;
+
+							.separator {
+								margin-inline: 0.5ex;
+								color: gray;
+							}
+						}
+					}
+
+					.close {
+						text-align: center;
+						margin-top: 0.5em;
+
+						.button {
+						}
+					}
+				}
 			}
 		}
 	}
@@ -289,12 +346,17 @@ $viewer-z-index: 2;
 
 			.edit {
 				@mixin editing($border-color, $background) {
-					border: 1px solid $border-color;
+					border: none;
 					background: $background;
 				}
 
+				margin: 0;
+				padding: 0;
+				vertical-align: baseline;
+				height: 100%;
+
 				background: rgba($color: #fff, $alpha: 0.5);
-				border: 1px solid transparent;
+				border: none;
 				outline: none;
 
 				// @at-root {
@@ -457,7 +519,7 @@ $viewer-z-index: 2;
 
 				select {
 					width: 100%;
-					text-align: center
+					text-align: center;
 				}
 			}
 

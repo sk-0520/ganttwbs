@@ -38,6 +38,9 @@ export const enum IconKind {
 	ConfirmNegative,
 	ConfirmCancel,
 
+	Warning,
+	Error,
+
 	Reset,
 	Clear,
 	Option,
@@ -75,6 +78,9 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.ConfirmNegative]: (props) => <Md.MdOutlineBlock {...convertParameter(props)} />,
 	[IconKind.ConfirmCancel]: (props) => <Md.MdOutlineRemoveCircleOutline {...convertParameter(props)} />,
 
+	[IconKind.Warning]: (props) => <Md.MdWarning {...convertParameter(props)} />,
+	[IconKind.Error]: (props) => <Md.MdError {...convertParameter(props)} />,
+
 	[IconKind.Reset]: (props) => <Md.MdRestartAlt {...convertParameter(props)} />,
 	[IconKind.Clear]: (props) => <Md.MdOutlineClear {...convertParameter(props)} />,
 	[IconKind.Option]: (props) => <Md.MdBuild {...convertParameter(props)} />,
@@ -97,6 +103,10 @@ function convertColor(kind: IconKind, color: string | null | undefined): string 
 			case IconKind.TimelineAddTask:
 				return "green";
 
+			case IconKind.Warning:
+				return "yellow";
+
+			case IconKind.Error:
 			case IconKind.ConfirmCancel:
 				return "red";
 
@@ -114,6 +124,8 @@ function convertParameter(props: Props): IconBaseProps {
 	const attr: IconBaseProps = {
 		title: props.title,
 		color: convertColor(props.kind, props.fill),
+		stroke: props.stroke,
+		strokeWidth: props.strokeWidth,
 	};
 
 	return attr;
@@ -124,6 +136,7 @@ interface Props {
 	/** 色。 未設定(`undefined`)の場合はデフォルト処理が行われる。 `null` は何もしない */
 	fill?: string | null;
 	stroke?: string;
+	strokeWidth?: string;
 	title?: string;
 }
 
@@ -139,7 +152,7 @@ export const IconImage: FC<Props> = (props: Props) => {
 
 interface LabelProps extends Props {
 	className?: string;
-	direction?: "left"| "right" | "bottom";
+	direction?: "left" | "right" | "bottom";
 	label: string;
 }
 

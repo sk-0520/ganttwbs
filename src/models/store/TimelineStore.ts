@@ -1,11 +1,13 @@
 import { DragEvent } from "react";
 
+import { DayInfo } from "@/models/data/DayInfo";
 import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { AnyTimeline, GroupTimeline, TimelineId } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
+import { DateTimeTicks } from "@/models/DateTime";
 
 export type MoveDirection = "up" | "down" | "parent";
 
@@ -27,6 +29,9 @@ export interface TimelineStore {
 
 	/** 各工数時間 */
 	readonly workRanges: ReadonlyMap<TimelineId, WorkRange>;
+
+	/** 日に対する何かしらの情報(情報がある時点で死んでる) */
+	readonly dayInfos: ReadonlyMap<DateTimeTicks, DayInfo>;
 
 	/** ホバー状態タイムライン */
 	readonly hoverItem: AnyTimeline | null;

@@ -50,6 +50,7 @@ export interface Locale {
 
 			/** DateTime.format */
 			yearMonthFormat: string,
+			dateOnlyFormat: string,
 		},
 	},
 
@@ -136,14 +137,28 @@ export interface Locale {
 				byebye: string
 			},
 			timeline: {
+				information: {
+					memberDuplication: string,
+					timelineAffected: string,
+					/**
+					 * * MEMBER
+					 * * GROUP
+					 */
+					memberFormat: string,
+				},
 				header: {
 					operations: {
 						addNewGroupTimeline: string,
 						addNewTaskTimeline: string,
 						importTimelines: string,
-						navigateFirst: string,
-						navigateToday: string,
-						navigateLast: string,
+
+						calendarFirst: string,
+						calendarToday: string,
+						calendarLast: string,
+
+						informationFirst: string,
+						informationList: string,
+						informationLast: string,
 					},
 					columns: {
 						id: string,
@@ -201,6 +216,9 @@ export interface Locale {
 							setting: string,
 						},
 					}
+				},
+				informationDialog: {
+					title: string,
 				},
 				importDialog: {
 					title: string,
