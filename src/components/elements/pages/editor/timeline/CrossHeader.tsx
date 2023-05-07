@@ -245,9 +245,13 @@ const CrossHeader: FC<Props> = (props: Props) => {
 			</div>
 			<div className="footer">
 				<div className="timeline-header header">
-					<div className="timeline-header tooltips">
-						<div className="timeline-cell timeline-id">
-							{locale.pages.editor.timeline.header.columns.id}
+					<div className="timeline-header specials">
+						<div className="timeline-cell timeline-id"
+							title={`${locale.common.timeline.task}/${locale.common.timeline.total}`}
+						>
+							{props.timelineStore.sequenceItems.filter(a => Settings.maybeTaskTimeline(a)).length}
+							/
+							{props.timelineStore.sequenceItems.length}
 						</div>
 						<div className="timeline-cell timeline-subject">
 							{locale.pages.editor.timeline.header.columns.subject}

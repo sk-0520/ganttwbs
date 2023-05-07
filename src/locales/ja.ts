@@ -63,6 +63,12 @@ const locale: Locale = {
 			yearMonthFormat: "yyyy/MM",
 			dateOnlyFormat: "yyyy/MM/dd"
 		},
+
+		timeline: {
+			total: "全タイムライン",
+			group: "グループ",
+			task: "タスク",
+		}
 	},
 
 	pages: {

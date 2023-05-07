@@ -52,6 +52,12 @@ export interface Locale {
 			yearMonthFormat: string,
 			dateOnlyFormat: string,
 		},
+
+		timeline: {
+			total: string,
+			group: string,
+			task: string,
+		}
 	},
 
 	/** 各ページ項目 */
