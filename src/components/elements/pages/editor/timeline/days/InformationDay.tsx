@@ -78,7 +78,12 @@ const InformationDay: FC<Props> = (props: Props) => {
 		>
 			{0 < mergedDayInfo.duplicateMembers.size ? (
 				<details>
-					<summary>@</summary>
+					<summary>
+						{/* U+EF0Fが取り除かれて白黒になる対応(vscodeかjsxかは知らん) */}
+						{/*"⚠️"*/}
+						{/* 2023-05-07 chrome だと相変わらず白黒なので絵文字変えといた(アイコンを使うと見づらい) */}
+						💥
+					</summary>
 					<div className="contents">
 						<dl>
 							<dt>
