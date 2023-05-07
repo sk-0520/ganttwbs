@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { Calendars } from "@/models/Calendars";
@@ -8,11 +8,13 @@ import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { AnyTimeline } from "@/models/data/Setting";
+import { AnyTimeline, TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Days } from "@/models/Days";
+import { Editors } from "@/models/Editors";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
+import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, TimelineStoreProps {
 	readonly date: DateTime;
@@ -20,6 +22,13 @@ interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, Time
 
 const InformationDay: FC<Props> = (props: Props) => {
 	const locale = useLocale();
+
+	const refDetails = useRef<HTMLDetailsElement>(null);
+
+	// useEffect(() => {
+	// 	if (refDetails.current) {
+	// 	}
+	// }, [refDetails]);
 
 	const holidayEventValue = Calendars.getHolidayEventValue(props.date, props.calendarInfo.holidayEventMap);
 	const classNames = Days.getDayClassNames(props.date, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
@@ -67,8 +76,24 @@ const InformationDay: FC<Props> = (props: Props) => {
 			const aIndex = props.timelineStore.indexItemMap.get(a.id) ?? -1; // TODO: 落とした方がいいかも
 			const bIndex = props.timelineStore.indexItemMap.get(b.id) ?? -1;
 			return aIndex - bIndex;
-		});
+		})
+		;
 
+	function handleClickTimeline(timelineId: TimelineId): void {
+		let date: DateTime | undefined = undefined;
+		const workRange = props.timelineStore.workRanges.get(timelineId);
+		if (workRange && WorkRanges.maybeSuccessWorkRange(workRange)) {
+			date = workRange.begin;
+		}
+
+		Editors.scrollView(timelineId, date);
+	}
+
+	function handleClose(): void {
+		if (refDetails.current) {
+			refDetails.current.open = false;
+		}
+	}
 
 	return (
 		<td
@@ -77,7 +102,9 @@ const InformationDay: FC<Props> = (props: Props) => {
 			className={className}
 		>
 			{0 < mergedDayInfo.duplicateMembers.size ? (
-				<details>
+				<details
+					ref={refDetails}
+				>
 					<summary>
 						{/* U+EF0Fが取り除かれて白黒になる対応(vscodeかjsxかは知らん) */}
 						{/*"⚠️"*/}
@@ -128,19 +155,34 @@ const InformationDay: FC<Props> = (props: Props) => {
 												key={i.id}
 												title={i.id}
 											>
-												<span
-													className={timelineClassName}
+												<a
+													className="event"
+													href="#"
+													onClick={ev => handleClickTimeline(i.id)}
 												>
-													{Timelines.toIndexNumber(timelineIndex)}
-													<span className="separator">-</span>
-													{i.subject}
-												</span>
+													<span
+														className={timelineClassName}
+													>
+														{Timelines.toIndexNumber(timelineIndex)}
+														<span className="separator">-</span>
+														{i.subject}
+													</span>
+												</a>
 											</li>
 										);
 									})}
 								</ul>
 							</dd>
 						</dl>
+						<div className="close">
+							<button
+								className="button"
+								type="button"
+								onClick={handleClose}
+							>
+								{locale.common.dialog.close}
+							</button>
+						</div>
 					</div>
 				</details>
 			) : (

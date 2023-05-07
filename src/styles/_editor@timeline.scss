@@ -234,11 +234,10 @@ $viewer-z-index: 2;
 				& > summary {
 					cursor: pointer;
 					list-style: none;
-					// text-shadow: 1px 1px 2px #000;
 				}
 
 				&[open] > summary {
-					transform: scale(2)
+					transform: scale(3);
 				}
 
 				& > .contents {
@@ -269,6 +268,14 @@ $viewer-z-index: 2;
 								margin-inline: 0.5ex;
 								color: gray;
 							}
+						}
+					}
+
+					.close {
+						text-align: center;
+						margin-top: 0.5em;
+
+						.button {
 						}
 					}
 				}
