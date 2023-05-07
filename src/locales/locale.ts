@@ -97,6 +97,7 @@ export interface Locale {
 			tabs: {
 				file: string,
 				timeline: string,
+				analytics: string,
 				setting: string,
 			},
 

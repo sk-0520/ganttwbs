@@ -8,8 +8,8 @@ import { useLocale } from "@/locales/locale";
 import { Browsers } from "@/models/Browsers";
 import { CssHelper } from "@/models/CssHelper";
 import { AutoSaveKind } from "@/models/data/AutoSave";
-import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { DateTime } from "@/models/DateTime";
 import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
@@ -17,9 +17,8 @@ import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 import { Types } from "@/models/Types";
 
-interface Props {
+interface Props extends ConfigurationProps {
 	isVisible: boolean;
-	configuration: Configuration;
 	editorData: EditorData;
 }
 

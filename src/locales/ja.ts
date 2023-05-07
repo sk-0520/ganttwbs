@@ -106,6 +106,7 @@ const locale: Locale = {
 			tabs: {
 				file: "ファイル",
 				timeline: "タイムライン",
+				analytics: "集計",
 				setting: "設定",
 			},
 

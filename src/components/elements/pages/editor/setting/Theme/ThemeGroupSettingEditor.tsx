@@ -39,6 +39,7 @@ const ThemeGroupSettingEditor: FC = () => {
 			throw new Error();
 		}
 		target.value = color;
+		setGroups(settingContext.theme.groups = [...groups]);
 	}
 
 	function handleRemoveColor(key: UUID) {
