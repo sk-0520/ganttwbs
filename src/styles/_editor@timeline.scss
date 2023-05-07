@@ -240,17 +240,21 @@ $viewer-z-index: 2;
 					display: block;
 					top: -100%;
 					left: 100%;
+					color: black;
 					background: white;
 					border: 1px solid gray;
 					border-radius: 0.5em;
 					box-shadow: 3px 3px 3px 0px rgba($color: black, $alpha: 0.8);
-					padding: 0.5ex;
+					padding: 0.5em;
 					white-space: nowrap;
 					text-align: left;
 
 					& > dl {
-						dt {
+						& > dt {
 							font-weight: bold;
+						}
+						& > dd {
+							margin-left: 1ex;
 						}
 					}
 				}
