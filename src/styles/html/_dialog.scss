@@ -2,6 +2,8 @@ dialog {
 	padding: 0;
 
 	font-size: 1rem !important;
+	border: 2px solid black;
+	border-radius: 10px;
 
 	&::backdrop {
 		backdrop-filter: blur(0.25ex);
@@ -19,14 +21,23 @@ dialog {
 		//grid-template-rows: $header-height 1fr $footer-height;
 
 		.header {
+			user-select: none;
 			min-height: $header-height;
 			max-height: $header-height;
-			background: red;
+			background: darkgray;
+			padding: 0.5ex;
+
+			h1 {
+				font-size: 1.2em !important;
+				height: $header-height;
+				display: table-cell;
+				vertical-align: middle;
+			}
 		}
 
 		.main {
 			flex: content;
-			background-color: pink;
+			background-color: gainsboro;
 			overflow: auto;
 			padding: 1rem;
 			//min-height: auto;
@@ -40,11 +51,14 @@ dialog {
 			min-height: $footer-height;
 			max-height: $footer-height;
 
-			background: lime;
+			background: darkgray;
 
-			ul.buttons {
+			.buttons {
 				text-align: center;
 				display: flex;
+				align-items: center;
+				height: $footer-height;
+				margin-inline: 0.5ex;
 
 				& > li {
 					flex: 1;

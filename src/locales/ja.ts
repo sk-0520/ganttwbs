@@ -236,7 +236,7 @@ const locale: Locale = {
 					title: "タイムライン設定",
 					progressMinimum: "未対応",
 					progressMaximum: "完了",
-					comment: "作業",
+					comment: "コメント",
 				}
 			},
 
