@@ -14,7 +14,6 @@ import { Days } from "@/models/Days";
 import { Editors } from "@/models/Editors";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
-import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, TimelineStoreProps {
 	readonly date: DateTime;
@@ -80,13 +79,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 		;
 
 	function handleClickTimeline(timelineId: TimelineId): void {
-		let date: DateTime | undefined = undefined;
-		const workRange = props.timelineStore.workRanges.get(timelineId);
-		if (workRange && WorkRanges.maybeSuccessWorkRange(workRange)) {
-			date = workRange.begin;
-		}
-
-		Editors.scrollView(timelineId, date);
+		Editors.scrollView(timelineId, props.date);
 	}
 
 	function handleClose(): void {
