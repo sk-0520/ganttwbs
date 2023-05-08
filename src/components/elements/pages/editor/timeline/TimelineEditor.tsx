@@ -6,6 +6,7 @@ import DaysHeader from "@/components/elements/pages/editor/timeline/DaysHeader";
 import TimelineDetailEditDialog from "@/components/elements/pages/editor/timeline/TimelineDetailEditDialog";
 import TimelineItems from "@/components/elements/pages/editor/timeline/TimelineItems";
 import TimelineViewer from "@/components/elements/pages/editor/timeline/TimelineViewer";
+import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
@@ -27,6 +28,7 @@ import { Editors } from "@/models/Editors";
 import { Resources } from "@/models/Resources";
 import { Settings } from "@/models/Settings";
 import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
+import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 
 /*
@@ -40,7 +42,7 @@ interface Props extends ConfigurationProps {
 }
 
 const TimelineEditor: FC<Props> = (props: Props) => {
-
+	const locale = useLocale();
 	const workRangesCache = new Map<TimelineId, WorkRange>();
 
 	let hoverTimeline: AnyTimeline | null = null;
@@ -345,6 +347,18 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		// 将来追加した場合の安全弁
 		if (position !== NewTimelinePosition.Next) {
 			throw new Error(position);
+		}
+
+		if (!newTimeline.subject) {
+			const timelineSubjects = new Set(
+				sequenceTimelines.filter(a => a.kind === newTimeline.kind)
+					.map(a => a.subject)
+			);
+			const defaultSubject = newTimeline.kind === "group"
+				? locale.common.timeline.newGroupTimeline
+				: locale.common.timeline.newTaskTimeline
+				;
+			newTimeline.subject = Strings.toUniqueDefault(defaultSubject, timelineSubjects);
 		}
 
 		let parent: GroupTimeline;

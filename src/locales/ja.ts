@@ -68,6 +68,8 @@ const locale: Locale = {
 			total: "全タイムライン",
 			group: "グループ",
 			task: "タスク",
+			newGroupTimeline: "新規グループ",
+			newTaskTimeline: "新規タスク",
 		}
 	},
 

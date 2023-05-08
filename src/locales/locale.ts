@@ -57,6 +57,8 @@ export interface Locale {
 			total: string,
 			group: string,
 			task: string,
+			newGroupTimeline: string,
+			newTaskTimeline: string,
 		}
 	},
 
