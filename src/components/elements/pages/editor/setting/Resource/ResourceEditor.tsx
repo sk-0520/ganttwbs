@@ -3,8 +3,8 @@ import { useContext, MouseEvent, useState, FC } from "react";
 import GroupsEditor from "@/components/elements/pages/editor/setting/Resource/GroupEditor";
 import { useLocale } from "@/locales/locale";
 import { GroupSetting, SettingContext } from "@/models/data/context/SettingContext";
-import { IdFactory } from "@/models/IdFactory";
 import { GroupId } from "@/models/data/Setting";
+import { IdFactory } from "@/models/IdFactory";
 
 const ResourceEditor: FC = () => {
 	const locale = useLocale();

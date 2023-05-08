@@ -65,8 +65,8 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 		setNewMemberName("");
 	}
 
-	const handleRemoveMember = (member: MemberSetting) => {
-		const newMembers = members.filter(a => a.id !== member.id);
+	const handleRemoveMember = (memberId: MemberId) => {
+		const newMembers = members.filter(a => a.id !== memberId);
 		setMembers(group.members = sortMembers(newMembers));
 	};
 
@@ -159,10 +159,11 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 						{members.map(a =>
 							<MemberEditor
 								key={a.id}
-								member={a}
+								groupId={props.groupId}
+								memberId={a.id}
 								members={members}
 								updatedColors={updatedColors}
-								callbackRemoveMember={handleRemoveMember}
+								callbackRemoveMember={a => handleRemoveMember(a)}
 							/>
 						)}
 					</tbody>
