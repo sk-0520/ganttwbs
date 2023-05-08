@@ -1,4 +1,4 @@
-import { DragEvent, FC, useLayoutEffect, useMemo } from "react";
+import { DragEvent, FC, useEffect, useLayoutEffect, useMemo } from "react";
 import { ReactNode, useState } from "react";
 
 import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
@@ -63,12 +63,12 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const [hoverTimelineId, setHoverTimelineId] = useState<TimelineId>();
 	const [activeTimelineId, setActiveTimelineId] = useState<TimelineId>();
 	const [emphasisTimelineIds, setEmphasisTimelineIds] = useState<ReadonlyArray<TimelineId>>([]);
-	const [emphasisStore, /* nop */] = useState(createEmphasisStore(hoverTimelineId, activeTimelineId, emphasisTimelineIds));
+	const [emphasisDays, setEmphasisDays] = useState<ReadonlyArray<DateTime>>([]);
+	const [emphasisStore, setEmphasisStore] = useState(createEmphasisStore(hoverTimelineId, activeTimelineId, emphasisTimelineIds, emphasisDays));
 
 	const dynamicStyleNodes = useMemo(() => {
 		return renderDynamicStyle(props.configuration.design, props.editorData.setting.theme);
 	}, [props.configuration.design, props.editorData.setting.theme]);
-
 
 	//TODO: クソ重いっぽいんやけどどう依存解決してメモ化するのか分からんので枝葉から対応するのです
 
@@ -81,12 +81,16 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		updateRelations();
 	}, [sequenceTimelines]); // eslint-disable-line react-hooks/exhaustive-deps
 
+	useEffect(() => {
+		console.debug("setEmphasisStore");
+		setEmphasisStore(createEmphasisStore(hoverTimelineId, activeTimelineId, emphasisTimelineIds, emphasisDays));
+	}, [hoverTimelineId, activeTimelineId, emphasisTimelineIds, emphasisDays]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	function createEmphasisStore(activeTimelineId: TimelineId | undefined, hoverTimelineId: TimelineId | undefined, emphasisTimelineIds: ReadonlyArray<TimelineId>): EmphasisStore {
+	function createEmphasisStore(activeTimelineId: TimelineId | undefined, hoverTimelineId: TimelineId | undefined, emphasisTimelineIds: ReadonlyArray<TimelineId>, days: ReadonlyArray<DateTime>): EmphasisStore {
 		const result: EmphasisStore = {
 			setActiveTimeline: handleSetActiveTimeline,
 			setHoverTimeline: handleSetHoverTimeline,
-			setEmphasisTimelines: handleSetEmphasisTimelines,
+			setEmphasis: handleSetEmphasis,
 		};
 
 		return result;
@@ -190,9 +194,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		setActiveTimelineId(timelineId);
 	}
 
-	function handleSetEmphasisTimelines(timelineIds: ReadonlyArray<TimelineId>): void {
-		console.debug("emphasis", timelineIds);
+	function handleSetEmphasis(timelineIds: ReadonlyArray<TimelineId>, days: ReadonlyArray<DateTime>): void {
+		console.debug("emphasis", timelineIds, days);
 		setEmphasisTimelineIds(timelineIds);
+		setEmphasisDays(days);
 	}
 
 	function handleStartDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void {

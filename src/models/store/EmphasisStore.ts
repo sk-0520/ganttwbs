@@ -1,3 +1,4 @@
+import { DateTime } from "@/models/DateTime";
 import { TimelineId } from "@/models/data/Setting";
 
 /**
@@ -5,14 +6,18 @@ import { TimelineId } from "@/models/data/Setting";
  */
 export interface EmphasisStore {
 	/**
-	 * ホバー状態設定。
+	 * ライムラインホバー状態設定。
 	 * @param timelineId
 	 */
 	setHoverTimeline(timelineId: TimelineId | undefined): void;
 	/**
-	 * アクティブ状態設定。
+	 * ライムラインアクティブ状態設定。
 	 * @param timelineId
 	 */
 	setActiveTimeline(timelineId: TimelineId | undefined): void;
-	setEmphasisTimelines(timelineIds: ReadonlyArray<TimelineId>): void;
+	/**
+	 * ライムライン強調状態設定。
+	 * @param timelineIds
+	 */
+	setEmphasis(timelineIds: ReadonlyArray<TimelineId>, days: ReadonlyArray<DateTime>): void;
 }
