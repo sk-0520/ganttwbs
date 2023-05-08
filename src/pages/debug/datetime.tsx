@@ -47,6 +47,7 @@ const DebugDateTimeItem: FC<DebugDateTimeItemProps> = (props: DebugDateTimeItemP
 				{render("[cdate] add 3 months", d => DateTime.convert(Number(cdate(d.ticks).add(3, "months")), d.timeZone))}
 				{render("[cdate] add 6 months", d => DateTime.convert(Number(cdate(d.ticks).add(6, "months")), d.timeZone))}
 				{render("[cdate] add 12 months", d => DateTime.convert(Number(cdate(d.ticks).add(12, "months")), d.timeZone))}
+				{render("create add 13 month", d => DateTime.create(d.timeZone, d.year, d.month + 13, d.day, d.hour, d.minute, d.second, d.millisecond))}
 			</tbody>
 		</table>
 	);
