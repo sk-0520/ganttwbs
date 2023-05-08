@@ -170,16 +170,15 @@ function toContext(configuration: Configuration, setting: Setting): SettingConte
 			timeZone: timeZone,
 		},
 		groups: setting.groups.map(a => ({
-			key: IdFactory.createReactKey(),
+			id: a.id,
 			name: a.name,
-			members: a.members.map<MemberSetting>(b => ({
-				key: IdFactory.createReactKey(),
+			members: a.members.map(b => ({
 				id: b.id,
 				name: b.name,
 				color: Color.parse(b.color),
 				priceCost: b.price.cost,
 				priceSales: b.price.sales,
-			})).sort((a, b) => a.name.localeCompare(b.name))
+			} satisfies MemberSetting)).sort((a, b) => a.name.localeCompare(b.name))
 		})).sort((a, b) => a.name.localeCompare(b.name)),
 		calendar: {
 			range: {
@@ -307,6 +306,7 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 			},
 		},
 		groups: context.groups.map(a => ({
+			id: a.id,
 			name: a.name,
 			members: a.members.map(b => ({
 				id: b.id,

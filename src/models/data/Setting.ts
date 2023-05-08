@@ -30,6 +30,9 @@ const HolidayKindSchema = z.enum([
 ]);
 export type HolidayKind = z.infer<typeof HolidayKindSchema>;
 
+const GroupIdSchema = z.string();
+export type GroupId = z.infer<typeof GroupIdSchema>;
+
 const MemberIdSchema = z.string();
 export type MemberId = z.infer<typeof MemberIdSchema>;
 
@@ -203,6 +206,7 @@ const MemberSchema = z.object({
 export type Member = z.infer<typeof MemberSchema>;
 
 const GroupSchema = z.object({
+	id: GroupIdSchema,
 	name: z.string(),
 	members: z.array(MemberSchema),
 });

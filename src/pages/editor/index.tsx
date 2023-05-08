@@ -109,7 +109,7 @@ function createConfiguration(): Configuration {
 		tabIndex: {
 			application: 1,
 			setting: 0,
-			// application: 2,
+			// application: 3,
 			// setting: 1,
 		},
 

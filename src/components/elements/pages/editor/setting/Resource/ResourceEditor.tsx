@@ -3,6 +3,7 @@ import { useContext, MouseEvent, useState, FC } from "react";
 import GroupsEditor from "@/components/elements/pages/editor/setting/Resource/GroupEditor";
 import { useLocale } from "@/locales/locale";
 import { GroupSetting, SettingContext } from "@/models/data/context/SettingContext";
+import { GroupId } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
 
 const ResourceEditor: FC = () => {
@@ -23,8 +24,8 @@ const ResourceEditor: FC = () => {
 			return;
 		}
 
-		const newGroup = {
-			key: IdFactory.createReactKey(),
+		const newGroup: GroupSetting = {
+			id: IdFactory.createGroupId(),
 			name: groupName,
 			members: [],
 		};
@@ -32,8 +33,8 @@ const ResourceEditor: FC = () => {
 		setNewGroupName("");
 	}
 
-	function handleRemoveGroup(group: GroupSetting) {
-		const targetGroup = editGroups.find(a => a.key === group.key);
+	function handleRemoveGroup(groupId: GroupId) {
+		const targetGroup = editGroups.find(a => a.id === groupId);
 		if (!targetGroup) {
 			throw new Error();
 		}
@@ -55,8 +56,8 @@ const ResourceEditor: FC = () => {
 				{editGroups.map(a => {
 					return (
 						<GroupsEditor
-							key={a.name}
-							group={a}
+							key={a.id}
+							groupId={a.id}
 							callbackRemove={a => handleRemoveGroup(a)}
 						/>
 					);

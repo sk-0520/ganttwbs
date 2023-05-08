@@ -1,40 +1,44 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
 import { Color } from "@/models/Color";
-import { MemberSetting } from "@/models/data/context/SettingContext";
+import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { Prices } from "@/models/data/Prices";
-import { MemberId } from "@/models/data/Setting";
+import { GroupId, MemberId } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Strings } from "@/models/Strings";
 
 interface Props {
-	member: MemberSetting,
+	groupId: GroupId,
+	memberId: MemberId,
 	members: ReadonlyArray<Readonly<MemberSetting>>,
 	updatedColors: ReadonlyMap<MemberId, Color>;
-	callbackRemoveMember(member: MemberSetting): void;
+	callbackRemoveMember(member: MemberId): void;
 }
 
 const MemberEditor: FC<Props> = (props: Props) => {
 	const locale = useLocale();
+	const settingContext = useContext(SettingContext);
+
+	const member = getMember(props.groupId, props.memberId, settingContext);
 
 	const priceSetting = DefaultSettings.getPriceSetting();
 
-	const [name, setName] = useState(props.member.name);
-	const [priceCost, setPriceCost] = useState(props.member.priceCost);
-	const [priceSales, setPriceSales] = useState(props.member.priceSales);
-	const [monthCost, setMonthCost] = useState(props.member.priceCost * priceSetting.workingDays);
-	const [monthSales, setMonthSales] = useState(props.member.priceSales * priceSetting.workingDays);
+	const [name, setName] = useState(member.name);
+	const [priceCost, setPriceCost] = useState(member.priceCost);
+	const [priceSales, setPriceSales] = useState(member.priceSales);
+	const [monthCost, setMonthCost] = useState(member.priceCost * priceSetting.workingDays);
+	const [monthSales, setMonthSales] = useState(member.priceSales * priceSetting.workingDays);
 	const [displayRate, setDisplayRate] = useState("---%");
-	const [color, setColor] = useState(props.member.color);
+	const [color, setColor] = useState(member.color);
 
 	useEffect(() => {
-		const updatedColor = props.updatedColors.get(props.member.id);
+		const updatedColor = props.updatedColors.get(member.id);
 		if (updatedColor) {
-			setColor(props.member.color = updatedColor);
+			setColor(member.color = updatedColor);
 		}
-	}, [props.member, props.updatedColors]);
+	}, [member, props.updatedColors]);
 
 	useEffect(() => {
 		setMonthCost(priceCost * priceSetting.workingDays);
@@ -52,23 +56,23 @@ const MemberEditor: FC<Props> = (props: Props) => {
 	function handleChangeName(value: string) {
 		const memberNames = new Set(
 			props.members
-				.filter(a => a.id !== props.member.id)
+				.filter(a => a.id !== props.memberId)
 				.map(a => a.name)
 		);
 		const name = Strings.toUniqueDefault(value, memberNames);
-		setName(props.member.name = name);
+		setName(member.name = name);
 	}
 
 	function handleChangePriceCost(value: number) {
-		setPriceCost(props.member.priceCost = value);
+		setPriceCost(member.priceCost = value);
 	}
 
 	function handleChangePriceSales(value: number) {
-		setPriceSales(props.member.priceSales = value);
+		setPriceSales(member.priceSales = value);
 	}
 
 	function handleChangeTheme(color: Color): void {
-		setColor(props.member.color = color);
+		setColor(member.color = color);
 	}
 
 	return (
@@ -117,7 +121,7 @@ const MemberEditor: FC<Props> = (props: Props) => {
 			<td className="remove-cell">
 				<button
 					type="button"
-					onClick={ev => props.callbackRemoveMember(props.member)}
+					onClick={ev => props.callbackRemoveMember(props.memberId)}
 				>
 					{locale.common.command.remove}
 				</button>
@@ -127,3 +131,17 @@ const MemberEditor: FC<Props> = (props: Props) => {
 };
 
 export default MemberEditor;
+
+function getMember(groupId: GroupId, memberId: MemberId, context: SettingContext): MemberSetting {
+	const group = context.groups.find(a => a.id === groupId);
+	if (!group) {
+		throw new Error();
+	}
+
+	const result = group.members.find(a => a.id === memberId);
+	if (!result) {
+		throw new Error();
+	}
+
+	return result;
+}
