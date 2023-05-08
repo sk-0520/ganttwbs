@@ -23,6 +23,7 @@ import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
+import { Editors } from "@/models/Editors";
 import { Resources } from "@/models/Resources";
 import { Settings } from "@/models/Settings";
 import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
@@ -378,6 +379,9 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		}
 
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
+		setTimeout(() => {
+			Editors.scrollView(newTimeline, undefined);
+		}, 0);
 	}
 
 	function handleUpdateTimeline(timeline: AnyTimeline): void {
