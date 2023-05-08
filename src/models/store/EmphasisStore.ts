@@ -4,19 +4,15 @@ import { TimelineId } from "@/models/data/Setting";
  * 強調。
  */
 export interface EmphasisStore {
-	/** ホバー状態タイムライン */
-	readonly hoverItem: TimelineId | undefined;
-	/** アクティブ状態タイムライン */
-	readonly activeItem: TimelineId | undefined;
-
 	/**
 	 * ホバー状態設定。
-	 * @param timeline
+	 * @param timelineId
 	 */
-	setHoverTimeline(timeline: TimelineId | undefined): void;
+	setHoverTimeline(timelineId: TimelineId | undefined): void;
 	/**
 	 * アクティブ状態設定。
-	 * @param timeline
+	 * @param timelineId
 	 */
-	setActiveTimeline(timeline: TimelineId | undefined): void;
+	setActiveTimeline(timelineId: TimelineId | undefined): void;
+	setEmphasisTimelines(timelineIds: ReadonlyArray<TimelineId>): void;
 }

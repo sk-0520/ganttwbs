@@ -60,7 +60,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 	const [visibleDetailEditDialog, setVisibleDetailEditDialog] = useState<AnyTimeline>();
-	const [emphasisStore, setEmphasisStore] = useState(createEmphasisStore(undefined, undefined));
+	const [hoverTimelineId, setHoverTimelineId] = useState<TimelineId>();
+	const [activeTimelineId, setActiveTimelineId] = useState<TimelineId>();
+	const [emphasisTimelineIds, setEmphasisTimelineIds] = useState<ReadonlyArray<TimelineId>>([]);
+	const [emphasisStore, /* nop */] = useState(createEmphasisStore(hoverTimelineId, activeTimelineId, emphasisTimelineIds));
 
 	const dynamicStyleNodes = useMemo(() => {
 		return renderDynamicStyle(props.configuration.design, props.editorData.setting.theme);
@@ -79,13 +82,11 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	}, [sequenceTimelines]); // eslint-disable-line react-hooks/exhaustive-deps
 
 
-	function createEmphasisStore(activeTimelineId: TimelineId | undefined, hoverTimelineId: TimelineId | undefined): EmphasisStore {
+	function createEmphasisStore(activeTimelineId: TimelineId | undefined, hoverTimelineId: TimelineId | undefined, emphasisTimelineIds: ReadonlyArray<TimelineId>): EmphasisStore {
 		const result: EmphasisStore = {
-			activeItem: activeTimelineId,
-			hoverItem: hoverTimelineId,
-
 			setActiveTimeline: handleSetActiveTimeline,
 			setHoverTimeline: handleSetHoverTimeline,
+			setEmphasisTimelines: handleSetEmphasisTimelines,
 		};
 
 		return result;
@@ -181,18 +182,17 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleSetHoverTimeline(timelineId: TimelineId | undefined): void {
 		console.debug("hover", timelineId);
-		setEmphasisStore({
-			...emphasisStore,
-			hoverItem: timelineId,
-		});
+		setHoverTimelineId(timelineId);
 	}
 
 	function handleSetActiveTimeline(timelineId: TimelineId | undefined): void {
 		console.debug("active", timelineId);
-		setEmphasisStore({
-			...emphasisStore,
-			activeItem: timelineId,
-		});
+		setActiveTimelineId(timelineId);
+	}
+
+	function handleSetEmphasisTimelines(timelineIds: ReadonlyArray<TimelineId>): void {
+		console.debug("emphasis", timelineIds);
+		setEmphasisTimelineIds(timelineIds);
 	}
 
 	function handleStartDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void {
