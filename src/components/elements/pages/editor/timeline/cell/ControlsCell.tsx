@@ -15,6 +15,7 @@ interface Props {
 	addItem: (kindOrTimeline: TimelineKind | GroupTimeline) => void;
 	deleteItem: () => void;
 	showDetail(): void;
+	showTimeline(): void;
 }
 
 const ControlsCell: FC<Props> = (props: Props) => {
@@ -61,6 +62,11 @@ const ControlsCell: FC<Props> = (props: Props) => {
 	function handleShowDetail() {
 		handleHideControls();
 		props.showDetail();
+	}
+
+	function handleShowTimeline() {
+		handleHideControls();
+		props.showTimeline();
 	}
 
 	return (
@@ -186,7 +192,17 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										/>
 									</button>
 								</td>
-								<td className="col-cell" />
+								<td className="col-cell">
+									<button
+										className="simple"
+										onClick={_ => handleShowTimeline()}
+									>
+										<IconLabel
+											kind={IconKind.MoveTarget}
+											label={locale.pages.editor.timeline.timelines.controls.others.show}
+										/>
+									</button>
+								</td>
 								<td className="col-cell">
 									<button
 										className="simple"
@@ -195,7 +211,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										<IconLabel
 											kind={IconKind.Remove}
 											label={locale.common.command.remove}
-											/>
+										/>
 									</button>
 								</td>
 							</tr>

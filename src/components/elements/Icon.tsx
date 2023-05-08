@@ -28,6 +28,7 @@ export const enum IconKind {
 	MoveDown,
 	MovePrev,
 	MoveNext,
+	MoveTarget,
 
 	NavigatePrev,
 	NavigateNext,
@@ -69,6 +70,7 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.MoveDown]: (props) => <Md.MdArrowDownward {...convertParameter(props)} />,
 	[IconKind.MovePrev]: (props) => <Md.MdArrowBack {...convertParameter(props)} />,
 	[IconKind.MoveNext]: (props) => <Md.MdArrowForward {...convertParameter(props)} />,
+	[IconKind.MoveTarget]: (props) => <Md.MdKeyboardDoubleArrowRight {...convertParameter(props)} />,
 
 	[IconKind.NavigatePrev]: (props) => <Md.MdNavigateBefore {...convertParameter(props)} />,
 	[IconKind.NavigateNext]: (props) => <Md.MdNavigateNext {...convertParameter(props)} />,

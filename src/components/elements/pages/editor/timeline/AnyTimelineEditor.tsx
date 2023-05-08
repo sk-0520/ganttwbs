@@ -23,6 +23,7 @@ import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline, GroupTimeline, Progress, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
+import { Editors } from "@/models/Editors";
 import { Settings } from "@/models/Settings";
 import { MoveDirection } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
@@ -166,6 +167,16 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleShowDetail() {
 		props.timelineStore.startDetailEdit(props.currentTimeline);
+	}
+
+	function handleShowTimeline(): void {
+		let date: DateTime | undefined = undefined;
+		const workRange = props.timelineStore.workRanges.get(props.currentTimeline.id);
+		if (workRange && WorkRanges.maybeSuccessWorkRange(workRange)) {
+			date = workRange.begin;
+		}
+
+		Editors.scrollView(props.currentTimeline.id, date);
 	}
 
 	function handleChangeMember(memberGroupPair: MemberGroupPair | undefined): void {
@@ -434,6 +445,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				addItem={handleControlAddItem}
 				deleteItem={handleControlDeleteItem}
 				showDetail={handleShowDetail}
+				showTimeline={handleShowTimeline}
 			/>
 		</TimelineHeaderRow >
 	);

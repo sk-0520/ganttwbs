@@ -220,6 +220,7 @@ const locale: Locale = {
 						},
 						others: {
 							title: "その他",
+							show: "表示",
 							setting: "詳細設定",
 						},
 					}

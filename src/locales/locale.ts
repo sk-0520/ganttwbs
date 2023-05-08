@@ -221,6 +221,7 @@ export interface Locale {
 						},
 						others: {
 							title: string,
+							show: string,
 							setting: string,
 						},
 					}
