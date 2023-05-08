@@ -17,6 +17,7 @@ import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { EmphasisStoreProps } from "@/models/data/props/EmphasisStoreProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -30,7 +31,7 @@ import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps, EmphasisStoreProps {
 	currentTimeline: AnyTimeline;
 	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
@@ -301,6 +302,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			draggingTimeline={props.draggingTimeline}
 			timelineStore={props.timelineStore}
 			level={timelineIndex.level}
+			emphasisStore={props.emphasisStore}
 		>
 			<IdCell
 				selectingId={selectingId}

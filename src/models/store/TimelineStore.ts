@@ -33,11 +33,6 @@ export interface TimelineStore {
 	/** 日に対する何かしらの情報(情報がある時点で死んでる) */
 	readonly dayInfos: ReadonlyMap<DateTimeTicks, DayInfo>;
 
-	/** ホバー状態タイムライン */
-	readonly hoverItem: AnyTimeline | null;
-	/** アクティブ状態タイムライン */
-	readonly activeItem: AnyTimeline | null;
-
 	/**
 	 * タイムラインの表示上IDを取得。
 	 */
@@ -76,17 +71,6 @@ export interface TimelineStore {
 	 * @param timeline
 	 */
 	removeTimeline(timeline: AnyTimeline): void;
-
-	/**
-	 * ホバー状態設定。
-	 * @param timeline
-	 */
-	setHoverTimeline(timeline: AnyTimeline | null): void;
-	/**
-	 * アクティブ状態設定。
-	 * @param timeline
-	 */
-	setActiveTimeline(timeline: AnyTimeline | null): void;
 
 	/**
 	 * D&D処理を開始

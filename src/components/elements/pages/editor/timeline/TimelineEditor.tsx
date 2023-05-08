@@ -27,6 +27,7 @@ import { Designs } from "@/models/Designs";
 import { Editors } from "@/models/Editors";
 import { Resources } from "@/models/Resources";
 import { Settings } from "@/models/Settings";
+import { EmphasisStore } from "@/models/store/EmphasisStore";
 import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
@@ -45,9 +46,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 	const workRangesCache = new Map<TimelineId, WorkRange>();
 
-	let hoverTimeline: AnyTimeline | null = null;
-	let activeTimeline: AnyTimeline | null = null;
-
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
 	}, [props.editorData.setting]);
@@ -62,6 +60,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 	const [visibleDetailEditDialog, setVisibleDetailEditDialog] = useState<AnyTimeline>();
+	const [emphasisStore, setEmphasisStore] = useState(createEmphasisStore(undefined, undefined));
 
 	const dynamicStyleNodes = useMemo(() => {
 		return renderDynamicStyle(props.configuration.design, props.editorData.setting.theme);
@@ -78,6 +77,19 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	useLayoutEffect(() => {
 		updateRelations();
 	}, [sequenceTimelines]); // eslint-disable-line react-hooks/exhaustive-deps
+
+
+	function createEmphasisStore(activeTimelineId: TimelineId | undefined, hoverTimelineId: TimelineId | undefined): EmphasisStore {
+		const result: EmphasisStore = {
+			activeItem: activeTimelineId,
+			hoverItem: hoverTimelineId,
+
+			setActiveTimeline: handleSetActiveTimeline,
+			setHoverTimeline: handleSetHoverTimeline,
+		};
+
+		return result;
+	}
 
 	function createTimelineStore(sequenceTimelines: ReadonlyArray<AnyTimeline>, totalTimelineMap: ReadonlyMap<TimelineId, AnyTimeline>, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
 
@@ -101,9 +113,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			workRanges: workRangesCache,
 			dayInfos: dayInfos,
 
-			hoverItem: hoverTimeline,
-			activeItem: activeTimeline,
-
 			calcReadableTimelineId: handleCalcReadableTimelineId,
 			searchBeforeTimeline: handleSearchBeforeTimeline,
 
@@ -112,9 +121,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			updateTimeline: handleUpdateTimeline,
 			moveTimeline: handleMoveTimeline,
 			removeTimeline: handleRemoveTimeline,
-
-			setHoverTimeline: handleSetHoverTimeline,
-			setActiveTimeline: handleSetActiveTimeline,
 
 			startDragTimeline: handleStartDragTimeline,
 			startDetailEdit: handleStartDetailEdit,
@@ -173,54 +179,20 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}
 
-	function handleSetPointerTimeline(timeline: AnyTimeline | null, property: "isHover" | "isActive"): void {
-		const changedItems = new Map<TimelineId, TimelineItem>();
-
-		const currentTimeline = property === "isHover"
-			? hoverTimeline
-			: activeTimeline
-			;
-
-		if (currentTimeline && currentTimeline?.id !== timeline?.id) {
-			changedItems.set(currentTimeline.id, {
-				timeline: currentTimeline,
-				[property]: false,
-			});
-		}
-
-		if (timeline) {
-			changedItems.set(timeline.id, {
-				timeline: timeline,
-				[property]: true,
-			});
-		}
-
-		if (property === "isHover") {
-			hoverTimeline = timeline;
-		} else {
-			activeTimeline = timeline;
-		}
-
-		const suppress = false;
-		if (suppress) {
-			const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
-			const store = createTimelineStore(sequenceTimelines, timelineMap, changedItems);
-			setTimelineStore(store);
-		}
+	function handleSetHoverTimeline(timelineId: TimelineId | undefined): void {
+		console.debug("hover", timelineId);
+		setEmphasisStore({
+			...emphasisStore,
+			hoverItem: timelineId,
+		});
 	}
 
-	function handleSetHoverTimeline(timeline: AnyTimeline | null): void {
-		handleSetPointerTimeline(
-			timeline,
-			"isHover"
-		);
-	}
-
-	function handleSetActiveTimeline(timeline: AnyTimeline | null): void {
-		handleSetPointerTimeline(
-			timeline,
-			"isActive"
-		);
+	function handleSetActiveTimeline(timelineId: TimelineId | undefined): void {
+		console.debug("active", timelineId);
+		setEmphasisStore({
+			...emphasisStore,
+			activeItem: timelineId,
+		});
 	}
 
 	function handleStartDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void {
@@ -577,6 +549,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				resourceInfo={resourceInfo}
 				calendarInfo={calendarInfo}
 				timelineStore={timelineStore}
+				emphasisStore={emphasisStore}
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
@@ -584,6 +557,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				resourceInfo={resourceInfo}
 				calendarInfo={calendarInfo}
 				timelineStore={timelineStore}
+				emphasisStore={emphasisStore}
 			/>
 			{/* <DrawArea
 				configuration={props.configuration}
