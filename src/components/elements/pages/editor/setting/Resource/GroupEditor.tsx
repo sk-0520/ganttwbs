@@ -5,22 +5,24 @@ import MemberEditor from "@/components/elements/pages/editor/setting/Resource/Me
 import { useLocale } from "@/locales/locale";
 import { Color } from "@/models/Color";
 import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
-import { MemberId } from "@/models/data/Setting";
+import { GroupId, MemberId } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
 import { Strings } from "@/models/Strings";
 
 interface Props {
-	group: GroupSetting;
-	callbackRemove(group: GroupSetting): void;
+	groupId: GroupId;
+	callbackRemove(groupId: GroupId): void;
 }
 
 const GroupsEditor: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
-	const [groupName, setGroupName] = useState(props.group.name);
-	const [members, setMembers] = useState(sortMembers(props.group.members));
+	const group = getGroup(props.groupId, settingContext);
+
+	const [groupName, setGroupName] = useState(group.name);
+	const [members, setMembers] = useState(sortMembers(group.members));
 	const [updatedColors, setUpdatedColors] = useState<Map<MemberId, Color>>(new Map());
 	const [newMemberName, setNewMemberName] = useState("");
 	const [visibleDialog, setVisibleDialog] = useState(false);
@@ -28,11 +30,11 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 	function handleChangeName(value: string): void {
 		const groupNames = new Set(
 			settingContext.groups
-				.filter(a => a !== props.group)
+				.filter(a => a.id !== props.groupId)
 				.map(a => a.name)
 		);
 		const name = Strings.toUniqueDefault(value, groupNames);
-		setGroupName(props.group.name = name);
+		setGroupName(group.name = name);
 	}
 
 	function handleStartChoiceColor(): void {
@@ -45,7 +47,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 			return;
 		}
 
-		if (props.group.members.some(a => a.name === name)) {
+		if (group.members.some(a => a.name === name)) {
 			return;
 		}
 
@@ -59,13 +61,13 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 			priceSales: priceSetting.price.sales,
 		};
 
-		setMembers(props.group.members = sortMembers([...members, newMember]));
+		setMembers(group.members = sortMembers([...members, newMember]));
 		setNewMemberName("");
 	}
 
 	const handleRemoveMember = (member: MemberSetting) => {
 		const newMembers = members.filter(a => a.id !== member.id);
-		setMembers(props.group.members = sortMembers(newMembers));
+		setMembers(group.members = sortMembers(newMembers));
 	};
 
 	return (
@@ -94,7 +96,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 					<li className="remove">
 						<button
 							type="button"
-							onClick={ev => props.callbackRemove(props.group)}
+							onClick={ev => props.callbackRemove(props.groupId)}
 						>
 							{locale.common.command.remove}
 						</button>
@@ -188,7 +190,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 				</table>
 				{visibleDialog && (
 					<GroupColorsDialog
-						group={props.group}
+						group={group}
 						callbackClosed={a => {
 							if (a) {
 								setUpdatedColors(a);
@@ -203,6 +205,15 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 };
 
 export default GroupsEditor;
+
+function getGroup(groupId: GroupId, context: SettingContext): GroupSetting {
+	const result = context.groups.find(a => a.id === groupId);
+	if (!result) {
+		throw new Error();
+	}
+
+	return result;
+}
 
 function sortMemberCore(a: Readonly<MemberSetting>, b: Readonly<MemberSetting>): number {
 	return a.name.localeCompare(b.name);

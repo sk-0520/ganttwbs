@@ -4,6 +4,7 @@ import GroupsEditor from "@/components/elements/pages/editor/setting/Resource/Gr
 import { useLocale } from "@/locales/locale";
 import { GroupSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { IdFactory } from "@/models/IdFactory";
+import { GroupId } from "@/models/data/Setting";
 
 const ResourceEditor: FC = () => {
 	const locale = useLocale();
@@ -32,8 +33,8 @@ const ResourceEditor: FC = () => {
 		setNewGroupName("");
 	}
 
-	function handleRemoveGroup(group: GroupSetting) {
-		const targetGroup = editGroups.find(a => a.id === group.id);
+	function handleRemoveGroup(groupId: GroupId) {
+		const targetGroup = editGroups.find(a => a.id === groupId);
 		if (!targetGroup) {
 			throw new Error();
 		}
@@ -56,7 +57,7 @@ const ResourceEditor: FC = () => {
 					return (
 						<GroupsEditor
 							key={a.id}
-							group={a}
+							groupId={a.id}
 							callbackRemove={a => handleRemoveGroup(a)}
 						/>
 					);
