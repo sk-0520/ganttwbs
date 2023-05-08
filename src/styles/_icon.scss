@@ -1,5 +1,5 @@
-.icon {
-	vertical-align: middle;
+*:has(> .icon > svg) * {
+	vertical-align: baseline;
 }
 
 .icon-label-wrapper {

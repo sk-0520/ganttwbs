@@ -63,7 +63,7 @@ const EditorPage: NextPage = () => {
 							<Tab>
 								{locale.pages.editor.tabs.timeline}
 							</Tab>
-							<Tab>
+							<Tab disabled>
 								{locale.pages.editor.tabs.analytics}
 							</Tab>
 							<Tab>
