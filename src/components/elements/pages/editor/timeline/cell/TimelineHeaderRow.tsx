@@ -20,7 +20,6 @@ interface Props extends TimelineStoreProps, EmphasisStoreProps {
 const TimelineHeaderRow: FC<Props> = (props: Props) => {
 
 	const [dropEventClassName, setDropEventClassName] = useState("");
-	const [mouseEnterClassName/*, setMouseEnterClassName*/] = useState("");
 
 	useEffect(() => {
 		if (!props.draggingTimeline) {
@@ -52,15 +51,9 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 					props.currentTimeline.kind,
 					"timeline-cell timeline-header",
 					"_dynamic_programmable_cell_height",
-					mouseEnterClassName,
 					dropEventClassName,
 					{
 						["_dynamic_programmable_groups_level-" + props.level.toString()]: Settings.maybeGroupTimeline(props.currentTimeline),
-						"hover":
-							(props.emphasisStore.hoverItem === props.currentTimeline.id)
-							||
-							(Settings.maybeTaskTimeline(props.currentTimeline) && props.selectingBeginDate?.timeline.id === props.currentTimeline.id)
-						,
 						"dragging": props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id,
 						"selected-previous": props.selectingBeginDate?.previous.has(props.currentTimeline.id),
 					}
