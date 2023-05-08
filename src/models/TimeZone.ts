@@ -1,3 +1,4 @@
+import { Browsers } from "@/models/Browsers";
 import { ParseResult, ResultFactory } from "@/models/data/Result";
 import { TimeSpan } from "@/models/TimeSpan";
 
@@ -30,6 +31,8 @@ export abstract class TimeZone {
 	 * @returns
 	 */
 	public static getClientTimeZone(): TimeZone {
+		Browsers.enforceRunning();
+
 		const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 		if (tz) {
 			return new IanaTimeZone(tz);

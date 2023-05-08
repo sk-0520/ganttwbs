@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { NextRouter, useRouter } from "next/router";
-import { useId } from "react";
+import { useEffect, useId, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Layout from "@/components/layout/Layout";
@@ -30,15 +30,22 @@ interface Input {
 	mode: "empty" | "sample";
 }
 
+const defaultDayCount = 120;
+
 const NewPage: NextPage = () => {
 	const locale = useLocale();
+	const [timeZone, setTimeZone] = useState<TimeZone>(TimeZone.utc);
+	const [fromDate, setFromDate] = useState<DateTime>(DateTime.today(timeZone));
 	const router = useRouter();
 	const baseId = useId();
 	const { register, handleSubmit, } = useForm<Input>();
 
-	const timeZone = TimeZone.getClientTimeZone();
-	const fromDate = DateTime.today(timeZone);
-	const defaultDayCount = 120;
+	useEffect(() => {
+		const timeZone = TimeZone.getClientTimeZone();
+		const date = DateTime.today(timeZone);
+		setTimeZone(timeZone);
+		setFromDate(date);
+	}, []);
 
 	const id = {
 		title: `${baseId}-title`,
@@ -46,7 +53,6 @@ const NewPage: NextPage = () => {
 		rangeBeginMonth: `${baseId}-rangeBeginMonth`,
 		rangeDayCount: `${baseId}-rangeMonthCount`,
 	} as const;
-
 
 	return (
 		<Layout
