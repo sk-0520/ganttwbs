@@ -76,7 +76,7 @@ export interface Locale {
 
 				beginYear: string,
 				beginMonth: string,
-				monthCount: string,
+				dayCount: string,
 			},
 
 			mode: {

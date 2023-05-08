@@ -26,7 +26,7 @@ interface Input {
 	title: string;
 	rangeBeginYear: number,
 	rangeBeginMonth: number,
-	rangeMonthCount: number,
+	rangeDayCount: number,
 	mode: "empty" | "sample";
 }
 
@@ -38,13 +38,13 @@ const NewPage: NextPage = () => {
 
 	const timeZone = TimeZone.getClientTimeZone();
 	const fromDate = DateTime.today(timeZone);
-	const defaultMonthCount = 6;
+	const defaultDayCount = 120;
 
 	const id = {
 		title: `${baseId}-title`,
 		rangeBeginYear: `${baseId}-rangeBeginYear`,
 		rangeBeginMonth: `${baseId}-rangeBeginMonth`,
-		rangeMonthCount: `${baseId}-rangeMonthCount`,
+		rangeDayCount: `${baseId}-rangeMonthCount`,
 	} as const;
 
 
@@ -123,17 +123,17 @@ const NewPage: NextPage = () => {
 								</tr>
 								<tr>
 									<th>
-										<label htmlFor={id.rangeMonthCount}>
-											{locale.pages.new.range.monthCount}
+										<label htmlFor={id.rangeDayCount}>
+											{locale.pages.new.range.dayCount}
 										</label>
 									</th>
 									<td>
 										<input
-											id={id.rangeMonthCount}
+											id={id.rangeDayCount}
 											type="number"
 											min={1}
-											defaultValue={defaultMonthCount}
-											{...register("rangeMonthCount", {
+											defaultValue={defaultDayCount}
+											{...register("rangeDayCount", {
 												valueAsNumber: true,
 												required: true,
 											})}
@@ -218,7 +218,7 @@ function convertDateRange(data: Input, timeZone: TimeZone): DateRange {
 	const begin = DateTime.create(timeZone, data.rangeBeginYear, data.rangeBeginMonth);
 	const result: DateRange = {
 		begin: begin,
-		end: begin.add(data.rangeMonthCount, "month"),
+		end: begin.add(data.rangeDayCount, "day"),
 	};
 
 	return result;

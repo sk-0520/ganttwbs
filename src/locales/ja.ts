@@ -86,7 +86,7 @@ const locale: Locale = {
 
 				beginYear: "開始年",
 				beginMonth: "開始月",
-				monthCount: "月数",
+				dayCount: "日数",
 			},
 
 			mode: {
