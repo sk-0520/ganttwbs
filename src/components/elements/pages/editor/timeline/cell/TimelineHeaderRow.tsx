@@ -39,9 +39,9 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 			props.emphasisStore.setHoverTimeline(props.currentTimeline.id);
 		}
 	}
-	function handleMouseLeave() {
-		props.emphasisStore.setHoverTimeline(undefined);
-	}
+	// function handleMouseLeave() {
+	// 	props.emphasisStore.setHoverTimeline(undefined);
+	// }
 
 	return (
 		<tr
@@ -64,7 +64,7 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 			onDragLeave={ev => props.draggingTimeline?.onDragLeave(ev, props.currentTimeline, handleDragLeave)}
 			onDrop={ev => props.draggingTimeline?.onDrop(ev, props.currentTimeline)}
 			onMouseEnter={handleMouseEnter}
-			onMouseLeave={handleMouseLeave}
+			// onMouseLeave={handleMouseLeave}
 		>
 			{props.children}
 		</tr>
