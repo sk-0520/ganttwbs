@@ -18,6 +18,14 @@ export abstract class IdFactory {
 	}
 
 	/**
+	 * グループID生成。
+	 * @returns
+	 */
+	public static createGroupId(): MemberId {
+		return v4();
+	}
+
+	/**
 	 * メンバーID生成。
 	 * @returns
 	 */

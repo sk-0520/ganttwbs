@@ -1,14 +1,13 @@
 import { createContext } from "react";
 
 import { Color } from "@/models/Color";
-import { DateOnly, MemberId, WeekDay } from "@/models/data/Setting";
+import { DateOnly, GroupId, MemberId, WeekDay } from "@/models/data/Setting";
 import { TimeZone } from "@/models/TimeZone";
 
 
 export type UUID = string;
 
 export interface MemberSetting {
-	key: UUID;
 	id: MemberId;
 	name: string;
 	color: Color;
@@ -24,7 +23,7 @@ export interface GeneralSetting {
 }
 
 export interface GroupSetting {
-	key: UUID;
+	id: GroupId;
 	name: string;
 	members: Array<MemberSetting>;
 }

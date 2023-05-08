@@ -52,7 +52,6 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 		const priceSetting = DefaultSettings.getPriceSetting();
 
 		const newMember: MemberSetting = {
-			key: IdFactory.createReactKey(),
 			id: IdFactory.createMemberId(),
 			name: name,
 			color: Color.random(),
@@ -157,7 +156,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 					<tbody>
 						{members.map(a =>
 							<MemberEditor
-								key={a.key}
+								key={a.id}
 								member={a}
 								members={members}
 								updatedColors={updatedColors}

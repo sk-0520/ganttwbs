@@ -15,6 +15,7 @@ import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
+import { IdFactory } from "@/models/IdFactory";
 
 interface DateRange {
 	begin: DateTime;
@@ -316,6 +317,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 	};
 
 	setting.groups.push({
+		id: IdFactory.createGroupId(),
 		name: "1.作業班",
 		members: [
 			members.wa,
@@ -323,6 +325,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 		],
 	});
 	setting.groups.push({
+		id: IdFactory.createGroupId(),
 		name: "2.検証班",
 		members: [
 			members.va,
@@ -330,6 +333,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 		],
 	});
 	setting.groups.push({
+		id: IdFactory.createGroupId(),
 		name: "3.管理班",
 		members: [
 			members.ma,

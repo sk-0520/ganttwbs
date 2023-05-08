@@ -23,8 +23,8 @@ const ResourceEditor: FC = () => {
 			return;
 		}
 
-		const newGroup = {
-			key: IdFactory.createReactKey(),
+		const newGroup: GroupSetting = {
+			id: IdFactory.createGroupId(),
 			name: groupName,
 			members: [],
 		};
@@ -33,7 +33,7 @@ const ResourceEditor: FC = () => {
 	}
 
 	function handleRemoveGroup(group: GroupSetting) {
-		const targetGroup = editGroups.find(a => a.key === group.key);
+		const targetGroup = editGroups.find(a => a.id === group.id);
 		if (!targetGroup) {
 			throw new Error();
 		}
@@ -55,7 +55,7 @@ const ResourceEditor: FC = () => {
 				{editGroups.map(a => {
 					return (
 						<GroupsEditor
-							key={a.name}
+							key={a.id}
 							group={a}
 							callbackRemove={a => handleRemoveGroup(a)}
 						/>
