@@ -40,10 +40,9 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 			props.emphasisStore.setHoverTimeline(props.currentTimeline.id);
 		}
 	}
-	// function handleMouseLeave() {
-	// 	props.timelineStore.setHoverTimeline(null);
-	// 	//setMouseEnterClassName("");
-	// }
+	function handleMouseLeave() {
+		props.emphasisStore.setHoverTimeline(undefined);
+	}
 
 	return (
 		<tr
@@ -57,7 +56,11 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 					dropEventClassName,
 					{
 						["_dynamic_programmable_groups_level-" + props.level.toString()]: Settings.maybeGroupTimeline(props.currentTimeline),
-						"hover": Settings.maybeTaskTimeline(props.currentTimeline) && props.selectingBeginDate?.timeline.id === props.currentTimeline.id,
+						"hover":
+							(props.emphasisStore.hoverItem === props.currentTimeline.id)
+							||
+							(Settings.maybeTaskTimeline(props.currentTimeline) && props.selectingBeginDate?.timeline.id === props.currentTimeline.id)
+						,
 						"dragging": props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id,
 						"selected-previous": props.selectingBeginDate?.previous.has(props.currentTimeline.id),
 					}
@@ -68,6 +71,7 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 			onDragLeave={ev => props.draggingTimeline?.onDragLeave(ev, props.currentTimeline, handleDragLeave)}
 			onDrop={ev => props.draggingTimeline?.onDrop(ev, props.currentTimeline)}
 			onMouseEnter={handleMouseEnter}
+			onMouseLeave={handleMouseLeave}
 		>
 			{props.children}
 		</tr>
