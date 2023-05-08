@@ -220,7 +220,35 @@ export class DateTime {
 				throw new TypeError();
 			}
 
-			date = this.date.add(diff, unit);
+			// 実環境だと年/月指定がなんでか動かん 原因解明より動けばいい方針
+			switch (unit) {
+				case "month":
+					return DateTime.create(
+						this.timeZone,
+						this.year,
+						this.month + diff,
+						this.day,
+						this.hour,
+						this.minute,
+						this.second,
+						this.millisecond,
+					);
+
+				case "year":
+					return DateTime.create(
+						this.timeZone,
+						this.year + diff,
+						this.month,
+						this.day,
+						this.hour,
+						this.minute,
+						this.second,
+						this.millisecond,
+					);
+
+				default:
+					date = this.date.add(diff, unit);
+			}
 		}
 
 		return new DateTime(date, this.timeZone);
