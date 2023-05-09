@@ -1,5 +1,6 @@
 import { FC, useEffect, useMemo, useState } from "react";
 
+import ColumnHighlight from "@/components/elements/pages/editor/timeline/highlight/ColumnHighlight";
 import RowHighlight from "@/components/elements/pages/editor/timeline/highlight/RowHighlight";
 import { Charts } from "@/models/Charts";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
@@ -15,11 +16,13 @@ interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, Hig
 const HighlightArea: FC<Props> = (props: Props) => {
 
 	const [crossHeaderWidth, setCrossHeaderWidth] = useState(0);
+	const [crossHeaderHeight, setCrossHeaderHeight] = useState(0);
 
 	useEffect(() => {
 		const crossHeaderElement = document.getElementById("cross-header");
 		if (crossHeaderElement) {
 			setCrossHeaderWidth(crossHeaderElement.clientWidth);
+			setCrossHeaderHeight(crossHeaderElement.clientHeight);
 		}
 	}, []);
 
@@ -29,6 +32,33 @@ const HighlightArea: FC<Props> = (props: Props) => {
 
 	return (
 		<div id="highlight-area">
+			{props.highlightValueStore.highlightTimelineIds.map(a => {
+				return (
+					<RowHighlight
+						key={a}
+						configuration={props.configuration}
+						mode="highlight"
+						timelineId={a}
+						areaData={areaData}
+						crossHeaderWidth={crossHeaderWidth}
+						timelineStore={props.timelineStore}
+					/>
+				);
+			})}
+			{props.highlightValueStore.highlightDays.map(a => {
+				return (
+					<ColumnHighlight
+						key={a.ticks}
+						configuration={props.configuration}
+						mode="highlight"
+						date={a}
+						areaData={areaData}
+						crossHeaderWidth={crossHeaderWidth}
+						crossHeaderHeight={crossHeaderHeight}
+						calendarInfo={props.calendarInfo}
+					/>
+				);
+			})}
 			{props.highlightValueStore.hoverTimelineId && (
 				<RowHighlight
 					configuration={props.configuration}
@@ -49,19 +79,7 @@ const HighlightArea: FC<Props> = (props: Props) => {
 					timelineStore={props.timelineStore}
 				/>
 			)}
-			{props.highlightValueStore.highlightTimelineIds.map(a => {
-				return (
-					<RowHighlight
-						key={a}
-						configuration={props.configuration}
-						mode="highlight"
-						timelineId={a}
-						areaData={areaData}
-						crossHeaderWidth={crossHeaderWidth}
-						timelineStore={props.timelineStore}
-					/>
-				);
-			})}
+
 		</div>
 	);
 };

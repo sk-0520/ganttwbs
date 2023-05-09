@@ -2,11 +2,11 @@
 @use "./mixin/control" as control;
 @use "./mixin/box" as box;
 
-$cross-header-z-index: 6;
-$days-header-z-index: 3;
+$cross-header-z-index: 10;
+$days-header-z-index: 8;
+$highlight-area-z-index: 6;
 $timelines-z-index: 4;
 $viewer-z-index: 2;
-$highlight-area-z-index: 5;
 
 #timeline {
 	$timeline-header-id-width: 14ch;
@@ -392,6 +392,7 @@ $highlight-area-z-index: 5;
 				z-index: $timelines-z-index + 1;
 
 				.tools {
+					//z-index: $highlight-area-z-index + 1; //うごかね
 					outline: $prompt-outline-width $prompt-background-color solid;
 					height: fit-content;
 					background-color: $prompt-background-color;
@@ -630,51 +631,11 @@ $highlight-area-z-index: 5;
 	}
 
 	#highlight-area {
-		position: absolute;
-		top: $app-header-height;
-		left: 0;
-		z-index: $highlight-area-z-index;
-
-		pointer-events: none;
-
-		//background-color: rgba(255, 0, 0, 0.295);
-
-		.highlight-row {
-			position: absolute;
-
-			&.active {
-				border-bottom: 2px solid red;
-			}
-			&.hover {
-				border-bottom: 2px solid coral;
-			}
-			&.highlight {
-				$base-color: yellow;
-
-				background: rgba($base-color, 0.5);
-				animation: keyframes 3s ease forwards;
-
-				@keyframes keyframes {
-					0% {
-						background-color: rgba($base-color, 0.7);
-					}
-					10% {
-						background-color: rgba($base-color, 0.5);
-					}
-					100% {
-						background-color: rgba($base-color, 0);
-					}
-				}
-			}
-		}
-
-		.highlight-column {
-			$base-color: yellow;
-
+		@mixin highlight-animation($animation-name, $base-color) {
 			background: rgba($base-color, 0.5);
-			animation: keyframes 3s ease forwards;
+			animation: #{$animation-name} 3s ease forwards;
 
-			@keyframes keyframes {
+			@keyframes #{$animation-name} {
 				0% {
 					background-color: rgba($base-color, 0.7);
 				}
@@ -684,6 +645,37 @@ $highlight-area-z-index: 5;
 				100% {
 					background-color: rgba($base-color, 0);
 				}
+			}
+		}
+
+		position: absolute;
+		top: $app-header-height;
+		left: 0;
+		z-index: $highlight-area-z-index;
+
+		pointer-events: none;
+
+		.highlight-row {
+			position: absolute;
+			left: 0;
+
+			&.active {
+				border-bottom: 2px solid red;
+			}
+			&.hover {
+				border-bottom: 2px solid coral;
+			}
+			&.highlight {
+				@include highlight-animation("row", yellow);
+			}
+		}
+
+		.highlight-column {
+			position: absolute;
+			top: 0;
+
+			&.highlight {
+				@include highlight-animation("column", yellow);
 			}
 		}
 	}

@@ -5,6 +5,7 @@ import { Calendars } from "@/models/Calendars";
 import { DayInfo } from "@/models/data/DayInfo";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -14,7 +15,6 @@ import { Days } from "@/models/Days";
 import { Editors } from "@/models/Editors";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
-import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 
 interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, TimelineStoreProps, HighlightCallbackStoreProps {
 	readonly date: DateTime;
