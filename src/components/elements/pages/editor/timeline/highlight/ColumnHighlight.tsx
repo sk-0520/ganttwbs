@@ -39,7 +39,7 @@ const RowHighlight: FC<Props> = (props: Props) => {
 				)
 			}
 			style={style}
-		>{props.date.toString()}</div>
+		/>
 	);
 };
 

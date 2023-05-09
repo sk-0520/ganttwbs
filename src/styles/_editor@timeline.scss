@@ -2,6 +2,7 @@
 @use "./mixin/control" as control;
 @use "./mixin/box" as box;
 
+// z-index もうだめかも・・・
 $cross-header-z-index: 10;
 $days-header-z-index: 8;
 $highlight-area-z-index: 6;
