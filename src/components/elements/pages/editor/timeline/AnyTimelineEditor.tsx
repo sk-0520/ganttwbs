@@ -52,8 +52,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const [progress, setProgress] = useState(0);
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
 	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
-
-	//TODO: 依存関係が腐ってるよ！
+	const [visibleBeginDateInput, setVisibleBeginDateInput] = useState(false);
 
 	useEffect(() => {
 		const timelineItem = props.timelineStore.changedItemMap.get(props.currentTimeline.id);
@@ -88,6 +87,15 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			}
 		}
 	}, [props.currentTimeline, props.timelineStore]);
+
+	useEffect(() => {
+		const isVisibleBeginDateInput = Boolean(props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id);
+		setVisibleBeginDateInput(isVisibleBeginDateInput);
+		if (isVisibleBeginDateInput) {
+			handleFocus(true);
+		}
+	}, [props.currentTimeline.id, props.selectingBeginDate]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
 	useEffect(() => {
 		if (props.selectingBeginDate) {
@@ -252,6 +260,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		}
 
 		props.beginDateCallbacks.submitSelectBeginDate(props.currentTimeline);
+		handleFocus(false);
 	}
 
 	function handleClearPrevious() {
@@ -283,6 +292,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		props.currentTimeline.previous = [...props.selectingBeginDate.previous];
 
 		props.beginDateCallbacks.submitSelectBeginDate(props.currentTimeline);
+		handleFocus(false);
 	}
 
 	function handleCancelPrevious() {
@@ -291,6 +301,15 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		}
 
 		props.beginDateCallbacks.cancelSelectBeginDate(props.currentTimeline);
+		handleFocus(false);
+	}
+
+	function handleFocus(isFocus: boolean): void {
+		if (isFocus) {
+			props.highlightCallbackStore.setActiveTimeline(props.currentTimeline.id);
+		} else {
+			props.highlightCallbackStore.setActiveTimeline(undefined);
+		}
 	}
 
 	const timelineIndex = props.timelineStore.calcReadableTimelineId(props.currentTimeline);
@@ -319,12 +338,14 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				disabled={Boolean(props.selectingBeginDate)}
 				readOnly={false}
 				callbackChangeValue={handleChangeSubject}
+				callbackFocus={handleFocus}
 			/>
 			<WorkloadCell
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
 				disabled={Boolean(props.selectingBeginDate)}
 				value={workload}
 				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeWorkload : undefined}
+				callbackFocus={handleFocus}
 			/>
 			<ResourceCell
 				currentTimeline={props.currentTimeline}
@@ -332,6 +353,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				disabled={Boolean(props.selectingBeginDate)}
 				resourceInfo={props.resourceInfo}
 				callbackChangeMember={handleChangeMember}
+				callbackFocus={handleFocus}
 			/>
 			<RelationCell
 				currentTimeline={props.currentTimeline}
@@ -339,7 +361,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				htmlFor={selectingId}
 			/>
 			{
-				props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
+				visibleBeginDateInput
 					? (
 						<td className="timeline-cell timeline-range-area prompt" colSpan={2}>
 							<ul className="contents">
@@ -439,15 +461,16 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				disabled={Boolean(props.selectingBeginDate)}
 				progress={progress}
 				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
+				callbackFocus={handleFocus}
 			/>
 			<ControlsCell
 				currentTimelineKind={props.currentTimeline.kind}
 				disabled={Boolean(props.selectingBeginDate)}
-				moveItem={handleControlMoveItem}
-				addItem={handleControlAddItem}
-				deleteItem={handleControlDeleteItem}
-				showDetail={handleShowDetail}
-				showTimeline={handleShowTimeline}
+				callbackMoveItem={handleControlMoveItem}
+				callbackAddItem={handleControlAddItem}
+				callbackDeleteItem={handleControlDeleteItem}
+				callbackShowDetail={handleShowDetail}
+				callbackShowTimeline={handleShowTimeline}
 			/>
 		</TimelineHeaderRow >
 	);

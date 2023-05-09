@@ -5,6 +5,7 @@ interface Props {
 	disabled: boolean;
 	value: string;
 	callbackChangeValue: (value: string) => void;
+	callbackFocus(isFocus: boolean): void;
 }
 
 const SubjectCell: FC<Props> = (props: Props) => {
@@ -17,6 +18,8 @@ const SubjectCell: FC<Props> = (props: Props) => {
 				readOnly={props.readOnly}
 				disabled={props.disabled}
 				onChange={ev => props.callbackChangeValue(ev.target.value)}
+				onFocus={ev => props.callbackFocus(true)}
+				onBlur={ev => props.callbackFocus(false)}
 			/>
 		</td>
 	);

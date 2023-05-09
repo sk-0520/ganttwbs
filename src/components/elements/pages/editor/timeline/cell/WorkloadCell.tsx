@@ -8,6 +8,7 @@ interface Props {
 	disabled: boolean;
 	value: number;
 	callbackChangeValue?: (value: number) => void;
+	callbackFocus(isFocus: boolean): void;
 }
 
 const WorkloadCell: FC<Props> = (props: Props) => {
@@ -30,6 +31,8 @@ const WorkloadCell: FC<Props> = (props: Props) => {
 				min={0}
 				value={Timelines.displayWorkload(props.value)}
 				onChange={ev => props.callbackChangeValue ? props.callbackChangeValue(ev.target.valueAsNumber) : undefined}
+				onFocus={ev => props.callbackFocus(true)}
+				onBlur={ev => props.callbackFocus(false)}
 			/>
 		</td>
 	);

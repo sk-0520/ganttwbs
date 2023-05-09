@@ -1,12 +1,12 @@
 import { FC, useEffect, useMemo, useState } from "react";
 
 import RowHighlight from "@/components/elements/pages/editor/timeline/highlight/RowHighlight";
+import { Charts } from "@/models/Charts";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { HighlightValueStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { Charts } from "@/models/Charts";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, HighlightValueStoreProps, TimelineStoreProps {
 
@@ -18,7 +18,7 @@ const HighlightArea: FC<Props> = (props: Props) => {
 
 	useEffect(() => {
 		const crossHeaderElement = document.getElementById("cross-header");
-		if(crossHeaderElement) {
+		if (crossHeaderElement) {
 			setCrossHeaderWidth(crossHeaderElement.clientWidth);
 		}
 	}, []);
@@ -34,6 +34,16 @@ const HighlightArea: FC<Props> = (props: Props) => {
 					configuration={props.configuration}
 					mode="hover"
 					timelineId={props.highlightValueStore.hoverTimelineId}
+					areaData={areaData}
+					crossHeaderWidth={crossHeaderWidth}
+					timelineStore={props.timelineStore}
+				/>
+			)}
+			{props.highlightValueStore.activeTimelineId && (
+				<RowHighlight
+					configuration={props.configuration}
+					mode="active"
+					timelineId={props.highlightValueStore.activeTimelineId}
 					areaData={areaData}
 					crossHeaderWidth={crossHeaderWidth}
 					timelineStore={props.timelineStore}

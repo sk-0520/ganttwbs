@@ -6,6 +6,7 @@ import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -14,7 +15,6 @@ import { Days } from "@/models/Days";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
-import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps, ResourceInfoProps, HighlightCallbackStoreProps {
