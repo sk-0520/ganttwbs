@@ -1,14 +1,16 @@
 import { useAtomValue } from "jotai";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, ReactNode, useEffect, useMemo, useState } from "react";
 
 import ColumnHighlight from "@/components/elements/pages/editor/timeline/highlight/ColumnHighlight";
 import RowHighlight from "@/components/elements/pages/editor/timeline/highlight/RowHighlight";
 import { Charts } from "@/models/Charts";
-import { ActiveTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { RowHighlightMode } from "@/models/data/Highlight";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineId } from "@/models/data/Setting";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 
@@ -20,6 +22,9 @@ const HighlightArea: FC<Props> = (props: Props) => {
 	const hoverTimelineId = useAtomValue(HoverTimelineIdAtom);
 	const highlightTimelineIds = useAtomValue(HighlightTimelineIdsAtom);
 	const highlightDays = useAtomValue(HighlightDaysAtom);
+	const dragSourceTimelineId = useAtomValue(DragSourceTimelineIdAtom);
+	const dragOverTimelineId = useAtomValue(DragOverTimelineIdAtom);
+
 
 	const [crossHeaderWidth, setCrossHeaderWidth] = useState(0);
 	const [crossHeaderHeight, setCrossHeaderHeight] = useState(0);
@@ -36,20 +41,24 @@ const HighlightArea: FC<Props> = (props: Props) => {
 		return Charts.createAreaData(props.configuration.design.seed.cell, props.calendarInfo.range, props.timelineStore.totalItemMap.size);
 	}, [props.configuration, props.calendarInfo, props.timelineStore.totalItemMap.size]);
 
+	function renderRowHighlight(timelineId: TimelineId, mode: RowHighlightMode, key?: string): ReactNode {
+		return (
+			<RowHighlight
+				key={key}
+				configuration={props.configuration}
+				mode={mode}
+				timelineId={timelineId}
+				areaData={areaData}
+				crossHeaderWidth={crossHeaderWidth}
+				timelineStore={props.timelineStore}
+			/>
+		);
+	}
+
 	return (
 		<div id="highlight-area">
 			{highlightTimelineIds.map(a => {
-				return (
-					<RowHighlight
-						key={a}
-						configuration={props.configuration}
-						mode="highlight"
-						timelineId={a}
-						areaData={areaData}
-						crossHeaderWidth={crossHeaderWidth}
-						timelineStore={props.timelineStore}
-					/>
-				);
+				return renderRowHighlight(a, "highlight", a);
 			})}
 			{highlightDays.map(a => {
 				return (
@@ -65,27 +74,10 @@ const HighlightArea: FC<Props> = (props: Props) => {
 					/>
 				);
 			})}
-			{hoverTimelineId && (
-				<RowHighlight
-					configuration={props.configuration}
-					mode="hover"
-					timelineId={hoverTimelineId}
-					areaData={areaData}
-					crossHeaderWidth={crossHeaderWidth}
-					timelineStore={props.timelineStore}
-				/>
-			)}
-			{activeTimelineId && (
-				<RowHighlight
-					configuration={props.configuration}
-					mode="active"
-					timelineId={activeTimelineId}
-					areaData={areaData}
-					crossHeaderWidth={crossHeaderWidth}
-					timelineStore={props.timelineStore}
-				/>
-			)}
-
+			{hoverTimelineId && renderRowHighlight(hoverTimelineId, "hover")}
+			{dragOverTimelineId && renderRowHighlight(dragOverTimelineId, "drag-over")}
+			{dragSourceTimelineId && renderRowHighlight(dragSourceTimelineId, "drag-source")}
+			{activeTimelineId && renderRowHighlight(activeTimelineId, "active")}
 		</div>
 	);
 };

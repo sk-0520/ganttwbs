@@ -12,7 +12,7 @@ import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
-import { ActiveTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
@@ -56,6 +56,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const [detailEditTimeline, setDetailEditTimeline] = useAtom(DetailEditTimelineAtom);
 	const [dragSourceTimeline, setDragSourceTimeline] = useAtom(DragSourceTimelineAtom);
 	const setDraggingTimeline = useSetAtom(DraggingTimelineAtom);
+	const setDragSourceTimelineId = useSetAtom(DragSourceTimelineIdAtom);
+	const setDragOverTimelineId = useSetAtom(DragOverTimelineIdAtom);
 
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
@@ -116,21 +118,24 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		}
 
 		if (dragSourceTimeline) {
-			setActiveTimelineId(undefined);
-			setHoverTimelineId(dragSourceTimeline.id);
-			setHighlightTimelineIds([]);
-
 			const dragging: DraggingTimeline = {
 				sourceTimeline: dragSourceTimeline,
 				onDragEnd: (ev) => {
 					console.debug("END", ev, dragSourceTimeline);
 					setDraggingTimeline(undefined);
 					setDragSourceTimeline(undefined);
+					setDragSourceTimelineId(undefined);
+					setDragOverTimelineId(undefined);
 				},
 				onDragEnter: (ev, targetTimeline) => {
 					console.debug("ENTER", ev, targetTimeline);
+					if(targetTimeline.id === dragSourceTimeline.id) {
+						setDragOverTimelineId(undefined);
+					} else {
+						setDragOverTimelineId(targetTimeline.id);
+					}
 				},
-				onDragOver: (ev, targetTimeline, callback) => {
+				onDragOver: (ev, targetTimeline) => {
 					console.debug("OVER", ev, targetTimeline);
 					// 自分自身への移動は抑制
 					if (targetTimeline.id === dragSourceTimeline.id) {
@@ -152,12 +157,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 						}
 					}
 
-					callback(dragging);
 					ev.preventDefault();
 				},
-				onDragLeave: (ev, targetTimeline, callback) => {
+				onDragLeave: (ev, targetTimeline) => {
 					console.debug("LEAVE", ev, targetTimeline);
-					callback(dragging);
 				},
 				onDrop: (ev, targetTimeline) => {
 					console.debug("DROP", ev, targetTimeline);
@@ -203,9 +206,13 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				}
 			};
 
+			setActiveTimelineId(undefined);
+			setHoverTimelineId(dragSourceTimeline.id);
+			setHighlightTimelineIds([]);
+			setDragSourceTimelineId(dragging.sourceTimeline.id);
 			setDraggingTimeline(dragging);
 		}
-	}, [dragSourceTimeline, props.editorData.setting.rootTimeline, setActiveTimelineId, setDragSourceTimeline, setDraggingTimeline, setHighlightTimelineIds, setHoverTimelineId]);
+	}, [dragSourceTimeline, props.editorData.setting.rootTimeline, setActiveTimelineId, setDragOverTimelineId, setDragSourceTimeline, setDragSourceTimelineId, setDraggingTimeline, setHighlightTimelineIds, setHoverTimelineId]);
 
 	function createTimelineStore(sequenceTimelines: ReadonlyArray<AnyTimeline>, totalTimelineMap: ReadonlyMap<TimelineId, AnyTimeline>, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
 

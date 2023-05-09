@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { useAtomValue, useSetAtom } from "jotai";
-import { FC, ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode } from "react";
 
 import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { DraggingTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
@@ -21,21 +21,6 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 	const draggingTimeline = useAtomValue(DraggingTimelineAtom);
 
-	const [dropEventClassName, setDropEventClassName] = useState("");
-
-	useEffect(() => {
-		if (!draggingTimeline) {
-			setDropEventClassName("");
-		}
-	}, [draggingTimeline]);
-
-	function handleDragOver() {
-		setDropEventClassName("drag-over");
-	}
-	function handleDragLeave() {
-		setDropEventClassName("");
-	}
-
 	function handleMouseEnter() {
 		if (!draggingTimeline && !props.selectingBeginDate) {
 			setHoverTimelineId(props.currentTimeline.id);
@@ -53,7 +38,6 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 					props.currentTimeline.kind,
 					"timeline-cell timeline-header",
 					"_dynamic_programmable_cell_height",
-					dropEventClassName,
 					{
 						["_dynamic_programmable_groups_level-" + props.level.toString()]: Settings.maybeGroupTimeline(props.currentTimeline),
 						"dragging": draggingTimeline?.sourceTimeline.id === props.currentTimeline.id,
@@ -62,8 +46,8 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 				)
 			}
 			onDragEnter={ev => draggingTimeline?.onDragEnter(ev, props.currentTimeline)}
-			onDragOver={ev => draggingTimeline?.onDragOver(ev, props.currentTimeline, handleDragOver)}
-			onDragLeave={ev => draggingTimeline?.onDragLeave(ev, props.currentTimeline, handleDragLeave)}
+			onDragOver={ev => draggingTimeline?.onDragOver(ev, props.currentTimeline)}
+			onDragLeave={ev => draggingTimeline?.onDragLeave(ev, props.currentTimeline)}
 			onDrop={ev => draggingTimeline?.onDrop(ev, props.currentTimeline)}
 			onMouseEnter={handleMouseEnter}
 			// onMouseLeave={handleMouseLeave}

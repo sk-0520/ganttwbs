@@ -2,20 +2,20 @@ import classNames from "classnames";
 import { CSSProperties, FC } from "react";
 
 import { AreaData } from "@/models/data/Area";
+import { RowHighlightMode } from "@/models/data/Highlight";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
 import { Types } from "@/models/Types";
 
 interface Props extends ConfigurationProps, TimelineStoreProps {
-	mode: "active" | "hover" | "highlight";
+	mode: RowHighlightMode;
 	timelineId: TimelineId;
 	areaData: AreaData;
 	crossHeaderWidth: number;
 }
 
 const RowHighlight: FC<Props> = (props: Props) => {
-
 
 	const index = props.timelineStore.indexItemMap.get(props.timelineId);
 	if (Types.isUndefined(index)) {

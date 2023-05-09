@@ -7,3 +7,5 @@ export const ActiveTimelineIdAtom = atom<TimelineId | undefined>(undefined);
 export const HoverTimelineIdAtom = atom<TimelineId | undefined>(undefined);
 export const HighlightTimelineIdsAtom = atom<Array<TimelineId>>([]);
 export const HighlightDaysAtom = atom<Array<DateTime>>([]);
+export const DragSourceTimelineIdAtom = atom<TimelineId | undefined>(undefined);
+export const DragOverTimelineIdAtom = atom<TimelineId | undefined>(undefined);
