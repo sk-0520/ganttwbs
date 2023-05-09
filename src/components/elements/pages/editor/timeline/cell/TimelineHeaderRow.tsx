@@ -1,10 +1,10 @@
 import classNames from "classnames";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { FC, ReactNode, useEffect, useState } from "react";
 
 import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { DraggingTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
-import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
@@ -14,20 +14,20 @@ interface Props extends TimelineStoreProps {
 	level: number;
 	currentTimeline: AnyTimeline;
 	selectingBeginDate: SelectingBeginDate | null;
-	draggingTimeline: DraggingTimeline | null;
 	children: ReactNode;
 }
 
 const TimelineHeaderRow: FC<Props> = (props: Props) => {
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
+	const draggingTimeline = useAtomValue(DraggingTimelineAtom);
 
 	const [dropEventClassName, setDropEventClassName] = useState("");
 
 	useEffect(() => {
-		if (!props.draggingTimeline) {
+		if (!draggingTimeline) {
 			setDropEventClassName("");
 		}
-	}, [props.draggingTimeline]);
+	}, [draggingTimeline]);
 
 	function handleDragOver() {
 		setDropEventClassName("drag-over");
@@ -37,7 +37,7 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 	}
 
 	function handleMouseEnter() {
-		if (!props.draggingTimeline && !props.selectingBeginDate) {
+		if (!draggingTimeline && !props.selectingBeginDate) {
 			setHoverTimelineId(props.currentTimeline.id);
 		}
 	}
@@ -56,15 +56,15 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 					dropEventClassName,
 					{
 						["_dynamic_programmable_groups_level-" + props.level.toString()]: Settings.maybeGroupTimeline(props.currentTimeline),
-						"dragging": props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id,
+						"dragging": draggingTimeline?.sourceTimeline.id === props.currentTimeline.id,
 						"selected-previous": props.selectingBeginDate?.previous.has(props.currentTimeline.id),
 					}
 				)
 			}
-			onDragEnter={ev => props.draggingTimeline?.onDragEnter(ev, props.currentTimeline)}
-			onDragOver={ev => props.draggingTimeline?.onDragOver(ev, props.currentTimeline, handleDragOver)}
-			onDragLeave={ev => props.draggingTimeline?.onDragLeave(ev, props.currentTimeline, handleDragLeave)}
-			onDrop={ev => props.draggingTimeline?.onDrop(ev, props.currentTimeline)}
+			onDragEnter={ev => draggingTimeline?.onDragEnter(ev, props.currentTimeline)}
+			onDragOver={ev => draggingTimeline?.onDragOver(ev, props.currentTimeline, handleDragOver)}
+			onDragLeave={ev => draggingTimeline?.onDragLeave(ev, props.currentTimeline, handleDragLeave)}
+			onDrop={ev => draggingTimeline?.onDrop(ev, props.currentTimeline)}
 			onMouseEnter={handleMouseEnter}
 			// onMouseLeave={handleMouseLeave}
 		>

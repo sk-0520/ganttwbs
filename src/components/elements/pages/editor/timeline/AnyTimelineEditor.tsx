@@ -13,9 +13,8 @@ import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/Workl
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
 import { ActiveTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DetailEditTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DetailEditTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
-import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
@@ -35,7 +34,6 @@ import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	currentTimeline: AnyTimeline;
-	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
 }
@@ -47,6 +45,8 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	const setDetailEditTimeline = useSetAtom(DetailEditTimelineAtom);
 	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
+	const setDragSourceTimeline = useSetAtom(DragSourceTimelineAtom);
+
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
 	const [memberId, setMemberId] = useState(Settings.maybeTaskTimeline(props.currentTimeline) ? props.currentTimeline.memberId : "");
@@ -216,7 +216,8 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleStartDragTimeline(ev: DragEvent): void {
-		props.timelineStore.startDragTimeline(ev, props.currentTimeline);
+		//props.timelineStore.startDragTimeline(ev, props.currentTimeline);
+		setDragSourceTimeline(props.currentTimeline);
 	}
 
 	function handleChangePrevious(isSelected: boolean): void {
@@ -322,7 +323,6 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		<TimelineHeaderRow
 			currentTimeline={props.currentTimeline}
 			selectingBeginDate={props.selectingBeginDate}
-			draggingTimeline={props.draggingTimeline}
 			timelineStore={props.timelineStore}
 			level={timelineIndex.level}
 		>
@@ -331,7 +331,6 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				readableTimelineId={timelineIndex}
 				currentTimeline={props.currentTimeline}
 				isSelectedPrevious={isSelectedPrevious}
-				draggingTimeline={props.draggingTimeline}
 				selectingBeginDate={props.selectingBeginDate}
 				callbackStartDragTimeline={handleStartDragTimeline}
 				callbackChangePrevious={handleChangePrevious}

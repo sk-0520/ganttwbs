@@ -4,8 +4,6 @@ import { FC, useMemo } from "react";
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
-import { DraggingTimeline } from "@/models/data/DraggingTimeline";
-import { DropTimeline } from "@/models/data/DropTimeline";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
@@ -15,8 +13,6 @@ import { IdFactory } from "@/models/IdFactory";
 
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
-	draggingTimeline: DraggingTimeline | null;
-	dropTimeline: DropTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
 }
@@ -54,7 +50,6 @@ const TimelineItems: FC<Props> = (props: Props) => {
 								setting={props.setting}
 								currentTimeline={a}
 								timelineStore={props.timelineStore}
-								draggingTimeline={props.draggingTimeline}
 								selectingBeginDate={props.selectingBeginDate}
 								beginDateCallbacks={props.beginDateCallbacks}
 								calendarInfo={props.calendarInfo}

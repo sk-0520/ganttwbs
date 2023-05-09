@@ -1,4 +1,3 @@
-import { DragEvent } from "react";
 
 import { DayInfo } from "@/models/data/DayInfo";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
@@ -72,12 +71,12 @@ export interface TimelineStore {
 	 */
 	removeTimeline(timeline: AnyTimeline): void;
 
-	/**
-	 * D&D処理を開始
-	 * @param event
-	 * @param sourceTimeline
-	 */
-	startDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void;
+	// /**
+	//  * D&D処理を開始
+	//  * @param event
+	//  * @param sourceTimeline
+	//  */
+	// startDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void;
 }
 
 

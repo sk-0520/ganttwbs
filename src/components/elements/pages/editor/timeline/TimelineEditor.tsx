@@ -1,5 +1,5 @@
 import { useAtom, useSetAtom } from "jotai";
-import { DragEvent, FC, useLayoutEffect, useMemo } from "react";
+import { FC, useEffect, useLayoutEffect, useMemo } from "react";
 import { ReactNode, useState } from "react";
 
 import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
@@ -13,7 +13,7 @@ import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
 import { ActiveTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DetailEditTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -54,6 +54,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
 	const [detailEditTimeline, setDetailEditTimeline] = useAtom(DetailEditTimelineAtom);
+	const [dragSourceTimeline, setDragSourceTimeline] = useAtom(DragSourceTimelineAtom);
+	const setDraggingTimeline = useSetAtom(DraggingTimelineAtom);
 
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
@@ -65,8 +67,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	const [sequenceTimelines, setSequenceTimelines] = useState(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(sequenceTimelines, new Map(), new Map()));
-	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
-	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
+	//const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
+	//const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 
 	const dynamicStyleNodes = useMemo(() => {
@@ -83,6 +85,127 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	useLayoutEffect(() => {
 		updateRelations();
 	}, [sequenceTimelines]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+		function fireDropTimeline(dropTimeline: DropTimeline) {
+			console.debug("FIRE");
+
+			const sameGroup = dropTimeline.sourceGroupTimeline.id === dropTimeline.destinationGroupTimeline.id;
+
+			if (sameGroup) {
+				// 同一グループ内移動
+				Arrays.moveIndexInPlace(dropTimeline.sourceGroupTimeline.children, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
+			} else {
+				// グループから破棄
+				const newSourceChildren = dropTimeline.sourceGroupTimeline.children.filter(a => a.id !== dropTimeline.timeline.id);
+				dropTimeline.sourceGroupTimeline.children = newSourceChildren;
+
+				// 別グループに追加
+				if (dropTimeline.destinationIndex === -1) {
+					dropTimeline.destinationGroupTimeline.children.push(dropTimeline.timeline);
+				} else {
+					dropTimeline.destinationGroupTimeline.children.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
+				}
+			}
+
+			setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
+
+			setActiveTimelineId(undefined);
+			setHoverTimelineId(dropTimeline.timeline.id);
+			setHighlightTimelineIds([dropTimeline.timeline.id]);
+		}
+
+		if (dragSourceTimeline) {
+			setActiveTimelineId(undefined);
+			setHoverTimelineId(dragSourceTimeline.id);
+			setHighlightTimelineIds([]);
+
+			const dragging: DraggingTimeline = {
+				sourceTimeline: dragSourceTimeline,
+				onDragEnd: (ev) => {
+					console.debug("END", ev, dragSourceTimeline);
+					setDraggingTimeline(undefined);
+					setDragSourceTimeline(undefined);
+				},
+				onDragEnter: (ev, targetTimeline) => {
+					console.debug("ENTER", ev, targetTimeline);
+				},
+				onDragOver: (ev, targetTimeline, callback) => {
+					console.debug("OVER", ev, targetTimeline);
+					// 自分自身への移動は抑制
+					if (targetTimeline.id === dragSourceTimeline.id) {
+						return;
+					}
+
+					if (Settings.maybeGroupTimeline(dragSourceTimeline)) {
+						// 自分がグループの場合、自分より下への移動は抑制
+						const map = Timelines.getTimelinesMap(dragSourceTimeline);
+						if (map.has(targetTimeline.id)) {
+							return;
+						}
+					}
+
+					// 自身のグループへの移動は抑制(どうすりゃいいのか正解が分からん)
+					if (Settings.maybeGroupTimeline(targetTimeline)) {
+						if (targetTimeline.children.find(a => a.id === dragSourceTimeline.id)) {
+							return;
+						}
+					}
+
+					callback(dragging);
+					ev.preventDefault();
+				},
+				onDragLeave: (ev, targetTimeline, callback) => {
+					console.debug("LEAVE", ev, targetTimeline);
+					callback(dragging);
+				},
+				onDrop: (ev, targetTimeline) => {
+					console.debug("DROP", ev, targetTimeline);
+
+					const sourceGroupTimelines = Timelines.getParentGroups(dragSourceTimeline, props.editorData.setting.rootTimeline);
+					const targetGroupTimelines = Timelines.getParentGroups(targetTimeline, props.editorData.setting.rootTimeline);
+
+					if (!sourceGroupTimelines.length || !targetGroupTimelines.length) {
+						// ツリーにいない場合はどうにもならん
+						throw new Error(JSON.stringify({
+							sourceGroupTimelines,
+							targetGroupTimelines,
+						}));
+					}
+
+					// 対象がグループの場合、そのグループへ移動
+					if (Settings.maybeGroupTimeline(targetTimeline)) {
+						const sourceGroupTimeline = sourceGroupTimelines[sourceGroupTimelines.length - 1];
+						const sourceIndex = sourceGroupTimeline.children.findIndex(a => a.id === dragSourceTimeline.id);
+
+						fireDropTimeline({
+							timeline: dragSourceTimeline,
+							sourceGroupTimeline: sourceGroupTimeline,
+							sourceIndex: sourceIndex,
+							destinationGroupTimeline: targetTimeline,
+							destinationIndex: -1,
+						});
+						return;
+					}
+
+					// 単純移動
+					const sourceNodes = sourceGroupTimelines[sourceGroupTimelines.length - 1].children;
+					const sourceIndex = sourceNodes.findIndex(a => a.id === dragSourceTimeline.id);
+					const destinationNodes = targetGroupTimelines[targetGroupTimelines.length - 1].children;
+					const destinationIndex = destinationNodes.findIndex(a => a.id === targetTimeline.id);
+					fireDropTimeline({
+						timeline: dragSourceTimeline,
+						sourceGroupTimeline: sourceGroupTimelines[sourceGroupTimelines.length - 1],
+						sourceIndex: sourceIndex,
+						destinationGroupTimeline: targetGroupTimelines[targetGroupTimelines.length - 1],
+						destinationIndex: destinationIndex,
+					});
+				}
+			};
+
+			setDraggingTimeline(dragging);
+		}
+	}, [dragSourceTimeline, props.editorData.setting.rootTimeline, setActiveTimelineId, setDragSourceTimeline, setDraggingTimeline, setHighlightTimelineIds, setHoverTimelineId]);
 
 	function createTimelineStore(sequenceTimelines: ReadonlyArray<AnyTimeline>, totalTimelineMap: ReadonlyMap<TimelineId, AnyTimeline>, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
 
@@ -114,8 +237,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			updateTimeline: handleUpdateTimeline,
 			moveTimeline: handleMoveTimeline,
 			removeTimeline: handleRemoveTimeline,
-
-			startDragTimeline: handleStartDragTimeline,
 		};
 
 		return result;
@@ -141,145 +262,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		);
 		const store = createTimelineStore(sequenceTimelines, timelineMap, changedItems);
 		setTimelineStore(store);
-	}
-
-	function fireDropTimeline(dropTimeline: DropTimeline) {
-		console.debug("FIRE");
-
-		const sameGroup = dropTimeline.sourceGroupTimeline.id === dropTimeline.destinationGroupTimeline.id;
-
-		if (sameGroup) {
-			// 同一グループ内移動
-			Arrays.moveIndexInPlace(dropTimeline.sourceGroupTimeline.children, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
-		} else {
-			// グループから破棄
-			const newSourceChildren = dropTimeline.sourceGroupTimeline.children.filter(a => a.id !== dropTimeline.timeline.id);
-			dropTimeline.sourceGroupTimeline.children = newSourceChildren;
-
-			// 別グループに追加
-			if (dropTimeline.destinationIndex === -1) {
-				dropTimeline.destinationGroupTimeline.children.push(dropTimeline.timeline);
-			} else {
-				dropTimeline.destinationGroupTimeline.children.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
-			}
-		}
-
-		setDropTimeline(null);
-		setDraggingTimeline(null);
-
-		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
-
-		setActiveTimelineId(undefined);
-		setHoverTimelineId(dropTimeline.timeline.id);
-		setHighlightTimelineIds([dropTimeline.timeline.id]);
-	}
-
-	// function handleSetHoverTimeline(timelineId: TimelineId | undefined): void {
-	// 	console.debug("hover", timelineId);
-	// 	setHoverTimelineId(timelineId);
-	// }
-
-	// function handleSetActiveTimeline(timelineId: TimelineId | undefined): void {
-	// 	console.debug("active", timelineId);
-	// 	setActiveTimelineId(timelineId);
-	// }
-
-	// function handleSetEmphasis(timelineIds: ReadonlyArray<TimelineId>, days: ReadonlyArray<DateTime>): void {
-	// 	console.debug("emphasis", timelineIds, days);
-	// 	setHighlightTimelineIds(timelineIds);
-	// 	setHighlightDays(days);
-	// }
-
-	function handleStartDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void {
-		console.debug(event, sourceTimeline);
-
-		setActiveTimelineId(undefined);
-		setHoverTimelineId(sourceTimeline.id);
-		setHighlightTimelineIds([]);
-
-		const dragging: DraggingTimeline = {
-			sourceTimeline: sourceTimeline,
-			onDragEnd: (ev) => {
-				console.debug("END", ev, sourceTimeline);
-				setDraggingTimeline(null);
-			},
-			onDragEnter: (ev, targetTimeline) => {
-				console.debug("ENTER", ev, targetTimeline);
-			},
-			onDragOver: (ev, targetTimeline, callback) => {
-				console.debug("OVER", ev, targetTimeline);
-				// 自分自身への移動は抑制
-				if (targetTimeline.id === sourceTimeline.id) {
-					return;
-				}
-
-				if (Settings.maybeGroupTimeline(sourceTimeline)) {
-					// 自分がグループの場合、自分より下への移動は抑制
-					const map = Timelines.getTimelinesMap(sourceTimeline);
-					if (map.has(targetTimeline.id)) {
-						return;
-					}
-				}
-
-				// 自身のグループへの移動は抑制(どうすりゃいいのか正解が分からん)
-				if (Settings.maybeGroupTimeline(targetTimeline)) {
-					if (targetTimeline.children.find(a => a.id === sourceTimeline.id)) {
-						return;
-					}
-				}
-
-				callback(dragging);
-				ev.preventDefault();
-			},
-			onDragLeave: (ev, targetTimeline, callback) => {
-				console.debug("LEAVE", ev, targetTimeline);
-				callback(dragging);
-			},
-			onDrop: (ev, targetTimeline) => {
-				console.debug("DROP", ev, targetTimeline);
-
-				const sourceGroupTimelines = Timelines.getParentGroups(sourceTimeline, props.editorData.setting.rootTimeline);
-				const targetGroupTimelines = Timelines.getParentGroups(targetTimeline, props.editorData.setting.rootTimeline);
-
-				if (!sourceGroupTimelines.length || !targetGroupTimelines.length) {
-					// ツリーにいない場合はどうにもならん
-					throw new Error(JSON.stringify({
-						sourceGroupTimelines,
-						targetGroupTimelines,
-					}));
-				}
-
-				// 対象がグループの場合、そのグループへ移動
-				if (Settings.maybeGroupTimeline(targetTimeline)) {
-					const sourceGroupTimeline = sourceGroupTimelines[sourceGroupTimelines.length - 1];
-					const sourceIndex = sourceGroupTimeline.children.findIndex(a => a.id === sourceTimeline.id);
-
-					fireDropTimeline({
-						timeline: sourceTimeline,
-						sourceGroupTimeline: sourceGroupTimeline,
-						sourceIndex: sourceIndex,
-						destinationGroupTimeline: targetTimeline,
-						destinationIndex: -1,
-					});
-					return;
-				}
-
-				// 単純移動
-				const sourceNodes = sourceGroupTimelines[sourceGroupTimelines.length - 1].children;
-				const sourceIndex = sourceNodes.findIndex(a => a.id === sourceTimeline.id);
-				const destinationNodes = targetGroupTimelines[targetGroupTimelines.length - 1].children;
-				const destinationIndex = destinationNodes.findIndex(a => a.id === targetTimeline.id);
-				fireDropTimeline({
-					timeline: sourceTimeline,
-					sourceGroupTimeline: sourceGroupTimelines[sourceGroupTimelines.length - 1],
-					sourceIndex: sourceIndex,
-					destinationGroupTimeline: targetGroupTimelines[targetGroupTimelines.length - 1],
-					destinationIndex: destinationIndex,
-				});
-			}
-		};
-
-		setDraggingTimeline(dragging);
 	}
 
 	function handleEndDetailEdit(sourceTimeline: AnyTimeline, changedTimeline: AnyTimeline | null): void {
@@ -538,8 +520,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			<TimelineItems
 				configuration={props.configuration}
 				setting={props.editorData.setting}
-				draggingTimeline={draggingTimeline}
-				dropTimeline={dropTimeline}
 				selectingBeginDate={selectingBeginDate}
 				beginDateCallbacks={beginDateCallbacks}
 				resourceInfo={resourceInfo}
