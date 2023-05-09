@@ -11,11 +11,11 @@ import { MoveDirection } from "@/models/store/TimelineStore";
 interface Props {
 	currentTimelineKind: TimelineKind;
 	disabled: boolean,
-	moveItem: (direction: MoveDirection) => void;
-	addItem: (kindOrTimeline: TimelineKind | GroupTimeline) => void;
-	deleteItem: () => void;
-	showDetail(): void;
-	showTimeline(): void;
+	callbackMoveItem: (direction: MoveDirection) => void;
+	callbackAddItem: (kindOrTimeline: TimelineKind | GroupTimeline) => void;
+	callbackDeleteItem: () => void;
+	callbackShowDetail(): void;
+	callbackShowTimeline(): void;
 }
 
 const ControlsCell: FC<Props> = (props: Props) => {
@@ -32,17 +32,17 @@ const ControlsCell: FC<Props> = (props: Props) => {
 	}
 
 	function handleMoveItem(direction: MoveDirection) {
-		props.moveItem(direction);
+		props.callbackMoveItem(direction);
 		handleHideControls();
 	}
 
 	function handleAddItem(kind: TimelineKind) {
-		props.addItem(kind);
+		props.callbackAddItem(kind);
 		handleHideControls();
 	}
 
 	function handleDeleteItem() {
-		props.deleteItem();
+		props.callbackDeleteItem();
 		handleHideControls();
 	}
 
@@ -53,7 +53,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 
 	function handleCloseTimelinesImport(timeline: GroupTimeline | null) {
 		if (timeline) {
-			props.addItem(timeline);
+			props.callbackAddItem(timeline);
 		}
 
 		setVisibleTimelinesImportDialog(false);
@@ -61,12 +61,12 @@ const ControlsCell: FC<Props> = (props: Props) => {
 
 	function handleShowDetail() {
 		handleHideControls();
-		props.showDetail();
+		props.callbackShowDetail();
 	}
 
 	function handleShowTimeline() {
 		handleHideControls();
-		props.showTimeline();
+		props.callbackShowTimeline();
 	}
 
 	return (

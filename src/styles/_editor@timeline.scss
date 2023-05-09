@@ -2,8 +2,10 @@
 @use "./mixin/control" as control;
 @use "./mixin/box" as box;
 
-$cross-header-z-index: 5;
-$days-header-z-index: 3;
+// z-index もうだめかも・・・
+$cross-header-z-index: 10;
+$days-header-z-index: 8;
+$highlight-area-z-index: 6;
 $timelines-z-index: 4;
 $viewer-z-index: 2;
 
@@ -329,10 +331,10 @@ $viewer-z-index: 2;
 				opacity: 0.8;
 			}
 
-			&.hover {
-				position: relative;
-				outline: 3px double rgba(255, 0, 0, 0.555);
-			}
+			// &.hover {
+			// 	position: relative;
+			// 	outline: 3px double rgba(255, 0, 0, 0.555);
+			// }
 
 			&.selected-previous {
 				text-shadow: 0px 0px 1px;
@@ -391,6 +393,7 @@ $viewer-z-index: 2;
 				z-index: $timelines-z-index + 1;
 
 				.tools {
+					//z-index: $highlight-area-z-index + 1; //うごかね
 					outline: $prompt-outline-width $prompt-background-color solid;
 					height: fit-content;
 					background-color: $prompt-background-color;
@@ -628,18 +631,53 @@ $viewer-z-index: 2;
 		}
 	}
 
-	/*
-	#highlight {
+	#highlight-area {
+		@mixin highlight-animation($animation-name, $base-color) {
+			background: rgba($base-color, 0.5);
+			animation: #{$animation-name} 3s ease forwards;
+
+			@keyframes #{$animation-name} {
+				0% {
+					background-color: rgba($base-color, 0.7);
+				}
+				10% {
+					background-color: rgba($base-color, 0.5);
+				}
+				100% {
+					background-color: rgba($base-color, 0);
+				}
+			}
+		}
+
 		position: absolute;
 		top: $app-header-height;
 		left: 0;
-		// width: 100vw;
-		// height: 100vh;
-		z-index: 3;
+		z-index: $highlight-area-z-index;
 
 		pointer-events: none;
 
-		background-color: rgba(255, 0, 0, 0.295);
+		.highlight-row {
+			position: absolute;
+			left: 0;
+
+			&.active {
+				border-bottom: 2px solid red;
+			}
+			&.hover {
+				border-bottom: 2px solid coral;
+			}
+			&.highlight {
+				@include highlight-animation("row", yellow);
+			}
+		}
+
+		.highlight-column {
+			position: absolute;
+			top: 0;
+
+			&.highlight {
+				@include highlight-animation("column", yellow);
+			}
+		}
 	}
-	*/
 }

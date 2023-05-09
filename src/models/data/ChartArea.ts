@@ -1,4 +1,4 @@
-import { AreaSize } from "@/models/data/AreaSize";
+import { AreaSize } from "@/models/data/Area";
 import { TimeSpanRange } from "@/models/data/TimeSpanRange";
 
 /**

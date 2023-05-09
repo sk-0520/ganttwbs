@@ -11,6 +11,7 @@ interface Props extends ResourceInfoProps {
 	selectedMemberId: MemberId;
 	disabled: boolean;
 	callbackChangeMember(memberGroupPair: MemberGroupPair | undefined): void;
+	callbackFocus(isFocus: boolean): void;
 }
 
 const ResourceCell: FC<Props> = (props: Props) => {
@@ -24,6 +25,7 @@ const ResourceCell: FC<Props> = (props: Props) => {
 					defaultValue={props.selectedMemberId}
 					resourceInfo={props.resourceInfo}
 					callbackChangeMember={props.callbackChangeMember}
+					callbackFocus={props.callbackFocus}
 				/>
 			)}
 		</td>

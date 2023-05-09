@@ -8,9 +8,10 @@ import locale from "@/locales/ja";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
+import { GroupTimeline, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Editors } from "@/models/Editors";
@@ -19,7 +20,7 @@ import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps, HighlightCallbackStoreProps {
 	//nop
 }
 
@@ -86,20 +87,21 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	function handleClickCalendarToday(): void {
-		Editors.scrollView(undefined, DateTime.today(props.calendarInfo.timeZone));
+		const date = DateTime.today(props.calendarInfo.timeZone);
+		scrollView(undefined, date);
 	}
 
 	function handleClickCalendarFirst(): void {
 		const range = WorkRanges.getSuccessTimelineIdRange(props.timelineStore.workRanges);
 		if (range.begin) {
-			Editors.scrollView(range.begin.timelineId, range.begin.workRange.begin);
+			scrollView(range.begin.timelineId, range.begin.workRange.begin);
 		}
 	}
 
 	function handleClickCalendarLast(): void {
 		const range = WorkRanges.getSuccessTimelineIdRange(props.timelineStore.workRanges);
 		if (range.end) {
-			Editors.scrollView(range.end.timelineId, range.end.workRange.begin);
+			scrollView(range.end.timelineId, range.end.workRange.begin);
 		}
 	}
 
@@ -109,8 +111,8 @@ const CrossHeader: FC<Props> = (props: Props) => {
 
 	function handleCloseInformation(date: DateTime | undefined): void {
 		setVisibleInformation(false);
-		if(date) {
-			Editors.scrollView(undefined, date);
+		if (date) {
+			scrollView(undefined, date);
 		}
 	}
 
@@ -118,7 +120,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 		const keys = [...props.timelineStore.dayInfos.keys()].sort((a, b) => a - b);
 		if (keys.length) {
 			const date = DateTime.convert(keys[0], props.calendarInfo.timeZone).toDateOnly();
-			Editors.scrollView(undefined, date);
+			scrollView(undefined, date);
 		}
 	}
 
@@ -126,12 +128,24 @@ const CrossHeader: FC<Props> = (props: Props) => {
 		const keys = [...props.timelineStore.dayInfos.keys()].sort((a, b) => b - a);
 		if (keys.length) {
 			const date = DateTime.convert(keys[0], props.calendarInfo.timeZone).toDateOnly();
-			Editors.scrollView(undefined, date);
+			scrollView(undefined, date);
 		}
 	}
 
+	function handleMouseEnter() {
+		props.highlightCallbackStore.setHoverTimeline(undefined);
+	}
+
+	function scrollView(timelineId: TimelineId | undefined, date: DateTime | undefined): void {
+			props.highlightCallbackStore.setHighlights(timelineId ? [timelineId]: [], date ? [date]: []);
+			Editors.scrollView(timelineId, date);
+	}
+
 	return (
-		<div id="cross-header">
+		<div
+			id="cross-header"
+			onMouseEnter={handleMouseEnter}
+		>
 			<div className="header">
 				<h1>{props.setting.name}</h1>
 			</div>

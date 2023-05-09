@@ -14,6 +14,7 @@ interface Props {
 	disabled: boolean;
 	progress: Progress;
 	callbackChangeValue?: (value: Progress) => void;
+	callbackFocus(isFocus: boolean): void;
 }
 
 const ProgressCell: FC<Props> = (props: Props) => {
@@ -46,6 +47,8 @@ const ProgressCell: FC<Props> = (props: Props) => {
 				disabled={props.disabled}
 				value={progress}
 				onChange={ev => handleChangeProgress(ev.target.value)}
+				onFocus={ev => props.callbackFocus(true)}
+				onBlur={ev => props.callbackFocus(false)}
 			>
 				{progressItems.map(a => {
 					return (

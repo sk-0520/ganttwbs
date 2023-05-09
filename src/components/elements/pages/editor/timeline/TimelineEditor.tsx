@@ -1,8 +1,9 @@
-import { DragEvent, FC, useLayoutEffect, useMemo } from "react";
+import { DragEvent, FC, useEffect, useLayoutEffect, useMemo } from "react";
 import { ReactNode, useState } from "react";
 
 import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
 import DaysHeader from "@/components/elements/pages/editor/timeline/DaysHeader";
+import HighlightArea from "@/components/elements/pages/editor/timeline/HighlightArea";
 import TimelineDetailEditDialog from "@/components/elements/pages/editor/timeline/TimelineDetailEditDialog";
 import TimelineItems from "@/components/elements/pages/editor/timeline/TimelineItems";
 import TimelineViewer from "@/components/elements/pages/editor/timeline/TimelineViewer";
@@ -27,7 +28,7 @@ import { Designs } from "@/models/Designs";
 import { Editors } from "@/models/Editors";
 import { Resources } from "@/models/Resources";
 import { Settings } from "@/models/Settings";
-import { EmphasisStore } from "@/models/store/EmphasisStore";
+import { HighlightCallbackStore, HighlightValueStore } from "@/models/store/HighlightStore";
 import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
@@ -60,12 +61,16 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 	const [visibleDetailEditDialog, setVisibleDetailEditDialog] = useState<AnyTimeline>();
-	const [emphasisStore, setEmphasisStore] = useState(createEmphasisStore(undefined, undefined));
+	const [hoverTimelineId, setHoverTimelineId] = useState<TimelineId>();
+	const [activeTimelineId, setActiveTimelineId] = useState<TimelineId>();
+	const [highlightTimelineIds, setHighlightTimelineIds] = useState<ReadonlyArray<TimelineId>>([]);
+	const [highlightDays, setHighlightDays] = useState<ReadonlyArray<DateTime>>([]);
+	const [highlightCallbackStore, /* nop */] = useState(createEmphasisStore());
+	const [highlightValueStore, setEmphasisValueStore] = useState(createEmphasisValueStore(hoverTimelineId, hoverTimelineId, highlightTimelineIds, highlightDays));
 
 	const dynamicStyleNodes = useMemo(() => {
 		return renderDynamicStyle(props.configuration.design, props.editorData.setting.theme);
 	}, [props.configuration.design, props.editorData.setting.theme]);
-
 
 	//TODO: クソ重いっぽいんやけどどう依存解決してメモ化するのか分からんので枝葉から対応するのです
 
@@ -78,16 +83,27 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		updateRelations();
 	}, [sequenceTimelines]); // eslint-disable-line react-hooks/exhaustive-deps
 
+	useEffect(() => {
+		console.debug("EmphasisValueStore");
+		setEmphasisValueStore(createEmphasisValueStore(activeTimelineId, hoverTimelineId, highlightTimelineIds, highlightDays));
+	}, [activeTimelineId, hoverTimelineId, highlightTimelineIds, highlightDays]);
 
-	function createEmphasisStore(activeTimelineId: TimelineId | undefined, hoverTimelineId: TimelineId | undefined): EmphasisStore {
-		const result: EmphasisStore = {
-			activeItem: activeTimelineId,
-			hoverItem: hoverTimelineId,
-
+	function createEmphasisStore(): HighlightCallbackStore {
+		const result: HighlightCallbackStore = {
 			setActiveTimeline: handleSetActiveTimeline,
 			setHoverTimeline: handleSetHoverTimeline,
+			setHighlights: handleSetEmphasis,
 		};
+		return result;
+	}
 
+	function createEmphasisValueStore(activeTimelineId: TimelineId | undefined, hoverTimelineId: TimelineId | undefined, emphasisTimelineIds: ReadonlyArray<TimelineId>, emphasisDays: ReadonlyArray<DateTime>): HighlightValueStore {
+		const result: HighlightValueStore = {
+			activeTimelineId,
+			hoverTimelineId,
+			highlightTimelineIds: emphasisTimelineIds,
+			highlightDays: emphasisDays,
+		};
 		return result;
 	}
 
@@ -181,18 +197,18 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleSetHoverTimeline(timelineId: TimelineId | undefined): void {
 		console.debug("hover", timelineId);
-		setEmphasisStore({
-			...emphasisStore,
-			hoverItem: timelineId,
-		});
+		setHoverTimelineId(timelineId);
 	}
 
 	function handleSetActiveTimeline(timelineId: TimelineId | undefined): void {
 		console.debug("active", timelineId);
-		setEmphasisStore({
-			...emphasisStore,
-			activeItem: timelineId,
-		});
+		setActiveTimelineId(timelineId);
+	}
+
+	function handleSetEmphasis(timelineIds: ReadonlyArray<TimelineId>, days: ReadonlyArray<DateTime>): void {
+		console.debug("emphasis", timelineIds, days);
+		setHighlightTimelineIds(timelineIds);
+		setHighlightDays(days);
 	}
 
 	function handleStartDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void {
@@ -366,6 +382,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 		setTimeout(() => {
+			highlightCallbackStore.setHighlights([newTimeline.id], []);
 			Editors.scrollView(newTimeline, undefined);
 		}, 0);
 	}
@@ -531,6 +548,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				setting={props.editorData.setting}
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
+				highlightCallbackStore={highlightCallbackStore}
 			/>
 			<DaysHeader
 				configuration={props.configuration}
@@ -538,7 +556,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
 				resourceInfo={resourceInfo}
-			/>
+				highlightCallbackStore={highlightCallbackStore}
+				/>
 			<TimelineItems
 				configuration={props.configuration}
 				setting={props.editorData.setting}
@@ -549,7 +568,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				resourceInfo={resourceInfo}
 				calendarInfo={calendarInfo}
 				timelineStore={timelineStore}
-				emphasisStore={emphasisStore}
+				highlightCallbackStore={highlightCallbackStore}
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
@@ -557,14 +576,15 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				resourceInfo={resourceInfo}
 				calendarInfo={calendarInfo}
 				timelineStore={timelineStore}
-				emphasisStore={emphasisStore}
+				highlightCallbackStore={highlightCallbackStore}
 			/>
-			{/* <DrawArea
+			<HighlightArea
 				configuration={props.configuration}
-				editData={props.editData}
-				timelineStore={timelineStore}
+				setting={props.editorData.setting}
 				calendarInfo={calendarInfo}
-			/> */}
+				timelineStore={timelineStore}
+				highlightValueStore={highlightValueStore}
+			/>
 			{visibleDetailEditDialog && <TimelineDetailEditDialog
 				configuration={props.configuration}
 				setting={props.editorData.setting}
