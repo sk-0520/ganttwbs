@@ -4,7 +4,7 @@ import { TimelineId } from "@/models/data/Setting";
 /**
  * 強調。
  */
-export interface EmphasisStore {
+export interface HighlightCallbackStore {
 	/**
 	 * ライムラインホバー状態設定。
 	 * @param timelineId
@@ -20,4 +20,11 @@ export interface EmphasisStore {
 	 * @param timelineIds
 	 */
 	setEmphasis(timelineIds: ReadonlyArray<TimelineId>, days: ReadonlyArray<DateTime>): void;
+}
+
+export interface HighlightValueStore {
+	readonly activeTimelineId: TimelineId | undefined;
+	readonly hoverTimelineId: TimelineId | undefined;
+	readonly highlightTimelineIds: ReadonlyArray<TimelineId>;
+	readonly highlightDays: ReadonlyArray<DateTime>;
 }

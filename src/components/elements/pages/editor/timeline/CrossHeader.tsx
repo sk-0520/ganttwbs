@@ -18,8 +18,9 @@ import { IdFactory } from "@/models/IdFactory";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
+import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 
-interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps, HighlightCallbackStoreProps {
 	//nop
 }
 

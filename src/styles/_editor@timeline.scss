@@ -2,10 +2,11 @@
 @use "./mixin/control" as control;
 @use "./mixin/box" as box;
 
-$cross-header-z-index: 5;
+$cross-header-z-index: 6;
 $days-header-z-index: 3;
 $timelines-z-index: 4;
 $viewer-z-index: 2;
+$highlight-area-z-index: 5;
 
 #timeline {
 	$timeline-header-id-width: 14ch;
@@ -628,18 +629,16 @@ $viewer-z-index: 2;
 		}
 	}
 
-	/*
-	#highlight {
+	#highlight-area {
 		position: absolute;
 		top: $app-header-height;
 		left: 0;
-		// width: 100vw;
-		// height: 100vh;
-		z-index: 3;
+		width: 100%;
+		height: 100vh;
+		z-index: $highlight-area-z-index;
 
 		pointer-events: none;
 
 		background-color: rgba(255, 0, 0, 0.295);
 	}
-	*/
 }

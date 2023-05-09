@@ -3,13 +3,13 @@ import { FC, ReactNode, useEffect, useState } from "react";
 
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
-import { EmphasisStoreProps } from "@/models/data/props/EmphasisStoreProps";
+import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends TimelineStoreProps, EmphasisStoreProps {
+interface Props extends TimelineStoreProps, HighlightCallbackStoreProps {
 	level: number;
 	currentTimeline: AnyTimeline;
 	selectingBeginDate: SelectingBeginDate | null;
@@ -36,7 +36,7 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 
 	function handleMouseEnter() {
 		if (!props.draggingTimeline && !props.selectingBeginDate) {
-			props.emphasisStore.setHoverTimeline(props.currentTimeline.id);
+			props.highlightCallbackStore.setHoverTimeline(props.currentTimeline.id);
 		}
 	}
 	// function handleMouseLeave() {
