@@ -14,7 +14,7 @@ export interface HighlightCallbackStore {
 	 * ライムラインアクティブ状態設定。
 	 * @param timelineId
 	 */
-	setActiveTimeline(timelineId: TimelineId | undefined): void;
+	//setActiveTimeline(timelineId: TimelineId | undefined): void;
 	/**
 	 * ライムライン強調状態設定。
 	 * @param timelineIds

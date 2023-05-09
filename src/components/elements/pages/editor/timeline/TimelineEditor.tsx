@@ -63,11 +63,11 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 	const [visibleDetailEditDialog, setVisibleDetailEditDialog] = useState<AnyTimeline>();
 	//const [hoverTimelineId, setHoverTimelineId] = useState<TimelineId>();
-	const [activeTimelineId, setActiveTimelineId] = useState<TimelineId>();
+	//const [activeTimelineId, setActiveTimelineId] = useState<TimelineId>();
 	const [highlightTimelineIds, setHighlightTimelineIds] = useState<ReadonlyArray<TimelineId>>([]);
 	const [highlightDays, setHighlightDays] = useState<ReadonlyArray<DateTime>>([]);
 	const [highlightCallbackStore, /* nop */] = useState(createEmphasisStore());
-	const [highlightValueStore, setEmphasisValueStore] = useState(createEmphasisValueStore(activeTimelineId, undefined, highlightTimelineIds, highlightDays));
+	const [highlightValueStore, setEmphasisValueStore] = useState(createEmphasisValueStore(undefined, undefined, highlightTimelineIds, highlightDays));
 
 	const dynamicStyleNodes = useMemo(() => {
 		return renderDynamicStyle(props.configuration.design, props.editorData.setting.theme);
@@ -86,12 +86,12 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	useEffect(() => {
 		console.debug("EmphasisValueStore");
-		setEmphasisValueStore(createEmphasisValueStore(activeTimelineId, undefined, highlightTimelineIds, highlightDays));
-	}, [activeTimelineId, highlightTimelineIds, highlightDays]);
+		setEmphasisValueStore(createEmphasisValueStore(undefined, undefined, highlightTimelineIds, highlightDays));
+	}, [highlightTimelineIds, highlightDays]);
 
 	function createEmphasisStore(): HighlightCallbackStore {
 		const result: HighlightCallbackStore = {
-			setActiveTimeline: handleSetActiveTimeline,
+			//setActiveTimeline: handleSetActiveTimeline,
 			//setHoverTimeline: handleSetHoverTimeline,
 			setHighlights: handleSetEmphasis,
 		};
@@ -201,10 +201,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	// 	setHoverTimelineId(timelineId);
 	// }
 
-	function handleSetActiveTimeline(timelineId: TimelineId | undefined): void {
-		console.debug("active", timelineId);
-		setActiveTimelineId(timelineId);
-	}
+	// function handleSetActiveTimeline(timelineId: TimelineId | undefined): void {
+	// 	console.debug("active", timelineId);
+	// 	setActiveTimelineId(timelineId);
+	// }
 
 	function handleSetEmphasis(timelineIds: ReadonlyArray<TimelineId>, days: ReadonlyArray<DateTime>): void {
 		console.debug("emphasis", timelineIds, days);

@@ -30,6 +30,8 @@ import { MoveDirection } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
+import { ActiveTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
+import { useSetAtom } from "jotai";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps, HighlightCallbackStoreProps {
 	currentTimeline: AnyTimeline;
@@ -43,6 +45,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
+	const setActiveTimelineIdAtom = useSetAtom(ActiveTimelineIdAtom);
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
 	const [memberId, setMemberId] = useState(Settings.maybeTaskTimeline(props.currentTimeline) ? props.currentTimeline.memberId : "");
@@ -306,9 +309,9 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleFocus(isFocus: boolean): void {
 		if (isFocus) {
-			props.highlightCallbackStore.setActiveTimeline(props.currentTimeline.id);
+			setActiveTimelineIdAtom(props.currentTimeline.id);
 		} else {
-			props.highlightCallbackStore.setActiveTimeline(undefined);
+			setActiveTimelineIdAtom(undefined);
 		}
 	}
 
