@@ -648,7 +648,9 @@ $highlight-area-z-index: 5;
 			&.hover {
 				border-bottom: 2px solid coral;
 			}
-			&.highlight {}
+			&.highlight {
+				background: rgba(yellow, 0.5);
+			}
 		}
 	}
 }

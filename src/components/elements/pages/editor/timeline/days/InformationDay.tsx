@@ -14,8 +14,9 @@ import { Days } from "@/models/Days";
 import { Editors } from "@/models/Editors";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
+import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 
-interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, TimelineStoreProps {
+interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, TimelineStoreProps, HighlightCallbackStoreProps {
 	readonly date: DateTime;
 }
 
@@ -79,7 +80,8 @@ const InformationDay: FC<Props> = (props: Props) => {
 		;
 
 	function handleClickTimeline(timelineId: TimelineId): void {
-		Editors.scrollView(timelineId, props.date);
+			props.highlightCallbackStore.setHighlights([timelineId], [props.date]);
+			Editors.scrollView(timelineId, props.date);
 	}
 
 	function handleClose(): void {

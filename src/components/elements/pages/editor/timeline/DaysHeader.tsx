@@ -161,6 +161,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 									resourceInfo={props.resourceInfo}
 									setting={props.setting}
 									timelineStore={props.timelineStore}
+									highlightCallbackStore={props.highlightCallbackStore}
 								/>
 							);
 						})}

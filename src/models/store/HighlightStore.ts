@@ -19,7 +19,7 @@ export interface HighlightCallbackStore {
 	 * ライムライン強調状態設定。
 	 * @param timelineIds
 	 */
-	setEmphasis(timelineIds: ReadonlyArray<TimelineId>, days: ReadonlyArray<DateTime>): void;
+	setHighlights(timelineIds: ReadonlyArray<TimelineId>, days: ReadonlyArray<DateTime>): void;
 }
 
 export interface HighlightValueStore {

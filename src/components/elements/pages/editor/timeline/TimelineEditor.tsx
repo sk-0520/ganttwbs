@@ -92,7 +92,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		const result: HighlightCallbackStore = {
 			setActiveTimeline: handleSetActiveTimeline,
 			setHoverTimeline: handleSetHoverTimeline,
-			setEmphasis: handleSetEmphasis,
+			setHighlights: handleSetEmphasis,
 		};
 		return result;
 	}
@@ -382,6 +382,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 		setTimeout(() => {
+			highlightCallbackStore.setHighlights([newTimeline.id], []);
 			Editors.scrollView(newTimeline, undefined);
 		}, 0);
 	}
