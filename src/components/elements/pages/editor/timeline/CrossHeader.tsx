@@ -1,3 +1,4 @@
+import { useSetAtom } from "jotai";
 import { FC, useEffect, useState } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
@@ -5,6 +6,7 @@ import InformationDialog from "@/components/elements/pages/editor/timeline/Infor
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
+import { HoverTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
@@ -25,6 +27,7 @@ interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, Tim
 }
 
 const CrossHeader: FC<Props> = (props: Props) => {
+	const setHoverTimelineIdAtom = useSetAtom(HoverTimelineIdAtom);
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 	const [workload, setWorkload] = useState(0);
@@ -133,7 +136,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	function handleMouseEnter() {
-		props.highlightCallbackStore.setHoverTimeline(undefined);
+		setHoverTimelineIdAtom(undefined);
 	}
 
 	function scrollView(timelineId: TimelineId | undefined, date: DateTime | undefined): void {

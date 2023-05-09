@@ -1,9 +1,11 @@
+import { useSetAtom } from "jotai";
 import { FC, useMemo } from "react";
 
 import InformationDay from "@/components/elements/pages/editor/timeline/days/InformationDay";
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
+import { HoverTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
@@ -30,6 +32,8 @@ type YearMonth = {
 
 const DaysHeader: FC<Props> = (props: Props) => {
 	const locale = useLocale();
+
+	const setHoverTimelineIdAtom = useSetAtom(HoverTimelineIdAtom);
 
 	const { dates, yearMonthBucket } = useMemo(() => {
 		console.debug("DaysHeader - dates", new Date());
@@ -129,7 +133,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	}, [locale, props.configuration.design.dummy.width]);
 
 	function handleMouseEnter() {
-		props.highlightCallbackStore.setHoverTimeline(undefined);
+		setHoverTimelineIdAtom(undefined);
 	}
 
 	return (
@@ -174,3 +178,4 @@ const DaysHeader: FC<Props> = (props: Props) => {
 };
 
 export default DaysHeader;
+

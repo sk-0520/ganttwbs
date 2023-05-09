@@ -1,8 +1,10 @@
+import { useAtomValue } from "jotai";
 import { FC, useEffect, useMemo, useState } from "react";
 
 import ColumnHighlight from "@/components/elements/pages/editor/timeline/highlight/ColumnHighlight";
 import RowHighlight from "@/components/elements/pages/editor/timeline/highlight/RowHighlight";
 import { Charts } from "@/models/Charts";
+import { HoverTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { HighlightValueStoreProps } from "@/models/data/props/HighlightStoreProps";
@@ -14,6 +16,8 @@ interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, Hig
 }
 
 const HighlightArea: FC<Props> = (props: Props) => {
+
+	const hoverTimelineIdAtom = useAtomValue(HoverTimelineIdAtom);
 
 	const [crossHeaderWidth, setCrossHeaderWidth] = useState(0);
 	const [crossHeaderHeight, setCrossHeaderHeight] = useState(0);
@@ -59,11 +63,11 @@ const HighlightArea: FC<Props> = (props: Props) => {
 					/>
 				);
 			})}
-			{props.highlightValueStore.hoverTimelineId && (
+			{hoverTimelineIdAtom && (
 				<RowHighlight
 					configuration={props.configuration}
 					mode="hover"
-					timelineId={props.highlightValueStore.hoverTimelineId}
+					timelineId={hoverTimelineIdAtom}
 					areaData={areaData}
 					crossHeaderWidth={crossHeaderWidth}
 					timelineStore={props.timelineStore}

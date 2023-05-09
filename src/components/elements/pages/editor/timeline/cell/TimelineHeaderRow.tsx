@@ -1,6 +1,8 @@
 import classNames from "classnames";
+import { useSetAtom } from "jotai";
 import { FC, ReactNode, useEffect, useState } from "react";
 
+import { HoverTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
@@ -18,6 +20,7 @@ interface Props extends TimelineStoreProps, HighlightCallbackStoreProps {
 }
 
 const TimelineHeaderRow: FC<Props> = (props: Props) => {
+	const setHoverTimelineIdAtom = useSetAtom(HoverTimelineIdAtom);
 
 	const [dropEventClassName, setDropEventClassName] = useState("");
 
@@ -36,7 +39,7 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 
 	function handleMouseEnter() {
 		if (!props.draggingTimeline && !props.selectingBeginDate) {
-			props.highlightCallbackStore.setHoverTimeline(props.currentTimeline.id);
+			setHoverTimelineIdAtom(props.currentTimeline.id);
 		}
 	}
 	// function handleMouseLeave() {

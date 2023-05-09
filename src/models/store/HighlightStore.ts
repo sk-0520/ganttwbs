@@ -9,7 +9,7 @@ export interface HighlightCallbackStore {
 	 * ライムラインホバー状態設定。
 	 * @param timelineId
 	 */
-	setHoverTimeline(timelineId: TimelineId | undefined): void;
+	//setHoverTimeline(timelineId: TimelineId | undefined): void;
 	/**
 	 * ライムラインアクティブ状態設定。
 	 * @param timelineId

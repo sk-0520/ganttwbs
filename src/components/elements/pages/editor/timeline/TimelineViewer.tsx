@@ -1,9 +1,11 @@
+import { useSetAtom } from "jotai";
 import { FC, MouseEvent, ReactNode, useMemo } from "react";
 
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
 import { Calendars } from "@/models/Calendars";
 import { Charts } from "@/models/Charts";
+import { HoverTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
@@ -19,6 +21,7 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 }
 
 const TimelineViewer: FC<Props> = (props: Props) => {
+	const setHoverTimelineIdAtom = useSetAtom(HoverTimelineIdAtom);
 
 	const areaData = useMemo(() => {
 		return Charts.createAreaData(props.configuration.design.seed.cell, props.calendarInfo.range, props.timelineStore.totalItemMap.size);
@@ -120,19 +123,19 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 	function handleMouseMove(ev: MouseEvent) {
 		// 下でグダグダやってるけどこっち(か算出方法)が間違ってる感あるなぁ
 		if (ev.nativeEvent.offsetY < 0 || areaData.size.height <= ev.nativeEvent.offsetY) {
-			props.highlightCallbackStore.setHoverTimeline(undefined);
+			setHoverTimelineIdAtom(undefined);
 			return;
 		}
 
 		const sequenceIndex = Math.floor(ev.nativeEvent.offsetY / areaData.cell.height.value);
 		// ここのグダグダ感
 		if(props.timelineStore.sequenceItems.length <= sequenceIndex) {
-			props.highlightCallbackStore.setHoverTimeline(undefined);
+			setHoverTimelineIdAtom(undefined);
 			return;
 		}
 
 		const timeline = props.timelineStore.sequenceItems[sequenceIndex];
-		props.highlightCallbackStore.setHoverTimeline(timeline.id);
+		setHoverTimelineIdAtom(timeline.id);
 	}
 
 	return (
