@@ -13,6 +13,7 @@ import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/Workl
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
 import { ActiveTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { DetailEditTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
@@ -44,6 +45,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
+	const setDetailEditTimeline = useSetAtom(DetailEditTimelineAtom);
 	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
@@ -59,6 +61,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	useEffect(() => {
 		const timelineItem = props.timelineStore.changedItemMap.get(props.currentTimeline.id);
 		if (timelineItem) {
+			setSubject(timelineItem.timeline.subject);
 
 			if (Settings.maybeGroupTimeline(timelineItem.timeline)) {
 				const workload = Timelines.sumWorkloadByGroup(timelineItem.timeline).totalDays;
@@ -97,7 +100,6 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			handleFocus(true);
 		}
 	}, [props.currentTimeline.id, props.selectingBeginDate]); // eslint-disable-line react-hooks/exhaustive-deps
-
 
 	useEffect(() => {
 		if (props.selectingBeginDate) {
@@ -177,7 +179,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleShowDetail() {
-		props.timelineStore.startDetailEdit(props.currentTimeline);
+		setDetailEditTimeline(props.currentTimeline);
 	}
 
 	function handleShowTimeline(): void {

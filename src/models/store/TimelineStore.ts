@@ -78,8 +78,6 @@ export interface TimelineStore {
 	 * @param sourceTimeline
 	 */
 	startDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void;
-
-	startDetailEdit(timeline: AnyTimeline): void;
 }
 
 

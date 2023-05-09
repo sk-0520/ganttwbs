@@ -1,5 +1,5 @@
 
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import { As } from "@/models/As";
 import { Progress } from "@/models/data/Setting";
@@ -19,6 +19,10 @@ interface Props {
 
 const ProgressCell: FC<Props> = (props: Props) => {
 	const [progress, setProgress] = useState(props.progress);
+
+	useEffect(() => {
+		setProgress(props.progress);
+	}, [props.progress]);
 
 	if (props.readOnly) {
 		return (
@@ -45,7 +49,7 @@ const ProgressCell: FC<Props> = (props: Props) => {
 			<select
 				className="edit"
 				disabled={props.disabled}
-				value={progress}
+				value={progress.toString()}
 				onChange={ev => handleChangeProgress(ev.target.value)}
 				onFocus={ev => props.callbackFocus(true)}
 				onBlur={ev => props.callbackFocus(false)}
@@ -54,7 +58,7 @@ const ProgressCell: FC<Props> = (props: Props) => {
 					return (
 						<option
 							key={a}
-							value={a}
+							value={a.toString()}
 						>
 							{Timelines.displayProgress(a)}
 						</option>

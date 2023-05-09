@@ -1,4 +1,4 @@
-import { Provider as JotaiProvider, useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { DragEvent, FC, useLayoutEffect, useMemo } from "react";
 import { ReactNode, useState } from "react";
 
@@ -13,6 +13,7 @@ import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { DetailEditTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -50,6 +51,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	const setHoverTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
+	const [detailEditTimeline, setDetailEditTimeline] = useAtom(DetailEditTimelineAtom);
 
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
@@ -64,7 +66,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
-	const [visibleDetailEditDialog, setVisibleDetailEditDialog] = useState<AnyTimeline>();
 
 	const dynamicStyleNodes = useMemo(() => {
 		return renderDynamicStyle(props.configuration.design, props.editorData.setting.theme);
@@ -113,7 +114,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			removeTimeline: handleRemoveTimeline,
 
 			startDragTimeline: handleStartDragTimeline,
-			startDetailEdit: handleStartDetailEdit,
 		};
 
 		return result;
@@ -273,15 +273,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		setDraggingTimeline(dragging);
 	}
 
-	function handleStartDetailEdit(timeline: AnyTimeline): void {
-		console.debug("詳細編集開始", timeline);
-		setVisibleDetailEditDialog(timeline);
-	}
-
 	function handleEndDetailEdit(sourceTimeline: AnyTimeline, changedTimeline: AnyTimeline | null): void {
 		console.debug("詳細編集終了", changedTimeline);
 
-		setVisibleDetailEditDialog(undefined);
+		setDetailEditTimeline(undefined);
 
 		if (changedTimeline) {
 			handleUpdateTimeline(changedTimeline);
@@ -515,57 +510,55 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	};
 
 	return (
-		<JotaiProvider>
-			<div id="timeline">
-				{dynamicStyleNodes}
+		<div id="timeline">
+			{dynamicStyleNodes}
 
-				<CrossHeader
-					configuration={props.configuration}
-					setting={props.editorData.setting}
-					timelineStore={timelineStore}
-					calendarInfo={calendarInfo}
-				/>
-				<DaysHeader
-					configuration={props.configuration}
-					setting={props.editorData.setting}
-					timelineStore={timelineStore}
-					calendarInfo={calendarInfo}
-					resourceInfo={resourceInfo}
-				/>
-				<TimelineItems
-					configuration={props.configuration}
-					setting={props.editorData.setting}
-					draggingTimeline={draggingTimeline}
-					dropTimeline={dropTimeline}
-					selectingBeginDate={selectingBeginDate}
-					beginDateCallbacks={beginDateCallbacks}
-					resourceInfo={resourceInfo}
-					calendarInfo={calendarInfo}
-					timelineStore={timelineStore}
-				/>
-				<TimelineViewer
-					configuration={props.configuration}
-					setting={props.editorData.setting}
-					resourceInfo={resourceInfo}
-					calendarInfo={calendarInfo}
-					timelineStore={timelineStore}
-				/>
-				<HighlightArea
-					configuration={props.configuration}
-					setting={props.editorData.setting}
-					calendarInfo={calendarInfo}
-					timelineStore={timelineStore}
-				/>
-				{visibleDetailEditDialog && <TimelineDetailEditDialog
-					configuration={props.configuration}
-					setting={props.editorData.setting}
-					calendarInfo={calendarInfo}
-					resourceInfo={resourceInfo}
-					timeline={visibleDetailEditDialog}
-					callbackSubmit={(timeline) => handleEndDetailEdit(visibleDetailEditDialog, timeline)}
-				/>}
-			</div>
-		</JotaiProvider>
+			<CrossHeader
+				configuration={props.configuration}
+				setting={props.editorData.setting}
+				timelineStore={timelineStore}
+				calendarInfo={calendarInfo}
+			/>
+			<DaysHeader
+				configuration={props.configuration}
+				setting={props.editorData.setting}
+				timelineStore={timelineStore}
+				calendarInfo={calendarInfo}
+				resourceInfo={resourceInfo}
+			/>
+			<TimelineItems
+				configuration={props.configuration}
+				setting={props.editorData.setting}
+				draggingTimeline={draggingTimeline}
+				dropTimeline={dropTimeline}
+				selectingBeginDate={selectingBeginDate}
+				beginDateCallbacks={beginDateCallbacks}
+				resourceInfo={resourceInfo}
+				calendarInfo={calendarInfo}
+				timelineStore={timelineStore}
+			/>
+			<TimelineViewer
+				configuration={props.configuration}
+				setting={props.editorData.setting}
+				resourceInfo={resourceInfo}
+				calendarInfo={calendarInfo}
+				timelineStore={timelineStore}
+			/>
+			<HighlightArea
+				configuration={props.configuration}
+				setting={props.editorData.setting}
+				calendarInfo={calendarInfo}
+				timelineStore={timelineStore}
+			/>
+			{detailEditTimeline && <TimelineDetailEditDialog
+				configuration={props.configuration}
+				setting={props.editorData.setting}
+				calendarInfo={calendarInfo}
+				resourceInfo={resourceInfo}
+				timeline={detailEditTimeline}
+				callbackSubmit={(timeline) => handleEndDetailEdit(detailEditTimeline, timeline)}
+			/>}
+		</div>
 	);
 };
 
