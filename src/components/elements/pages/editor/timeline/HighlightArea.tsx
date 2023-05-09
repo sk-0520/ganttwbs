@@ -49,6 +49,19 @@ const HighlightArea: FC<Props> = (props: Props) => {
 					timelineStore={props.timelineStore}
 				/>
 			)}
+			{props.highlightValueStore.highlightTimelineIds.map(a => {
+				return (
+					<RowHighlight
+						key={a}
+						configuration={props.configuration}
+						mode="highlight"
+						timelineId={a}
+						areaData={areaData}
+						crossHeaderWidth={crossHeaderWidth}
+						timelineStore={props.timelineStore}
+					/>
+				);
+			})}
 		</div>
 	);
 };

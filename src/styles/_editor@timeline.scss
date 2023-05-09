@@ -649,7 +649,41 @@ $highlight-area-z-index: 5;
 				border-bottom: 2px solid coral;
 			}
 			&.highlight {
-				background: rgba(yellow, 0.5);
+				$base-color: yellow;
+
+				background: rgba($base-color, 0.5);
+				animation: keyframes 3s ease forwards;
+
+				@keyframes keyframes {
+					0% {
+						background-color: rgba($base-color, 0.7);
+					}
+					10% {
+						background-color: rgba($base-color, 0.5);
+					}
+					100% {
+						background-color: rgba($base-color, 0);
+					}
+				}
+			}
+		}
+
+		.highlight-column {
+			$base-color: yellow;
+
+			background: rgba($base-color, 0.5);
+			animation: keyframes 3s ease forwards;
+
+			@keyframes keyframes {
+				0% {
+					background-color: rgba($base-color, 0.7);
+				}
+				10% {
+					background-color: rgba($base-color, 0.5);
+				}
+				100% {
+					background-color: rgba($base-color, 0);
+				}
 			}
 		}
 	}
