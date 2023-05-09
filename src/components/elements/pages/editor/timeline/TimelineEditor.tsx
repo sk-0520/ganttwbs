@@ -12,7 +12,7 @@ import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
-import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { ActiveTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { DetailEditTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
@@ -49,7 +49,9 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 	const workRangesCache = new Map<TimelineId, WorkRange>();
 
-	const setHoverTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
+	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
+	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
+	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
 	const [detailEditTimeline, setDetailEditTimeline] = useAtom(DetailEditTimelineAtom);
 
@@ -149,7 +151,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		if (sameGroup) {
 			// 同一グループ内移動
 			Arrays.moveIndexInPlace(dropTimeline.sourceGroupTimeline.children, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
-
 		} else {
 			// グループから破棄
 			const newSourceChildren = dropTimeline.sourceGroupTimeline.children.filter(a => a.id !== dropTimeline.timeline.id);
@@ -167,6 +168,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		setDraggingTimeline(null);
 
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
+
+		setActiveTimelineId(undefined);
+		setHoverTimelineId(dropTimeline.timeline.id);
+		setHighlightTimelineIds([dropTimeline.timeline.id]);
 	}
 
 	// function handleSetHoverTimeline(timelineId: TimelineId | undefined): void {
@@ -187,6 +192,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleStartDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void {
 		console.debug(event, sourceTimeline);
+
+		setActiveTimelineId(undefined);
+		setHoverTimelineId(sourceTimeline.id);
+		setHighlightTimelineIds([]);
 
 		const dragging: DraggingTimeline = {
 			sourceTimeline: sourceTimeline,
@@ -351,7 +360,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 		setTimeout(() => {
-			setHoverTimelineIds([newTimeline.id]);
+			setHighlightTimelineIds([newTimeline.id]);
 			setHighlightDays([]);
 			Editors.scrollView(newTimeline, undefined);
 		}, 0);
