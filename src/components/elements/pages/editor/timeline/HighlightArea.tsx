@@ -4,21 +4,22 @@ import { FC, useEffect, useMemo, useState } from "react";
 import ColumnHighlight from "@/components/elements/pages/editor/timeline/highlight/ColumnHighlight";
 import RowHighlight from "@/components/elements/pages/editor/timeline/highlight/RowHighlight";
 import { Charts } from "@/models/Charts";
-import { ActiveTimelineIdAtom, HoverTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
+import { ActiveTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { HighlightValueStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 
-interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, HighlightValueStoreProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 
 }
 
 const HighlightArea: FC<Props> = (props: Props) => {
 
-	const activeTimelineIdAtom = useAtomValue(ActiveTimelineIdAtom);
-	const hoverTimelineIdAtom = useAtomValue(HoverTimelineIdAtom);
+	const activeTimelineId = useAtomValue(ActiveTimelineIdAtom);
+	const hoverTimelineId = useAtomValue(HoverTimelineIdAtom);
+	const highlightTimelineIds = useAtomValue(HighlightTimelineIdsAtom);
+	const highlightDays = useAtomValue(HighlightDaysAtom);
 
 	const [crossHeaderWidth, setCrossHeaderWidth] = useState(0);
 	const [crossHeaderHeight, setCrossHeaderHeight] = useState(0);
@@ -37,7 +38,7 @@ const HighlightArea: FC<Props> = (props: Props) => {
 
 	return (
 		<div id="highlight-area">
-			{props.highlightValueStore.highlightTimelineIds.map(a => {
+			{highlightTimelineIds.map(a => {
 				return (
 					<RowHighlight
 						key={a}
@@ -50,7 +51,7 @@ const HighlightArea: FC<Props> = (props: Props) => {
 					/>
 				);
 			})}
-			{props.highlightValueStore.highlightDays.map(a => {
+			{highlightDays.map(a => {
 				return (
 					<ColumnHighlight
 						key={a.ticks}
@@ -64,21 +65,21 @@ const HighlightArea: FC<Props> = (props: Props) => {
 					/>
 				);
 			})}
-			{hoverTimelineIdAtom && (
+			{hoverTimelineId && (
 				<RowHighlight
 					configuration={props.configuration}
 					mode="hover"
-					timelineId={hoverTimelineIdAtom}
+					timelineId={hoverTimelineId}
 					areaData={areaData}
 					crossHeaderWidth={crossHeaderWidth}
 					timelineStore={props.timelineStore}
 				/>
 			)}
-			{activeTimelineIdAtom && (
+			{activeTimelineId && (
 				<RowHighlight
 					configuration={props.configuration}
 					mode="active"
-					timelineId={activeTimelineIdAtom}
+					timelineId={activeTimelineId}
 					areaData={areaData}
 					crossHeaderWidth={crossHeaderWidth}
 					timelineStore={props.timelineStore}

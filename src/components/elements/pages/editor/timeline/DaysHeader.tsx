@@ -8,7 +8,6 @@ import { Calendars } from "@/models/Calendars";
 import { HoverTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -18,8 +17,7 @@ import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 
-
-interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps, ResourceInfoProps, HighlightCallbackStoreProps {
+interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps, ResourceInfoProps {
 	//nop
 }
 
@@ -33,7 +31,7 @@ type YearMonth = {
 const DaysHeader: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
-	const setHoverTimelineIdAtom = useSetAtom(HoverTimelineIdAtom);
+	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 
 	const { dates, yearMonthBucket } = useMemo(() => {
 		console.debug("DaysHeader - dates", new Date());
@@ -133,7 +131,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	}, [locale, props.configuration.design.dummy.width]);
 
 	function handleMouseEnter() {
-		setHoverTimelineIdAtom(undefined);
+		setHoverTimelineId(undefined);
 	}
 
 	return (
@@ -165,7 +163,6 @@ const DaysHeader: FC<Props> = (props: Props) => {
 									resourceInfo={props.resourceInfo}
 									setting={props.setting}
 									timelineStore={props.timelineStore}
-									highlightCallbackStore={props.highlightCallbackStore}
 								/>
 							);
 						})}

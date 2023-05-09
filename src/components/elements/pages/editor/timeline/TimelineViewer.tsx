@@ -8,7 +8,6 @@ import { Charts } from "@/models/Charts";
 import { HoverTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -16,12 +15,12 @@ import { ColorString } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps, HighlightCallbackStoreProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	//nop
 }
 
 const TimelineViewer: FC<Props> = (props: Props) => {
-	const setHoverTimelineIdAtom = useSetAtom(HoverTimelineIdAtom);
+	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 
 	const areaData = useMemo(() => {
 		return Charts.createAreaData(props.configuration.design.seed.cell, props.calendarInfo.range, props.timelineStore.totalItemMap.size);
@@ -123,19 +122,19 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 	function handleMouseMove(ev: MouseEvent) {
 		// 下でグダグダやってるけどこっち(か算出方法)が間違ってる感あるなぁ
 		if (ev.nativeEvent.offsetY < 0 || areaData.size.height <= ev.nativeEvent.offsetY) {
-			setHoverTimelineIdAtom(undefined);
+			setHoverTimelineId(undefined);
 			return;
 		}
 
 		const sequenceIndex = Math.floor(ev.nativeEvent.offsetY / areaData.cell.height.value);
 		// ここのグダグダ感
 		if(props.timelineStore.sequenceItems.length <= sequenceIndex) {
-			setHoverTimelineIdAtom(undefined);
+			setHoverTimelineId(undefined);
 			return;
 		}
 
 		const timeline = props.timelineStore.sequenceItems[sequenceIndex];
-		setHoverTimelineIdAtom(timeline.id);
+		setHoverTimelineId(timeline.id);
 	}
 
 	return (

@@ -1,5 +1,5 @@
-import { Provider as JotaiProvider } from "jotai";
-import { DragEvent, FC, useEffect, useLayoutEffect, useMemo } from "react";
+import { Provider as JotaiProvider, useSetAtom } from "jotai";
+import { DragEvent, FC, useLayoutEffect, useMemo } from "react";
 import { ReactNode, useState } from "react";
 
 import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
@@ -12,6 +12,7 @@ import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
+import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/HighlightAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -29,7 +30,6 @@ import { Designs } from "@/models/Designs";
 import { Editors } from "@/models/Editors";
 import { Resources } from "@/models/Resources";
 import { Settings } from "@/models/Settings";
-import { HighlightCallbackStore, HighlightValueStore } from "@/models/store/HighlightStore";
 import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
@@ -48,6 +48,9 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 	const workRangesCache = new Map<TimelineId, WorkRange>();
 
+	const setHoverTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
+	const setHighlightDays = useSetAtom(HighlightDaysAtom);
+
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
 	}, [props.editorData.setting]);
@@ -62,12 +65,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 	const [visibleDetailEditDialog, setVisibleDetailEditDialog] = useState<AnyTimeline>();
-	//const [hoverTimelineId, setHoverTimelineId] = useState<TimelineId>();
-	//const [activeTimelineId, setActiveTimelineId] = useState<TimelineId>();
-	const [highlightTimelineIds, setHighlightTimelineIds] = useState<ReadonlyArray<TimelineId>>([]);
-	const [highlightDays, setHighlightDays] = useState<ReadonlyArray<DateTime>>([]);
-	const [highlightCallbackStore, /* nop */] = useState(createEmphasisStore());
-	const [highlightValueStore, setEmphasisValueStore] = useState(createEmphasisValueStore(undefined, undefined, highlightTimelineIds, highlightDays));
 
 	const dynamicStyleNodes = useMemo(() => {
 		return renderDynamicStyle(props.configuration.design, props.editorData.setting.theme);
@@ -83,30 +80,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	useLayoutEffect(() => {
 		updateRelations();
 	}, [sequenceTimelines]); // eslint-disable-line react-hooks/exhaustive-deps
-
-	useEffect(() => {
-		console.debug("EmphasisValueStore");
-		setEmphasisValueStore(createEmphasisValueStore(undefined, undefined, highlightTimelineIds, highlightDays));
-	}, [highlightTimelineIds, highlightDays]);
-
-	function createEmphasisStore(): HighlightCallbackStore {
-		const result: HighlightCallbackStore = {
-			//setActiveTimeline: handleSetActiveTimeline,
-			//setHoverTimeline: handleSetHoverTimeline,
-			setHighlights: handleSetEmphasis,
-		};
-		return result;
-	}
-
-	function createEmphasisValueStore(activeTimelineId: TimelineId | undefined, hoverTimelineId: TimelineId | undefined, emphasisTimelineIds: ReadonlyArray<TimelineId>, emphasisDays: ReadonlyArray<DateTime>): HighlightValueStore {
-		const result: HighlightValueStore = {
-			activeTimelineId,
-			hoverTimelineId,
-			highlightTimelineIds: emphasisTimelineIds,
-			highlightDays: emphasisDays,
-		};
-		return result;
-	}
 
 	function createTimelineStore(sequenceTimelines: ReadonlyArray<AnyTimeline>, totalTimelineMap: ReadonlyMap<TimelineId, AnyTimeline>, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
 
@@ -206,11 +179,11 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	// 	setActiveTimelineId(timelineId);
 	// }
 
-	function handleSetEmphasis(timelineIds: ReadonlyArray<TimelineId>, days: ReadonlyArray<DateTime>): void {
-		console.debug("emphasis", timelineIds, days);
-		setHighlightTimelineIds(timelineIds);
-		setHighlightDays(days);
-	}
+	// function handleSetEmphasis(timelineIds: ReadonlyArray<TimelineId>, days: ReadonlyArray<DateTime>): void {
+	// 	console.debug("emphasis", timelineIds, days);
+	// 	setHighlightTimelineIds(timelineIds);
+	// 	setHighlightDays(days);
+	// }
 
 	function handleStartDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void {
 		console.debug(event, sourceTimeline);
@@ -383,7 +356,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 		setTimeout(() => {
-			highlightCallbackStore.setHighlights([newTimeline.id], []);
+			setHoverTimelineIds([newTimeline.id]);
+			setHighlightDays([]);
 			Editors.scrollView(newTimeline, undefined);
 		}, 0);
 	}
@@ -550,7 +524,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 					setting={props.editorData.setting}
 					timelineStore={timelineStore}
 					calendarInfo={calendarInfo}
-					highlightCallbackStore={highlightCallbackStore}
 				/>
 				<DaysHeader
 					configuration={props.configuration}
@@ -558,7 +531,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 					timelineStore={timelineStore}
 					calendarInfo={calendarInfo}
 					resourceInfo={resourceInfo}
-					highlightCallbackStore={highlightCallbackStore}
 				/>
 				<TimelineItems
 					configuration={props.configuration}
@@ -570,7 +542,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 					resourceInfo={resourceInfo}
 					calendarInfo={calendarInfo}
 					timelineStore={timelineStore}
-					highlightCallbackStore={highlightCallbackStore}
 				/>
 				<TimelineViewer
 					configuration={props.configuration}
@@ -578,14 +549,12 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 					resourceInfo={resourceInfo}
 					calendarInfo={calendarInfo}
 					timelineStore={timelineStore}
-					highlightCallbackStore={highlightCallbackStore}
 				/>
 				<HighlightArea
 					configuration={props.configuration}
 					setting={props.editorData.setting}
 					calendarInfo={calendarInfo}
 					timelineStore={timelineStore}
-					highlightValueStore={highlightValueStore}
 				/>
 				{visibleDetailEditDialog && <TimelineDetailEditDialog
 					configuration={props.configuration}

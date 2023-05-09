@@ -1,3 +1,4 @@
+import { useSetAtom } from "jotai";
 import { useState, useEffect, DragEvent, FC } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
@@ -11,13 +12,13 @@ import TimelineHeaderRow from "@/components/elements/pages/editor/timeline/cell/
 import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/WorkloadCell";
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
+import { ActiveTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -30,10 +31,8 @@ import { MoveDirection } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
-import { ActiveTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
-import { useSetAtom } from "jotai";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps, HighlightCallbackStoreProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	currentTimeline: AnyTimeline;
 	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
@@ -45,7 +44,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
-	const setActiveTimelineIdAtom = useSetAtom(ActiveTimelineIdAtom);
+	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
 	const [memberId, setMemberId] = useState(Settings.maybeTaskTimeline(props.currentTimeline) ? props.currentTimeline.memberId : "");
@@ -309,9 +308,9 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleFocus(isFocus: boolean): void {
 		if (isFocus) {
-			setActiveTimelineIdAtom(props.currentTimeline.id);
+			setActiveTimelineId(props.currentTimeline.id);
 		} else {
-			setActiveTimelineIdAtom(undefined);
+			setActiveTimelineId(undefined);
 		}
 	}
 
@@ -324,7 +323,6 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			draggingTimeline={props.draggingTimeline}
 			timelineStore={props.timelineStore}
 			level={timelineIndex.level}
-			highlightCallbackStore={props.highlightCallbackStore}
 		>
 			<IdCell
 				selectingId={selectingId}

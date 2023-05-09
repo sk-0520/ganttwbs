@@ -5,13 +5,12 @@ import { FC, ReactNode, useEffect, useState } from "react";
 import { HoverTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
-import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends TimelineStoreProps, HighlightCallbackStoreProps {
+interface Props extends TimelineStoreProps {
 	level: number;
 	currentTimeline: AnyTimeline;
 	selectingBeginDate: SelectingBeginDate | null;
@@ -20,7 +19,7 @@ interface Props extends TimelineStoreProps, HighlightCallbackStoreProps {
 }
 
 const TimelineHeaderRow: FC<Props> = (props: Props) => {
-	const setHoverTimelineIdAtom = useSetAtom(HoverTimelineIdAtom);
+	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 
 	const [dropEventClassName, setDropEventClassName] = useState("");
 
@@ -39,7 +38,7 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 
 	function handleMouseEnter() {
 		if (!props.draggingTimeline && !props.selectingBeginDate) {
-			setHoverTimelineIdAtom(props.currentTimeline.id);
+			setHoverTimelineId(props.currentTimeline.id);
 		}
 	}
 	// function handleMouseLeave() {

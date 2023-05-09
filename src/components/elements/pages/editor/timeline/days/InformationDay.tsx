@@ -1,11 +1,12 @@
+import { useSetAtom } from "jotai";
 import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { Calendars } from "@/models/Calendars";
+import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/HighlightAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
-import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -16,12 +17,15 @@ import { Editors } from "@/models/Editors";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, TimelineStoreProps, HighlightCallbackStoreProps {
+interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, TimelineStoreProps {
 	readonly date: DateTime;
 }
 
 const InformationDay: FC<Props> = (props: Props) => {
 	const locale = useLocale();
+
+	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
+	const setHighlightDays = useSetAtom(HighlightDaysAtom);
 
 	const refDetails = useRef<HTMLDetailsElement>(null);
 
@@ -80,8 +84,9 @@ const InformationDay: FC<Props> = (props: Props) => {
 		;
 
 	function handleClickTimeline(timelineId: TimelineId): void {
-			props.highlightCallbackStore.setHighlights([timelineId], [props.date]);
-			Editors.scrollView(timelineId, props.date);
+		setHighlightTimelineIds([timelineId]);
+		setHighlightDays([props.date]);
+		Editors.scrollView(timelineId, props.date);
 	}
 
 	function handleClose(): void {
