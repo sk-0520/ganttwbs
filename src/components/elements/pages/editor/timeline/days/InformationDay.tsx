@@ -3,7 +3,7 @@ import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { Calendars } from "@/models/Calendars";
-import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/HighlightAtoms";
+import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";

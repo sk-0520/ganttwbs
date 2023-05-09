@@ -5,7 +5,7 @@ import InformationDay from "@/components/elements/pages/editor/timeline/days/Inf
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
-import { HoverTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
+import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";

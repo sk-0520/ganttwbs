@@ -5,7 +5,7 @@ import GanttChartTimeline from "@/components/elements/pages/editor/timeline/Gant
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
 import { Calendars } from "@/models/Calendars";
 import { Charts } from "@/models/Charts";
-import { HoverTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
+import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";

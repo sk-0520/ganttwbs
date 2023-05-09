@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { useSetAtom } from "jotai";
 import { FC, ReactNode, useEffect, useState } from "react";
 
-import { HoverTimelineIdAtom } from "@/models/data/atom/HighlightAtoms";
+import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
