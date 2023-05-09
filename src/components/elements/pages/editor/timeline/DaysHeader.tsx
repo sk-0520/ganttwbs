@@ -14,9 +14,10 @@ import { Days } from "@/models/Days";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
+import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 
 
-interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps, ResourceInfoProps {
+interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps, ResourceInfoProps, HighlightCallbackStoreProps {
 	//nop
 }
 
@@ -127,8 +128,15 @@ const DaysHeader: FC<Props> = (props: Props) => {
 		};
 	}, [locale, props.configuration.design.dummy.width]);
 
+	function handleMouseEnter() {
+		props.highlightCallbackStore.setHoverTimeline(undefined);
+	}
+
 	return (
-		<div id="days-header">
+		<div
+			id="days-header"
+			onMouseEnter={handleMouseEnter}
+		>
 			<table>
 				<tbody>
 					<tr className="year-month">

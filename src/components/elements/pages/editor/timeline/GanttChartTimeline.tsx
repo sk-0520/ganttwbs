@@ -37,7 +37,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 			: null
 			;
 
-		const area = Charts.createChartArea(timeSpanRange, props.currentIndex, cell, props.chartSize);
+		const area = Charts.createChartArea(timeSpanRange, props.currentIndex, cell, props.areaSize);
 
 		return (
 			Settings.maybeTaskTimeline(props.currentTimeline)

@@ -3,6 +3,7 @@ import { ReactNode, useState } from "react";
 
 import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
 import DaysHeader from "@/components/elements/pages/editor/timeline/DaysHeader";
+import HighlightArea from "@/components/elements/pages/editor/timeline/HighlightArea";
 import TimelineDetailEditDialog from "@/components/elements/pages/editor/timeline/TimelineDetailEditDialog";
 import TimelineItems from "@/components/elements/pages/editor/timeline/TimelineItems";
 import TimelineViewer from "@/components/elements/pages/editor/timeline/TimelineViewer";
@@ -31,7 +32,6 @@ import { HighlightCallbackStore, HighlightValueStore } from "@/models/store/High
 import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
-import HighlightArea from "@/components/elements/pages/editor/timeline/HighlightArea";
 
 /*
 心臓部
@@ -555,7 +555,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				timelineStore={timelineStore}
 				calendarInfo={calendarInfo}
 				resourceInfo={resourceInfo}
-			/>
+				highlightCallbackStore={highlightCallbackStore}
+				/>
 			<TimelineItems
 				configuration={props.configuration}
 				setting={props.editorData.setting}
@@ -580,6 +581,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				configuration={props.configuration}
 				setting={props.editorData.setting}
 				calendarInfo={calendarInfo}
+				timelineStore={timelineStore}
 				highlightValueStore={highlightValueStore}
 			/>
 			{visibleDetailEditDialog && <TimelineDetailEditDialog

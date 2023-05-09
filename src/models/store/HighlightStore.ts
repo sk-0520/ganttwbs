@@ -1,5 +1,5 @@
-import { DateTime } from "@/models/DateTime";
 import { TimelineId } from "@/models/data/Setting";
+import { DateTime } from "@/models/DateTime";
 
 /**
  * 強調。

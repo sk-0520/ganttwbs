@@ -1,6 +1,9 @@
-import { AreaSize } from "@/models/data/AreaSize";
+import { Calendars } from "@/models/Calendars";
+import { AreaData, AreaSize } from "@/models/data/Area";
+import { CalendarRange } from "@/models/data/CalendarRange";
 import { CellBox } from "@/models/data/CellBox";
 import { ChartArea } from "@/models/data/ChartArea";
+import { CellDesign } from "@/models/data/Design";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { GroupTimeline, MemberId, TaskTimeline, Theme, TimelineId } from "@/models/data/Setting";
 import { TimeSpanRange } from "@/models/data/TimeSpanRange";
@@ -37,6 +40,21 @@ export abstract class Charts {
 			end: endDiffSpan,
 		};
 		return result;
+	}
+
+	public static createAreaData(cell: Readonly<CellDesign>, calendarRange: Readonly<CalendarRange>, rowCount: number): AreaData {
+		const days = Calendars.getCalendarRangeDays(calendarRange);
+
+		const areaSize: AreaSize = {
+			width: cell.width.value * days,
+			height: cell.height.value * rowCount,
+		};
+
+		return {
+			cell,
+			days,
+			size: areaSize,
+		};
 	}
 
 	public static createChartArea(timeSpanRange: TimeSpanRange | null, index: number, cell: CellBox, chartSize: AreaSize): ChartArea {

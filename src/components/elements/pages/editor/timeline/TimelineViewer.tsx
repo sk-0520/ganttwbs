@@ -1,9 +1,9 @@
-import { FC, ReactNode, useMemo } from "react";
+import { FC, MouseEvent, ReactNode, useMemo } from "react";
 
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
 import { Calendars } from "@/models/Calendars";
-import { AreaSize } from "@/models/data/AreaSize";
+import { Charts } from "@/models/Charts";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
@@ -20,32 +20,18 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 
 const TimelineViewer: FC<Props> = (props: Props) => {
 
-	const { cell, days } = useMemo(() => {
-		const cell = props.configuration.design.seed.cell;
-		const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
-		return {
-			cell,
-			days,
-		};
-	}, [props.configuration, props.calendarInfo]);
-
-	const chartSize = useMemo(() => {
-		const result: AreaSize = {
-			width: cell.width.value * days,
-			height: cell.height.value * props.timelineStore.totalItemMap.size,
-		};
-		return result;
-	}, [cell, days, props.timelineStore.totalItemMap.size]);
-
+	const areaData = useMemo(() => {
+		return Charts.createAreaData(props.configuration.design.seed.cell, props.calendarInfo.range, props.timelineStore.totalItemMap.size);
+	}, [props.configuration, props.calendarInfo, props.timelineStore.totalItemMap.size]);
 
 	const gridNodes = useMemo(() => {
-		const width = cell.width.value * (days + props.configuration.design.dummy.width);
-		const height = cell.height.value * (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height);
+		const width = areaData.cell.width.value * (areaData.days + props.configuration.design.dummy.width);
+		const height = areaData.cell.height.value * (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height);
 
 		// 横軸
 		const gridHorizontals = new Array<ReactNode>();
 		for (let i = 0; i < (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height); i++) {
-			const y = cell.height.value + cell.height.value * i;
+			const y = areaData.cell.height.value + areaData.cell.height.value * i;
 			gridHorizontals.push(
 				<line
 					key={i}
@@ -63,10 +49,10 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 		// 縦軸
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
-		for (let i = 0; i < (days + props.configuration.design.dummy.width); i++) {
+		for (let i = 0; i < (areaData.days + props.configuration.design.dummy.width); i++) {
 			const date = props.calendarInfo.range.begin.add(TimeSpan.fromDays(i));
 
-			const gridX = cell.width.value + cell.width.value * i;
+			const gridX = areaData.cell.width.value + areaData.cell.width.value * i;
 
 			gridVerticals.push(
 				<line
@@ -81,7 +67,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				/>
 			);
 
-			if (days < i) {
+			if (areaData.days < i) {
 				// 曜日とかの判定すらもういらない
 				continue;
 			}
@@ -101,14 +87,14 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				}
 			}
 			if (color) {
-				const holidayX = cell.width.value * i;
+				const holidayX = areaData.cell.width.value * i;
 
 				gridHolidays.push(
 					<rect
 						key={holidayX}
 						x={holidayX}
 						y={0}
-						width={cell.width.value}
+						width={areaData.cell.width.value}
 						height={height}
 						fill={color}
 					/>
@@ -129,14 +115,32 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				</g>
 			</g>
 		);
-	}, [cell, days, props.calendarInfo, props.configuration, props.setting, props.timelineStore.totalItemMap.size]);
+	}, [areaData, props.calendarInfo, props.configuration, props.setting, props.timelineStore.totalItemMap.size]);
+
+	function handleMouseMove(ev: MouseEvent) {
+		// 下でグダグダやってるけどこっち(か算出方法)が間違ってる感あるなぁ
+		if (ev.nativeEvent.offsetY < 0 || areaData.size.height <= ev.nativeEvent.offsetY) {
+			props.highlightCallbackStore.setHoverTimeline(undefined);
+			return;
+		}
+
+		const sequenceIndex = Math.floor(ev.nativeEvent.offsetY / areaData.cell.height.value);
+		// ここのグダグダ感
+		if(props.timelineStore.sequenceItems.length <= sequenceIndex) {
+			props.highlightCallbackStore.setHoverTimeline(undefined);
+			return;
+		}
+
+		const timeline = props.timelineStore.sequenceItems[sequenceIndex];
+		props.highlightCallbackStore.setHoverTimeline(timeline.id);
+	}
 
 	return (
-		<div id="viewer">
+		<div id="viewer" onMouseMove={handleMouseMove}>
 			<svg
 				id="canvas"
-				width={(chartSize.width + (cell.width.value * props.configuration.design.dummy.width)) + "px"}
-				height={(chartSize.height + (cell.height.value * (props.configuration.design.dummy.height - 1))) + "px"}
+				width={(areaData.size.width + (areaData.cell.width.value * props.configuration.design.dummy.width)) + "px"}
+				height={(areaData.size.height + (areaData.cell.height.value * (props.configuration.design.dummy.height - 1))) + "px"}
 			>
 				{gridNodes}
 				{props.timelineStore.sequenceItems.map((a, i) => {
@@ -150,7 +154,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							currentIndex={i}
 							calendarInfo={props.calendarInfo}
 							resourceInfo={props.resourceInfo}
-							chartSize={chartSize}
+							areaSize={areaData.size}
 							timelineStore={props.timelineStore}
 						/>
 					);
@@ -168,7 +172,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							currentIndex={i}
 							calendarInfo={props.calendarInfo}
 							resourceInfo={props.resourceInfo}
-							chartSize={chartSize}
+							areaSize={areaData.size}
 							timelineStore={props.timelineStore}
 						/>
 					);

@@ -2,7 +2,7 @@
 import { FC } from "react";
 
 import { Charts } from "@/models/Charts";
-import { AreaSize } from "@/models/data/AreaSize";
+import { AreaSize } from "@/models/data/Area";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
@@ -16,7 +16,7 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 	currentIndex: number;
 	currentTimeline: TaskTimeline;
 
-	chartSize: AreaSize;
+	areaSize: AreaSize;
 }
 
 const ConnectorTimeline: FC<Props> = (props: Props) => {
@@ -46,7 +46,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 	};
 
 	const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.begin, currentWorkRange);
-	const currentChartArea = Charts.createChartArea(currentTimeSpanRange, props.currentIndex, cell, props.chartSize);
+	const currentChartArea = Charts.createChartArea(currentTimeSpanRange, props.currentIndex, cell, props.areaSize);
 
 	const currentColor = Charts.getTaskBackground(props.currentTimeline, props.resourceInfo.memberMap, props.setting.theme);
 
@@ -74,7 +74,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 				}
 
 				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.begin, previewWorkRange);
-				const previousChartArea = Charts.createChartArea(previousTimeSpanRange, previousIndex, cell, props.chartSize);
+				const previousChartArea = Charts.createChartArea(previousTimeSpanRange, previousIndex, cell, props.areaSize);
 
 				// 基準座標を設定
 				const position = {

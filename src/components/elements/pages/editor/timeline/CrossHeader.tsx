@@ -8,6 +8,7 @@ import locale from "@/locales/ja";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
@@ -18,7 +19,6 @@ import { IdFactory } from "@/models/IdFactory";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
-import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps, HighlightCallbackStoreProps {
 	//nop
@@ -110,7 +110,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 
 	function handleCloseInformation(date: DateTime | undefined): void {
 		setVisibleInformation(false);
-		if(date) {
+		if (date) {
 			Editors.scrollView(undefined, date);
 		}
 	}
@@ -131,8 +131,15 @@ const CrossHeader: FC<Props> = (props: Props) => {
 		}
 	}
 
+	function handleMouseEnter() {
+		props.highlightCallbackStore.setHoverTimeline(undefined);
+	}
+
 	return (
-		<div id="cross-header">
+		<div
+			id="cross-header"
+			onMouseEnter={handleMouseEnter}
+		>
 			<div className="header">
 				<h1>{props.setting.name}</h1>
 			</div>
