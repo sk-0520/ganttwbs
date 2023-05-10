@@ -69,6 +69,43 @@ export abstract class Arrays {
 		return array[array.length - 1];
 	}
 
+
+	/**
+	 * `Array.find` の絶対取る版
+	 * 取得した値が `undefined` の場合に例外を投げるため、値として有効な `undefined` が入らない個所で使用すること。
+	 * @param array
+	 * @param predicate
+	 * @param thisArg
+	 * @returns 値。
+	 * @throws `undefined` の場合に `RangeError`
+	 */
+	public static find<T>(array: ReadonlyArray<T>, predicate: (value: T, index: number, obj: readonly T[]) => boolean, thisArg?: any): T {
+		const result = array.find(predicate, thisArg);
+		if (result === undefined) {
+			throw new RangeError("not found");
+		}
+
+		return result;
+	}
+
+	/**
+	 * `Array.findLast` の絶対取る版
+	 * 取得した値が `undefined` の場合に例外を投げるため、値として有効な `undefined` が入らない個所で使用すること。
+	 * @param array
+	 * @param predicate
+	 * @param thisArg
+	 * @returns 値。
+	 * @throws `undefined` の場合に `RangeError`
+	 */
+	public static findLast<T>(array: ReadonlyArray<T>, predicate: (value: T, index: number, obj: readonly T[]) => boolean, thisArg?: any): T {
+		const result = array.findLast(predicate, thisArg);
+		if (result === undefined) {
+			throw new RangeError("not found");
+		}
+
+		return result;
+	}
+
 	/**
 	 * 配列内位置を移動(破壊的)。
 	 * @param array 対象配列。
