@@ -319,23 +319,6 @@ $viewer-z-index: 2;
 		.timeline-header {
 			border-bottom: 1px dotted black;
 
-			&.dragging {
-				opacity: 0.8;
-				filter: contrast(50%) grayscale(100%);
-			}
-
-			&.drag-over {
-				position: relative;
-				//mix-blend-mode: overlay;
-				outline: 1px solid red;
-				opacity: 0.8;
-			}
-
-			// &.hover {
-			// 	position: relative;
-			// 	outline: 3px double rgba(255, 0, 0, 0.555);
-			// }
-
 			&.selected-previous {
 				text-shadow: 0px 0px 1px;
 				outline: 2px dashed orange;
@@ -668,6 +651,13 @@ $viewer-z-index: 2;
 			}
 			&.highlight {
 				@include highlight-animation("row", yellow);
+			}
+
+			&.drag-source {
+				background: rgba(gray, 0.5);
+			}
+			&.drag-over {
+				background: rgba(lime, 0.3);
 			}
 		}
 

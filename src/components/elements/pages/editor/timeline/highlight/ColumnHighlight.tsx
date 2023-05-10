@@ -2,12 +2,13 @@ import classNames from "classnames";
 import { CSSProperties, FC } from "react";
 
 import { AreaData } from "@/models/data/Area";
+import { ColumnHighlightMode } from "@/models/data/Highlight";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { DateTime } from "@/models/DateTime";
 
 interface Props extends ConfigurationProps, CalendarInfoProps {
-	mode: "highlight";
+	mode: ColumnHighlightMode;
 	date: DateTime;
 	areaData: AreaData;
 	crossHeaderWidth: number;

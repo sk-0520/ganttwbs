@@ -6,7 +6,9 @@ export const enum AutoSaveKind {
 }
 
 interface AutoSaveState {
+	//TODO: 状態として切り分け
 	isEnabled: boolean,
+	//TODO: 状態として切り分け
 	time: TimeSpan,
 	readonly step: number;
 }

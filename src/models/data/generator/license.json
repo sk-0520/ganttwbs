@@ -161,6 +161,13 @@
     "licenses": "MIT",
     "repository": "https://github.com/facebook/jest"
   },
+  "jotai": {
+    "module": "jotai@2.1.0",
+    "version": "2.1.0",
+    "publisher": "Daishi Kato",
+    "licenses": "MIT",
+    "repository": "https://github.com/pmndrs/jotai"
+  },
   "license-checker": {
     "module": "license-checker@25.0.1",
     "version": "25.0.1",

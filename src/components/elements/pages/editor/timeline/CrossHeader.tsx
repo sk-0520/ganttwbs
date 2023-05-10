@@ -1,3 +1,4 @@
+import { useSetAtom } from "jotai";
 import { FC, useEffect, useState } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
@@ -5,10 +6,10 @@ import InformationDialog from "@/components/elements/pages/editor/timeline/Infor
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
+import { HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { GroupTimeline, TimelineId, TimelineKind } from "@/models/data/Setting";
@@ -20,11 +21,14 @@ import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps, HighlightCallbackStoreProps {
+interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 	//nop
 }
 
 const CrossHeader: FC<Props> = (props: Props) => {
+	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
+	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
+	const setHighlightDays = useSetAtom(HighlightDaysAtom);
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 	const [workload, setWorkload] = useState(0);
@@ -133,12 +137,13 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	function handleMouseEnter() {
-		props.highlightCallbackStore.setHoverTimeline(undefined);
+		setHoverTimelineId(undefined);
 	}
 
 	function scrollView(timelineId: TimelineId | undefined, date: DateTime | undefined): void {
-			props.highlightCallbackStore.setHighlights(timelineId ? [timelineId]: [], date ? [date]: []);
-			Editors.scrollView(timelineId, date);
+		setHighlightTimelineIds(timelineId ? [timelineId] : []);
+		setHighlightDays(date ? [date] : []);
+		Editors.scrollView(timelineId, date);
 	}
 
 	return (

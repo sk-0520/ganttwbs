@@ -1,3 +1,4 @@
+import { useSetAtom } from "jotai";
 import { useState, useEffect, DragEvent, FC } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
@@ -11,13 +12,13 @@ import TimelineHeaderRow from "@/components/elements/pages/editor/timeline/cell/
 import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/WorkloadCell";
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
+import { ActiveTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { DetailEditTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
-import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -31,9 +32,8 @@ import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps, HighlightCallbackStoreProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	currentTimeline: AnyTimeline;
-	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
 }
@@ -42,6 +42,10 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
+
+	const setDetailEditTimeline = useSetAtom(DetailEditTimelineAtom);
+	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
+	const setDragSourceTimeline = useSetAtom(DragSourceTimelineAtom);
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
@@ -57,6 +61,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	useEffect(() => {
 		const timelineItem = props.timelineStore.changedItemMap.get(props.currentTimeline.id);
 		if (timelineItem) {
+			setSubject(timelineItem.timeline.subject);
 
 			if (Settings.maybeGroupTimeline(timelineItem.timeline)) {
 				const workload = Timelines.sumWorkloadByGroup(timelineItem.timeline).totalDays;
@@ -95,7 +100,6 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			handleFocus(true);
 		}
 	}, [props.currentTimeline.id, props.selectingBeginDate]); // eslint-disable-line react-hooks/exhaustive-deps
-
 
 	useEffect(() => {
 		if (props.selectingBeginDate) {
@@ -175,7 +179,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleShowDetail() {
-		props.timelineStore.startDetailEdit(props.currentTimeline);
+		setDetailEditTimeline(props.currentTimeline);
 	}
 
 	function handleShowTimeline(): void {
@@ -212,7 +216,8 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleStartDragTimeline(ev: DragEvent): void {
-		props.timelineStore.startDragTimeline(ev, props.currentTimeline);
+		//props.timelineStore.startDragTimeline(ev, props.currentTimeline);
+		setDragSourceTimeline(props.currentTimeline);
 	}
 
 	function handleChangePrevious(isSelected: boolean): void {
@@ -306,9 +311,9 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleFocus(isFocus: boolean): void {
 		if (isFocus) {
-			props.highlightCallbackStore.setActiveTimeline(props.currentTimeline.id);
+			setActiveTimelineId(props.currentTimeline.id);
 		} else {
-			props.highlightCallbackStore.setActiveTimeline(undefined);
+			setActiveTimelineId(undefined);
 		}
 	}
 
@@ -318,17 +323,14 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		<TimelineHeaderRow
 			currentTimeline={props.currentTimeline}
 			selectingBeginDate={props.selectingBeginDate}
-			draggingTimeline={props.draggingTimeline}
 			timelineStore={props.timelineStore}
 			level={timelineIndex.level}
-			highlightCallbackStore={props.highlightCallbackStore}
 		>
 			<IdCell
 				selectingId={selectingId}
 				readableTimelineId={timelineIndex}
 				currentTimeline={props.currentTimeline}
 				isSelectedPrevious={isSelectedPrevious}
-				draggingTimeline={props.draggingTimeline}
 				selectingBeginDate={props.selectingBeginDate}
 				callbackStartDragTimeline={handleStartDragTimeline}
 				callbackChangePrevious={handleChangePrevious}

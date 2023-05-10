@@ -1,3 +1,4 @@
+import { Provider as JotaiProvider } from "jotai";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -43,12 +44,12 @@ const EditorPage: NextPage = () => {
 	}, [router]);
 
 	return (
-		<Layout
-			mode="application"
-			layoutId="editor"
-			title={(editorData ? editorData.fileName + " " : "") + locale.pages.editor.title}
-		>
-			<>
+		<JotaiProvider>
+			<Layout
+				mode="application"
+				layoutId="editor"
+				title={(editorData ? editorData.fileName + " " : "") + locale.pages.editor.title}
+			>
 				{!editorData && <p>{locale.pages.editor.loading}</p>}
 				{editorData && (
 					<Tabs
@@ -86,8 +87,8 @@ const EditorPage: NextPage = () => {
 						</TabPanel>
 					</Tabs>
 				)}
-			</>
-		</Layout>
+			</Layout>
+		</JotaiProvider>
 	);
 };
 

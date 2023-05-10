@@ -4,20 +4,15 @@ import { FC, useMemo } from "react";
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
-import { DraggingTimeline } from "@/models/data/DraggingTimeline";
-import { DropTimeline } from "@/models/data/DropTimeline";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { HighlightCallbackStoreProps } from "@/models/data/props/HighlightStoreProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { IdFactory } from "@/models/IdFactory";
 
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps, HighlightCallbackStoreProps {
-	draggingTimeline: DraggingTimeline | null;
-	dropTimeline: DropTimeline | null;
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
 }
@@ -55,12 +50,10 @@ const TimelineItems: FC<Props> = (props: Props) => {
 								setting={props.setting}
 								currentTimeline={a}
 								timelineStore={props.timelineStore}
-								draggingTimeline={props.draggingTimeline}
 								selectingBeginDate={props.selectingBeginDate}
 								beginDateCallbacks={props.beginDateCallbacks}
 								calendarInfo={props.calendarInfo}
 								resourceInfo={props.resourceInfo}
-								highlightCallbackStore={props.highlightCallbackStore}
 							/>
 						);
 					})}
