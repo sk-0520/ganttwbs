@@ -61,9 +61,9 @@ async function onSubmit(data: Input, router: NextRouter) {
 	console.debug(setting);
 	console.debug(fileName);
 
-	const editData: EditorData = {
+	const editorData: EditorData = {
 		fileName: fileName,
 		setting: setting,
 	};
-	Goto.editor(editData, router);
+	Goto.editor(editorData, router);
 }

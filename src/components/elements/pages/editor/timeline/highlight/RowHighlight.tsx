@@ -6,7 +6,7 @@ import { RowHighlightMode } from "@/models/data/Highlight";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
-import { Types } from "@/models/Types";
+import { Require } from "@/models/Require";
 
 interface Props extends ConfigurationProps, TimelineStoreProps {
 	mode: RowHighlightMode;
@@ -17,10 +17,7 @@ interface Props extends ConfigurationProps, TimelineStoreProps {
 
 const RowHighlight: FC<Props> = (props: Props) => {
 
-	const index = props.timelineStore.indexItemMap.get(props.timelineId);
-	if (Types.isUndefined(index)) {
-		return null;
-	}
+	const index = Require.get(props.timelineStore.indexItemMap, props.timelineId);
 
 	const baseY = props.areaData.cell.height.value * index;
 

@@ -5,15 +5,15 @@ import { useLocale } from "@/locales/locale";
 import { Calendars } from "@/models/Calendars";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
-import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { AnyTimeline, TimelineId } from "@/models/data/Setting";
+import { TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Days } from "@/models/Days";
 import { Editors } from "@/models/Editors";
+import { Require } from "@/models/Require";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 
@@ -57,7 +57,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 
 	// ソート済み重複メンバー取得
 	const sortedMembers = [...mergedDayInfo.duplicateMembers]
-		.map(a => props.resourceInfo.memberMap.get(a) as MemberGroupPair)
+		.map(a => Require.get(props.resourceInfo.memberMap, a))
 		.sort((a, b) => {
 			const groupIndex = props.resourceInfo.groupItems.indexOf(a.group);
 			const groupCompare = groupIndex - props.resourceInfo.groupItems.indexOf(b.group);
@@ -65,20 +65,17 @@ const InformationDay: FC<Props> = (props: Props) => {
 				return groupCompare;
 			}
 			const group = props.resourceInfo.groupItems[groupIndex];
-			const members = props.resourceInfo.memberItems.get(group);
-			if (!members) {
-				throw new Error();
-			}
+			const members = Require.get(props.resourceInfo.memberItems, group);
 			return members.indexOf(a.member) - members.indexOf(b.member);
 		})
 		;
 
 	// ソート済みタイムライン取得
 	const sortedTimelines = [...mergedDayInfo.targetTimelines]
-		.map(a => props.timelineStore.totalItemMap.get(a) as AnyTimeline)
+		.map(a => Require.get(props.timelineStore.totalItemMap, a))
 		.sort((a, b) => {
-			const aIndex = props.timelineStore.indexItemMap.get(a.id) ?? -1; // TODO: 落とした方がいいかも
-			const bIndex = props.timelineStore.indexItemMap.get(b.id) ?? -1;
+			const aIndex = Require.get(props.timelineStore.indexItemMap, a.id);
+			const bIndex = Require.get(props.timelineStore.indexItemMap, b.id);
 			return aIndex - bIndex;
 		})
 		;

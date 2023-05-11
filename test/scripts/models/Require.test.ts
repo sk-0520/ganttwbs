@@ -15,4 +15,34 @@ describe("Require", () => {
 	])("get - throw", <K, V>(key: K, map: Map<K, V>) => {
 		expect(() => Require.get(map, key)).toThrow();
 	});
+
+	test.each([
+		["A", "a"],
+		["B", "b"],
+		["C", "c"],
+	])("switch", (expected: string, input: string) => {
+		const actual = Require.switch(input, {
+			"a": _ => "A",
+			"b": _ => "B",
+			"c": _ => "C",
+		});
+		expect(actual).toBe(expected);
+	});
+
+	test("switch - default", () => {
+		const actual = Require.switch("X", {
+			"a": _ => "A",
+			"b": _ => "B",
+			"c": _ => "C",
+		}, "DEFAULT");
+		expect(actual).toBe("DEFAULT");
+	});
+
+	test("switch - throw", () => {
+		expect(() => Require.switch("X", {
+			"a": _ => "A",
+			"b": _ => "B",
+			"c": _ => "C",
+		})).toThrow();
+	});
 });

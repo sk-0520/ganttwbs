@@ -3,8 +3,9 @@ import { FC, useContext, useState } from "react";
 import GroupColorsDialog from "@/components/elements/pages/editor/setting/Resource/GroupColorsDialog";
 import MemberEditor from "@/components/elements/pages/editor/setting/Resource/MemberEditor";
 import { useLocale } from "@/locales/locale";
+import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
-import { GroupSetting, MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
+import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { GroupId, MemberId } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
@@ -19,7 +20,7 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
-	const group = getGroup(props.groupId, settingContext);
+	const group = Arrays.find(settingContext.groups, a => a.id === props.groupId);
 
 	const [groupName, setGroupName] = useState(group.name);
 	const [members, setMembers] = useState(sortMembers(group.members));
@@ -207,14 +208,14 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 
 export default GroupsEditor;
 
-function getGroup(groupId: GroupId, context: SettingContext): GroupSetting {
-	const result = context.groups.find(a => a.id === groupId);
-	if (!result) {
-		throw new Error();
-	}
+// function getGroup(groupId: GroupId, context: SettingContext): GroupSetting {
+// 	const result = context.groups.find(a => a.id === groupId);
+// 	if (!result) {
+// 		throw new Error();
+// 	}
 
-	return result;
-}
+// 	return result;
+// }
 
 function sortMemberCore(a: Readonly<MemberSetting>, b: Readonly<MemberSetting>): number {
 	return a.name.localeCompare(b.name);

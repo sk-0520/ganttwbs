@@ -213,11 +213,11 @@ function onSubmit(data: Input, timeZone: TimeZone, router: NextRouter) {
 	console.debug(setting);
 	console.debug(fileName);
 
-	const editData: EditorData = {
+	const editorData: EditorData = {
 		fileName: fileName,
 		setting: setting,
 	};
-	Goto.editor(editData, router);
+	Goto.editor(editorData, router);
 }
 
 function convertDateRange(data: Input, timeZone: TimeZone): DateRange {

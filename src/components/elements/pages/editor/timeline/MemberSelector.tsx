@@ -4,6 +4,7 @@ import { Color } from "@/models/Color";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { Member, MemberId } from "@/models/data/Setting";
+import { Require } from "@/models/Require";
 
 interface Props extends ResourceInfoProps {
 	className?: string;
@@ -52,10 +53,7 @@ const MemberSelector: FC<Props> = (props: Props) => {
 			<option></option>
 
 			{props.resourceInfo.groupItems.map(a => {
-				const members = props.resourceInfo.memberItems.get(a);
-				if (!members) {
-					return null;
-				}
+				const members = Require.get(props.resourceInfo.memberItems, a);
 
 				return (
 					a.name ?

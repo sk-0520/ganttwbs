@@ -27,21 +27,21 @@ import { TimeZone } from "@/models/TimeZone";
 const NewLine = "\r\n";
 
 interface Props extends ConfigurationProps {
-	editData: EditorData;
+	editorData: EditorData;
 }
 
 const SettingEditor: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
-	const setting = toContext(props.configuration, props.editData.setting);
+	const setting = toContext(props.configuration, props.editorData.setting);
 
 	function handleSubmit(event: FormEvent) {
 		event.preventDefault();
 
-		props.editData.setting = fromContext(props.editData.setting, setting);
+		props.editorData.setting = fromContext(props.editorData.setting, setting);
 		console.debug(setting);
 		//TODO: 自動保存とぶつかる可能性あり、、、同一オブジェクトなので大丈夫、か？
-		Storages.saveEditorData(props.editData);
+		Storages.saveEditorData(props.editorData);
 
 		window.location.reload();
 	}

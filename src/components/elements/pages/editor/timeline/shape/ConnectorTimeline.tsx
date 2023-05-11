@@ -9,6 +9,7 @@ import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TaskTimeline } from "@/models/data/Setting";
+import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
 import { WorkRanges } from "@/models/WorkRanges";
 
@@ -53,15 +54,8 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 	return (
 		<>
 			{props.currentTimeline.previous.map(b => {
-				const previousIndex = props.timelineStore.indexItemMap.get(b);
-				if (typeof previousIndex === "undefined") {
-					return null;
-				}
-
-				const previousTimeline = props.timelineStore.totalItemMap.get(b);
-				if (!previousTimeline) {
-					return null;
-				}
+				const previousIndex = Require.get(props.timelineStore.indexItemMap, b);
+				const previousTimeline = Require.get(props.timelineStore.totalItemMap, b);
 
 				const previewColor = Settings.maybeGroupTimeline(previousTimeline)
 					? Charts.getGroupBackground(previousTimeline, props.timelineStore.rootGroupTimeline, props.setting.theme)

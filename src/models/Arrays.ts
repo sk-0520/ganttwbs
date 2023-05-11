@@ -1,4 +1,6 @@
-
+/**
+ * 配列の処理ヘルパー。
+ */
 export abstract class Arrays {
 
 	/**
@@ -79,6 +81,7 @@ export abstract class Arrays {
 	 * @returns 値。
 	 * @throws `undefined` の場合に `RangeError`
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public static find<T>(array: ReadonlyArray<T>, predicate: (value: T, index: number, obj: readonly T[]) => boolean, thisArg?: any): T {
 		const result = array.find(predicate, thisArg);
 		if (result === undefined) {
@@ -97,6 +100,7 @@ export abstract class Arrays {
 	 * @returns 値。
 	 * @throws `undefined` の場合に `RangeError`
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public static findLast<T>(array: ReadonlyArray<T>, predicate: (value: T, index: number, obj: readonly T[]) => boolean, thisArg?: any): T {
 		const result = array.findLast(predicate, thisArg);
 		if (result === undefined) {

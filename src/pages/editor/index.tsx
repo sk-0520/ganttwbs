@@ -35,12 +35,12 @@ const EditorPage: NextPage = () => {
 	}
 
 	useEffect(() => {
-		const editData = Storages.loadEditorData();
-		if (!editData) {
+		const editorData = Storages.loadEditorData();
+		if (!editorData) {
 			router.push("/");
 			return;
 		}
-		setEditorData(editData);
+		setEditorData(editorData);
 	}, [router]);
 
 	return (
@@ -83,7 +83,7 @@ const EditorPage: NextPage = () => {
 							<AnalyticsViewer configuration={configuration} editorData={editorData} isVisible={selectedTabIndex === TabIndex.Analytics} />
 						</TabPanel>
 						<TabPanel className="tab panel tab-setting">
-							<SettingEditor configuration={configuration} editData={editorData} />
+							<SettingEditor configuration={configuration} editorData={editorData} />
 						</TabPanel>
 					</Tabs>
 				)}

@@ -6,6 +6,7 @@ import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
 import { GroupSetting } from "@/models/data/context/SettingContext";
 import { MemberId } from "@/models/data/Setting";
+import { Require } from "@/models/Require";
 
 const ColorKinds = [
 	"same",
@@ -148,10 +149,7 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 										{a.name}
 									</td>
 									{ColorKinds.map(b => {
-										const color = colorTable[b].get(a.id);
-										if (!color) {
-											throw new Error(a.id);
-										}
+										const color = Require.get(colorTable[b], a.id);
 
 										const htmlColor = color.toHtml();
 										const style: CSSProperties = {

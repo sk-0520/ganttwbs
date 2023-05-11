@@ -2,6 +2,7 @@ import { FC, useContext, useEffect, useState } from "react";
 
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
+import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
 import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { Prices } from "@/models/data/Prices";
@@ -21,7 +22,8 @@ const MemberEditor: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
-	const member = getMember(props.groupId, props.memberId, settingContext);
+	const group = Arrays.find(settingContext.groups, a => a.id === props.groupId);
+	const member = Arrays.find(group.members, a => a.id === props.memberId);
 
 	const priceSetting = DefaultSettings.getPriceSetting();
 
@@ -132,16 +134,3 @@ const MemberEditor: FC<Props> = (props: Props) => {
 
 export default MemberEditor;
 
-function getMember(groupId: GroupId, memberId: MemberId, context: SettingContext): MemberSetting {
-	const group = context.groups.find(a => a.id === groupId);
-	if (!group) {
-		throw new Error();
-	}
-
-	const result = group.members.find(a => a.id === memberId);
-	if (!result) {
-		throw new Error();
-	}
-
-	return result;
-}

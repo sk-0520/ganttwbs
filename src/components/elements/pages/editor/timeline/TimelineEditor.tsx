@@ -29,6 +29,7 @@ import { WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
 import { Editors } from "@/models/Editors";
+import { Require } from "@/models/Require";
 import { Resources } from "@/models/Resources";
 import { Settings } from "@/models/Settings";
 import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
@@ -257,11 +258,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 		const changedItems = new Map(
 			[...timelineMap.entries()]
-				.filter(([k, _]) => timelineMap.has(k))
 				.map(([k, v]) => {
 					const item: TimelineItem = {
 						timeline: v,
-						workRange: workRanges.get(k),
+						workRange: Require.get(workRanges, k),
 					};
 
 					return [k, item];

@@ -1,3 +1,4 @@
+import { CssHelper } from "@/models/CssHelper";
 import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 import { Holiday, Theme } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
@@ -35,7 +36,7 @@ export abstract class Days {
 	}
 
 	public static getCellClassName(customClassNames: ReadonlyArray<string>): string {
-		return ["cell", "_dynamic_design_cell", ...customClassNames].join(" ");
+		return CssHelper.joinClassName(["cell", "_dynamic_design_cell", ...customClassNames]);
 	}
 
 }

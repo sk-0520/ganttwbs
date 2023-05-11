@@ -27,4 +27,24 @@ export abstract class Require {
 		return result;
 	}
 
+	/**
+	 * `switch` 処理。
+	 * 変数を手っ取り早く初期化する用のヘルパ。
+	 * @param expression
+	 * @param cases
+	 * @param defaultValue
+	 * @returns
+	 */
+	public static switch<O>(expression: string | number | symbol, cases: { [key: string | number | symbol]: (input: string | number | symbol) => O }, defaultValue?: O): O {
+		if (expression in cases) {
+			const func = cases[expression];
+			return func(expression);
+		}
+
+		if (defaultValue === undefined) {
+			throw new Error(`expression: ${String(expression)}, cases: ${Object.keys(cases).join(", ")}`);
+		}
+
+		return defaultValue;
+	}
 }
