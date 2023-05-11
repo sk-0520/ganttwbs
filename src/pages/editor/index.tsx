@@ -64,7 +64,7 @@ const EditorPage: NextPage = () => {
 							<Tab>
 								{locale.pages.editor.tabs.timeline}
 							</Tab>
-							<Tab disabled>
+							<Tab>
 								{locale.pages.editor.tabs.analytics}
 							</Tab>
 							<Tab>
@@ -108,10 +108,9 @@ function createConfiguration(): Configuration {
 
 	const result: Configuration = {
 		tabIndex: {
-			application: 1,
+			// application: 1,
 			setting: 0,
-			// application: 3,
-			// setting: 1,
+			application: 2,
 		},
 
 		autoSave: {

@@ -14,7 +14,9 @@ const AnalyticsViewer: FC<Props> = (props: Props) => {
 	}
 
 	return (
-		<p>あとでやる</p>
+		<div id="analytics">
+			<p>あとでやる</p>
+		</div>
 	);
 };
 
