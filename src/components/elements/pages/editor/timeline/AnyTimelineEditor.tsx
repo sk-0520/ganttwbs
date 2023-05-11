@@ -336,6 +336,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				callbackChangePrevious={handleChangePrevious}
 			/>
 			<SubjectCell
+				timeline={props.currentTimeline}
 				value={subject}
 				disabled={Boolean(props.selectingBeginDate)}
 				readOnly={false}

@@ -30,6 +30,10 @@ export abstract class Timelines {
 		return "timeline-row-" + this.getId(timeline);
 	}
 
+	public static toSubjectId(timeline: TimelineIdOrObject): string {
+		return "timeline-cell-subject-" + this.getId(timeline);
+	}
+
 	public static toNodePreviousId(timeline: TimelineIdOrObject): string {
 		return "timeline-node-previous-" + this.getId(timeline);
 	}
