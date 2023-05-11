@@ -1,14 +1,17 @@
 
-import { FC } from "react";
+import { FC, KeyboardEvent } from "react";
 
 import { Timelines } from "@/models/Timelines";
+import { AnyTimeline } from "@/models/data/Setting";
 
 interface Props {
+	timeline: AnyTimeline;
 	readOnly: boolean;
 	disabled: boolean;
 	value: number;
 	callbackChangeValue?: (value: number) => void;
 	callbackFocus(isFocus: boolean): void;
+	callbackKeyDown(ev: KeyboardEvent<HTMLInputElement>): void;
 }
 
 const WorkloadCell: FC<Props> = (props: Props) => {
@@ -24,6 +27,7 @@ const WorkloadCell: FC<Props> = (props: Props) => {
 	return (
 		<td className="timeline-cell timeline-workload">
 			<input
+				id={Timelines.toWorkloadId(props.timeline)}
 				className="edit"
 				type="number"
 				disabled={props.disabled}
@@ -33,6 +37,7 @@ const WorkloadCell: FC<Props> = (props: Props) => {
 				onChange={ev => props.callbackChangeValue ? props.callbackChangeValue(ev.target.valueAsNumber) : undefined}
 				onFocus={ev => props.callbackFocus(true)}
 				onBlur={ev => props.callbackFocus(false)}
+				onKeyDown={props.callbackKeyDown}
 			/>
 		</td>
 	);

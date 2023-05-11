@@ -34,6 +34,10 @@ export abstract class Timelines {
 		return "timeline-cell-subject-" + this.getId(timeline);
 	}
 
+	public static toWorkloadId(timeline: TimelineIdOrObject): string {
+		return "timeline-cell-workload-" + this.getId(timeline);
+	}
+
 	public static toNodePreviousId(timeline: TimelineIdOrObject): string {
 		return "timeline-node-previous-" + this.getId(timeline);
 	}

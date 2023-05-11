@@ -16,6 +16,8 @@ import { Timelines } from "@/models/Timelines";
 import { Dom } from "@/models/Dom";
 import { useSetAtom } from "jotai";
 import { HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { TimelineStore } from "@/models/store/TimelineStore";
+import { Settings } from "@/models/Settings";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	selectingBeginDate: SelectingBeginDate | null;
@@ -25,30 +27,11 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 const TimelineItems: FC<Props> = (props: Props) => {
 
 	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
-		if (ev.key !== "Enter") {
-			return;
-		}
+		handleCellKeyDown(ev, currentTimeline, props.timelineStore, "subject");
+	}, [props.timelineStore]);
 
-		const currentIndex = Require.get(props.timelineStore.indexItemMap, currentTimeline.id);
-		let nextIndex = -1;
-		if (ev.shiftKey) {
-			if (0 < currentIndex) {
-				nextIndex = currentIndex - 1;
-			}
-		} else {
-			if (currentIndex < props.timelineStore.sequenceItems.length - 1) {
-				nextIndex = currentIndex + 1;
-			}
-		}
-
-		if (nextIndex !== -1) {
-			const nextTimeline = props.timelineStore.sequenceItems[nextIndex];
-			const nextSubjectId = Timelines.toSubjectId(nextTimeline);
-			const nextElement = Dom.getElementById(nextSubjectId, HTMLInputElement);
-			nextElement.select();
-			nextElement.focus();
-		}
-
+	const onWorkloadKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
+		handleCellKeyDown(ev, currentTimeline, props.timelineStore, "workload");
 	}, [props.timelineStore]);
 
 	const dummyAreaNodes = useMemo(() => {
@@ -87,6 +70,7 @@ const TimelineItems: FC<Props> = (props: Props) => {
 								calendarInfo={props.calendarInfo}
 								resourceInfo={props.resourceInfo}
 								callbackSubjectKeyDown={onSubjectKeyDown}
+								callbackWorkloadKeyDown={onWorkloadKeyDown}
 							/>
 						);
 					})}
@@ -100,3 +84,61 @@ const TimelineItems: FC<Props> = (props: Props) => {
 };
 
 export default TimelineItems;
+
+function handleCellKeyDown(ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline, timelineStore: TimelineStore, currentCell: "subject" | "workload"): void {
+	if (ev.key !== "Enter") {
+		return;
+	}
+
+	const currentIndex = Require.get(timelineStore.indexItemMap, currentTimeline.id);
+	let nextIndex = -1;
+
+	function getNextTimeline(index: number): AnyTimeline | null {
+		const nextTimeline = timelineStore.sequenceItems[index];
+
+		switch (currentCell) {
+			case "subject":
+				break;
+
+			case "workload":
+				if (Settings.maybeGroupTimeline(nextTimeline)) {
+					return null;
+				}
+				break;
+
+			default:
+				throw new Error(currentCell);
+		}
+
+		return nextTimeline;
+	}
+
+	if (ev.shiftKey) {
+		for (let i = currentIndex - 1; 0 <= i; i--) {
+			const timeline = getNextTimeline(i);
+			if (timeline) {
+				nextIndex = Require.get(timelineStore.indexItemMap, timeline.id);
+				break;
+			}
+		}
+	} else {
+		for (let i = currentIndex + 1; i < timelineStore.sequenceItems.length; i++) {
+			const timeline = getNextTimeline(i);
+			if (timeline) {
+				nextIndex = Require.get(timelineStore.indexItemMap, timeline.id);
+				break;
+			}
+		}
+	}
+
+	if (nextIndex !== -1) {
+		const nextTimeline = timelineStore.sequenceItems[nextIndex];
+		const nextCellId = Require.switch(currentCell, {
+			"subject": () => Timelines.toSubjectId(nextTimeline),
+			"workload": () => Timelines.toWorkloadId(nextTimeline),
+		});
+		const nextElement = Dom.getElementById(nextCellId, HTMLInputElement);
+		nextElement.select();
+		nextElement.focus();
+	}
+}
