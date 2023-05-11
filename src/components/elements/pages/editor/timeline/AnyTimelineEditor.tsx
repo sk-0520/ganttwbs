@@ -1,5 +1,5 @@
 import { useSetAtom } from "jotai";
-import { useState, useEffect, DragEvent, FC } from "react";
+import { useState, useEffect, DragEvent, FC, useCallback, KeyboardEvent } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
 import ControlsCell from "@/components/elements/pages/editor/timeline/cell/ControlsCell";
@@ -36,6 +36,7 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 	currentTimeline: AnyTimeline;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
+	callbackSubjectKeyDown(ev: KeyboardEvent, currentTimeline: AnyTimeline): void;
 }
 
 const AnyTimelineEditor: FC<Props> = (props: Props) => {
@@ -116,6 +117,10 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			}
 		}
 	}, [props.currentTimeline, props.selectingBeginDate]);
+
+	const onSubjectKeyDown = useCallback((ev: KeyboardEvent) => {
+		props.callbackSubjectKeyDown(ev, props.currentTimeline);
+	}, [props]);
 
 	function handleChangeSubject(s: string) {
 		setSubject(s);
@@ -342,6 +347,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				readOnly={false}
 				callbackChangeValue={handleChangeSubject}
 				callbackFocus={handleFocus}
+				callbackKeyDown={onSubjectKeyDown}
 			/>
 			<WorkloadCell
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}

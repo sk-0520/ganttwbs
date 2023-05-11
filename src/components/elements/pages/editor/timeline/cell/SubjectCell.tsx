@@ -9,6 +9,7 @@ interface Props {
 	value: string;
 	callbackChangeValue: (value: string) => void;
 	callbackFocus(isFocus: boolean): void;
+	callbackKeyDown(ev: KeyboardEvent): void;
 }
 
 const SubjectCell: FC<Props> = (props: Props) => {
@@ -24,7 +25,7 @@ const SubjectCell: FC<Props> = (props: Props) => {
 				onChange={ev => props.callbackChangeValue(ev.target.value)}
 				onFocus={ev => props.callbackFocus(true)}
 				onBlur={ev => props.callbackFocus(false)}
-				//onKeyDown={props.callbackKeyDown}
+				onKeyDown={props.callbackKeyDown}
 			/>
 		</td>
 	);
