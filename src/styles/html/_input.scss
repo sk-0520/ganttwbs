@@ -14,8 +14,15 @@ button.action {
 	font-weight: bold;
 }
 
-input[type="number"] {
-	text-align: right;
+input {
+	&[type="number"] {
+		text-align: right;
+	}
+
+	&[type="radio"],
+	&[type="checkbox"] {
+		vertical-align: baseline;
+	}
 }
 
 button {

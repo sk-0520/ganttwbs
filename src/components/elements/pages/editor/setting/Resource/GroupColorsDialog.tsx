@@ -161,9 +161,13 @@ const GroupColorsDialog: FC<Props> = (props: Props) => {
 											<td
 												key={b}
 												className="color-cell"
-												style={style}
 											>
-												{htmlColor}
+												<div
+													className="color"
+													style={style}
+												>
+													{htmlColor}
+												</div>
 											</td>
 										);
 									})}
