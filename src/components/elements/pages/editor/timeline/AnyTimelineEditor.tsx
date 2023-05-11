@@ -118,7 +118,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		}
 	}, [props.currentTimeline, props.selectingBeginDate]);
 
-	const onSubjectKeyDown = useCallback((ev: KeyboardEvent) => {
+	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>) => {
 		props.callbackSubjectKeyDown(ev, props.currentTimeline);
 	}, [props]);
 

@@ -14,7 +14,8 @@ import { AnyTimeline } from "@/models/data/Setting";
 import { Require } from "@/models/Require";
 import { Timelines } from "@/models/Timelines";
 import { Dom } from "@/models/Dom";
-
+import { useSetAtom } from "jotai";
+import { HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	selectingBeginDate: SelectingBeginDate | null;
@@ -23,7 +24,7 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 
 const TimelineItems: FC<Props> = (props: Props) => {
 
-	const onSubjectKeyDown = useCallback((ev: KeyboardEvent, currentTimeline: AnyTimeline) => {
+	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
 		if (ev.key !== "Enter") {
 			return;
 		}
@@ -43,7 +44,8 @@ const TimelineItems: FC<Props> = (props: Props) => {
 		if (nextIndex !== -1) {
 			const nextTimeline = props.timelineStore.sequenceItems[nextIndex];
 			const nextSubjectId = Timelines.toSubjectId(nextTimeline);
-			const nextElement = Dom.getElementById(nextSubjectId);
+			const nextElement = Dom.getElementById(nextSubjectId, HTMLInputElement);
+			nextElement.select();
 			nextElement.focus();
 		}
 

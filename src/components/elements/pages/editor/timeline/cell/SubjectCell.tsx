@@ -9,7 +9,7 @@ interface Props {
 	value: string;
 	callbackChangeValue: (value: string) => void;
 	callbackFocus(isFocus: boolean): void;
-	callbackKeyDown(ev: KeyboardEvent): void;
+	callbackKeyDown(ev: KeyboardEvent<HTMLInputElement>): void;
 }
 
 const SubjectCell: FC<Props> = (props: Props) => {
