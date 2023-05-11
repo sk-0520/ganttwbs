@@ -33,11 +33,11 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 		const cell = props.configuration.design.seed.cell;
 
 		const timeSpanRange = successWorkRange
-			? Charts.getTimeSpanRange(props.calendarInfo.range.from, successWorkRange)
+			? Charts.getTimeSpanRange(props.calendarInfo.range.begin, successWorkRange)
 			: null
 			;
 
-		const area = Charts.createChartArea(timeSpanRange, props.currentIndex, cell, props.chartSize);
+		const area = Charts.createChartArea(timeSpanRange, props.currentIndex, cell, props.areaSize);
 
 		return (
 			Settings.maybeTaskTimeline(props.currentTimeline)

@@ -4,11 +4,12 @@ import { ParseResult, ResultFactory } from "@/models/data/Result";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 
-export type Unit = "second" | "minute" | "hour" | "day" | "month" | "year";
 
 type DateTimeParseResult = ParseResult<DateTime, Error>;
 
+export type Unit = "second" | "minute" | "hour" | "day" | "week" | "month" | "year";
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export type DateTimeTicks = number;
 
 function factory(timeZone: TimeZone): cdate.cdate {
 	let create = cdate;
@@ -19,6 +20,23 @@ function factory(timeZone: TimeZone): cdate.cdate {
 	}
 
 	return create;
+}
+
+function toDateOnly(date: cdate.CDate): cdate.CDate {
+	return date
+		.set("hour", 0)
+		.set("minute", 0)
+		.set("second", 0)
+		.set("millisecond", 0)
+		;
+}
+
+function padStart(value: number, length: number, fillString: string): string {
+	return value.toString().padStart(length, fillString);
+}
+
+function padStart0(value: number, length: number): string {
+	return padStart(value, length, "0");
 }
 
 /**
@@ -77,11 +95,19 @@ export class DateTime {
 		return this.date.get("millisecond");
 	}
 
+	/**
+	 * UNIX時間のミリ秒取得。
+	 * @returns
+	 */
+	public get ticks(): number {
+		return Number(this.date);
+	}
+
 	//#endregion
 
 	//#region function
 
-	private static parseCore(input: string | Date | number | undefined, timeZone: TimeZone): DateTimeParseResult {
+	private static parseCore(input: string | Date | DateTimeTicks | undefined, timeZone: TimeZone): DateTimeParseResult {
 		const create = factory(timeZone);
 
 		const date = create(input);
@@ -91,6 +117,33 @@ export class DateTime {
 		}
 
 		return ResultFactory.success(new DateTime(date, timeZone));
+	}
+
+	public static create(
+		timeZone: TimeZone,
+		year: number,
+		month: number,
+		day?: number,
+		hour?: number,
+		minute?: number,
+		second?: number,
+		millisecond?: number
+	): DateTime {
+		// 指定された各数値で new Date(y,m,d...) 的な事したかったけど分からんかった,
+		// 自分でタイムゾーン計算したらライブラリの意味ない、、、とはいえこの手法もどうなんっていう
+
+		const date = {
+			year: padStart0(year, 4),
+			month: padStart0(month, 2),
+			day: padStart0(day ?? 1, 2),
+			hour: padStart0(hour ?? 0, 2),
+			minute: padStart0(minute ?? 0, 2),
+			second: padStart0(second ?? 0, 2),
+			millisecond: (millisecond ?? 0).toString(),
+		};
+		const iso8601WithoutTimezone = `${date.year}-${date.month}-${date.day}T${date.hour}:${date.minute}:${date.second}.${date.millisecond}`;
+
+		return this.parse(iso8601WithoutTimezone, timeZone);
 	}
 
 	/**
@@ -133,7 +186,7 @@ export class DateTime {
 	 * @param timeZone
 	 * @returns
 	 */
-	public static convert(input: Date | number, timeZone: TimeZone): DateTime {
+	public static convert(input: Date | DateTimeTicks, timeZone: TimeZone): DateTime {
 		return ResultFactory.parseErrorIsThrow("", _ => this.parseCore(input, timeZone));
 	}
 
@@ -167,10 +220,44 @@ export class DateTime {
 				throw new TypeError();
 			}
 
-			date = this.date.add(diff, unit);
+			// 実環境だと年/月指定がなんでか動かん 原因解明より動けばいい方針
+			switch (unit) {
+				case "month":
+					return DateTime.create(
+						this.timeZone,
+						this.year,
+						this.month + diff,
+						this.day,
+						this.hour,
+						this.minute,
+						this.second,
+						this.millisecond,
+					);
+
+				case "year":
+					return DateTime.create(
+						this.timeZone,
+						this.year + diff,
+						this.month,
+						this.day,
+						this.hour,
+						this.minute,
+						this.second,
+						this.millisecond,
+					);
+
+				default:
+					date = this.date.add(diff, unit);
+			}
 		}
 
 		return new DateTime(date, this.timeZone);
+	}
+
+	public changeTimeZone(timeZone: TimeZone): DateTime {
+		const create = factory(timeZone);
+		const date = create(Number(this.date));
+		return new DateTime(date, timeZone);
 	}
 
 	/**
@@ -179,27 +266,41 @@ export class DateTime {
 	 * @returns
 	 */
 	public diff(target: Readonly<DateTime>): TimeSpan {
-		const time = target.getTime() - this.getTime();
+		const time = target.ticks - this.ticks;
 		return TimeSpan.fromMilliseconds(time);
 	}
 
+	public equals(date: DateTime): boolean {
+		return this.ticks === date.ticks;
+	}
+
+	public compare(date: DateTime): number {
+		return this.ticks - date.ticks;
+	}
+
+	public isIn(begin: DateTime, end: DateTime): boolean {
+		return begin.ticks <= this.ticks && this.ticks <= end.ticks;
+	}
+
 	/**
-	 * UNIX時間のミリ秒取得。
+	 * 閏年か。
+	 *
+	 * いるか？これ。
+	 * @param year
 	 * @returns
 	 */
-	public getTime(): number {
-		return this.date.toDate().getTime();
+	public static isLeapYear(year: number): boolean {
+		return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
 	}
 
 	public toDateOnly(): DateTime {
-		const date = this.date
-			.set("hour", 0)
-			.set("minute", 0)
-			.set("second", 0)
-			.set("millisecond", 0)
-			;
+		const date = toDateOnly(this.date);
 
 		return new DateTime(date, this.timeZone);
+	}
+
+	public getLastDayOfMonth(): DateTime {
+		return new DateTime(toDateOnly(this.date.endOf("month").endOf("day")), this.timeZone);
 	}
 
 	/**
@@ -228,23 +329,23 @@ export class DateTime {
 		}
 
 		const map = new Map([
-			["yyyy", this.year.toString().padStart(4, "0")],
-			["yyyyy", this.year.toString().padStart(5, "0")],
+			["yyyy", padStart0(this.year, 4)],
+			["yyyyy", padStart0(this.year, 5)],
 
 			["M", (this.month).toString()],
-			["MM", (this.month).toString().padStart(2, "0")],
+			["MM", padStart0(this.month, 2)],
 
 			["d", this.day.toString()],
-			["dd", this.day.toString().padStart(2, "0")],
+			["dd", padStart0(this.day, 2)],
 
 			["H", this.hour.toString()],
-			["HH", this.hour.toString().padStart(2, "0")],
+			["HH", padStart0(this.hour, 2)],
 
 			["m", this.minute.toString()],
-			["mm", this.minute.toString().padStart(2, "0")],
+			["mm", padStart0(this.minute, 2)],
 
 			["s", this.second.toString()],
-			["ss", this.second.toString().padStart(2, "0")],
+			["ss", padStart0(this.second, 2)],
 		]);
 
 		const pattern = Array.from(map.keys())
@@ -256,6 +357,25 @@ export class DateTime {
 			new RegExp("(" + pattern + ")", "g"),
 			m => map.get(m) ?? m
 		);
+	}
+
+	/**
+	 * HTML <input type="*" /> に合わせた入力文字列へ変換。
+	 * @param type
+	 * @returns
+	 */
+	public toInput(type: "date"): string {
+		switch (type) {
+			case "date":
+				return this.format("yyyy-MM-dd");
+
+			default:
+				throw new Error(type);
+		}
+	}
+
+	public toString(): string {
+		return this.format("U");
 	}
 
 	//#endregion

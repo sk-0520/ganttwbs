@@ -1,3 +1,19 @@
-.icon {
-	vertical-align: middle;
+*:has(> .icon > svg) * {
+	vertical-align: baseline;
+}
+
+.icon-label-wrapper {
+	display: flex;
+	align-items: center;
+
+	&.left {
+		flex-direction: row;
+	}
+	&.right {
+		flex-direction: row-reverse;
+	}
+
+	&.block {
+		flex-direction: column;
+	}
 }

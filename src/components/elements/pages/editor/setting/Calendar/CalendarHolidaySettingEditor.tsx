@@ -12,7 +12,7 @@ const CalendarHolidaySettingEditor: FC = () => {
 	function renderEditor(value: string, callbackChanged: (value: string) => void): ReactNode {
 		return (
 			<Editor
-				className='editor'
+				className="editor"
 				width="40vw"
 				height="8em"
 				defaultValue={value}
@@ -32,25 +32,30 @@ const CalendarHolidaySettingEditor: FC = () => {
 	return (
 		<>
 			<p>
-				<code className="example">YYYY-MM-DD&lt;TAB&gt;説明</code> の形で入力してください。
+				{locale.pages.editor.setting.calendar.holiday.description}<br />
+				<code className="example">
+					YYYY-MM-DD
+					&lt;TAB&gt;
+					{locale.pages.editor.setting.calendar.holiday.example}</code>
 			</p>
 			<div className="holiday">
 				<div className="holidays">
-					<h3>祝日</h3>
-					{renderEditor(settingContext.calendar.holiday.events.holidays, (s) => settingContext.calendar.holiday.events.holidays = s)}
+					<h3>
+						{locale.common.calendar.holiday.normal}
+					</h3>
+					{renderEditor(settingContext.calendar.holiday.events.normal, (s) => settingContext.calendar.holiday.events.normal = s)}
 					<p>
-						国などが定める通常の祝日を設定してください。
+						{locale.pages.editor.setting.calendar.holiday.normal.description}
 					</p>
 				</div>
 
 				<div className="holidays">
-					<h3>特殊</h3>
-					{renderEditor(settingContext.calendar.holiday.events.specials, (s) => settingContext.calendar.holiday.events.specials = s)}
+					<h3>
+						{locale.common.calendar.holiday.special}
+					</h3>
+					{renderEditor(settingContext.calendar.holiday.events.special, (s) => settingContext.calendar.holiday.events.special = s)}
 					<p>
-						会社の年末年始・夏季休暇などを設定してください。
-					</p>
-					<p>
-						通常の祝日と重複する場合、こちらが優先されます。
+						{locale.pages.editor.setting.calendar.holiday.special.description}
 					</p>
 				</div>
 			</div>

@@ -2,22 +2,18 @@ import { FC, useContext, useState } from "react";
 
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
+import { useLocale } from "@/locales/locale";
+import { Color } from "@/models/Color";
 import { SettingContext } from "@/models/data/context/SettingContext";
-import { Color } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 
 const ThemeTimelineSettingEditor: FC = () => {
+	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
-	const [group, setGroup] = useState(settingContext.theme.timeline.group);
 	const [defaultGroup, setDefaultGroup] = useState(settingContext.theme.timeline.defaultGroup);
 	const [defaultTask, setDefaultTask] = useState(settingContext.theme.timeline.defaultTask);
 	const [completed, setCompleted] = useState(settingContext.theme.timeline.completed);
-
-	function handleChangeGroup(color: Color) {
-		setGroup(color);
-		settingContext.theme.timeline.group = color;
-	}
 
 	function handleChangeDefaultGroup(color: Color) {
 		setDefaultGroup(color);
@@ -35,29 +31,25 @@ const ThemeTimelineSettingEditor: FC = () => {
 	}
 
 	function handleReset() {
-		settingContext.theme.timeline = DefaultSettings.getTimelineTheme();
+		const defaultTimelineTheme = DefaultSettings.getTimelineTheme();
+		settingContext.theme.timeline = {
+			defaultGroup: Color.parse(defaultTimelineTheme.defaultGroup),
+			defaultTask: Color.parse(defaultTimelineTheme.defaultTask),
+			completed: Color.parse(defaultTimelineTheme.completed),
+		};
 
-		setGroup(settingContext.theme.timeline.group);
 		setDefaultGroup(settingContext.theme.timeline.defaultGroup);
 		setDefaultTask(settingContext.theme.timeline.defaultTask);
 		setCompleted(settingContext.theme.timeline.completed);
 	}
 
 	return (
-		<table className='timeline'>
+		<table className="timeline">
 			<tbody>
 				<tr>
-					<td>未設定グループ</td>
 					<td>
-						<PlainColorPicker
-							color={group}
-							callbackChanged={c => handleChangeGroup(c)}
-						/>
+						{locale.pages.editor.setting.theme.timeline.defaultGroup}
 					</td>
-				</tr>
-
-				<tr>
-					<td>グループライン</td>
 					<td>
 						<PlainColorPicker
 							color={defaultGroup}
@@ -67,7 +59,9 @@ const ThemeTimelineSettingEditor: FC = () => {
 				</tr>
 
 				<tr>
-					<td>タスクライン</td>
+					<td>
+						{locale.pages.editor.setting.theme.timeline.defaultTask}
+					</td>
 					<td>
 						<PlainColorPicker
 							color={defaultTask}
@@ -77,7 +71,9 @@ const ThemeTimelineSettingEditor: FC = () => {
 				</tr>
 
 				<tr>
-					<td>完了</td>
+					<td>
+						{locale.pages.editor.setting.theme.timeline.completed}
+					</td>
 					<td>
 						<PlainColorPicker
 							color={completed}

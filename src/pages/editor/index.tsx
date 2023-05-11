@@ -1,12 +1,15 @@
+import { Provider as JotaiProvider } from "jotai";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
+import AnalyticsViewer from "@/components/elements/pages/editor/analytics/AnalyticsViewer";
 import FileEditor from "@/components/elements/pages/editor/file/FileEditor";
 import SettingEditor from "@/components/elements/pages/editor/setting/SettingEditor";
 import TimelineEditor from "@/components/elements/pages/editor/timeline/TimelineEditor";
 import Layout from "@/components/layout/Layout";
+import { useLocale } from "@/locales/locale";
 import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
 import { Storages } from "@/models/Storages";
@@ -15,10 +18,12 @@ import { TimeSpan } from "@/models/TimeSpan";
 const enum TabIndex {
 	File,
 	Editor,
-	Setting
+	Analytics,
+	Setting,
 }
 
 const EditorPage: NextPage = () => {
+	const locale = useLocale();
 	const router = useRouter();
 
 	const [configuration] = useState(createConfiguration());
@@ -30,20 +35,22 @@ const EditorPage: NextPage = () => {
 	}
 
 	useEffect(() => {
-		const editData = Storages.loadEditorData();
-		if (!editData) {
+		const editorData = Storages.loadEditorData();
+		if (!editorData) {
 			router.push("/");
 			return;
 		}
-		setEditorData(editData);
+		setEditorData(editorData);
 	}, [router]);
 
 	return (
-		<Layout mode='application' layoutId='editor'
-			title={editorData ? editorData.fileName + " 編集" : "編集"}
-		>
-			<>
-				{!editorData && <p>読み込み中</p>}
+		<JotaiProvider>
+			<Layout
+				mode="application"
+				layoutId="editor"
+				title={(editorData ? editorData.fileName + " " : "") + locale.pages.editor.title}
+			>
+				{!editorData && <p>{locale.pages.editor.loading}</p>}
 				{editorData && (
 					<Tabs
 						defaultIndex={selectedTabIndex}
@@ -51,27 +58,37 @@ const EditorPage: NextPage = () => {
 						onSelect={handleOnSelect}
 					>
 						<TabList>
-							<Tab>ファイル</Tab>
-							<Tab>編集</Tab>
-							<Tab>設定</Tab>
+							<Tab>
+								{locale.pages.editor.tabs.file}
+							</Tab>
+							<Tab>
+								{locale.pages.editor.tabs.timeline}
+							</Tab>
+							<Tab disabled>
+								{locale.pages.editor.tabs.analytics}
+							</Tab>
+							<Tab>
+								{locale.pages.editor.tabs.setting}
+							</Tab>
 						</TabList>
 
-						{/* ファイル */}
-						<TabPanel className='tab panel tab-file'>
+						<TabPanel className="tab panel tab-file">
 							<FileEditor configuration={configuration} editorData={editorData} isVisible={selectedTabIndex === TabIndex.File} />
 						</TabPanel>
-						{/* ほんたい */}
-						<TabPanel className='tab panel tab-timeline' >
+						{/* このアプリの本体 */}
+						<TabPanel className="tab panel tab-timeline" >
 							<TimelineEditor configuration={configuration} editorData={editorData} />
 						</TabPanel>
-						{/* 設定 */}
-						<TabPanel className='tab panel tab-setting'>
-							<SettingEditor configuration={configuration} editData={editorData} />
+						<TabPanel className="tab panel tab-analytics" >
+							<AnalyticsViewer configuration={configuration} editorData={editorData} isVisible={selectedTabIndex === TabIndex.Analytics} />
+						</TabPanel>
+						<TabPanel className="tab panel tab-setting">
+							<SettingEditor configuration={configuration} editorData={editorData} />
 						</TabPanel>
 					</Tabs>
 				)}
-			</>
-		</Layout>
+			</Layout>
+		</JotaiProvider>
 	);
 };
 
@@ -89,15 +106,12 @@ function createConfiguration(): Configuration {
 		}
 	};
 
-	const defaultTabIndex = {
-		application: 1,
-		setting: 0,
-	} as const;
-
 	const result: Configuration = {
 		tabIndex: {
-			application: defaultTabIndex.application,
-			setting: defaultTabIndex.setting,
+			application: 1,
+			setting: 0,
+			// application: 3,
+			// setting: 1,
 		},
 
 		autoSave: {
@@ -123,7 +137,7 @@ function createConfiguration(): Configuration {
 				group: {
 					maximum: 10,
 				},
-				indexNumber: {
+				readableTimelineId: {
 					maximum: 10,
 					paddingLeft: {
 						value: 0.5,

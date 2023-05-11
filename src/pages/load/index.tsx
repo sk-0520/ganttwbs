@@ -3,6 +3,7 @@ import { NextRouter, useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import Layout from "@/components/layout/Layout";
+import { useLocale } from "@/locales/locale";
 import { EditorData } from "@/models/data/EditorData";
 import { SettingSchema } from "@/models/data/Setting";
 import { Goto } from "@/models/Goto";
@@ -12,20 +13,25 @@ interface Input {
 }
 
 const LoadPage: NextPage = () => {
-	const { register, handleSubmit, } = useForm<Input>();
+	const locale = useLocale();
 	const router = useRouter();
+	const { register, handleSubmit, } = useForm<Input>();
 
 	return (
-		<Layout title='読み込み' mode='page' layoutId='load'>
+		<Layout
+			mode="page"
+			layoutId="load"
+			title={locale.pages.load.title}
+		>
 			<form onSubmit={handleSubmit(data => onSubmit(data, router))}>
-				<dl className='inputs'>
+				<dl className="inputs">
 					<dt>ファイル</dt>
 					<dd>
-						<input type='file' {...register("files")} />
+						<input type="file" {...register("files")} />
 					</dd>
 				</dl>
 
-				<button className='action'>作業開始</button>
+				<button className="action">作業開始</button>
 			</form>
 		</Layout>
 	);
@@ -55,9 +61,9 @@ async function onSubmit(data: Input, router: NextRouter) {
 	console.debug(setting);
 	console.debug(fileName);
 
-	const editData: EditorData = {
+	const editorData: EditorData = {
 		fileName: fileName,
 		setting: setting,
 	};
-	Goto.editor(editData, router);
+	Goto.editor(editorData, router);
 }

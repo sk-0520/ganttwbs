@@ -1,9 +1,6 @@
 
 import { FC, ReactNode, useEffect, useRef, MouseEvent } from "react";
 
-import style from "@/styles/modules/components/elements/Overlay.module.scss";
-
-
 interface Props {
 	isVisible: boolean;
 
@@ -48,7 +45,7 @@ const Overlay: FC<Props> = (props: Props) => {
 			{props.isVisible && (
 				<>
 					<div
-						className={style.overlay}
+						className="overlay-wrapper"
 						onClick={handleHide}
 						onMouseDown={handleMouseDown}
 					>
@@ -56,7 +53,7 @@ const Overlay: FC<Props> = (props: Props) => {
 					</div>
 					<span
 						ref={refChildren}
-						className={style.children}
+						className="overlay-children"
 						onMouseDown={handleMouseDown}
 					>
 						{props.children}

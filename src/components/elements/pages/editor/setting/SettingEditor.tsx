@@ -1,6 +1,7 @@
 import { FC, FormEvent } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
+import { IconKind, IconLabel } from "@/components/elements/Icon";
 import CalendarHolidaySettingEditor from "@/components/elements/pages/editor/setting/Calendar/CalendarHolidaySettingEditor";
 import CalendarRangeSettingEditor from "@/components/elements/pages/editor/setting/Calendar/CalendarRangeSettingEditor";
 import CalendarWeekSettingEditor from "@/components/elements/pages/editor/setting/Calendar/CalendarWeekSettingEditor";
@@ -9,6 +10,8 @@ import ResourceEditor from "@/components/elements/pages/editor/setting/Resource/
 import ThemeCalendarSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeCalendarSettingEditor";
 import ThemeGroupSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeGroupSettingEditor";
 import ThemeTimelineSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeTimelineSettingEditor";
+import { useLocale } from "@/locales/locale";
+import { Color } from "@/models/Color";
 import { Configuration } from "@/models/data/Configuration";
 import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { EditorData } from "@/models/data/EditorData";
@@ -24,19 +27,21 @@ import { TimeZone } from "@/models/TimeZone";
 const NewLine = "\r\n";
 
 interface Props extends ConfigurationProps {
-	editData: EditorData;
+	editorData: EditorData;
 }
 
 const SettingEditor: FC<Props> = (props: Props) => {
-	const setting = toContext(props.configuration, props.editData.setting);
+	const locale = useLocale();
+
+	const setting = toContext(props.configuration, props.editorData.setting);
 
 	function handleSubmit(event: FormEvent) {
 		event.preventDefault();
 
-		props.editData.setting = fromContext(props.editData.setting, setting);
+		props.editorData.setting = fromContext(props.editorData.setting, setting);
 		console.debug(setting);
 		//TODO: 自動保存とぶつかる可能性あり、、、同一オブジェクトなので大丈夫、か？
-		Storages.saveEditorData(props.editData);
+		Storages.saveEditorData(props.editorData);
 
 		window.location.reload();
 	}
@@ -46,50 +51,70 @@ const SettingEditor: FC<Props> = (props: Props) => {
 			<form onSubmit={handleSubmit}>
 				<Tabs defaultIndex={props.configuration.tabIndex.setting} forceRenderTabPanel={true}>
 					<TabList>
-						<Tab>基本</Tab>
-						<Tab>リソース</Tab>
-						<Tab>カレンダー</Tab>
-						<Tab>テーマ</Tab>
+						<Tab>
+							{locale.pages.editor.setting.tabs.general}
+						</Tab>
+						<Tab>
+							{locale.pages.editor.setting.tabs.resource}
+						</Tab>
+						<Tab>
+							{locale.pages.editor.setting.tabs.calendar}
+						</Tab>
+						<Tab>
+							{locale.pages.editor.setting.tabs.theme}
+						</Tab>
 					</TabList>
 
-					<TabPanel className='setting-tab-item general'>
+					<TabPanel className="setting-tab-item general">
 						<GeneralEditor />
 					</TabPanel>
 
-					<TabPanel className='setting-tab-item resource'>
+					<TabPanel className="setting-tab-item resource">
 						<ResourceEditor />
 					</TabPanel>
 
-					<TabPanel className='setting-tab-item calendar'>
+					<TabPanel className="setting-tab-item calendar">
 						<dl className="inputs">
-							<dt>日付範囲</dt>
+							<dt>
+								{locale.pages.editor.setting.calendar.range.title}
+							</dt>
 							<dd className="range">
 								<CalendarRangeSettingEditor />
 							</dd>
 
-							<dt>曜日設定</dt>
+							<dt>
+								{locale.pages.editor.setting.calendar.week.title}
+							</dt>
 							<dd className="week">
 								<CalendarWeekSettingEditor />
 							</dd>
 
-							<dt>祝日</dt>
+							<dt>
+								{locale.pages.editor.setting.calendar.holiday.title}
+							</dt>
 							<dd className="holiday">
 								<CalendarHolidaySettingEditor />
 							</dd>
 						</dl>
 					</TabPanel>
 
-					<TabPanel className='setting-tab-item theme'>
-						<dl className='inputs'>
-							<dt>カレンダー</dt>
+					<TabPanel className="setting-tab-item theme">
+						<dl className="inputs">
+							<dt>
+								{locale.pages.editor.setting.theme.calendar.title}
+							</dt>
 							<dd>
 								<ThemeCalendarSettingEditor />
 							</dd>
-							<dt>グループ</dt>
+							<dt>
+								{locale.pages.editor.setting.theme.group.title}
+							</dt>
 							<dd>
 								<ThemeGroupSettingEditor />
 							</dd>
-							<dt>タイムライン</dt>
+							<dt>
+								{locale.pages.editor.setting.theme.timeline.title}
+							</dt>
 							<dd>
 								<ThemeTimelineSettingEditor />
 							</dd>
@@ -97,7 +122,14 @@ const SettingEditor: FC<Props> = (props: Props) => {
 					</TabPanel>
 				</Tabs>
 
-				<button className="action setting-save">submit</button>
+				<div className="setting-save">
+					<button className="action">
+						<IconLabel
+							kind={IconKind.Save}
+							label={locale.pages.editor.setting.save}
+						/>
+					</button>
+				</div>
 			</form>
 		</SettingContext.Provider>
 	);
@@ -106,12 +138,18 @@ const SettingEditor: FC<Props> = (props: Props) => {
 export default SettingEditor;
 
 function toCalendarHolidayEventContext(kind: HolidayKind, items: { [key: DateOnly]: HolidayEvent }, timeZone: TimeZone): string {
-	return Object.entries(items)
+	let lines = Object.entries(items)
 		.filter(([k, v]) => v.kind === kind)
 		.map(([k, v]) => ({ date: DateTime.parse(k, timeZone), display: v.display }))
-		.sort((a, b) => a.date.getTime() - b.date.getTime())
+		.sort((a, b) => a.date.compare(b.date))
 		.map(a => `${a.date.format("yyyy-MM-dd")}\t${a.display}`)
-		.join(NewLine) + NewLine;
+		.join(NewLine)
+		;
+	if (lines.length) {
+		lines += NewLine;
+	}
+
+	return lines;
 }
 
 function toContext(configuration: Configuration, setting: Setting): SettingContext {
@@ -121,6 +159,7 @@ function toContext(configuration: Configuration, setting: Setting): SettingConte
 			regular: DefaultSettings.getRegularHolidays(),
 			event: DefaultSettings.getEventHolidayColors(),
 		},
+		timeline: DefaultSettings.getTimelineTheme(),
 	};
 
 	return {
@@ -131,21 +170,20 @@ function toContext(configuration: Configuration, setting: Setting): SettingConte
 			timeZone: timeZone,
 		},
 		groups: setting.groups.map(a => ({
-			key: IdFactory.createReactKey(),
+			id: a.id,
 			name: a.name,
-			members: a.members.map<MemberSetting>(b => ({
-				key: IdFactory.createReactKey(),
+			members: a.members.map(b => ({
 				id: b.id,
 				name: b.name,
-				color: b.color,
+				color: Color.parse(b.color),
 				priceCost: b.price.cost,
 				priceSales: b.price.sales,
-			})).sort((a, b) => a.name.localeCompare(b.name))
+			} satisfies MemberSetting)).sort((a, b) => a.name.localeCompare(b.name))
 		})).sort((a, b) => a.name.localeCompare(b.name)),
 		calendar: {
 			range: {
-				from: setting.calendar.range.from,
-				to: setting.calendar.range.to,
+				begin: setting.calendar.range.begin,
+				end: setting.calendar.range.end,
 			},
 			holiday: {
 				regulars: {
@@ -158,36 +196,35 @@ function toContext(configuration: Configuration, setting: Setting): SettingConte
 					sunday: setting.calendar.holiday.regulars.includes("sunday"),
 				},
 				events: {
-					holidays: toCalendarHolidayEventContext("holiday", setting.calendar.holiday.events, timeZone),
-					specials: toCalendarHolidayEventContext("special", setting.calendar.holiday.events, timeZone),
+					normal: toCalendarHolidayEventContext("normal", setting.calendar.holiday.events, timeZone),
+					special: toCalendarHolidayEventContext("special", setting.calendar.holiday.events, timeZone),
 				}
 			},
 		},
 		theme: {
 			holiday: {
 				regulars: {
-					monday: setting.theme.holiday.regulars.monday ?? colors.holiday.regular.get("monday") ?? DefaultSettings.BusinessWeekdayColor,
-					tuesday: setting.theme.holiday.regulars.tuesday ?? colors.holiday.regular.get("tuesday") ?? DefaultSettings.BusinessWeekdayColor,
-					wednesday: setting.theme.holiday.regulars.wednesday ?? colors.holiday.regular.get("wednesday") ?? DefaultSettings.BusinessWeekdayColor,
-					thursday: setting.theme.holiday.regulars.thursday ?? colors.holiday.regular.get("thursday") ?? DefaultSettings.BusinessWeekdayColor,
-					friday: setting.theme.holiday.regulars.friday ?? colors.holiday.regular.get("friday") ?? DefaultSettings.BusinessWeekdayColor,
-					saturday: setting.theme.holiday.regulars.saturday ?? colors.holiday.regular.get("saturday") ?? DefaultSettings.BusinessWeekdayColor,
-					sunday: setting.theme.holiday.regulars.sunday ?? colors.holiday.regular.get("sunday") ?? DefaultSettings.BusinessWeekdayColor,
+					monday: Color.tryParse(setting.theme.holiday.regulars.monday || "") ?? colors.holiday.regular.monday ?? DefaultSettings.BusinessWeekdayColor,
+					tuesday: Color.tryParse(setting.theme.holiday.regulars.tuesday || "") ?? colors.holiday.regular.tuesday ?? DefaultSettings.BusinessWeekdayColor,
+					wednesday: Color.tryParse(setting.theme.holiday.regulars.wednesday || "") ?? colors.holiday.regular.wednesday ?? DefaultSettings.BusinessWeekdayColor,
+					thursday: Color.tryParse(setting.theme.holiday.regulars.thursday || "") ?? colors.holiday.regular.thursday ?? DefaultSettings.BusinessWeekdayColor,
+					friday: Color.tryParse(setting.theme.holiday.regulars.friday || "") ?? colors.holiday.regular.friday ?? DefaultSettings.BusinessWeekdayColor,
+					saturday: Color.tryParse(setting.theme.holiday.regulars.saturday || "") ?? colors.holiday.regular.saturday ?? DefaultSettings.BusinessWeekdayColor,
+					sunday: Color.tryParse(setting.theme.holiday.regulars.sunday || "") ?? colors.holiday.regular.sunday ?? DefaultSettings.BusinessWeekdayColor,
 				},
 				events: {
-					holiday: setting.theme.holiday.events.holiday ?? colors.holiday.event.holiday,
-					special: setting.theme.holiday.events.special ?? colors.holiday.event.special,
+					normal: Color.tryParse(setting.theme.holiday.events.normal || "") ?? colors.holiday.event.normal,
+					special: Color.tryParse(setting.theme.holiday.events.special || "") ?? colors.holiday.event.special,
 				}
 			},
 			groups: setting.theme.groups.map(a => ({
 				key: IdFactory.createReactKey(),
-				value: a,
+				value: Color.tryParse(a) ?? DefaultSettings.UnknownMemberColor,
 			})),
 			timeline: {
-				group: setting.theme.timeline.group,
-				defaultGroup: setting.theme.timeline.defaultGroup,
-				defaultTask: setting.theme.timeline.defaultTask,
-				completed: setting.theme.timeline.completed,
+				defaultGroup: Color.tryParse(setting.theme.timeline.defaultGroup) ?? Color.parse(colors.timeline.defaultGroup),
+				defaultTask: Color.tryParse(setting.theme.timeline.defaultTask) ?? Color.parse(colors.timeline.defaultTask),
+				completed: Color.tryParse(setting.theme.timeline.completed) ?? Color.parse(colors.timeline.completed),
 			}
 		}
 	};
@@ -226,8 +263,8 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 		timeZone: timeZone.serialize(),
 		calendar: {
 			range: {
-				from: context.calendar.range.from,
-				to: context.calendar.range.to,
+				begin: context.calendar.range.begin,
+				end: context.calendar.range.end,
 			},
 			holiday: {
 				regulars: new Array<{ week: WeekDay, value: boolean }>().concat([
@@ -240,41 +277,41 @@ function fromContext(source: Readonly<Setting>, context: SettingContext): Settin
 					{ week: "sunday", value: context.calendar.holiday.regulars.sunday },
 				]).filter(a => a.value).map(a => a.week),
 				events: {
-					...fromCalendarHolidayEventsContext("holiday", context.calendar.holiday.events.holidays, timeZone),
-					...fromCalendarHolidayEventsContext("special", context.calendar.holiday.events.specials, timeZone),
+					...fromCalendarHolidayEventsContext("normal", context.calendar.holiday.events.normal, timeZone),
+					...fromCalendarHolidayEventsContext("special", context.calendar.holiday.events.special, timeZone),
 				}
 			}
 		},
 		theme: {
 			holiday: {
 				regulars: {
-					monday: context.theme.holiday.regulars.monday,
-					tuesday: context.theme.holiday.regulars.tuesday,
-					wednesday: context.theme.holiday.regulars.wednesday,
-					thursday: context.theme.holiday.regulars.thursday,
-					friday: context.theme.holiday.regulars.friday,
-					saturday: context.theme.holiday.regulars.saturday,
-					sunday: context.theme.holiday.regulars.sunday,
+					monday: context.theme.holiday.regulars.monday.toHtml(),
+					tuesday: context.theme.holiday.regulars.tuesday.toHtml(),
+					wednesday: context.theme.holiday.regulars.wednesday.toHtml(),
+					thursday: context.theme.holiday.regulars.thursday.toHtml(),
+					friday: context.theme.holiday.regulars.friday.toHtml(),
+					saturday: context.theme.holiday.regulars.saturday.toHtml(),
+					sunday: context.theme.holiday.regulars.sunday.toHtml(),
 				},
 				events: {
-					holiday: context.theme.holiday.events.holiday,
-					special: context.theme.holiday.events.special,
+					normal: context.theme.holiday.events.normal.toHtml(),
+					special: context.theme.holiday.events.special.toHtml(),
 				}
 			},
-			groups: context.theme.groups.map(a => a.value),
+			groups: context.theme.groups.map(a => a.value.toHtml()),
 			timeline: {
-				group: context.theme.timeline.group,
-				defaultGroup: context.theme.timeline.defaultGroup,
-				defaultTask: context.theme.timeline.defaultTask,
-				completed: context.theme.timeline.completed,
+				defaultGroup: context.theme.timeline.defaultGroup.toHtml(),
+				defaultTask: context.theme.timeline.defaultTask.toHtml(),
+				completed: context.theme.timeline.completed.toHtml(),
 			},
 		},
 		groups: context.groups.map(a => ({
+			id: a.id,
 			name: a.name,
 			members: a.members.map(b => ({
 				id: b.id,
 				name: b.name,
-				color: b.color,
+				color: b.color.toHtml(),
 				price: {
 					cost: b.priceCost,
 					sales: b.priceSales,

@@ -1,8 +1,10 @@
 import { Arrays } from "@/models/Arrays";
-import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
+import { DayInfo } from "@/models/data/DayInfo";
+import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
+import { ResourceInfo } from "@/models/data/ResourceInfo";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId } from "@/models/data/Setting";
 import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
-import { DateTime, WeekIndex } from "@/models/DateTime";
+import { DateTime, DateTimeTicks, WeekIndex } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
 import { Limiter } from "@/models/Limiter";
 import { Settings } from "@/models/Settings";
@@ -16,15 +18,27 @@ interface Holidays {
 	weeks: ReadonlyArray<WeekIndex>;
 }
 
-type TimeLineIdOrObject = TimelineId | AnyTimeline;
+export type TimelineIdOrObject = TimelineId | AnyTimeline;
 
 export abstract class Timelines {
 
-	private static getId(timeline: TimeLineIdOrObject): string {
+	private static getId(timeline: TimelineIdOrObject): string {
 		return typeof timeline === "string" ? timeline : timeline.id;
 	}
 
-	public static toNodePreviousId(timeline: TimeLineIdOrObject): string {
+	public static toRowId(timeline: TimelineIdOrObject): string {
+		return "timeline-row-" + this.getId(timeline);
+	}
+
+	public static toSubjectId(timeline: TimelineIdOrObject): string {
+		return "timeline-cell-subject-" + this.getId(timeline);
+	}
+
+	public static toWorkloadId(timeline: TimelineIdOrObject): string {
+		return "timeline-cell-workload-" + this.getId(timeline);
+	}
+
+	public static toNodePreviousId(timeline: TimelineIdOrObject): string {
 		return "timeline-node-previous-" + this.getId(timeline);
 	}
 
@@ -32,16 +46,21 @@ export abstract class Timelines {
 		return "days-" + date.format("yyyy_MM_dd");
 	}
 
-	public static toChartId(timeline: TimeLineIdOrObject): string {
+	public static toChartId(timeline: TimelineIdOrObject): string {
 		return "timeline-chart-" + this.getId(timeline);
 	}
 
+	public static getReadableTimelineIdClassName(displayTimelineId: ReadableTimelineId): string {
+		return "_dynamic_programmable_readableTimelineId_level-" + displayTimelineId.level;
+	}
+
+
 	public static serializeWorkload(workload: TimeSpan): TimeOnly {
-		return workload.toString("readable");
+		return workload.serialize("readable");
 	}
 
 	public static serializeDateTime(date: DateTime): TimeOnly {
-		return date.format("yyyy-MM-dd");
+		return date.toInput("date");
 	}
 
 	public static createRootTimeline(): RootTimeline {
@@ -84,7 +103,7 @@ export abstract class Timelines {
 		return item;
 	}
 
-	public static toIndexNumber(index: DisplayTimelineId): string {
+	public static toReadableTimelineId(index: ReadableTimelineId): string {
 		return index.tree.join(".");
 	}
 
@@ -244,7 +263,7 @@ export abstract class Timelines {
 
 	}
 
-	public static calcDisplayId(timeline: Readonly<AnyTimeline>, rootTimeline: Readonly<GroupTimeline>): DisplayTimelineId {
+	public static calcReadableTimelineId(timeline: Readonly<AnyTimeline>, rootTimeline: Readonly<GroupTimeline>): ReadableTimelineId {
 
 		const groups = Timelines.getParentGroups(timeline, rootTimeline);
 		if (!groups.length) {
@@ -275,7 +294,7 @@ export abstract class Timelines {
 		}
 		tree.push(index + 1);
 
-		const result: DisplayTimelineId = {
+		const result: ReadableTimelineId = {
 			level: tree.length,
 			tree: tree,
 		};
@@ -308,7 +327,7 @@ export abstract class Timelines {
 				return true;
 			}
 
-			if (holidays.dates.some(a => a.getTime() === dateOnly.getTime())) {
+			if (holidays.dates.some(a => a.ticks === dateOnly.ticks)) {
 				return true;
 			}
 
@@ -360,6 +379,103 @@ export abstract class Timelines {
 		};
 
 		return result;
+	}
+
+
+	/**
+	 * タイムラインから最初に見つかったタスクを返す。
+	 * ここでいう最初は層の浅い部分となる。
+	 * @param timeline
+	 * @returns
+	 */
+	public static getFirstTaskTimeline(timeline: AnyTimeline): TaskTimeline | null {
+		if (Settings.maybeTaskTimeline(timeline)) {
+			return timeline;
+		} else if (Settings.maybeGroupTimeline(timeline)) {
+			const taskChildren = timeline.children.filter(Settings.maybeTaskTimeline);
+			if (taskChildren.length) {
+				return taskChildren[0];
+			}
+
+			const groupChildren = timeline.children.filter(Settings.maybeGroupTimeline);
+			for (const groupTImeline of groupChildren) {
+				const taskTimeline = this.getFirstTaskTimeline(groupTImeline);
+				if (taskTimeline) {
+					return taskTimeline;
+				}
+			}
+		} else {
+			throw new Error();
+		}
+
+		return null;
+	}
+
+	/**
+	 * 指定タイムラインは前工程タイムラインとして選択可能か
+	 * @param targetTimeline 前工程になりうるかチェックするタイムライン。
+	 * @param baseTimeline 基準となるタイムライン。
+	 * @param rootTimeline
+	 * @returns
+	 */
+	public static canSelect(targetTimeline: AnyTimeline, baseTimeline: AnyTimeline, rootTimeline: GroupTimeline): boolean {
+		const groups = Timelines.getParentGroups(baseTimeline, rootTimeline);
+		if (groups.length) {
+			return !groups.some(a => a.id === targetTimeline.id);
+		}
+
+		return true;
+	}
+
+	/**
+	 * 前工程タイムラインを検索。
+	 * @param timeline タイムライン。
+	 * @param rootTimeline
+	 * @returns
+	 */
+	public static searchBeforeTimeline(timeline: AnyTimeline, rootTimeline: GroupTimeline): AnyTimeline | undefined {
+		const sequenceTimelines = this.flat(rootTimeline.children);
+
+		const index = sequenceTimelines.findIndex(a => a.id === timeline.id);
+		if (index === -1) {
+			throw new Error();
+		}
+
+		const groups = Timelines.getParentGroups(timeline, rootTimeline);
+		const group = Arrays.last(groups);
+
+		for (let i = index - 1; 0 <= i; i--) {
+			const beforeTimeline = sequenceTimelines[i];
+			if (Settings.maybeGroupTimeline(beforeTimeline)) {
+				// 前項目が自身の属するグループの場合、直近タイムラインにはなりえない
+				if (groups.find(a => a.id === beforeTimeline.id)) {
+					continue;
+				}
+				return beforeTimeline;
+			}
+			if (Settings.maybeTaskTimeline(beforeTimeline)) {
+				const beforeGroups = Timelines.getParentGroups(beforeTimeline, rootTimeline);
+				const beforeGroup = Arrays.last(beforeGroups);
+				// 前項目のグループと自身のグループが同じ場合、兄弟として直近として扱える
+				if (beforeGroup.id === group.id) {
+					return beforeTimeline;
+				}
+
+				if (this.canSelect(beforeTimeline, timeline, rootTimeline)) {
+					// タスク自体は直近として扱える場合でも、異なるグループのためそのグループ自体を選択する
+					if (1 < beforeGroups.length) {
+						const target = beforeGroup;
+						if (this.canSelect(target, timeline, rootTimeline)) {
+							return target;
+						}
+					}
+
+					return beforeTimeline;
+				}
+			}
+		}
+
+		return undefined;
 	}
 
 	public static getWorkRanges(flatTimelines: ReadonlyArray<AnyTimeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>, timeZone: TimeZone): Map<TimelineId, WorkRange> {
@@ -508,7 +624,7 @@ export abstract class Timelines {
 					let prevDate = maxWorkRange.end;
 					if (timeline.static) {
 						const staticDate = DateTime.parse(timeline.static, timeZone);
-						const targetTime = Math.max(staticDate.getTime(), maxWorkRange.end.getTime());
+						const targetTime = Math.max(staticDate.ticks, maxWorkRange.end.ticks);
 						prevDate = DateTime.convert(targetTime, timeZone);
 					}
 
@@ -574,99 +690,132 @@ export abstract class Timelines {
 		return result;
 	}
 
-	/**
-	 * タイムラインから最初に見つかったタスクを返す。
-	 * ここでいう最初は層の浅い部分となる。
-	 * @param timeline
-	 * @returns
-	 */
-	public static getFirstTaskTimeline(timeline: AnyTimeline): TaskTimeline | null {
-		if (Settings.maybeTaskTimeline(timeline)) {
-			return timeline;
-		} else if (Settings.maybeGroupTimeline(timeline)) {
-			const taskChildren = timeline.children.filter(Settings.maybeTaskTimeline);
-			if (taskChildren.length) {
-				return taskChildren[0];
-			}
+	public static calcDayInfos(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>): Map<DateTimeTicks, DayInfo> {
+		const LOG_CDI = "日情報算出";
+		console.time(LOG_CDI);
 
-			const groupChildren = timeline.children.filter(Settings.maybeGroupTimeline);
-			for (const groupTImeline of groupChildren) {
-				const taskTimeline = this.getFirstTaskTimeline(groupTImeline);
-				if (taskTimeline) {
-					return taskTimeline;
-				}
-			}
-		} else {
-			throw new Error();
+		type SuccessWorkRangeTimeline = Omit<SuccessWorkRange, "kind" | "timeline"> & {
+			timeline: TaskTimeline,
 		}
 
-		return null;
-	}
+		const successWorkRanges = new Set(
+			[...workRanges]
+				.filter(WorkRanges.maybeSuccessWorkRange)
+				.filter(a => Settings.maybeTaskTimeline(a.timeline))
+				.map(a => ({
+					begin: a.begin,
+					end: a.end,
+					timeline: a.timeline as TaskTimeline
+				} satisfies SuccessWorkRangeTimeline))
+		);
 
-	/**
-	 * 指定タイムラインは前工程タイムラインとして選択可能か
-	 * @param targetTimeline 前工程になりうるかチェックするタイムライン。
-	 * @param baseTimeline 基準となるタイムライン。
-	 * @param rootTimeline
-	 * @returns
-	 */
-	public static canSelect(targetTimeline: AnyTimeline, baseTimeline: AnyTimeline, rootTimeline: GroupTimeline): boolean {
-		const groups = Timelines.getParentGroups(baseTimeline, rootTimeline);
-		if (groups.length) {
-			return !groups.some(a => a.id === targetTimeline.id);
+		if (!successWorkRanges.size) {
+			// 重複チェックするにはそもそも範囲算出が成功してないとなんもできない
+			console.timeEnd(LOG_CDI);
+			return new Map();
 		}
 
-		return true;
-	}
+		const result = new Map<DateTimeTicks, DayInfo>();
 
-	/**
-	 * 前工程タイムラインを検索。
-	 * @param timeline タイムライン。
-	 * @param rootTimeline
-	 * @returns
-	 */
-	public static searchBeforeTimeline(timeline: AnyTimeline, rootTimeline: GroupTimeline): AnyTimeline | undefined {
-		const sequenceTimelines = this.flat(rootTimeline.children);
-
-		const index = sequenceTimelines.findIndex(a => a.id === timeline.id);
-		if (index === -1) {
-			throw new Error();
-		}
-
-		const groups = Timelines.getParentGroups(timeline, rootTimeline);
-		const group = Arrays.last(groups);
-
-		for (let i = index - 1; 0 <= i; i--) {
-			const beforeTimeline = sequenceTimelines[i];
-			if (Settings.maybeGroupTimeline(beforeTimeline)) {
-				// 前項目が自身の属するグループの場合、直近タイムラインにはなりえない
-				if (groups.find(a => a.id === beforeTimeline.id)) {
+		// 作業範囲一覧を総なめ
+		for (const currentWorkRange of successWorkRanges) {
+			for (const otherWorkRange of successWorkRanges) {
+				if (otherWorkRange === currentWorkRange) {
+					// 自分は無視
 					continue;
 				}
-				return beforeTimeline;
-			}
-			if (Settings.maybeTaskTimeline(beforeTimeline)) {
-				const beforeGroups = Timelines.getParentGroups(beforeTimeline, rootTimeline);
-				const beforeGroup = Arrays.last(beforeGroups);
-				// 前項目のグループと自身のグループが同じ場合、兄弟として直近として扱える
-				if (beforeGroup.id === group.id) {
-					return beforeTimeline;
+
+				let range: {
+					begin: DateTime;
+					end: DateTime;
+				} | undefined = undefined;
+
+				if (
+					// 自身の後半に対象が存在する
+					(currentWorkRange.begin.ticks < otherWorkRange.begin.ticks)
+					&&
+					(otherWorkRange.begin.ticks < currentWorkRange.end.ticks)
+					&&
+					(currentWorkRange.end.ticks < otherWorkRange.end.ticks)
+				) {
+					range = {
+						begin: otherWorkRange.begin,
+						end: currentWorkRange.end,
+					};
+				} else if (
+					// 自身の中に対象が存在する
+					(currentWorkRange.begin.ticks <= otherWorkRange.begin.ticks)
+					&&
+					(otherWorkRange.begin.ticks < otherWorkRange.end.ticks)
+					&&
+					(otherWorkRange.end.ticks <= currentWorkRange.end.ticks)
+				) {
+					range = {
+						begin: otherWorkRange.begin,
+						end: otherWorkRange.end,
+					};
+				} else if (
+					// 自身の前半に対象が存在する
+					(otherWorkRange.begin.ticks < currentWorkRange.begin.ticks)
+					&&
+					(currentWorkRange.begin.ticks < otherWorkRange.end.ticks)
+					&&
+					(otherWorkRange.end.ticks < currentWorkRange.end.ticks)
+				) {
+					range = {
+						begin: currentWorkRange.begin,
+						end: otherWorkRange.end,
+					};
+				} else if (
+					// 自身が対象の中に納まる
+					(otherWorkRange.begin.ticks <= currentWorkRange.begin.ticks)
+					&&
+					(currentWorkRange.begin.ticks < currentWorkRange.end.ticks)
+					&&
+					(currentWorkRange.end.ticks <= otherWorkRange.end.ticks)
+				) {
+					range = {
+						begin: currentWorkRange.begin,
+						end: currentWorkRange.end,
+					};
 				}
 
-				if (this.canSelect(beforeTimeline, timeline, rootTimeline)) {
-					// タスク自体は直近として扱える場合でも、異なるグループのためそのグループ自体を選択する
-					if (1 < beforeGroups.length) {
-						const target = beforeGroup;
-						if (this.canSelect(target, timeline, rootTimeline)) {
-							return target;
+				if (range) {
+					if (currentWorkRange.timeline.memberId === otherWorkRange.timeline.memberId && resourceInfo.memberMap.has(currentWorkRange.timeline.memberId)) {
+						const setInfo = (date: DateTime) => {
+							let info = result.get(date.ticks);
+							if (!info) {
+								info = {
+									duplicateMembers: new Set(),
+									targetTimelines: new Set(),
+								};
+								result.set(date.ticks, info);
+							}
+
+							info.duplicateMembers.add(currentWorkRange.timeline.memberId);
+							info.targetTimelines.add(currentWorkRange.timeline.id);
+						};
+
+						const length = range.begin.diff(range.end).totalDays;
+						for (let i = 0; i < length; i++) {
+							const date = i
+								? range.begin.add(i, "day").toDateOnly()
+								: range.begin
+								;
+							setInfo(date);
+						}
+						// 終端(中途半端な終了時間を考慮)
+						if (!range.end.toDateOnly().equals(range.end)) {
+							setInfo(range.end);
 						}
 					}
-
-					return beforeTimeline;
 				}
 			}
 		}
 
-		return undefined;
+		console.timeEnd(LOG_CDI);
+
+		return result;
 	}
+
 }

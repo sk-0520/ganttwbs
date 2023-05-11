@@ -8,8 +8,8 @@ import { useLocale } from "@/locales/locale";
 import { Browsers } from "@/models/Browsers";
 import { CssHelper } from "@/models/CssHelper";
 import { AutoSaveKind } from "@/models/data/AutoSave";
-import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { DateTime } from "@/models/DateTime";
 import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
@@ -17,9 +17,8 @@ import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 import { Types } from "@/models/Types";
 
-interface Props {
+interface Props extends ConfigurationProps {
 	isVisible: boolean;
-	configuration: Configuration;
 	editorData: EditorData;
 }
 
@@ -90,7 +89,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 
 		autoSaveDownloadIntervalId.current = window.setInterval(() => {
 			const now = DateTime.today(TimeZone.getClientTimeZone());
-			const autoSaveName = formatAutoDownloadFileName(fileName, locale.editor.file.autoSave.download.fileNameFormat, now);
+			const autoSaveName = formatAutoDownloadFileName(fileName, locale.pages.editor.file.save.auto.download.fileNameFormat, now);
 			downloadJson(autoSaveName, editorData.setting);
 			setAutoSaveDownloadLastTime(now);
 			setAutoSaveDownloadNextTime(now.add(autoSaveDownloadTime));
@@ -145,11 +144,15 @@ const FileEditor: FC<Props> = (props: Props) => {
 	}
 
 	return (
-		<dl className='inputs'>
-			<dt>設定</dt>
+		<dl className="inputs">
+			<dt>
+				{locale.pages.editor.file.save.title}
+			</dt>
 			<dd>
 				<dl className="inputs">
-					<dt>ファイル名</dt>
+					<dt>
+						{locale.pages.editor.file.save.fileName}
+					</dt>
 					<dd>
 						<input
 							type="text"
@@ -158,16 +161,28 @@ const FileEditor: FC<Props> = (props: Props) => {
 						/>
 					</dd>
 
-					<dt>自動保存</dt>
+					<dt>
+						{locale.pages.editor.file.save.auto.title}
+					</dt>
 					<dd>
 						<table className="auto-save">
 							<thead>
 								<tr>
-									<th className="kind-cell">自動保存方法</th>
-									<th className="enabled-cell">定期実施</th>
-									<th className="span-cell">実施間隔(分)</th>
-									<th className="last-time-cell">前回</th>
-									<th className="next-time-cell">次回</th>
+									<th className="kind-cell">
+										{locale.pages.editor.file.save.auto.columns.kind}
+									</th>
+									<th className="enabled-cell">
+										{locale.pages.editor.file.save.auto.columns.enabled}
+									</th>
+									<th className="span-cell">
+										{locale.pages.editor.file.save.auto.columns.span}
+									</th>
+									<th className="last-time-cell">
+										{locale.pages.editor.file.save.auto.columns.last}
+									</th>
+									<th className="next-time-cell">
+										{locale.pages.editor.file.save.auto.columns.next}
+									</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -202,11 +217,21 @@ const FileEditor: FC<Props> = (props: Props) => {
 				</dl>
 			</dd>
 
-			<dt>出力</dt>
+			<dt>
+				{locale.pages.editor.file.save.export.title}
+			</dt>
 			<dd>
 				<ul className="inline">
-					<li><button onClick={handleDownload}>DOWNLOAD</button></li>
-					<li><button onClick={handleJsonCopy}>copy</button></li>
+					<li>
+						<button onClick={handleDownload}>
+							{locale.common.command.download}
+						</button>
+					</li>
+					<li>
+						<button onClick={handleJsonCopy}>
+							{locale.common.command.copy}
+						</button>
+					</li>
 				</ul>
 			</dd>
 			<dd>
@@ -222,17 +247,25 @@ const FileEditor: FC<Props> = (props: Props) => {
 				/>
 			</dd>
 
-			<dt>さいなら</dt>
+			<dt>
+				{locale.pages.editor.file.byebye}
+			</dt>
 			<dd>
 				<ul>
 					<li>
-						<Link href="/">トップ</Link>
+						<Link href="/">
+							{locale.pages.top.title}
+						</Link>
 					</li>
 					<li>
-						<Link href="/new">新規</Link>
+						<Link href="/new">
+							{locale.pages.new.title}
+						</Link>
 					</li>
 					<li>
-						<Link href="/load">読み込み</Link>
+						<Link href="/load">
+							{locale.pages.load.title}
+						</Link>
 					</li>
 				</ul>
 			</dd>

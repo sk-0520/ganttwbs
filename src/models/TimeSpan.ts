@@ -1,3 +1,4 @@
+import { As } from "@/models/As";
 import { ParseResult, ResultFactory } from "@/models/data/Result";
 
 type TimeSpanParseResult = ParseResult<TimeSpan, Error>;
@@ -43,6 +44,9 @@ export class TimeSpan {
 		return Math.trunc(this._ticks / 1000 / 60 / 60 / 24);
 	}
 
+	/**
+	 * ミリ秒。
+	 */
 	public get ticks(): number {
 		return this._ticks;
 	}
@@ -101,7 +105,37 @@ export class TimeSpan {
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private static parseISO8601(s: string): TimeSpanParseResult {
-		return ResultFactory.error(new Error());
+		//P[n]Y[n]M[n]DT[n]H[n]M[n]S
+		const matches = /^P((?<YEAR>\d+)Y)?((?<MONTH>\d+)M)?((?<DAY>\d+)D)?(T((?<HOUR>\d+)H)?((?<MINUTE>\d+)M)?((?<SECOND>\d+)S)?(.(?<MS>\d+))?)?/.exec(s);
+		if (!matches || !matches.groups) {
+			return ResultFactory.error(new Error(s));
+		}
+
+		let ticks = 0;
+
+		if (matches.groups.YEAR) {
+			ticks += As.integer(matches.groups.YEAR) * 365 * 12 * 24 * 60 * 60 * 1000;
+		}
+		if (matches.groups.MONTH) {
+			ticks += As.integer(matches.groups.MONTH) * 12 * 24 * 60 * 60 * 1000;
+		}
+		if (matches.groups.DAY) {
+			ticks += As.integer(matches.groups.DAY) * 24 * 60 * 60 * 1000;
+		}
+
+		if (matches.groups.HOUR) {
+			ticks += As.integer(matches.groups.HOUR) * 60 * 60 * 1000;
+		}
+		if (matches.groups.MINUTE) {
+			ticks += As.integer(matches.groups.MINUTE) * 60 * 1000;
+		}
+		if (matches.groups.SECOND) {
+			ticks += As.integer(matches.groups.SECOND) * 60 * 1000;
+		}
+		if (matches.groups.MS) {
+			ticks += As.integer(matches.groups.MS);
+		}
+		return ResultFactory.success(new TimeSpan(ticks));
 	}
 
 	private static parseReadable(s: string): TimeSpanParseResult {
@@ -111,13 +145,13 @@ export class TimeSpan {
 		}
 
 		const totalSeconds
-			= parseInt(matches.groups.S, 10)
-			+ (parseInt(matches.groups.M, 10) * 60)
-			+ (parseInt(matches.groups.H, 10) * 60 * 60)
-			+ (matches.groups.DAY ? parseInt(matches.groups.DAY, 10) * 60 * 60 * 24 : 0);
+			= As.integer(matches.groups.S)
+			+ (As.integer(matches.groups.M) * 60)
+			+ (As.integer(matches.groups.H) * 60 * 60)
+			+ (matches.groups.DAY ? As.integer(matches.groups.DAY) * 60 * 60 * 24 : 0);
 
 		if (matches.groups.MS) {
-			const ms = parseInt(matches.groups.MS, 10);
+			const ms = As.integer(matches.groups.MS);
 			if (ms) {
 				const totalMilliseconds = totalSeconds * 1000 + ms;
 				return ResultFactory.success(TimeSpan.fromMilliseconds(totalMilliseconds));
@@ -147,7 +181,38 @@ export class TimeSpan {
 		return ResultFactory.parseErrorIsThrow(s, this.parseCore);
 	}
 
-	private toReadableString(): string {
+	private serializeIso8601(): string {
+		if (!this.ticks) {
+			return "P0D";
+		}
+
+		let result = "P";
+
+		if (this.days) {
+			result += `${this.days}D`;
+		}
+
+		if (this.hours || this.minutes || this.seconds || this.milliseconds) {
+			result += "T";
+
+			if (this.hours) {
+				result += `${this.hours}H`;
+			}
+			if (this.minutes) {
+				result += `${this.minutes}M`;
+			}
+			if (this.seconds) {
+				result += `${this.seconds}M`;
+			}
+			if (this.milliseconds) {
+				result += `.${this.milliseconds}`;
+			}
+		}
+
+		return result;
+	}
+
+	private serializeReadable(): string {
 		let result = "";
 		if (this.days) {
 			result += this.days + ".";
@@ -166,14 +231,21 @@ export class TimeSpan {
 		return result;
 	}
 
-	public toString(format: "readable"): string {
+	public serialize(format: "iso8601" | "readable"): string {
 		switch (format) {
+			case "iso8601":
+				return this.serializeIso8601();
+
 			case "readable":
-				return this.toReadableString();
+				return this.serializeReadable();
 
 			default:
 				throw new Error();
 		}
+	}
+
+	public toString(): string {
+		return this.serialize("readable");
 	}
 
 	//#endregion

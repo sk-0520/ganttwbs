@@ -16,7 +16,7 @@ export abstract class Calendars {
 				date: date,
 				event: v,
 			};
-			result.set(date.getTime(), value);
+			result.set(date.ticks, value);
 		}
 
 		return result;
@@ -26,8 +26,8 @@ export abstract class Calendars {
 		const timeZone = TimeZone.parse(rawTimeZone);
 
 		const range: CalendarRange = {
-			from: DateTime.parse(calendar.range.from, timeZone),
-			to: DateTime.parse(calendar.range.to, timeZone),
+			begin: DateTime.parse(calendar.range.begin, timeZone),
+			end: DateTime.parse(calendar.range.end, timeZone),
 		};
 
 		const holidayEventMap = this.createHolidayEventMap(calendar.holiday.events, timeZone);
@@ -48,13 +48,13 @@ export abstract class Calendars {
 	 * @returns
 	 */
 	public static getCalendarRangeDays(calendarRange: Readonly<CalendarRange>): number {
-		const diff = calendarRange.from.diff(calendarRange.to);
+		const diff = calendarRange.begin.diff(calendarRange.end);
 		const days = diff.totalDays + 1;
 		return days;
 	}
 
 	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<number, Readonly<HolidayEventMapValue>>): Readonly<HolidayEventMapValue> | null {
-		const value = eventMap.get(target.getTime());
+		const value = eventMap.get(target.ticks);
 
 		if (!value) {
 			return null;

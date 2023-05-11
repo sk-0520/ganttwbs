@@ -2,8 +2,8 @@ import { z } from "zod";
 
 import { IdFactory } from "@/models/IdFactory";
 
-const ColorSchema = z.string();
-export type Color = z.infer<typeof ColorSchema>;
+const ColorStringSchema = z.string();
+export type ColorString = z.infer<typeof ColorStringSchema>;
 
 const TimestampSchema = z.string();
 export type Timestamp = z.infer<typeof TimestampSchema>;
@@ -25,10 +25,13 @@ const WeekDaySchema = z.enum([
 export type WeekDay = z.infer<typeof WeekDaySchema>;
 
 const HolidayKindSchema = z.enum([
-	"holiday",
+	"normal",
 	"special",
 ]);
 export type HolidayKind = z.infer<typeof HolidayKindSchema>;
+
+const GroupIdSchema = z.string();
+export type GroupId = z.infer<typeof GroupIdSchema>;
 
 const MemberIdSchema = z.string();
 export type MemberId = z.infer<typeof MemberIdSchema>;
@@ -65,8 +68,8 @@ const HolidaySchema = z.object({
 export type Holiday = z.infer<typeof HolidaySchema>;
 
 const WorkDateRangeSchema = z.object({
-	from: DateOnlySchema,
-	to: DateOnlySchema,
+	begin: DateOnlySchema,
+	end: DateOnlySchema,
 });
 /** @inheritdoc */
 export type WorkDateRange = z.infer<typeof WorkDateRangeSchema>;
@@ -165,22 +168,21 @@ const VersionItemSchema = z.object({
 export type VersionItem = z.infer<typeof VersionItemSchema>;
 
 const HolidayThemeSchema = z.object({
-	regulars: z.record(WeekDaySchema, ColorSchema),
-	events: z.record(HolidayKindSchema, ColorSchema),
+	regulars: z.record(WeekDaySchema, ColorStringSchema),
+	events: z.record(HolidayKindSchema, ColorStringSchema),
 });
 export type HolidayTheme = z.infer<typeof HolidayThemeSchema>;
 
 const TimelineThemeSchema = z.object({
-	group: ColorSchema,
-	defaultGroup: ColorSchema,
-	defaultTask: ColorSchema,
-	completed: ColorSchema,
+	defaultGroup: ColorStringSchema,
+	defaultTask: ColorStringSchema,
+	completed: ColorStringSchema,
 });
 export type TimelineTheme = z.infer<typeof TimelineThemeSchema>;
 
 const ThemeSchema = z.object({
 	holiday: HolidayThemeSchema,
-	groups: z.array(ColorSchema),
+	groups: z.array(ColorStringSchema),
 	timeline: TimelineThemeSchema,
 });
 export type Theme = z.infer<typeof ThemeSchema>;
@@ -198,12 +200,13 @@ export type Price = z.infer<typeof PriceSchema>;
 const MemberSchema = z.object({
 	id: MemberIdSchema,
 	name: z.string(),
-	color: ColorSchema,
+	color: ColorStringSchema,
 	price: PriceSchema,
 });
 export type Member = z.infer<typeof MemberSchema>;
 
 const GroupSchema = z.object({
+	id: GroupIdSchema,
 	name: z.string(),
 	members: z.array(MemberSchema),
 });

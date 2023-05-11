@@ -27,6 +27,9 @@ module.exports = {
 			"error",
 			"double"
 		],
+		"eqeqeq": [
+			"error",
+		],
 		/*
 		"no-tabs": [
 			"error",
@@ -53,6 +56,18 @@ module.exports = {
 			"error",
 		],
 		"no-func-assign": [
+			"error",
+		],
+		"no-invalid-regexp": [
+			"error",
+		],
+		"no-loop-func": [
+			"error",
+		],
+		"no-octal-escape": [
+			"error",
+		],
+		"no-implicit-coercion": [
 			"error",
 		],
 		"no-inner-declarations": [
@@ -105,6 +120,10 @@ module.exports = {
 		],
 		"unused-imports/no-unused-imports": [
 			"error"
+		],
+		"jsx-quotes": [
+			"error",
+			"prefer-double",
 		],
 		"react/jsx-indent": [
 			"error",

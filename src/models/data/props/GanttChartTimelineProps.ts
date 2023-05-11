@@ -1,4 +1,4 @@
-import { AreaSize } from "@/models/data/AreaSize";
+import { AreaSize } from "@/models/data/Area";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
@@ -12,6 +12,6 @@ export interface GanttChartTimelineProps extends ConfigurationProps, SettingProp
 	currentTimeline: AnyTimeline;
 	currentIndex: number;
 
-	chartSize: AreaSize;
+	areaSize: AreaSize;
 }
 

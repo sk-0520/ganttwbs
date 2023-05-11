@@ -64,6 +64,27 @@ describe("Arrays", () => {
 		expect(() => Arrays.first(input)).toThrowError(RangeError);
 	});
 
+
+	test("find", () => {
+		expect(Arrays.find([1, 2, 3, 4], a => a % 2 === 0)).toBe(2);
+		expect(Arrays.find([1, 2, 3, 4], a => 2 < a)).toBe(3);
+	});
+
+	test("find - throw", () => {
+		expect(() => Arrays.find([1, 2, 3, 4], (a) => a < 0)).toThrow(RangeError);
+		expect(() => Arrays.find(["A", undefined, "B"], (a, i) => i === 1)).toThrow(RangeError);
+	});
+
+	test("findLast", () => {
+		expect(Arrays.findLast([1, 2, 3, 4], a => a % 2 === 0)).toBe(4);
+		expect(Arrays.findLast([1, 2, 3, 4], a => 2 < a)).toBe(4);
+	});
+
+	test("findLast - throw", () => {
+		expect(() => Arrays.findLast([1, 2, 3, 4], (a) => a < 0)).toThrow(RangeError);
+		expect(() => Arrays.findLast(["A", undefined, "B"], (a, i) => i === 1)).toThrow(RangeError);
+	});
+
 	test.each([
 		[[20, 10, 30], [10, 20, 30], 0, 1],
 		[[20, 10, 30], [10, 20, 30], 1, 0],

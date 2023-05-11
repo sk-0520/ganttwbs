@@ -1,15 +1,15 @@
-import { TinyColor, random } from "@ctrl/tinycolor";
 import { FC, useContext, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
+import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
-import { Colors } from "@/models/Colors";
+import { Color } from "@/models/Color";
 import { SettingContext, UUID } from "@/models/data/context/SettingContext";
-import { Color } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
+import { Strings } from "@/models/Strings";
 
 const groupThemeColors = DefaultSettings.getGroupThemeColors();
 
@@ -24,6 +24,7 @@ const reset = {
 } as const;
 
 const ThemeGroupSettingEditor: FC = () => {
+	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
 	const [groups, setGroups] = useState(settingContext.theme.groups);
@@ -38,6 +39,7 @@ const ThemeGroupSettingEditor: FC = () => {
 			throw new Error();
 		}
 		target.value = color;
+		setGroups(settingContext.theme.groups = [...groups]);
 	}
 
 	function handleRemoveColor(key: UUID) {
@@ -48,7 +50,7 @@ const ThemeGroupSettingEditor: FC = () => {
 	function handleAddColor() {
 		groups.push({
 			key: IdFactory.createReactKey(),
-			value: random().toHexString(),
+			value: Color.random(),
 		});
 		setGroups(settingContext.theme.groups = [...groups]);
 	}
@@ -60,7 +62,7 @@ const ThemeGroupSettingEditor: FC = () => {
 			if (1 < groups.length) {
 				setResetColorEnd(groups[groups.length - 1].value);
 			} else {
-				setResetColorEnd(random().toHexString());
+				setResetColorEnd(Color.random());
 			}
 		} else {
 			setResetColorBegin(reset.color.begin);
@@ -82,7 +84,14 @@ const ThemeGroupSettingEditor: FC = () => {
 					{groups.map((a, i) => {
 						return (
 							<tr key={a.key}>
-								<td>レベル {i + 1}</td>
+								<td>
+									{Strings.replaceMap(
+										locale.pages.editor.setting.theme.group.levelFormat,
+										{
+											"LEVEL": (i + 1).toString(),
+										}
+									)}
+								</td>
 								<td>
 									<PlainColorPicker
 										color={a.value}
@@ -91,10 +100,10 @@ const ThemeGroupSettingEditor: FC = () => {
 								</td>
 								<td>
 									<button
-										type='button'
+										type="button"
 										onClick={ev => handleRemoveColor(a.key)}
 									>
-										remove
+										{locale.common.command.remove}
 									</button>
 								</td>
 							</tr>
@@ -106,18 +115,18 @@ const ThemeGroupSettingEditor: FC = () => {
 						<td />
 						<td>
 							<button
-								type='button'
+								type="button"
 								onClick={handleAddColor}
 							>
-								末尾追加
+								{locale.common.command.add}
 							</button>
 						</td>
 						<td>
 							<button
-								type='button'
+								type="button"
 								onClick={handleStartResetColor}
 							>
-								一括設定
+								{locale.pages.editor.setting.theme.group.collectiveSetting}
 							</button>
 						</td>
 					</tr>
@@ -127,14 +136,14 @@ const ThemeGroupSettingEditor: FC = () => {
 			{visibleResetColor && (
 				<Dialog
 					button="submit"
-					title="一括設定"
+					title={locale.pages.editor.setting.theme.group.collectiveSettingDialog.title}
 					callbackClose={r => {
 						if (r === "submit") {
 							const colors = resetCount <= 1
-								? [new TinyColor(resetColorBegin)]
-								: Colors.generateGradient(resetColorBegin, resetColorEnd, resetCount)
+								? [resetColorBegin]
+								: Color.generateGradient(resetColorBegin, resetColorEnd, resetCount)
 								;
-							const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a.toHexString() }));
+							const groups = colors.map(a => ({ key: IdFactory.createReactKey(), value: a }));
 							setGroups(settingContext.theme.groups = groups);
 						}
 						setVisibleResetColor(false);
@@ -142,7 +151,7 @@ const ThemeGroupSettingEditor: FC = () => {
 				>
 					<dl className="inputs">
 						<dt>
-							件数(無限)
+							{locale.pages.editor.setting.theme.group.collectiveSettingDialog.countInfinity}
 						</dt>
 						<dd>
 							<input
@@ -152,7 +161,14 @@ const ThemeGroupSettingEditor: FC = () => {
 								onChange={ev => setResetCount(ev.target.valueAsNumber)}
 							/>
 						</dd>
-						<dd title={`有限(${reset.maximum})`}>
+						<dd
+							title={Strings.replaceMap(
+								locale.pages.editor.setting.theme.group.collectiveSettingDialog.countFiniteFormat,
+								{
+									"COUNT": reset.maximum.toString(),
+								}
+							)}
+						>
 							<input
 								type="range"
 								min={reset.minimum}
@@ -162,23 +178,25 @@ const ThemeGroupSettingEditor: FC = () => {
 							/>
 						</dd>
 
-						<dt>色</dt>
+						<dt>
+							{locale.pages.editor.setting.theme.group.collectiveSettingDialog.color}
+						</dt>
 						<dd>
 							{/* ブラウザに任せる, ダイアログ内でぶわってするとぶわってなる */}
 							<input
 								type="color"
-								value={resetColorBegin}
-								onChange={ev => setResetColorBegin(ev.target.value)}
+								value={resetColorBegin.toHtml()}
+								onChange={ev => setResetColorBegin(Color.parse(ev.target.value))}
 							/>
 							～
 							<input
 								type="color"
-								value={resetColorEnd}
-								onChange={ev => setResetColorEnd(ev.target.value)}
+								value={resetColorEnd.toHtml()}
+								onChange={ev => setResetColorEnd(Color.parse(ev.target.value))}
 							/>
 						</dd>
 
-						<dt>初期化</dt>
+						<dt>&nbsp;</dt>
 						<dd>
 							<DefaultButton
 								visibleLabel={true}

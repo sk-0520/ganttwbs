@@ -1,11 +1,12 @@
 
+import { useSetAtom } from "jotai";
 import { FC, useMemo } from "react";
 
 import ErrorRow from "@/components/elements/pages/editor/timeline/shape/ErrorRow";
+import { DetailEditTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { ChartProps } from "@/models/data/props/ChartProps";
 import { GroupTimeline } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
-
 
 
 interface Props extends ChartProps {
@@ -13,6 +14,7 @@ interface Props extends ChartProps {
 }
 
 const GroupChart: FC<Props> = (props: Props) => {
+	const setDetailEditTimeline = useSetAtom(DetailEditTimelineAtom);
 
 	const groupRowNodes = useMemo(() => {
 		return (
@@ -60,7 +62,7 @@ const GroupChart: FC<Props> = (props: Props) => {
 					rx={height / 2}
 					ry={width / 2}
 					paintOrder="stroke"
-					onDoubleClick={_ => props.timelineStore.startDetailEdit(props.currentTimeline)}
+					onDoubleClick={_ => setDetailEditTimeline(props.currentTimeline)}
 				/>
 
 				<rect

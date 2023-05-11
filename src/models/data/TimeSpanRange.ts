@@ -1,6 +1,6 @@
 import { TimeSpan } from "@/models/TimeSpan";
 
 export interface TimeSpanRange {
-	start: TimeSpan;
+	begin: TimeSpan;
 	end: TimeSpan;
 }

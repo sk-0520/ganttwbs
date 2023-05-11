@@ -1,14 +1,17 @@
-import { FC, ReactNode, useMemo } from "react";
+import { useSetAtom } from "jotai";
+import { FC, MouseEvent, ReactNode, useMemo } from "react";
 
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
 import { Calendars } from "@/models/Calendars";
-import { AreaSize } from "@/models/data/AreaSize";
+import { Charts } from "@/models/Charts";
+import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { ColorString } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 
@@ -17,33 +20,20 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 }
 
 const TimelineViewer: FC<Props> = (props: Props) => {
+	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 
-	const { cell, days } = useMemo(() => {
-		const cell = props.configuration.design.seed.cell;
-		const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
-		return {
-			cell,
-			days,
-		};
-	}, [props.configuration, props.calendarInfo]);
-
-	const chartSize = useMemo(() => {
-		const result: AreaSize = {
-			width: cell.width.value * days,
-			height: cell.height.value * props.timelineStore.totalItemMap.size,
-		};
-		return result;
-	}, [cell, days, props.timelineStore.totalItemMap.size]);
-
+	const areaData = useMemo(() => {
+		return Charts.createAreaData(props.configuration.design.seed.cell, props.calendarInfo.range, props.timelineStore.totalItemMap.size);
+	}, [props.configuration, props.calendarInfo, props.timelineStore.totalItemMap.size]);
 
 	const gridNodes = useMemo(() => {
-		const width = cell.width.value * days;
-		const height = cell.height.value * (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height);
+		const width = areaData.cell.width.value * (areaData.days + props.configuration.design.dummy.width);
+		const height = areaData.cell.height.value * (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height);
 
 		// 横軸
 		const gridHorizontals = new Array<ReactNode>();
 		for (let i = 0; i < (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height); i++) {
-			const y = cell.height.value + cell.height.value * i;
+			const y = areaData.cell.height.value + areaData.cell.height.value * i;
 			gridHorizontals.push(
 				<line
 					key={i}
@@ -61,10 +51,10 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 		// 縦軸
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
-		for (let i = 0; i < days; i++) {
-			const date = props.calendarInfo.range.from.add(TimeSpan.fromDays(i));
+		for (let i = 0; i < (areaData.days + props.configuration.design.dummy.width); i++) {
+			const date = props.calendarInfo.range.begin.add(TimeSpan.fromDays(i));
 
-			const gridX = cell.width.value + cell.width.value * i;
+			const gridX = areaData.cell.width.value + areaData.cell.width.value * i;
 
 			gridVerticals.push(
 				<line
@@ -75,11 +65,16 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 					y2={height}
 					stroke="gray"
 					strokeWidth={1}
-					strokeDasharray={2}
+					strokeDasharray={1.5}
 				/>
 			);
 
-			let color: string | undefined = undefined;
+			if (areaData.days < i) {
+				// 曜日とかの判定すらもういらない
+				continue;
+			}
+
+			let color: ColorString | undefined = undefined;
 
 			// 祝日判定
 			const holidayEventValue = Calendars.getHolidayEventValue(date, props.calendarInfo.holidayEventMap);
@@ -94,14 +89,14 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				}
 			}
 			if (color) {
-				const holidayX = cell.width.value * i;
+				const holidayX = areaData.cell.width.value * i;
 
 				gridHolidays.push(
 					<rect
 						key={holidayX}
 						x={holidayX}
 						y={0}
-						width={cell.width.value}
+						width={areaData.cell.width.value}
 						height={height}
 						fill={color}
 					/>
@@ -122,11 +117,33 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				</g>
 			</g>
 		);
-	}, [cell, days, props.calendarInfo, props.configuration, props.setting, props.timelineStore.totalItemMap.size]);
+	}, [areaData, props.calendarInfo, props.configuration, props.setting, props.timelineStore.totalItemMap.size]);
+
+	function handleMouseMove(ev: MouseEvent) {
+		// 下でグダグダやってるけどこっち(か算出方法)が間違ってる感あるなぁ
+		if (ev.nativeEvent.offsetY < 0 || areaData.size.height <= ev.nativeEvent.offsetY) {
+			setHoverTimelineId(undefined);
+			return;
+		}
+
+		const sequenceIndex = Math.floor(ev.nativeEvent.offsetY / areaData.cell.height.value);
+		// ここのグダグダ感
+		if(props.timelineStore.sequenceItems.length <= sequenceIndex) {
+			setHoverTimelineId(undefined);
+			return;
+		}
+
+		const timeline = props.timelineStore.sequenceItems[sequenceIndex];
+		setHoverTimelineId(timeline.id);
+	}
 
 	return (
-		<div id='viewer'>
-			<svg id="canvas" width={chartSize.width} height={chartSize.height}>
+		<div id="viewer" onMouseMove={handleMouseMove}>
+			<svg
+				id="canvas"
+				width={(areaData.size.width + (areaData.cell.width.value * props.configuration.design.dummy.width)) + "px"}
+				height={(areaData.size.height + (areaData.cell.height.value * (props.configuration.design.dummy.height - 1))) + "px"}
+			>
 				{gridNodes}
 				{props.timelineStore.sequenceItems.map((a, i) => {
 					return (
@@ -139,7 +156,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							currentIndex={i}
 							calendarInfo={props.calendarInfo}
 							resourceInfo={props.resourceInfo}
-							chartSize={chartSize}
+							areaSize={areaData.size}
 							timelineStore={props.timelineStore}
 						/>
 					);
@@ -157,7 +174,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							currentIndex={i}
 							calendarInfo={props.calendarInfo}
 							resourceInfo={props.resourceInfo}
-							chartSize={chartSize}
+							areaSize={areaData.size}
 							timelineStore={props.timelineStore}
 						/>
 					);

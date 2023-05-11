@@ -1,13 +1,10 @@
-import { TinyColor } from "@ctrl/tinycolor";
 import { CSSProperties, FC, useEffect, useRef, useState } from "react";
 import { SketchPicker } from "react-color";
 import { PresetColor } from "react-color/lib/components/sketch/Sketch";
 
 import Overlay from "@/components/elements/Overlay";
-import { Colors } from "@/models/Colors";
-import { Color } from "@/models/data/Setting";
-import style from "@/styles/modules/components/elements/PlainColorPicker.module.scss";
-
+import { Color } from "@/models/Color";
+import { ColorString } from "@/models/data/Setting";
 
 interface Props {
 	color: Color;
@@ -16,16 +13,11 @@ interface Props {
 }
 
 const PlainColorPicker: FC<Props> = (props: Props) => {
-
 	const [isVisible, setIsVisible] = useState(false);
-	const [color, setColor] = useState(props.color);
+	//const [color, setColor] = useState(props.color);
 	const refPicker = useRef<HTMLDivElement>(null);
 
 	const presetColors = new Array<PresetColor>();
-
-	useEffect(() => {
-		setColor(props.color);
-	}, [props.color]);
 
 	useEffect(() => {
 		if (refPicker.current) {
@@ -38,37 +30,35 @@ const PlainColorPicker: FC<Props> = (props: Props) => {
 		}
 	}, [isVisible, refPicker]);
 
-	function handleChanging(value: Color): void {
-		setColor(value);
+	function handleChanging(value: ColorString): void {
 		if (props.callbackChanging) {
-			props.callbackChanging(value);
+			const color = Color.parse(value);
+			props.callbackChanging(color);
 		}
 	}
 
-	function handleChanged(value: Color): void {
-		setColor(value);
+	function handleChanged(value: ColorString): void {
 		if (props.callbackChanged) {
-			props.callbackChanged(value);
+			const color = Color.parse(value);
+			props.callbackChanged(color);
 		}
 	}
-
-	const current = new TinyColor(color);
 
 	const boxStyle: CSSProperties = {
-		background: current.toHexString(),
-		borderColor: Colors.getAutoColor(current).toHexString(),
+		background: props.color.toHtml(),
+		borderColor: props.color.getAutoColor().toHtml(),
 	};
 
 	return (
 		<>
-			<span className={style.wrapper}>
+			<span className="color-picker-wrapper plain">
 				<button
-					className={style.button}
+					className="button"
 					type="button"
 					onClick={ev => setIsVisible(true)}
 				>
-					<span className={style.box} style={boxStyle}>&nbsp;</span>
-					<code>{current.toHexString()}</code>
+					<span className="box" style={boxStyle}>&nbsp;</span>
+					<code>{props.color.toHtml()}</code>
 				</button>
 				<Overlay
 					isVisible={isVisible}
@@ -78,8 +68,8 @@ const PlainColorPicker: FC<Props> = (props: Props) => {
 						ref={refPicker}
 					>
 						<SketchPicker
-							className={style.picker}
-							color={color}
+							className="picker"
+							color={props.color.toHtml()}
 							disableAlpha={false}
 							presetColors={presetColors}
 							onChange={(cr, _) => handleChanging(cr.hex)}

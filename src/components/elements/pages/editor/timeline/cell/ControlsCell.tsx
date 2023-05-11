@@ -1,22 +1,26 @@
 import classNames from "classnames";
 import { FC, useState } from "react";
 
-import { IconImage, IconKind } from "@/components/elements/Icon";
+import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
+import { useLocale } from "@/locales/locale";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { MoveDirection } from "@/models/store/TimelineStore";
 
 interface Props {
 	currentTimelineKind: TimelineKind;
 	disabled: boolean,
-	moveItem: (direction: MoveDirection) => void;
-	addItem: (kindOrTimeline: TimelineKind | GroupTimeline) => void;
-	deleteItem: () => void;
-	showDetail(): void;
+	callbackMoveItem: (direction: MoveDirection) => void;
+	callbackAddItem: (kindOrTimeline: TimelineKind | GroupTimeline) => void;
+	callbackDeleteItem: () => void;
+	callbackShowDetail(): void;
+	callbackShowTimeline(): void;
 }
 
 const ControlsCell: FC<Props> = (props: Props) => {
+	const locale = useLocale();
+
 	const [visibleControls, setVisibleControls] = useState(false);
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 
@@ -28,17 +32,17 @@ const ControlsCell: FC<Props> = (props: Props) => {
 	}
 
 	function handleMoveItem(direction: MoveDirection) {
-		props.moveItem(direction);
+		props.callbackMoveItem(direction);
 		handleHideControls();
 	}
 
 	function handleAddItem(kind: TimelineKind) {
-		props.addItem(kind);
+		props.callbackAddItem(kind);
 		handleHideControls();
 	}
 
 	function handleDeleteItem() {
-		props.deleteItem();
+		props.callbackDeleteItem();
 		handleHideControls();
 	}
 
@@ -49,7 +53,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 
 	function handleCloseTimelinesImport(timeline: GroupTimeline | null) {
 		if (timeline) {
-			props.addItem(timeline);
+			props.callbackAddItem(timeline);
 		}
 
 		setVisibleTimelinesImportDialog(false);
@@ -57,7 +61,12 @@ const ControlsCell: FC<Props> = (props: Props) => {
 
 	function handleShowDetail() {
 		handleHideControls();
-		props.showDetail();
+		props.callbackShowDetail();
+	}
+
+	function handleShowTimeline() {
+		handleHideControls();
+		props.callbackShowTimeline();
 	}
 
 	return (
@@ -87,17 +96,17 @@ const ControlsCell: FC<Props> = (props: Props) => {
 						<tbody>
 							<tr>
 								<th className="col-header">
-									移動
+									{locale.pages.editor.timeline.timelines.controls.move.title}
 								</th>
 								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleMoveItem("up")}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.MoveUp}
+											label={locale.pages.editor.timeline.timelines.controls.move.up}
 										/>
-										上へ
 									</button>
 								</td>
 								<td className="col-cell">
@@ -105,10 +114,10 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleMoveItem("down")}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.MoveDown}
+											label={locale.pages.editor.timeline.timelines.controls.move.down}
 										/>
-										下へ
 									</button>
 								</td>
 								<td className="col-cell">
@@ -116,10 +125,10 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleMoveItem("parent")}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.MovePrev}
+											label={locale.pages.editor.timeline.timelines.controls.move.parent}
 										/>
-										下げる
 									</button>
 								</td>
 							</tr>
@@ -132,17 +141,17 @@ const ControlsCell: FC<Props> = (props: Props) => {
 											: "直近"
 									}
 								>
-									追加
+									{locale.pages.editor.timeline.timelines.controls.add.title}
 								</th>
 								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleAddItem("group")}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.TimelineAddGroup}
+											label={locale.pages.editor.timeline.timelines.controls.add.group}
 										/>
-										グループ
 									</button>
 								</td>
 								<td className="col-cell">
@@ -150,10 +159,10 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleAddItem("task")}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.TimelineAddTask}
+											label={locale.pages.editor.timeline.timelines.controls.add.task}
 										/>
-										タスク
 									</button>
 								</td>
 								<td className="col-cell">
@@ -161,38 +170,48 @@ const ControlsCell: FC<Props> = (props: Props) => {
 										className="simple"
 										onClick={_ => handleShowTimelinesImportDialog()}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.TimelineImport}
+											label={locale.pages.editor.timeline.timelines.controls.add.import}
 										/>
-										一括
 									</button>
 								</td>
 							</tr>
 							<tr>
 								<th className="col-header">
-									その他
+									{locale.pages.editor.timeline.timelines.controls.others.title}
 								</th>
 								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleShowDetail()}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.Edit}
+											label={locale.pages.editor.timeline.timelines.controls.others.setting}
 										/>
-										詳細設定
 									</button>
 								</td>
-								<td className="col-cell" />
+								<td className="col-cell">
+									<button
+										className="simple"
+										onClick={_ => handleShowTimeline()}
+									>
+										<IconLabel
+											kind={IconKind.MoveTarget}
+											label={locale.pages.editor.timeline.timelines.controls.others.show}
+										/>
+									</button>
+								</td>
 								<td className="col-cell">
 									<button
 										className="simple"
 										onClick={_ => handleDeleteItem()}
 									>
-										<IconImage
+										<IconLabel
 											kind={IconKind.Remove}
+											label={locale.common.command.remove}
 										/>
-										削除
 									</button>
 								</td>
 							</tr>

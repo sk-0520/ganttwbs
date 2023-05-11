@@ -1,3 +1,8 @@
+/** クラス的な。 */
+export type Constructor<T extends object> = {
+	prototype: T,
+};
+
 export abstract class Types {
 
 	/**
@@ -29,14 +34,68 @@ export abstract class Types {
 		return typeof arg === "string";
 	}
 
+	public static hasProperty(arg: unknown, key: PropertyKey): arg is Record<PropertyKey, unknown> {
+		return arg !== undefined && arg !== null && typeof arg === "object" && key in arg;
+	}
+
 	/**
-	 * 真偽値変換。
-	 * ちょっとお堅いJSX内で使用する想定。
-	 * `!!` はなんかこう、使いたくない。
-	 * @param arg 対象データ。
+	 * 指定したオブジェクトが指定したクラス(コンストラクタ)の継承関係しているか
+	 * @param arg
+	 * @param type
 	 * @returns
 	 */
-	public static toBoolean(arg: unknown): boolean {
-		return arg ? true : false;
+	public static instanceOf<T extends object>(arg: unknown, type: Constructor<T>): arg is T {
+		return arg instanceof type.prototype.constructor;
+	}
+
+
+	/**
+	 * 指定したオブジェクトが指定したクラス(コンストラクタ)と同じか
+	 * @param arg
+	 * @param type
+	 * @returns
+	 */
+	public static isEqual<T extends object>(arg: unknown, type: Constructor<T>): arg is T {
+		if (!this.hasProperty(arg, "constructor")) {
+			return false;
+		}
+
+		return arg.constructor.prototype === type.prototype;
+	}
+
+	/**
+	 * オブジェクトから変数とプロパティ(ゲッター)の名前を取得。
+	 * @param obj
+	 * @returns
+	 */
+	public static getProperties<T extends object>(obj: T): Set<keyof T> {
+		const result = new Set<keyof T>();
+
+		let current = obj;
+
+		while (true) {
+			const prototype = Object.getPrototypeOf(current);
+			if (prototype === null) {
+				break;
+			}
+
+			const currentPropertyNames = Object.getOwnPropertyNames(prototype) as Array<keyof T>;
+			const targets = currentPropertyNames.filter(i => {
+				const descriptor = Object.getOwnPropertyDescriptor(prototype, i);
+				return i !== "__proto__" && descriptor?.get instanceof Function;
+			});
+
+			for (const target of targets) {
+				result.add(target);
+			}
+
+			current = prototype;
+		}
+
+		for (const target in obj) {
+			result.add(target);
+		}
+
+		return result;
 	}
 }

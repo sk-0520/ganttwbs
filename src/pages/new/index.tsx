@@ -1,87 +1,158 @@
 import { NextPage } from "next";
 import { NextRouter, useRouter } from "next/router";
+import { useEffect, useId, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Layout from "@/components/layout/Layout";
+import { useLocale } from "@/locales/locale";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { EditorData } from "@/models/data/EditorData";
-import { DateOnly, Member, Setting } from "@/models/data/Setting";
+import { Member, Setting, WeekDay } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Goto } from "@/models/Goto";
+import { IdFactory } from "@/models/IdFactory";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 
+interface DateRange {
+	begin: DateTime;
+	end: DateTime;
+}
+
 interface Input {
 	title: string;
-	dateFrom: DateOnly;
-	dateTo: DateOnly;
+	rangeBeginYear: number,
+	rangeBeginMonth: number,
+	rangeMonthCount: number,
 	mode: "empty" | "sample";
 }
 
+const defaultMonthCount = 4;
+
 const NewPage: NextPage = () => {
+	const locale = useLocale();
+	const [timeZone, setTimeZone] = useState<TimeZone>(TimeZone.utc);
+	const [fromDate, setFromDate] = useState<DateTime>(DateTime.today(timeZone));
 	const router = useRouter();
-	//const { register, handleSubmit, formState: { errors } } = useForm();
+	const baseId = useId();
 	const { register, handleSubmit, } = useForm<Input>();
 
-	const timeZone = TimeZone.getClientTimeZone();
-	const fromDate = DateTime.today(timeZone);
-	const toDate = fromDate.add(TimeSpan.fromDays(180));
+	useEffect(() => {
+		const timeZone = TimeZone.getClientTimeZone();
+		const date = DateTime.today(timeZone);
+		setTimeZone(timeZone);
+		setFromDate(date);
+	}, []);
+
+	const id = {
+		title: `${baseId}-title`,
+		rangeBeginYear: `${baseId}-rangeBeginYear`,
+		rangeBeginMonth: `${baseId}-rangeBeginMonth`,
+		rangeMonthCount: `${baseId}-rangeMonthCount`,
+	} as const;
 
 	return (
-		<Layout title='新規作成' mode='page' layoutId='new'>
-			<p>ここで入力する内容は編集時に変更可能です。</p>
+		<Layout
+			mode="page"
+			layoutId="new"
+			title={locale.pages.new.title}
+		>
+			<p>
+				{locale.pages.new.description}
+			</p>
 
 			<form onSubmit={handleSubmit(data => onSubmit(data, timeZone, router))}>
-				<dl className='inputs'>
-					<dt>タイトル</dt>
+				<dl className="inputs">
+					<dt>
+						<label htmlFor={id.title}>
+							{locale.pages.new.projectName}
+						</label>
+					</dt>
 					<dd>
 						<input
-							type='text'
+							id={id.title}
+							type="text"
 							/*DEBUG*/ defaultValue={fromDate.format("L")}
 							{...register("title", {
-								required: {
-									value: true,
-									message: "必須"
-								}
+								required: true,
 							})}
 						/>
 					</dd>
 
-					<dt>日付範囲</dt>
+					<dt>
+						{locale.pages.new.range.title}
+					</dt>
 					<dd>
-						<label>
-							開始
-							<input
-								type='date'
-								defaultValue={fromDate.format("yyyy-MM-dd")}
-								{...register("dateFrom", {
-									required: {
-										value: true,
-										message: "必須"
-									}
-								})}
-							/>
-						</label>
-						<span>～</span>
-						<label>
-							<input
-								type='date'
-								defaultValue={toDate.format("yyyy-MM-dd")}
-								{...register("dateTo", {
-									required: {
-										value: true,
-										message: "必須"
-									}
-								})}
-							/>
-							終了
-						</label>
+						<table className="date-range">
+							<tbody>
+								<tr>
+									<th>
+										<label htmlFor={id.rangeBeginYear}>
+											{locale.pages.new.range.beginYear}
+										</label>
+									</th>
+									<td>
+										<input
+											id={id.rangeBeginYear}
+											type="number"
+											min={1900}
+											defaultValue={fromDate.year}
+											{...register("rangeBeginYear", {
+												valueAsNumber: true,
+												required: true,
+											})}
+										/>
+									</td>
+								</tr>
+								<tr>
+									<th>
+										<label htmlFor={id.rangeBeginMonth}>
+											{locale.pages.new.range.beginMonth}
+										</label>
+									</th>
+									<td>
+										<input
+											id={id.rangeBeginMonth}
+											type="number"
+											min={1}
+											max={12}
+											defaultValue={fromDate.month}
+											{...register("rangeBeginMonth", {
+												valueAsNumber: true,
+												required: true,
+											})}
+										/>
+									</td>
+								</tr>
+								<tr>
+									<th>
+										<label htmlFor={id.rangeMonthCount}>
+											{locale.pages.new.range.monthCount}
+										</label>
+									</th>
+									<td>
+										<input
+											id={id.rangeMonthCount}
+											type="number"
+											min={1}
+											defaultValue={defaultMonthCount}
+											{...register("rangeMonthCount", {
+												valueAsNumber: true,
+												required: true,
+											})}
+										/>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</dd>
 
-					<dt>作成方法</dt>
+					<dt>
+						{locale.pages.new.mode.title}
+					</dt>
 					<dd>
 						<ul className="inline">
 							<li>
@@ -93,7 +164,7 @@ const NewPage: NextPage = () => {
 											required: true
 										})}
 									/>
-									空データ
+									{locale.pages.new.mode.empty}
 								</label>
 							</li>
 							<li>
@@ -105,14 +176,16 @@ const NewPage: NextPage = () => {
 											required: true
 										})}
 									/>
-									サンプル
+									{locale.pages.new.mode.sample}
 								</label>
 							</li>
 						</ul>
 					</dd>
 				</dl>
 
-				<button className='action'>作業開始</button>
+				<button className="action">
+					{locale.pages.new.submit}
+				</button>
 			</form>
 		</Layout>
 	);
@@ -140,16 +213,28 @@ function onSubmit(data: Input, timeZone: TimeZone, router: NextRouter) {
 	console.debug(setting);
 	console.debug(fileName);
 
-	const editData: EditorData = {
+	const editorData: EditorData = {
 		fileName: fileName,
 		setting: setting,
 	};
-	Goto.editor(editData, router);
+	Goto.editor(editorData, router);
+}
+
+function convertDateRange(data: Input, timeZone: TimeZone): DateRange {
+	const begin = DateTime.create(timeZone, data.rangeBeginYear, data.rangeBeginMonth);
+	const result: DateRange = {
+		begin: begin,
+		end: begin.add(data.rangeMonthCount, "month").add(-1, "day"),
+	};
+
+	return result;
 }
 
 function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 	const regularHolidays = DefaultSettings.getRegularHolidays();
-	const defaultWeekColors = Settings.getWeekDays().filter(a => !regularHolidays.has(a)).map(a => ({ [a]: "#000000" })).reduce((r, a) => ({ ...r, ...a }));
+	const defaultWeekColors = Settings.getWeekDays().filter(a => !(a in regularHolidays)).map(a => ({ [a]: DefaultSettings.BusinessWeekdayColor })).reduce((r, a) => ({ ...r, ...a }));
+
+	const range = convertDateRange(data, timeZone);
 
 	const setting: Setting = {
 		name: data.title,
@@ -158,20 +243,20 @@ function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 		timeZone: timeZone.serialize(),
 		calendar: {
 			holiday: {
-				regulars: [...regularHolidays.keys()],
+				regulars: Object.keys(regularHolidays) as Array<WeekDay>, //TODO: 何か間違っているかも
 				events: {}
 			},
 			range: {
-				from: data.dateFrom,
-				to: data.dateTo
+				begin: Timelines.serializeDateTime(range.begin),
+				end: Timelines.serializeDateTime(range.end),
 			},
 		},
 		theme: {
 			holiday: {
-				regulars: { ...[...regularHolidays].map(([k, v]) => ({ [k]: v })).reduce((r, a) => ({ ...r, ...a })), ...defaultWeekColors },
-				events: DefaultSettings.getEventHolidayColors(),
+				regulars: { ...Object.entries(regularHolidays).map(([k, v]) => ({ [k]: v.toHtml() })).reduce((r, a) => ({ ...r, ...a })), ...Object.entries(defaultWeekColors).map(([k, v]) => ({ [k]: v.toHtml() })).reduce((r, a) => ({ ...r, ...a })) },
+				events: Object.entries(DefaultSettings.getEventHolidayColors()).map(([k, v]) => ({ [k]: v.toHtml() })).reduce((r, a) => ({ ...r, ...a })),
 			},
-			groups: DefaultSettings.getGroupThemeColors(),
+			groups: DefaultSettings.getGroupThemeColors().map(a => a.toHtml()),
 			timeline: DefaultSettings.getTimelineTheme(),
 		},
 		groups: [],
@@ -185,11 +270,13 @@ function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 	const setting = createEmptySetting(data, timeZone);
 
+	const range = convertDateRange(data, timeZone);
+
 	const calendarRange: CalendarRange = {
-		from: DateTime.parse(data.dateFrom, timeZone),
-		to: DateTime.parse(data.dateTo, timeZone),
+		begin: range.begin,
+		end: range.end,
 	};
-	const お疲れ様 = calendarRange.from.add(2, "month");
+	const お疲れ様 = calendarRange.begin.add(2, "month");
 
 	const price = DefaultSettings.getPriceSetting();
 
@@ -236,6 +323,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 	};
 
 	setting.groups.push({
+		id: IdFactory.createGroupId(),
 		name: "1.作業班",
 		members: [
 			members.wa,
@@ -243,6 +331,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 		],
 	});
 	setting.groups.push({
+		id: IdFactory.createGroupId(),
 		name: "2.検証班",
 		members: [
 			members.va,
@@ -250,6 +339,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 		],
 	});
 	setting.groups.push({
+		id: IdFactory.createGroupId(),
 		name: "3.管理班",
 		members: [
 			members.ma,
@@ -262,7 +352,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 			"kind": "task",
 			"id": "680e27c0-7320-441e-9ec1-cf485996824e",
 			"previous": [],
-			"static": Timelines.serializeDateTime(calendarRange.from.add(TimeSpan.fromDays(10))),
+			"static": Timelines.serializeDateTime(calendarRange.begin.add(TimeSpan.fromDays(10))),
 			"progress": 0,
 			"workload": Timelines.serializeWorkload(TimeSpan.fromDays(1)),
 			"memberId": "",

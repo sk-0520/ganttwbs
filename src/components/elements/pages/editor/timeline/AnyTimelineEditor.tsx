@@ -1,6 +1,7 @@
-import { useState, useEffect, DragEvent, FC } from "react";
+import { useSetAtom } from "jotai";
+import { useState, useEffect, DragEvent, FC, useCallback, KeyboardEvent, useRef } from "react";
 
-import { IconImage, IconKind } from "@/components/elements/Icon";
+import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
 import ControlsCell from "@/components/elements/pages/editor/timeline/cell/ControlsCell";
 import IdCell from "@/components/elements/pages/editor/timeline/cell/IdCell";
 import ProgressCell from "@/components/elements/pages/editor/timeline/cell/ProgressCell";
@@ -10,8 +11,10 @@ import SubjectCell from "@/components/elements/pages/editor/timeline/cell/Subjec
 import TimelineHeaderRow from "@/components/elements/pages/editor/timeline/cell/TimelineHeaderRow";
 import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/WorkloadCell";
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
+import { useLocale } from "@/locales/locale";
+import { ActiveTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { DetailEditTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
-import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
@@ -19,25 +22,32 @@ import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { AnyTimeline, GroupTimeline, TimelineKind } from "@/models/data/Setting";
+import { AnyTimeline, GroupTimeline, Progress, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
+import { Editors } from "@/models/Editors";
 import { Settings } from "@/models/Settings";
 import { MoveDirection } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
-import { Types } from "@/models/Types";
 import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	currentTimeline: AnyTimeline;
-	draggingTimeline: DraggingTimeline | null;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
+	callbackSubjectKeyDown(ev: KeyboardEvent, currentTimeline: AnyTimeline): void;
+	callbackWorkloadKeyDown(ev: KeyboardEvent, currentTimeline: AnyTimeline): void;
 }
 
 const AnyTimelineEditor: FC<Props> = (props: Props) => {
+	const locale = useLocale();
+
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
+
+	const setDetailEditTimeline = useSetAtom(DetailEditTimelineAtom);
+	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
+	const setDragSourceTimeline = useSetAtom(DragSourceTimelineAtom);
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
@@ -48,12 +58,19 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const [progress, setProgress] = useState(0);
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
 	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
+	const [visibleBeginDateInput, setVisibleBeginDateInput] = useState(false);
+	const refInputDate = useRef<HTMLInputElement>(null);
 
-	//TODO: 依存関係が腐ってるよ！
+	useEffect(() => {
+		if(refInputDate.current) {
+			refInputDate.current.focus();
+		}
+	}, [refInputDate]);
 
 	useEffect(() => {
 		const timelineItem = props.timelineStore.changedItemMap.get(props.currentTimeline.id);
 		if (timelineItem) {
+			setSubject(timelineItem.timeline.subject);
 
 			if (Settings.maybeGroupTimeline(timelineItem.timeline)) {
 				const workload = Timelines.sumWorkloadByGroup(timelineItem.timeline).totalDays;
@@ -86,6 +103,14 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}, [props.currentTimeline, props.timelineStore]);
 
 	useEffect(() => {
+		const isVisibleBeginDateInput = Boolean(props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id);
+		setVisibleBeginDateInput(isVisibleBeginDateInput);
+		if (isVisibleBeginDateInput) {
+			handleFocus(true);
+		}
+	}, [props.currentTimeline.id, props.selectingBeginDate]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
 		if (props.selectingBeginDate) {
 			if (Settings.maybeGroupTimeline(props.currentTimeline)) {
 				const selected = props.selectingBeginDate.previous.has(props.currentTimeline.id);
@@ -100,6 +125,15 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			}
 		}
 	}, [props.currentTimeline, props.selectingBeginDate]);
+
+	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>) => {
+		props.callbackSubjectKeyDown(ev, props.currentTimeline);
+	}, [props]);
+
+	const handleWorkloadKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>) => {
+		props.callbackWorkloadKeyDown(ev, props.currentTimeline);
+	}, [props]);
+
 
 	function handleChangeSubject(s: string) {
 		setSubject(s);
@@ -121,12 +155,12 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		});
 	}
 
-	function handleChangeProgress(n: number) {
+	function handleChangeProgress(progress: Progress) {
 		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
 			throw new Error();
 		}
 
-		const progress = n / 100.0;
+		//const progress = n / 100.0;
 
 		props.timelineStore.updateTimeline({
 			...props.currentTimeline,
@@ -163,7 +197,17 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleShowDetail() {
-		props.timelineStore.startDetailEdit(props.currentTimeline);
+		setDetailEditTimeline(props.currentTimeline);
+	}
+
+	function handleShowTimeline(): void {
+		let date: DateTime | undefined = undefined;
+		const workRange = props.timelineStore.workRanges.get(props.currentTimeline.id);
+		if (workRange && WorkRanges.maybeSuccessWorkRange(workRange)) {
+			date = workRange.begin;
+		}
+
+		Editors.scrollView(props.currentTimeline.id, date);
 	}
 
 	function handleChangeMember(memberGroupPair: MemberGroupPair | undefined): void {
@@ -190,7 +234,8 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleStartDragTimeline(ev: DragEvent): void {
-		props.timelineStore.startDragTimeline(ev, props.currentTimeline);
+		//props.timelineStore.startDragTimeline(ev, props.currentTimeline);
+		setDragSourceTimeline(props.currentTimeline);
 	}
 
 	function handleChangePrevious(isSelected: boolean): void {
@@ -238,6 +283,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		}
 
 		props.beginDateCallbacks.submitSelectBeginDate(props.currentTimeline);
+		handleFocus(false);
 	}
 
 	function handleClearPrevious() {
@@ -269,6 +315,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		props.currentTimeline.previous = [...props.selectingBeginDate.previous];
 
 		props.beginDateCallbacks.submitSelectBeginDate(props.currentTimeline);
+		handleFocus(false);
 	}
 
 	function handleCancelPrevious() {
@@ -277,121 +324,146 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		}
 
 		props.beginDateCallbacks.cancelSelectBeginDate(props.currentTimeline);
+		handleFocus(false);
 	}
 
-	const timelineIndex = props.timelineStore.calcDisplayId(props.currentTimeline);
+	function handleFocus(isFocus: boolean): void {
+		if (isFocus) {
+			setActiveTimelineId(props.currentTimeline.id);
+		} else {
+			setActiveTimelineId(undefined);
+		}
+	}
+
+	const timelineIndex = props.timelineStore.calcReadableTimelineId(props.currentTimeline);
 
 	return (
 		<TimelineHeaderRow
 			currentTimeline={props.currentTimeline}
 			selectingBeginDate={props.selectingBeginDate}
-			draggingTimeline={props.draggingTimeline}
 			timelineStore={props.timelineStore}
 			level={timelineIndex.level}
 		>
 			<IdCell
 				selectingId={selectingId}
-				timelineIndex={timelineIndex}
+				readableTimelineId={timelineIndex}
 				currentTimeline={props.currentTimeline}
 				isSelectedPrevious={isSelectedPrevious}
-				draggingTimeline={props.draggingTimeline}
 				selectingBeginDate={props.selectingBeginDate}
 				callbackStartDragTimeline={handleStartDragTimeline}
 				callbackChangePrevious={handleChangePrevious}
 			/>
 			<SubjectCell
+				timeline={props.currentTimeline}
 				value={subject}
-				disabled={Types.toBoolean(props.selectingBeginDate)}
+				disabled={Boolean(props.selectingBeginDate)}
 				readOnly={false}
 				callbackChangeValue={handleChangeSubject}
+				callbackFocus={handleFocus}
+				callbackKeyDown={onSubjectKeyDown}
 			/>
 			<WorkloadCell
+				timeline={props.currentTimeline}
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-				disabled={Types.toBoolean(props.selectingBeginDate)}
+				disabled={Boolean(props.selectingBeginDate)}
 				value={workload}
 				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeWorkload : undefined}
+				callbackFocus={handleFocus}
+				callbackKeyDown={handleWorkloadKeyDown}
 			/>
 			<ResourceCell
 				currentTimeline={props.currentTimeline}
 				selectedMemberId={memberId}
-				disabled={Types.toBoolean(props.selectingBeginDate)}
+				disabled={Boolean(props.selectingBeginDate)}
 				resourceInfo={props.resourceInfo}
 				callbackChangeMember={handleChangeMember}
+				callbackFocus={handleFocus}
 			/>
 			<RelationCell
 				currentTimeline={props.currentTimeline}
-				selectable={Types.toBoolean(props.selectingBeginDate)}
+				selectable={Boolean(props.selectingBeginDate)}
 				htmlFor={selectingId}
 			/>
 			{
-				props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id
+				visibleBeginDateInput
 					? (
-						<td className='timeline-cell timeline-range-area prompt' colSpan={2}>
+						<td className="timeline-cell timeline-range-area prompt" colSpan={2}>
 							<ul className="contents">
 								<li className="main">
 									<input
+										ref={refInputDate}
 										type="date"
-										value={selectedBeginDate ? selectedBeginDate.format("yyyy-MM-dd") : ""}
+										value={selectedBeginDate ? selectedBeginDate.toInput("date") : ""}
 										onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
 									/>
 								</li>
 								<li>
-									<button type="button" onClick={handleSubmitPrevious}>
+									<button
+										type="button"
+										title={locale.common.dialog.submit}
+										onClick={handleSubmitPrevious}
+									>
 										<IconImage
 											kind={IconKind.ConfirmPositive}
 											fill="green"
-											title="確定"
 										/>
 									</button>
 								</li>
 								<li>
-									<button type="button" onClick={handleCancelPrevious}>
+									<button
+										type="button"
+										title={locale.common.dialog.cancel}
+										onClick={handleCancelPrevious}
+									>
 										<IconImage
 											kind={IconKind.ConfirmCancel}
-											title="キャンセル"
 										/>
 									</button>
 								</li>
 							</ul>
 							<div className="tools after">
 								<fieldset>
-									<legend>即時実行</legend>
+									<legend>
+										{locale.pages.editor.timeline.timelines.range.immediate.title}
+									</legend>
 									<ul>
 										<li>
 											<button onClick={handleSubmitAttachBeforeTimeline}>
-												<IconImage
+												<IconLabel
 													kind={IconKind.RelationJoin}
+													label={locale.pages.editor.timeline.timelines.range.immediate.attachBeforeTimeline}
 												/>
-												直近項目に紐づける
 											</button>
 										</li>
 									</ul>
 								</fieldset>
 								<fieldset>
-									<legend>連続作業</legend>
+									<legend>
+										{locale.pages.editor.timeline.timelines.range.continue.title}
+									</legend>
 									<ul>
 										<li>
 											<button onClick={handleAttachBeforeTimeline}>
-												<IconImage
+												<IconLabel
 													kind={IconKind.RelationJoin}
+													label={locale.pages.editor.timeline.timelines.range.continue.attachBeforeTimeline}
 												/>
-												直近項目に紐づける
 											</button>
 										</li>
 										<li>
 											<button onClick={handleClearPrevious}>
-												<IconImage
+												<IconLabel
 													kind={IconKind.RelationClear}
+													label={locale.pages.editor.timeline.timelines.range.continue.clearRelation}
 												/>
-												紐づけを解除
 											</button>
 										</li>
 										<li>
 											<button onClick={handleClearStatic}>
-												<IconImage
+												<IconLabel
 													kind={IconKind.Clear}
+													label={locale.pages.editor.timeline.timelines.range.continue.clearDate}
 												/>
-												固定日付をクリア
 											</button>
 										</li>
 									</ul>
@@ -401,7 +473,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 					) : (
 						<WorkRangeCells
 							workRangeKind={workRangeKind}
-							selectable={Types.toBoolean(props.selectingBeginDate)}
+							selectable={Boolean(props.selectingBeginDate)}
 							beginDate={beginDate}
 							endDate={endDate}
 							htmlFor={selectingId}
@@ -411,17 +483,19 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			}
 			<ProgressCell
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-				disabled={Types.toBoolean(props.selectingBeginDate)}
+				disabled={Boolean(props.selectingBeginDate)}
 				progress={progress}
 				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
+				callbackFocus={handleFocus}
 			/>
 			<ControlsCell
 				currentTimelineKind={props.currentTimeline.kind}
-				disabled={Types.toBoolean(props.selectingBeginDate)}
-				moveItem={handleControlMoveItem}
-				addItem={handleControlAddItem}
-				deleteItem={handleControlDeleteItem}
-				showDetail={handleShowDetail}
+				disabled={Boolean(props.selectingBeginDate)}
+				callbackMoveItem={handleControlMoveItem}
+				callbackAddItem={handleControlAddItem}
+				callbackDeleteItem={handleControlDeleteItem}
+				callbackShowDetail={handleShowDetail}
+				callbackShowTimeline={handleShowTimeline}
 			/>
 		</TimelineHeaderRow >
 	);

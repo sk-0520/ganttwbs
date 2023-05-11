@@ -27,7 +27,7 @@ const CalendarWeekSettingEditor: FC = () => {
 			.map(a => ({[a]: false}))
 			.reduce((r, a) => ({ ...r, ...a }))
 		;
-		const defaultRegulars = [...DefaultSettings.getRegularHolidays().keys()]
+		const defaultRegulars = Object.keys(DefaultSettings.getRegularHolidays())
 			.map(a => ({[a]: true}))
 			.reduce((r, a) => ({ ...r, ...a }))
 		;
@@ -50,7 +50,7 @@ const CalendarWeekSettingEditor: FC = () => {
 				<li key={a}>
 					<label>
 						<input
-							type='checkbox'
+							type="checkbox"
 							checked={weeks[a]}
 							onChange={ev => handleChange(a, ev.target.checked)}
 						/>

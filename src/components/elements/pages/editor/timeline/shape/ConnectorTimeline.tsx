@@ -2,13 +2,14 @@
 import { FC } from "react";
 
 import { Charts } from "@/models/Charts";
-import { AreaSize } from "@/models/data/AreaSize";
+import { AreaSize } from "@/models/data/Area";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TaskTimeline } from "@/models/data/Setting";
+import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
 import { WorkRanges } from "@/models/WorkRanges";
 
@@ -16,7 +17,7 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 	currentIndex: number;
 	currentTimeline: TaskTimeline;
 
-	chartSize: AreaSize;
+	areaSize: AreaSize;
 }
 
 const ConnectorTimeline: FC<Props> = (props: Props) => {
@@ -45,23 +46,16 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 		].map(([x, y]) => x + "," + y).join(" "),
 	};
 
-	const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.from, currentWorkRange);
-	const currentChartArea = Charts.createChartArea(currentTimeSpanRange, props.currentIndex, cell, props.chartSize);
+	const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.begin, currentWorkRange);
+	const currentChartArea = Charts.createChartArea(currentTimeSpanRange, props.currentIndex, cell, props.areaSize);
 
 	const currentColor = Charts.getTaskBackground(props.currentTimeline, props.resourceInfo.memberMap, props.setting.theme);
 
 	return (
 		<>
 			{props.currentTimeline.previous.map(b => {
-				const previousIndex = props.timelineStore.indexItemMap.get(b);
-				if (typeof previousIndex === "undefined") {
-					return null;
-				}
-
-				const previousTimeline = props.timelineStore.totalItemMap.get(b);
-				if (!previousTimeline) {
-					return null;
-				}
+				const previousIndex = Require.get(props.timelineStore.indexItemMap, b);
+				const previousTimeline = Require.get(props.timelineStore.totalItemMap, b);
 
 				const previewColor = Settings.maybeGroupTimeline(previousTimeline)
 					? Charts.getGroupBackground(previousTimeline, props.timelineStore.rootGroupTimeline, props.setting.theme)
@@ -73,8 +67,8 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 					return null;
 				}
 
-				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.from, previewWorkRange);
-				const previousChartArea = Charts.createChartArea(previousTimeSpanRange, previousIndex, cell, props.chartSize);
+				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.begin, previewWorkRange);
+				const previousChartArea = Charts.createChartArea(previousTimeSpanRange, previousIndex, cell, props.areaSize);
 
 				// 基準座標を設定
 				const position = {

@@ -1,13 +1,13 @@
 import { createContext } from "react";
 
-import { Color, DateOnly, MemberId, WeekDay } from "@/models/data/Setting";
+import { Color } from "@/models/Color";
+import { DateOnly, GroupId, MemberId, WeekDay } from "@/models/data/Setting";
 import { TimeZone } from "@/models/TimeZone";
 
 
 export type UUID = string;
 
 export interface MemberSetting {
-	key: UUID;
 	id: MemberId;
 	name: string;
 	color: Color;
@@ -23,21 +23,21 @@ export interface GeneralSetting {
 }
 
 export interface GroupSetting {
-	key: UUID;
+	id: GroupId;
 	name: string;
 	members: Array<MemberSetting>;
 }
 
 export interface CalendarSetting {
 	range: {
-		from: DateOnly;
-		to: DateOnly;
+		begin: DateOnly;
+		end: DateOnly;
 	};
 	holiday: {
 		regulars: { [key in WeekDay]: boolean };
 		events: {
-			holidays: string;
-			specials: string;
+			normal: string;
+			special: string;
 		}
 	};
 }
@@ -46,13 +46,12 @@ export interface ThemeSetting {
 	holiday: {
 		regulars: { [key in WeekDay]: Color },
 		events: {
-			holiday: Color,
+			normal: Color,
 			special: Color,
 		}
 	};
 	groups: Array<{ key: UUID, value: Color }>;
 	timeline: {
-		group: Color;
 		defaultGroup: Color;
 		defaultTask: Color;
 		completed: Color;

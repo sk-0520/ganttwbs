@@ -1,9 +1,10 @@
 import { FC, ReactNode } from "react";
 
-import { Colors } from "@/models/Colors";
+import { Color } from "@/models/Color";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { Member, MemberId } from "@/models/data/Setting";
+import { Require } from "@/models/Require";
 
 interface Props extends ResourceInfoProps {
 	className?: string;
@@ -11,6 +12,7 @@ interface Props extends ResourceInfoProps {
 
 	defaultValue: MemberId;
 	callbackChangeMember(memberGroupPair: MemberGroupPair | undefined): void;
+	callbackFocus?(isFocus: boolean): void;
 }
 
 const MemberSelector: FC<Props> = (props: Props) => {
@@ -23,7 +25,7 @@ const MemberSelector: FC<Props> = (props: Props) => {
 						key={a.id}
 						value={a.id}
 						style={{
-							color: Colors.getAutoColor(a.color).toHexString(),
+							color: Color.parse(a.color).getAutoColor().toHtml(),
 							background: a.color,
 						}}
 					>
@@ -45,14 +47,13 @@ const MemberSelector: FC<Props> = (props: Props) => {
 			disabled={props.disabled}
 			defaultValue={props.defaultValue}
 			onChange={ev => handleChangeOption(ev.target.value)}
+			onFocus={ev => props.callbackFocus ? props.callbackFocus(true): undefined}
+			onBlur={ev => props.callbackFocus ? props.callbackFocus(false): undefined}
 		>
 			<option></option>
 
 			{props.resourceInfo.groupItems.map(a => {
-				const members = props.resourceInfo.memberItems.get(a);
-				if (!members) {
-					return null;
-				}
+				const members = Require.get(props.resourceInfo.memberItems, a);
 
 				return (
 					a.name ?

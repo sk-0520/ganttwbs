@@ -1,21 +1,23 @@
+import { useSetAtom } from "jotai";
 import { FC, useMemo } from "react";
 
+import InformationDay from "@/components/elements/pages/editor/timeline/days/InformationDay";
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
-import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
+import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { Holiday, Theme } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
+import { Days } from "@/models/Days";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 
-
-interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps, ResourceInfoProps {
 	//nop
 }
 
@@ -29,12 +31,14 @@ type YearMonth = {
 const DaysHeader: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
+	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
+
 	const { dates, yearMonthBucket } = useMemo(() => {
 		console.debug("DaysHeader - dates", new Date());
 		const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
 		const dates = Arrays
 			.range(0, days)
-			.map(a => props.calendarInfo.range.from.add(TimeSpan.fromDays(a)))
+			.map(a => props.calendarInfo.range.begin.add(TimeSpan.fromDays(a)))
 			;
 
 		const yearMonthBucket = new Array<YearMonth>();
@@ -66,12 +70,11 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	}, [props.calendarInfo]);
 
 	const yearMonthNodes = useMemo(() => {
-		console.debug("renderYearMonthrenderYearMonthrenderYearMonth");
 		return yearMonthBucket.map(a => {
 			const year = a.year;
 			const month = a.month;
 
-			const display = a.date.format(locale.common.calendar.format.yearMonth);
+			const display = a.date.format(locale.common.calendar.yearMonthFormat);
 			const dateTime = `${year}-${month}`;
 
 			return (
@@ -83,14 +86,13 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	}, [locale, yearMonthBucket]);
 
 	const dayNodes = useMemo(() => {
-		console.debug("renderDayrenderDayrenderDayrenderDay");
 		return dates.map(a => {
 			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
-			const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
-			const className = getCellClassName(classNames);
+			const classNames = Days.getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
+			const className = Days.getCellClassName(classNames);
 
 			return (
-				<td key={a.getTime()} id={Timelines.toDaysId(a)} title={holidayEventValue?.event.display} className={className}>
+				<td key={a.ticks} id={Timelines.toDaysId(a)} title={holidayEventValue?.event.display} className={className}>
 					<time dateTime={a.format("U")}>{a.day}</time>
 				</td>
 			);
@@ -98,50 +100,73 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	}, [dates, props.calendarInfo, props.setting]);
 
 	const weekNodes = useMemo(() => {
-		console.debug("renderWeekrenderWeekrenderWeek");
 		return dates.map(a => {
 			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
-			const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
-			const className = getCellClassName(classNames);
+			const classNames = Days.getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
+			const className = Days.getCellClassName(classNames);
 
 			return (
-				<td key={a.getTime()} title={holidayEventValue?.event.display} className={className}>
+				<td key={a.ticks} title={holidayEventValue?.event.display} className={className}>
 					{locale.common.calendar.week.short[Settings.toWeekDay(a.week)]}
 				</td>
 			);
 		});
 	}, [dates, locale, props.calendarInfo, props.setting]);
 
-	const pinNodes = useMemo(() => {
-		console.debug("renderPinrenderPinrenderPin");
-		return dates.map(a => {
-			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
-			const classNames = getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
-			const className = getCellClassName(classNames);
+	const dummyNodes = useMemo(() => {
+		const className = Days.getCellClassName([]);
 
-			return (
-				<td key={a.getTime()} title={holidayEventValue?.event.display} className={className}>
-					@
+		return {
+			yearMonth: (
+				<td colSpan={props.configuration.design.dummy.width} className="cell _dynamic_design_cell">
+					<time dateTime={"invalid"}>
+						{locale.pages.editor.timeline.header.dummy}
+					</time>
 				</td>
-			);
-		});
-	}, [dates, props.calendarInfo, props.setting]);
+			),
+			columns: Arrays.range(0, props.configuration.design.dummy.width).map(a => {
+				return <td key={a} className={className}>&nbsp;</td>;
+			}),
+		};
+	}, [locale, props.configuration.design.dummy.width]);
+
+	function handleMouseEnter() {
+		setHoverTimelineId(undefined);
+	}
 
 	return (
-		<div id='days-header'>
+		<div
+			id="days-header"
+			onMouseEnter={handleMouseEnter}
+		>
 			<table>
 				<tbody>
-					<tr className='year-month'>
+					<tr className="year-month">
 						{yearMonthNodes}
+						{dummyNodes.yearMonth}
 					</tr>
-					<tr className='day'>
+					<tr className="day">
 						{dayNodes}
+						{dummyNodes.columns}
 					</tr>
-					<tr className='week'>
+					<tr className="week">
 						{weekNodes}
+						{dummyNodes.columns}
 					</tr>
-					<tr className='pin'>
-						{pinNodes}
+					<tr className="information">
+						{dates.map(a => {
+							return (
+								<InformationDay
+									key={a.ticks}
+									date={a}
+									calendarInfo={props.calendarInfo}
+									resourceInfo={props.resourceInfo}
+									setting={props.setting}
+									timelineStore={props.timelineStore}
+								/>
+							);
+						})}
+						{dummyNodes.columns}
 					</tr>
 				</tbody>
 			</table>
@@ -151,35 +176,3 @@ const DaysHeader: FC<Props> = (props: Props) => {
 
 export default DaysHeader;
 
-function getWeekDayClassName(date: DateTime, regulars: Readonly<Holiday["regulars"]>, theme: Readonly<Theme>): string {
-
-	for (const regular of regulars) {
-		const weekday = Settings.toWeekDay(date.week);
-		if (regular === weekday) {
-			return "_dynamic_theme_holiday_regulars_" + regular;
-		}
-	}
-
-	return "";
-}
-
-function getHolidayClassName(date: DateTime, holidayEventValue: HolidayEventMapValue | null, theme: Readonly<Theme>): string {
-	if (holidayEventValue) {
-		if (holidayEventValue) {
-			return "_dynamic_theme_holiday_events_" + holidayEventValue.event.kind;
-		}
-	}
-
-	return "";
-}
-
-function getDayClassNames(date: DateTime, regularHolidays: Readonly<Holiday["regulars"]>, holidayEventValue: HolidayEventMapValue | null, theme: Readonly<Theme>): Array<string> {
-	const weekClassName = getWeekDayClassName(date, regularHolidays, theme);
-	const holidayClassName = getHolidayClassName(date, holidayEventValue, theme);
-
-	return [weekClassName, holidayClassName].filter(a => a);
-}
-
-function getCellClassName(customClassNames: ReadonlyArray<string>): string {
-	return ["cell", "_dynamic_design_cell", ...customClassNames].join(" ");
-}

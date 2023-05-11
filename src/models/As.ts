@@ -6,6 +6,7 @@ type InputType = string | undefined;
  * 絶対に分かってる値を指定の型に変換する。
  *
  * * 環境変数等が入力対象
+ *   * ユーザー操作で変わらないHTML値とかも対象(変えられて死んでもそれは知らぬ存ぜぬ)
  * * 失敗時は死ぬ
  */
 export abstract class As {

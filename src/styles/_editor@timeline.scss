@@ -1,9 +1,11 @@
 @use "variable" as variable;
 @use "./mixin/control" as control;
-@use "./common/box" as box;
+@use "./mixin/box" as box;
 
-$cross-header-z-index: 5;
-$days-header-z-index: 3;
+// z-index もうだめかも・・・
+$cross-header-z-index: 10;
+$days-header-z-index: 8;
+$highlight-area-z-index: 6;
 $timelines-z-index: 4;
 $viewer-z-index: 2;
 
@@ -94,30 +96,45 @@ $viewer-z-index: 2;
 		}
 		.content {
 			flex: content;
+
+			.inline {
+				button {
+					height: 2em;
+				}
+
+				hr {
+					display: block;
+					width: 1em;
+					visibility: hidden;
+				}
+			}
 		}
 		.footer {
 			.timeline-header {
+				$background: darkgrey;
+
 				text-align: center;
 				position: relative;
 
 				&.header {
-					background: darkgrey;
+					background: $background;
 
 					&:hover {
-						& > .tooltips {
+						& > .specials {
 							display: flex;
 						}
 					}
 
-					& > .timeline-cell {
+					.timeline-cell {
 						border-right: 1px solid black;
 					}
-				}
 
-				&.tooltips {
-					top: -100%;
-					position: absolute;
-					display: none;
+					.specials {
+						top: 0;
+						position: absolute;
+						display: none;
+						background: $background;
+					}
 				}
 			}
 		}
@@ -204,13 +221,66 @@ $viewer-z-index: 2;
 			}
 		}
 
-		.pin {
+		.information {
 			@include row();
 
 			text-align: center;
 
 			td {
 				@include cell();
+			}
+
+			details {
+				position: relative;
+
+				& > summary {
+					cursor: pointer;
+					list-style: none;
+				}
+
+				&[open] > summary {
+					transform: scale(3);
+				}
+
+				& > .contents {
+					//@include box.width(initial);
+					z-index: $days-header-z-index + 1;
+
+					position: absolute;
+					display: block;
+					top: -100%;
+					left: 100%;
+					color: black;
+					background: white;
+					border: 1px solid gray;
+					border-radius: 0.5em;
+					box-shadow: 3px 3px 3px 0px rgba($color: black, $alpha: 0.8);
+					padding: 0.5em;
+					white-space: nowrap;
+					text-align: left;
+
+					& > dl {
+						& > dt {
+							font-weight: bold;
+						}
+						& > dd {
+							margin-left: 1ex;
+
+							.separator {
+								margin-inline: 0.5ex;
+								color: gray;
+							}
+						}
+					}
+
+					.close {
+						text-align: center;
+						margin-top: 0.5em;
+
+						.button {
+						}
+					}
+				}
 			}
 		}
 	}
@@ -249,23 +319,6 @@ $viewer-z-index: 2;
 		.timeline-header {
 			border-bottom: 1px dotted black;
 
-			&.dragging {
-				opacity: 0.8;
-				filter: contrast(50%) grayscale(100%);
-			}
-
-			&.drag-over {
-				position: relative;
-				//mix-blend-mode: overlay;
-				outline: 1px solid red;
-				opacity: 0.8;
-			}
-
-			&.hover {
-				position: relative;
-				outline: 3px double rgba(255, 0, 0, 0.555);
-			}
-
 			&.selected-previous {
 				text-shadow: 0px 0px 1px;
 				outline: 2px dashed orange;
@@ -278,12 +331,17 @@ $viewer-z-index: 2;
 
 			.edit {
 				@mixin editing($border-color, $background) {
-					border: 1px solid $border-color;
+					border: none;
 					background: $background;
 				}
 
+				margin: 0;
+				padding: 0;
+				vertical-align: baseline;
+				height: 100%;
+
 				background: rgba($color: #fff, $alpha: 0.5);
-				border: 1px solid transparent;
+				border: none;
 				outline: none;
 
 				// @at-root {
@@ -318,6 +376,7 @@ $viewer-z-index: 2;
 				z-index: $timelines-z-index + 1;
 
 				.tools {
+					//z-index: $highlight-area-z-index + 1; //うごかね
 					outline: $prompt-outline-width $prompt-background-color solid;
 					height: fit-content;
 					background-color: $prompt-background-color;
@@ -428,6 +487,10 @@ $viewer-z-index: 2;
 			}
 
 			.timeline-workload {
+				&.readonly {
+					text-align: center;
+				}
+
 				input[type="number"] {
 					width: 100%;
 				}
@@ -440,8 +503,13 @@ $viewer-z-index: 2;
 			}
 
 			.timeline-progress {
-				input[type="number"] {
+				&.readonly {
+					text-align: center;
+				}
+
+				select {
 					width: 100%;
+					text-align: center;
 				}
 			}
 
@@ -546,18 +614,60 @@ $viewer-z-index: 2;
 		}
 	}
 
-	/*
-	#highlight {
+	#highlight-area {
+		@mixin highlight-animation($animation-name, $base-color) {
+			background: rgba($base-color, 0.5);
+			animation: #{$animation-name} 3s ease forwards;
+
+			@keyframes #{$animation-name} {
+				0% {
+					background-color: rgba($base-color, 0.7);
+				}
+				10% {
+					background-color: rgba($base-color, 0.5);
+				}
+				100% {
+					background-color: rgba($base-color, 0);
+				}
+			}
+		}
+
 		position: absolute;
 		top: $app-header-height;
 		left: 0;
-		// width: 100vw;
-		// height: 100vh;
-		z-index: 3;
+		z-index: $highlight-area-z-index;
 
 		pointer-events: none;
 
-		background-color: rgba(255, 0, 0, 0.295);
+		.highlight-row {
+			position: absolute;
+			left: 0;
+
+			&.active {
+				border-bottom: 2px solid red;
+			}
+			&.hover {
+				border-bottom: 2px solid coral;
+			}
+			&.highlight {
+				@include highlight-animation("row", yellow);
+			}
+
+			&.drag-source {
+				background: rgba(gray, 0.5);
+			}
+			&.drag-over {
+				background: rgba(lime, 0.3);
+			}
+		}
+
+		.highlight-column {
+			position: absolute;
+			top: 0;
+
+			&.highlight {
+				@include highlight-animation("column", yellow);
+			}
+		}
 	}
-	*/
 }

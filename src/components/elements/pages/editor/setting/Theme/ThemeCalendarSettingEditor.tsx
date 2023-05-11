@@ -3,8 +3,9 @@ import { FC, useContext, useState } from "react";
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
+import { Color } from "@/models/Color";
 import { SettingContext } from "@/models/data/context/SettingContext";
-import { Color, WeekDay } from "@/models/data/Setting";
+import { WeekDay } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Settings } from "@/models/Settings";
 
@@ -22,9 +23,9 @@ const ThemeCalendarSettingEditor: FC = () => {
 		setHolidayRegulars(settingContext.theme.holiday.regulars = { ...holidayRegulars });
 	}
 
-	function handleSetHolidayEventColor(event: "holiday" | "special", color: Color) {
-		settingContext.theme.holiday.events[event] = color;
-		setHolidayEvents({...holidayEvents});
+	function handleSetHolidayEventColor(event: "normal" | "special", color: Color) {
+		holidayEvents[event] = color;
+		setHolidayEvents(settingContext.theme.holiday.events = { ...holidayEvents });
 	}
 
 	function handleResetRegular() {
@@ -32,7 +33,7 @@ const ThemeCalendarSettingEditor: FC = () => {
 			.map(a => ({ [a]: DefaultSettings.BusinessWeekdayColor }))
 			.reduce((r, a) => ({ ...r, ...a }))
 			;
-		const defaultRegulars = [...DefaultSettings.getRegularHolidays()]
+		const defaultRegulars = Object.entries(DefaultSettings.getRegularHolidays())
 			.map(([k, v]) => ({ [k]: v }))
 			.reduce((r, a) => ({ ...r, ...a }))
 			;
@@ -40,7 +41,7 @@ const ThemeCalendarSettingEditor: FC = () => {
 		const defaultWeeks = {
 			...weekDays,
 			...defaultRegulars,
-		} as  { [key in WeekDay]: Color };
+		} as { [key in WeekDay]: Color };
 
 		setHolidayRegulars(
 			settingContext.theme.holiday.regulars = defaultWeeks
@@ -49,7 +50,7 @@ const ThemeCalendarSettingEditor: FC = () => {
 
 	function handleResetHoliday() {
 		setHolidayEvents(
-			settingContext.theme.holiday.events = {...DefaultSettings.getEventHolidayColors()},
+			settingContext.theme.holiday.events = { ...DefaultSettings.getEventHolidayColors() },
 		);
 	}
 
@@ -101,17 +102,23 @@ const ThemeCalendarSettingEditor: FC = () => {
 				</tr>
 
 				<tr>
-					<td className="header" rowSpan={2}>祝日</td>
-					<td className="subject">通常</td>
+					<td className="header" rowSpan={2}>
+						{locale.common.calendar.holiday.name}
+					</td>
+					<td className="subject">
+						{locale.common.calendar.holiday.normal}
+					</td>
 					<td className="theme">
 						<PlainColorPicker
-							color={holidayEvents.holiday}
-							callbackChanged={c => handleSetHolidayEventColor("holiday", c)}
+							color={holidayEvents.normal}
+							callbackChanged={c => handleSetHolidayEventColor("normal", c)}
 						/>
 					</td>
 				</tr>
 				<tr>
-					<td className="subject">特殊</td>
+					<td className="subject">
+						{locale.common.calendar.holiday.special}
+					</td>
 					<td className="theme">
 						<PlainColorPicker
 							color={holidayEvents.special}

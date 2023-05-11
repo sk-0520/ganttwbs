@@ -10,6 +10,14 @@ export abstract class Strings {
 		return typeof s === "string" && this.trim(s).length !== 0;
 	}
 
+	/**
+	 * 指定値を集合から一意な値に変換。
+	 * @param source 指定値。
+	 * @param items 重複チェック用の集合。
+	 * @param compare 比較処理。
+	 * @param converter 一意な値への変換処理。
+	 * @returns 一意な値。
+	 */
 	public static toUnique(source: string, items: ReadonlySet<string>, compare: (a: string, b: string) => boolean, converter: (source: string, number: number) => string): string {
 		let changeName = source;
 
@@ -30,6 +38,12 @@ export abstract class Strings {
 		return changeName;
 	}
 
+	/**
+	 * 指定値を集合から一意な値に変換(デフォルト処理)。
+	 * @param source 指定値。
+	 * @param items 重複チェック用の集合。
+	 * @returns 一意な値。
+	 */
 	public static toUniqueDefault(source: string, items: ReadonlySet<string>): string {
 		return this.toUnique(source, items, (a, b) => a === b, (source, number) => `${source}(${number})`);
 	}
@@ -160,6 +174,14 @@ export abstract class Strings {
 		return source.replaceAll(searchValue, replaceValue);
 	}
 
+	/**
+	 * 関数によるプレースホルダー文字列置き換え。
+	 * @param source 元文字列。
+	 * @param head プレースホルダー開始。
+	 * @param tail プレースホルダー終了。
+	 * @param func プレースホルダー置き換え処理。
+	 * @returns 置き換え文字列。
+	 */
 	public static replaceFunc(source: string, head: string, tail: string, func: (placeholder: string) => string): string {
 		if (!head || !tail) {
 			throw new Error(`head: ${head}, tail: ${tail}`);
@@ -178,6 +200,14 @@ export abstract class Strings {
 		return replacedText;
 	}
 
+	/**
+	 * ペアによるプレースホルダー文字列置き換え。
+	 * @param source 元文字列。
+	 * @param map キー:値 の集合。
+	 * @param head プレースホルダー開始。
+	 * @param tail プレースホルダー終了。
+	 * @returns
+	 */
 	public static replaceMap(source: string, map: ReadonlyMap<string, string> | Record<string, string>, head = "${", tail = "}"): string {
 
 		let func: (placeholder: string) => string;

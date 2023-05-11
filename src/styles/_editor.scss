@@ -75,6 +75,8 @@ main#editor {
 
 			.setting-tab-item {
 				display: none;
+				margin: 2px;
+				border-radius: 2px;
 
 				&.react-tabs__tab-panel--selected {
 					display: block;
@@ -90,19 +92,6 @@ main#editor {
 				}
 
 				&.general {
-					.timezone-selector {
-						max-height: 8em;
-						width: fit-content;
-						overflow: auto;
-
-						button {
-							width: 100%;
-
-							&.current {
-								font-weight: bold;
-							}
-						}
-					}
 				}
 
 				&.resource {
@@ -204,8 +193,6 @@ main#editor {
 					}
 
 					.group-color {
-						border: 1px solid red;
-
 						.color-types {
 							display: flex;
 							flex-direction: row;
@@ -226,7 +213,7 @@ main#editor {
 
 							.member-cell,
 							.color-cell {
-								padding: 0.25em;
+								padding: 0.25ex 0.25em;
 								border-inline: 1px dashed darkgray;
 							}
 
@@ -243,10 +230,12 @@ main#editor {
 
 							tbody {
 								.color-cell {
-									border-radius: 1em;
-									text-align: center;
-									font-size: 0.8em;
-									font-family: Consolas, monospace;
+									.color {
+										border-radius: 1em;
+										text-align: center;
+										font-size: 0.8em;
+										font-family: Consolas, monospace;
+									}
 								}
 							}
 						}
@@ -305,7 +294,15 @@ main#editor {
 
 			.setting-save {
 				position: absolute;
+				display: flex;
 				bottom: 0;
+				width: 100%;
+				height: variable.$tab-editor-header-height;
+
+				.action {
+					text-align: center;
+					margin-inline: auto;
+				}
 			}
 		}
 	}

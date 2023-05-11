@@ -1,11 +1,12 @@
-import { DragEvent } from "react";
 
-import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
+import { DayInfo } from "@/models/data/DayInfo";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
+import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline, GroupTimeline, TimelineId } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
+import { DateTimeTicks } from "@/models/DateTime";
 
 export type MoveDirection = "up" | "down" | "parent";
 
@@ -28,15 +29,13 @@ export interface TimelineStore {
 	/** 各工数時間 */
 	readonly workRanges: ReadonlyMap<TimelineId, WorkRange>;
 
-	/** ホバー状態タイムライン */
-	readonly hoverItem: AnyTimeline | null;
-	/** アクティブ状態タイムライン */
-	readonly activeItem: AnyTimeline | null;
+	/** 日に対する何かしらの情報(情報がある時点で死んでる) */
+	readonly dayInfos: ReadonlyMap<DateTimeTicks, DayInfo>;
 
 	/**
 	 * タイムラインの表示上IDを取得。
 	 */
-	calcDisplayId(timeline: AnyTimeline): DisplayTimelineId;
+	calcReadableTimelineId(timeline: AnyTimeline): ReadableTimelineId;
 	/**
 	 * 指定タイムラインの直近のタイムラインを取得。
 	 */
@@ -72,25 +71,12 @@ export interface TimelineStore {
 	 */
 	removeTimeline(timeline: AnyTimeline): void;
 
-	/**
-	 * ホバー状態設定。
-	 * @param timeline
-	 */
-	setHoverTimeline(timeline: AnyTimeline | null): void;
-	/**
-	 * アクティブ状態設定。
-	 * @param timeline
-	 */
-	setActiveTimeline(timeline: AnyTimeline | null): void;
-
-	/**
-	 * D&D処理を開始
-	 * @param event
-	 * @param sourceTimeline
-	 */
-	startDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void;
-
-	startDetailEdit(timeline: AnyTimeline): void;
+	// /**
+	//  * D&D処理を開始
+	//  * @param event
+	//  * @param sourceTimeline
+	//  */
+	// startDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void;
 }
 
 

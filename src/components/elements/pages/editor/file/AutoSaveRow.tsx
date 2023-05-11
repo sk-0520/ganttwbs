@@ -29,11 +29,11 @@ const AutoSaveRow: FC<Props> = (props: Props) => {
 	};
 	const kindValues: KindValues = props.kind === AutoSaveKind.Storage
 		? {
-			kind: locale.editor.file.autoSave.storage.kind,
+			kind: locale.pages.editor.file.save.auto.storage.kind,
 			step: props.configuration.autoSave.storage.step,
 		}
 		: {
-			kind: locale.editor.file.autoSave.download.kind,
+			kind: locale.pages.editor.file.save.auto.download.kind,
 			step: props.configuration.autoSave.download.step,
 		}
 		;
@@ -46,17 +46,17 @@ const AutoSaveRow: FC<Props> = (props: Props) => {
 			<td className="enabled-cell">
 				<label>
 					<input
-						type='checkbox'
+						type="checkbox"
 						checked={props.isEnabled}
 						onChange={ev => props.callbackChangeAutoSaveIsEnable(props.kind, ev.target.checked)}
 					/>
-					有効
+					{locale.common.enabled}
 				</label>
 			</td>
 			<td className="span-cell">
 				<input
 					className="span"
-					type='number'
+					type="number"
 					min={0}
 					step={kindValues.step}
 					value={toAutoSaveTimeValue(props.time)}

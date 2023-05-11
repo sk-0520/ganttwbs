@@ -1,37 +1,46 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
-import { MemberSetting } from "@/models/data/context/SettingContext";
+import { useLocale } from "@/locales/locale";
+import { Arrays } from "@/models/Arrays";
+import { Color } from "@/models/Color";
+import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { Prices } from "@/models/data/Prices";
-import { Color, MemberId } from "@/models/data/Setting";
+import { GroupId, MemberId } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Strings } from "@/models/Strings";
 
 interface Props {
-	member: MemberSetting;
+	groupId: GroupId,
+	memberId: MemberId,
 	members: ReadonlyArray<Readonly<MemberSetting>>,
 	updatedColors: ReadonlyMap<MemberId, Color>;
-	callbackRemoveMember(member: MemberSetting): void;
+	callbackRemoveMember(member: MemberId): void;
 }
 
 const MemberEditor: FC<Props> = (props: Props) => {
+	const locale = useLocale();
+	const settingContext = useContext(SettingContext);
+
+	const group = Arrays.find(settingContext.groups, a => a.id === props.groupId);
+	const member = Arrays.find(group.members, a => a.id === props.memberId);
 
 	const priceSetting = DefaultSettings.getPriceSetting();
 
-	const [name, setName] = useState(props.member.name);
-	const [priceCost, setPriceCost] = useState(props.member.priceCost);
-	const [priceSales, setPriceSales] = useState(props.member.priceSales);
-	const [monthCost, setMonthCost] = useState(props.member.priceCost * priceSetting.workingDays);
-	const [monthSales, setMonthSales] = useState(props.member.priceSales * priceSetting.workingDays);
+	const [name, setName] = useState(member.name);
+	const [priceCost, setPriceCost] = useState(member.priceCost);
+	const [priceSales, setPriceSales] = useState(member.priceSales);
+	const [monthCost, setMonthCost] = useState(member.priceCost * priceSetting.workingDays);
+	const [monthSales, setMonthSales] = useState(member.priceSales * priceSetting.workingDays);
 	const [displayRate, setDisplayRate] = useState("---%");
-	const [color, setColor] = useState(props.member.color);
+	const [color, setColor] = useState(member.color);
 
 	useEffect(() => {
-		const color = props.updatedColors.get(props.member.id);
-		if (color) {
-			setColor(props.member.color = color);
+		const updatedColor = props.updatedColors.get(member.id);
+		if (updatedColor) {
+			setColor(member.color = updatedColor);
 		}
-	}, [props.member, props.updatedColors]);
+	}, [member, props.updatedColors]);
 
 	useEffect(() => {
 		setMonthCost(priceCost * priceSetting.workingDays);
@@ -49,23 +58,23 @@ const MemberEditor: FC<Props> = (props: Props) => {
 	function handleChangeName(value: string) {
 		const memberNames = new Set(
 			props.members
-				.filter(a => a.id !== props.member.id)
+				.filter(a => a.id !== props.memberId)
 				.map(a => a.name)
 		);
 		const name = Strings.toUniqueDefault(value, memberNames);
-		setName(props.member.name = name);
+		setName(member.name = name);
 	}
 
 	function handleChangePriceCost(value: number) {
-		setPriceCost(props.member.priceCost = value);
+		setPriceCost(member.priceCost = value);
 	}
 
 	function handleChangePriceSales(value: number) {
-		setPriceSales(props.member.priceSales = value);
+		setPriceSales(member.priceSales = value);
 	}
 
 	function handleChangeTheme(color: Color): void {
-		setColor(props.member.color = color);
+		setColor(member.color = color);
 	}
 
 	return (
@@ -114,9 +123,9 @@ const MemberEditor: FC<Props> = (props: Props) => {
 			<td className="remove-cell">
 				<button
 					type="button"
-					onClick={ev => props.callbackRemoveMember(props.member)}
+					onClick={ev => props.callbackRemoveMember(props.memberId)}
 				>
-					remove
+					{locale.common.command.remove}
 				</button>
 			</td>
 		</tr>
@@ -124,3 +133,4 @@ const MemberEditor: FC<Props> = (props: Props) => {
 };
 
 export default MemberEditor;
+

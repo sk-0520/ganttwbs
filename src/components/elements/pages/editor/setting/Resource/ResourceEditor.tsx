@@ -1,10 +1,13 @@
 import { useContext, MouseEvent, useState, FC } from "react";
 
 import GroupsEditor from "@/components/elements/pages/editor/setting/Resource/GroupEditor";
+import { useLocale } from "@/locales/locale";
 import { GroupSetting, SettingContext } from "@/models/data/context/SettingContext";
+import { GroupId } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
 
 const ResourceEditor: FC = () => {
+	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
 	const [newGroupName, setNewGroupName] = useState("");
@@ -21,8 +24,8 @@ const ResourceEditor: FC = () => {
 			return;
 		}
 
-		const newGroup = {
-			key: IdFactory.createReactKey(),
+		const newGroup: GroupSetting = {
+			id: IdFactory.createGroupId(),
 			name: groupName,
 			members: [],
 		};
@@ -30,8 +33,8 @@ const ResourceEditor: FC = () => {
 		setNewGroupName("");
 	}
 
-	function handleRemoveGroup(group: GroupSetting) {
-		const targetGroup = editGroups.find(a => a.key === group.key);
+	function handleRemoveGroup(groupId: GroupId) {
+		const targetGroup = editGroups.find(a => a.id === groupId);
 		if (!targetGroup) {
 			throw new Error();
 		}
@@ -53,21 +56,24 @@ const ResourceEditor: FC = () => {
 				{editGroups.map(a => {
 					return (
 						<GroupsEditor
-							key={a.name}
-							group={a}
-							groups={editGroups}
+							key={a.id}
+							groupId={a.id}
 							callbackRemove={a => handleRemoveGroup(a)}
 						/>
 					);
 				})}
 
-				<dt className="group">新規グループ</dt>
+				<dt className="group">
+					{locale.pages.editor.setting.resource.newGroup}
+				</dt>
 				<dd>
 					<input
 						value={newGroupName}
 						onChange={ev => setNewGroupName(ev.target.value)}
 					/>
-					<button type="button" onClick={handleAddGroup}>add</button>
+					<button type="button" onClick={handleAddGroup}>
+						{locale.common.command.add}
+					</button>
 				</dd>
 			</dl>
 		</>

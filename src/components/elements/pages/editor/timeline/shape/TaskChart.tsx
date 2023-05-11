@@ -1,18 +1,19 @@
 
+import { useSetAtom } from "jotai";
 import { FC } from "react";
 
 import ErrorRow from "@/components/elements/pages/editor/timeline/shape/ErrorRow";
+import { DetailEditTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { ChartProps } from "@/models/data/props/ChartProps";
 import { TaskTimeline } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
-
-
 
 interface Props extends ChartProps {
 	currentTimeline: TaskTimeline;
 }
 
 const TaskChart: FC<Props> = (props: Props) => {
+	const setDetailEditTimeline = useSetAtom(DetailEditTimelineAtom);
 
 	if (!props.area.timeSpanRange) {
 		return (
@@ -41,7 +42,7 @@ const TaskChart: FC<Props> = (props: Props) => {
 				stroke={props.borderColor}
 				strokeWidth={props.borderThickness}
 				paintOrder="stroke"
-				onDoubleClick={_ => props.timelineStore.startDetailEdit(props.currentTimeline)}
+				onDoubleClick={_ => setDetailEditTimeline(props.currentTimeline)}
 			/>
 
 			<rect

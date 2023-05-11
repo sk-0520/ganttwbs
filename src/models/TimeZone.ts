@@ -1,5 +1,5 @@
+import { Browsers } from "@/models/Browsers";
 import { ParseResult, ResultFactory } from "@/models/data/Result";
-import { Strings } from "@/models/Strings";
 import { TimeSpan } from "@/models/TimeSpan";
 
 type TimeZoneParseResult = ParseResult<TimeZone, Error>;
@@ -31,6 +31,8 @@ export abstract class TimeZone {
 	 * @returns
 	 */
 	public static getClientTimeZone(): TimeZone {
+		Browsers.enforceRunning();
+
 		const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 		if (tz) {
 			return new IanaTimeZone(tz);
@@ -48,15 +50,15 @@ export abstract class TimeZone {
 		}
 
 		//TODO: +-HH:MM 形式のみ。 : なかったり、HHのみとかもうめんどい
-		const regex = /(?<signs>\+|-)(?<h>[0-2][0-9]):(?<m>[0-5][0-9])/;
+		const regex = /(?<SIGNS>\+|-)(?<H>[0-2][0-9]):(?<M>[0-5][0-9])/;
 		const match = s.match(regex);
 		if (!match || !match.groups) {
 			return ResultFactory.error(new Error(s));
 		}
 
-		const signs = match.groups["signs"] === "-" ? -1 : +1;
-		const h = Number.parseInt(match.groups["h"], 10);
-		const m = Number.parseInt(match.groups["m"], 10);
+		const signs = match.groups.SIGNS === "-" ? -1 : +1;
+		const h = Number.parseInt(match.groups.H, 10);
+		const m = Number.parseInt(match.groups.M, 10);
 		const totalMinutes = (h * 60 + m) * signs;
 
 		return ResultFactory.success(new OffsetTimeZone(TimeSpan.fromMinutes(totalMinutes)));
@@ -155,7 +157,7 @@ export abstract class TimeZone {
 
 		const timeZoneNames = [
 			...baseTimeZoneNames.sort(),
-			//"UTC",
+			"UTC",
 		];
 
 		return timeZoneNames.map(a => new IanaTimeZone(a));
@@ -181,18 +183,10 @@ export abstract class TimeZone {
 
 	/**
 	 * 生成。
-	 * @param input
 	 * @returns
 	 */
-	public static create(input: TimeSpan | string): TimeZone {
-		if (input instanceof TimeSpan) {
-			return new OffsetTimeZone(input);
-		}
-		if (Strings.isNotWhiteSpace(input)) {
-			return new IanaTimeZone(input);
-		}
-
-		throw new Error(input);
+	public static create(offset: TimeSpan): TimeZone {
+		return new OffsetTimeZone(offset);
 	}
 
 	/**
@@ -202,6 +196,9 @@ export abstract class TimeZone {
 	 */
 	public abstract serialize(): string;
 
+	public toString(): string {
+		return this.serialize();
+	}
 }
 
 /**

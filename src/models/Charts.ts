@@ -1,6 +1,9 @@
-import { AreaSize } from "@/models/data/AreaSize";
+import { Calendars } from "@/models/Calendars";
+import { AreaData, AreaSize } from "@/models/data/Area";
+import { CalendarRange } from "@/models/data/CalendarRange";
 import { CellBox } from "@/models/data/CellBox";
 import { ChartArea } from "@/models/data/ChartArea";
+import { CellDesign } from "@/models/data/Design";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { GroupTimeline, MemberId, TaskTimeline, Theme, TimelineId } from "@/models/data/Setting";
 import { TimeSpanRange } from "@/models/data/TimeSpanRange";
@@ -24,17 +27,33 @@ export abstract class Charts {
 	}
 
 	public static getTimeSpanRange(startDate: Readonly<DateTime>, workRange: SuccessWorkRange): TimeSpanRange {
-		const startDiffTime = workRange.begin.getTime() - startDate.getTime();
+		const startDiffTime = workRange.begin.ticks - startDate.ticks;
 		const startDiffSpan = TimeSpan.fromMilliseconds(startDiffTime);
 		//const startDiffDays = startDiffSpan.totalDays;
 
-		const endDiffTime = workRange.end.getTime() - workRange.begin.getTime();
+		const endDiffTime = workRange.end.ticks - workRange.begin.ticks;
 		const endDiffSpan = TimeSpan.fromMilliseconds(endDiffTime);
 		//const endDiffDays = endDiffSpan.totalDays;
 
-		return {
-			start: startDiffSpan,
+		const result: TimeSpanRange = {
+			begin: startDiffSpan,
 			end: endDiffSpan,
+		};
+		return result;
+	}
+
+	public static createAreaData(cell: Readonly<CellDesign>, calendarRange: Readonly<CalendarRange>, rowCount: number): AreaData {
+		const days = Calendars.getCalendarRangeDays(calendarRange);
+
+		const areaSize: AreaSize = {
+			width: cell.width.value * days,
+			height: cell.height.value * rowCount,
+		};
+
+		return {
+			cell,
+			days,
+			size: areaSize,
 		};
 	}
 
@@ -44,7 +63,7 @@ export abstract class Charts {
 
 		const result: ChartArea = {
 			timeSpanRange: timeSpanRange,
-			x: timeSpanRange ? timeSpanRange.start.totalDays * width : 0,
+			x: timeSpanRange ? timeSpanRange.begin.totalDays * width : 0,
 			y: index * height,
 			width: timeSpanRange ? timeSpanRange.end.totalDays * width : 0,
 			height: height,
@@ -62,10 +81,9 @@ export abstract class Charts {
 			if (index in theme.groups) {
 				return theme.groups[index];
 			}
-			return theme.timeline.defaultGroup;
 		}
 
-		return theme.timeline.group;
+		return theme.timeline.defaultGroup;
 	}
 
 	public static getTaskBackground(timeline: TaskTimeline, memberMap: ReadonlyMap<MemberId, MemberGroupPair>, theme: Readonly<Theme>): string {

@@ -1,10 +1,11 @@
 import classNames from "classnames";
+import { useAtomValue } from "jotai";
 import { DragEvent, FC } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
+import { DraggingTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
-import { DisplayTimelineId } from "@/models/data/DisplayTimelineId";
-import { DraggingTimeline } from "@/models/data/DraggingTimeline";
+import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
@@ -12,16 +13,18 @@ import { Timelines } from "@/models/Timelines";
 interface Props {
 	selectingId: string,
 	isSelectedPrevious: boolean;
-	timelineIndex: DisplayTimelineId;
+	readableTimelineId: ReadableTimelineId;
 	readonly currentTimeline: Readonly<AnyTimeline>;
 	selectingBeginDate: SelectingBeginDate | null;
-	draggingTimeline: DraggingTimeline | null;
 	callbackStartDragTimeline(ev: DragEvent): void;
 	callbackChangePrevious: (isSelected: boolean) => void;
 }
 
 const IdCell: FC<Props> = (props: Props) => {
-	const className = "_dynamic_programmable_indexNumber_level-" + props.timelineIndex.level;
+
+	const className = Timelines.getReadableTimelineIdClassName(props.readableTimelineId);
+
+	const draggingTimeline = useAtomValue(DraggingTimelineAtom);
 
 	const canSelect = props.selectingBeginDate && (
 		props.selectingBeginDate.timeline.id !== props.currentTimeline.id && props.selectingBeginDate.canSelect(props.currentTimeline)
@@ -33,14 +36,14 @@ const IdCell: FC<Props> = (props: Props) => {
 				classNames(
 					"timeline-cell timeline-id",
 					{
-						dragging: props.draggingTimeline?.sourceTimeline.id === props.currentTimeline.id
+						dragging: draggingTimeline?.sourceTimeline.id === props.currentTimeline.id
 					}
 				)
 			}
 			title={props.currentTimeline.id}
 			draggable={!props.selectingBeginDate}
 			onDragStart={ev => props.callbackStartDragTimeline(ev)}
-			onDragEnd={props.draggingTimeline?.onDragEnd}
+			onDragEnd={draggingTimeline?.onDragEnd}
 		>
 			<label>
 				{props.selectingBeginDate
@@ -68,7 +71,7 @@ const IdCell: FC<Props> = (props: Props) => {
 					)
 				}
 				<span className={className}>
-					{Timelines.toIndexNumber(props.timelineIndex)}
+					{Timelines.toReadableTimelineId(props.readableTimelineId)}
 				</span>
 			</label>
 		</td>

@@ -1,4 +1,30 @@
-import { Types } from "@/models/Types";
+import { Constructor, Types } from "@/models/Types";
+
+class TestSuper { }
+class TestSub1 extends TestSuper { }
+class TestSub1Sub extends TestSub1 { }
+class TestSub1SubSub extends TestSub1Sub { }
+class TestSub2 extends TestSuper { }
+
+class TestDeepSuper {
+	public A = 10;
+	public get Z(): string {
+		return "Z";
+	}
+}
+class TestDeep extends TestDeepSuper {
+	public constructor(public a: number, private nest: { b: string, node: { c: boolean } }) {
+		super();
+	}
+
+	public get b(): string {
+		return this.nest.b;
+	}
+
+	public get c(): boolean {
+		return this.nest.node.c;
+	}
+}
 
 describe("Types", () => {
 
@@ -79,6 +105,70 @@ describe("Types", () => {
 		[true, { a: "A" }],
 		[true, () => undefined],
 	])("toBoolean", (expected: boolean, input: unknown) => {
-		expect(Types.toBoolean(input)).toBe(expected);
+		expect(Boolean(input)).toBe(expected);
+	});
+
+	test.each([
+		[true, new TestSuper(), TestSuper],
+		[true, new TestSub1(), TestSub1],
+		[true, new TestSub1Sub(), TestSub1Sub],
+		[true, new TestSub1SubSub(), TestSub1SubSub],
+		[true, new TestSub2(), TestSub2],
+
+		[true, new TestSub1(), TestSuper],
+		[true, new TestSub1Sub(), TestSub1],
+		[true, new TestSub1Sub(), TestSuper],
+		[true, new TestSub1SubSub(), TestSub1Sub],
+		[true, new TestSub1SubSub(), TestSub1],
+		[true, new TestSub1SubSub(), TestSuper],
+		[true, new TestSub2(), TestSuper],
+
+		[false, new TestSub1SubSub(), TestSub2],
+
+		[false, undefined, TestSuper],
+		[false, null, TestSuper],
+		[false, {}, TestSuper],
+		[false, 0, TestSuper],
+	])("instanceOf", <T1, T2 extends object>(expected: boolean, obj: T1, type: Constructor<T2>) => {
+		expect(Types.instanceOf(obj, type)).toBe(expected);
+	});
+
+	test.each([
+		[true, new TestSuper(), TestSuper],
+		[true, new TestSub1(), TestSub1],
+		[true, new TestSub1Sub(), TestSub1Sub],
+		[true, new TestSub1SubSub(), TestSub1SubSub],
+		[true, new TestSub2(), TestSub2],
+
+		[false, new TestSub1(), TestSuper],
+		[false, new TestSub1Sub(), TestSub1],
+		[false, new TestSub1Sub(), TestSuper],
+		[false, new TestSub1SubSub(), TestSub1Sub],
+		[false, new TestSub1SubSub(), TestSub1],
+		[false, new TestSub1SubSub(), TestSuper],
+		[false, new TestSub2(), TestSuper],
+
+		[false, new TestSub1SubSub(), TestSub2],
+
+		[false, undefined, TestSuper],
+		[false, null, TestSuper],
+		[false, {}, TestSuper],
+		[false, 0, TestSuper],
+	])("isEqual", <T1, T2 extends object>(expected: boolean, obj: T1, type: Constructor<T2>) => {
+		expect(Types.isEqual(obj, type)).toBe(expected);
+	});
+
+	test("getProperties", () => {
+		const input = new TestDeep(-1, { b: "A", node: { c: true } });
+
+		const actual1 = Types.getProperties(input);
+		expect(actual1.size).toBeGreaterThanOrEqual(5);
+
+		expect(actual1.has("A")).toBeTruthy();
+		expect(actual1.has("Z")).toBeTruthy();
+
+		expect(actual1.has("a")).toBeTruthy();
+		expect(actual1.has("b")).toBeTruthy();
+		expect(actual1.has("c")).toBeTruthy();
 	});
 });
