@@ -1,5 +1,5 @@
 import { useSetAtom } from "jotai";
-import { useState, useEffect, DragEvent, FC } from "react";
+import { useState, useEffect, DragEvent, FC, useCallback, KeyboardEvent, useRef } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
 import ControlsCell from "@/components/elements/pages/editor/timeline/cell/ControlsCell";
@@ -36,6 +36,8 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 	currentTimeline: AnyTimeline;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
+	callbackSubjectKeyDown(ev: KeyboardEvent, currentTimeline: AnyTimeline): void;
+	callbackWorkloadKeyDown(ev: KeyboardEvent, currentTimeline: AnyTimeline): void;
 }
 
 const AnyTimelineEditor: FC<Props> = (props: Props) => {
@@ -57,6 +59,13 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
 	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
 	const [visibleBeginDateInput, setVisibleBeginDateInput] = useState(false);
+	const refInputDate = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if(refInputDate.current) {
+			refInputDate.current.focus();
+		}
+	}, [refInputDate]);
 
 	useEffect(() => {
 		const timelineItem = props.timelineStore.changedItemMap.get(props.currentTimeline.id);
@@ -116,6 +125,15 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			}
 		}
 	}, [props.currentTimeline, props.selectingBeginDate]);
+
+	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>) => {
+		props.callbackSubjectKeyDown(ev, props.currentTimeline);
+	}, [props]);
+
+	const handleWorkloadKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>) => {
+		props.callbackWorkloadKeyDown(ev, props.currentTimeline);
+	}, [props]);
+
 
 	function handleChangeSubject(s: string) {
 		setSubject(s);
@@ -336,18 +354,22 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				callbackChangePrevious={handleChangePrevious}
 			/>
 			<SubjectCell
+				timeline={props.currentTimeline}
 				value={subject}
 				disabled={Boolean(props.selectingBeginDate)}
 				readOnly={false}
 				callbackChangeValue={handleChangeSubject}
 				callbackFocus={handleFocus}
+				callbackKeyDown={onSubjectKeyDown}
 			/>
 			<WorkloadCell
+				timeline={props.currentTimeline}
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
 				disabled={Boolean(props.selectingBeginDate)}
 				value={workload}
 				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeWorkload : undefined}
 				callbackFocus={handleFocus}
+				callbackKeyDown={handleWorkloadKeyDown}
 			/>
 			<ResourceCell
 				currentTimeline={props.currentTimeline}
@@ -369,6 +391,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 							<ul className="contents">
 								<li className="main">
 									<input
+										ref={refInputDate}
 										type="date"
 										value={selectedBeginDate ? selectedBeginDate.toInput("date") : ""}
 										onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}

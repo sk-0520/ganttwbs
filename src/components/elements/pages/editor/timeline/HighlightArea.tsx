@@ -11,6 +11,7 @@ import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
+import { Dom } from "@/models/Dom";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 
@@ -30,11 +31,9 @@ const HighlightArea: FC<Props> = (props: Props) => {
 	const [crossHeaderHeight, setCrossHeaderHeight] = useState(0);
 
 	useEffect(() => {
-		const crossHeaderElement = document.getElementById("cross-header");
-		if (crossHeaderElement) {
-			setCrossHeaderWidth(crossHeaderElement.clientWidth);
-			setCrossHeaderHeight(crossHeaderElement.clientHeight);
-		}
+		const crossHeaderElement = Dom.getElementById("cross-header");
+		setCrossHeaderWidth(crossHeaderElement.clientWidth);
+		setCrossHeaderHeight(crossHeaderElement.clientHeight);
 	}, []);
 
 	const areaData = useMemo(() => {

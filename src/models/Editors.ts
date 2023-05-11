@@ -1,4 +1,5 @@
 import { DateTime } from "@/models/DateTime";
+import { Dom } from "@/models/Dom";
 import { TimelineIdOrObject, Timelines } from "@/models/Timelines";
 
 export abstract class Editors {
@@ -9,8 +10,8 @@ export abstract class Editors {
 			return;
 		}
 
-		const columnElement = date ? document.getElementById(Timelines.toDaysId(date)) : undefined;
-		const rowElement = timeline ? document.getElementById(Timelines.toRowId(timeline)) : undefined;
+		const columnElement = date ? Dom.getElementById(Timelines.toDaysId(date)) : undefined;
+		const rowElement = timeline ? Dom.getElementById(Timelines.toRowId(timeline)) : undefined;
 
 		mainContentElement.scrollTo({
 			left: columnElement?.offsetLeft,
