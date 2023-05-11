@@ -9,15 +9,13 @@ import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { IdFactory } from "@/models/IdFactory";
 import { AnyTimeline } from "@/models/data/Setting";
-import { Require } from "@/models/Require";
-import { Timelines } from "@/models/Timelines";
 import { Dom } from "@/models/Dom";
-import { useSetAtom } from "jotai";
-import { HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { TimelineStore } from "@/models/store/TimelineStore";
+import { IdFactory } from "@/models/IdFactory";
+import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
+import { TimelineStore } from "@/models/store/TimelineStore";
+import { Timelines } from "@/models/Timelines";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	selectingBeginDate: SelectingBeginDate | null;

@@ -1,8 +1,8 @@
 
 import { FC, KeyboardEvent } from "react";
 
-import { Timelines } from "@/models/Timelines";
 import { AnyTimeline } from "@/models/data/Setting";
+import { Timelines } from "@/models/Timelines";
 
 interface Props {
 	timeline: AnyTimeline;
