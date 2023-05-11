@@ -13,6 +13,7 @@ import { IdFactory } from "@/models/IdFactory";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Require } from "@/models/Require";
 import { Timelines } from "@/models/Timelines";
+import { Dom } from "@/models/Dom";
 
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
@@ -23,7 +24,7 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 const TimelineItems: FC<Props> = (props: Props) => {
 
 	const onSubjectKeyDown = useCallback((ev: KeyboardEvent, currentTimeline: AnyTimeline) => {
-		if(ev.key !== "Enter") {
+		if (ev.key !== "Enter") {
 			return;
 		}
 
@@ -39,13 +40,11 @@ const TimelineItems: FC<Props> = (props: Props) => {
 			}
 		}
 
-		if(nextIndex !== -1) {
+		if (nextIndex !== -1) {
 			const nextTimeline = props.timelineStore.sequenceItems[nextIndex];
 			const nextSubjectId = Timelines.toSubjectId(nextTimeline);
-			const nextElement = document.getElementById(nextSubjectId);
-			if(nextElement) {
-				nextElement.focus();
-			}
+			const nextElement = Dom.getElementById(nextSubjectId);
+			nextElement.focus();
 		}
 
 	}, [props.timelineStore]);
