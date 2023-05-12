@@ -139,6 +139,10 @@ const FileEditor: FC<Props> = (props: Props) => {
 		downloadJson(fileName, editorData.setting);
 	}
 
+	function handleExportExcel() {
+
+	}
+
 	function handleJsonCopy() {
 		Browsers.copyText(settingJson);
 	}
@@ -222,6 +226,11 @@ const FileEditor: FC<Props> = (props: Props) => {
 			</dt>
 			<dd>
 				<ul className="inline">
+					<li>
+						<button onClick={handleExportExcel}>
+							Excel
+						</button>
+					</li>
 					<li>
 						<button onClick={handleDownload}>
 							{locale.common.command.download}
