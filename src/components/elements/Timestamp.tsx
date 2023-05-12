@@ -1,8 +1,8 @@
 
 import { FC } from "react";
 
-import { DateTime } from "@/models/DateTime";
 import { Locale, useLocale } from "@/locales/locale";
+import { DateTime } from "@/models/DateTime";
 
 
 interface Props {

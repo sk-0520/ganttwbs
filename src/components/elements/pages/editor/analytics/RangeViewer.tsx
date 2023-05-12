@@ -1,7 +1,8 @@
-import Timestamp from "@/components/elements/Timestamp";
-import { TotalSuccessWorkRange } from "@/models/data/WorkRange";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { FC } from "react";
+
+import Timestamp from "@/components/elements/Timestamp";
+import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { TotalSuccessWorkRange } from "@/models/data/WorkRange";
 
 interface Props extends CalendarInfoProps {
 	totalSuccessWorkRange: TotalSuccessWorkRange
