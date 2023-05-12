@@ -6,6 +6,7 @@ import { Configuration } from "@/models/data/Configuration";
 import { DateTime } from "@/models/DateTime";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Types } from "@/models/Types";
+import Timestamp from "@/components/elements/Timestamp";
 
 interface Props {
 	configuration: Configuration;
@@ -90,13 +91,14 @@ function fromAutoSaveTimeValue(value: number | undefined): TimeSpan | undefined 
 function renderDateTime(time: DateTime | undefined, locale: Locale): ReactNode {
 	if (time) {
 		return (
-			<time className="time" dateTime={time.format("U")}>
-				{time.format("HH:mm:ss")}
-			</time>
+			<Timestamp
+				format="time"
+				date={time}
+			/>
 		);
 	}
 
 	return (
-		<span className="time">--:--:--</span>
+		<time dateTime={"invalid"}>--:--:--</time>
 	);
 }
