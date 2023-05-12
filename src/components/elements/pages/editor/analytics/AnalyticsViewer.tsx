@@ -1,10 +1,13 @@
 import { FC } from "react";
 
+import RangeViewer from "@/components/elements/pages/editor/analytics/RangeViewer";
 import { Calendars } from "@/models/Calendars";
 import { EditorData } from "@/models/data/EditorData";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { Resources } from "@/models/Resources";
 import { Timelines } from "@/models/Timelines";
+import { WorkRanges } from "@/models/WorkRanges";
+import WorkViewer from "@/components/elements/pages/editor/analytics/WorkViewer";
 
 interface Props extends ConfigurationProps {
 	isVisible: boolean;
@@ -30,9 +33,21 @@ const AnalyticsViewer: FC<Props> = (props: Props) => {
 	console.debug("workRanges", workRanges);
 	console.debug("dayInfos", dayInfos);
 
+	const successWorkRanges = [...workRanges.values()].filter(WorkRanges.maybeSuccessWorkRange);
+	const totalSuccessWorkRange = WorkRanges.getTotalSuccessWorkRange(successWorkRanges);
+
 	return (
 		<div id="analytics">
-			<p>あとでやる</p>
+			<RangeViewer
+				calendarInfo={calendarInfo}
+				totalSuccessWorkRange={totalSuccessWorkRange}
+			/>
+			<WorkViewer
+				calendarInfo={calendarInfo}
+				resourceInfo={resourceInfo}
+				sequenceTimelines={sequenceTimelines}
+				totalSuccessWorkRange={totalSuccessWorkRange}
+			/>
 		</div>
 	);
 };
