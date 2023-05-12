@@ -12,7 +12,7 @@ import TimelineHeaderRow from "@/components/elements/pages/editor/timeline/cell/
 import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/WorkloadCell";
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
-import { ActiveTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { ActiveTimelineIdAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { DetailEditTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
@@ -46,6 +46,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
 	const setDetailEditTimeline = useSetAtom(DetailEditTimelineAtom);
+	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
 	const setDragSourceTimeline = useSetAtom(DragSourceTimelineAtom);
 
@@ -62,7 +63,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const refInputDate = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		if(refInputDate.current) {
+		if (refInputDate.current) {
 			refInputDate.current.focus();
 		}
 	}, [refInputDate]);
@@ -106,7 +107,8 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		const isVisibleBeginDateInput = Boolean(props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id);
 		setVisibleBeginDateInput(isVisibleBeginDateInput);
 		if (isVisibleBeginDateInput) {
-			handleFocus(true);
+			handleFocus(false);
+			setHoverTimelineId(undefined);
 		}
 	}, [props.currentTimeline.id, props.selectingBeginDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
