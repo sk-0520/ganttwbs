@@ -16,6 +16,7 @@ import { Strings } from "@/models/Strings";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 import { Types } from "@/models/Types";
+import { Workbook } from "exceljs";
 
 interface Props extends ConfigurationProps {
 	isVisible: boolean;
@@ -139,8 +140,13 @@ const FileEditor: FC<Props> = (props: Props) => {
 		downloadJson(fileName, editorData.setting);
 	}
 
-	function handleExportExcel() {
+	async function handleExportExcel(): Promise<void> {
+		const workbook = createWorkbook(editorData);
 
+		//エクセルファイルを生成する
+		const uint8Array = await workbook.xlsx.writeBuffer();
+		const blob = new Blob([uint8Array], { type: "application/octet-binary" });
+		Browsers.download(editorData.fileName + ".xlsx", blob);
 	}
 
 	function handleJsonCopy() {
@@ -227,7 +233,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 			<dd>
 				<ul className="inline">
 					<li>
-						<button onClick={handleExportExcel}>
+						<button disabled onClick={handleExportExcel}>
 							Excel
 						</button>
 					</li>
@@ -298,3 +304,11 @@ function formatAutoDownloadFileName(fileName: string, fileNameFormat: string, ti
 function downloadJson(fileName: string, obj: object): void {
 	Browsers.downloadJson(fileName, obj, "\t");
 }
+function createWorkbook(editorData: EditorData): Workbook {
+	const workbook = new Workbook();
+
+	workbook.addWorksheet("timeline");
+
+	return workbook;
+}
+
