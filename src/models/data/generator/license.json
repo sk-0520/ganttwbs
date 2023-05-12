@@ -142,6 +142,13 @@
     "licenses": "MIT",
     "repository": "https://github.com/eslint/eslint"
   },
+  "exceljs": {
+    "module": "exceljs@4.3.0",
+    "version": "4.3.0",
+    "publisher": "Guyon Roche",
+    "licenses": "MIT",
+    "repository": "https://github.com/exceljs/exceljs"
+  },
   "i18next": {
     "module": "i18next@22.4.15",
     "version": "22.4.15",
