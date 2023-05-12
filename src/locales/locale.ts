@@ -50,7 +50,12 @@ export interface Locale {
 
 			/** DateTime.format */
 			yearMonthFormat: string,
+			/** DateTime.format */
+			dateTimeFormat: string,
+			/** DateTime.format */
 			dateOnlyFormat: string,
+			/** DateTime.format */
+			timeOnlyFormat: string,
 		},
 
 		timeline: {

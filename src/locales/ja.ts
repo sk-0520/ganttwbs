@@ -61,7 +61,9 @@ const locale: Locale = {
 			},
 
 			yearMonthFormat: "yyyy/MM",
-			dateOnlyFormat: "yyyy/MM/dd"
+			dateTimeFormat: "yyyy/MM/dd HH:mm:ss",
+			dateOnlyFormat: "yyyy/MM/dd",
+			timeOnlyFormat: "HH:mm:ss",
 		},
 
 		timeline: {
