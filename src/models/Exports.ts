@@ -350,6 +350,8 @@ export abstract class Exports {
 
 		const groupColors = setting.theme.groups.map(a => Color.tryParse(a) ?? DefaultSettings.UnknownMemberColor);
 		const defaultGroupColor = Color.parse(setting.theme.timeline.defaultGroup);
+		const taskColor = Color.parse(setting.theme.timeline.defaultTask);
+		const completedColor = Color.parse(setting.theme.timeline.completed);
 
 		// タイムラインをどさっと出力
 		//let n = 1;
@@ -411,13 +413,41 @@ export abstract class Exports {
 			}
 
 			if (successWorkRange) {
-				const beginSpan = beginDate.diff(successWorkRange.begin);
-				const diff = Math.floor(successWorkRange.begin.diff(successWorkRange.end).totalDays);
-				const beginCell = timelineRow.getCell(ColumnKeys.length + Math.floor(beginSpan.totalDays) + 1);
+				const beginSpan = beginDate.diff(successWorkRange.begin.toDateOnly());
+				const beginCell = timelineRow.getCell(ColumnKeys.length + Math.floor(beginSpan.totalDays));
+
+				const diff = Math.floor(successWorkRange.begin.toDateOnly().diff(successWorkRange.end.toDateOnly()).totalDays);
+
+				const fillColor = Settings.maybeGroupTimeline(timeline)
+					? groupColors[readableTimelineId.level - 1] ?? defaultGroupColor
+					: (memberGroupPair?.member.color ? Color.parse(memberGroupPair.member.color) : taskColor)
+					;
+				for (let i = 0; i < diff; i++) {
+					const x = diff / 100.0;
+					const cell = timelineRow.getCell(beginCell.fullAddress.col + i);
+					if (x <= progress) {
+						cell.fill = {
+							type: "pattern",
+							pattern: "solid",
+							fgColor: {
+								argb: this.toArgbColor(completedColor),
+							},
+						};
+					} else {
+						cell.fill = {
+							type: "pattern",
+							pattern: "solid",
+							fgColor: {
+								argb: this.toArgbColor(fillColor),
+							},
+						};
+					}
+				}
+
 				// データバー無理だった
 				// beginCell.value = progress;
-				// const endCell = timelineRow.getCell(ColumnKeys.length + Math.floor(beginSpan.totalDays) + diff);
 				// timelineSheet.mergeCells(beginCell.fullAddress.row, beginCell.fullAddress.col, beginCell.fullAddress.row, beginCell.fullAddress.col + diff);
+				// const endCell = timelineRow.getCell(ColumnKeys.length + Math.floor(beginSpan.totalDays) + diff);
 
 				// const timelineRowCells = {
 				// 	begin: timelineRow.getCell(ColumnKeys.length + 1),
@@ -465,12 +495,12 @@ export abstract class Exports {
 					? groupColors[readableTimelineId.level - 1]
 					: defaultGroupColor
 					;
-					console.debug("CL",this.toArgbColor(Color.create(groupColor.r,groupColor.g,groupColor.b, 0.8)));
+				console.debug("CL", this.toArgbColor(Color.create(groupColor.r, groupColor.g, groupColor.b, 0.8)));
 				timelineRow.fill = {
 					type: "pattern",
 					pattern: "solid",
 					fgColor: {
-						argb: this.toArgbColor(Color.create(groupColor.r,groupColor.g,groupColor.b, 0.8)),
+						argb: this.toArgbColor(Color.create(groupColor.r, groupColor.g, groupColor.b, 0.8)),
 					},
 				};
 			}
