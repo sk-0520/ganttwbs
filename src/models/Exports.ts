@@ -379,6 +379,9 @@ export abstract class Exports {
 			}
 		];
 
+		// 印刷設定
+		// timelineSheet.pageSetup.printTitlesColumn  = "A:G";
+
 		const groupColors = setting.theme.groups.map(a => Color.tryParse(a) ?? DefaultSettings.UnknownMemberColor);
 		const defaultGroupColor = Color.parse(setting.theme.timeline.defaultGroup);
 		const defaultTaskColor = Color.parse(setting.theme.timeline.defaultTask);
