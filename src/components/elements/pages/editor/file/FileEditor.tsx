@@ -141,7 +141,8 @@ const FileEditor: FC<Props> = (props: Props) => {
 	}
 
 	async function handleExportExcel(): Promise<void> {
-		const workbook = await Exports.createWorkbook(editorData);
+		const calcData = Exports.calc(editorData.setting);
+		const workbook = await Exports.createWorkbook(calcData);
 
 		//エクセルファイルを生成する
 		const binaries = await workbook.xlsx.writeBuffer();

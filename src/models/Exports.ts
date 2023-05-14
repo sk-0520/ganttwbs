@@ -1,9 +1,11 @@
+import { Workbook } from "exceljs";
+
 import { Calendars } from "@/models/Calendars";
+import { CalcData } from "@/models/data/CalcData";
+import { Setting } from "@/models/data/Setting";
 import { Resources } from "@/models/Resources";
 import { Timelines } from "@/models/Timelines";
-import { CalcData } from "@/models/data/CalcData";
-import { EditorData } from "@/models/data/EditorData";
-import { Workbook } from "exceljs";
+import { WorkRanges } from "@/models/WorkRanges";
 
 export abstract class Exports {
 
@@ -15,37 +17,38 @@ export abstract class Exports {
 	 * @param editorData 編集データ。
 	 * @returns 計算済みデータ。
 	 */
-	public static calc(editorData: EditorData): CalcData {
-		const calendarInfo = Calendars.createCalendarInfo(editorData.setting.timeZone, editorData.setting.calendar);
-		const resourceInfo = Resources.createResourceInfo(editorData.setting.groups);
-		const sequenceTimelines = Timelines.flat(editorData.setting.rootTimeline.children);
-		const timelineMap = Timelines.getTimelinesMap(editorData.setting.rootTimeline);
-		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], editorData.setting.calendar.holiday, editorData.setting.recursive, calendarInfo.timeZone);
+	public static calc(setting: Setting): CalcData {
+		const calendarInfo = Calendars.createCalendarInfo(setting.timeZone, setting.calendar);
+		const resourceInfo = Resources.createResourceInfo(setting.groups);
+		const sequenceTimelines = Timelines.flat(setting.rootTimeline.children);
+		const timelineMap = Timelines.getTimelinesMap(setting.rootTimeline);
+		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], setting.calendar.holiday, setting.recursive, calendarInfo.timeZone);
 		const dayInfos = Timelines.calcDayInfos(timelineMap, new Set([...workRanges.values()]), resourceInfo);
+
+		const successWorkRanges = [...workRanges.values()].filter(WorkRanges.maybeSuccessWorkRange);
+		const totalSuccessWorkRange = WorkRanges.getTotalSuccessWorkRange(successWorkRanges);
 
 		return {
 			calendarInfo,
 			resourceInfo,
 			sequenceTimelines,
 			timelineMap,
-			workRanges,
 			dayInfos,
+			workRange: {
+				baseRanges: workRanges,
+				successWorkRanges: successWorkRanges,
+				totalSuccessWorkRange: totalSuccessWorkRange,
+			},
 		};
 	}
 
-	public static async createWorkbook(editorData: EditorData): Promise<Workbook> {
+	public static async createWorkbook(calcData: CalcData): Promise<Workbook> {
 		const workbook = new Workbook();
 
-		const calendarInfo = Calendars.createCalendarInfo(editorData.setting.timeZone, editorData.setting.calendar);
-		const resourceInfo = Resources.createResourceInfo(editorData.setting.groups);
-		const sequenceTimelines = Timelines.flat(editorData.setting.rootTimeline.children);
-		const timelineMap = Timelines.getTimelinesMap(editorData.setting.rootTimeline);
-		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], editorData.setting.calendar.holiday, editorData.setting.recursive, calendarInfo.timeZone);
-		const dayInfos = Timelines.calcDayInfos(timelineMap, new Set([...workRanges.values()]), resourceInfo);
 
 		const timelineSheet = workbook.addWorksheet("timeline");
 
-		const dates = Calendars.getDays(calendarInfo.range.begin, calendarInfo.range.end).map(a => a.toDate());
+		const dates = Calendars.getDays(calcData.calendarInfo.range.begin, calcData.calendarInfo.range.end).map(a => a.toDate());
 
 		// ヘッダ
 		// 1. タイトル - 月
