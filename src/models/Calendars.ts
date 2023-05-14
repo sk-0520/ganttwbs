@@ -62,6 +62,24 @@ export abstract class Calendars {
 		return value;
 	}
 
+	public static getDays(begin: DateTime, end: DateTime): Array<DateTime> {
+		const diff = begin.diff(end).totalDays;
+
+		const base = begin.toDateOnly();
+
+		const result = new Array<DateTime>();
+		for (let i = 0; i < diff; i++) {
+			if (i) {
+				result.push(base.add(i, "day"));
+			} else {
+				result.push(begin);
+			}
+		}
+		result.push(end);
+
+		return result;
+	}
+
 	public static getMonths(begin: DateTime, end: DateTime): Array<DateTime> {
 		const b = begin.year * 12 + begin.month;
 		const e = end.year * 12 + end.month;

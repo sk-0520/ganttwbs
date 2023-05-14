@@ -2,7 +2,7 @@ import { Arrays } from "@/models/Arrays";
 import { DayInfo } from "@/models/data/DayInfo";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { ResourceInfo } from "@/models/data/ResourceInfo";
-import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId } from "@/models/data/Setting";
+import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, Timestamp } from "@/models/data/Setting";
 import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime, DateTimeTicks, WeekIndex } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
@@ -58,9 +58,12 @@ export abstract class Timelines {
 	public static serializeWorkload(workload: TimeSpan): TimeOnly {
 		return workload.serialize("readable");
 	}
+	public static deserializeWorkload(workload: TimeOnly): TimeSpan {
+		return TimeSpan.parse(workload);
+	}
 
-	public static serializeDateTime(date: DateTime): TimeOnly {
-		return date.toInput("date");
+	public static serializeDateTime(date: DateTime): Timestamp {
+		return date.format("yyyy-MM-dd");
 	}
 
 	public static createRootTimeline(): RootTimeline {
@@ -143,7 +146,7 @@ export abstract class Timelines {
 				const summary = this.sumWorkloads(timeline.children);
 				workloads.push(summary);
 			} else if (Settings.maybeTaskTimeline(timeline)) {
-				const span = TimeSpan.parse(timeline.workload);
+				const span = this.deserializeWorkload(timeline.workload);
 				workloads.push(span);
 			}
 		}
@@ -510,7 +513,7 @@ export abstract class Timelines {
 				throw new Error();
 			}
 			const beginDate = DateTime.parse(timeline.static, timeZone);
-			const workload = TimeSpan.parse(timeline.workload);
+			const workload = this.deserializeWorkload(timeline.workload);
 			const successWorkRange = this.createSuccessWorkRange(holidays, timeline, beginDate, workload, timeZone, recursiveMaxCount);
 			result.set(timeline.id, successWorkRange);
 			cache.statics.set(timeline.id, timeline);
@@ -543,7 +546,7 @@ export abstract class Timelines {
 				continue;
 			}
 
-			const workload = TimeSpan.parse(timeline.workload);
+			const workload = this.deserializeWorkload(timeline.workload);
 
 			const successWorkRange = this.createSuccessWorkRange(holidays, timeline, prevRange.end, workload, timeZone, recursiveMaxCount);
 			result.set(timeline.id, successWorkRange);
@@ -628,7 +631,7 @@ export abstract class Timelines {
 						prevDate = DateTime.convert(targetTime, timeZone);
 					}
 
-					const workload = TimeSpan.parse(timeline.workload);
+					const workload = this.deserializeWorkload(timeline.workload);
 					const successWorkRange = this.createSuccessWorkRange(holidays, timeline, prevDate, workload, timeZone, recursiveMaxCount);
 					result.set(timeline.id, successWorkRange);
 

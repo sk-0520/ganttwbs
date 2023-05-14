@@ -13,7 +13,7 @@ import { Settings } from "@/models/Settings";
 type DisplayValue = "workload" | "cost";
 
 interface Props extends CalendarInfoProps, ResourceInfoProps {
-	totalSuccessWorkRange: TotalSuccessWorkRange;
+	totalSuccessWorkRange: TotalSuccessWorkRange | undefined;
 	sequenceTimelines: Array<AnyTimeline>;
 }
 
@@ -21,7 +21,10 @@ const WorkViewer: FC<Props> = (props: Props) => {
 
 	const [displayValue, /*setDisplayValue*/] = useState<DisplayValue>("workload");
 
-	const months = Calendars.getMonths(props.totalSuccessWorkRange.minimum.begin, props.totalSuccessWorkRange.maximum.end);
+	const months = props.totalSuccessWorkRange
+		? Calendars.getMonths(props.totalSuccessWorkRange.minimum.begin, props.totalSuccessWorkRange.maximum.end)
+		: []
+	;
 	const taskTimelines = props.sequenceTimelines.filter(Settings.maybeTaskTimeline);
 
 	return (

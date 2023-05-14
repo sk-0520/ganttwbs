@@ -3,6 +3,7 @@ import Link from "next/link";
 import path from "path-browserify";
 import { FC, useEffect, useRef, useState } from "react";
 
+import { IconKind, IconLabel } from "@/components/elements/Icon";
 import AutoSaveRow from "@/components/elements/pages/editor/file/AutoSaveRow";
 import { useLocale } from "@/locales/locale";
 import { Browsers } from "@/models/Browsers";
@@ -11,12 +12,12 @@ import { AutoSaveKind } from "@/models/data/AutoSave";
 import { EditorData } from "@/models/data/EditorData";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { DateTime } from "@/models/DateTime";
+import { Exports } from "@/models/Exports";
 import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 import { Types } from "@/models/Types";
-import { Workbook } from "exceljs";
 
 interface Props extends ConfigurationProps {
 	isVisible: boolean;
@@ -141,12 +142,16 @@ const FileEditor: FC<Props> = (props: Props) => {
 	}
 
 	async function handleExportExcel(): Promise<void> {
-		const workbook = createWorkbook(editorData);
+		const calcData = Exports.calc(editorData.setting);
+		const workbook = await Exports.createWorkbook(editorData.setting, calcData, locale);
+
+		const parsedFileName = path.parse(editorData.fileName);
+		const fileName = parsedFileName.name + ".xlsx";
 
 		//エクセルファイルを生成する
-		const uint8Array = await workbook.xlsx.writeBuffer();
-		const blob = new Blob([uint8Array], { type: "application/octet-binary" });
-		Browsers.download(editorData.fileName + ".xlsx", blob);
+		const binaries = await workbook.xlsx.writeBuffer();
+		const blob = new Blob([binaries], { type: "application/octet-binary" });
+		Browsers.download(fileName, blob);
 	}
 
 	function handleJsonCopy() {
@@ -233,8 +238,11 @@ const FileEditor: FC<Props> = (props: Props) => {
 			<dd>
 				<ul className="inline">
 					<li>
-						<button disabled onClick={handleExportExcel}>
-							Excel
+						<button onClick={handleExportExcel}>
+							<IconLabel
+								kind={IconKind.SoftwareExcel}
+								label={locale.pages.editor.file.save.export.excel}
+							/>
 						</button>
 					</li>
 					<li>
@@ -304,11 +312,5 @@ function formatAutoDownloadFileName(fileName: string, fileNameFormat: string, ti
 function downloadJson(fileName: string, obj: object): void {
 	Browsers.downloadJson(fileName, obj, "\t");
 }
-function createWorkbook(editorData: EditorData): Workbook {
-	const workbook = new Workbook();
 
-	workbook.addWorksheet("timeline");
-
-	return workbook;
-}
 
