@@ -1,10 +1,37 @@
 import { Calendars } from "@/models/Calendars";
 import { Resources } from "@/models/Resources";
 import { Timelines } from "@/models/Timelines";
+import { CalcData } from "@/models/data/CalcData";
 import { EditorData } from "@/models/data/EditorData";
 import { Workbook } from "exceljs";
 
 export abstract class Exports {
+
+	/**
+	 * 編集データから出力用の計算済みデータを生成。
+	 *
+	 * 出力やある時点での一括データ表示に使用する想定。
+	 *
+	 * @param editorData 編集データ。
+	 * @returns 計算済みデータ。
+	 */
+	public static calc(editorData: EditorData): CalcData {
+		const calendarInfo = Calendars.createCalendarInfo(editorData.setting.timeZone, editorData.setting.calendar);
+		const resourceInfo = Resources.createResourceInfo(editorData.setting.groups);
+		const sequenceTimelines = Timelines.flat(editorData.setting.rootTimeline.children);
+		const timelineMap = Timelines.getTimelinesMap(editorData.setting.rootTimeline);
+		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], editorData.setting.calendar.holiday, editorData.setting.recursive, calendarInfo.timeZone);
+		const dayInfos = Timelines.calcDayInfos(timelineMap, new Set([...workRanges.values()]), resourceInfo);
+
+		return {
+			calendarInfo,
+			resourceInfo,
+			sequenceTimelines,
+			timelineMap,
+			workRanges,
+			dayInfos,
+		};
+	}
 
 	public static async createWorkbook(editorData: EditorData): Promise<Workbook> {
 		const workbook = new Workbook();
