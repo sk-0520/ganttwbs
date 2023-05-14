@@ -172,6 +172,14 @@ export abstract class Exports {
 			};
 		}
 		timelineSheet.mergeCells(1, 1, 1, ColumnKeys.length);
+		const titleCell = headerRow1.getCell(Require.get(baseCellsNumberMap, "id"));
+		titleCell.font = {
+			bold: true
+		};
+		titleCell.alignment = {
+			horizontal: "justify",
+			vertical: "middle",
+		};
 
 		for (const key of ColumnKeys) {
 			const column = timelineSheet.getColumn(Require.get(baseCellsNumberMap, key));
