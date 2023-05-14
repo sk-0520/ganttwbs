@@ -11,15 +11,12 @@ import { AutoSaveKind } from "@/models/data/AutoSave";
 import { EditorData } from "@/models/data/EditorData";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { DateTime } from "@/models/DateTime";
+import { Exports } from "@/models/Exports";
 import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 import { Types } from "@/models/Types";
-import { Workbook } from "exceljs";
-import { Calendars } from "@/models/Calendars";
-import { Resources } from "@/models/Resources";
-import { Timelines } from "@/models/Timelines";
 
 interface Props extends ConfigurationProps {
 	isVisible: boolean;
@@ -144,11 +141,11 @@ const FileEditor: FC<Props> = (props: Props) => {
 	}
 
 	async function handleExportExcel(): Promise<void> {
-		const workbook = await createWorkbook(editorData);
+		const workbook = await Exports.createWorkbook(editorData);
 
 		//エクセルファイルを生成する
-		const uint8Array = await workbook.xlsx.writeBuffer();
-		const blob = new Blob([uint8Array], { type: "application/octet-binary" });
+		const binaries = await workbook.xlsx.writeBuffer();
+		const blob = new Blob([binaries], { type: "application/octet-binary" });
 		Browsers.download(editorData.fileName + ".xlsx", blob);
 	}
 
@@ -308,70 +305,4 @@ function downloadJson(fileName: string, obj: object): void {
 	Browsers.downloadJson(fileName, obj, "\t");
 }
 
-async function createWorkbook(editorData: EditorData): Promise<Workbook> {
-	const workbook = new Workbook();
-
-	const calendarInfo = Calendars.createCalendarInfo(editorData.setting.timeZone, editorData.setting.calendar);
-	const resourceInfo = Resources.createResourceInfo(editorData.setting.groups);
-	const sequenceTimelines = Timelines.flat(editorData.setting.rootTimeline.children);
-	const timelineMap = Timelines.getTimelinesMap(editorData.setting.rootTimeline);
-	const workRanges = Timelines.getWorkRanges([...timelineMap.values()], editorData.setting.calendar.holiday, editorData.setting.recursive, calendarInfo.timeZone);
-	const dayInfos = Timelines.calcDayInfos(timelineMap, new Set([...workRanges.values()]), resourceInfo);
-
-	const timelineSheet = workbook.addWorksheet("timeline");
-
-	const dates = Calendars.getDays(calendarInfo.range.begin, calendarInfo.range.end).map(a => a.toDate());
-
-	// ヘッダ
-	// 1. タイトル - 月
-	// 2. 集計 - 日付
-	// 3. ヘッダ - 曜日
-	const header1 = timelineSheet.addRow([
-		"ID",
-		"作業",
-		"個数",
-		"割当",
-		"開始",
-		"終了",
-		"進捗率",
-		...dates
-	]);
-	const baseColumnLength = header1.cellCount - dates.length;
-	for(let i = 0; i < dates.length; i++) {
-		const cell = header1.getCell(baseColumnLength + i + 1);
-		cell.style.numFmt = "mm";
-	}
-
-	const header2 = timelineSheet.addRow([
-		"ID",
-		"作業",
-		"個数",
-		"割当",
-		"開始",
-		"終了",
-		"進捗率",
-		...dates
-	]);
-	for(let i = 0; i < dates.length; i++) {
-		const cell = header2.getCell(baseColumnLength + i + 1);
-		cell.style.numFmt = "dd";
-	}
-
-	const header3 = timelineSheet.addRow([
-		"ID",
-		"作業",
-		"個数",
-		"割当",
-		"開始",
-		"終了",
-		"進捗率",
-		...dates
-	]);
-	for(let i = 0; i < dates.length; i++) {
-		const cell = header3.getCell(baseColumnLength + i + 1);
-		cell.style.numFmt = "aaa";
-	}
-
-	return workbook;
-}
 
