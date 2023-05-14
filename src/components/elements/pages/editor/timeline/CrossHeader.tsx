@@ -293,7 +293,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 									<>
 										<div
 											className="timeline-cell timeline-range-from"
-											title={locale.pages.editor.timeline.header.columns.workRangeFrom}
+											title={locale.pages.editor.timeline.header.columns.workRangeBegin}
 										>
 											<Timestamp
 												date={beginDate}
@@ -302,7 +302,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 										</div>
 										<div
 											className="timeline-cell timeline-range-to"
-											title={locale.pages.editor.timeline.header.columns.workRangeTo}
+											title={locale.pages.editor.timeline.header.columns.workRangeEnd}
 										>
 											<Timestamp
 												date={endDate}
@@ -344,10 +344,10 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						{locale.pages.editor.timeline.header.columns.relation}
 					</div>
 					<div className="timeline-cell timeline-range-from">
-						{locale.pages.editor.timeline.header.columns.workRangeFrom}
+						{locale.pages.editor.timeline.header.columns.workRangeBegin}
 					</div>
 					<div className="timeline-cell timeline-range-to">
-						{locale.pages.editor.timeline.header.columns.workRangeTo}
+						{locale.pages.editor.timeline.header.columns.workRangeEnd}
 					</div>
 					<div className="timeline-cell timeline-progress">
 						{locale.pages.editor.timeline.header.columns.progress}

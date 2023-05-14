@@ -176,8 +176,8 @@ const locale: Locale = {
 						workload: "工数",
 						resource: "割当",
 						relation: "💩",
-						workRangeFrom: "開始",
-						workRangeTo: "終了",
+						workRangeBegin: "開始",
+						workRangeEnd: "終了",
 						workRangeError: "あかん",
 						progress: "進捗率",
 						controls: "操作",
@@ -355,6 +355,19 @@ const locale: Locale = {
 		},
 		aboutLibrary: {
 			title: "ライブラリ",
+		},
+	},
+
+	file: {
+		excel: {
+			export: {
+				monthOnlyFormat: "mm",
+				dayOnlyFormat: "dd",
+				weekOnlyFormat: "aaa",
+				workRangeFormat: "yyyy/mm/dd",
+
+				timelineSheetNameFormat: "timeline",
+			},
 		},
 	},
 
