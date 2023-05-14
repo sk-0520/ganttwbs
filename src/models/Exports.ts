@@ -419,7 +419,7 @@ export abstract class Exports {
 				const diffDay = Math.floor(successWorkRange.begin.diff(successWorkRange.end).totalDays) + 1;
 				console.debug("SUBJECT", timeline.subject, diffDay);
 
-				const fillColor = Settings.maybeGroupTimeline(timeline)
+				const memberColor = Settings.maybeGroupTimeline(timeline)
 					? groupColors[readableTimelineId.level - 1] ?? defaultGroupColor
 					: (memberGroupPair?.member.color ? Color.parse(memberGroupPair.member.color) : taskColor)
 					;
@@ -427,23 +427,24 @@ export abstract class Exports {
 				const step = 1 / diffDay;
 				for (let i = 0; i < diffDay; i++) {
 					const cell = timelineRow.getCell(beginCell.fullAddress.col + i);
-					if (((step * i) + step) <= progress) {
-						cell.fill = {
-							type: "pattern",
-							pattern: "solid",
-							fgColor: {
-								argb: this.toArgbColor(completedColor),
-							},
-						};
-					} else {
-						cell.fill = {
-							type: "pattern",
-							pattern: "solid",
-							fgColor: {
-								argb: this.toArgbColor(fillColor),
-							},
-						};
-					}
+					const isCompletedArea = ((step * i) + step) <= progress;
+					const fillColor = isCompletedArea
+						? this.toArgbColor(completedColor)
+						: this.toArgbColor(memberColor)
+						;
+					cell.fill = {
+						type: "pattern",
+						pattern: "solid",
+						fgColor: {
+							argb: fillColor,
+						},
+					};
+					// cell.font = {
+					// 	color: {
+					// 		argb: fillColor,
+					// 	}
+					// };
+					// cell.value = isCompletedArea;
 				}
 
 				// データバー無理だった
@@ -497,12 +498,11 @@ export abstract class Exports {
 					? groupColors[readableTimelineId.level - 1]
 					: defaultGroupColor
 					;
-				console.debug("CL", this.toArgbColor(Color.create(groupColor.r, groupColor.g, groupColor.b, 0.8)));
 				timelineRow.fill = {
 					type: "pattern",
 					pattern: "solid",
 					fgColor: {
-						argb: this.toArgbColor(Color.create(groupColor.r, groupColor.g, groupColor.b, 0.8)),
+						argb: this.toArgbColor(Color.create(groupColor.r, groupColor.g, groupColor.b)),
 					},
 				};
 			}
