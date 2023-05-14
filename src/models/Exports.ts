@@ -1,4 +1,4 @@
-import { Border, Workbook } from "exceljs";
+import { Border, Row, Workbook, Worksheet } from "exceljs";
 
 import { Locale } from "@/locales/locale";
 import { Calendars } from "@/models/Calendars";
@@ -110,7 +110,7 @@ export abstract class Exports {
 		return result;
 	}
 
-	private static getBaseCellsNumberMap(): Map<ColumnKey, number> {
+	private static getExcelBaseCellsNumberMap(): Map<ColumnKey, number> {
 		const result = new Map<ColumnKey, number>(
 			ColumnKeys.map((a, i) => [a, i + 1])
 		);
@@ -118,7 +118,7 @@ export abstract class Exports {
 		return result;
 	}
 
-	private static toArgbColor(color: Color): string {
+	private static toExcelArgbColor(color: Color): string {
 		return (color.a * 255).toString(16).padStart(2, "0")
 			+ color.r.toString(16).padStart(2, "0")
 			+ color.g.toString(16).padStart(2, "0")
@@ -135,23 +135,7 @@ export abstract class Exports {
 	// 	return "$" + ret.groups.COL + "$" + ret.groups.ROW;
 	// }
 
-	public static async createWorkbook(setting: Setting, calcData: CalcData, locale: Locale): Promise<Workbook> {
-		const dates = Calendars.getDays(calcData.calendarInfo.range.begin, calcData.calendarInfo.range.end).map(a => a.toDate());
-
-		const rootTimelineItem = Require.get(calcData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
-		const rootSuccessWorkRanges = calcData.workRange.successWorkRanges.find(a => a.timeline.id === rootTimelineItem.id);
-
-		const baseCellsNumberMap = this.getBaseCellsNumberMap();
-
-		const workbook = new Workbook();
-		const timelineSheet = workbook.addWorksheet(Strings.replaceMap(locale.file.excel.export.timelineSheetNameFormat, {
-			"NAME": setting.name
-		}));
-
-		// ヘッダ
-		// 1. タイトル - 月
-		// 2. 集計 - 日付
-		// 3. ヘッダ - 曜日
+	private static createExcelRow1(timelineSheet: Worksheet, calcData: CalcData, setting: Setting, dates: ReadonlyArray<Readonly<Date>>, baseCellsNumberMap: ReadonlyMap<ColumnKey, number>, beginDate: DateTime, locale: Locale): Row {
 		const header1: BaseCells = {
 			"id": setting.name,
 			"subject": "",
@@ -204,7 +188,6 @@ export abstract class Exports {
 			};
 		}
 
-		const beginDate = calcData.calendarInfo.range.begin.toDateOnly();
 		for (let i = 0; i < dates.length; i++) {
 			const date = beginDate.add(i, "day");
 			const column = timelineSheet.getColumn(ColumnKeys.length + i + 1);
@@ -227,7 +210,7 @@ export abstract class Exports {
 							type: "pattern",
 							pattern: "solid",
 							fgColor: {
-								argb: this.toArgbColor(color),
+								argb: this.toExcelArgbColor(color),
 							},
 						};
 					}
@@ -243,7 +226,7 @@ export abstract class Exports {
 							type: "pattern",
 							pattern: "solid",
 							fgColor: {
-								argb: this.toArgbColor(color),
+								argb: this.toExcelArgbColor(color),
 							},
 						};
 					}
@@ -257,6 +240,12 @@ export abstract class Exports {
 				right: DefaultBorders.DaysCell,
 			};
 		}
+
+		return headerRow1;
+	}
+
+	private static createExcelRow2(timelineSheet: Worksheet, calcData: CalcData, setting: Setting, dates: ReadonlyArray<Readonly<Date>>, baseCellsNumberMap: ReadonlyMap<ColumnKey, number>, rootTimelineItem: RootTimeline, locale: Locale): Row {
+		const rootSuccessWorkRanges = calcData.workRange.successWorkRanges.find(a => a.timeline.id === rootTimelineItem.id);
 
 		const header2: BaseCells = {
 			"id": `${calcData.sequenceTimelines.filter(Settings.maybeTaskTimeline).length}/${calcData.sequenceTimelines.length}`,
@@ -289,18 +278,22 @@ export abstract class Exports {
 			};
 			cell.font = {
 				color: {
-					argb: this.toArgbColor(totalColor.getAutoColor()),
+					argb: this.toExcelArgbColor(totalColor.getAutoColor()),
 				},
 			};
 			cell.fill = {
 				type: "pattern",
 				pattern: "solid",
 				fgColor: {
-					argb: this.toArgbColor(totalColor),
+					argb: this.toExcelArgbColor(totalColor),
 				},
 			};
 		}
 
+		return headerRow2;
+	}
+
+	private static createExcelRow3(timelineSheet: Worksheet, calcData: CalcData, setting: Setting, dates: ReadonlyArray<Readonly<Date>>, baseCellsNumberMap: ReadonlyMap<ColumnKey, number>, locale: Locale): Row {
 		const header3: BaseCells = {
 			"id": locale.pages.editor.timeline.header.columns.id,
 			"subject": locale.pages.editor.timeline.header.columns.subject,
@@ -327,17 +320,42 @@ export abstract class Exports {
 			};
 			cell.font = {
 				color: {
-					argb: this.toArgbColor(columnColor.getAutoColor()),
+					argb: this.toExcelArgbColor(columnColor.getAutoColor()),
 				},
 			};
 			cell.fill = {
 				type: "pattern",
 				pattern: "solid",
 				fgColor: {
-					argb: this.toArgbColor(columnColor),
+					argb: this.toExcelArgbColor(columnColor),
 				},
 			};
 		}
+
+		return headerRow3;
+	}
+
+
+	public static async createWorkbook(setting: Setting, calcData: CalcData, locale: Locale): Promise<Workbook> {
+		const dates = Calendars.getDays(calcData.calendarInfo.range.begin, calcData.calendarInfo.range.end).map(a => a.toDate());
+
+		const rootTimelineItem = Require.get(calcData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
+
+		const baseCellsNumberMap = this.getExcelBaseCellsNumberMap();
+
+		const workbook = new Workbook();
+		const timelineSheet = workbook.addWorksheet(Strings.replaceMap(locale.file.excel.export.timelineSheetNameFormat, {
+			"NAME": setting.name
+		}));
+		const beginDate = calcData.calendarInfo.range.begin.toDateOnly();
+
+		// ヘッダ
+		// 1. タイトル - 月
+		this.createExcelRow1(timelineSheet, calcData, setting, dates, baseCellsNumberMap, beginDate, locale);
+		// 2. 集計 - 日付
+		this.createExcelRow2(timelineSheet, calcData, setting, dates, baseCellsNumberMap, rootTimelineItem, locale);
+		// 3. ヘッダ - 曜日
+		this.createExcelRow3(timelineSheet, calcData, setting, dates, baseCellsNumberMap, locale);
 
 		// ウィンドウ枠固定
 		timelineSheet.views = [
@@ -429,8 +447,8 @@ export abstract class Exports {
 					const cell = timelineRow.getCell(beginCell.fullAddress.col + i);
 					const isCompletedArea = ((step * i) + step) <= progress;
 					const fillColor = isCompletedArea
-						? this.toArgbColor(completedColor)
-						: this.toArgbColor(memberColor)
+						? this.toExcelArgbColor(completedColor)
+						: this.toExcelArgbColor(memberColor)
 						;
 					cell.fill = {
 						type: "pattern",
@@ -502,7 +520,7 @@ export abstract class Exports {
 					type: "pattern",
 					pattern: "solid",
 					fgColor: {
-						argb: this.toArgbColor(Color.create(groupColor.r, groupColor.g, groupColor.b)),
+						argb: this.toExcelArgbColor(Color.create(groupColor.r, groupColor.g, groupColor.b)),
 					},
 				};
 			}
