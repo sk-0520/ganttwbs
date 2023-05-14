@@ -119,12 +119,21 @@ export abstract class Exports {
 	}
 
 	private static toArgbColor(color: Color): string {
-		return color.a.toString(16).padStart(2, "0")
+		return (color.a * 255).toString(16).padStart(2, "0")
 			+ color.r.toString(16).padStart(2, "0")
 			+ color.g.toString(16).padStart(2, "0")
 			+ color.b.toString(16).padStart(2, "0")
 			;
 	}
+
+	// private static toAbsoluteAddress(address:string):string {
+	// 	const ret = /(?<COL>[A-Z]+)(?<ROW>\d+)/.exec(address);
+	// 	if(!ret || !ret.groups) {
+	// 		throw new Error();
+	// 	}
+
+	// 	return "$" + ret.groups.COL + "$" + ret.groups.ROW;
+	// }
 
 	public static async createWorkbook(setting: Setting, calcData: CalcData, locale: Locale): Promise<Workbook> {
 		const dates = Calendars.getDays(calcData.calendarInfo.range.begin, calcData.calendarInfo.range.end).map(a => a.toDate());
@@ -343,7 +352,9 @@ export abstract class Exports {
 		const defaultGroupColor = Color.parse(setting.theme.timeline.defaultGroup);
 
 		// タイムラインをどさっと出力
+		//let n = 1;
 		for (const timeline of calcData.sequenceTimelines) {
+
 			const readableTimelineId = Timelines.calcReadableTimelineId(timeline, rootTimelineItem);
 			const workload = Settings.maybeGroupTimeline(timeline)
 				? Timelines.sumWorkloadByGroup(timeline)
@@ -375,6 +386,7 @@ export abstract class Exports {
 
 			const timelineRow = timelineSheet.addRow([
 				...this.createBaseCells(timelineBaseCells),
+				...dates.map(_ => ""),
 			]);
 
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "id")).alignment = {
@@ -398,16 +410,67 @@ export abstract class Exports {
 				};
 			}
 
+			if (successWorkRange) {
+				const beginSpan = beginDate.diff(successWorkRange.begin);
+				const diff = Math.floor(successWorkRange.begin.diff(successWorkRange.end).totalDays);
+				const beginCell = timelineRow.getCell(ColumnKeys.length + Math.floor(beginSpan.totalDays) + 1);
+				// データバー無理だった
+				// beginCell.value = progress;
+				// const endCell = timelineRow.getCell(ColumnKeys.length + Math.floor(beginSpan.totalDays) + diff);
+				// timelineSheet.mergeCells(beginCell.fullAddress.row, beginCell.fullAddress.col, beginCell.fullAddress.row, beginCell.fullAddress.col + diff);
+
+				// const timelineRowCells = {
+				// 	begin: timelineRow.getCell(ColumnKeys.length + 1),
+				// 	end: timelineRow.getCell(ColumnKeys.length + 1 + dates.length),
+				// };
+
+				// const absoluteAddresses = {
+				// 	begin: this.toAbsoluteAddress(timelineRowCells.begin.address),
+				// 	end: this.toAbsoluteAddress(timelineRowCells.end.address),
+				// };
+
+				// console.debug(`${absoluteAddresses.begin}:${absoluteAddresses.end}`);
+
+				// timelineSheet.addConditionalFormatting({
+				// 	ref: `${absoluteAddresses.begin}:${absoluteAddresses.end}`,
+				// 	rules: [
+				// 		{
+				// 			type: "dataBar",
+				// 			priority: n++,
+				// 			gradient: false,
+				// 			border: true,
+				// 			cfvo: [
+				// 				{
+				// 					type: "min",
+				// 					value: 0
+				// 				},
+				// 				{
+				// 					type: "max",
+				// 					value: 1
+				// 				},
+				// 			],
+				// 		} satisfies DataBarRuleType,
+				// 	],
+				// });
+
+
+			}
+
+			//const date = beginDate.add(i, "day");
+
+
+
 			if (Settings.maybeGroupTimeline(timeline)) {
 				const groupColor = (readableTimelineId.level - 1) in groupColors
 					? groupColors[readableTimelineId.level - 1]
 					: defaultGroupColor
 					;
+					console.debug("CL",this.toArgbColor(Color.create(groupColor.r,groupColor.g,groupColor.b, 0.8)));
 				timelineRow.fill = {
 					type: "pattern",
 					pattern: "solid",
 					fgColor: {
-						argb: this.toArgbColor(groupColor),
+						argb: this.toArgbColor(Color.create(groupColor.r,groupColor.g,groupColor.b, 0.8)),
 					},
 				};
 			}
