@@ -145,10 +145,13 @@ const FileEditor: FC<Props> = (props: Props) => {
 		const calcData = Exports.calc(editorData.setting);
 		const workbook = await Exports.createWorkbook(editorData.setting, calcData, locale);
 
+		const parsedFileName = path.parse(editorData.fileName);
+		const fileName = parsedFileName.name + ".xlsx";
+
 		//エクセルファイルを生成する
 		const binaries = await workbook.xlsx.writeBuffer();
 		const blob = new Blob([binaries], { type: "application/octet-binary" });
-		Browsers.download(editorData.fileName + ".xlsx", blob);
+		Browsers.download(fileName, blob);
 	}
 
 	function handleJsonCopy() {
