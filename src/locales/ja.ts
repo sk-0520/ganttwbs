@@ -143,6 +143,8 @@ const locale: Locale = {
 
 					export: {
 						title: "出力",
+
+						excel: "エクセル出力",
 					},
 				},
 

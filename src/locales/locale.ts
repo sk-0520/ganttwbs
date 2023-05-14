@@ -146,6 +146,8 @@ export interface Locale {
 
 					export: {
 						title: string,
+
+						excel: string;
 					},
 				},
 				byebye: string

@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { FC, ReactNode } from "react";
 import { IconBaseProps } from "react-icons";
+import * as Ai from "react-icons/ai";
 import * as Md from "react-icons/md";
 
 import { Types } from "@/models/Types";
@@ -48,6 +49,8 @@ export const enum IconKind {
 	Edit,
 	Remove,
 	Save,
+
+	SoftwareExcel,
 }
 
 const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
@@ -90,6 +93,8 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.Edit]: (props) => <Md.MdModeEdit {...convertParameter(props)} />,
 	[IconKind.Remove]: (props) => <Md.MdOutlineDelete {...convertParameter(props)} />,
 	[IconKind.Save]: (props) => <Md.MdOutlineSave {...convertParameter(props)} />,
+
+	[IconKind.SoftwareExcel]: (props) => <Ai.AiFillFileExcel {...convertParameter(props)} />,
 } as const;
 
 function convertColor(kind: IconKind, color: string | null | undefined): string | undefined {
@@ -114,6 +119,8 @@ function convertColor(kind: IconKind, color: string | null | undefined): string 
 			case IconKind.ConfirmCancel:
 				return "red";
 
+			case IconKind.SoftwareExcel:
+				return "green";
 
 			default:
 				break;

@@ -3,6 +3,7 @@ import Link from "next/link";
 import path from "path-browserify";
 import { FC, useEffect, useRef, useState } from "react";
 
+import { IconKind, IconLabel } from "@/components/elements/Icon";
 import AutoSaveRow from "@/components/elements/pages/editor/file/AutoSaveRow";
 import { useLocale } from "@/locales/locale";
 import { Browsers } from "@/models/Browsers";
@@ -235,7 +236,10 @@ const FileEditor: FC<Props> = (props: Props) => {
 				<ul className="inline">
 					<li>
 						<button onClick={handleExportExcel}>
-							Excel
+							<IconLabel
+								kind={IconKind.SoftwareExcel}
+								label={locale.pages.editor.file.save.export.excel}
+							/>
 						</button>
 					</li>
 					<li>
