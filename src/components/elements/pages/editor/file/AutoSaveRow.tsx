@@ -1,6 +1,7 @@
 import { FC, ReactNode } from "react";
 
-import { Locale, useLocale } from "@/locales/locale";
+import Timestamp from "@/components/elements/Timestamp";
+import { useLocale } from "@/locales/locale";
 import { AutoSaveKind } from "@/models/data/AutoSave";
 import { Configuration } from "@/models/data/Configuration";
 import { DateTime } from "@/models/DateTime";
@@ -64,10 +65,10 @@ const AutoSaveRow: FC<Props> = (props: Props) => {
 				/>
 			</td>
 			<td className="last-time-cell">
-				{renderDateTime(props.lastTime, locale)}
+				{renderDateTime(props.lastTime)}
 			</td>
 			<td className="next-time-cell">
-				{renderDateTime(props.nextTime, locale)}
+				{renderDateTime(props.nextTime)}
 			</td>
 		</tr>
 	);
@@ -87,16 +88,17 @@ function fromAutoSaveTimeValue(value: number | undefined): TimeSpan | undefined 
 	return TimeSpan.fromMinutes(value);
 }
 
-function renderDateTime(time: DateTime | undefined, locale: Locale): ReactNode {
+function renderDateTime(time: DateTime | undefined): ReactNode {
 	if (time) {
 		return (
-			<time className="time" dateTime={time.format("U")}>
-				{time.format("HH:mm:ss")}
-			</time>
+			<Timestamp
+				format="time"
+				date={time}
+			/>
 		);
 	}
 
 	return (
-		<span className="time">--:--:--</span>
+		<time dateTime={"invalid"}>--:--:--</time>
 	);
 }

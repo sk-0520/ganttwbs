@@ -3,6 +3,7 @@ import Link from "next/link";
 import path from "path-browserify";
 import { FC, useEffect, useRef, useState } from "react";
 
+import { IconKind, IconLabel } from "@/components/elements/Icon";
 import AutoSaveRow from "@/components/elements/pages/editor/file/AutoSaveRow";
 import { useLocale } from "@/locales/locale";
 import { Browsers } from "@/models/Browsers";
@@ -11,6 +12,7 @@ import { AutoSaveKind } from "@/models/data/AutoSave";
 import { EditorData } from "@/models/data/EditorData";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { DateTime } from "@/models/DateTime";
+import { Exports } from "@/models/Exports";
 import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
 import { TimeSpan } from "@/models/TimeSpan";
@@ -139,6 +141,19 @@ const FileEditor: FC<Props> = (props: Props) => {
 		downloadJson(fileName, editorData.setting);
 	}
 
+	async function handleExportExcel(): Promise<void> {
+		const calcData = Exports.calc(editorData.setting);
+		const workbook = await Exports.createWorkbook(editorData.setting, calcData, locale);
+
+		const parsedFileName = path.parse(editorData.fileName);
+		const fileName = parsedFileName.name + ".xlsx";
+
+		//エクセルファイルを生成する
+		const binaries = await workbook.xlsx.writeBuffer();
+		const blob = new Blob([binaries], { type: "application/octet-binary" });
+		Browsers.download(fileName, blob);
+	}
+
 	function handleJsonCopy() {
 		Browsers.copyText(settingJson);
 	}
@@ -223,6 +238,14 @@ const FileEditor: FC<Props> = (props: Props) => {
 			<dd>
 				<ul className="inline">
 					<li>
+						<button onClick={handleExportExcel}>
+							<IconLabel
+								kind={IconKind.SoftwareExcel}
+								label={locale.pages.editor.file.save.export.excel}
+							/>
+						</button>
+					</li>
+					<li>
 						<button onClick={handleDownload}>
 							{locale.common.command.download}
 						</button>
@@ -289,3 +312,5 @@ function formatAutoDownloadFileName(fileName: string, fileNameFormat: string, ti
 function downloadJson(fileName: string, obj: object): void {
 	Browsers.downloadJson(fileName, obj, "\t");
 }
+
+

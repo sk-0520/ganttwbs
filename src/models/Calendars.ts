@@ -41,7 +41,6 @@ export abstract class Calendars {
 		return result;
 	}
 
-
 	/**
 	 * カレンダー範囲から日数を取得。
 	 * @param calendarRange
@@ -61,5 +60,45 @@ export abstract class Calendars {
 		}
 
 		return value;
+	}
+
+	public static getDays(begin: DateTime, end: DateTime): Array<DateTime> {
+		const diff = begin.diff(end).totalDays;
+
+		const base = begin.toDateOnly();
+
+		const result = new Array<DateTime>();
+		for (let i = 0; i < diff; i++) {
+			if (i) {
+				result.push(base.add(i, "day"));
+			} else {
+				result.push(begin);
+			}
+		}
+		result.push(end);
+
+		return result;
+	}
+
+	public static getMonths(begin: DateTime, end: DateTime): Array<DateTime> {
+		const b = begin.year * 12 + begin.month;
+		const e = end.year * 12 + end.month;
+		const diff = e - b;
+
+		const result = new Array<DateTime>();
+		for (let i = 0; i < diff; i++) {
+			if (i) {
+				result.push(DateTime.create(
+					begin.timeZone,
+					begin.year,
+					begin.month + i
+				));
+			} else {
+				result.push(begin);
+			}
+		}
+		result.push(end);
+
+		return result;
 	}
 }

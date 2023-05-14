@@ -260,6 +260,22 @@ export class DateTime {
 		return new DateTime(date, timeZone);
 	}
 
+	public toDate(keepLocalTime = true): Date {
+		if (!keepLocalTime) {
+			throw new Error("keepLocalTime");
+		}
+
+		return new Date(Date.UTC(
+			this.year,
+			this.month - 1,
+			this.day,
+			this.hour,
+			this.minute,
+			this.second,
+			this.millisecond
+		));
+	}
+
 	/**
 	 * 差分取得。
 	 * @param target

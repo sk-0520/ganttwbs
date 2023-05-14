@@ -40,8 +40,8 @@
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
   "@types/node": {
-    "module": "@types/node@20.1.1",
-    "version": "20.1.1",
+    "module": "@types/node@20.1.4",
+    "version": "20.1.4",
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
@@ -102,8 +102,8 @@
     "repository": "https://github.com/JedWatson/classnames"
   },
   "eslint-config-next": {
-    "module": "eslint-config-next@13.4.1",
-    "version": "13.4.1",
+    "module": "eslint-config-next@13.4.2",
+    "version": "13.4.2",
     "licenses": "MIT",
     "repository": "https://github.com/vercel/next.js"
   },
@@ -141,6 +141,13 @@
     "publisher": "Nicholas C. Zakas",
     "licenses": "MIT",
     "repository": "https://github.com/eslint/eslint"
+  },
+  "exceljs": {
+    "module": "exceljs@4.3.0",
+    "version": "4.3.0",
+    "publisher": "Guyon Roche",
+    "licenses": "MIT",
+    "repository": "https://github.com/exceljs/exceljs"
   },
   "i18next": {
     "module": "i18next@22.4.15",
@@ -190,14 +197,14 @@
     "repository": "https://github.com/i18next/next-i18next"
   },
   "next": {
-    "module": "next@13.4.1",
-    "version": "13.4.1",
+    "module": "next@13.4.2",
+    "version": "13.4.2",
     "licenses": "MIT",
     "repository": "https://github.com/vercel/next.js"
   },
   "npm-check-updates": {
-    "module": "npm-check-updates@16.10.10",
-    "version": "16.10.10",
+    "module": "npm-check-updates@16.10.12",
+    "version": "16.10.12",
     "publisher": "Tomas Junnonen",
     "licenses": "Apache-2.0",
     "repository": "https://github.com/raineorshine/npm-check-updates"

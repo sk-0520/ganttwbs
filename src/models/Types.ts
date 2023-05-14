@@ -34,6 +34,10 @@ export abstract class Types {
 		return typeof arg === "string";
 	}
 
+	public static isNumber(arg: unknown): arg is string {
+		return typeof arg === "number";
+	}
+
 	public static hasProperty(arg: unknown, key: PropertyKey): arg is Record<PropertyKey, unknown> {
 		return arg !== undefined && arg !== null && typeof arg === "object" && key in arg;
 	}

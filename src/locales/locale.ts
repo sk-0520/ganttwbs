@@ -50,7 +50,12 @@ export interface Locale {
 
 			/** DateTime.format */
 			yearMonthFormat: string,
+			/** DateTime.format */
+			dateTimeFormat: string,
+			/** DateTime.format */
 			dateOnlyFormat: string,
+			/** DateTime.format */
+			timeOnlyFormat: string,
 		},
 
 		timeline: {
@@ -141,6 +146,8 @@ export interface Locale {
 
 					export: {
 						title: string,
+
+						excel: string;
 					},
 				},
 				byebye: string
@@ -175,8 +182,8 @@ export interface Locale {
 						workload: string,
 						resource: string,
 						relation: string,
-						workRangeFrom: string,
-						workRangeTo: string,
+						workRangeBegin: string,
+						workRangeEnd: string,
 						workRangeError: string,
 						progress: string,
 						controls: string,
@@ -258,7 +265,7 @@ export interface Locale {
 				general: {
 					projectName: string,
 					recursive: string,
-					timeZoneKind:{
+					timeZoneKind: {
 						name: string,
 						offset: string,
 					},
@@ -369,7 +376,24 @@ export interface Locale {
 		},
 	},
 
-
+	file: {
+		excel: {
+			export: {
+				/** Excel format */
+				monthOnlyFormat: string,
+				/** Excel format */
+				dayOnlyFormat: string,
+				/** Excel format */
+				weekOnlyFormat: string,
+				/** Excel format */
+				workRangeFormat: string,
+				/**
+				 * * NAME
+				 */
+				timelineSheetNameFormat: string,
+			},
+		},
+	},
 
 	styles: {
 		editor: {
