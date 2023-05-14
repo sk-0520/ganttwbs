@@ -89,23 +89,22 @@ export abstract class Exports {
 
 	public static getBaseCellsNumberMap(): Map<ColumnKey, number> {
 		const result = new Map<ColumnKey, number>(
-			ColumnKeys.map((a,i) => [a, i+1])
+			ColumnKeys.map((a, i) => [a, i + 1])
 		);
 
 		return result;
 	}
 
 	public static async createWorkbook(setting: Setting, calcData: CalcData): Promise<Workbook> {
-		const workbook = new Workbook();
-
-		const timelineSheet = workbook.addWorksheet("timeline");
-
 		const dates = Calendars.getDays(calcData.calendarInfo.range.begin, calcData.calendarInfo.range.end).map(a => a.toDate());
 
 		const rootTimelineItem = Require.get(calcData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
 		const rootSuccessWorkRanges = calcData.workRange.successWorkRanges.find(a => a.timeline.id === rootTimelineItem.id);
 
 		const baseCellsNumberMap = this.getBaseCellsNumberMap();
+
+		const workbook = new Workbook();
+		const timelineSheet = workbook.addWorksheet("timeline");
 
 		// ヘッダ
 		// 1. タイトル - 月
@@ -127,6 +126,24 @@ export abstract class Exports {
 		for (let i = 0; i < dates.length; i++) {
 			const cell = headerRow1.getCell(ColumnKeys.length + i + 1);
 			cell.style.numFmt = "mm";
+		}
+		timelineSheet.mergeCells(1, 1, 1, ColumnKeys.length);
+
+		for(const key of ColumnKeys) {
+			const column = timelineSheet.getColumn(Require.get(baseCellsNumberMap, key));
+			column.width = Require.switch(key as ColumnKey, {
+				"id": () => 6,
+				"subject": () => 14,
+				"workload": () => 6,
+				"resource": () => 10,
+				"range-begin": () => 10,
+				"range-end": () => 10,
+				"progress": () => 6,
+			});
+		}
+		for (let i = 0; i < dates.length; i++) {
+			const column = timelineSheet.getColumn(ColumnKeys.length + i + 1);
+			column.width = 4;
 		}
 
 		const header2: BaseCells = {
@@ -164,6 +181,54 @@ export abstract class Exports {
 		for (let i = 0; i < dates.length; i++) {
 			const cell = headerRow3.getCell(ColumnKeys.length + i + 1);
 			cell.style.numFmt = "aaa";
+		}
+
+		// ウィンドウ枠固定
+		timelineSheet.views = [
+			{
+				state: "frozen",
+				xSplit: ColumnKeys.length,
+				ySplit: 3,
+			}
+		];
+
+		// タイムラインをどさっと出力
+		for (const timeline of calcData.sequenceTimelines) {
+			const readableTimelineId = Timelines.calcReadableTimelineId(timeline, rootTimelineItem);
+			const workload = Settings.maybeGroupTimeline(timeline)
+				? Timelines.sumWorkloadByGroup(timeline)
+				: Timelines.deserializeWorkload(timeline.workload)
+				;
+			const memberGroupPair = Settings.maybeGroupTimeline(timeline)
+				? undefined
+				: calcData.resourceInfo.memberMap.get(timeline.memberId)
+				;
+			const successWorkRange = calcData.workRange.successWorkRanges.find(a => a.timeline.id === timeline.id);
+			const workRange = successWorkRange
+				? { begin: successWorkRange.begin.toDate(), end: successWorkRange.end.toDate() }
+				: { begin: "#ERROR", end: "" }
+				;
+			const progress = Settings.maybeGroupTimeline(timeline)
+				? Timelines.sumProgressByGroup(timeline)
+				: timeline.progress
+				;
+
+			const timelineBaseCells: BaseCells = {
+				"id": Timelines.toReadableTimelineId(readableTimelineId),
+				"subject": timeline.subject,
+				"workload": workload.totalDays,
+				"resource": memberGroupPair ? `${memberGroupPair.member.name}(${memberGroupPair.group.name})`: "",
+				"range-begin": workRange.begin,
+				"range-end": workRange.end,
+				"progress": progress,
+			};
+
+			const timelineRow = timelineSheet.addRow([
+				...this.createBaseCells(timelineBaseCells),
+			]);
+
+			timelineRow.getCell(Require.get(baseCellsNumberMap, "progress")).numFmt = "0%";
+
 		}
 
 		return workbook;

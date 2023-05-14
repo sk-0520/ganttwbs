@@ -81,7 +81,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				setProgress(progress);
 
 			} else if (Settings.maybeTaskTimeline(timelineItem.timeline)) {
-				const workload = TimeSpan.parse(timelineItem.timeline.workload).totalDays;
+				const workload = Timelines.deserializeWorkload(timelineItem.timeline.workload).totalDays;
 				setWorkload(workload);
 
 				const progress = timelineItem.timeline.progress;
