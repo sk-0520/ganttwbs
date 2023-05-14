@@ -5,7 +5,7 @@ import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
 import { CalcData } from "@/models/data/CalcData";
 import { ResultFactory } from "@/models/data/Result";
-import { AnyTimeline, Progress, RootTimeline, Setting } from "@/models/data/Setting";
+import { Progress, RootTimeline, Setting } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
@@ -15,7 +15,6 @@ import { Settings } from "@/models/Settings";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
-import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 
 type CellInputType = string | Progress | DateTime | Date;
 const ColumnKeys = [
@@ -449,7 +448,6 @@ export abstract class Exports {
 				const beginCell = timelineRow.getCell(ColumnKeys.length + Math.floor(beginSpan.totalDays) + 1);
 
 				const diffDay = Math.floor(successWorkRange.begin.diff(successWorkRange.end).totalDays) + 1;
-				console.debug("SUBJECT", timeline.subject, diffDay);
 
 				const targetColor = Settings.maybeGroupTimeline(timeline)
 					? groupColors[readableTimelineId.level - 1] ?? defaultGroupColor
