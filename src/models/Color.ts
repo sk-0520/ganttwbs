@@ -82,6 +82,10 @@ export class Color {
 		return this.raw.equals(color.raw);
 	}
 
+	/**
+	 * HTMLで用いられる色に変換する。
+	 * @returns #RRGGBB
+	 */
 	public toHtml(): ColorString {
 		return this.raw.toHexString();
 	}

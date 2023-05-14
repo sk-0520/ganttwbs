@@ -11,6 +11,7 @@ import { Resources } from "@/models/Resources";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
+import { Color } from "@/models/Color";
 
 type CellInputType = string | Progress | DateTime | Date;
 const ColumnKeys = [
@@ -87,12 +88,20 @@ export abstract class Exports {
 		return result;
 	}
 
-	public static getBaseCellsNumberMap(): Map<ColumnKey, number> {
+	private static getBaseCellsNumberMap(): Map<ColumnKey, number> {
 		const result = new Map<ColumnKey, number>(
 			ColumnKeys.map((a, i) => [a, i + 1])
 		);
 
 		return result;
+	}
+
+	private static toArgbColor(color: Color): string {
+		return color.a.toString(16).padStart(2, "0")
+			+ color.r.toString(16).padStart(2, "0")
+			+ color.g.toString(16).padStart(2, "0")
+			+ color.b.toString(16).padStart(2, "0")
+			;
 	}
 
 	public static async createWorkbook(setting: Setting, calcData: CalcData): Promise<Workbook> {
@@ -129,7 +138,7 @@ export abstract class Exports {
 		}
 		timelineSheet.mergeCells(1, 1, 1, ColumnKeys.length);
 
-		for(const key of ColumnKeys) {
+		for (const key of ColumnKeys) {
 			const column = timelineSheet.getColumn(Require.get(baseCellsNumberMap, key));
 			column.width = Require.switch(key as ColumnKey, {
 				"id": () => 6,
@@ -141,9 +150,48 @@ export abstract class Exports {
 				"progress": () => 6,
 			});
 		}
+
+		const beginDate = calcData.calendarInfo.range.begin.toDateOnly();
 		for (let i = 0; i < dates.length; i++) {
+			const date = beginDate.add(i, "day");
 			const column = timelineSheet.getColumn(ColumnKeys.length + i + 1);
 			column.width = 4;
+			column.fill = {
+				type: "pattern",
+				pattern: "none",
+			};
+
+			if (setting.theme.holiday.regulars) {
+				const weekDay = Settings.toWeekDay(date.week);
+				if (weekDay in setting.theme.holiday.regulars && setting.calendar.holiday.regulars.includes(weekDay)) {
+					const color = Color.tryParse(setting.theme.holiday.regulars[weekDay] || "");
+					if (color) {
+						column.fill = {
+							type: "pattern",
+							pattern: "solid",
+							fgColor: {
+								argb: this.toArgbColor(color),
+							},
+						};
+					}
+				}
+			}
+
+			const eventValue = calcData.calendarInfo.holidayEventMap.get(date.ticks);
+			if (eventValue) {
+				if (eventValue.event.kind in setting.theme.holiday.events) {
+					const color = Color.tryParse(setting.theme.holiday.events[eventValue.event.kind] || "");
+					if (color) {
+						column.fill = {
+							type: "pattern",
+							pattern: "solid",
+							fgColor: {
+								argb: this.toArgbColor(color),
+							},
+						};
+					}
+				}
+			}
 		}
 
 		const header2: BaseCells = {
@@ -217,7 +265,7 @@ export abstract class Exports {
 				"id": Timelines.toReadableTimelineId(readableTimelineId),
 				"subject": timeline.subject,
 				"workload": workload.totalDays,
-				"resource": memberGroupPair ? `${memberGroupPair.member.name}(${memberGroupPair.group.name})`: "",
+				"resource": memberGroupPair ? `${memberGroupPair.member.name}(${memberGroupPair.group.name})` : "",
 				"range-begin": workRange.begin,
 				"range-end": workRange.end,
 				"progress": progress,
