@@ -1,20 +1,20 @@
-import { Workbook } from "exceljs";
+import { Border, Workbook } from "exceljs";
 
+import { Locale } from "@/locales/locale";
 import { Calendars } from "@/models/Calendars";
+import { Color } from "@/models/Color";
 import { CalcData } from "@/models/data/CalcData";
 import { ResultFactory } from "@/models/data/Result";
 import { Progress, RootTimeline, Setting } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
+import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
 import { Require } from "@/models/Require";
 import { Resources } from "@/models/Resources";
 import { Settings } from "@/models/Settings";
+import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
-import { Color } from "@/models/Color";
-import { DefaultSettings } from "@/models/DefaultSettings";
-import { Locale } from "@/locales/locale";
-import { Strings } from "@/models/Strings";
 
 type CellInputType = string | Progress | DateTime | Date;
 const ColumnKeys = [
@@ -33,6 +33,27 @@ const ExcelFormat = {
 	Workload: "0.00",
 	Progress: "0%",
 } as const;
+
+const DefaultBorders = {
+	BaseCell: {
+		style: "thin",
+		color: {
+			argb: "ff000000",
+		},
+	} satisfies Border,
+	DaysCell: {
+		style: "thin",
+		color: {
+			argb: "ff000000",
+		},
+	} satisfies Border,
+	TimelineCell: {
+		style: "hair",
+		color: {
+			argb: "ff000000",
+		},
+	} satisfies Border,
+};
 
 export abstract class Exports {
 
@@ -138,20 +159,40 @@ export abstract class Exports {
 		for (let i = 0; i < dates.length; i++) {
 			const cell = headerRow1.getCell(ColumnKeys.length + i + 1);
 			cell.style.numFmt = locale.file.excel.export.monthOnlyFormat;
+			// カラム設定が効かないっぽい(順序依存？)
+			cell.style.alignment = {
+				vertical: "middle",
+				horizontal: "center",
+			};
+			cell.style.border = {
+				top: DefaultBorders.DaysCell,
+				bottom: DefaultBorders.DaysCell,
+				left: DefaultBorders.DaysCell,
+				right: DefaultBorders.DaysCell,
+			};
 		}
 		timelineSheet.mergeCells(1, 1, 1, ColumnKeys.length);
 
 		for (const key of ColumnKeys) {
 			const column = timelineSheet.getColumn(Require.get(baseCellsNumberMap, key));
 			column.width = Require.switch(key as ColumnKey, {
-				"id": () => 12,
-				"subject": () => 16,
-				"workload": () => 6,
-				"resource": () => 10,
-				"range-begin": () => 11,
-				"range-end": () => 11,
-				"progress": () => 6,
+				"id": () => 14,
+				"subject": () => 20,
+				"workload": () => 8,
+				"resource": () => 14,
+				"range-begin": () => 12,
+				"range-end": () => 12,
+				"progress": () => 8,
 			});
+			column.style.alignment = {
+				vertical: "middle"
+			};
+			column.style.border = {
+				top: DefaultBorders.BaseCell,
+				bottom: DefaultBorders.BaseCell,
+				left: DefaultBorders.BaseCell,
+				right: DefaultBorders.BaseCell,
+			};
 		}
 
 		const beginDate = calcData.calendarInfo.range.begin.toDateOnly();
@@ -159,6 +200,10 @@ export abstract class Exports {
 			const date = beginDate.add(i, "day");
 			const column = timelineSheet.getColumn(ColumnKeys.length + i + 1);
 			column.width = 4;
+			column.style.alignment = {
+				vertical: "middle",
+				horizontal: "center",
+			};
 			column.fill = {
 				type: "pattern",
 				pattern: "none",
@@ -195,6 +240,13 @@ export abstract class Exports {
 					}
 				}
 			}
+
+			column.style.border = {
+				top: DefaultBorders.DaysCell,
+				bottom: DefaultBorders.DaysCell,
+				left: DefaultBorders.DaysCell,
+				right: DefaultBorders.DaysCell,
+			};
 		}
 
 		const header2: BaseCells = {
@@ -214,11 +266,31 @@ export abstract class Exports {
 			const cell = headerRow2.getCell(ColumnKeys.length + i + 1);
 			cell.style.numFmt = locale.file.excel.export.dayOnlyFormat;
 		}
+
 		headerRow2.getCell(Require.get(baseCellsNumberMap, "workload")).numFmt = ExcelFormat.Workload;
 		headerRow2.getCell(Require.get(baseCellsNumberMap, "progress")).numFmt = ExcelFormat.Progress;
 		headerRow2.getCell(Require.get(baseCellsNumberMap, "range-begin")).numFmt = locale.file.excel.export.workRangeFormat;
 		headerRow2.getCell(Require.get(baseCellsNumberMap, "range-end")).numFmt = locale.file.excel.export.workRangeFormat;
-
+		const totalColor = Color.parse("ccc");
+		for (const key of ColumnKeys) {
+			const cell = headerRow2.getCell(Require.get(baseCellsNumberMap, key));
+			cell.style.alignment = {
+				horizontal: "center",
+				vertical: "middle",
+			};
+			cell.font = {
+				color: {
+					argb: this.toArgbColor(totalColor.getAutoColor()),
+				},
+			};
+			cell.fill = {
+				type: "pattern",
+				pattern: "solid",
+				fgColor: {
+					argb: this.toArgbColor(totalColor),
+				},
+			};
+		}
 
 		const header3: BaseCells = {
 			"id": locale.pages.editor.timeline.header.columns.id,
@@ -236,6 +308,26 @@ export abstract class Exports {
 		for (let i = 0; i < dates.length; i++) {
 			const cell = headerRow3.getCell(ColumnKeys.length + i + 1);
 			cell.style.numFmt = locale.file.excel.export.weekOnlyFormat;
+		}
+		const columnColor = Color.parse("444");
+		for (const key of ColumnKeys) {
+			const cell = headerRow3.getCell(Require.get(baseCellsNumberMap, key));
+			cell.style.alignment = {
+				horizontal: "center",
+				vertical: "middle",
+			};
+			cell.font = {
+				color: {
+					argb: this.toArgbColor(columnColor.getAutoColor()),
+				},
+			};
+			cell.fill = {
+				type: "pattern",
+				pattern: "solid",
+				fgColor: {
+					argb: this.toArgbColor(columnColor),
+				},
+			};
 		}
 
 		// ウィンドウ枠固定
@@ -286,12 +378,25 @@ export abstract class Exports {
 			]);
 
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "id")).alignment = {
+				vertical: "middle",
+				horizontal: "left",
 				indent: readableTimelineId.level - 1,
 			};
+			timelineRow.getCell(Require.get(baseCellsNumberMap, "id")).numFmt = "@";
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "workload")).numFmt = ExcelFormat.Workload;
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "progress")).numFmt = ExcelFormat.Progress;
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "range-begin")).numFmt = locale.file.excel.export.workRangeFormat;
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "range-end")).numFmt = locale.file.excel.export.workRangeFormat;
+
+			for (let i = 0; i < dates.length; i++) {
+				const cell = timelineRow.getCell(ColumnKeys.length + i + 1);
+				cell.style.border = {
+					top: DefaultBorders.TimelineCell,
+					bottom: DefaultBorders.TimelineCell,
+					left: DefaultBorders.TimelineCell,
+					right: DefaultBorders.TimelineCell,
+				};
+			}
 
 			if (Settings.maybeGroupTimeline(timeline)) {
 				const groupColor = (readableTimelineId.level - 1) in groupColors
@@ -306,7 +411,6 @@ export abstract class Exports {
 					},
 				};
 			}
-
 		}
 
 		return workbook;
