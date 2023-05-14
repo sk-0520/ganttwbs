@@ -5,7 +5,7 @@ import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
 import { CalcData } from "@/models/data/CalcData";
 import { ResultFactory } from "@/models/data/Result";
-import { Progress, RootTimeline, Setting } from "@/models/data/Setting";
+import { AnyTimeline, Progress, RootTimeline, Setting } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
@@ -15,6 +15,7 @@ import { Settings } from "@/models/Settings";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
+import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 
 type CellInputType = string | Progress | DateTime | Date;
 const ColumnKeys = [
@@ -49,6 +50,12 @@ const DefaultBorders = {
 	} satisfies Border,
 	TimelineCell: {
 		style: "hair",
+		color: {
+			argb: "ff000000",
+		},
+	} satisfies Border,
+	TimelineRangeCell: {
+		style: "thin",
 		color: {
 			argb: "ff000000",
 		},
@@ -335,7 +342,6 @@ export abstract class Exports {
 		return headerRow3;
 	}
 
-
 	public static async createWorkbook(setting: Setting, calcData: CalcData, locale: Locale): Promise<Workbook> {
 		const dates = Calendars.getDays(calcData.calendarInfo.range.begin, calcData.calendarInfo.range.end).map(a => a.toDate());
 
@@ -368,7 +374,7 @@ export abstract class Exports {
 
 		const groupColors = setting.theme.groups.map(a => Color.tryParse(a) ?? DefaultSettings.UnknownMemberColor);
 		const defaultGroupColor = Color.parse(setting.theme.timeline.defaultGroup);
-		const taskColor = Color.parse(setting.theme.timeline.defaultTask);
+		const defaultTaskColor = Color.parse(setting.theme.timeline.defaultTask);
 		const completedColor = Color.parse(setting.theme.timeline.completed);
 
 		// タイムラインをどさっと出力
@@ -437,10 +443,24 @@ export abstract class Exports {
 				const diffDay = Math.floor(successWorkRange.begin.diff(successWorkRange.end).totalDays) + 1;
 				console.debug("SUBJECT", timeline.subject, diffDay);
 
-				const memberColor = Settings.maybeGroupTimeline(timeline)
+				const targetColor = Settings.maybeGroupTimeline(timeline)
 					? groupColors[readableTimelineId.level - 1] ?? defaultGroupColor
-					: (memberGroupPair?.member.color ? Color.parse(memberGroupPair.member.color) : taskColor)
+					: (memberGroupPair?.member.color ? Color.parse(memberGroupPair.member.color) : defaultTaskColor)
 					;
+
+				beginCell.style.border = {
+					left: DefaultBorders.TimelineRangeCell,
+					top: DefaultBorders.TimelineCell,
+					bottom: DefaultBorders.TimelineCell,
+					right: DefaultBorders.TimelineCell,
+				};
+				const endCell = timelineRow.getCell(beginCell.fullAddress.col + diffDay);
+				endCell.style.border = {
+					left: DefaultBorders.TimelineRangeCell,
+					top: DefaultBorders.TimelineCell,
+					bottom: DefaultBorders.TimelineCell,
+					right: DefaultBorders.TimelineCell,
+				};
 
 				const step = 1 / diffDay;
 				for (let i = 0; i < diffDay; i++) {
@@ -448,7 +468,7 @@ export abstract class Exports {
 					const isCompletedArea = ((step * i) + step) <= progress;
 					const fillColor = isCompletedArea
 						? this.toExcelArgbColor(completedColor)
-						: this.toExcelArgbColor(memberColor)
+						: this.toExcelArgbColor(targetColor)
 						;
 					cell.fill = {
 						type: "pattern",
