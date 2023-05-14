@@ -12,6 +12,7 @@ import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
 import { Color } from "@/models/Color";
+import { DefaultSettings } from "@/models/DefaultSettings";
 
 type CellInputType = string | Progress | DateTime | Date;
 const ColumnKeys = [
@@ -240,6 +241,9 @@ export abstract class Exports {
 			}
 		];
 
+		const groupColors = setting.theme.groups.map(a => Color.tryParse(a) ?? DefaultSettings.UnknownMemberColor);
+		const defaultGroupColor = Color.parse(setting.theme.timeline.defaultGroup);
+
 		// タイムラインをどさっと出力
 		for (const timeline of calcData.sequenceTimelines) {
 			const readableTimelineId = Timelines.calcReadableTimelineId(timeline, rootTimelineItem);
@@ -276,6 +280,20 @@ export abstract class Exports {
 			]);
 
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "progress")).numFmt = "0%";
+
+			if (Settings.maybeGroupTimeline(timeline)) {
+				const groupColor = (readableTimelineId.level - 1) in groupColors
+					? groupColors[readableTimelineId.level - 1]
+					: defaultGroupColor
+					;
+				timelineRow.fill = {
+					type: "pattern",
+					pattern: "solid",
+					fgColor: {
+						argb: this.toArgbColor(groupColor),
+					},
+				};
+			}
 
 		}
 
