@@ -91,6 +91,21 @@ describe("Types", () => {
 	test.each([
 		[false, undefined],
 		[false, null],
+		[false, Symbol()],
+		[true, 1],
+		[false, 9007199254740991n],
+		[false, "A"],
+		[false, true],
+		[false, ["A"]],
+		[false, { a: "A" }],
+		[false, () => undefined],
+	])("isString", (expected: boolean, input: unknown) => {
+		expect(Types.isNumber(input)).toBe(expected);
+	});
+
+	test.each([
+		[false, undefined],
+		[false, null],
 		[true, Symbol()],
 		[false, 0],
 		[true, 1],

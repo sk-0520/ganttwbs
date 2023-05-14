@@ -20,17 +20,23 @@ const AnalyticsViewer: FC<Props> = (props: Props) => {
 
 	console.debug("calcData", calcData);
 
+	const totalSuccessWorkRange = calcData.workRange.totalSuccessWorkRange.success
+		? calcData.workRange.totalSuccessWorkRange.value
+		: undefined
+	;
+
+
 	return (
 		<div id="analytics">
 			<RangeViewer
 				calendarInfo={calcData.calendarInfo}
-				totalSuccessWorkRange={calcData.workRange.totalSuccessWorkRange}
+				totalSuccessWorkRange={totalSuccessWorkRange}
 			/>
 			<WorkViewer
 				calendarInfo={calcData.calendarInfo}
 				resourceInfo={calcData.resourceInfo}
 				sequenceTimelines={calcData.sequenceTimelines}
-				totalSuccessWorkRange={calcData.workRange.totalSuccessWorkRange}
+				totalSuccessWorkRange={totalSuccessWorkRange}
 			/>
 		</div>
 	);

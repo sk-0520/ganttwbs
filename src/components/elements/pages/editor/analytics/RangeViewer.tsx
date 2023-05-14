@@ -5,7 +5,7 @@ import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { TotalSuccessWorkRange } from "@/models/data/WorkRange";
 
 interface Props extends CalendarInfoProps {
-	totalSuccessWorkRange: TotalSuccessWorkRange
+	totalSuccessWorkRange: TotalSuccessWorkRange | undefined;
 }
 
 const RangeViewer: FC<Props> = (props: Props) => {
@@ -43,10 +43,28 @@ const RangeViewer: FC<Props> = (props: Props) => {
 							実働
 						</td>
 						<td>
-							<Timestamp format="date" date={props.totalSuccessWorkRange.minimum.begin} />
+							{props.totalSuccessWorkRange
+								? (
+									<Timestamp format="date" date={props.totalSuccessWorkRange.minimum.begin} />
+								)
+								: (
+									<span>
+										計算結果エラー
+									</span>
+								)
+							}
 						</td>
 						<td>
-							<Timestamp format="date" date={props.totalSuccessWorkRange.maximum.end} />
+							{props.totalSuccessWorkRange
+								? (
+									<Timestamp format="date" date={props.totalSuccessWorkRange.maximum.end} />
+								)
+								: (
+									<span>
+										計算結果エラー
+									</span>
+								)
+							}
 						</td>
 					</tr>
 				</tbody>
