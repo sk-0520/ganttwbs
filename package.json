@@ -27,7 +27,8 @@
 		"lint-fix": "next lint --fix --dir .",
 		"license": "ts-node --project tsconfig.local.json ./generator/license-generator.ts",
 		"check": "ncu",
-		"update": "ncu -u && npm install && npm run license"
+		"update": "ncu -u && npm install && npm run license",
+		"analyze": "ANALYZE=true npm run build"
 	},
 	"jest": {
 		"moduleFileExtensions": [
@@ -73,6 +74,7 @@
 		"@ctrl/tinycolor": "^3.6.0",
 		"@markuplint/jsx-parser": "^3.7.0",
 		"@markuplint/react-spec": "^3.8.0",
+		"@next/bundle-analyzer": "^13.4.2",
 		"@types/jest": "^29.5.1",
 		"@types/license-checker": "^25.0.3",
 		"@types/node": "^20.1.4",
@@ -83,6 +85,7 @@
 		"@types/uuid": "^9.0.1",
 		"@typescript-eslint/eslint-plugin": "^5.59.5",
 		"@typescript-eslint/parser": "^5.59.5",
+		"cross-env": "^7.0.3",
 		"eslint": "^8.40.0",
 		"eslint-config-next": "13.4.2",
 		"eslint-import-resolver-typescript": "^3.5.5",
