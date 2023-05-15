@@ -183,6 +183,7 @@ export abstract class Exports {
 
 		for (const key of ColumnKeys) {
 			const column = timelineSheet.getColumn(Require.get(baseCellsNumberMap, key));
+			column.outlineLevel = 1;
 			column.width = Require.switch(key as ColumnKey, {
 				"id": () => 14,
 				"subject": () => 20,
