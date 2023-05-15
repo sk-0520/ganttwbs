@@ -32,6 +32,7 @@ type BaseCells = { [key in ColumnKey]: CellInputType };
 const ExcelFormat = {
 	Workload: "0.00",
 	Progress: "0%",
+	Chart: ";;;",
 } as const;
 
 const DefaultBorders = {
@@ -182,6 +183,7 @@ export abstract class Exports {
 
 		for (const key of ColumnKeys) {
 			const column = timelineSheet.getColumn(Require.get(baseCellsNumberMap, key));
+			column.outlineLevel = 1;
 			column.width = Require.switch(key as ColumnKey, {
 				"id": () => 14,
 				"subject": () => 20,
@@ -430,9 +432,11 @@ export abstract class Exports {
 				horizontal: "left",
 				indent: readableTimelineId.level - 1,
 			};
+			const progressCell = timelineRow.getCell(Require.get(baseCellsNumberMap, "progress"));
+
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "id")).numFmt = "@";
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "workload")).numFmt = ExcelFormat.Workload;
-			timelineRow.getCell(Require.get(baseCellsNumberMap, "progress")).numFmt = ExcelFormat.Progress;
+			progressCell.numFmt = ExcelFormat.Progress;
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "range-begin")).numFmt = locale.file.excel.export.workRangeFormat;
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "range-end")).numFmt = locale.file.excel.export.workRangeFormat;
 
@@ -450,7 +454,17 @@ export abstract class Exports {
 				const beginSpan = beginDate.diff(successWorkRange.begin.toDateOnly());
 				const beginCell = timelineRow.getCell(ColumnKeys.length + Math.floor(beginSpan.totalDays) + 1);
 
-				const diffDay = Math.floor(successWorkRange.begin.diff(successWorkRange.end).totalDays) + 1;
+				beginCell.value = {
+					formula: progressCell.address,
+					result: progress,
+					date1904: false,
+				};
+				beginCell.numFmt = ExcelFormat.Chart;
+
+				let diffDay = Math.floor(successWorkRange.begin.diff(successWorkRange.end).totalDays);
+				if(diffDay < 1) {
+					diffDay = 1;
+				}
 
 				const targetColor = Settings.maybeGroupTimeline(timeline)
 					? groupColors[readableTimelineId.level - 1] ?? defaultGroupColor
