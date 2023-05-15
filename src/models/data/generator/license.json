@@ -202,6 +202,13 @@
     "licenses": "MIT",
     "repository": "https://github.com/markuplint/markuplint"
   },
+  "minify-xml": {
+    "module": "minify-xml@3.4.0",
+    "version": "3.4.0",
+    "publisher": "Kristian Kraljic",
+    "licenses": "(MIT OR Apache-2.0)",
+    "repository": "https://github.com/kristian/minify-xml"
+  },
   "next-i18next": {
     "module": "next-i18next@13.2.2",
     "version": "13.2.2",
