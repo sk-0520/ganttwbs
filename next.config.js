@@ -11,10 +11,23 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
+	i18n: i18n,
 	sassOptions: {
 		includePaths: [path.join(__dirname, "styles")],
 	},
-	i18n: i18n
+	async headers() {
+		return [
+			{
+				source: "/*",
+				headers: [
+					{
+						key: "APP-VERSION",
+						value: process.env.VERCEL_GIT_COMMIT_SHA
+					}
+				]
+			}
+		];
+	},
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
