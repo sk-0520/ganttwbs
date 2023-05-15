@@ -27,6 +27,7 @@ const Layout: NextPage<Props> = (props: Props) => {
 		<>
 			<Head>
 				<title>{headTitle}</title>
+				<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 				<meta name="app-revision" content={revision} />
 			</Head>
 			{
