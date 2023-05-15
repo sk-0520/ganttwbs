@@ -5,4 +5,15 @@ ol {
 			display: inline-block;
 		}
 	}
+
+	&.just-like {
+		margin-left: 1.5em;
+	}
+}
+
+ul.just-like {
+	list-style: initial;
+}
+ol.just-like {
+	list-style: initial;
 }

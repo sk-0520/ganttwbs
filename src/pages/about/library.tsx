@@ -32,14 +32,20 @@ const AboutLibraryPage: NextPage = () => {
 		<Layout
 			mode="page"
 			layoutId="about-library"
-			title={locale.pages.aboutLibrary.title}
+			title={locale.pages.about.pages.library.title}
 		>
 			<table className="license">
 				<thead>
 					<tr>
-						<th>モジュール</th>
-						<th>作者</th>
-						<th>ライセンス</th>
+						<th>
+							{locale.pages.about.pages.library.module}
+						</th>
+						<th>
+							{locale.pages.about.pages.library.author}
+						</th>
+						<th>
+							{locale.pages.about.pages.library.license}
+						</th>
 					</tr>
 				</thead>
 				<tbody>

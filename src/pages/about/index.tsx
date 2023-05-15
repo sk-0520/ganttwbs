@@ -14,10 +14,24 @@ const AboutPage: NextPage = () => {
 			title={locale.pages.about.title}
 		>
 			<>
-				<p>ガントチャート的な何かをどうこうしたい。</p>
-				<ul>
+				<p>
+					{locale.pages.about.description}
+				</p>
+				<ul className="just-like">
 					<li>
-						<Link href="/about/library">library</Link>
+						<a href={process.env.NEXT_PUBLIC_APP_REPOSITORY_URL} target="app-repository">
+							{locale.pages.about.repository}
+						</a>
+					</li>
+					<li>
+						<a href={process.env.NEXT_PUBLIC_APP_LICENSE_URL} target="app-license">
+							{locale.pages.about.license}
+						</a>
+					</li>
+					<li>
+						<Link href="/about/library">
+							{locale.pages.about.pages.library.title}
+						</Link>
 					</li>
 				</ul>
 			</>
