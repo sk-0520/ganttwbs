@@ -15,6 +15,8 @@ interface Props {
 	children?: React.ReactNode;
 }
 
+const revision = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA;
+
 const Layout: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
 
@@ -25,6 +27,7 @@ const Layout: NextPage<Props> = (props: Props) => {
 		<>
 			<Head>
 				<title>{headTitle}</title>
+				<meta name="app-revision" content={revision} />
 			</Head>
 			{
 				props.mode === "application"

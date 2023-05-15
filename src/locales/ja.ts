@@ -354,9 +354,20 @@ const locale: Locale = {
 		},
 		about: {
 			title: "なにこれ？",
-		},
-		aboutLibrary: {
-			title: "ライブラリ",
+
+			description: "ガントチャート的な何かをどうこうしたい。",
+			repository: "リポジトリ",
+			license: "ライセンス",
+
+			pages: {
+				library: {
+					title: "ライブラリ",
+
+					module: "モジュール",
+					author: "作者",
+					license: "ライセンス",
+				}
+			}
 		},
 	},
 

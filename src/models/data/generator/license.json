@@ -27,6 +27,12 @@
     "licenses": "MIT",
     "repository": "https://github.com/suren-atoyan/monaco-react"
   },
+  "@next/bundle-analyzer": {
+    "module": "@next/bundle-analyzer@13.4.2",
+    "version": "13.4.2",
+    "licenses": "MIT",
+    "repository": "https://github.com/vercel/next.js"
+  },
   "@types/jest": {
     "module": "@types/jest@29.5.1",
     "version": "29.5.1",
@@ -100,6 +106,13 @@
     "publisher": "Jed Watson",
     "licenses": "MIT",
     "repository": "https://github.com/JedWatson/classnames"
+  },
+  "cross-env": {
+    "module": "cross-env@7.0.3",
+    "version": "7.0.3",
+    "publisher": "Kent C. Dodds",
+    "licenses": "MIT",
+    "repository": "https://github.com/kentcdodds/cross-env"
   },
   "eslint-config-next": {
     "module": "eslint-config-next@13.4.2",

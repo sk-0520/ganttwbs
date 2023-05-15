@@ -370,9 +370,20 @@ export interface Locale {
 		},
 		about: {
 			title: string,
-		},
-		aboutLibrary: {
-			title: string,
+
+			description: string,
+			repository: string,
+			license: string,
+
+			pages: {
+				library: {
+					title: string,
+
+					module: string,
+					author: string,
+					license: string,
+				}
+			}
 		},
 	},
 
