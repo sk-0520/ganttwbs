@@ -15,19 +15,6 @@ const nextConfig = {
 	sassOptions: {
 		includePaths: [path.join(__dirname, "styles")],
 	},
-	async headers() {
-		return [
-			{
-				source: "/*",
-				headers: [
-					{
-						key: "APP-VERSION",
-						value: process.env.VERCEL_GIT_COMMIT_SHA
-					}
-				]
-			}
-		];
-	},
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
