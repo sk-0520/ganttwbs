@@ -103,6 +103,17 @@ export class DateTime {
 		return Number(this.date);
 	}
 
+	public get timeIsZero(): boolean {
+		return !this.hour
+			&&
+			!this.minute
+			&&
+			!this.second
+			&&
+			!this.millisecond
+		;
+	}
+
 	//#endregion
 
 	//#region function

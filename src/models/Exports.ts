@@ -461,10 +461,7 @@ export abstract class Exports {
 				};
 				beginCell.numFmt = ExcelFormat.Chart;
 
-				let diffDay = Math.floor(successWorkRange.begin.diff(successWorkRange.end).totalDays);
-				if(diffDay < 1) {
-					diffDay = 1;
-				}
+				const days = Calendars.getDays(successWorkRange.begin, successWorkRange.end);
 
 				const targetColor = Settings.maybeGroupTimeline(timeline)
 					? groupColors[readableTimelineId.level - 1] ?? defaultGroupColor
@@ -477,7 +474,7 @@ export abstract class Exports {
 					bottom: DefaultBorders.TimelineCell,
 					right: DefaultBorders.TimelineCell,
 				};
-				const endCell = timelineRow.getCell(beginCell.fullAddress.col + diffDay);
+				const endCell = timelineRow.getCell(beginCell.fullAddress.col + days.length);
 				endCell.style.border = {
 					left: DefaultBorders.TimelineRangeCell,
 					top: DefaultBorders.TimelineCell,
@@ -485,8 +482,8 @@ export abstract class Exports {
 					right: DefaultBorders.TimelineCell,
 				};
 
-				const step = 1 / diffDay;
-				for (let i = 0; i < diffDay; i++) {
+				const step = 1 / days.length;
+				for (let i = 0; i < days.length; i++) {
 					const cell = timelineRow.getCell(beginCell.fullAddress.col + i);
 					const isCompletedArea = ((step * i) + step) <= progress;
 					const fillColor = isCompletedArea
