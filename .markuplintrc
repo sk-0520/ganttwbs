@@ -3,7 +3,13 @@
 		"doctype": "always",
 		"require-accessible-name": false,
 		"end-tag": false,
-		"invalid-attr": true,
+		"invalid-attr": {
+			"options": {
+				"allowAttrs": [
+					"onAnimationEnd"
+				]
+			}
+		},
 		"require-datetime": true,
 		"required-element": true,
 		"attr-duplication": false,

@@ -7,8 +7,7 @@ export class Dom {
 	 * @param elementId
 	 * @param elementType
 	 * @returns
-	 * @throws {throws.NotFoundDomSelectorError} セレクタから要素が見つからない
-	 * @throws {throws.ElementTypeError} 要素に指定された型が合わない
+	 * @throws {Error} セレクタから要素が見つからない, 要素に指定された型が合わない
 	 */
 	public static getElementById<THtmlElement extends HTMLElement>(elementId: string, elementType?: Constructor<THtmlElement>): THtmlElement {
 		const result = document.getElementById(elementId);

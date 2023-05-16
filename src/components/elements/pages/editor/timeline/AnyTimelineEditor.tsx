@@ -12,7 +12,7 @@ import TimelineHeaderRow from "@/components/elements/pages/editor/timeline/cell/
 import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/WorkloadCell";
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
-import { ActiveTimelineIdAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { ActiveTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { DetailEditTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
@@ -47,6 +47,8 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	const setDetailEditTimeline = useSetAtom(DetailEditTimelineAtom);
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
+	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
+	const setHighlightDays = useSetAtom(HighlightDaysAtom);
 	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
 	const setDragSourceTimeline = useSetAtom(DragSourceTimelineAtom);
 
@@ -209,6 +211,9 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			date = workRange.begin;
 		}
 
+		setHighlightTimelineIds([props.currentTimeline.id]);
+		setHighlightDays(date ? [date] : []);
+
 		Editors.scrollView(props.currentTimeline.id, date);
 	}
 
@@ -350,6 +355,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				selectingId={selectingId}
 				readableTimelineId={timelineIndex}
 				currentTimeline={props.currentTimeline}
+				progress={progress}
 				isSelectedPrevious={isSelectedPrevious}
 				selectingBeginDate={props.selectingBeginDate}
 				callbackStartDragTimeline={handleStartDragTimeline}

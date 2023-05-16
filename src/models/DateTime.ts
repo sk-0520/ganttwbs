@@ -90,7 +90,7 @@ export class DateTime {
 		return this.date.get("second");
 	}
 
-	/** ミリ秒 */
+	/** ミリ秒(0-999) */
 	public get millisecond(): number {
 		return this.date.get("millisecond");
 	}
@@ -101,6 +101,17 @@ export class DateTime {
 	 */
 	public get ticks(): number {
 		return Number(this.date);
+	}
+
+	public get timeIsZero(): boolean {
+		return !this.hour
+			&&
+			!this.minute
+			&&
+			!this.second
+			&&
+			!this.millisecond
+		;
 	}
 
 	//#endregion

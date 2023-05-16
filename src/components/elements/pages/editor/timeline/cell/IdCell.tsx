@@ -6,7 +6,7 @@ import { IconImage, IconKind } from "@/components/elements/Icon";
 import { DraggingTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
-import { AnyTimeline } from "@/models/data/Setting";
+import { AnyTimeline, Progress } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 
@@ -15,6 +15,7 @@ interface Props {
 	isSelectedPrevious: boolean;
 	readableTimelineId: ReadableTimelineId;
 	readonly currentTimeline: Readonly<AnyTimeline>;
+	readonly progress: Progress;
 	selectingBeginDate: SelectingBeginDate | null;
 	callbackStartDragTimeline(ev: DragEvent): void;
 	callbackChangePrevious: (isSelected: boolean) => void;
@@ -23,6 +24,7 @@ interface Props {
 const IdCell: FC<Props> = (props: Props) => {
 
 	const className = Timelines.getReadableTimelineIdClassName(props.readableTimelineId);
+	const completed = 1 <= props.progress;
 
 	const draggingTimeline = useAtomValue(DraggingTimelineAtom);
 
@@ -66,8 +68,8 @@ const IdCell: FC<Props> = (props: Props) => {
 					) :
 					(
 						Settings.maybeGroupTimeline(props.currentTimeline)
-							? <IconImage kind={IconKind.TimelineGroup} />
-							: <IconImage kind={IconKind.TimelineTask} />
+							? <IconImage kind={IconKind.TimelineGroup} fill={completed ? "#555": undefined} />
+							: <IconImage kind={IconKind.TimelineTask} fill={completed ? "#555": undefined} />
 					)
 				}
 				<span className={className}>

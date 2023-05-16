@@ -67,7 +67,8 @@
 			"test:.+$",
 			"^(pre|post)",
 			"license",
-			"^(check|update)$"
+			"^(check|update)$",
+			"^(favicon|analyze)$",
 		],
 		"auto-close-tag.activationOnLanguage": [
 			"html",

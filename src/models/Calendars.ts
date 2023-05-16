@@ -75,7 +75,10 @@ export abstract class Calendars {
 				result.push(begin);
 			}
 		}
-		result.push(end);
+
+		if (1 < diff && !end.timeIsZero) {
+			result.push(end);
+		}
 
 		return result;
 	}
