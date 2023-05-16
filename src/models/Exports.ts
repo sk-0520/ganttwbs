@@ -143,6 +143,8 @@ export abstract class Exports {
 	// }
 
 	private static createExcelRow1(timelineSheet: Worksheet, calcData: CalcData, setting: Setting, dates: ReadonlyArray<Readonly<Date>>, baseCellsNumberMap: ReadonlyMap<ColumnKey, number>, beginDate: DateTime, locale: Locale): Row {
+		const monthEqualColor = Color.create(0xcc, 0xcc, 0xcc);
+
 		const header1: BaseCells = {
 			"id": setting.name,
 			"subject": "",
@@ -170,6 +172,17 @@ export abstract class Exports {
 				left: DefaultBorders.DaysCell,
 				right: DefaultBorders.DaysCell,
 			};
+			if (i) {
+				const prev = beginDate.add(i - 1, "day");
+				const current = beginDate.add(i, "day");
+				if (prev.month === current.month) {
+					cell.font = {
+						color: {
+							argb: this.toExcelArgbColor(monthEqualColor),
+						},
+					};
+				}
+			}
 		}
 		timelineSheet.mergeCells(1, 1, 1, ColumnKeys.length);
 		const titleCell = headerRow1.getCell(Require.get(baseCellsNumberMap, "id"));
@@ -382,7 +395,29 @@ export abstract class Exports {
 		];
 
 		// 印刷設定
-		// timelineSheet.pageSetup.printTitlesColumn  = "A:G";
+		timelineSheet.pageSetup = {
+			printTitlesColumn: "A:G",
+			printTitlesRow: "1:3",
+			paperSize: 9, //A4, 諸事情でenumじゃない
+			orientation: "landscape",
+			fitToPage: true,
+			fitToHeight: 1,
+			fitToWidth: 0,
+			margins: {
+				top: 0.5,
+				left: 0.5,
+				bottom: 0.5,
+				right: 0.5,
+				header: 0.25,
+				footer: 0.25,
+			}
+		};
+
+		// ヘッダ・フッタ設定
+		timelineSheet.headerFooter = {
+			oddHeader: "&A",
+			oddFooter: "&P/&N"
+		};
 
 		const groupColors = setting.theme.groups.map(a => Color.tryParse(a) ?? DefaultSettings.UnknownMemberColor);
 		const defaultGroupColor = Color.parse(setting.theme.timeline.defaultGroup);

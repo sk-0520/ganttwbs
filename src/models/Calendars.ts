@@ -76,11 +76,7 @@ export abstract class Calendars {
 			}
 		}
 
-		if(
-			1 < diff
-			&&
-			!end.timeIsZero
-		) {
+		if (1 < diff && !end.timeIsZero) {
 			result.push(end);
 		}
 
