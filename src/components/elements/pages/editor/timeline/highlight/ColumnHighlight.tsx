@@ -13,6 +13,7 @@ interface Props extends ConfigurationProps, CalendarInfoProps {
 	areaData: AreaData;
 	crossHeaderWidth: number;
 	crossHeaderHeight: number;
+	callbackAnimationEnd(): void;
 }
 
 const RowHighlight: FC<Props> = (props: Props) => {
@@ -40,6 +41,7 @@ const RowHighlight: FC<Props> = (props: Props) => {
 				)
 			}
 			style={style}
+			onAnimationEnd={props.callbackAnimationEnd}
 		/>
 	);
 };

@@ -1,31 +1,31 @@
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { FC, ReactNode, useEffect, useMemo, useState } from "react";
 
 import ColumnHighlight from "@/components/elements/pages/editor/timeline/highlight/ColumnHighlight";
 import RowHighlight from "@/components/elements/pages/editor/timeline/highlight/RowHighlight";
 import { Charts } from "@/models/Charts";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { RowHighlightMode } from "@/models/data/Highlight";
+import { ColumnHighlightMode, RowHighlightMode } from "@/models/data/Highlight";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
+import { DateTime } from "@/models/DateTime";
 import { Dom } from "@/models/Dom";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
-
+	//nop
 }
 
 const HighlightArea: FC<Props> = (props: Props) => {
 
 	const activeTimelineId = useAtomValue(ActiveTimelineIdAtom);
 	const hoverTimelineId = useAtomValue(HoverTimelineIdAtom);
-	const highlightTimelineIds = useAtomValue(HighlightTimelineIdsAtom);
-	const highlightDays = useAtomValue(HighlightDaysAtom);
+	const [highlightTimelineIds, setHighlightTimelineIds] = useAtom(HighlightTimelineIdsAtom);
+	const [highlightDays, setHighlightDays] = useAtom(HighlightDaysAtom);
 	const dragSourceTimelineId = useAtomValue(DragSourceTimelineIdAtom);
 	const dragOverTimelineId = useAtomValue(DragOverTimelineIdAtom);
-
 
 	const [crossHeaderWidth, setCrossHeaderWidth] = useState(0);
 	const [crossHeaderHeight, setCrossHeaderHeight] = useState(0);
@@ -50,8 +50,21 @@ const HighlightArea: FC<Props> = (props: Props) => {
 				areaData={areaData}
 				crossHeaderWidth={crossHeaderWidth}
 				timelineStore={props.timelineStore}
+				callbackAnimationEnd={() => handleRowAnimationEnd(mode, timelineId)}
 			/>
 		);
+	}
+
+	function handleRowAnimationEnd(mode: RowHighlightMode, timelineId: TimelineId): void {
+		if (mode === "highlight") {
+			setHighlightTimelineIds(c => c.filter(a => a !== timelineId));
+		}
+	}
+
+	function handleColumnAnimationEnd(mode: ColumnHighlightMode, date: DateTime): void {
+		if (mode === "highlight") {
+			setHighlightDays(c => c.filter(a => !a.equals(date)));
+		}
 	}
 
 	return (
@@ -70,6 +83,7 @@ const HighlightArea: FC<Props> = (props: Props) => {
 						crossHeaderWidth={crossHeaderWidth}
 						crossHeaderHeight={crossHeaderHeight}
 						calendarInfo={props.calendarInfo}
+						callbackAnimationEnd={() => handleColumnAnimationEnd("highlight", a)}
 					/>
 				);
 			})}

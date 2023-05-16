@@ -13,6 +13,7 @@ interface Props extends ConfigurationProps, TimelineStoreProps {
 	timelineId: TimelineId;
 	areaData: AreaData;
 	crossHeaderWidth: number;
+	callbackAnimationEnd(): void;
 }
 
 const RowHighlight: FC<Props> = (props: Props) => {
@@ -36,6 +37,7 @@ const RowHighlight: FC<Props> = (props: Props) => {
 				)
 			}
 			style={style}
+			onAnimationEnd={props.callbackAnimationEnd}
 		/>
 	);
 };

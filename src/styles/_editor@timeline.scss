@@ -295,6 +295,12 @@ $viewer-z-index: 2;
 		width: $app-header-width;
 
 		.task {
+			&.completed {
+				$from: 200;
+				$to: 240;
+				background: linear-gradient(90deg, rgba($from, $from, $from, 1) 30%, rgba($to, $to, $to, 1) 100%);
+			}
+
 			.timeline-range-from,
 			.timeline-range-to,
 			.timeline-range-area {
@@ -617,7 +623,7 @@ $viewer-z-index: 2;
 	#highlight-area {
 		@mixin highlight-animation($animation-name, $base-color) {
 			background: rgba($base-color, 0.5);
-			animation: #{$animation-name} 3s ease forwards;
+			animation: #{$animation-name} 2s ease forwards;
 
 			@keyframes #{$animation-name} {
 				0% {
@@ -625,6 +631,9 @@ $viewer-z-index: 2;
 				}
 				10% {
 					background-color: rgba($base-color, 0.5);
+				}
+				90% {
+					background-color: rgba($base-color, 0.1);
 				}
 				100% {
 					background-color: rgba($base-color, 0);

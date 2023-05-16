@@ -175,15 +175,6 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 							markerStart={Charts.toReference(markerId.start)}
 							markerEnd={Charts.toReference(markerId.end)}
 						/>
-						<text
-							x={position.from.x}
-							y={position.from.y}
-						>
-							x1={position.from.x},
-							y1={position.from.y},
-							x2={position.to.x},
-							y2={position.to.y}
-						</text>
 					</g>
 				);
 			})}
