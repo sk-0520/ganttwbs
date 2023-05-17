@@ -82,7 +82,7 @@ const CalendarSchema = z.object({
 export type Calendar = z.infer<typeof CalendarSchema>;
 
 
-const TimelineIdSchema = z.string();
+const TimelineIdSchema = z.string().nonempty();
 /** @inheritdoc */
 export type TimelineId = z.infer<typeof TimelineIdSchema>;
 
