@@ -4,7 +4,7 @@ import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { ResourceInfo } from "@/models/data/ResourceInfo";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, Timestamp } from "@/models/data/Setting";
 import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
-import { DateTime, DateTimeTicks, WeekIndex } from "@/models/DateTime";
+import { DateTime, DateTimeTicks, WeekIndex, toTicks } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
 import { Limiter } from "@/models/Limiter";
 import { Settings } from "@/models/Settings";
@@ -627,7 +627,7 @@ export abstract class Timelines {
 					let prevDate = maxWorkRange.end;
 					if (timeline.static) {
 						const staticDate = DateTime.parse(timeline.static, timeZone);
-						const targetTime = Math.max(staticDate.ticks, maxWorkRange.end.ticks);
+						const targetTime = toTicks(Math.max(Number(staticDate.ticks), Number(maxWorkRange.end.ticks)));
 						prevDate = DateTime.convert(targetTime, timeZone);
 					}
 

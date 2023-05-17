@@ -2,13 +2,13 @@ import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 import { Calendar, Holiday } from "@/models/data/Setting";
-import { DateTime } from "@/models/DateTime";
+import { DateTime, DateTimeTicks } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
 
 export abstract class Calendars {
 
-	private static createHolidayEventMap(events: Holiday["events"], timeZone: TimeZone): Map<number, HolidayEventMapValue> {
-		const result = new Map<number, HolidayEventMapValue>();
+	private static createHolidayEventMap(events: Holiday["events"], timeZone: TimeZone): Map<DateTimeTicks, HolidayEventMapValue> {
+		const result = new Map<DateTimeTicks, HolidayEventMapValue>();
 
 		for (const [k, v] of Object.entries(events)) {
 			const date = DateTime.parse(k, timeZone);
@@ -52,7 +52,7 @@ export abstract class Calendars {
 		return days;
 	}
 
-	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<number, Readonly<HolidayEventMapValue>>): Readonly<HolidayEventMapValue> | undefined {
+	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<DateTimeTicks, Readonly<HolidayEventMapValue>>): Readonly<HolidayEventMapValue> | undefined {
 		return eventMap.get(target.ticks);
 	}
 

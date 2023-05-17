@@ -121,7 +121,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	function handleClickInformationFirst(): void {
-		const keys = [...props.timelineStore.dayInfos.keys()].sort((a, b) => a - b);
+		const keys = [...props.timelineStore.dayInfos.keys()].sort((a, b) => Number(a) - Number(b));
 		if (keys.length) {
 			const date = DateTime.convert(keys[0], props.calendarInfo.timeZone).toDateOnly();
 			scrollView(undefined, date);
@@ -129,7 +129,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	function handleClickInformationLast(): void {
-		const keys = [...props.timelineStore.dayInfos.keys()].sort((a, b) => b - a);
+		const keys = [...props.timelineStore.dayInfos.keys()].sort((a, b) => Number(b) - Number(a));
 		if (keys.length) {
 			const date = DateTime.convert(keys[0], props.calendarInfo.timeZone).toDateOnly();
 			scrollView(undefined, date);

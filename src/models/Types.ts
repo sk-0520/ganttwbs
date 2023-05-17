@@ -3,6 +3,13 @@ export type Constructor<T extends object> = {
 	prototype: T,
 };
 
+
+declare const _Strong: unique symbol;
+/**
+ * 強い型。
+ */
+export type Strong<T, U = string> = T & { readonly [_Strong]: U };
+
 export abstract class Types {
 
 	/**
