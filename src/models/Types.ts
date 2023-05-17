@@ -7,6 +7,8 @@ export type Constructor<T extends object> = {
 declare const _Strong: unique symbol;
 /**
  * 強い型。
+ *
+ * object のキーにも使えん、zodの恩恵もない。。。
  */
 export type Strong<T, U = string> = T & { readonly [_Strong]: U };
 
