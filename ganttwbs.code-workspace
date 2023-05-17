@@ -67,6 +67,7 @@
 			"test:.+$",
 			"^(pre|post)",
 			"license",
+			"license",
 			"^(check|update)$",
 			"^(favicon|analyze)$",
 		],
