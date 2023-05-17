@@ -52,10 +52,6 @@ export abstract class Calendars {
 		return days;
 	}
 
-	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<DateTimeTicks, Readonly<HolidayEventMapValue>>): Readonly<HolidayEventMapValue> | undefined {
-		return eventMap.get(target.ticks);
-	}
-
 	/**
 	 * 開始・終了日からその期間の日を配列として取得する。
 	 * @param begin

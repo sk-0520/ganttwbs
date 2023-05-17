@@ -2,7 +2,6 @@ import { useSetAtom } from "jotai";
 import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
-import { Calendars } from "@/models/Calendars";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
@@ -34,7 +33,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 	// 	}
 	// }, [refDetails]);
 
-	const holidayEventValue = Calendars.getHolidayEventValue(props.date, props.calendarInfo.holidayEventMap);
+	const holidayEventValue = props.calendarInfo.holidayEventMap.get(props.date.ticks);
 	const classNames = Days.getDayClassNames(props.date, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
 	const className = Days.getCellClassName(classNames);
 
