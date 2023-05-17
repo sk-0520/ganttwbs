@@ -48,32 +48,32 @@ export abstract class Calendars {
 	 */
 	public static getCalendarRangeDays(calendarRange: Readonly<CalendarRange>): number {
 		const diff = calendarRange.begin.diff(calendarRange.end);
-		const days = diff.totalDays + 1;
+		const days = Math.floor(diff.totalDays) + 1;
 		return days;
 	}
 
-	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<number, Readonly<HolidayEventMapValue>>): Readonly<HolidayEventMapValue> | null {
-		const value = eventMap.get(target.ticks);
-
-		if (!value) {
-			return null;
-		}
-
-		return value;
+	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<number, Readonly<HolidayEventMapValue>>): Readonly<HolidayEventMapValue> | undefined {
+		return eventMap.get(target.ticks);
 	}
 
+	/**
+	 * 開始・終了日からその期間の日を配列として取得する。
+	 * @param begin
+	 * @param end
+	 * @returns
+	 */
 	public static getDays(begin: DateTime, end: DateTime): Array<DateTime> {
-		const diff = begin.diff(end).totalDays;
-
 		const base = begin.toDateOnly();
+
+		const diff = base.diff(end.toDateOnly()).totalDays;
 
 		const result = new Array<DateTime>();
 		result.push(begin);
-		for (let i = 1; i < diff - 1; i++) {
+		for (let i = 1; i < diff; i++) {
 			result.push(base.add(i, "day"));
 		}
 
-		if (!end.timeIsZero) {
+		if (1 <= diff && !end.timeIsZero) {
 			result.push(end);
 		}
 
