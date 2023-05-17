@@ -68,15 +68,12 @@ export abstract class Calendars {
 		const base = begin.toDateOnly();
 
 		const result = new Array<DateTime>();
-		for (let i = 0; i < diff; i++) {
-			if (i) {
-				result.push(base.add(i, "day"));
-			} else {
-				result.push(begin);
-			}
+		result.push(begin);
+		for (let i = 1; i < diff - 1; i++) {
+			result.push(base.add(i, "day"));
 		}
 
-		if (1 < diff && !end.timeIsZero) {
+		if (!end.timeIsZero) {
 			result.push(end);
 		}
 
