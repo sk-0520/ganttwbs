@@ -64,8 +64,10 @@
 			"webextension"
 		],
 		"npm.scriptExplorerExclude": [
+			"code:.+$",
 			"test:.+$",
 			"^(pre|post)",
+			"^(build|start)$",
 			"license",
 			"^(check|update)$",
 			"^(favicon|analyze)$",

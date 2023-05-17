@@ -3,7 +3,6 @@ import { FC, MouseEvent, ReactNode, useMemo } from "react";
 
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
-import { Calendars } from "@/models/Calendars";
 import { Charts } from "@/models/Charts";
 import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
@@ -77,7 +76,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 			let color: ColorString | undefined = undefined;
 
 			// 祝日判定
-			const holidayEventValue = Calendars.getHolidayEventValue(date, props.calendarInfo.holidayEventMap);
+			const holidayEventValue = props.calendarInfo.holidayEventMap.get(date.ticks);
 			if (holidayEventValue) {
 				color = props.setting.theme.holiday.events[holidayEventValue.event.kind];
 			}

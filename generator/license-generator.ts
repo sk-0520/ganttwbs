@@ -33,6 +33,7 @@ checker.init({
 				version: version,
 				publisher: value["publisher"],
 				licenses: value["licenses"],
+				licenseNote: value.licenseFile && fs.existsSync(value.licenseFile) ? fs.readFileSync(value.licenseFile).toString() : "",
 				repository: value["repository"],
 			});
 		}

@@ -366,6 +366,7 @@ const locale: Locale = {
 					module: "モジュール",
 					author: "作者",
 					license: "ライセンス",
+					licenseNote: "ライセンスの全文表示切替"
 				}
 			}
 		},

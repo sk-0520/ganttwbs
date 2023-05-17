@@ -382,6 +382,7 @@ export interface Locale {
 					module: string,
 					author: string,
 					license: string,
+					licenseNote: string,
 				}
 			}
 		},

@@ -87,7 +87,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 
 	const dayNodes = useMemo(() => {
 		return dates.map(a => {
-			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
+			const holidayEventValue = props.calendarInfo.holidayEventMap.get(a.ticks);
 			const classNames = Days.getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
 			const className = Days.getCellClassName(classNames);
 
@@ -101,7 +101,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 
 	const weekNodes = useMemo(() => {
 		return dates.map(a => {
-			const holidayEventValue = Calendars.getHolidayEventValue(a, props.calendarInfo.holidayEventMap);
+			const holidayEventValue = props.calendarInfo.holidayEventMap.get(a.ticks);
 			const classNames = Days.getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
 			const className = Days.getCellClassName(classNames);
 
