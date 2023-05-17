@@ -18,7 +18,7 @@ export abstract class Days {
 		return "";
 	}
 
-	public static getHolidayClassName(date: DateTime, holidayEventValue: HolidayEventMapValue | null, theme: Readonly<Theme>): string {
+	public static getHolidayClassName(date: DateTime, holidayEventValue: HolidayEventMapValue | undefined, theme: Readonly<Theme>): string {
 		if (holidayEventValue) {
 			if (holidayEventValue) {
 				return "_dynamic_theme_holiday_events_" + holidayEventValue.event.kind;
@@ -28,7 +28,7 @@ export abstract class Days {
 		return "";
 	}
 
-	public static getDayClassNames(date: DateTime, regularHolidays: Readonly<Holiday["regulars"]>, holidayEventValue: HolidayEventMapValue | null, theme: Readonly<Theme>): Array<string> {
+	public static getDayClassNames(date: DateTime, regularHolidays: Readonly<Holiday["regulars"]>, holidayEventValue: HolidayEventMapValue | undefined, theme: Readonly<Theme>): Array<string> {
 		const weekClassName = this.getWeekDayClassName(date, regularHolidays, theme);
 		const holidayClassName = this.getHolidayClassName(date, holidayEventValue, theme);
 

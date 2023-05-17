@@ -18,7 +18,7 @@ const InformationDialog: FC<Props> = (props: Props) => {
 		[...props.timelineStore.dayInfos]
 			.map(([k, v]) => DateTime.convert(k, props.calendarInfo.timeZone).toDateOnly())
 			.map(a => a.ticks)
-			.sort((a, b) => a - b)
+			.sort((a, b) => Number(a) - Number(b))
 	);
 
 	function handleClickDate(date: DateTime): void {

@@ -3,13 +3,19 @@ import { cdate } from "cdate";
 import { ParseResult, ResultFactory } from "@/models/data/Result";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
-
+import { Strong } from "@/models/Types";
 
 type DateTimeParseResult = ParseResult<DateTime, Error>;
 
 export type Unit = "second" | "minute" | "hour" | "day" | "week" | "month" | "year";
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
-export type DateTimeTicks = number;
+
+//export type DateTimeTicks = number;
+export type DateTimeTicks = Strong<"DateTimeTicks", number>;
+
+export function toTicks(arg: number | DateTimeTicks): DateTimeTicks {
+	return arg as DateTimeTicks;
+}
 
 function factory(timeZone: TimeZone): cdate.cdate {
 	let create = cdate;
@@ -99,8 +105,8 @@ export class DateTime {
 	 * UNIX時間のミリ秒取得。
 	 * @returns
 	 */
-	public get ticks(): number {
-		return Number(this.date);
+	public get ticks(): DateTimeTicks {
+		return toTicks(Number(this.date));
 	}
 
 	public get timeIsZero(): boolean {
@@ -111,7 +117,7 @@ export class DateTime {
 			!this.second
 			&&
 			!this.millisecond
-		;
+			;
 	}
 
 	//#endregion
@@ -293,7 +299,7 @@ export class DateTime {
 	 * @returns
 	 */
 	public diff(target: Readonly<DateTime>): TimeSpan {
-		const time = target.ticks - this.ticks;
+		const time = Number(target.ticks) - Number(this.ticks);
 		return TimeSpan.fromMilliseconds(time);
 	}
 
@@ -302,7 +308,7 @@ export class DateTime {
 	}
 
 	public compare(date: DateTime): number {
-		return this.ticks - date.ticks;
+		return Number(this.ticks) - Number(date.ticks);
 	}
 
 	public isIn(begin: DateTime, end: DateTime): boolean {

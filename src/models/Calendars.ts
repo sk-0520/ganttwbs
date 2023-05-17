@@ -2,13 +2,13 @@ import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { CalendarRange } from "@/models/data/CalendarRange";
 import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 import { Calendar, Holiday } from "@/models/data/Setting";
-import { DateTime } from "@/models/DateTime";
+import { DateTime, DateTimeTicks } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
 
 export abstract class Calendars {
 
-	private static createHolidayEventMap(events: Holiday["events"], timeZone: TimeZone): Map<number, HolidayEventMapValue> {
-		const result = new Map<number, HolidayEventMapValue>();
+	private static createHolidayEventMap(events: Holiday["events"], timeZone: TimeZone): Map<DateTimeTicks, HolidayEventMapValue> {
+		const result = new Map<DateTimeTicks, HolidayEventMapValue>();
 
 		for (const [k, v] of Object.entries(events)) {
 			const date = DateTime.parse(k, timeZone);
@@ -48,35 +48,32 @@ export abstract class Calendars {
 	 */
 	public static getCalendarRangeDays(calendarRange: Readonly<CalendarRange>): number {
 		const diff = calendarRange.begin.diff(calendarRange.end);
-		const days = diff.totalDays + 1;
+		const days = Math.floor(diff.totalDays) + 1;
 		return days;
 	}
 
-	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<number, Readonly<HolidayEventMapValue>>): Readonly<HolidayEventMapValue> | null {
-		const value = eventMap.get(target.ticks);
-
-		if (!value) {
-			return null;
-		}
-
-		return value;
+	public static getHolidayEventValue(target: DateTime, eventMap: ReadonlyMap<DateTimeTicks, Readonly<HolidayEventMapValue>>): Readonly<HolidayEventMapValue> | undefined {
+		return eventMap.get(target.ticks);
 	}
 
+	/**
+	 * 開始・終了日からその期間の日を配列として取得する。
+	 * @param begin
+	 * @param end
+	 * @returns
+	 */
 	public static getDays(begin: DateTime, end: DateTime): Array<DateTime> {
-		const diff = begin.diff(end).totalDays;
-
 		const base = begin.toDateOnly();
 
+		const diff = base.diff(end.toDateOnly()).totalDays;
+
 		const result = new Array<DateTime>();
-		for (let i = 0; i < diff; i++) {
-			if (i) {
-				result.push(base.add(i, "day"));
-			} else {
-				result.push(begin);
-			}
+		result.push(begin);
+		for (let i = 1; i < diff; i++) {
+			result.push(base.add(i, "day"));
 		}
 
-		if (1 < diff && !end.timeIsZero) {
+		if (1 <= diff && !end.timeIsZero) {
 			result.push(end);
 		}
 

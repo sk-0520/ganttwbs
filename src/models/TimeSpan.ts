@@ -1,5 +1,6 @@
 import { As } from "@/models/As";
 import { ParseResult, ResultFactory } from "@/models/data/Result";
+import { DateTimeTicks } from "@/models/DateTime";
 
 type TimeSpanParseResult = ParseResult<TimeSpan, Error>;
 
@@ -74,6 +75,10 @@ export class TimeSpan {
 	//#endregion
 
 	//#region function
+
+	public static fromTicks(ticks: DateTimeTicks): TimeSpan {
+		return this.fromMilliseconds(Number(ticks));
+	}
 
 	public static fromMilliseconds(milliSeconds: number): TimeSpan {
 		return new TimeSpan(milliSeconds);
