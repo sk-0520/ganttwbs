@@ -459,7 +459,6 @@ export abstract class Exports {
 
 			const timelineRow = timelineSheet.addRow([
 				...this.createBaseCells(timelineBaseCells),
-				...dates.map(_ => ""),
 			]);
 
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "id")).alignment = {
