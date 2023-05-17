@@ -250,6 +250,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		return result;
 	}
 
+	// TODO: atom を連鎖的に更新すればこいつはもういらないはず
 	function updateRelations() {
 		console.debug("全体へ通知");
 
