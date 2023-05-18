@@ -7,7 +7,7 @@ import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/T
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { SequenceTimelinesAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { RootTimelineAtom, SequenceTimelinesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
@@ -23,7 +23,6 @@ import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
-	//nop
 }
 
 const CrossHeader: FC<Props> = (props: Props) => {
@@ -31,6 +30,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
 	const sequenceTimelines = useAtomValue(SequenceTimelinesAtom);
+	const rootTimeline = useAtomValue(RootTimelineAtom);
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 	const [workload, setWorkload] = useState(0);
@@ -64,7 +64,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 
 	function addEmptyTimeline(kind: TimelineKind) {
 		props.timelineStore.addEmptyTimeline(
-			props.timelineStore.rootGroupTimeline,
+			rootTimeline,
 			{
 				position: NewTimelinePosition.Next,
 				timelineKind: kind,
@@ -86,7 +86,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 
 	function handleInputTimelines(timeline: GroupTimeline | null) {
 		if (timeline) {
-			props.timelineStore.addNewTimeline(props.timelineStore.rootGroupTimeline, timeline, NewTimelinePosition.Next);
+			props.timelineStore.addNewTimeline(rootTimeline, timeline, NewTimelinePosition.Next);
 		}
 
 		setVisibleTimelinesImportDialog(false);

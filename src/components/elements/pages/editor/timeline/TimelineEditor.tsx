@@ -13,7 +13,7 @@ import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, SequenceTimelinesAtom, TotalTimelineMapAtom, TotalTimelineMapType } from "@/models/data/atom/editor/TimelineAtoms";
+import { DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, RootTimelineAtom, SequenceTimelinesAtom, TotalTimelineMapAtom, TotalTimelineMapType } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -61,6 +61,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const setDragOverTimelineId = useSetAtom(DragOverTimelineIdAtom);
 	const [sequenceTimelines, setSequenceTimelines] = useAtom(SequenceTimelinesAtom);
 	const [/* totalTimelineMap */, setTotalTimelineMap] = useAtom(TotalTimelineMapAtom);
+	const [rootTimelineAtom, setRootTimelineAtom] = useAtom(RootTimelineAtom);
 
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
@@ -85,7 +86,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	// }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useLayoutEffect(() => {
-
+		setRootTimelineAtom(props.editorData.setting.rootTimeline);
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
