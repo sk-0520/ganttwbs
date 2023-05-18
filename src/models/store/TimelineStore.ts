@@ -18,11 +18,6 @@ export interface TimelineStore {
 	/** 全てのタイムライン(ノード状態ではない) */
 	readonly totalItemMap: ReadonlyMap<TimelineId, AnyTimeline>;
 
-	/** 各タイムラインを上から見たインデックス順の一覧 */
-	readonly sequenceItems: ReadonlyArray<AnyTimeline>;
-	/** 各タイムラインを上から見たインデックスのマッピング */
-	readonly indexItemMap: ReadonlyMap<TimelineId, number>;
-
 	/** 変更タイムライン */
 	readonly changedItemMap: ReadonlyMap<TimelineId, TimelineItem>;
 

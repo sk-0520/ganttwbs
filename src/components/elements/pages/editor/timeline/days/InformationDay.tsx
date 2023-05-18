@@ -1,4 +1,4 @@
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
@@ -15,6 +15,7 @@ import { Editors } from "@/models/Editors";
 import { Require } from "@/models/Require";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
+import { TimelineIndexMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 
 interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, TimelineStoreProps {
 	readonly date: DateTime;
@@ -22,6 +23,8 @@ interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, Time
 
 const InformationDay: FC<Props> = (props: Props) => {
 	const locale = useLocale();
+
+	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
 
 	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
@@ -73,8 +76,8 @@ const InformationDay: FC<Props> = (props: Props) => {
 	const sortedTimelines = [...mergedDayInfo.targetTimelines]
 		.map(a => Require.get(props.timelineStore.totalItemMap, a))
 		.sort((a, b) => {
-			const aIndex = Require.get(props.timelineStore.indexItemMap, a.id);
-			const bIndex = Require.get(props.timelineStore.indexItemMap, b.id);
+			const aIndex = Require.get(timelineIndexMap, a.id);
+			const bIndex = Require.get(timelineIndexMap, b.id);
 			return aIndex - bIndex;
 		})
 		;

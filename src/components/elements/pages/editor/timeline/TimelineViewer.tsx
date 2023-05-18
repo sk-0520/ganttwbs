@@ -1,4 +1,4 @@
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { FC, MouseEvent, ReactNode, useMemo } from "react";
 
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
@@ -13,12 +13,14 @@ import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { ColorString } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
+import { SequenceTimelinesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	//nop
 }
 
 const TimelineViewer: FC<Props> = (props: Props) => {
+	const sequenceTimelines = useAtomValue(SequenceTimelinesAtom);
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 
 	const areaData = useMemo(() => {
@@ -127,12 +129,12 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 
 		const sequenceIndex = Math.floor(ev.nativeEvent.offsetY / areaData.cell.height.value);
 		// ここのグダグダ感
-		if(props.timelineStore.sequenceItems.length <= sequenceIndex) {
+		if(sequenceTimelines.length <= sequenceIndex) {
 			setHoverTimelineId(undefined);
 			return;
 		}
 
-		const timeline = props.timelineStore.sequenceItems[sequenceIndex];
+		const timeline = sequenceTimelines[sequenceIndex];
 		setHoverTimelineId(timeline.id);
 	}
 
@@ -144,7 +146,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				height={(areaData.size.height + (areaData.cell.height.value * (props.configuration.design.dummy.height - 1))) + "px"}
 			>
 				{gridNodes}
-				{props.timelineStore.sequenceItems.map((a, i) => {
+				{sequenceTimelines.map((a, i) => {
 					return (
 						<GanttChartTimeline
 							key={a.id}
@@ -160,7 +162,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 						/>
 					);
 				})}
-				{props.timelineStore.sequenceItems.map((a, i) => {
+				{sequenceTimelines.map((a, i) => {
 					if (!Settings.maybeTaskTimeline(a)) {
 						return null;
 					}

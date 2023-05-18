@@ -7,6 +7,8 @@ import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
 import { Require } from "@/models/Require";
+import { useAtomValue } from "jotai";
+import { TimelineIndexMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 
 interface Props extends ConfigurationProps, TimelineStoreProps {
 	mode: RowHighlightMode;
@@ -17,8 +19,9 @@ interface Props extends ConfigurationProps, TimelineStoreProps {
 }
 
 const RowHighlight: FC<Props> = (props: Props) => {
+	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
 
-	const index = Require.get(props.timelineStore.indexItemMap, props.timelineId);
+	const index = Require.get(timelineIndexMap, props.timelineId);
 
 	const baseY = props.areaData.cell.height.value * index;
 

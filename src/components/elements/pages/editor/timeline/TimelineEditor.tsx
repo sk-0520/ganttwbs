@@ -13,7 +13,7 @@ import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, SequenceTimelinesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -59,6 +59,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const setDraggingTimeline = useSetAtom(DraggingTimelineAtom);
 	const setDragSourceTimelineId = useSetAtom(DragSourceTimelineIdAtom);
 	const setDragOverTimelineId = useSetAtom(DragOverTimelineIdAtom);
+	const [sequenceTimelines, setSequenceTimelines] = useAtom(SequenceTimelinesAtom);
 
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
@@ -68,7 +69,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		return Resources.createResourceInfo(props.editorData.setting.groups);
 	}, [props.editorData.setting]);
 
-	const [sequenceTimelines, setSequenceTimelines] = useState(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(sequenceTimelines, new Map(), new Map()));
 	//const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
 	//const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
@@ -230,8 +230,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		const result: TimelineStore = {
 			rootGroupTimeline: props.editorData.setting.rootTimeline,
 			totalItemMap: totalTimelineMap,
-			sequenceItems: sequenceTimelines,
-			indexItemMap: Timelines.toIndexes(sequenceTimelines),
 
 			changedItemMap: changedItems,
 			workRanges: workRangesCache,

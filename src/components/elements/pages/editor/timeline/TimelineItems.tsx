@@ -16,6 +16,8 @@ import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
+import { SequenceTimelinesAtom, TimelineIndexMap, TimelineIndexMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { useAtomValue } from "jotai";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	selectingBeginDate: SelectingBeginDate | null;
@@ -23,13 +25,15 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 }
 
 const TimelineItems: FC<Props> = (props: Props) => {
+	const sequenceTimelines = useAtomValue(SequenceTimelinesAtom);
+	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
 
 	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
-		handleCellKeyDown(ev, currentTimeline, props.timelineStore, "subject");
+		handleCellKeyDown(ev, currentTimeline, props.timelineStore, sequenceTimelines, timelineIndexMap, "subject");
 	}, [props.timelineStore]);
 
 	const onWorkloadKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
-		handleCellKeyDown(ev, currentTimeline, props.timelineStore, "workload");
+		handleCellKeyDown(ev, currentTimeline, props.timelineStore, sequenceTimelines, timelineIndexMap, "workload");
 	}, [props.timelineStore]);
 
 	const dummyAreaNodes = useMemo(() => {
@@ -55,7 +59,7 @@ const TimelineItems: FC<Props> = (props: Props) => {
 		<div id="timelines">
 			<table>
 				<tbody>
-					{props.timelineStore.sequenceItems.map((a, i) => {
+					{sequenceTimelines.map((a, i) => {
 						return (
 							<AnyTimelineEditor
 								key={a.id}
@@ -83,16 +87,16 @@ const TimelineItems: FC<Props> = (props: Props) => {
 
 export default TimelineItems;
 
-function handleCellKeyDown(ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline, timelineStore: TimelineStore, currentCell: "subject" | "workload"): void {
+function handleCellKeyDown(ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline, timelineStore: TimelineStore, sequenceTimelines: ReadonlyArray<AnyTimeline>, timelineIndexMap: TimelineIndexMap, currentCell: "subject" | "workload"): void {
 	if (ev.key !== "Enter") {
 		return;
 	}
 
-	const currentIndex = Require.get(timelineStore.indexItemMap, currentTimeline.id);
+	const currentIndex = Require.get(timelineIndexMap, currentTimeline.id);
 	let nextIndex = -1;
 
 	function getNextTimeline(index: number): AnyTimeline | null {
-		const nextTimeline = timelineStore.sequenceItems[index];
+		const nextTimeline = sequenceTimelines[index];
 
 		switch (currentCell) {
 			case "subject":
@@ -115,22 +119,22 @@ function handleCellKeyDown(ev: KeyboardEvent<HTMLInputElement>, currentTimeline:
 		for (let i = currentIndex - 1; 0 <= i; i--) {
 			const timeline = getNextTimeline(i);
 			if (timeline) {
-				nextIndex = Require.get(timelineStore.indexItemMap, timeline.id);
+				nextIndex = Require.get(timelineIndexMap, timeline.id);
 				break;
 			}
 		}
 	} else {
-		for (let i = currentIndex + 1; i < timelineStore.sequenceItems.length; i++) {
+		for (let i = currentIndex + 1; i < sequenceTimelines.length; i++) {
 			const timeline = getNextTimeline(i);
 			if (timeline) {
-				nextIndex = Require.get(timelineStore.indexItemMap, timeline.id);
+				nextIndex = Require.get(timelineIndexMap, timeline.id);
 				break;
 			}
 		}
 	}
 
 	if (nextIndex !== -1) {
-		const nextTimeline = timelineStore.sequenceItems[nextIndex];
+		const nextTimeline = sequenceTimelines[nextIndex];
 		const nextCellId = Require.switch(currentCell, {
 			"subject": () => Timelines.toSubjectId(nextTimeline),
 			"workload": () => Timelines.toWorkloadId(nextTimeline),

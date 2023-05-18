@@ -1,4 +1,4 @@
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { FC, useEffect, useState } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
@@ -20,6 +20,7 @@ import { IdFactory } from "@/models/IdFactory";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
+import { SequenceTimelinesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 	//nop
@@ -29,6 +30,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
+	const sequenceTimelines = useAtomValue(SequenceTimelinesAtom);
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 	const [workload, setWorkload] = useState(0);
@@ -268,9 +270,9 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						<div className="timeline-cell timeline-id"
 							title={`${locale.common.timeline.task}/${locale.common.timeline.total}`}
 						>
-							{props.timelineStore.sequenceItems.filter(a => Settings.maybeTaskTimeline(a)).length}
+							{sequenceTimelines.filter(a => Settings.maybeTaskTimeline(a)).length}
 							/
-							{props.timelineStore.sequenceItems.length}
+							{sequenceTimelines.length}
 						</div>
 						<div className="timeline-cell timeline-subject">
 							{locale.pages.editor.timeline.header.columns.subject}
