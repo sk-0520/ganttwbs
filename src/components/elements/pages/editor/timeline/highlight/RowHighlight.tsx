@@ -1,14 +1,14 @@
 import classNames from "classnames";
+import { useAtomValue } from "jotai";
 import { CSSProperties, FC } from "react";
 
 import { AreaData } from "@/models/data/Area";
+import { TimelineIndexMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { RowHighlightMode } from "@/models/data/Highlight";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
 import { Require } from "@/models/Require";
-import { useAtomValue } from "jotai";
-import { TimelineIndexMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 
 interface Props extends ConfigurationProps, TimelineStoreProps {
 	mode: RowHighlightMode;

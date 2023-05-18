@@ -1,4 +1,4 @@
-import { atom, useAtom, useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { FC, useEffect, useLayoutEffect, useMemo } from "react";
 import { ReactNode, useState } from "react";
 
@@ -218,7 +218,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			setDragSourceTimelineId(dragging.sourceTimeline.id);
 			setDraggingTimeline(dragging);
 		}
-	}, [dragSourceTimeline, props.editorData.setting.rootTimeline, setActiveTimelineId, setDragOverTimelineId, setDragSourceTimeline, setDragSourceTimelineId, setDraggingTimeline, setHighlightTimelineIds, setHoverTimelineId]);
+	}, [dragSourceTimeline, props.editorData.setting.rootTimeline, setActiveTimelineId, setDragOverTimelineId, setDragSourceTimeline, setDragSourceTimelineId, setDraggingTimeline, setHighlightTimelineIds, setHoverTimelineId, setSequenceTimelines]);
 
 	function createTimelineStore(sequenceTimelines: ReadonlyArray<AnyTimeline>, totalTimelineMap: TotalTimelineMapType, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
 

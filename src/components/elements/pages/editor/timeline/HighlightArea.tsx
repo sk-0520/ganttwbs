@@ -5,6 +5,7 @@ import ColumnHighlight from "@/components/elements/pages/editor/timeline/highlig
 import RowHighlight from "@/components/elements/pages/editor/timeline/highlight/RowHighlight";
 import { Charts } from "@/models/Charts";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { ColumnHighlightMode, RowHighlightMode } from "@/models/data/Highlight";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
@@ -13,7 +14,6 @@ import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Dom } from "@/models/Dom";
-import { TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 	//nop

@@ -5,6 +5,7 @@ import GanttChartTimeline from "@/components/elements/pages/editor/timeline/Gant
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
 import { Charts } from "@/models/Charts";
 import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { SequenceTimelinesAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
@@ -13,7 +14,6 @@ import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { ColorString } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
-import { SequenceTimelinesAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	//nop

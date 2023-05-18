@@ -3,6 +3,7 @@ import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
@@ -15,7 +16,6 @@ import { Editors } from "@/models/Editors";
 import { Require } from "@/models/Require";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
-import { TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 
 interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, TimelineStoreProps {
 	readonly date: DateTime;
