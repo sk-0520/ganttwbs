@@ -4,7 +4,7 @@ import { Calendars } from "@/models/Calendars";
 import { useCalendarInfoAtomReader, useResourceInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { AnyTimeline, Member, TaskTimeline } from "@/models/data/Setting";
-import { TotalSuccessWorkRange } from "@/models/data/WorkRange";
+import { SuccessWorkRange, TotalSuccessWorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
@@ -13,7 +13,8 @@ type DisplayValue = "workload" | "cost";
 
 interface Props {
 	totalSuccessWorkRange: TotalSuccessWorkRange | undefined;
-	sequenceTimelines: Array<AnyTimeline>;
+	successWorkRanges: ReadonlyArray<SuccessWorkRange>;
+	sequenceTimelines: ReadonlyArray<AnyTimeline>;
 }
 
 const WorkViewer: FC<Props> = (props: Props) => {
@@ -25,7 +26,7 @@ const WorkViewer: FC<Props> = (props: Props) => {
 	const months = props.totalSuccessWorkRange
 		? Calendars.getMonths(props.totalSuccessWorkRange.minimum.begin, props.totalSuccessWorkRange.maximum.end)
 		: []
-	;
+		;
 	const taskTimelines = props.sequenceTimelines.filter(Settings.maybeTaskTimeline);
 
 	return (
@@ -98,19 +99,53 @@ function renderMonths(months: ReadonlyArray<DateTime>): ReactNode {
 	});
 }
 
-function renderMember(displayValue: DisplayValue, member: Member, months: ReadonlyArray<DateTime>, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>): ReactNode {
+function renderMember(displayValue: DisplayValue, member: Member, months: ReadonlyArray<DateTime>, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): ReactNode {
 	return (
 		<Fragment key={member.id}>
 			<td>
 				{member.name}
 			</td>
+
 			{months.map(a => {
+				const range = {
+					begin: a,
+					end: a.getLastDayOfMonth().add(23, "hour").add(59, "minute"), //TODO ミリ秒追加がないんだわ
+				};
+
+				const percent = calcDisplayValue(member, range.begin, range.end, calendarInfo, taskTimelines, successWorkRanges);
+
 				return (
 					<td key={a.ticks}>
-						TODO:当月内の稼働率とか
+						{percent}
 					</td>
 				);
 			})}
 		</Fragment>
 	);
+}
+
+
+function calcDisplayValue(member: Member, begin: DateTime, end: DateTime, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): number {
+
+	// わからん。適当
+	const days = Calendars.getDays(begin, end);
+
+	const timelines = taskTimelines.filter(a => a.memberId === member.id);
+	const workRanges = successWorkRanges
+		.filter(a => timelines.some(b => b.id === a.timeline.id))
+		.filter(a => begin.ticks <= a.begin.ticks)
+		;
+
+	return workRanges.length / days.length;
+
+	// switch (displayValue) {
+	// 	case "workload":
+	// 		return calcDisplayValueWorkload(member, begin, end, calendarInfo, taskTimelines, totalSuccessWorkRange);
+
+	// 	case "cost":
+	// 		return calcDisplayValueCost(member, begin, end, calendarInfo, taskTimelines, totalSuccessWorkRange);
+
+	// 	default:
+	// 		throw new Error();
+	// }
 }
