@@ -71,8 +71,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	}, [props.editorData.setting]);
 
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(sequenceTimelines, new Map(), new Map()));
-	//const [draggingTimeline, setDraggingTimeline] = useState<DraggingTimeline | null>(null);
-	//const [dropTimeline, setDropTimeline] = useState<DropTimeline | null>(null);
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 
 	const dynamicStyleNodes = useMemo(() => {
@@ -87,6 +85,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	// }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useLayoutEffect(() => {
+
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -233,8 +232,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		console.debug("dayInfos", dayInfos);
 
 		const result: TimelineStore = {
-			rootGroupTimeline: props.editorData.setting.rootTimeline,
-
 			changedItemMap: changedItems,
 			workRanges: workRangesCache,
 			dayInfos: dayInfos,

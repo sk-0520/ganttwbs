@@ -4,7 +4,7 @@ import { FC } from "react";
 
 import { Charts } from "@/models/Charts";
 import { AreaSize } from "@/models/data/Area";
-import { TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { RootTimelineAtom, TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
@@ -23,6 +23,7 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 }
 
 const ConnectorTimeline: FC<Props> = (props: Props) => {
+	const rootTimeline = useAtomValue(RootTimelineAtom);
 	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
 	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
 
@@ -62,7 +63,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 				const previousTimeline = Require.get(totalTimelineMap, b);
 
 				const previewColor = Settings.maybeGroupTimeline(previousTimeline)
-					? Charts.getGroupBackground(previousTimeline, props.timelineStore.rootGroupTimeline, props.setting.theme)
+					? Charts.getGroupBackground(previousTimeline, rootTimeline, props.setting.theme)
 					: Charts.getTaskBackground(previousTimeline, props.resourceInfo.memberMap, props.setting.theme)
 					;
 

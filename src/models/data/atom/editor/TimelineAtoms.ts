@@ -1,12 +1,22 @@
 import { atom } from "jotai";
 
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
-import { AnyTimeline, TimelineId } from "@/models/data/Setting";
+import { RootTimeline, AnyTimeline, TimelineId } from "@/models/data/Setting";
+import { IdFactory } from "@/models/IdFactory";
 import { Timelines } from "@/models/Timelines";
 
 export const DetailEditTimelineAtom = atom<AnyTimeline | undefined>(undefined);
 export const DragSourceTimelineAtom = atom<AnyTimeline | undefined>(undefined);
 export const DraggingTimelineAtom = atom<DraggingTimeline | undefined>(undefined);
+
+/** 設定上のタイムライン。一生同じ。 */
+export const RootTimelineAtom = atom<RootTimeline>({
+	id: IdFactory.rootTimelineId,
+	kind: "group",
+	subject: "",
+	comment: "",
+	children: [],
+} satisfies RootTimeline);
 
 /** 各タイムラインを上から見たインデックス順の一覧 */
 export const SequenceTimelinesAtom = atom<Array<AnyTimeline>>([]);

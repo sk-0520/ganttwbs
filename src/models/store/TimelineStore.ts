@@ -3,7 +3,7 @@ import { DayInfo } from "@/models/data/DayInfo";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
-import { AnyTimeline, GroupTimeline, TimelineId } from "@/models/data/Setting";
+import { AnyTimeline, TimelineId } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
 import { DateTimeTicks } from "@/models/DateTime";
@@ -11,9 +11,6 @@ import { DateTimeTicks } from "@/models/DateTime";
 export type MoveDirection = "up" | "down" | "parent";
 
 export interface TimelineStore {
-
-	/** 最上位(こいつ自身はどうでもよくて、子を使用する) */
-	readonly rootGroupTimeline: GroupTimeline;
 
 	/** 変更タイムライン */
 	readonly changedItemMap: ReadonlyMap<TimelineId, TimelineItem>;
