@@ -62,10 +62,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const [sequenceTimelines, setSequenceTimelines] = useAtom(SequenceTimelinesAtom);
 	const [/* totalTimelineMap */, setTotalTimelineMap] = useAtom(TotalTimelineMapAtom);
 
-	useLayoutEffect(() => {
-		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
-
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
 	}, [props.editorData.setting]);
@@ -89,6 +85,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	// useEffect(() => {
 	// 	updateRelations();
 	// }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useLayoutEffect(() => {
+		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useLayoutEffect(() => {
 		updateRelations();
