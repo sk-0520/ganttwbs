@@ -11,6 +11,11 @@ type InputType = string | undefined;
  */
 export abstract class As {
 
+	/**
+	 * 文字列への変換。
+	 * @param input
+	 * @returns
+	 */
 	public static string(input: InputType): string {
 		if (Types.isUndefined(input)) {
 			throw new Error();
@@ -19,6 +24,11 @@ export abstract class As {
 		return input;
 	}
 
+	/**
+	 * 整数へ変換。
+	 * @param input
+	 * @returns
+	 */
 	public static integer(input: InputType): number {
 		const value = Number.parseInt(this.string(input));
 		if (Number.isNaN(value)) {
@@ -28,6 +38,11 @@ export abstract class As {
 		return value;
 	}
 
+	/**
+	 * 浮動小数点へ変換。
+	 * @param input
+	 * @returns
+	 */
 	public static float(input: InputType): number {
 		const value = Number.parseFloat(this.string(input));
 		if (Number.isNaN(value)) {

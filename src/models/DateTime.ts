@@ -326,12 +326,20 @@ export class DateTime {
 		return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
 	}
 
+	/**
+	 * 自身から年月日以外を破棄。
+	 * @returns
+	 */
 	public toDateOnly(): DateTime {
 		const date = toDateOnly(this.date);
 
 		return new DateTime(date, this.timeZone);
 	}
 
+	/**
+	 * 自身の所属する月の最終日を取得。
+	 * @returns
+	 */
 	public getLastDayOfMonth(): DateTime {
 		return new DateTime(toDateOnly(this.date.endOf("month").endOf("day")), this.timeZone);
 	}

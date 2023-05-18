@@ -76,6 +76,12 @@ export abstract class Calendars {
 		return result;
 	}
 
+	/**
+	 * 開始・終了日からその期間の月を配列として取得する。
+	 * @param begin
+	 * @param end
+	 * @returns
+	 */
 	public static getMonths(begin: DateTime, end: DateTime): Array<DateTime> {
 		const b = begin.year * 12 + begin.month;
 		const e = end.year * 12 + end.month;

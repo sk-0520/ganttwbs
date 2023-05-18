@@ -19,6 +19,11 @@ export class WorkRanges {
 		return false;
 	}
 
+	/**
+	 * エラー状態？
+	 * @param workRange
+	 * @returns
+	 */
 	public static isError(workRange: WorkRange): boolean {
 		const errorKinds: Array<WorkRangeKind> = [
 			WorkRangeKind.NoInput,
