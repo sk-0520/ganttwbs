@@ -61,7 +61,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const setDragOverTimelineId = useSetAtom(DragOverTimelineIdAtom);
 	const [sequenceTimelines, setSequenceTimelines] = useAtom(SequenceTimelinesAtom);
 	const [/* totalTimelineMap */, setTotalTimelineMap] = useAtom(TotalTimelineMapAtom);
-	const [rootTimelineAtom, setRootTimelineAtom] = useAtom(RootTimelineAtom);
+	const [rootTimeline, setRootTimeline] = useAtom(RootTimelineAtom);
 
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
@@ -86,7 +86,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	// }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		setRootTimelineAtom(props.editorData.setting.rootTimeline);
+		setRootTimeline(props.editorData.setting.rootTimeline);
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
