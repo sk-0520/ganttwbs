@@ -12,7 +12,7 @@ import { TaskTimeline } from "@/models/data/Setting";
 import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
 import { WorkRanges } from "@/models/WorkRanges";
-import { TimelineIndexMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { useAtomValue } from "jotai";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
@@ -24,6 +24,7 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 
 const ConnectorTimeline: FC<Props> = (props: Props) => {
 	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
+	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
 
 	if (!props.currentTimeline.previous.length) {
 		return null;
@@ -58,7 +59,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 		<>
 			{props.currentTimeline.previous.map(b => {
 				const previousIndex = Require.get(timelineIndexMap, b);
-				const previousTimeline = Require.get(props.timelineStore.totalItemMap, b);
+				const previousTimeline = Require.get(totalTimelineMap, b);
 
 				const previewColor = Settings.maybeGroupTimeline(previousTimeline)
 					? Charts.getGroupBackground(previousTimeline, props.timelineStore.rootGroupTimeline, props.setting.theme)

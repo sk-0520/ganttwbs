@@ -13,6 +13,7 @@ import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Dom } from "@/models/Dom";
+import { TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 
 interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
 	//nop
@@ -22,6 +23,7 @@ const HighlightArea: FC<Props> = (props: Props) => {
 
 	const activeTimelineId = useAtomValue(ActiveTimelineIdAtom);
 	const hoverTimelineId = useAtomValue(HoverTimelineIdAtom);
+	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
 	const [highlightTimelineIds, setHighlightTimelineIds] = useAtom(HighlightTimelineIdsAtom);
 	const [highlightDays, setHighlightDays] = useAtom(HighlightDaysAtom);
 	const dragSourceTimelineId = useAtomValue(DragSourceTimelineIdAtom);
@@ -37,8 +39,8 @@ const HighlightArea: FC<Props> = (props: Props) => {
 	}, []);
 
 	const areaData = useMemo(() => {
-		return Charts.createAreaData(props.configuration.design.seed.cell, props.calendarInfo.range, props.timelineStore.totalItemMap.size);
-	}, [props.configuration, props.calendarInfo, props.timelineStore.totalItemMap.size]);
+		return Charts.createAreaData(props.configuration.design.seed.cell, props.calendarInfo.range, totalTimelineMap.size);
+	}, [props.configuration, props.calendarInfo, totalTimelineMap.size]);
 
 	function renderRowHighlight(timelineId: TimelineId, mode: RowHighlightMode, key?: string): ReactNode {
 		return (

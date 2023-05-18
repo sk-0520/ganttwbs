@@ -13,7 +13,7 @@ import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { ColorString } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
-import { SequenceTimelinesAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { SequenceTimelinesAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 
 interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
 	//nop
@@ -21,19 +21,20 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 
 const TimelineViewer: FC<Props> = (props: Props) => {
 	const sequenceTimelines = useAtomValue(SequenceTimelinesAtom);
+	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 
 	const areaData = useMemo(() => {
-		return Charts.createAreaData(props.configuration.design.seed.cell, props.calendarInfo.range, props.timelineStore.totalItemMap.size);
-	}, [props.configuration, props.calendarInfo, props.timelineStore.totalItemMap.size]);
+		return Charts.createAreaData(props.configuration.design.seed.cell, props.calendarInfo.range, totalTimelineMap.size);
+	}, [props.configuration, props.calendarInfo, totalTimelineMap.size]);
 
 	const gridNodes = useMemo(() => {
 		const width = areaData.cell.width.value * (areaData.days + props.configuration.design.dummy.width);
-		const height = areaData.cell.height.value * (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height);
+		const height = areaData.cell.height.value * (totalTimelineMap.size + props.configuration.design.dummy.height);
 
 		// 横軸
 		const gridHorizontals = new Array<ReactNode>();
-		for (let i = 0; i < (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height); i++) {
+		for (let i = 0; i < (totalTimelineMap.size + props.configuration.design.dummy.height); i++) {
 			const y = areaData.cell.height.value + areaData.cell.height.value * i;
 			gridHorizontals.push(
 				<line
@@ -118,7 +119,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				</g>
 			</g>
 		);
-	}, [areaData, props.calendarInfo, props.configuration, props.setting, props.timelineStore.totalItemMap.size]);
+	}, [areaData, props.calendarInfo, props.configuration, props.setting, totalTimelineMap.size]);
 
 	function handleMouseMove(ev: MouseEvent) {
 		// 下でグダグダやってるけどこっち(か算出方法)が間違ってる感あるなぁ

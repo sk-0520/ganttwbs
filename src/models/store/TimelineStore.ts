@@ -15,9 +15,6 @@ export interface TimelineStore {
 	/** 最上位(こいつ自身はどうでもよくて、子を使用する) */
 	readonly rootGroupTimeline: GroupTimeline;
 
-	/** 全てのタイムライン(ノード状態ではない) */
-	readonly totalItemMap: ReadonlyMap<TimelineId, AnyTimeline>;
-
 	/** 変更タイムライン */
 	readonly changedItemMap: ReadonlyMap<TimelineId, TimelineItem>;
 

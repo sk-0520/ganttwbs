@@ -30,11 +30,11 @@ const TimelineItems: FC<Props> = (props: Props) => {
 
 	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
 		handleCellKeyDown(ev, currentTimeline, props.timelineStore, sequenceTimelines, timelineIndexMap, "subject");
-	}, [props.timelineStore]);
+	}, [props.timelineStore, sequenceTimelines, timelineIndexMap]);
 
 	const onWorkloadKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
 		handleCellKeyDown(ev, currentTimeline, props.timelineStore, sequenceTimelines, timelineIndexMap, "workload");
-	}, [props.timelineStore]);
+	}, [props.timelineStore, sequenceTimelines, timelineIndexMap]);
 
 	const dummyAreaNodes = useMemo(() => {
 		console.debug("dummyAreaNodedummyAreaNodedummyAreaNode");

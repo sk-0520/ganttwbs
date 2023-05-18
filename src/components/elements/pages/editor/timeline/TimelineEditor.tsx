@@ -1,4 +1,4 @@
-import { useAtom, useSetAtom } from "jotai";
+import { atom, useAtom, useSetAtom } from "jotai";
 import { FC, useEffect, useLayoutEffect, useMemo } from "react";
 import { ReactNode, useState } from "react";
 
@@ -13,7 +13,7 @@ import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, SequenceTimelinesAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, SequenceTimelinesAtom, TotalTimelineMapAtom, TotalTimelineMapType } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -60,6 +60,11 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const setDragSourceTimelineId = useSetAtom(DragSourceTimelineIdAtom);
 	const setDragOverTimelineId = useSetAtom(DragOverTimelineIdAtom);
 	const [sequenceTimelines, setSequenceTimelines] = useAtom(SequenceTimelinesAtom);
+	const [/* totalTimelineMap */, setTotalTimelineMap] = useAtom(TotalTimelineMapAtom);
+
+	useLayoutEffect(() => {
+		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const calendarInfo = useMemo(() => {
 		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
@@ -130,7 +135,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				},
 				onDragEnter: (ev, targetTimeline) => {
 					console.debug("ENTER", ev, targetTimeline);
-					if(targetTimeline.id === dragSourceTimeline.id) {
+					if (targetTimeline.id === dragSourceTimeline.id) {
 						setDragOverTimelineId(undefined);
 					} else {
 						setDragOverTimelineId(targetTimeline.id);
@@ -215,7 +220,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		}
 	}, [dragSourceTimeline, props.editorData.setting.rootTimeline, setActiveTimelineId, setDragOverTimelineId, setDragSourceTimeline, setDragSourceTimelineId, setDraggingTimeline, setHighlightTimelineIds, setHoverTimelineId]);
 
-	function createTimelineStore(sequenceTimelines: ReadonlyArray<AnyTimeline>, totalTimelineMap: ReadonlyMap<TimelineId, AnyTimeline>, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
+	function createTimelineStore(sequenceTimelines: ReadonlyArray<AnyTimeline>, totalTimelineMap: TotalTimelineMapType, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
 
 		for (const [k, v] of changedItems) {
 			if (v.workRange) {
@@ -229,7 +234,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 		const result: TimelineStore = {
 			rootGroupTimeline: props.editorData.setting.rootTimeline,
-			totalItemMap: totalTimelineMap,
 
 			changedItemMap: changedItems,
 			workRanges: workRangesCache,
@@ -253,6 +257,9 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		console.debug("全体へ通知");
 
 		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
+		setTotalTimelineMap(timelineMap);
+
+		//const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
 		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], props.editorData.setting.calendar.holiday, props.editorData.setting.recursive, calendarInfo.timeZone);
 
 		const changedItems = new Map(
@@ -365,6 +372,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		}
 
 		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
+		setTotalTimelineMap(timelineMap);
 
 		const prevSource = { ...source };
 		Object.assign(source, timeline);

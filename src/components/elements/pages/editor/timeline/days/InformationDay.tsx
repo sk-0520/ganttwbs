@@ -15,7 +15,7 @@ import { Editors } from "@/models/Editors";
 import { Require } from "@/models/Require";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
-import { TimelineIndexMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 
 interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, TimelineStoreProps {
 	readonly date: DateTime;
@@ -25,6 +25,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
 	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
+	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
 
 	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
@@ -73,13 +74,14 @@ const InformationDay: FC<Props> = (props: Props) => {
 		;
 
 	// ソート済みタイムライン取得
-	const sortedTimelines = [...mergedDayInfo.targetTimelines]
-		.map(a => Require.get(props.timelineStore.totalItemMap, a))
+	const sortedTimelines = timelineIndexMap.size ? [...mergedDayInfo.targetTimelines]
+		.map(a => Require.get(totalTimelineMap, a))
 		.sort((a, b) => {
 			const aIndex = Require.get(timelineIndexMap, a.id);
 			const bIndex = Require.get(timelineIndexMap, b.id);
 			return aIndex - bIndex;
 		})
+		: []
 		;
 
 	function handleClickTimeline(timelineId: TimelineId): void {
