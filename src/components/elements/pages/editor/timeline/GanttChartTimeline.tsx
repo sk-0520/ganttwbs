@@ -1,4 +1,4 @@
-import { FC, ReactNode, useLayoutEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 
 import GroupChart from "@/components/elements/pages/editor/timeline/shape/GroupChart";
 import TaskChart from "@/components/elements/pages/editor/timeline/shape/TaskChart";
@@ -15,7 +15,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 
 	const [successWorkRange, setSuccessWorkRange] = useState<SuccessWorkRange | null>();
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		const timelineItem = props.timelineStore.changedItemMap.get(props.currentTimeline.id);
 		if (timelineItem) {
 			if (timelineItem.workRange) {

@@ -1,5 +1,5 @@
 import { useAtom, useSetAtom } from "jotai";
-import { FC, useEffect, useLayoutEffect, useMemo } from "react";
+import { FC, useEffect, useMemo } from "react";
 import { ReactNode, useState } from "react";
 
 import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
@@ -85,12 +85,12 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	// 	updateRelations();
 	// }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		setRootTimelineAtom(props.editorData.setting.rootTimeline);
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		updateRelations();
 	}, [sequenceTimelines]); // eslint-disable-line react-hooks/exhaustive-deps
 
