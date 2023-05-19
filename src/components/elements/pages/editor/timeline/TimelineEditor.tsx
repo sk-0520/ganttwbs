@@ -55,7 +55,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const setDragSourceTimelineId = useSetAtom(DragSourceTimelineIdAtom);
 	const setDragOverTimelineId = useSetAtom(DragOverTimelineIdAtom);
 	const [sequenceTimelines, setSequenceTimelines] = useAtom(SequenceTimelinesAtom);
-	const [/* totalTimelineMap */, setTotalTimelineMap] = useAtom(TotalTimelineMapAtom);
+	const [/*totalTimelineMap*/, setTotalTimelineMap] = useAtom(TotalTimelineMapAtom);
 	const setSettingAtom = useSetAtom(SettingAtom);
 	const rootTimeline = useAtomValue(RootTimelineAtom);
 	const calendarInfo = useAtomValue(CalendarInfoAtom);
@@ -215,13 +215,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		}
 	}, [dragSourceTimeline, props.editorData.setting.rootTimeline, setActiveTimelineId, setDragOverTimelineId, setDragSourceTimeline, setDragSourceTimelineId, setDraggingTimeline, setHighlightTimelineIds, setHoverTimelineId, setSequenceTimelines]);
 
-	function createTimelineStore(sequenceTimelines: ReadonlyArray<AnyTimeline>, totalTimelineMap: TotalTimelineMapType, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
-
-
-		const dayInfos = Timelines.calcDayInfos(totalTimelineMap, new Set([...workRanges.values()]), resourceInfo);
-
-		console.debug("dayInfos", dayInfos);
-
+	function createTimelineStore(): TimelineStore {
 		const result: TimelineStore = {
 			calcReadableTimelineId: handleCalcReadableTimelineId,
 			searchBeforeTimeline: handleSearchBeforeTimeline,
@@ -257,7 +251,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		// 			return [k, item];
 		// 		})
 		// );
-		const store = createTimelineStore(sequenceTimelines, timelineMap, timelineItems);
+		const store = createTimelineStore();
 		setTimelineStore(store);
 	}
 
@@ -358,55 +352,55 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
 		setTotalTimelineMap(timelineMap);
 
-		const prevSource = { ...source };
+		//const prevSource = { ...source };
 		Object.assign(source, timeline);
 		const timelineItems = new Array<TimelineItem>();
 		timelineItems.push({
 			timeline: source
 		});
 
-		if (Settings.maybeGroupTimeline(timeline)) {
-			/*
-			const prevGroupSource = prevSource as GroupTimeline;
-			if (prevGroupSource.children !== timeline.children) {
-				// 関係が変わってる場合はがさっと変えた方が手っ取り早い
-				updateRelations();
-			}
-			*/
-			// おう、何も考えず変えとけ変えとけ
-			updateRelations();
-			return;
-		}
+		// if (Settings.maybeGroupTimeline(timeline)) {
+		// 	/*
+		// 	const prevGroupSource = prevSource as GroupTimeline;
+		// 	if (prevGroupSource.children !== timeline.children) {
+		// 		// 関係が変わってる場合はがさっと変えた方が手っ取り早い
+		// 		updateRelations();
+		// 	}
+		// 	*/
+		// 	// おう、何も考えず変えとけ変えとけ
+		// 	updateRelations();
+		// 	return;
+		// }
 
-		if (Settings.maybeTaskTimeline(timeline)) {
-			const src = prevSource as TaskTimeline;
+		// if (Settings.maybeTaskTimeline(timeline)) {
+		// 	const src = prevSource as TaskTimeline;
 
-			// 先祖グループに対してふわーっと処理
-			const groups = Timelines.getParentGroups(timeline, props.editorData.setting.rootTimeline);
-			if (groups.length) {
-				const reversedGroups = groups.reverse();
-				// 工数
-				if (timeline.workload !== src.workload) {
-					// 何も考えず全更新(工数が変わってる場合、差分検出するより全更新したほうが手っ取り早い→速度は知らん)
-					updateRelations();
-					return;
-				}
-				// 進捗
-				if (timeline.progress !== src.progress) {
-					for (const group of reversedGroups) {
-						timelineItems.push({
-							timeline: group
-						});
-					}
-				}
-			}
-		}
+		// 	// 先祖グループに対してふわーっと処理
+		// 	const groups = Timelines.getParentGroups(timeline, props.editorData.setting.rootTimeline);
+		// 	if (groups.length) {
+		// 		const reversedGroups = groups.reverse();
+		// 		// 工数
+		// 		if (timeline.workload !== src.workload) {
+		// 			// 何も考えず全更新(工数が変わってる場合、差分検出するより全更新したほうが手っ取り早い→速度は知らん)
+		// 			updateRelations();
+		// 			return;
+		// 		}
+		// 		// 進捗
+		// 		if (timeline.progress !== src.progress) {
+		// 			for (const group of reversedGroups) {
+		// 				timelineItems.push({
+		// 					timeline: group
+		// 				});
+		// 			}
+		// 		}
+		// 	}
+		// }
 
-		const changedItems = new Map<TimelineId, TimelineItem>(
-			timelineItems.map(a => [a.timeline.id, a])
-		);
+		// const changedItems = new Map<TimelineId, TimelineItem>(
+		// 	timelineItems.map(a => [a.timeline.id, a])
+		// );
 
-		const store = createTimelineStore(sequenceTimelines, timelineMap, changedItems);
+		const store = createTimelineStore();
 		setTimelineStore(store);
 	}
 
