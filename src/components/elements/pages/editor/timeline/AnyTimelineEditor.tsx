@@ -1,4 +1,4 @@
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useState, useEffect, DragEvent, FC, useCallback, KeyboardEvent, useRef } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
@@ -13,7 +13,7 @@ import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/Workl
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
 import { ActiveTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DetailEditTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DetailEditTimelineAtom, DragSourceTimelineAtom, TimelineItemsAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
@@ -51,6 +51,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
 	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
 	const setDragSourceTimeline = useSetAtom(DragSourceTimelineAtom);
+	const timelineItems = useAtomValue(TimelineItemsAtom);
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
@@ -71,7 +72,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}, [refInputDate]);
 
 	useEffect(() => {
-		const timelineItem = props.timelineStore.changedItemMap.get(props.currentTimeline.id);
+		const timelineItem = timelineItems.get(props.currentTimeline.id);
 		if (timelineItem) {
 			setSubject(timelineItem.timeline.subject);
 

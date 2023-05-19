@@ -4,7 +4,6 @@ import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline, TimelineId } from "@/models/data/Setting";
-import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
 import { DateTimeTicks } from "@/models/DateTime";
 
@@ -12,8 +11,6 @@ export type MoveDirection = "up" | "down" | "parent";
 
 export interface TimelineStore {
 
-	/** 変更タイムライン */
-	readonly changedItemMap: ReadonlyMap<TimelineId, TimelineItem>;
 
 	/** 各工数時間 */
 	readonly workRanges: ReadonlyMap<TimelineId, WorkRange>;

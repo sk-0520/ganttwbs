@@ -8,15 +8,19 @@ import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
+import { TimelineItemsAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { useAtomValue } from "jotai";
 
 interface Props extends GanttChartTimelineProps { }
 
 const GanttChartTimeline: FC<Props> = (props: Props) => {
+	const timelineItems = useAtomValue(TimelineItemsAtom);
+
 
 	const [successWorkRange, setSuccessWorkRange] = useState<SuccessWorkRange | null>();
 
 	useEffect(() => {
-		const timelineItem = props.timelineStore.changedItemMap.get(props.currentTimeline.id);
+		const timelineItem = timelineItems.get(props.currentTimeline.id);
 		if (timelineItem) {
 			if (timelineItem.workRange) {
 				if (WorkRanges.maybeSuccessWorkRange(timelineItem.workRange)) {

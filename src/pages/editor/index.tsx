@@ -1,4 +1,4 @@
-import { Provider as JotaiProvider, useSetAtom } from "jotai";
+import { Provider as JotaiProvider } from "jotai";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -10,7 +10,6 @@ import SettingEditor from "@/components/elements/pages/editor/setting/SettingEdi
 import TimelineEditor from "@/components/elements/pages/editor/timeline/TimelineEditor";
 import Layout from "@/components/layout/Layout";
 import { useLocale } from "@/locales/locale";
-import { RootTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
 import { Storages } from "@/models/Storages";
@@ -30,7 +29,6 @@ const EditorPage: NextPage = () => {
 	const [configuration] = useState(createConfiguration());
 	const [editorData, setEditorData] = useState<EditorData | null>(null);
 	const [selectedTabIndex, setSelectedTabIndex] = useState(configuration.tabIndex.application);
-	const setRootTimeline = useSetAtom(RootTimelineAtom);
 
 	function handleOnSelect(index: number, lastIndex: number, event: Event) {
 		setSelectedTabIndex(index);
@@ -42,9 +40,8 @@ const EditorPage: NextPage = () => {
 			router.push("/");
 			return;
 		}
-		setRootTimeline(editorData.setting.rootTimeline);
 		setEditorData(editorData);
-	}, [router, setRootTimeline]);
+	}, [router]);
 
 	return (
 		<JotaiProvider>

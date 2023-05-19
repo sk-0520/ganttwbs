@@ -1,5 +1,5 @@
-import { useAtom, useSetAtom } from "jotai";
-import { FC, useEffect, useMemo } from "react";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { FC, useEffect, useLayoutEffect, useMemo } from "react";
 import { ReactNode, useState } from "react";
 
 import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
@@ -10,10 +10,9 @@ import TimelineItems from "@/components/elements/pages/editor/timeline/TimelineI
 import TimelineViewer from "@/components/elements/pages/editor/timeline/TimelineViewer";
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
-import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, RootTimelineAtom, SequenceTimelinesAtom, TotalTimelineMapAtom, TotalTimelineMapType } from "@/models/data/atom/editor/TimelineAtoms";
+import { CalendarInfoAtom, DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, ResourceInfoAtom, RootTimelineAtom, SequenceTimelinesAtom, SettingAtom, TimelineItemsAtom, TotalTimelineMapAtom, TotalTimelineMapType } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -29,8 +28,6 @@ import { WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
 import { Editors } from "@/models/Editors";
-import { Require } from "@/models/Require";
-import { Resources } from "@/models/Resources";
 import { Settings } from "@/models/Settings";
 import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
 import { Strings } from "@/models/Strings";
@@ -61,15 +58,13 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const setDragOverTimelineId = useSetAtom(DragOverTimelineIdAtom);
 	const [sequenceTimelines, setSequenceTimelines] = useAtom(SequenceTimelinesAtom);
 	const [/* totalTimelineMap */, setTotalTimelineMap] = useAtom(TotalTimelineMapAtom);
-	const [rootTimeline, setRootTimeline] = useAtom(RootTimelineAtom);
+	const setSettingAtom = useSetAtom(SettingAtom);
+	const rootTimeline = useAtomValue(RootTimelineAtom);
+	const calendarInfo = useAtomValue(CalendarInfoAtom);
+	const resourceInfo = useAtomValue(ResourceInfoAtom);
+	//const workRanges = useAtomValue(WorkRangesAtom);
+	const timelineItems = useAtomValue(TimelineItemsAtom);
 
-	const calendarInfo = useMemo(() => {
-		return Calendars.createCalendarInfo(props.editorData.setting.timeZone, props.editorData.setting.calendar);
-	}, [props.editorData.setting]);
-
-	const resourceInfo = useMemo(() => {
-		return Resources.createResourceInfo(props.editorData.setting.groups);
-	}, [props.editorData.setting]);
 
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(sequenceTimelines, new Map(), new Map()));
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
@@ -85,8 +80,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	// 	updateRelations();
 	// }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
-		setRootTimeline(props.editorData.setting.rootTimeline);
+	useLayoutEffect(() => {
+		setSettingAtom(props.editorData.setting);
 		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -233,7 +228,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		console.debug("dayInfos", dayInfos);
 
 		const result: TimelineStore = {
-			changedItemMap: changedItems,
 			workRanges: workRangesCache,
 			dayInfos: dayInfos,
 
@@ -254,24 +248,24 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	function updateRelations() {
 		console.debug("全体へ通知");
 
-		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
+		const timelineMap = Timelines.getTimelinesMap(rootTimeline);
 		setTotalTimelineMap(timelineMap);
 
 		//const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
-		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], props.editorData.setting.calendar.holiday, props.editorData.setting.recursive, calendarInfo.timeZone);
+		//const workRanges = Timelines.getWorkRanges([...timelineMap.values()], props.editorData.setting.calendar.holiday, props.editorData.setting.recursive, calendarInfo.timeZone);
 
-		const changedItems = new Map(
-			[...timelineMap.entries()]
-				.map(([k, v]) => {
-					const item: TimelineItem = {
-						timeline: v,
-						workRange: Require.get(workRanges, k),
-					};
+		// const changedItems = new Map(
+		// 	[...timelineMap.entries()]
+		// 		.map(([k, v]) => {
+		// 			const item: TimelineItem = {
+		// 				timeline: v,
+		// 				workRange: Require.get(workRanges, k),
+		// 			};
 
-					return [k, item];
-				})
-		);
-		const store = createTimelineStore(sequenceTimelines, timelineMap, changedItems);
+		// 			return [k, item];
+		// 		})
+		// );
+		const store = createTimelineStore(sequenceTimelines, timelineMap, timelineItems);
 		setTimelineStore(store);
 	}
 
