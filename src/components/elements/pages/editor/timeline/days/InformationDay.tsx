@@ -3,22 +3,21 @@ import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DayInfosAtom, TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { CalendarInfoAtom, ResourceInfoAtom, TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
-import { DateTime } from "@/models/DateTime";
+import { DateTime, DateTimeTicks } from "@/models/DateTime";
 import { Days } from "@/models/Days";
 import { Editors } from "@/models/Editors";
 import { Require } from "@/models/Require";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, TimelineStoreProps {
+interface Props extends SettingProps, TimelineStoreProps {
 	readonly date: DateTime;
+	readonly dayInfos: Map<DateTimeTicks, DayInfo>;
 }
 
 const InformationDay: FC<Props> = (props: Props) => {
@@ -26,7 +25,8 @@ const InformationDay: FC<Props> = (props: Props) => {
 
 	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
 	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
-	const dayInfos = useAtomValue(DayInfosAtom);
+	const calendarInfo = useAtomValue(CalendarInfoAtom);
+	const resourceInfo = useAtomValue(ResourceInfoAtom);
 
 	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
@@ -38,7 +38,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 	// 	}
 	// }, [refDetails]);
 
-	const holidayEventValue = props.calendarInfo.holidayEventMap.get(props.date.ticks);
+	const holidayEventValue = calendarInfo.holidayEventMap.get(props.date.ticks);
 	const classNames = Days.getDayClassNames(props.date, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
 	const className = Days.getCellClassName(classNames);
 
@@ -48,7 +48,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 	};
 
 	const nextDay = props.date.add(1, "day");
-	for (const [ticks, info] of dayInfos) {
+	for (const [ticks, info] of props.dayInfos) {
 		if (props.date.ticks <= ticks && ticks < nextDay.ticks) {
 			for (const memberId of info.duplicateMembers) {
 				mergedDayInfo.duplicateMembers.add(memberId);
@@ -61,15 +61,15 @@ const InformationDay: FC<Props> = (props: Props) => {
 
 	// ソート済み重複メンバー取得
 	const sortedMembers = [...mergedDayInfo.duplicateMembers]
-		.map(a => Require.get(props.resourceInfo.memberMap, a))
+		.map(a => Require.get(resourceInfo.memberMap, a))
 		.sort((a, b) => {
-			const groupIndex = props.resourceInfo.groupItems.indexOf(a.group);
-			const groupCompare = groupIndex - props.resourceInfo.groupItems.indexOf(b.group);
+			const groupIndex = resourceInfo.groupItems.indexOf(a.group);
+			const groupCompare = groupIndex - resourceInfo.groupItems.indexOf(b.group);
 			if (!groupCompare) {
 				return groupCompare;
 			}
-			const group = props.resourceInfo.groupItems[groupIndex];
-			const members = Require.get(props.resourceInfo.memberItems, group);
+			const group = resourceInfo.groupItems[groupIndex];
+			const members = Require.get(resourceInfo.memberItems, group);
 			return members.indexOf(a.member) - members.indexOf(b.member);
 		})
 		;

@@ -12,7 +12,7 @@ import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { CalendarInfoAtom, DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, ResourceInfoAtom, RootTimelineAtom, SequenceTimelinesAtom, SettingAtom, TimelineItemsAtom, TotalTimelineMapAtom, TotalTimelineMapType, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { CalendarInfoAtom, DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, ResourceInfoAtom, RootTimelineAtom, SequenceTimelinesAtom, SettingAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -23,7 +23,6 @@ import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, TimelineId, TimelineKind } from "@/models/data/Setting";
-import { TimelineItem } from "@/models/data/TimelineItem";
 import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
 import { Editors } from "@/models/Editors";
@@ -60,13 +59,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const rootTimeline = useAtomValue(RootTimelineAtom);
 	const calendarInfo = useAtomValue(CalendarInfoAtom);
 	const resourceInfo = useAtomValue(ResourceInfoAtom);
-	//const workRanges = useAtomValue(WorkRangesAtom);
-	const timelineItems = useAtomValue(TimelineItemsAtom);
-	const workRanges = useAtomValue(WorkRangesAtom);
 
-
-
-	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(sequenceTimelines, new Map(), new Map()));
+	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore());
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
 
 	const dynamicStyleNodes = useMemo(() => {
@@ -354,10 +348,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 		//const prevSource = { ...source };
 		Object.assign(source, timeline);
-		const timelineItems = new Array<TimelineItem>();
-		timelineItems.push({
-			timeline: source
-		});
+		// const timelineItems = new Array<TimelineItem>();
+		// timelineItems.push({
+		// 	timeline: source
+		// });
 
 		// if (Settings.maybeGroupTimeline(timeline)) {
 		// 	/*
@@ -506,8 +500,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				configuration={props.configuration}
 				setting={props.editorData.setting}
 				timelineStore={timelineStore}
-				calendarInfo={calendarInfo}
-				resourceInfo={resourceInfo}
 			/>
 			<TimelineItems
 				configuration={props.configuration}

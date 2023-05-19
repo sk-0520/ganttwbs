@@ -1,4 +1,4 @@
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { FC, useMemo } from "react";
 
 import InformationDay from "@/components/elements/pages/editor/timeline/days/InformationDay";
@@ -6,9 +6,8 @@ import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { CalendarInfoAtom, DayInfosAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { DateTime } from "@/models/DateTime";
@@ -17,7 +16,7 @@ import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 
-interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps, ResourceInfoProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
 	//nop
 }
 
@@ -31,14 +30,16 @@ type YearMonth = {
 const DaysHeader: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
+	const calendarInfo = useAtomValue(CalendarInfoAtom);
+	const dayInfos = useAtomValue(DayInfosAtom);
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 
 	const { dates, yearMonthBucket } = useMemo(() => {
 		console.debug("DaysHeader - dates", new Date());
-		const days = Calendars.getCalendarRangeDays(props.calendarInfo.range);
+		const days = Calendars.getCalendarRangeDays(calendarInfo.range);
 		const dates = Arrays
 			.range(0, days)
-			.map(a => props.calendarInfo.range.begin.add(TimeSpan.fromDays(a)))
+			.map(a => calendarInfo.range.begin.add(TimeSpan.fromDays(a)))
 			;
 
 		const yearMonthBucket = new Array<YearMonth>();
@@ -67,7 +68,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 			dates,
 			yearMonthBucket
 		};
-	}, [props.calendarInfo]);
+	}, [calendarInfo]);
 
 	const yearMonthNodes = useMemo(() => {
 		return yearMonthBucket.map(a => {
@@ -87,7 +88,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 
 	const dayNodes = useMemo(() => {
 		return dates.map(a => {
-			const holidayEventValue = props.calendarInfo.holidayEventMap.get(a.ticks);
+			const holidayEventValue = calendarInfo.holidayEventMap.get(a.ticks);
 			const classNames = Days.getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
 			const className = Days.getCellClassName(classNames);
 
@@ -97,11 +98,11 @@ const DaysHeader: FC<Props> = (props: Props) => {
 				</td>
 			);
 		});
-	}, [dates, props.calendarInfo, props.setting]);
+	}, [dates, calendarInfo, props.setting]);
 
 	const weekNodes = useMemo(() => {
 		return dates.map(a => {
-			const holidayEventValue = props.calendarInfo.holidayEventMap.get(a.ticks);
+			const holidayEventValue = calendarInfo.holidayEventMap.get(a.ticks);
 			const classNames = Days.getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
 			const className = Days.getCellClassName(classNames);
 
@@ -111,7 +112,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 				</td>
 			);
 		});
-	}, [dates, locale, props.calendarInfo, props.setting]);
+	}, [dates, locale, calendarInfo, props.setting]);
 
 	const dummyNodes = useMemo(() => {
 		const className = Days.getCellClassName([]);
@@ -159,8 +160,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 								<InformationDay
 									key={a.ticks}
 									date={a}
-									calendarInfo={props.calendarInfo}
-									resourceInfo={props.resourceInfo}
+									dayInfos={dayInfos}
 									setting={props.setting}
 									timelineStore={props.timelineStore}
 								/>
