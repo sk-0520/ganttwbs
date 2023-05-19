@@ -3,7 +3,7 @@ import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DayInfosAtom, TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
@@ -26,6 +26,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 
 	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
 	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
+	const dayInfos = useAtomValue(DayInfosAtom);
 
 	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
@@ -47,7 +48,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 	};
 
 	const nextDay = props.date.add(1, "day");
-	for (const [ticks, info] of props.timelineStore.dayInfos) {
+	for (const [ticks, info] of dayInfos) {
 		if (props.date.ticks <= ticks && ticks < nextDay.ticks) {
 			for (const memberId of info.duplicateMembers) {
 				mergedDayInfo.duplicateMembers.add(memberId);

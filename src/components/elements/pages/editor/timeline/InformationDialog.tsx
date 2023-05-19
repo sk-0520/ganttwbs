@@ -1,7 +1,9 @@
+import { useAtomValue } from "jotai";
 import { FC } from "react";
 
 import Dialog from "@/components/elements/Dialog";
 import { useLocale } from "@/locales/locale";
+import { DayInfosAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -13,9 +15,10 @@ interface Props extends ConfigurationProps, CalendarInfoProps, TimelineStoreProp
 
 const InformationDialog: FC<Props> = (props: Props) => {
 	const locale = useLocale();
+	const dayInfos = useAtomValue(DayInfosAtom);
 
 	const dates = new Set(
-		[...props.timelineStore.dayInfos]
+		[...dayInfos]
 			.map(([k, v]) => DateTime.convert(k, props.calendarInfo.timeZone).toDateOnly())
 			.map(a => a.ticks)
 			.sort((a, b) => Number(a) - Number(b))

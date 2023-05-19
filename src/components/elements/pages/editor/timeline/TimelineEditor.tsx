@@ -223,8 +223,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		console.debug("dayInfos", dayInfos);
 
 		const result: TimelineStore = {
-			dayInfos: dayInfos,
-
 			calcReadableTimelineId: handleCalcReadableTimelineId,
 			searchBeforeTimeline: handleSearchBeforeTimeline,
 

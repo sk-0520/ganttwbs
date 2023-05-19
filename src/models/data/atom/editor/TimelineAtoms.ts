@@ -93,6 +93,7 @@ export type TotalTimelineMapType = ReadonlyMap<TimelineId, AnyTimeline>;
 /** 全てのタイムライン(ノード状態ではない) */
 export const TotalTimelineMapAtom = atom<TotalTimelineMapType>(new Map());
 
+/** 各工数時間 */
 export const WorkRangesAtom = atom(
 	get => {
 		const setting = get(SettingAtom);
@@ -104,6 +105,7 @@ export const WorkRangesAtom = atom(
 	}
 );
 
+/** 変更タイムライン */
 export const TimelineItemsAtom = atom(
 	get => {
 		const timelineMap = get(TotalTimelineMapAtom);
@@ -125,3 +127,15 @@ export const TimelineItemsAtom = atom(
 	}
 );
 //ReadonlyMap<TimelineId, TimelineItem>
+
+/** 日に対する何かしらの情報(情報がある時点で死んでる) */
+export const DayInfosAtom = atom(
+	get => {
+		const resourceInfoAtom = get(ResourceInfoAtom);
+		const totalTimelineMap = get(TotalTimelineMapAtom);
+		const workRanges = get(WorkRangesAtom);
+		const dayInfos = Timelines.calcDayInfos(totalTimelineMap, new Set([...workRanges.values()]), resourceInfoAtom);
+
+		return dayInfos;
+	}
+);

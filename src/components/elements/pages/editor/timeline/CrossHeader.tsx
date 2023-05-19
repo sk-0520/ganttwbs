@@ -7,7 +7,7 @@ import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/T
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { RootTimelineAtom, SequenceTimelinesAtom, TimelineItemsAtom, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DayInfosAtom, RootTimelineAtom, SequenceTimelinesAtom, TimelineItemsAtom, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
@@ -33,6 +33,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	const rootTimeline = useAtomValue(RootTimelineAtom);
 	const timelineItems = useAtomValue(TimelineItemsAtom);
 	const workRanges = useAtomValue(WorkRangesAtom);
+	const dayInfos = useAtomValue(DayInfosAtom);
 
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
@@ -63,7 +64,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 			}
 
 		}
-	}, [props.timelineStore]);
+	}, [props.timelineStore, timelineItems]);
 
 	function addEmptyTimeline(kind: TimelineKind) {
 		props.timelineStore.addEmptyTimeline(
@@ -126,7 +127,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	function handleClickInformationFirst(): void {
-		const keys = [...props.timelineStore.dayInfos.keys()].sort((a, b) => Number(a) - Number(b));
+		const keys = [...dayInfos.keys()].sort((a, b) => Number(a) - Number(b));
 		if (keys.length) {
 			const date = DateTime.convert(keys[0], props.calendarInfo.timeZone).toDateOnly();
 			scrollView(undefined, date);
@@ -134,7 +135,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	function handleClickInformationLast(): void {
-		const keys = [...props.timelineStore.dayInfos.keys()].sort((a, b) => Number(b) - Number(a));
+		const keys = [...dayInfos.keys()].sort((a, b) => Number(b) - Number(a));
 		if (keys.length) {
 			const date = DateTime.convert(keys[0], props.calendarInfo.timeZone).toDateOnly();
 			scrollView(undefined, date);
@@ -234,7 +235,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						<li>
 							<button
 								onClick={ev => handleClickInformationFirst()}
-								disabled={!props.timelineStore.dayInfos.size}
+								disabled={!dayInfos.size}
 								title={locale.pages.editor.timeline.header.operations.informationFirst}
 							>
 								<IconImage
@@ -244,7 +245,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						</li>
 						<li>
 							<button
-								disabled={!props.timelineStore.dayInfos.size}
+								disabled={!dayInfos.size}
 								onClick={ev => handleClickInformationList()}
 							>
 								<IconLabel
@@ -256,7 +257,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						<li>
 							<button
 								title={locale.pages.editor.timeline.header.operations.informationLast}
-								disabled={!props.timelineStore.dayInfos.size}
+								disabled={!dayInfos.size}
 								onClick={ev => handleClickInformationLast()}
 							>
 								<IconImage

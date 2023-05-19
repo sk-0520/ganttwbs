@@ -1,20 +1,12 @@
 
-import { DayInfo } from "@/models/data/DayInfo";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline } from "@/models/data/Setting";
-import { DateTimeTicks } from "@/models/DateTime";
 
 export type MoveDirection = "up" | "down" | "parent";
 
 export interface TimelineStore {
-
-
-
-	/** 日に対する何かしらの情報(情報がある時点で死んでる) */
-	readonly dayInfos: ReadonlyMap<DateTimeTicks, DayInfo>;
-
 	/**
 	 * タイムラインの表示上IDを取得。
 	 */
