@@ -1,15 +1,15 @@
+import { useAtomValue } from "jotai";
 import { FC, ReactNode, useEffect, useState } from "react";
 
 import GroupChart from "@/components/elements/pages/editor/timeline/shape/GroupChart";
 import TaskChart from "@/components/elements/pages/editor/timeline/shape/TaskChart";
 import { Charts } from "@/models/Charts";
+import { TimelineItemsAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
 import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
-import { TimelineItemsAtom } from "@/models/data/atom/editor/TimelineAtoms";
-import { useAtomValue } from "jotai";
 
 interface Props extends GanttChartTimelineProps { }
 
@@ -30,7 +30,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 				}
 			}
 		}
-	}, [props.timelineStore, props.currentTimeline]);
+	}, [props.timelineStore, props.currentTimeline, timelineItems]);
 
 
 	function renderCurrentTimeline(): ReactNode {

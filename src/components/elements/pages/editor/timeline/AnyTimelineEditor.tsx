@@ -13,7 +13,7 @@ import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/Workl
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
 import { ActiveTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DetailEditTimelineAtom, DragSourceTimelineAtom, TimelineItemsAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DetailEditTimelineAtom, DragSourceTimelineAtom, TimelineItemsAtom, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
@@ -52,6 +52,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
 	const setDragSourceTimeline = useSetAtom(DragSourceTimelineAtom);
 	const timelineItems = useAtomValue(TimelineItemsAtom);
+	const workRanges = useAtomValue(WorkRangesAtom);
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
@@ -104,7 +105,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				}
 			}
 		}
-	}, [props.currentTimeline, props.timelineStore]);
+	}, [props.currentTimeline, props.timelineStore, timelineItems]);
 
 	useEffect(() => {
 		const isVisibleBeginDateInput = Boolean(props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id);
@@ -207,7 +208,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleShowTimeline(): void {
 		let date: DateTime | undefined = undefined;
-		const workRange = props.timelineStore.workRanges.get(props.currentTimeline.id);
+		const workRange = workRanges.get(props.currentTimeline.id);
 		if (workRange && WorkRanges.maybeSuccessWorkRange(workRange)) {
 			date = workRange.begin;
 		}

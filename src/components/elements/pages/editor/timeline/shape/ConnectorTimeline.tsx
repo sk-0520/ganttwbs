@@ -4,7 +4,7 @@ import { FC } from "react";
 
 import { Charts } from "@/models/Charts";
 import { AreaSize } from "@/models/data/Area";
-import { RootTimelineAtom, TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { RootTimelineAtom, TimelineIndexMapAtom, TotalTimelineMapAtom, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
@@ -26,12 +26,13 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 	const rootTimeline = useAtomValue(RootTimelineAtom);
 	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
 	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
+	const workRanges = useAtomValue(WorkRangesAtom);
 
 	if (!props.currentTimeline.previous.length) {
 		return null;
 	}
 
-	const currentWorkRange = props.timelineStore.workRanges.get(props.currentTimeline.id);
+	const currentWorkRange = workRanges.get(props.currentTimeline.id);
 	if (!WorkRanges.maybeSuccessWorkRange(currentWorkRange)) {
 		return null;
 	}
@@ -67,7 +68,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 					: Charts.getTaskBackground(previousTimeline, props.resourceInfo.memberMap, props.setting.theme)
 					;
 
-				const previewWorkRange = props.timelineStore.workRanges.get(previousTimeline.id);
+				const previewWorkRange = workRanges.get(previousTimeline.id);
 				if (!WorkRanges.maybeSuccessWorkRange(previewWorkRange)) {
 					return null;
 				}

@@ -7,7 +7,7 @@ import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/T
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { RootTimelineAtom, SequenceTimelinesAtom, TimelineItemsAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { RootTimelineAtom, SequenceTimelinesAtom, TimelineItemsAtom, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
@@ -32,6 +32,8 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	const sequenceTimelines = useAtomValue(SequenceTimelinesAtom);
 	const rootTimeline = useAtomValue(RootTimelineAtom);
 	const timelineItems = useAtomValue(TimelineItemsAtom);
+	const workRanges = useAtomValue(WorkRangesAtom);
+
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 	const [workload, setWorkload] = useState(0);
@@ -99,14 +101,14 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	function handleClickCalendarFirst(): void {
-		const range = WorkRanges.getSuccessTimelineIdRange(props.timelineStore.workRanges);
+		const range = WorkRanges.getSuccessTimelineIdRange(workRanges);
 		if (range.begin) {
 			scrollView(range.begin.timelineId, range.begin.workRange.begin);
 		}
 	}
 
 	function handleClickCalendarLast(): void {
-		const range = WorkRanges.getSuccessTimelineIdRange(props.timelineStore.workRanges);
+		const range = WorkRanges.getSuccessTimelineIdRange(workRanges);
 		if (range.end) {
 			scrollView(range.end.timelineId, range.end.workRange.begin);
 		}

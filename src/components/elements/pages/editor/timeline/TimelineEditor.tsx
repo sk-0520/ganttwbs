@@ -12,7 +12,7 @@ import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { CalendarInfoAtom, DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, ResourceInfoAtom, RootTimelineAtom, SequenceTimelinesAtom, SettingAtom, TimelineItemsAtom, TotalTimelineMapAtom, TotalTimelineMapType } from "@/models/data/atom/editor/TimelineAtoms";
+import { CalendarInfoAtom, DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, ResourceInfoAtom, RootTimelineAtom, SequenceTimelinesAtom, SettingAtom, TimelineItemsAtom, TotalTimelineMapAtom, TotalTimelineMapType, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -24,7 +24,6 @@ import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
-import { WorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
 import { Editors } from "@/models/Editors";
@@ -45,7 +44,6 @@ interface Props extends ConfigurationProps {
 
 const TimelineEditor: FC<Props> = (props: Props) => {
 	const locale = useLocale();
-	const workRangesCache = new Map<TimelineId, WorkRange>();
 
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
@@ -64,6 +62,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const resourceInfo = useAtomValue(ResourceInfoAtom);
 	//const workRanges = useAtomValue(WorkRangesAtom);
 	const timelineItems = useAtomValue(TimelineItemsAtom);
+	const workRanges = useAtomValue(WorkRangesAtom);
+
 
 
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore(sequenceTimelines, new Map(), new Map()));
@@ -217,18 +217,12 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	function createTimelineStore(sequenceTimelines: ReadonlyArray<AnyTimeline>, totalTimelineMap: TotalTimelineMapType, changedItems: ReadonlyMap<TimelineId, TimelineItem>): TimelineStore {
 
-		for (const [k, v] of changedItems) {
-			if (v.workRange) {
-				workRangesCache.set(k, v.workRange);
-			}
-		}
 
-		const dayInfos = Timelines.calcDayInfos(totalTimelineMap, new Set([...workRangesCache.values()]), resourceInfo);
+		const dayInfos = Timelines.calcDayInfos(totalTimelineMap, new Set([...workRanges.values()]), resourceInfo);
 
 		console.debug("dayInfos", dayInfos);
 
 		const result: TimelineStore = {
-			workRanges: workRangesCache,
 			dayInfos: dayInfos,
 
 			calcReadableTimelineId: handleCalcReadableTimelineId,
