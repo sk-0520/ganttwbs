@@ -12,7 +12,7 @@ import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { CalendarInfoAtom, DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, ResourceInfoAtom, SequenceTimelinesAtom, SequenceTimelinesWriterAtom, SettingAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, ResourceInfoAtom, SequenceTimelinesAtom, SequenceTimelinesWriterAtom, useCalendarInfoAtomReader, useSettingAtomWriter } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -56,8 +56,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const setSequenceTimelinesWriter = useSetAtom(SequenceTimelinesWriterAtom);
 	const sequenceTimelines= useAtomValue(SequenceTimelinesAtom);
 	//const [/*totalTimelineMap*/, setTotalTimelineMap] = useAtom(TotalTimelineMapAtom);
-	const setSettingAtom = useSetAtom(SettingAtom);
-	const calendarInfo = useAtomValue(CalendarInfoAtom);
+	const settingAtomWriter = useSettingAtomWriter();
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 	const resourceInfo = useAtomValue(ResourceInfoAtom);
 
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore());
@@ -75,7 +75,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	// }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useLayoutEffect(() => {
-		setSettingAtom(props.editorData.setting);
+		settingAtomWriter.write(props.editorData.setting);
 		setSequenceTimelinesWriter(...Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -441,7 +441,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		console.debug(timeline);
 		setSelectingBeginDate({
 			timeline: timeline,
-			beginDate: timeline.static ? DateTime.parse(timeline.static, calendarInfo.timeZone) : null,
+			beginDate: timeline.static ? DateTime.parse(timeline.static, calendarInfoAtomReader.data.timeZone) : null,
 			previous: new Set(timeline.previous),
 			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editorData.setting.rootTimeline),
 		});
@@ -490,7 +490,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				configuration={props.configuration}
 				setting={props.editorData.setting}
 				timelineStore={timelineStore}
-				calendarInfo={calendarInfo}
 			/>
 			<DaysHeader
 				configuration={props.configuration}
@@ -503,26 +502,22 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				selectingBeginDate={selectingBeginDate}
 				beginDateCallbacks={beginDateCallbacks}
 				resourceInfo={resourceInfo}
-				calendarInfo={calendarInfo}
 				timelineStore={timelineStore}
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
 				setting={props.editorData.setting}
 				resourceInfo={resourceInfo}
-				calendarInfo={calendarInfo}
 				timelineStore={timelineStore}
 			/>
 			<HighlightArea
 				configuration={props.configuration}
 				setting={props.editorData.setting}
-				calendarInfo={calendarInfo}
 				timelineStore={timelineStore}
 			/>
 			{detailEditTimeline && <TimelineDetailEditDialog
 				configuration={props.configuration}
 				setting={props.editorData.setting}
-				calendarInfo={calendarInfo}
 				resourceInfo={resourceInfo}
 				timeline={detailEditTimeline}
 				callbackSubmit={(timeline) => handleEndDetailEdit(detailEditTimeline, timeline)}

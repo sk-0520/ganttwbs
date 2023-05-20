@@ -13,11 +13,10 @@ import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/Workl
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
 import { ActiveTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DetailEditTimelineAtom, DragSourceTimelineAtom, TimelineItemsAtom, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DetailEditTimelineAtom, DragSourceTimelineAtom, TimelineItemsAtom, useCalendarInfoAtomReader, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
@@ -32,7 +31,7 @@ import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, ResourceInfoProps {
 	currentTimeline: AnyTimeline;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
@@ -53,6 +52,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const setDragSourceTimeline = useSetAtom(DragSourceTimelineAtom);
 	const timelineItems = useAtomValue(TimelineItemsAtom);
 	const workRanges = useAtomValue(WorkRangesAtom);
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
@@ -265,7 +265,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			return;
 		}
 
-		props.selectingBeginDate.beginDate = date ? DateTime.convert(date, props.calendarInfo.timeZone) : null;
+		props.selectingBeginDate.beginDate = date ? DateTime.convert(date, calendarInfoAtomReader.data.timeZone) : null;
 		setSelectedBeginDate(props.selectingBeginDate.beginDate);
 	}
 

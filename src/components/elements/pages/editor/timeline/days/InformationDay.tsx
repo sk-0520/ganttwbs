@@ -3,7 +3,7 @@ import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { CalendarInfoAtom, DayInfosAtom, ResourceInfoAtom, TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DayInfosAtom, ResourceInfoAtom, TimelineIndexMapAtom, TotalTimelineMapAtom, useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -24,9 +24,9 @@ const InformationDay: FC<Props> = (props: Props) => {
 
 	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
 	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
-	const calendarInfo = useAtomValue(CalendarInfoAtom);
 	const resourceInfo = useAtomValue(ResourceInfoAtom);
 	const dayInfos = useAtomValue(DayInfosAtom);
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
 	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
@@ -38,7 +38,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 	// 	}
 	// }, [refDetails]);
 
-	const holidayEventValue = calendarInfo.holidayEventMap.get(props.date.ticks);
+	const holidayEventValue = calendarInfoAtomReader.data.holidayEventMap.get(props.date.ticks);
 	const classNames = Days.getDayClassNames(props.date, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
 	const className = Days.getCellClassName(classNames);
 

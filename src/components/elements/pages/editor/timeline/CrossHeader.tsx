@@ -7,9 +7,8 @@ import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/T
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DayInfosAtom, RootTimelineAtom, SequenceTimelinesAtom, TimelineItemsAtom, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DayInfosAtom, SequenceTimelinesAtom, TimelineItemsAtom, useCalendarInfoAtomReader, useRootTimelineAtomReader, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -22,7 +21,7 @@ import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
 }
 
 const CrossHeader: FC<Props> = (props: Props) => {
@@ -30,10 +29,11 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
 	const sequenceTimelines = useAtomValue(SequenceTimelinesAtom);
-	const rootTimeline = useAtomValue(RootTimelineAtom);
+	const rootTimelineReader = useRootTimelineAtomReader();
 	const timelineItems = useAtomValue(TimelineItemsAtom);
 	const workRanges = useAtomValue(WorkRangesAtom);
 	const dayInfos = useAtomValue(DayInfosAtom);
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
@@ -68,7 +68,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 
 	function addEmptyTimeline(kind: TimelineKind) {
 		props.timelineStore.addEmptyTimeline(
-			rootTimeline,
+			rootTimelineReader.data,
 			{
 				position: NewTimelinePosition.Next,
 				timelineKind: kind,
@@ -90,14 +90,14 @@ const CrossHeader: FC<Props> = (props: Props) => {
 
 	function handleInputTimelines(timeline: GroupTimeline | null) {
 		if (timeline) {
-			props.timelineStore.addNewTimeline(rootTimeline, timeline, NewTimelinePosition.Next);
+			props.timelineStore.addNewTimeline(rootTimelineReader.data, timeline, NewTimelinePosition.Next);
 		}
 
 		setVisibleTimelinesImportDialog(false);
 	}
 
 	function handleClickCalendarToday(): void {
-		const date = DateTime.today(props.calendarInfo.timeZone);
+		const date = DateTime.today(calendarInfoAtomReader.data.timeZone);
 		scrollView(undefined, date);
 	}
 
@@ -129,7 +129,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	function handleClickInformationFirst(): void {
 		const keys = [...dayInfos.keys()].sort((a, b) => Number(a) - Number(b));
 		if (keys.length) {
-			const date = DateTime.convert(keys[0], props.calendarInfo.timeZone).toDateOnly();
+			const date = DateTime.convert(keys[0], calendarInfoAtomReader.data.timeZone).toDateOnly();
 			scrollView(undefined, date);
 		}
 	}
@@ -137,7 +137,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	function handleClickInformationLast(): void {
 		const keys = [...dayInfos.keys()].sort((a, b) => Number(b) - Number(a));
 		if (keys.length) {
-			const date = DateTime.convert(keys[0], props.calendarInfo.timeZone).toDateOnly();
+			const date = DateTime.convert(keys[0], calendarInfoAtomReader.data.timeZone).toDateOnly();
 			scrollView(undefined, date);
 		}
 	}
@@ -371,7 +371,6 @@ const CrossHeader: FC<Props> = (props: Props) => {
 			{visibleInformation && (
 				<InformationDialog
 					configuration={props.configuration}
-					calendarInfo={props.calendarInfo}
 					timelineStore={props.timelineStore}
 					callbackClose={handleCloseInformation}
 				/>

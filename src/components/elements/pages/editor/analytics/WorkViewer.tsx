@@ -1,8 +1,8 @@
 import { FC, Fragment, ReactNode, useState } from "react";
 
 import { Calendars } from "@/models/Calendars";
+import { useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { AnyTimeline, Member, TaskTimeline } from "@/models/data/Setting";
 import { TotalSuccessWorkRange } from "@/models/data/WorkRange";
@@ -12,7 +12,7 @@ import { Settings } from "@/models/Settings";
 
 type DisplayValue = "workload" | "cost";
 
-interface Props extends CalendarInfoProps, ResourceInfoProps {
+interface Props extends ResourceInfoProps {
 	totalSuccessWorkRange: TotalSuccessWorkRange | undefined;
 	sequenceTimelines: Array<AnyTimeline>;
 }
@@ -20,6 +20,7 @@ interface Props extends CalendarInfoProps, ResourceInfoProps {
 const WorkViewer: FC<Props> = (props: Props) => {
 
 	const [displayValue, /*setDisplayValue*/] = useState<DisplayValue>("workload");
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
 	const months = props.totalSuccessWorkRange
 		? Calendars.getMonths(props.totalSuccessWorkRange.minimum.begin, props.totalSuccessWorkRange.maximum.end)
@@ -64,12 +65,12 @@ const WorkViewer: FC<Props> = (props: Props) => {
 									>
 										{a.name}
 									</td>
-									{renderMember(displayValue, firstMember, months, props.calendarInfo, taskTimelines)}
+									{renderMember(displayValue, firstMember, months, calendarInfoAtomReader.data, taskTimelines)}
 								</tr>
 								{nextMembers.map(b => {
 									return (
 										<tr key={b.id}>
-											{renderMember(displayValue, b, months, props.calendarInfo, taskTimelines)}
+											{renderMember(displayValue, b, months, calendarInfoAtomReader.data, taskTimelines)}
 										</tr>
 									);
 								})}

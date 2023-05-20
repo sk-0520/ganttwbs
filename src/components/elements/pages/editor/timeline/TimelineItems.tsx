@@ -6,7 +6,6 @@ import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTi
 import { Arrays } from "@/models/Arrays";
 import { SequenceTimelinesAtom, TimelineIndexMap, TimelineIndexMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
@@ -19,7 +18,7 @@ import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, ResourceInfoProps {
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
 }
@@ -69,7 +68,6 @@ const TimelineItems: FC<Props> = (props: Props) => {
 								timelineStore={props.timelineStore}
 								selectingBeginDate={props.selectingBeginDate}
 								beginDateCallbacks={props.beginDateCallbacks}
-								calendarInfo={props.calendarInfo}
 								resourceInfo={props.resourceInfo}
 								callbackSubjectKeyDown={onSubjectKeyDown}
 								callbackWorkloadKeyDown={onWorkloadKeyDown}

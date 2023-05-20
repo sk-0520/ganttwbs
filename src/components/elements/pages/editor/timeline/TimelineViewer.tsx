@@ -5,8 +5,7 @@ import GanttChartTimeline from "@/components/elements/pages/editor/timeline/Gant
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
 import { Charts } from "@/models/Charts";
 import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { SequenceTimelinesAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { SequenceTimelinesAtom, TotalTimelineMapAtom, useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
@@ -15,7 +14,7 @@ import { ColorString } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, ResourceInfoProps {
 	//nop
 }
 
@@ -23,10 +22,12 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 	const sequenceTimelines = useAtomValue(SequenceTimelinesAtom);
 	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
+
 
 	const areaData = useMemo(() => {
-		return Charts.createAreaData(props.configuration.design.seed.cell, props.calendarInfo.range, totalTimelineMap.size);
-	}, [props.configuration, props.calendarInfo, totalTimelineMap.size]);
+		return Charts.createAreaData(props.configuration.design.seed.cell, calendarInfoAtomReader.data.range, totalTimelineMap.size);
+	}, [props.configuration, calendarInfoAtomReader.data, totalTimelineMap.size]);
 
 	const gridNodes = useMemo(() => {
 		const width = areaData.cell.width.value * (areaData.days + props.configuration.design.dummy.width);
@@ -54,7 +55,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
 		for (let i = 0; i < (areaData.days + props.configuration.design.dummy.width); i++) {
-			const date = props.calendarInfo.range.begin.add(TimeSpan.fromDays(i));
+			const date = calendarInfoAtomReader.data.range.begin.add(TimeSpan.fromDays(i));
 
 			const gridX = areaData.cell.width.value + areaData.cell.width.value * i;
 
@@ -79,7 +80,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 			let color: ColorString | undefined = undefined;
 
 			// 祝日判定
-			const holidayEventValue = props.calendarInfo.holidayEventMap.get(date.ticks);
+			const holidayEventValue = calendarInfoAtomReader.data.holidayEventMap.get(date.ticks);
 			if (holidayEventValue) {
 				color = props.setting.theme.holiday.events[holidayEventValue.event.kind];
 			}
@@ -119,7 +120,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				</g>
 			</g>
 		);
-	}, [areaData, props.calendarInfo, props.configuration, props.setting, totalTimelineMap.size]);
+	}, [areaData, calendarInfoAtomReader.data, props.configuration, props.setting, totalTimelineMap.size]);
 
 	function handleMouseMove(ev: MouseEvent) {
 		// 下でグダグダやってるけどこっち(か算出方法)が間違ってる感あるなぁ
@@ -156,7 +157,6 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							parentGroup={null}
 							currentTimeline={a}
 							currentIndex={i}
-							calendarInfo={props.calendarInfo}
 							resourceInfo={props.resourceInfo}
 							areaSize={areaData.size}
 							timelineStore={props.timelineStore}
@@ -174,7 +174,6 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							setting={props.setting}
 							currentTimeline={a}
 							currentIndex={i}
-							calendarInfo={props.calendarInfo}
 							resourceInfo={props.resourceInfo}
 							areaSize={areaData.size}
 							timelineStore={props.timelineStore}

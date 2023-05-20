@@ -4,7 +4,7 @@ import { FC, ReactNode, useEffect, useState } from "react";
 import GroupChart from "@/components/elements/pages/editor/timeline/shape/GroupChart";
 import TaskChart from "@/components/elements/pages/editor/timeline/shape/TaskChart";
 import { Charts } from "@/models/Charts";
-import { TimelineItemsAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { TimelineItemsAtom, useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
 import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { Settings } from "@/models/Settings";
@@ -15,7 +15,7 @@ interface Props extends GanttChartTimelineProps { }
 
 const GanttChartTimeline: FC<Props> = (props: Props) => {
 	const timelineItems = useAtomValue(TimelineItemsAtom);
-
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
 	const [successWorkRange, setSuccessWorkRange] = useState<SuccessWorkRange | null>();
 
@@ -37,7 +37,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 		const cell = props.configuration.design.seed.cell;
 
 		const timeSpanRange = successWorkRange
-			? Charts.getTimeSpanRange(props.calendarInfo.range.begin, successWorkRange)
+			? Charts.getTimeSpanRange(calendarInfoAtomReader.data.range.begin, successWorkRange)
 			: null
 			;
 

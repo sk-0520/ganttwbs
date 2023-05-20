@@ -5,9 +5,8 @@ import ColumnHighlight from "@/components/elements/pages/editor/timeline/highlig
 import RowHighlight from "@/components/elements/pages/editor/timeline/highlight/RowHighlight";
 import { Charts } from "@/models/Charts";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { TotalTimelineMapAtom, useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ColumnHighlightMode, RowHighlightMode } from "@/models/data/Highlight";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -15,7 +14,7 @@ import { TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Dom } from "@/models/Dom";
 
-interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
 	//nop
 }
 
@@ -28,6 +27,7 @@ const HighlightArea: FC<Props> = (props: Props) => {
 	const [highlightDays, setHighlightDays] = useAtom(HighlightDaysAtom);
 	const dragSourceTimelineId = useAtomValue(DragSourceTimelineIdAtom);
 	const dragOverTimelineId = useAtomValue(DragOverTimelineIdAtom);
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
 	const [crossHeaderWidth, setCrossHeaderWidth] = useState(0);
 	const [crossHeaderHeight, setCrossHeaderHeight] = useState(0);
@@ -39,8 +39,8 @@ const HighlightArea: FC<Props> = (props: Props) => {
 	}, []);
 
 	const areaData = useMemo(() => {
-		return Charts.createAreaData(props.configuration.design.seed.cell, props.calendarInfo.range, totalTimelineMap.size);
-	}, [props.configuration, props.calendarInfo, totalTimelineMap.size]);
+		return Charts.createAreaData(props.configuration.design.seed.cell, calendarInfoAtomReader.data.range, totalTimelineMap.size);
+	}, [props.configuration, calendarInfoAtomReader.data.range, totalTimelineMap.size]);
 
 	function renderRowHighlight(timelineId: TimelineId, mode: RowHighlightMode, key?: string): ReactNode {
 		return (
@@ -84,7 +84,6 @@ const HighlightArea: FC<Props> = (props: Props) => {
 						areaData={areaData}
 						crossHeaderWidth={crossHeaderWidth}
 						crossHeaderHeight={crossHeaderHeight}
-						calendarInfo={props.calendarInfo}
 						callbackAnimationEnd={() => handleColumnAnimationEnd("highlight", a)}
 					/>
 				);

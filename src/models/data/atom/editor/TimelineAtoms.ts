@@ -1,6 +1,8 @@
-import { atom } from "jotai";
+import { atom, useAtomValue, useSetAtom } from "jotai";
 
 import { Calendars } from "@/models/Calendars";
+import { AtomReader, AtomWriter } from "@/models/data/atom/AtomHelper";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { DayInfo } from "@/models/data/DayInfo";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { RootTimeline, AnyTimeline, TimelineId, Setting } from "@/models/data/Setting";
@@ -19,7 +21,7 @@ export const DragSourceTimelineAtom = atom<AnyTimeline | undefined>(undefined);
 export const DraggingTimelineAtom = atom<DraggingTimeline | undefined>(undefined);
 
 /** 設定上。一生同じ。 */
-export const SettingAtom = atom<Setting>({
+const SettingAtom = atom<Setting>({
 	name: "",
 	recursive: DefaultSettings.RecursiveMaxCount,
 	version: DefaultSettings.SettingVersion,
@@ -57,20 +59,44 @@ export const SettingAtom = atom<Setting>({
 	versions: [],
 } satisfies Setting);
 
+export function useSettingAtomReader(): AtomReader<Setting> {
+	return {
+		data: useAtomValue(SettingAtom),
+	};
+}
+
+export function useSettingAtomWriter(): AtomWriter<Setting> {
+	return {
+		write: useSetAtom(SettingAtom),
+	};
+}
+
 /** 設定上のタイムライン。一生同じ。 */
-export const RootTimelineAtom = atom<RootTimeline>(
+const RootTimelineAtom = atom<RootTimeline>(
 	get => {
 		const setting = get(SettingAtom);
 		return setting.rootTimeline;
 	}
 );
 
-export const CalendarInfoAtom = atom(
+export function useRootTimelineAtomReader(): AtomReader<RootTimeline> {
+	return {
+		data: useAtomValue(RootTimelineAtom),
+	};
+}
+
+const CalendarInfoAtom = atom(
 	get => {
 		const setting = get(SettingAtom);
 		return Calendars.createCalendarInfo(setting.timeZone, setting.calendar);
 	}
 );
+
+export function useCalendarInfoAtomReader(): AtomReader<CalendarInfo> {
+	return {
+		data: useAtomValue(CalendarInfoAtom),
+	};
+}
 
 export const ResourceInfoAtom = atom(
 	get => {
@@ -87,7 +113,7 @@ export const ResourceInfoAtom = atom(
 export const SequenceTimelinesWriterAtom = atom<never, Array<AnyTimeline>, void>(
 	undefined as never,
 	(get, set, ...sequenceTimelines) => {
-		if(!sequenceTimelines) {
+		if (!sequenceTimelines) {
 			throw new Error();
 		}
 
