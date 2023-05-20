@@ -147,7 +147,8 @@ export interface Locale {
 					export: {
 						title: string,
 
-						excel: string;
+						excel: string,
+						tsv: string,
 					},
 				},
 				byebye: string

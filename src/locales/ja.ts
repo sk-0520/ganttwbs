@@ -145,6 +145,7 @@ const locale: Locale = {
 						title: "出力",
 
 						excel: "エクセル出力",
+						tsv: "TSV出力",
 					},
 				},
 

@@ -154,6 +154,13 @@ const FileEditor: FC<Props> = (props: Props) => {
 		Browsers.download(fileName, blob);
 	}
 
+	async function handleExportCsv(kind: "tsv"): Promise<void> {
+		const calcData = Exports.calc(editorData.setting);
+		const table = await Exports.createTable(editorData.setting, calcData, locale);
+		console.debug(table);
+		return;
+	}
+
 	function handleJsonCopy() {
 		Browsers.copyText(settingJson);
 	}
@@ -242,6 +249,14 @@ const FileEditor: FC<Props> = (props: Props) => {
 							<IconLabel
 								kind={IconKind.SoftwareExcel}
 								label={locale.pages.editor.file.save.export.excel}
+							/>
+						</button>
+					</li>
+					<li>
+						<button onClick={_ => handleExportCsv("tsv")}>
+							<IconLabel
+								kind={IconKind.SoftwareExcel}
+								label={locale.pages.editor.file.save.export.tsv}
 							/>
 						</button>
 					</li>

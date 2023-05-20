@@ -602,4 +602,8 @@ export abstract class Exports {
 
 		return workbook;
 	}
+
+	public static async createTable(setting: Setting, calcData: CalcData, locale: Locale): Promise<Array<Array<string>>> {
+		return [];
+	}
 }
