@@ -189,7 +189,13 @@ export function useTotalTimelineMapAtomReader(): AtomReader<TotalTimelineMapType
 }
 
 /** 各工数時間 */
-export const WorkRangesAtom = atom<Map<TimelineId, WorkRange>>(new Map());
+const WorkRangesAtom = atom<Map<TimelineId, WorkRange>>(new Map());
+
+export function useWorkRangesAtomReader(): AtomReader<Map<TimelineId, WorkRange>> {
+	return {
+		data: useAtomValue(WorkRangesAtom),
+	};
+}
 
 /** 変更タイムライン */
 export const TimelineItemsAtom = atom<Map<TimelineId, TimelineItem>>(new Map());

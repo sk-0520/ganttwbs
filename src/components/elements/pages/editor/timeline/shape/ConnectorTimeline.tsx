@@ -1,10 +1,9 @@
 
-import { useAtomValue } from "jotai";
 import { FC } from "react";
 
 import { Charts } from "@/models/Charts";
 import { AreaSize } from "@/models/data/Area";
-import { useCalendarInfoAtomReader, useResourceInfoAtomReader, useRootTimelineAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader, useResourceInfoAtomReader, useRootTimelineAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -22,7 +21,7 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
 
 const ConnectorTimeline: FC<Props> = (props: Props) => {
 	const rootTimelineReader = useRootTimelineAtomReader();
-	const workRanges = useAtomValue(WorkRangesAtom);
+	const workRangesAtomReader = useWorkRangesAtomReader();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 	const resourceInfoAtomReader = useResourceInfoAtomReader();
 	const timelineIndexMapAtomReader = useTimelineIndexMapAtomReader();
@@ -32,7 +31,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 		return null;
 	}
 
-	const currentWorkRange = workRanges.get(props.currentTimeline.id);
+	const currentWorkRange = workRangesAtomReader.data.get(props.currentTimeline.id);
 	if (!WorkRanges.maybeSuccessWorkRange(currentWorkRange)) {
 		return null;
 	}
@@ -68,7 +67,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 					: Charts.getTaskBackground(previousTimeline, resourceInfoAtomReader.data.memberMap, props.setting.theme)
 					;
 
-				const previewWorkRange = workRanges.get(previousTimeline.id);
+				const previewWorkRange = workRangesAtomReader.data.get(previousTimeline.id);
 				if (!WorkRanges.maybeSuccessWorkRange(previewWorkRange)) {
 					return null;
 				}

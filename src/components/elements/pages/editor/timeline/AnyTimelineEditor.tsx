@@ -14,7 +14,7 @@ import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/Wor
 import { useLocale } from "@/locales/locale";
 import { DetailEditTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/DragAndDropAtoms";
 import { ActiveTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { TimelineItemsAtom, useCalendarInfoAtomReader, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { TimelineItemsAtom, useCalendarInfoAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
@@ -51,7 +51,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
 	const setDragSourceTimeline = useSetAtom(DragSourceTimelineAtom);
 	const timelineItems = useAtomValue(TimelineItemsAtom);
-	const workRanges = useAtomValue(WorkRangesAtom);
+	const workRangesAtomReader = useWorkRangesAtomReader();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
@@ -208,7 +208,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleShowTimeline(): void {
 		let date: DateTime | undefined = undefined;
-		const workRange = workRanges.get(props.currentTimeline.id);
+		const workRange = workRangesAtomReader.data.get(props.currentTimeline.id);
 		if (workRange && WorkRanges.maybeSuccessWorkRange(workRange)) {
 			date = workRange.begin;
 		}

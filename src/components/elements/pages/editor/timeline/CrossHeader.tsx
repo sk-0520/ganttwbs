@@ -7,7 +7,7 @@ import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/T
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DayInfosAtom, TimelineItemsAtom, useCalendarInfoAtomReader, useRootTimelineAtomReader, useSequenceTimelinesAtomReader, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DayInfosAtom, TimelineItemsAtom, useCalendarInfoAtomReader, useRootTimelineAtomReader, useSequenceTimelinesAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
@@ -31,9 +31,9 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
 	const rootTimelineReader = useRootTimelineAtomReader();
 	const timelineItems = useAtomValue(TimelineItemsAtom);
-	const workRanges = useAtomValue(WorkRangesAtom);
 	const dayInfos = useAtomValue(DayInfosAtom);
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
+	const workRangesAtomReader = useWorkRangesAtomReader();
 
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
@@ -102,14 +102,14 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	function handleClickCalendarFirst(): void {
-		const range = WorkRanges.getSuccessTimelineIdRange(workRanges);
+		const range = WorkRanges.getSuccessTimelineIdRange(workRangesAtomReader.data);
 		if (range.begin) {
 			scrollView(range.begin.timelineId, range.begin.workRange.begin);
 		}
 	}
 
 	function handleClickCalendarLast(): void {
-		const range = WorkRanges.getSuccessTimelineIdRange(workRanges);
+		const range = WorkRanges.getSuccessTimelineIdRange(workRangesAtomReader.data);
 		if (range.end) {
 			scrollView(range.end.timelineId, range.end.workRange.begin);
 		}
