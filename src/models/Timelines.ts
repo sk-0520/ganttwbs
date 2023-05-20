@@ -821,4 +821,7 @@ export abstract class Timelines {
 		return result;
 	}
 
+	public static isCompleted(progress: Progress): boolean {
+		return 1 <= progress;
+	}
 }

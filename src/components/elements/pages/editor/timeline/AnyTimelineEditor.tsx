@@ -67,6 +67,8 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const [visibleBeginDateInput, setVisibleBeginDateInput] = useState(false);
 	const refInputDate = useRef<HTMLInputElement>(null);
 
+	const isCompletedTask = Settings.maybeTaskTimeline(props.currentTimeline) && Timelines.isCompleted(props.currentTimeline.progress);
+
 	useEffect(() => {
 		if (refInputDate.current) {
 			refInputDate.current.focus();
@@ -267,7 +269,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		}
 
 		selectingBeginDateAtomWriter.write(c => {
-			if(!c) {
+			if (!c) {
 				throw new Error();
 			}
 
@@ -368,6 +370,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			currentTimeline={props.currentTimeline}
 			timelineCallbacks={props.timelineCallbacks}
 			level={timelineIndex.level}
+			isCompletedTask={isCompletedTask}
 		>
 			<IdCell
 				selectingId={selectingId}
@@ -382,7 +385,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				timeline={props.currentTimeline}
 				value={subject}
 				disabled={Boolean(selectingBeginDateAtomReader.data)}
-				readOnly={false}
+				readOnly={isCompletedTask}
 				callbackChangeValue={handleChangeSubject}
 				callbackFocus={handleFocus}
 				callbackKeyDown={onSubjectKeyDown}
@@ -390,7 +393,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			<WorkloadCell
 				timeline={props.currentTimeline}
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-				disabled={Boolean(selectingBeginDateAtomReader.data)}
+				disabled={Boolean(selectingBeginDateAtomReader.data) || isCompletedTask}
 				value={workload}
 				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeWorkload : undefined}
 				callbackFocus={handleFocus}
@@ -399,7 +402,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			<ResourceCell
 				currentTimeline={props.currentTimeline}
 				selectedMemberId={memberId}
-				disabled={Boolean(selectingBeginDateAtomReader.data)}
+				disabled={Boolean(selectingBeginDateAtomReader.data) || isCompletedTask}
 				callbackChangeMember={handleChangeMember}
 				callbackFocus={handleFocus}
 			/>
@@ -501,13 +504,13 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 							beginDate={beginDate}
 							endDate={endDate}
 							htmlFor={selectingId}
-							callbackClickBeginDate={Settings.maybeTaskTimeline(props.currentTimeline) ? handleClickBeginDate : undefined}
+							callbackClickBeginDate={Settings.maybeTaskTimeline(props.currentTimeline) && !isCompletedTask ? handleClickBeginDate : undefined}
 						/>
 					)
 			}
 			<ProgressCell
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-				disabled={Boolean(selectingBeginDateAtomReader.data)}
+				disabled={Boolean(selectingBeginDateAtomReader.data) || isCompletedTask}
 				progress={progress}
 				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
 				callbackFocus={handleFocus}
@@ -521,7 +524,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				callbackShowDetail={handleShowDetail}
 				callbackShowTimeline={handleShowTimeline}
 			/>
-		</TimelineHeaderRow >
+		</TimelineHeaderRow>
 	);
 };
 

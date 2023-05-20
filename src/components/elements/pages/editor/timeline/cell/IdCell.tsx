@@ -22,7 +22,7 @@ interface Props {
 const IdCell: FC<Props> = (props: Props) => {
 
 	const className = Timelines.getReadableTimelineIdClassName(props.readableTimelineId);
-	const completed = 1 <= props.progress;
+	const completed = Timelines.isCompleted(props.progress);
 
 	const draggingTimelineAtomReader = useDraggingTimelineAtomReader();
 	const selectingBeginDateAtomReader = useSelectingBeginDateAtomReader();
@@ -42,7 +42,7 @@ const IdCell: FC<Props> = (props: Props) => {
 				)
 			}
 			title={props.currentTimeline.id}
-			draggable={!selectingBeginDateAtomReader.data}
+			draggable={!selectingBeginDateAtomReader.data && !completed}
 			onDragStart={ev => props.callbackStartDragTimeline(ev)}
 			onDragEnd={draggingTimelineAtomReader.data?.onDragEnd}
 		>

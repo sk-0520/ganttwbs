@@ -1,10 +1,10 @@
 import { cdate } from "cdate";
 
 import { ParseResult, ResultFactory } from "@/models/data/Result";
+import { Require } from "@/models/Require";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 import { Strong } from "@/models/Types";
-import { Require } from "@/models/Require";
 
 type DateTimeParseResult = ParseResult<DateTime, Error>;
 

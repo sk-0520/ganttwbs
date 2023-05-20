@@ -12,6 +12,7 @@ import { Timelines } from "@/models/Timelines";
 interface Props extends TimelineCallbacksProps {
 	level: number;
 	currentTimeline: AnyTimeline;
+	isCompletedTask: boolean;
 	children: ReactNode;
 }
 
@@ -41,7 +42,7 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 						["_dynamic_programmable_groups_level-" + props.level.toString()]: Settings.maybeGroupTimeline(props.currentTimeline),
 						"dragging": draggingTimelineAtomReader.data?.sourceTimeline.id === props.currentTimeline.id,
 						"selected-previous": selectingBeginDateAtomReader.data?.previous.has(props.currentTimeline.id),
-						"completed": Settings.maybeTaskTimeline(props.currentTimeline) && 1 <= props.currentTimeline.progress
+						"completed": props.isCompletedTask
 					}
 				)
 			}

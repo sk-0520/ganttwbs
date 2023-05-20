@@ -2,6 +2,7 @@
 import { FC, useEffect, useState } from "react";
 
 import { As } from "@/models/As";
+import { useActiveTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { Progress } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
 
@@ -19,6 +20,7 @@ interface Props {
 
 const ProgressCell: FC<Props> = (props: Props) => {
 	const [progress, setProgress] = useState(props.progress);
+	const activeTimelineIdAtomWriter = useActiveTimelineIdAtomWriter();
 
 	useEffect(() => {
 		setProgress(props.progress);
@@ -41,6 +43,9 @@ const ProgressCell: FC<Props> = (props: Props) => {
 		setProgress(progress);
 		if (props.callbackChangeValue) {
 			props.callbackChangeValue(progress);
+		}
+		if(Timelines.isCompleted(progress)) {
+			activeTimelineIdAtomWriter.write(undefined);
 		}
 	}
 
