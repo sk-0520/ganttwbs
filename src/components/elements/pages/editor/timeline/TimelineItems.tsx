@@ -3,16 +3,16 @@ import { FC, useCallback, useMemo, KeyboardEvent } from "react";
 
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
-import { TimelineIndexMap, useSequenceTimelinesAtomReader, useTimelineIndexMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useSequenceTimelinesAtomReader, useTimelineIndexMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
-import { AnyTimeline } from "@/models/data/Setting";
+import { AnyTimeline, TimelineId } from "@/models/data/Setting";
+import { TimelineCallbacks } from "@/models/data/TimelineCallbacks";
 import { Dom } from "@/models/Dom";
 import { IdFactory } from "@/models/IdFactory";
 import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
-import { TimelineCallbacks } from "@/models/data/TimelineCallbacks";
 import { Timelines } from "@/models/Timelines";
 
 interface Props extends ConfigurationProps, TimelineCallbacksProps {
@@ -80,7 +80,7 @@ const TimelineItems: FC<Props> = (props: Props) => {
 
 export default TimelineItems;
 
-function handleCellKeyDown(ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline, timelineStore: TimelineCallbacks, sequenceTimelines: ReadonlyArray<AnyTimeline>, timelineIndexMap: TimelineIndexMap, currentCell: "subject" | "workload"): void {
+function handleCellKeyDown(ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline, timelineStore: TimelineCallbacks, sequenceTimelines: ReadonlyArray<AnyTimeline>, timelineIndexMap: ReadonlyMap<TimelineId, number>, currentCell: "subject" | "workload"): void {
 	if (ev.key !== "Enter") {
 		return;
 	}

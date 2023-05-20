@@ -1,10 +1,8 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 
 import { Calendars } from "@/models/Calendars";
-import { AtomReader, AtomWriter } from "@/models/data/atom/AtomHelper";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
+import { AtomReader, AtomType, AtomWriter } from "@/models/data/atom/AtomHelper";
 import { DayInfo } from "@/models/data/DayInfo";
-import { ResourceInfo } from "@/models/data/ResourceInfo";
 import { RootTimeline, AnyTimeline, TimelineId, Setting } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
@@ -55,13 +53,13 @@ const SettingAtom = atom<Setting>({
 	versions: [],
 } satisfies Setting);
 
-export function useSettingAtomReader(): AtomReader<Setting> {
+export function useSettingAtomReader(): AtomReader<AtomType<typeof SettingAtom>> {
 	return {
 		data: useAtomValue(SettingAtom),
 	};
 }
 
-export function useSettingAtomWriter(): AtomWriter<Setting> {
+export function useSettingAtomWriter(): AtomWriter<AtomType<typeof SettingAtom>> {
 	return {
 		write: useSetAtom(SettingAtom),
 	};
@@ -75,7 +73,7 @@ const RootTimelineAtom = atom<RootTimeline>(
 	}
 );
 
-export function useRootTimelineAtomReader(): AtomReader<RootTimeline> {
+export function useRootTimelineAtomReader(): AtomReader<AtomType<typeof RootTimelineAtom>> {
 	return {
 		data: useAtomValue(RootTimelineAtom),
 	};
@@ -88,7 +86,7 @@ const CalendarInfoAtom = atom(
 	}
 );
 
-export function useCalendarInfoAtomReader(): AtomReader<CalendarInfo> {
+export function useCalendarInfoAtomReader(): AtomReader<AtomType<typeof CalendarInfoAtom>> {
 	return {
 		data: useAtomValue(CalendarInfoAtom),
 	};
@@ -101,7 +99,7 @@ const ResourceInfoAtom = atom(
 	}
 );
 
-export function useResourceInfoAtomReader(): AtomReader<ResourceInfo> {
+export function useResourceInfoAtomReader(): AtomReader<AtomType<typeof ResourceInfoAtom>> {
 	return {
 		data: useAtomValue(ResourceInfoAtom),
 	};
@@ -153,7 +151,7 @@ const SequenceTimelinesWriterAtom = atom<never, Array<AnyTimeline>, void>(
 	}
 );
 
-export function useSequenceTimelinesWriterAtomWriter() {
+export function useSequenceTimelinesWriterAtomWriter() { //TODO: 何もわからん, 理解する気もない
 	return {
 		write: useSetAtom(SequenceTimelinesWriterAtom),
 	};
@@ -162,27 +160,25 @@ export function useSequenceTimelinesWriterAtomWriter() {
 /** 各タイムラインを上から見たインデックス順の一覧 */
 const SequenceTimelinesAtom = atom<Array<AnyTimeline>>([]);
 
-export function useSequenceTimelinesAtomReader(): AtomReader<Array<AnyTimeline>> {
+export function useSequenceTimelinesAtomReader(): AtomReader<AtomType<typeof SequenceTimelinesAtom>> {
 	return {
 		data: useAtomValue(SequenceTimelinesAtom),
 	};
 }
 
-export type TimelineIndexMap = ReadonlyMap<TimelineId, number>;
 /** 各タイムラインを上から見たインデックスのマッピング */
-const TimelineIndexMapAtom = atom<TimelineIndexMap>(new Map());
+const TimelineIndexMapAtom = atom<ReadonlyMap<TimelineId, number>>(new Map());
 
-export function useTimelineIndexMapAtomReader(): AtomReader<TimelineIndexMap> {
+export function useTimelineIndexMapAtomReader(): AtomReader<AtomType<typeof TimelineIndexMapAtom>> {
 	return {
 		data: useAtomValue(TimelineIndexMapAtom),
 	};
 }
 
-export type TotalTimelineMapType = ReadonlyMap<TimelineId, AnyTimeline>;
 /** 全てのタイムライン(ノード状態ではない) */
-const TotalTimelineMapAtom = atom<TotalTimelineMapType>(new Map());
+const TotalTimelineMapAtom = atom<ReadonlyMap<TimelineId, AnyTimeline>>(new Map());
 
-export function useTotalTimelineMapAtomReader(): AtomReader<TotalTimelineMapType> {
+export function useTotalTimelineMapAtomReader(): AtomReader<AtomType<typeof TotalTimelineMapAtom>> {
 	return {
 		data: useAtomValue(TotalTimelineMapAtom),
 	};
@@ -191,7 +187,7 @@ export function useTotalTimelineMapAtomReader(): AtomReader<TotalTimelineMapType
 /** 各工数時間 */
 const WorkRangesAtom = atom<Map<TimelineId, WorkRange>>(new Map());
 
-export function useWorkRangesAtomReader(): AtomReader<Map<TimelineId, WorkRange>> {
+export function useWorkRangesAtomReader(): AtomReader<AtomType<typeof WorkRangesAtom>> {
 	return {
 		data: useAtomValue(WorkRangesAtom),
 	};
@@ -200,7 +196,7 @@ export function useWorkRangesAtomReader(): AtomReader<Map<TimelineId, WorkRange>
 /** 変更タイムライン */
 const TimelineItemsAtom = atom<Map<TimelineId, TimelineItem>>(new Map());
 
-export function useTimelineItemsAtomReader(): AtomReader<Map<TimelineId, TimelineItem>> {
+export function useTimelineItemsAtomReader(): AtomReader<AtomType<typeof TimelineItemsAtom>> {
 	return {
 		data: useAtomValue(TimelineItemsAtom),
 	};
@@ -210,7 +206,7 @@ export function useTimelineItemsAtomReader(): AtomReader<Map<TimelineId, Timelin
 /** 日に対する何かしらの情報(情報がある時点で死んでる) */
 const DayInfosAtom = atom<Map<DateTimeTicks, DayInfo>>(new Map());
 
-export function useDayInfosAtomReader(): AtomReader<Map<DateTimeTicks, DayInfo>> {
+export function useDayInfosAtomReader(): AtomReader<AtomType<typeof DayInfosAtom>> {
 	return {
 		data: useAtomValue(DayInfosAtom),
 	};

@@ -23,11 +23,11 @@ import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, TimelineId, TimelineKind } from "@/models/data/Setting";
+import { MoveDirection, TimelineCallbacks } from "@/models/data/TimelineCallbacks";
 import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
 import { Editors } from "@/models/Editors";
 import { Settings } from "@/models/Settings";
-import { MoveDirection, TimelineCallbacks } from "@/models/data/TimelineCallbacks";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 
@@ -57,7 +57,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const dragOverTimelineIdAtomWriter = useDragOverTimelineIdAtomWriter();
 	const sequenceTimelinesWriterAtomWriter = useSequenceTimelinesWriterAtomWriter();
 	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
-	//const [/*totalTimelineMap*/, setTotalTimelineMap] = useAtom(TotalTimelineMapAtom);
 	const settingAtomWriter = useSettingAtomWriter();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
