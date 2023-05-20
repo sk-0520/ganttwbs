@@ -25,16 +25,12 @@ const AnalyticsViewer: FC<Props> = (props: Props) => {
 		: undefined
 	;
 
-
 	return (
 		<div id="analytics">
 			<RangeViewer
-				calendarInfo={calcData.calendarInfo}
 				totalSuccessWorkRange={totalSuccessWorkRange}
 			/>
 			<WorkViewer
-				calendarInfo={calcData.calendarInfo}
-				resourceInfo={calcData.resourceInfo}
 				sequenceTimelines={calcData.sequenceTimelines}
 				totalSuccessWorkRange={totalSuccessWorkRange}
 			/>

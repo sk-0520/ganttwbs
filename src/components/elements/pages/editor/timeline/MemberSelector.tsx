@@ -1,12 +1,12 @@
 import { FC, ReactNode } from "react";
 
 import { Color } from "@/models/Color";
+import { useResourceInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { Member, MemberId } from "@/models/data/Setting";
 import { Require } from "@/models/Require";
 
-interface Props extends ResourceInfoProps {
+interface Props {
 	className?: string;
 	disabled?: boolean;
 
@@ -16,6 +16,7 @@ interface Props extends ResourceInfoProps {
 }
 
 const MemberSelector: FC<Props> = (props: Props) => {
+	const resourceInfoAtomReader = useResourceInfoAtomReader();
 
 	function renderMemberOptions(members: ReadonlyArray<Member>): Array<ReactNode> {
 		return (
@@ -37,7 +38,7 @@ const MemberSelector: FC<Props> = (props: Props) => {
 	}
 
 	function handleChangeOption(memberId: MemberId) {
-		const pair = props.resourceInfo.memberMap.get(memberId);
+		const pair = resourceInfoAtomReader.data.memberMap.get(memberId);
 		props.callbackChangeMember(pair);
 	}
 
@@ -52,8 +53,8 @@ const MemberSelector: FC<Props> = (props: Props) => {
 		>
 			<option></option>
 
-			{props.resourceInfo.groupItems.map(a => {
-				const members = Require.get(props.resourceInfo.memberItems, a);
+			{resourceInfoAtomReader.data.groupItems.map(a => {
+				const members = Require.get(resourceInfoAtomReader.data.memberItems, a);
 
 				return (
 					a.name ?

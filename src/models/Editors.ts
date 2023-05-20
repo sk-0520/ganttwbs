@@ -4,6 +4,11 @@ import { TimelineIdOrObject, Timelines } from "@/models/Timelines";
 
 export abstract class Editors {
 
+	/**
+	 * 表示領域への移動。
+	 * @param timeline
+	 * @param date
+	 */
 	public static scrollView(timeline: TimelineIdOrObject | undefined, date: DateTime | undefined): void {
 		if (!timeline && !date) {
 			throw new Error();

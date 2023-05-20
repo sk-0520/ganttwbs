@@ -1,13 +1,10 @@
-import { useSetAtom } from "jotai";
 import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
-import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
+import { useCalendarInfoAtomReader, useDayInfosAtomReader, useResourceInfoAtomReader, useSettingAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
-import { SettingProps } from "@/models/data/props/SettingProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Days } from "@/models/Days";
@@ -16,15 +13,22 @@ import { Require } from "@/models/Require";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends SettingProps, CalendarInfoProps, ResourceInfoProps, TimelineStoreProps {
+interface Props extends TimelineCallbacksProps {
 	readonly date: DateTime;
 }
 
 const InformationDay: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
-	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
-	const setHighlightDays = useSetAtom(HighlightDaysAtom);
+	const settingAtomReader = useSettingAtomReader();
+	const resourceInfoAtomReader = useResourceInfoAtomReader();
+	const dayInfosAtomReader = useDayInfosAtomReader();
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
+	const timelineIndexMapAtomReader = useTimelineIndexMapAtomReader();
+	const totalTimelineMapAtomReader = useTotalTimelineMapAtomReader();
+
+	const highlightTimelineIdsAtomWriter = useHighlightTimelineIdsAtomWriter();
+	const highlightDaysAtomWriter = useHighlightDaysAtomWriter();
 
 	const refDetails = useRef<HTMLDetailsElement>(null);
 
@@ -33,8 +37,8 @@ const InformationDay: FC<Props> = (props: Props) => {
 	// 	}
 	// }, [refDetails]);
 
-	const holidayEventValue = props.calendarInfo.holidayEventMap.get(props.date.ticks);
-	const classNames = Days.getDayClassNames(props.date, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
+	const holidayEventValue = calendarInfoAtomReader.data.holidayEventMap.get(props.date.ticks);
+	const classNames = Days.getDayClassNames(props.date, settingAtomReader.data.calendar.holiday.regulars, holidayEventValue, settingAtomReader.data.theme);
 	const className = Days.getCellClassName(classNames);
 
 	const mergedDayInfo: DayInfo = {
@@ -43,7 +47,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 	};
 
 	const nextDay = props.date.add(1, "day");
-	for (const [ticks, info] of props.timelineStore.dayInfos) {
+	for (const [ticks, info] of dayInfosAtomReader.data) {
 		if (props.date.ticks <= ticks && ticks < nextDay.ticks) {
 			for (const memberId of info.duplicateMembers) {
 				mergedDayInfo.duplicateMembers.add(memberId);
@@ -56,32 +60,33 @@ const InformationDay: FC<Props> = (props: Props) => {
 
 	// ソート済み重複メンバー取得
 	const sortedMembers = [...mergedDayInfo.duplicateMembers]
-		.map(a => Require.get(props.resourceInfo.memberMap, a))
+		.map(a => Require.get(resourceInfoAtomReader.data.memberMap, a))
 		.sort((a, b) => {
-			const groupIndex = props.resourceInfo.groupItems.indexOf(a.group);
-			const groupCompare = groupIndex - props.resourceInfo.groupItems.indexOf(b.group);
+			const groupIndex = resourceInfoAtomReader.data.groupItems.indexOf(a.group);
+			const groupCompare = groupIndex - resourceInfoAtomReader.data.groupItems.indexOf(b.group);
 			if (!groupCompare) {
 				return groupCompare;
 			}
-			const group = props.resourceInfo.groupItems[groupIndex];
-			const members = Require.get(props.resourceInfo.memberItems, group);
+			const group = resourceInfoAtomReader.data.groupItems[groupIndex];
+			const members = Require.get(resourceInfoAtomReader.data.memberItems, group);
 			return members.indexOf(a.member) - members.indexOf(b.member);
 		})
 		;
 
 	// ソート済みタイムライン取得
-	const sortedTimelines = [...mergedDayInfo.targetTimelines]
-		.map(a => Require.get(props.timelineStore.totalItemMap, a))
+	const sortedTimelines = timelineIndexMapAtomReader.data.size ? [...mergedDayInfo.targetTimelines]
+		.map(a => Require.get(totalTimelineMapAtomReader.data, a))
 		.sort((a, b) => {
-			const aIndex = Require.get(props.timelineStore.indexItemMap, a.id);
-			const bIndex = Require.get(props.timelineStore.indexItemMap, b.id);
+			const aIndex = Require.get(timelineIndexMapAtomReader.data, a.id);
+			const bIndex = Require.get(timelineIndexMapAtomReader.data, b.id);
 			return aIndex - bIndex;
 		})
+		: []
 		;
 
 	function handleClickTimeline(timelineId: TimelineId): void {
-		setHighlightTimelineIds([timelineId]);
-		setHighlightDays([props.date]);
+		highlightTimelineIdsAtomWriter.write([timelineId]);
+		highlightDaysAtomWriter.write([props.date]);
 		Editors.scrollView(timelineId, props.date);
 	}
 
@@ -143,7 +148,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 							<dd>
 								<ul>
 									{sortedTimelines.map(i => {
-										const timelineIndex = props.timelineStore.calcReadableTimelineId(i);
+										const timelineIndex = props.timelineCallbacks.calcReadableTimelineId(i);
 										const timelineClassName = Timelines.getReadableTimelineIdClassName(timelineIndex);
 
 										return (

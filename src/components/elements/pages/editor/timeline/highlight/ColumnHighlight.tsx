@@ -2,12 +2,12 @@ import classNames from "classnames";
 import { CSSProperties, FC } from "react";
 
 import { AreaData } from "@/models/data/Area";
+import { useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ColumnHighlightMode } from "@/models/data/Highlight";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { DateTime } from "@/models/DateTime";
 
-interface Props extends ConfigurationProps, CalendarInfoProps {
+interface Props extends ConfigurationProps {
 	mode: ColumnHighlightMode;
 	date: DateTime;
 	areaData: AreaData;
@@ -17,8 +17,9 @@ interface Props extends ConfigurationProps, CalendarInfoProps {
 }
 
 const RowHighlight: FC<Props> = (props: Props) => {
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
-	const targetDay = props.calendarInfo.range.begin.diff(props.date.toDateOnly()).totalDays;
+	const targetDay = calendarInfoAtomReader.data.range.begin.diff(props.date.truncateTime()).totalDays;
 
 	if (props.areaData.days < targetDay) {
 		return null;

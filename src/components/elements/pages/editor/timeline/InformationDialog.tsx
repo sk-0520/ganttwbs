@@ -2,21 +2,23 @@ import { FC } from "react";
 
 import Dialog from "@/components/elements/Dialog";
 import { useLocale } from "@/locales/locale";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { useCalendarInfoAtomReader, useDayInfosAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { DateTime } from "@/models/DateTime";
 
-interface Props extends ConfigurationProps, CalendarInfoProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	callbackClose(date: DateTime | undefined): void;
 }
 
 const InformationDialog: FC<Props> = (props: Props) => {
 	const locale = useLocale();
+	const dayInfosAtomReader = useDayInfosAtomReader();
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
 	const dates = new Set(
-		[...props.timelineStore.dayInfos]
-			.map(([k, v]) => DateTime.convert(k, props.calendarInfo.timeZone).toDateOnly())
+		[...dayInfosAtomReader.data]
+			.map(([k, v]) => DateTime.convert(k, calendarInfoAtomReader.data.timeZone).truncateTime())
 			.map(a => a.ticks)
 			.sort((a, b) => Number(a) - Number(b))
 	);
@@ -35,7 +37,7 @@ const InformationDialog: FC<Props> = (props: Props) => {
 		>
 			<ul>
 				{[...dates].map(a => {
-					const date = DateTime.convert(a, props.calendarInfo.timeZone);
+					const date = DateTime.convert(a, calendarInfoAtomReader.data.timeZone);
 					return (
 						<li key={a}>
 							<a

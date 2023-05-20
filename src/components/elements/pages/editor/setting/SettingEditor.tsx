@@ -1,4 +1,4 @@
-import { FC, FormEvent } from "react";
+import { FC, FormEvent, useMemo } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
 import { IconKind, IconLabel } from "@/components/elements/Icon";
@@ -33,7 +33,9 @@ interface Props extends ConfigurationProps {
 const SettingEditor: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
-	const setting = toContext(props.configuration, props.editorData.setting);
+	const setting = useMemo(() => {
+		return toContext(props.configuration, props.editorData.setting);
+	}, [props.configuration, props.editorData.setting]);
 
 	function handleSubmit(event: FormEvent) {
 		event.preventDefault();

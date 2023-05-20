@@ -346,7 +346,7 @@ export abstract class Timelines {
 				return this.createRecursiveCalculatorWorkRange(timeline);
 			}
 
-			const date = begin.toDateOnly();
+			const date = begin.truncateTime();
 			if (isHoliday(date)) {
 				begin = date.add(1, "day");
 				continue;
@@ -358,7 +358,7 @@ export abstract class Timelines {
 		let end = begin.add(TimeSpan.fromMilliseconds(workload.totalMilliseconds));
 
 		// 開始日から終了日までにある休日を加算
-		let count = begin.toDateOnly().diff(begin).totalDays + begin.diff(end).totalDays;
+		let count = begin.truncateTime().diff(begin).totalDays + begin.diff(end).totalDays;
 		let endDays = 0;
 		limiter.reset();
 		for (let i = 0; i < count; i++) {
@@ -366,7 +366,7 @@ export abstract class Timelines {
 				return this.createRecursiveCalculatorWorkRange(timeline);
 			}
 
-			const date = begin.add(i, "day").toDateOnly();
+			const date = begin.add(i, "day").truncateTime();
 			if (isHoliday(date)) {
 				endDays += 1;
 				count += 1;
@@ -802,13 +802,13 @@ export abstract class Timelines {
 						const length = range.begin.diff(range.end).totalDays;
 						for (let i = 0; i < length; i++) {
 							const date = i
-								? range.begin.add(i, "day").toDateOnly()
+								? range.begin.add(i, "day").truncateTime()
 								: range.begin
 								;
 							setInfo(date);
 						}
 						// 終端(中途半端な終了時間を考慮)
-						if (!range.end.toDateOnly().equals(range.end)) {
+						if (!range.end.truncateTime().equals(range.end)) {
 							setInfo(range.end);
 						}
 					}
@@ -821,4 +821,7 @@ export abstract class Timelines {
 		return result;
 	}
 
+	public static isCompleted(progress: Progress): boolean {
+		return 1 <= progress;
+	}
 }

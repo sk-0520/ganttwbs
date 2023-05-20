@@ -1,37 +1,38 @@
-import { useSetAtom } from "jotai";
 import { FC, MouseEvent, ReactNode, useMemo } from "react";
 
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
 import { Charts } from "@/models/Charts";
-import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
+import { useCalendarInfoAtomReader, useSequenceTimelinesAtomReader, useSettingAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
-import { SettingProps } from "@/models/data/props/SettingProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { ColorString } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
+interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	//nop
 }
 
 const TimelineViewer: FC<Props> = (props: Props) => {
-	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
+	const settingAtomReader = useSettingAtomReader();
+	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
+	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
+	const totalTimelineMapAtomReader = useTotalTimelineMapAtomReader();
 
 	const areaData = useMemo(() => {
-		return Charts.createAreaData(props.configuration.design.seed.cell, props.calendarInfo.range, props.timelineStore.totalItemMap.size);
-	}, [props.configuration, props.calendarInfo, props.timelineStore.totalItemMap.size]);
+		return Charts.createAreaData(props.configuration.design.seed.cell, calendarInfoAtomReader.data.range, totalTimelineMapAtomReader.data.size);
+	}, [props.configuration, calendarInfoAtomReader.data, totalTimelineMapAtomReader.data.size]);
 
 	const gridNodes = useMemo(() => {
 		const width = areaData.cell.width.value * (areaData.days + props.configuration.design.dummy.width);
-		const height = areaData.cell.height.value * (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height);
+		const height = areaData.cell.height.value * (totalTimelineMapAtomReader.data.size + props.configuration.design.dummy.height);
 
 		// 横軸
 		const gridHorizontals = new Array<ReactNode>();
-		for (let i = 0; i < (props.timelineStore.totalItemMap.size + props.configuration.design.dummy.height); i++) {
+		for (let i = 0; i < (totalTimelineMapAtomReader.data.size + props.configuration.design.dummy.height); i++) {
 			const y = areaData.cell.height.value + areaData.cell.height.value * i;
 			gridHorizontals.push(
 				<line
@@ -51,7 +52,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
 		for (let i = 0; i < (areaData.days + props.configuration.design.dummy.width); i++) {
-			const date = props.calendarInfo.range.begin.add(TimeSpan.fromDays(i));
+			const date = calendarInfoAtomReader.data.range.begin.add(TimeSpan.fromDays(i));
 
 			const gridX = areaData.cell.width.value + areaData.cell.width.value * i;
 
@@ -76,15 +77,15 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 			let color: ColorString | undefined = undefined;
 
 			// 祝日判定
-			const holidayEventValue = props.calendarInfo.holidayEventMap.get(date.ticks);
+			const holidayEventValue = calendarInfoAtomReader.data.holidayEventMap.get(date.ticks);
 			if (holidayEventValue) {
-				color = props.setting.theme.holiday.events[holidayEventValue.event.kind];
+				color = settingAtomReader.data.theme.holiday.events[holidayEventValue.event.kind];
 			}
 			// 曜日判定
 			if (!color) {
 				const week = Settings.toWeekDay(date.week);
-				if (props.setting.calendar.holiday.regulars.includes(week)) {
-					color = props.setting.theme.holiday.regulars[week];
+				if (settingAtomReader.data.calendar.holiday.regulars.includes(week)) {
+					color = settingAtomReader.data.theme.holiday.regulars[week];
 				}
 			}
 			if (color) {
@@ -116,24 +117,24 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				</g>
 			</g>
 		);
-	}, [areaData, props.calendarInfo, props.configuration, props.setting, props.timelineStore.totalItemMap.size]);
+	}, [areaData, calendarInfoAtomReader.data, props.configuration, settingAtomReader.data, totalTimelineMapAtomReader.data.size]);
 
 	function handleMouseMove(ev: MouseEvent) {
 		// 下でグダグダやってるけどこっち(か算出方法)が間違ってる感あるなぁ
 		if (ev.nativeEvent.offsetY < 0 || areaData.size.height <= ev.nativeEvent.offsetY) {
-			setHoverTimelineId(undefined);
+			hoverTimelineIdAtomWriter.write(undefined);
 			return;
 		}
 
 		const sequenceIndex = Math.floor(ev.nativeEvent.offsetY / areaData.cell.height.value);
 		// ここのグダグダ感
-		if(props.timelineStore.sequenceItems.length <= sequenceIndex) {
-			setHoverTimelineId(undefined);
+		if(sequenceTimelinesAtomReader.data.length <= sequenceIndex) {
+			hoverTimelineIdAtomWriter.write(undefined);
 			return;
 		}
 
-		const timeline = props.timelineStore.sequenceItems[sequenceIndex];
-		setHoverTimelineId(timeline.id);
+		const timeline = sequenceTimelinesAtomReader.data[sequenceIndex];
+		hoverTimelineIdAtomWriter.write(timeline.id);
 	}
 
 	return (
@@ -144,23 +145,20 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				height={(areaData.size.height + (areaData.cell.height.value * (props.configuration.design.dummy.height - 1))) + "px"}
 			>
 				{gridNodes}
-				{props.timelineStore.sequenceItems.map((a, i) => {
+				{sequenceTimelinesAtomReader.data.map((a, i) => {
 					return (
 						<GanttChartTimeline
 							key={a.id}
 							configuration={props.configuration}
-							setting={props.setting}
 							parentGroup={null}
 							currentTimeline={a}
 							currentIndex={i}
-							calendarInfo={props.calendarInfo}
-							resourceInfo={props.resourceInfo}
 							areaSize={areaData.size}
-							timelineStore={props.timelineStore}
+							timelineCallbacks={props.timelineCallbacks}
 						/>
 					);
 				})}
-				{props.timelineStore.sequenceItems.map((a, i) => {
+				{sequenceTimelinesAtomReader.data.map((a, i) => {
 					if (!Settings.maybeTaskTimeline(a)) {
 						return null;
 					}
@@ -168,13 +166,10 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 						<ConnectorTimeline
 							key={a.id}
 							configuration={props.configuration}
-							setting={props.setting}
 							currentTimeline={a}
 							currentIndex={i}
-							calendarInfo={props.calendarInfo}
-							resourceInfo={props.resourceInfo}
 							areaSize={areaData.size}
-							timelineStore={props.timelineStore}
+							timelineCallbacks={props.timelineCallbacks}
 						/>
 					);
 				})}

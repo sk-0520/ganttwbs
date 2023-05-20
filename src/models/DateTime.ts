@@ -1,6 +1,7 @@
 import { cdate } from "cdate";
 
 import { ParseResult, ResultFactory } from "@/models/data/Result";
+import { Require } from "@/models/Require";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 import { Strong } from "@/models/Types";
@@ -26,15 +27,6 @@ function factory(timeZone: TimeZone): cdate.cdate {
 	}
 
 	return create;
-}
-
-function toDateOnly(date: cdate.CDate): cdate.CDate {
-	return date
-		.set("hour", 0)
-		.set("minute", 0)
-		.set("second", 0)
-		.set("millisecond", 0)
-		;
 }
 
 function padStart(value: number, length: number, fillString: string): string {
@@ -326,14 +318,47 @@ export class DateTime {
 		return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
 	}
 
-	public toDateOnly(): DateTime {
-		const date = toDateOnly(this.date);
+	/**
+	 * 指定した単位未満を切り落とす。
+	 * @param keepUnit 切り落とし時に保持する単位。ここで指定した値未満が初期値となる。
+	 * @returns 切り落とされた項目は初期値(月なら1月、日なら1日、時なら0時)となる
+	 */
+	public truncate(keepUnit: Unit): DateTime {
+		const date = Require.switch(keepUnit, {
+			"year": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0).set("hour", 0).set("date", 1).set("month", 0),
+			"month": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0).set("hour", 0).set("date", 1),
+			"day": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0).set("hour", 0),
+			"hour": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0),
+			"minute": _ => this.date.set("millisecond", 0).set("second", 0),
+			"second": _ => this.date.set("millisecond", 0),
+		});
 
 		return new DateTime(date, this.timeZone);
 	}
 
+	/**
+	 * 自身から年月日以外を破棄。
+	 * @returns
+	 */
+	public truncateTime(): DateTime {
+		return this.truncate("day");
+	}
+
+	/**
+	 * 自身の所属する月の最終日を取得。
+	 * @returns
+	 */
 	public getLastDayOfMonth(): DateTime {
-		return new DateTime(toDateOnly(this.date.endOf("month").endOf("day")), this.timeZone);
+		const date = this.date
+			.endOf("month")
+			.endOf("day")
+			.set("millisecond", 0)
+			.set("second", 0)
+			.set("minute", 0)
+			.set("hour", 0)
+		;
+
+		return new DateTime(date, this.timeZone);
 	}
 
 	/**

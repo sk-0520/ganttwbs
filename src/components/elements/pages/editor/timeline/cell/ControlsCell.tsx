@@ -1,14 +1,13 @@
 import classNames from "classnames";
-import { useSetAtom } from "jotai";
 import { FC, useEffect, useState } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import { useLocale } from "@/locales/locale";
-import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
-import { MoveDirection } from "@/models/store/TimelineStore";
+import { MoveDirection } from "@/models/data/TimelineCallbacks";
 
 interface Props {
 	currentTimelineKind: TimelineKind;
@@ -23,16 +22,16 @@ interface Props {
 const ControlsCell: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
-	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
+	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
 
 	const [visibleControls, setVisibleControls] = useState(false);
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 
 	useEffect(() => {
 		if (visibleControls) {
-			setHoverTimelineId(undefined);
+			hoverTimelineIdAtomWriter.write(undefined);
 		}
-	}, [setHoverTimelineId, visibleControls]);
+	}, [hoverTimelineIdAtomWriter, visibleControls]);
 
 	function handleStartControls() {
 		setVisibleControls(true);
@@ -101,7 +100,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 				isVisible={visibleControls}
 				callBackHidden={handleHideControls}
 			>
-				<div className="tools after">
+				<div className="tools before">
 					<table className="panel grid">
 						<tbody>
 							<tr>

@@ -1,31 +1,32 @@
-import { useAtom, useAtomValue } from "jotai";
 import { FC, ReactNode, useEffect, useMemo, useState } from "react";
 
 import ColumnHighlight from "@/components/elements/pages/editor/timeline/highlight/ColumnHighlight";
 import RowHighlight from "@/components/elements/pages/editor/timeline/highlight/RowHighlight";
 import { Charts } from "@/models/Charts";
-import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { useActiveTimelineIdAtomReader, useDragOverTimelineIdAtomReader, useDragSourceTimelineIdAtomReader, useHighlightDaysAtomReader, useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomReader, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomReader } from "@/models/data/atom/editor/HighlightAtoms";
+import { useCalendarInfoAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ColumnHighlightMode, RowHighlightMode } from "@/models/data/Highlight";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { SettingProps } from "@/models/data/props/SettingProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Dom } from "@/models/Dom";
 
-interface Props extends ConfigurationProps, SettingProps, CalendarInfoProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	//nop
 }
 
 const HighlightArea: FC<Props> = (props: Props) => {
-
-	const activeTimelineId = useAtomValue(ActiveTimelineIdAtom);
-	const hoverTimelineId = useAtomValue(HoverTimelineIdAtom);
-	const [highlightTimelineIds, setHighlightTimelineIds] = useAtom(HighlightTimelineIdsAtom);
-	const [highlightDays, setHighlightDays] = useAtom(HighlightDaysAtom);
-	const dragSourceTimelineId = useAtomValue(DragSourceTimelineIdAtom);
-	const dragOverTimelineId = useAtomValue(DragOverTimelineIdAtom);
+	const activeTimelineIdAtomReader = useActiveTimelineIdAtomReader();
+	const hoverTimelineIdAtomReader = useHoverTimelineIdAtomReader();
+	const highlightTimelineIdsAtomReader = useHighlightTimelineIdsAtomReader();
+	const highlightTimelineIdsAtomWriter = useHighlightTimelineIdsAtomWriter();
+	const highlightDaysAtomReader = useHighlightDaysAtomReader();
+	const highlightDaysAtomWriter = useHighlightDaysAtomWriter();
+	const dragSourceTimelineIdAtomReader = useDragSourceTimelineIdAtomReader();
+	const dragOverTimelineIdAtomReader = useDragOverTimelineIdAtomReader();
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
+	const totalTimelineMapAtomReader = useTotalTimelineMapAtomReader();
 
 	const [crossHeaderWidth, setCrossHeaderWidth] = useState(0);
 	const [crossHeaderHeight, setCrossHeaderHeight] = useState(0);
@@ -37,8 +38,8 @@ const HighlightArea: FC<Props> = (props: Props) => {
 	}, []);
 
 	const areaData = useMemo(() => {
-		return Charts.createAreaData(props.configuration.design.seed.cell, props.calendarInfo.range, props.timelineStore.totalItemMap.size);
-	}, [props.configuration, props.calendarInfo, props.timelineStore.totalItemMap.size]);
+		return Charts.createAreaData(props.configuration.design.seed.cell, calendarInfoAtomReader.data.range, totalTimelineMapAtomReader.data.size);
+	}, [props.configuration, calendarInfoAtomReader.data.range, totalTimelineMapAtomReader.data.size]);
 
 	function renderRowHighlight(timelineId: TimelineId, mode: RowHighlightMode, key?: string): ReactNode {
 		return (
@@ -49,7 +50,7 @@ const HighlightArea: FC<Props> = (props: Props) => {
 				timelineId={timelineId}
 				areaData={areaData}
 				crossHeaderWidth={crossHeaderWidth}
-				timelineStore={props.timelineStore}
+				timelineCallbacks={props.timelineCallbacks}
 				callbackAnimationEnd={() => handleRowAnimationEnd(mode, timelineId)}
 			/>
 		);
@@ -57,22 +58,22 @@ const HighlightArea: FC<Props> = (props: Props) => {
 
 	function handleRowAnimationEnd(mode: RowHighlightMode, timelineId: TimelineId): void {
 		if (mode === "highlight") {
-			setHighlightTimelineIds(c => c.filter(a => a !== timelineId));
+			highlightTimelineIdsAtomWriter.write(c => c.filter(a => a !== timelineId));
 		}
 	}
 
 	function handleColumnAnimationEnd(mode: ColumnHighlightMode, date: DateTime): void {
 		if (mode === "highlight") {
-			setHighlightDays(c => c.filter(a => !a.equals(date)));
+			highlightDaysAtomWriter.write(c => c.filter(a => !a.equals(date)));
 		}
 	}
 
 	return (
 		<div id="highlight-area">
-			{highlightTimelineIds.map(a => {
+			{highlightTimelineIdsAtomReader.data.map(a => {
 				return renderRowHighlight(a, "highlight", a);
 			})}
-			{highlightDays.map(a => {
+			{highlightDaysAtomReader.data.map(a => {
 				return (
 					<ColumnHighlight
 						key={a.ticks}
@@ -82,15 +83,14 @@ const HighlightArea: FC<Props> = (props: Props) => {
 						areaData={areaData}
 						crossHeaderWidth={crossHeaderWidth}
 						crossHeaderHeight={crossHeaderHeight}
-						calendarInfo={props.calendarInfo}
 						callbackAnimationEnd={() => handleColumnAnimationEnd("highlight", a)}
 					/>
 				);
 			})}
-			{hoverTimelineId && renderRowHighlight(hoverTimelineId, "hover")}
-			{dragOverTimelineId && renderRowHighlight(dragOverTimelineId, "drag-over")}
-			{dragSourceTimelineId && renderRowHighlight(dragSourceTimelineId, "drag-source")}
-			{activeTimelineId && renderRowHighlight(activeTimelineId, "active")}
+			{hoverTimelineIdAtomReader.data && renderRowHighlight(hoverTimelineIdAtomReader.data, "hover")}
+			{dragOverTimelineIdAtomReader.data && renderRowHighlight(dragOverTimelineIdAtomReader.data, "drag-over")}
+			{dragSourceTimelineIdAtomReader.data && renderRowHighlight(dragSourceTimelineIdAtomReader.data, "drag-source")}
+			{activeTimelineIdAtomReader.data && renderRowHighlight(activeTimelineIdAtomReader.data, "active")}
 		</div>
 	);
 };
