@@ -1,8 +1,9 @@
 
-import { FC, useCallback, useMemo, KeyboardEvent } from "react";
+import { FC, useCallback, useMemo, KeyboardEvent, MouseEvent } from "react";
 
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
+import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useSequenceTimelinesAtomReader, useTimelineIndexMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks } from "@/models/data/BeginDate";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
@@ -22,6 +23,7 @@ interface Props extends ConfigurationProps, TimelineCallbacksProps {
 const TimelineItems: FC<Props> = (props: Props) => {
 	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
 	const timelineIndexMapAtomReader = useTimelineIndexMapAtomReader();
+	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
 
 	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
 		handleCellKeyDown(ev, currentTimeline, props.timelineCallbacks, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data, "subject");
@@ -50,6 +52,10 @@ const TimelineItems: FC<Props> = (props: Props) => {
 		});
 	}, [props.configuration]);
 
+	function handleMouseMove(ev: MouseEvent) {
+		hoverTimelineIdAtomWriter.write(undefined);
+	}
+
 	return (
 		<div id="timelines">
 			<table>
@@ -68,7 +74,9 @@ const TimelineItems: FC<Props> = (props: Props) => {
 						);
 					})}
 				</tbody>
-				<tfoot>
+				<tfoot
+					onMouseEnter={handleMouseMove}
+				>
 					{dummyAreaNodes}
 				</tfoot>
 			</table>
