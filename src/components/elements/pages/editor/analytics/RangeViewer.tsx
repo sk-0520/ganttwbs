@@ -1,14 +1,16 @@
 import { FC } from "react";
 
 import Timestamp from "@/components/elements/Timestamp";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { TotalSuccessWorkRange } from "@/models/data/WorkRange";
 
-interface Props extends CalendarInfoProps {
+interface Props {
 	totalSuccessWorkRange: TotalSuccessWorkRange | undefined;
 }
 
 const RangeViewer: FC<Props> = (props: Props) => {
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
+
 	return (
 		<section>
 			<h2>
@@ -32,10 +34,10 @@ const RangeViewer: FC<Props> = (props: Props) => {
 							予定
 						</td>
 						<td>
-							<Timestamp format="date" date={props.calendarInfo.range.begin} />
+							<Timestamp format="date" date={calendarInfoAtomReader.data.range.begin} />
 						</td>
 						<td>
-							<Timestamp format="date" date={props.calendarInfo.range.end} />
+							<Timestamp format="date" date={calendarInfoAtomReader.data.range.end} />
 						</td>
 					</tr>
 					<tr>

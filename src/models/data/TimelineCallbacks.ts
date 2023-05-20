@@ -1,37 +1,12 @@
 
-import { DayInfo } from "@/models/data/DayInfo";
 import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
-import { AnyTimeline, GroupTimeline, TimelineId } from "@/models/data/Setting";
-import { TimelineItem } from "@/models/data/TimelineItem";
-import { WorkRange } from "@/models/data/WorkRange";
-import { DateTimeTicks } from "@/models/DateTime";
+import { AnyTimeline } from "@/models/data/Setting";
 
 export type MoveDirection = "up" | "down" | "parent";
 
-export interface TimelineStore {
-
-	/** 最上位(こいつ自身はどうでもよくて、子を使用する) */
-	readonly rootGroupTimeline: GroupTimeline;
-
-	/** 全てのタイムライン(ノード状態ではない) */
-	readonly totalItemMap: ReadonlyMap<TimelineId, AnyTimeline>;
-
-	/** 各タイムラインを上から見たインデックス順の一覧 */
-	readonly sequenceItems: ReadonlyArray<AnyTimeline>;
-	/** 各タイムラインを上から見たインデックスのマッピング */
-	readonly indexItemMap: ReadonlyMap<TimelineId, number>;
-
-	/** 変更タイムライン */
-	readonly changedItemMap: ReadonlyMap<TimelineId, TimelineItem>;
-
-	/** 各工数時間 */
-	readonly workRanges: ReadonlyMap<TimelineId, WorkRange>;
-
-	/** 日に対する何かしらの情報(情報がある時点で死んでる) */
-	readonly dayInfos: ReadonlyMap<DateTimeTicks, DayInfo>;
-
+export interface TimelineCallbacks {
 	/**
 	 * タイムラインの表示上IDを取得。
 	 */

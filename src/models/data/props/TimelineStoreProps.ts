@@ -1,5 +1,5 @@
-import { TimelineStore } from "@/models/store/TimelineStore";
+import { TimelineCallbacks } from "@/models/data/TimelineCallbacks";
 
-export interface TimelineStoreProps {
-	readonly timelineStore: TimelineStore;
+export interface TimelineCallbacksProps {
+	readonly timelineCallbacks: TimelineCallbacks;
 }

@@ -1,4 +1,3 @@
-import { useSetAtom } from "jotai";
 import { useState, useEffect, DragEvent, FC, useCallback, KeyboardEvent, useRef } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
@@ -12,29 +11,27 @@ import TimelineHeaderRow from "@/components/elements/pages/editor/timeline/cell/
 import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/WorkloadCell";
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
-import { ActiveTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DetailEditTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
-import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
+import { useSelectingBeginDateAtomReader, useSelectingBeginDateAtomWriter } from "@/models/data/atom/editor/BeginDateAtoms";
+import { useDetailEditTimelineAtomWriter, useDragSourceTimelineAtomWriter } from "@/models/data/atom/editor/DragAndDropAtoms";
+import { useActiveTimelineIdAtomWriter, useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
+import { useCalendarInfoAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { BeginDateCallbacks } from "@/models/data/BeginDate";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
-import { SettingProps } from "@/models/data/props/SettingProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { AnyTimeline, GroupTimeline, Progress, TimelineKind } from "@/models/data/Setting";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
+import { AnyTimeline, GroupTimeline, Progress, TaskTimeline, TimelineKind } from "@/models/data/Setting";
+import { MoveDirection } from "@/models/data/TimelineCallbacks";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Editors } from "@/models/Editors";
 import { Settings } from "@/models/Settings";
-import { MoveDirection } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
+interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	currentTimeline: AnyTimeline;
-	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
 	callbackSubjectKeyDown(ev: KeyboardEvent, currentTimeline: AnyTimeline): void;
 	callbackWorkloadKeyDown(ev: KeyboardEvent, currentTimeline: AnyTimeline): void;
@@ -45,12 +42,18 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
-	const setDetailEditTimeline = useSetAtom(DetailEditTimelineAtom);
-	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
-	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
-	const setHighlightDays = useSetAtom(HighlightDaysAtom);
-	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
-	const setDragSourceTimeline = useSetAtom(DragSourceTimelineAtom);
+	const detailEditTimelineAtomWriter = useDetailEditTimelineAtomWriter();
+
+	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
+	const highlightTimelineIdsAtomWriter = useHighlightTimelineIdsAtomWriter();
+	const highlightDaysAtomWriter = useHighlightDaysAtomWriter();
+	const activeTimelineIdAtomWriter = useActiveTimelineIdAtomWriter();
+	const dragSourceTimelineAtomWriter = useDragSourceTimelineAtomWriter();
+	const timelineItemsAtomReader = useTimelineItemsAtomReader();
+	const workRangesAtomReader = useWorkRangesAtomReader();
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
+	const selectingBeginDateAtomReader = useSelectingBeginDateAtomReader();
+	const selectingBeginDateAtomWriter = useSelectingBeginDateAtomWriter();
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
@@ -59,8 +62,8 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const [beginDate, setBeginDate] = useState<DateTime | null>(null);
 	const [endDate, setEndDate] = useState<DateTime | null>(null);
 	const [progress, setProgress] = useState(0);
-	const [isSelectedPrevious, setIsSelectedPrevious] = useState(props.selectingBeginDate?.previous.has(props.currentTimeline.id) ?? false);
-	const [selectedBeginDate, setSelectedBeginDate] = useState(props.selectingBeginDate?.beginDate ?? null);
+	const [isSelectedPrevious, setIsSelectedPrevious] = useState(selectingBeginDateAtomReader.data?.previous.has(props.currentTimeline.id) ?? false);
+	const [selectedBeginDate, setSelectedBeginDate] = useState(selectingBeginDateAtomReader.data?.beginDate ?? null);
 	const [visibleBeginDateInput, setVisibleBeginDateInput] = useState(false);
 	const refInputDate = useRef<HTMLInputElement>(null);
 
@@ -71,7 +74,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}, [refInputDate]);
 
 	useEffect(() => {
-		const timelineItem = props.timelineStore.changedItemMap.get(props.currentTimeline.id);
+		const timelineItem = timelineItemsAtomReader.data.get(props.currentTimeline.id);
 		if (timelineItem) {
 			setSubject(timelineItem.timeline.subject);
 
@@ -103,32 +106,32 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				}
 			}
 		}
-	}, [props.currentTimeline, props.timelineStore]);
+	}, [props.currentTimeline, props.timelineCallbacks, timelineItemsAtomReader.data]);
 
 	useEffect(() => {
-		const isVisibleBeginDateInput = Boolean(props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id);
+		const isVisibleBeginDateInput = Boolean(selectingBeginDateAtomReader.data && selectingBeginDateAtomReader.data.timeline.id === props.currentTimeline.id);
 		setVisibleBeginDateInput(isVisibleBeginDateInput);
 		if (isVisibleBeginDateInput) {
 			handleFocus(false);
-			setHoverTimelineId(undefined);
+			hoverTimelineIdAtomWriter.write(undefined);
 		}
-	}, [props.currentTimeline.id, props.selectingBeginDate]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [props.currentTimeline.id, selectingBeginDateAtomReader.data]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		if (props.selectingBeginDate) {
+		if (selectingBeginDateAtomReader.data) {
 			if (Settings.maybeGroupTimeline(props.currentTimeline)) {
-				const selected = props.selectingBeginDate.previous.has(props.currentTimeline.id);
+				const selected = selectingBeginDateAtomReader.data.previous.has(props.currentTimeline.id);
 				setIsSelectedPrevious(selected);
 			} else if (Settings.maybeTaskTimeline(props.currentTimeline)) {
-				const selected = props.selectingBeginDate.previous.has(props.currentTimeline.id);
+				const selected = selectingBeginDateAtomReader.data.previous.has(props.currentTimeline.id);
 				setIsSelectedPrevious(selected);
 
-				setSelectedBeginDate(props.selectingBeginDate.beginDate ?? null);
+				setSelectedBeginDate(selectingBeginDateAtomReader.data.beginDate ?? null);
 			} else {
 				throw new Error();
 			}
 		}
-	}, [props.currentTimeline, props.selectingBeginDate]);
+	}, [props.currentTimeline, selectingBeginDateAtomReader.data]);
 
 	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>) => {
 		props.callbackSubjectKeyDown(ev, props.currentTimeline);
@@ -153,7 +156,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		//props.currentTimeline.workload = Timelines.serializeWorkload(TimeSpan.fromDays(n));
 		const workload = Timelines.serializeWorkload(TimeSpan.fromDays(n));
 
-		props.timelineStore.updateTimeline({
+		props.timelineCallbacks.updateTimeline({
 			...props.currentTimeline,
 			workload: workload,
 		});
@@ -166,20 +169,20 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 		//const progress = n / 100.0;
 
-		props.timelineStore.updateTimeline({
+		props.timelineCallbacks.updateTimeline({
 			...props.currentTimeline,
 			progress: progress,
 		});
 	}
 
 	function handleControlMoveItem(direction: MoveDirection) {
-		props.timelineStore.moveTimeline(direction, props.currentTimeline);
+		props.timelineCallbacks.moveTimeline(direction, props.currentTimeline);
 	}
 
 	function handleControlAddItem(kindOrTimeline: TimelineKind | GroupTimeline): void {
 		if (kindOrTimeline === "group" || kindOrTimeline === "task") {
 			// 空タイムライン
-			props.timelineStore.addEmptyTimeline(
+			props.timelineCallbacks.addEmptyTimeline(
 				props.currentTimeline,
 				{
 					position: NewTimelinePosition.Next,
@@ -188,7 +191,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			);
 		} else {
 			// グループ
-			props.timelineStore.addNewTimeline(
+			props.timelineCallbacks.addNewTimeline(
 				props.currentTimeline,
 				kindOrTimeline,
 				NewTimelinePosition.Next
@@ -197,22 +200,22 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleControlDeleteItem() {
-		props.timelineStore.removeTimeline(props.currentTimeline);
+		props.timelineCallbacks.removeTimeline(props.currentTimeline);
 	}
 
 	function handleShowDetail() {
-		setDetailEditTimeline(props.currentTimeline);
+		detailEditTimelineAtomWriter.write(props.currentTimeline);
 	}
 
 	function handleShowTimeline(): void {
 		let date: DateTime | undefined = undefined;
-		const workRange = props.timelineStore.workRanges.get(props.currentTimeline.id);
+		const workRange = workRangesAtomReader.data.get(props.currentTimeline.id);
 		if (workRange && WorkRanges.maybeSuccessWorkRange(workRange)) {
 			date = workRange.begin;
 		}
 
-		setHighlightTimelineIds([props.currentTimeline.id]);
-		setHighlightDays(date ? [date] : []);
+		highlightTimelineIdsAtomWriter.write([props.currentTimeline.id]);
+		highlightDaysAtomWriter.write(date ? [date] : []);
 
 		Editors.scrollView(props.currentTimeline.id, date);
 	}
@@ -222,7 +225,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		props.timelineStore.updateTimeline({
+		props.timelineCallbacks.updateTimeline({
 			...props.currentTimeline,
 			memberId: memberGroupPair?.member.id ?? "",
 		});
@@ -233,7 +236,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		if (props.selectingBeginDate) {
+		if (selectingBeginDateAtomReader.data) {
 			return;
 		}
 
@@ -242,29 +245,38 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleStartDragTimeline(ev: DragEvent): void {
 		//props.timelineStore.startDragTimeline(ev, props.currentTimeline);
-		setDragSourceTimeline(props.currentTimeline);
+		dragSourceTimelineAtomWriter.write(props.currentTimeline);
 	}
 
 	function handleChangePrevious(isSelected: boolean): void {
-		if (!props.selectingBeginDate) {
+		if (!selectingBeginDateAtomReader.data) {
 			return;
 		}
 
 		if (isSelected) {
-			props.selectingBeginDate.previous.add(props.currentTimeline.id);
+			selectingBeginDateAtomReader.data.previous.add(props.currentTimeline.id);
 		} else {
-			props.selectingBeginDate.previous.delete(props.currentTimeline.id);
+			selectingBeginDateAtomReader.data.previous.delete(props.currentTimeline.id);
 		}
 		setIsSelectedPrevious(isSelected);
 	}
 
 	function handleChangeSelectingBeginDate(date: Date | null): void {
-		if (!props.selectingBeginDate) {
+		if (!selectingBeginDateAtomReader.data) {
 			return;
 		}
 
-		props.selectingBeginDate.beginDate = date ? DateTime.convert(date, props.calendarInfo.timeZone) : null;
-		setSelectedBeginDate(props.selectingBeginDate.beginDate);
+		selectingBeginDateAtomWriter.write(c => {
+			if(!c) {
+				throw new Error();
+			}
+
+			return {
+				...c,
+				beginDate: date ? DateTime.convert(date, calendarInfoAtomReader.data.timeZone) : null,
+			};
+		});
+		setSelectedBeginDate(selectingBeginDateAtomReader.data.beginDate);
 	}
 
 	function handleAttachBeforeTimeline() {
@@ -272,7 +284,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		const beforeTimeline = props.timelineStore.searchBeforeTimeline(props.currentTimeline);
+		const beforeTimeline = props.timelineCallbacks.searchBeforeTimeline(props.currentTimeline);
 		if (beforeTimeline) {
 			props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([beforeTimeline.id]));
 		}
@@ -283,13 +295,17 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		const beforeTimeline = props.timelineStore.searchBeforeTimeline(props.currentTimeline);
+		const timeline: TaskTimeline = {
+			...props.currentTimeline,
+		};
+
+		const beforeTimeline = props.timelineCallbacks.searchBeforeTimeline(timeline);
 		if (beforeTimeline) {
-			props.currentTimeline.static = undefined;
-			props.currentTimeline.previous = [beforeTimeline.id];
+			timeline.static = undefined;
+			timeline.previous = [beforeTimeline.id];
 		}
 
-		props.beginDateCallbacks.submitSelectBeginDate(props.currentTimeline);
+		props.beginDateCallbacks.submitSelectBeginDate(timeline);
 		handleFocus(false);
 	}
 
@@ -314,14 +330,17 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		if (!props.selectingBeginDate) {
+		if (!selectingBeginDateAtomReader.data) {
 			return;
 		}
 
-		props.currentTimeline.static = props.selectingBeginDate.beginDate ? props.selectingBeginDate.beginDate.format("yyyy-MM-dd") : undefined;
-		props.currentTimeline.previous = [...props.selectingBeginDate.previous];
+		const timeline: TaskTimeline = {
+			...props.currentTimeline,
+			static: selectingBeginDateAtomReader.data.beginDate ? selectingBeginDateAtomReader.data.beginDate.format("yyyy-MM-dd") : undefined,
+			previous: [...selectingBeginDateAtomReader.data.previous],
+		};
 
-		props.beginDateCallbacks.submitSelectBeginDate(props.currentTimeline);
+		props.beginDateCallbacks.submitSelectBeginDate(timeline);
 		handleFocus(false);
 	}
 
@@ -336,19 +355,18 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleFocus(isFocus: boolean): void {
 		if (isFocus) {
-			setActiveTimelineId(props.currentTimeline.id);
+			activeTimelineIdAtomWriter.write(props.currentTimeline.id);
 		} else {
-			setActiveTimelineId(undefined);
+			activeTimelineIdAtomWriter.write(undefined);
 		}
 	}
 
-	const timelineIndex = props.timelineStore.calcReadableTimelineId(props.currentTimeline);
+	const timelineIndex = props.timelineCallbacks.calcReadableTimelineId(props.currentTimeline);
 
 	return (
 		<TimelineHeaderRow
 			currentTimeline={props.currentTimeline}
-			selectingBeginDate={props.selectingBeginDate}
-			timelineStore={props.timelineStore}
+			timelineCallbacks={props.timelineCallbacks}
 			level={timelineIndex.level}
 		>
 			<IdCell
@@ -357,14 +375,13 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				currentTimeline={props.currentTimeline}
 				progress={progress}
 				isSelectedPrevious={isSelectedPrevious}
-				selectingBeginDate={props.selectingBeginDate}
 				callbackStartDragTimeline={handleStartDragTimeline}
 				callbackChangePrevious={handleChangePrevious}
 			/>
 			<SubjectCell
 				timeline={props.currentTimeline}
 				value={subject}
-				disabled={Boolean(props.selectingBeginDate)}
+				disabled={Boolean(selectingBeginDateAtomReader.data)}
 				readOnly={false}
 				callbackChangeValue={handleChangeSubject}
 				callbackFocus={handleFocus}
@@ -373,7 +390,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			<WorkloadCell
 				timeline={props.currentTimeline}
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-				disabled={Boolean(props.selectingBeginDate)}
+				disabled={Boolean(selectingBeginDateAtomReader.data)}
 				value={workload}
 				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeWorkload : undefined}
 				callbackFocus={handleFocus}
@@ -382,14 +399,13 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			<ResourceCell
 				currentTimeline={props.currentTimeline}
 				selectedMemberId={memberId}
-				disabled={Boolean(props.selectingBeginDate)}
-				resourceInfo={props.resourceInfo}
+				disabled={Boolean(selectingBeginDateAtomReader.data)}
 				callbackChangeMember={handleChangeMember}
 				callbackFocus={handleFocus}
 			/>
 			<RelationCell
 				currentTimeline={props.currentTimeline}
-				selectable={Boolean(props.selectingBeginDate)}
+				selectable={Boolean(selectingBeginDateAtomReader.data)}
 				htmlFor={selectingId}
 			/>
 			{
@@ -481,7 +497,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 					) : (
 						<WorkRangeCells
 							workRangeKind={workRangeKind}
-							selectable={Boolean(props.selectingBeginDate)}
+							selectable={Boolean(selectingBeginDateAtomReader.data)}
 							beginDate={beginDate}
 							endDate={endDate}
 							htmlFor={selectingId}
@@ -491,14 +507,14 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			}
 			<ProgressCell
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
-				disabled={Boolean(props.selectingBeginDate)}
+				disabled={Boolean(selectingBeginDateAtomReader.data)}
 				progress={progress}
 				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
 				callbackFocus={handleFocus}
 			/>
 			<ControlsCell
 				currentTimelineKind={props.currentTimeline.kind}
-				disabled={Boolean(props.selectingBeginDate)}
+				disabled={Boolean(selectingBeginDateAtomReader.data)}
 				callbackMoveItem={handleControlMoveItem}
 				callbackAddItem={handleControlAddItem}
 				callbackDeleteItem={handleControlDeleteItem}

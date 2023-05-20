@@ -3,17 +3,15 @@ import { FC } from "react";
 
 import { Charts } from "@/models/Charts";
 import { AreaSize } from "@/models/data/Area";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { useCalendarInfoAtomReader, useResourceInfoAtomReader, useRootTimelineAtomReader, useSettingAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
-import { SettingProps } from "@/models/data/props/SettingProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { TaskTimeline } from "@/models/data/Setting";
 import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
+interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	currentIndex: number;
 	currentTimeline: TaskTimeline;
 
@@ -21,12 +19,19 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, Ca
 }
 
 const ConnectorTimeline: FC<Props> = (props: Props) => {
+	const settingAtomReader = useSettingAtomReader();
+	const rootTimelineReader = useRootTimelineAtomReader();
+	const workRangesAtomReader = useWorkRangesAtomReader();
+	const calendarInfoAtomReader = useCalendarInfoAtomReader();
+	const resourceInfoAtomReader = useResourceInfoAtomReader();
+	const timelineIndexMapAtomReader = useTimelineIndexMapAtomReader();
+	const totalTimelineMapAtomReader = useTotalTimelineMapAtomReader();
 
 	if (!props.currentTimeline.previous.length) {
 		return null;
 	}
 
-	const currentWorkRange = props.timelineStore.workRanges.get(props.currentTimeline.id);
+	const currentWorkRange = workRangesAtomReader.data.get(props.currentTimeline.id);
 	if (!WorkRanges.maybeSuccessWorkRange(currentWorkRange)) {
 		return null;
 	}
@@ -46,28 +51,28 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 		].map(([x, y]) => x + "," + y).join(" "),
 	};
 
-	const currentTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.begin, currentWorkRange);
+	const currentTimeSpanRange = Charts.getTimeSpanRange(calendarInfoAtomReader.data.range.begin, currentWorkRange);
 	const currentChartArea = Charts.createChartArea(currentTimeSpanRange, props.currentIndex, cell, props.areaSize);
 
-	const currentColor = Charts.getTaskBackground(props.currentTimeline, props.resourceInfo.memberMap, props.setting.theme);
+	const currentColor = Charts.getTaskBackground(props.currentTimeline, resourceInfoAtomReader.data.memberMap, settingAtomReader.data.theme);
 
 	return (
 		<>
 			{props.currentTimeline.previous.map(b => {
-				const previousIndex = Require.get(props.timelineStore.indexItemMap, b);
-				const previousTimeline = Require.get(props.timelineStore.totalItemMap, b);
+				const previousIndex = Require.get(timelineIndexMapAtomReader.data, b);
+				const previousTimeline = Require.get(totalTimelineMapAtomReader.data, b);
 
 				const previewColor = Settings.maybeGroupTimeline(previousTimeline)
-					? Charts.getGroupBackground(previousTimeline, props.timelineStore.rootGroupTimeline, props.setting.theme)
-					: Charts.getTaskBackground(previousTimeline, props.resourceInfo.memberMap, props.setting.theme)
+					? Charts.getGroupBackground(previousTimeline, rootTimelineReader.data, settingAtomReader.data.theme)
+					: Charts.getTaskBackground(previousTimeline, resourceInfoAtomReader.data.memberMap, settingAtomReader.data.theme)
 					;
 
-				const previewWorkRange = props.timelineStore.workRanges.get(previousTimeline.id);
+				const previewWorkRange = workRangesAtomReader.data.get(previousTimeline.id);
 				if (!WorkRanges.maybeSuccessWorkRange(previewWorkRange)) {
 					return null;
 				}
 
-				const previousTimeSpanRange = Charts.getTimeSpanRange(props.calendarInfo.range.begin, previewWorkRange);
+				const previousTimeSpanRange = Charts.getTimeSpanRange(calendarInfoAtomReader.data.range.begin, previewWorkRange);
 				const previousChartArea = Charts.createChartArea(previousTimeSpanRange, previousIndex, cell, props.areaSize);
 
 				// 基準座標を設定

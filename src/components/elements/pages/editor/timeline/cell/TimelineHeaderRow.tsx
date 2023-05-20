@@ -1,29 +1,28 @@
 import classNames from "classnames";
-import { useAtomValue, useSetAtom } from "jotai";
 import { FC, ReactNode } from "react";
 
-import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DraggingTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
-import { SelectingBeginDate } from "@/models/data/BeginDate";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { useSelectingBeginDateAtomReader } from "@/models/data/atom/editor/BeginDateAtoms";
+import { useDraggingTimelineAtomReader } from "@/models/data/atom/editor/DragAndDropAtoms";
+import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends TimelineStoreProps {
+interface Props extends TimelineCallbacksProps {
 	level: number;
 	currentTimeline: AnyTimeline;
-	selectingBeginDate: SelectingBeginDate | null;
 	children: ReactNode;
 }
 
 const TimelineHeaderRow: FC<Props> = (props: Props) => {
-	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
-	const draggingTimeline = useAtomValue(DraggingTimelineAtom);
+	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
+	const draggingTimelineAtomReader = useDraggingTimelineAtomReader();
+	const selectingBeginDateAtomReader = useSelectingBeginDateAtomReader();
 
 	function handleMouseEnter() {
-		if (!draggingTimeline && !props.selectingBeginDate) {
-			setHoverTimelineId(props.currentTimeline.id);
+		if (!draggingTimelineAtomReader.data && !selectingBeginDateAtomReader.data) {
+			hoverTimelineIdAtomWriter.write(props.currentTimeline.id);
 		}
 	}
 	// function handleMouseLeave() {
@@ -40,16 +39,16 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 					"_dynamic_programmable_cell_height",
 					{
 						["_dynamic_programmable_groups_level-" + props.level.toString()]: Settings.maybeGroupTimeline(props.currentTimeline),
-						"dragging": draggingTimeline?.sourceTimeline.id === props.currentTimeline.id,
-						"selected-previous": props.selectingBeginDate?.previous.has(props.currentTimeline.id),
+						"dragging": draggingTimelineAtomReader.data?.sourceTimeline.id === props.currentTimeline.id,
+						"selected-previous": selectingBeginDateAtomReader.data?.previous.has(props.currentTimeline.id),
 						"completed": Settings.maybeTaskTimeline(props.currentTimeline) && 1 <= props.currentTimeline.progress
 					}
 				)
 			}
-			onDragEnter={ev => draggingTimeline?.onDragEnter(ev, props.currentTimeline)}
-			onDragOver={ev => draggingTimeline?.onDragOver(ev, props.currentTimeline)}
-			onDragLeave={ev => draggingTimeline?.onDragLeave(ev, props.currentTimeline)}
-			onDrop={ev => draggingTimeline?.onDrop(ev, props.currentTimeline)}
+			onDragEnter={ev => draggingTimelineAtomReader.data?.onDragEnter(ev, props.currentTimeline)}
+			onDragOver={ev => draggingTimelineAtomReader.data?.onDragOver(ev, props.currentTimeline)}
+			onDragLeave={ev => draggingTimelineAtomReader.data?.onDragLeave(ev, props.currentTimeline)}
+			onDrop={ev => draggingTimelineAtomReader.data?.onDrop(ev, props.currentTimeline)}
 			onMouseEnter={handleMouseEnter}
 			// onMouseLeave={handleMouseLeave}
 		>

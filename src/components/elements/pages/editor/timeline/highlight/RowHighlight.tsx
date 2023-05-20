@@ -2,13 +2,14 @@ import classNames from "classnames";
 import { CSSProperties, FC } from "react";
 
 import { AreaData } from "@/models/data/Area";
+import { useTimelineIndexMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { RowHighlightMode } from "@/models/data/Highlight";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
 import { Require } from "@/models/Require";
 
-interface Props extends ConfigurationProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	mode: RowHighlightMode;
 	timelineId: TimelineId;
 	areaData: AreaData;
@@ -17,8 +18,9 @@ interface Props extends ConfigurationProps, TimelineStoreProps {
 }
 
 const RowHighlight: FC<Props> = (props: Props) => {
+	const timelineIndexMapAtomReader = useTimelineIndexMapAtomReader();
 
-	const index = Require.get(props.timelineStore.indexItemMap, props.timelineId);
+	const index = Require.get(timelineIndexMapAtomReader.data, props.timelineId);
 
 	const baseY = props.areaData.cell.height.value * index;
 

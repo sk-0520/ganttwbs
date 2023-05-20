@@ -1,7 +1,7 @@
 import { ChartArea } from "@/models/data/ChartArea";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { Progress } from "@/models/data/Setting";
-import { TimelineStore } from "@/models/store/TimelineStore";
+import { TimelineCallbacks } from "@/models/data/TimelineCallbacks";
 
 
 export interface ChartProps extends ConfigurationProps {
@@ -11,5 +11,5 @@ export interface ChartProps extends ConfigurationProps {
 	borderThickness: number;
 	area: ChartArea;
 	progress: Progress;
-	timelineStore: TimelineStore;
+	timelineStore: TimelineCallbacks;
 }

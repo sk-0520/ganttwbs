@@ -3,34 +3,33 @@ import { FC, useCallback, useMemo, KeyboardEvent } from "react";
 
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
-import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
-import { CalendarInfoProps } from "@/models/data/props/CalendarInfoProps";
+import { useSequenceTimelinesAtomReader, useTimelineIndexMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { BeginDateCallbacks } from "@/models/data/BeginDate";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
-import { SettingProps } from "@/models/data/props/SettingProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
-import { AnyTimeline } from "@/models/data/Setting";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
+import { AnyTimeline, TimelineId } from "@/models/data/Setting";
+import { TimelineCallbacks } from "@/models/data/TimelineCallbacks";
 import { Dom } from "@/models/Dom";
 import { IdFactory } from "@/models/IdFactory";
 import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
-import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, CalendarInfoProps, ResourceInfoProps {
-	selectingBeginDate: SelectingBeginDate | null;
+interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	beginDateCallbacks: BeginDateCallbacks;
 }
 
 const TimelineItems: FC<Props> = (props: Props) => {
+	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
+	const timelineIndexMapAtomReader = useTimelineIndexMapAtomReader();
 
 	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
-		handleCellKeyDown(ev, currentTimeline, props.timelineStore, "subject");
-	}, [props.timelineStore]);
+		handleCellKeyDown(ev, currentTimeline, props.timelineCallbacks, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data, "subject");
+	}, [props.timelineCallbacks, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data]);
 
 	const onWorkloadKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
-		handleCellKeyDown(ev, currentTimeline, props.timelineStore, "workload");
-	}, [props.timelineStore]);
+		handleCellKeyDown(ev, currentTimeline, props.timelineCallbacks, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data, "workload");
+	}, [props.timelineCallbacks, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data]);
 
 	const dummyAreaNodes = useMemo(() => {
 		console.debug("dummyAreaNodedummyAreaNodedummyAreaNode");
@@ -55,18 +54,14 @@ const TimelineItems: FC<Props> = (props: Props) => {
 		<div id="timelines">
 			<table>
 				<tbody>
-					{props.timelineStore.sequenceItems.map((a, i) => {
+					{sequenceTimelinesAtomReader.data.map((a, i) => {
 						return (
 							<AnyTimelineEditor
 								key={a.id}
 								configuration={props.configuration}
-								setting={props.setting}
 								currentTimeline={a}
-								timelineStore={props.timelineStore}
-								selectingBeginDate={props.selectingBeginDate}
+								timelineCallbacks={props.timelineCallbacks}
 								beginDateCallbacks={props.beginDateCallbacks}
-								calendarInfo={props.calendarInfo}
-								resourceInfo={props.resourceInfo}
 								callbackSubjectKeyDown={onSubjectKeyDown}
 								callbackWorkloadKeyDown={onWorkloadKeyDown}
 							/>
@@ -83,16 +78,16 @@ const TimelineItems: FC<Props> = (props: Props) => {
 
 export default TimelineItems;
 
-function handleCellKeyDown(ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline, timelineStore: TimelineStore, currentCell: "subject" | "workload"): void {
+function handleCellKeyDown(ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline, timelineStore: TimelineCallbacks, sequenceTimelines: ReadonlyArray<AnyTimeline>, timelineIndexMap: ReadonlyMap<TimelineId, number>, currentCell: "subject" | "workload"): void {
 	if (ev.key !== "Enter") {
 		return;
 	}
 
-	const currentIndex = Require.get(timelineStore.indexItemMap, currentTimeline.id);
+	const currentIndex = Require.get(timelineIndexMap, currentTimeline.id);
 	let nextIndex = -1;
 
 	function getNextTimeline(index: number): AnyTimeline | null {
-		const nextTimeline = timelineStore.sequenceItems[index];
+		const nextTimeline = sequenceTimelines[index];
 
 		switch (currentCell) {
 			case "subject":
@@ -115,22 +110,22 @@ function handleCellKeyDown(ev: KeyboardEvent<HTMLInputElement>, currentTimeline:
 		for (let i = currentIndex - 1; 0 <= i; i--) {
 			const timeline = getNextTimeline(i);
 			if (timeline) {
-				nextIndex = Require.get(timelineStore.indexItemMap, timeline.id);
+				nextIndex = Require.get(timelineIndexMap, timeline.id);
 				break;
 			}
 		}
 	} else {
-		for (let i = currentIndex + 1; i < timelineStore.sequenceItems.length; i++) {
+		for (let i = currentIndex + 1; i < sequenceTimelines.length; i++) {
 			const timeline = getNextTimeline(i);
 			if (timeline) {
-				nextIndex = Require.get(timelineStore.indexItemMap, timeline.id);
+				nextIndex = Require.get(timelineIndexMap, timeline.id);
 				break;
 			}
 		}
 	}
 
 	if (nextIndex !== -1) {
-		const nextTimeline = timelineStore.sequenceItems[nextIndex];
+		const nextTimeline = sequenceTimelines[nextIndex];
 		const nextCellId = Require.switch(currentCell, {
 			"subject": () => Timelines.toSubjectId(nextTimeline),
 			"workload": () => Timelines.toWorkloadId(nextTimeline),

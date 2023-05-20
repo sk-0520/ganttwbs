@@ -14,7 +14,7 @@
 	},
 	"homepage": "https://github.com/sk-0520/ganttwbs#readme",
 	"scripts": {
-		"typescript-watch": "tsc --watch",
+		"watch-typescript": "tsc --watch",
 		"code:typescript": "tsc",
 		"code:markup": "markuplint --problem-only src/**/*.tsx",
 		"code:lint": "next lint --dir .",
