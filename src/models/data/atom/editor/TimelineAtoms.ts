@@ -208,4 +208,10 @@ export function useTimelineItemsAtomReader(): AtomReader<Map<TimelineId, Timelin
 
 
 /** 日に対する何かしらの情報(情報がある時点で死んでる) */
-export const DayInfosAtom = atom<Map<DateTimeTicks, DayInfo>>(new Map());
+const DayInfosAtom = atom<Map<DateTimeTicks, DayInfo>>(new Map());
+
+export function useDayInfosAtomReader(): AtomReader<Map<DateTimeTicks, DayInfo>> {
+	return {
+		data: useAtomValue(DayInfosAtom),
+	};
+}

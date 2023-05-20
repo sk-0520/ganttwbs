@@ -1,4 +1,4 @@
-import { useAtomValue, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { FC, useEffect, useState } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
@@ -7,7 +7,7 @@ import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/T
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DayInfosAtom, useCalendarInfoAtomReader, useRootTimelineAtomReader, useSequenceTimelinesAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader, useDayInfosAtomReader, useRootTimelineAtomReader, useSequenceTimelinesAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
@@ -31,10 +31,9 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
 	const rootTimelineReader = useRootTimelineAtomReader();
 	const timelineItemsAtomReader = useTimelineItemsAtomReader();
-	const dayInfos = useAtomValue(DayInfosAtom);
+	const dayInfosAtomReader = useDayInfosAtomReader();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 	const workRangesAtomReader = useWorkRangesAtomReader();
-
 
 	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
 	const [workload, setWorkload] = useState(0);
@@ -127,7 +126,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	function handleClickInformationFirst(): void {
-		const keys = [...dayInfos.keys()].sort((a, b) => Number(a) - Number(b));
+		const keys = [...dayInfosAtomReader.data.keys()].sort((a, b) => Number(a) - Number(b));
 		if (keys.length) {
 			const date = DateTime.convert(keys[0], calendarInfoAtomReader.data.timeZone).toDateOnly();
 			scrollView(undefined, date);
@@ -135,7 +134,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	function handleClickInformationLast(): void {
-		const keys = [...dayInfos.keys()].sort((a, b) => Number(b) - Number(a));
+		const keys = [...dayInfosAtomReader.data.keys()].sort((a, b) => Number(b) - Number(a));
 		if (keys.length) {
 			const date = DateTime.convert(keys[0], calendarInfoAtomReader.data.timeZone).toDateOnly();
 			scrollView(undefined, date);
@@ -235,7 +234,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						<li>
 							<button
 								onClick={ev => handleClickInformationFirst()}
-								disabled={!dayInfos.size}
+								disabled={!dayInfosAtomReader.data.size}
 								title={locale.pages.editor.timeline.header.operations.informationFirst}
 							>
 								<IconImage
@@ -245,7 +244,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						</li>
 						<li>
 							<button
-								disabled={!dayInfos.size}
+								disabled={!dayInfosAtomReader.data.size}
 								onClick={ev => handleClickInformationList()}
 							>
 								<IconLabel
@@ -257,7 +256,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						<li>
 							<button
 								title={locale.pages.editor.timeline.header.operations.informationLast}
-								disabled={!dayInfos.size}
+								disabled={!dayInfosAtomReader.data.size}
 								onClick={ev => handleClickInformationLast()}
 							>
 								<IconImage

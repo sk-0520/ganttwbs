@@ -1,9 +1,9 @@
-import { useAtomValue, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DayInfosAtom, useCalendarInfoAtomReader, useResourceInfoAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader, useDayInfosAtomReader, useResourceInfoAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -23,7 +23,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
 	const resourceInfoAtomReader = useResourceInfoAtomReader();
-	const dayInfos = useAtomValue(DayInfosAtom);
+	const dayInfosAtomReader = useDayInfosAtomReader();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 	const timelineIndexMapAtomReader = useTimelineIndexMapAtomReader();
 	const totalTimelineMapAtomReader = useTotalTimelineMapAtomReader();
@@ -48,7 +48,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 	};
 
 	const nextDay = props.date.add(1, "day");
-	for (const [ticks, info] of dayInfos) {
+	for (const [ticks, info] of dayInfosAtomReader.data) {
 		if (props.date.ticks <= ticks && ticks < nextDay.ticks) {
 			for (const memberId of info.duplicateMembers) {
 				mergedDayInfo.duplicateMembers.add(memberId);
