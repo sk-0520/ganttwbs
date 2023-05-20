@@ -6,7 +6,7 @@ import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { CalendarInfoAtom, DayInfosAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { CalendarInfoAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -31,7 +31,6 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
 	const calendarInfo = useAtomValue(CalendarInfoAtom);
-	const dayInfos = useAtomValue(DayInfosAtom);
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 
 	const { dates, yearMonthBucket } = useMemo(() => {
@@ -160,7 +159,6 @@ const DaysHeader: FC<Props> = (props: Props) => {
 								<InformationDay
 									key={a.ticks}
 									date={a}
-									dayInfos={dayInfos}
 									setting={props.setting}
 									timelineStore={props.timelineStore}
 								/>

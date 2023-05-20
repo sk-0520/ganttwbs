@@ -1,10 +1,12 @@
 import { atom } from "jotai";
 
 import { Calendars } from "@/models/Calendars";
+import { DayInfo } from "@/models/data/DayInfo";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { RootTimeline, AnyTimeline, TimelineId, Setting } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
-import { DateTime } from "@/models/DateTime";
+import { WorkRange } from "@/models/data/WorkRange";
+import { DateTime, DateTimeTicks } from "@/models/DateTime";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
 import { Require } from "@/models/Require";
@@ -77,39 +79,32 @@ export const ResourceInfoAtom = atom(
 	}
 );
 
-/** 各タイムラインを上から見たインデックス順の一覧 */
-export const SequenceTimelinesAtom = atom<Array<AnyTimeline>>([]);
+/**
+ * 変更基準点。
+ *
+ * 元々各atom内で依存系を処理してたけど、使い方が悪いのか動かんくてこいつの中で全処理するようにした。
+ */
+export const SequenceTimelinesWriterAtom = atom<never, Array<AnyTimeline>, void>(
+	undefined as never,
+	(get, set, ...sequenceTimelines) => {
+		if(!sequenceTimelines) {
+			throw new Error();
+		}
 
-export type TimelineIndexMap = ReadonlyMap<TimelineId, number>;
-/** 各タイムラインを上から見たインデックスのマッピング */
-export const TimelineIndexMapAtom = atom<TimelineIndexMap>(
-	get => {
-		const sequenceTimelines = get(SequenceTimelinesAtom);
-		return Timelines.toIndexes(sequenceTimelines);
-	}
-);
+		set(SequenceTimelinesAtom, sequenceTimelines);
 
-export type TotalTimelineMapType = ReadonlyMap<TimelineId, AnyTimeline>;
-/** 全てのタイムライン(ノード状態ではない) */
-export const TotalTimelineMapAtom = atom<TotalTimelineMapType>(new Map());
+		const timelineIndexMap = Timelines.toIndexes(sequenceTimelines);
+		set(TimelineIndexMapAtom, timelineIndexMap);
 
-/** 各工数時間 */
-export const WorkRangesAtom = atom(
-	get => {
+		const timelineMap = Timelines.getTimelinesMap(get(RootTimelineAtom));
+		set(TotalTimelineMapAtom, timelineMap);
+
 		const setting = get(SettingAtom);
 		const calendarInfo = get(CalendarInfoAtom);
 		const totalTimelineMap = get(TotalTimelineMapAtom);
 
 		const workRanges = Timelines.getWorkRanges([...totalTimelineMap.values()], setting.calendar.holiday, setting.recursive, calendarInfo.timeZone);
-		return workRanges;
-	}
-);
-
-/** 変更タイムライン */
-export const TimelineItemsAtom = atom(
-	get => {
-		const timelineMap = get(TotalTimelineMapAtom);
-		const workRanges = get(WorkRangesAtom);
+		set(WorkRangesAtom, workRanges);
 
 		const timelineItems = new Map(
 			[...timelineMap.entries()]
@@ -122,20 +117,32 @@ export const TimelineItemsAtom = atom(
 					return [k, item];
 				})
 		);
+		set(TimelineItemsAtom, timelineItems);
 
-		return timelineItems;
+		const resourceInfoAtom = get(ResourceInfoAtom);
+		const dayInfos = Timelines.calcDayInfos(totalTimelineMap, new Set([...workRanges.values()]), resourceInfoAtom);
+		set(DayInfosAtom, dayInfos);
 	}
 );
+
+/** 各タイムラインを上から見たインデックス順の一覧 */
+export const SequenceTimelinesAtom = atom<Array<AnyTimeline>>([]);
+
+export type TimelineIndexMap = ReadonlyMap<TimelineId, number>;
+/** 各タイムラインを上から見たインデックスのマッピング */
+export const TimelineIndexMapAtom = atom<TimelineIndexMap>(new Map());
+
+export type TotalTimelineMapType = ReadonlyMap<TimelineId, AnyTimeline>;
+/** 全てのタイムライン(ノード状態ではない) */
+export const TotalTimelineMapAtom = atom<TotalTimelineMapType>(new Map());
+
+/** 各工数時間 */
+export const WorkRangesAtom = atom<Map<TimelineId, WorkRange>>(new Map());
+
+/** 変更タイムライン */
+export const TimelineItemsAtom = atom<Map<TimelineId, TimelineItem>>(new Map());
+
 //ReadonlyMap<TimelineId, TimelineItem>
 
 /** 日に対する何かしらの情報(情報がある時点で死んでる) */
-export const DayInfosAtom = atom(
-	get => {
-		const resourceInfoAtom = get(ResourceInfoAtom);
-		const totalTimelineMap = get(TotalTimelineMapAtom);
-		const workRanges = get(WorkRangesAtom);
-		const dayInfos = Timelines.calcDayInfos(totalTimelineMap, new Set([...workRanges.values()]), resourceInfoAtom);
-
-		return dayInfos;
-	}
-);
+export const DayInfosAtom = atom<Map<DateTimeTicks, DayInfo>>(new Map());

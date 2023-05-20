@@ -12,7 +12,7 @@ import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { CalendarInfoAtom, DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, ResourceInfoAtom, RootTimelineAtom, SequenceTimelinesAtom, SettingAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { CalendarInfoAtom, DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, ResourceInfoAtom, SequenceTimelinesAtom, SequenceTimelinesWriterAtom, SettingAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -53,10 +53,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const setDraggingTimeline = useSetAtom(DraggingTimelineAtom);
 	const setDragSourceTimelineId = useSetAtom(DragSourceTimelineIdAtom);
 	const setDragOverTimelineId = useSetAtom(DragOverTimelineIdAtom);
-	const [sequenceTimelines, setSequenceTimelines] = useAtom(SequenceTimelinesAtom);
-	const [/*totalTimelineMap*/, setTotalTimelineMap] = useAtom(TotalTimelineMapAtom);
+	const setSequenceTimelinesWriter = useSetAtom(SequenceTimelinesWriterAtom);
+	const sequenceTimelines= useAtomValue(SequenceTimelinesAtom);
+	//const [/*totalTimelineMap*/, setTotalTimelineMap] = useAtom(TotalTimelineMapAtom);
 	const setSettingAtom = useSetAtom(SettingAtom);
-	const rootTimeline = useAtomValue(RootTimelineAtom);
 	const calendarInfo = useAtomValue(CalendarInfoAtom);
 	const resourceInfo = useAtomValue(ResourceInfoAtom);
 
@@ -76,7 +76,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	useLayoutEffect(() => {
 		setSettingAtom(props.editorData.setting);
-		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
+		setSequenceTimelinesWriter(...Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
@@ -105,7 +105,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				}
 			}
 
-			setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
+			setSequenceTimelinesWriter(...Timelines.flat(props.editorData.setting.rootTimeline.children));
 
 			setActiveTimelineId(undefined);
 			setHoverTimelineId(dropTimeline.timeline.id);
@@ -207,7 +207,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			setDragSourceTimelineId(dragging.sourceTimeline.id);
 			setDraggingTimeline(dragging);
 		}
-	}, [dragSourceTimeline, props.editorData.setting.rootTimeline, setActiveTimelineId, setDragOverTimelineId, setDragSourceTimeline, setDragSourceTimelineId, setDraggingTimeline, setHighlightTimelineIds, setHoverTimelineId, setSequenceTimelines]);
+	}, [dragSourceTimeline, props.editorData.setting.rootTimeline, setActiveTimelineId, setDragOverTimelineId, setDragSourceTimeline, setDragSourceTimelineId, setDraggingTimeline, setHighlightTimelineIds, setHoverTimelineId, setSequenceTimelinesWriter]);
 
 	function createTimelineStore(): TimelineStore {
 		const result: TimelineStore = {
@@ -228,8 +228,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	function updateRelations() {
 		console.debug("全体へ通知");
 
-		const timelineMap = Timelines.getTimelinesMap(rootTimeline);
-		setTotalTimelineMap(timelineMap);
+		// const timelineMap = Timelines.getTimelinesMap(rootTimeline);
+		// setTotalTimelineMap(timelineMap);
 
 		//const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
 		//const workRanges = Timelines.getWorkRanges([...timelineMap.values()], props.editorData.setting.calendar.holiday, props.editorData.setting.recursive, calendarInfo.timeZone);
@@ -325,7 +325,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			}
 		}
 
-		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
+		setSequenceTimelinesWriter(...Timelines.flat(props.editorData.setting.rootTimeline.children));
 		setTimeout(() => {
 			setHighlightTimelineIds([newTimeline.id]);
 			setHighlightDays([]);
@@ -342,9 +342,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		if (source.kind !== timeline.kind) {
 			throw new Error();
 		}
-
-		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
-		setTotalTimelineMap(timelineMap);
 
 		//const prevSource = { ...source };
 		Object.assign(source, timeline);
@@ -396,6 +393,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 		const store = createTimelineStore();
 		setTimelineStore(store);
+		setSequenceTimelinesWriter(...Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}
 
 	function handleMoveTimeline(direction: MoveDirection, timeline: AnyTimeline): void {
@@ -417,8 +415,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			Arrays.replaceOrderInPlace(group.children, direction === "down", timeline);
 		}
 
-		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
-	}
+		setSequenceTimelinesWriter(...Timelines.flat(props.editorData.setting.rootTimeline.children));	}
 
 	function handleRemoveTimeline(timeline: AnyTimeline): void {
 		const groups = Timelines.getParentGroups(timeline, props.editorData.setting.rootTimeline);
@@ -438,8 +435,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		const group = Arrays.last(groups);
 		const newChildren = group.children.filter(a => a.id !== timeline.id);
 		group.children = newChildren;
-		setSequenceTimelines(Timelines.flat(props.editorData.setting.rootTimeline.children));
-	}
+		setSequenceTimelinesWriter(...Timelines.flat(props.editorData.setting.rootTimeline.children));	}
 
 	function handleStartSelectBeginDate(timeline: TaskTimeline): void {
 		console.debug(timeline);

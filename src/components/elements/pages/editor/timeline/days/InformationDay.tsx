@@ -3,12 +3,12 @@ import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { CalendarInfoAtom, ResourceInfoAtom, TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { CalendarInfoAtom, DayInfosAtom, ResourceInfoAtom, TimelineIndexMapAtom, TotalTimelineMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
-import { DateTime, DateTimeTicks } from "@/models/DateTime";
+import { DateTime } from "@/models/DateTime";
 import { Days } from "@/models/Days";
 import { Editors } from "@/models/Editors";
 import { Require } from "@/models/Require";
@@ -17,7 +17,6 @@ import { Timelines } from "@/models/Timelines";
 
 interface Props extends SettingProps, TimelineStoreProps {
 	readonly date: DateTime;
-	readonly dayInfos: Map<DateTimeTicks, DayInfo>;
 }
 
 const InformationDay: FC<Props> = (props: Props) => {
@@ -27,6 +26,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
 	const calendarInfo = useAtomValue(CalendarInfoAtom);
 	const resourceInfo = useAtomValue(ResourceInfoAtom);
+	const dayInfos = useAtomValue(DayInfosAtom);
 
 	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
@@ -48,7 +48,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 	};
 
 	const nextDay = props.date.add(1, "day");
-	for (const [ticks, info] of props.dayInfos) {
+	for (const [ticks, info] of dayInfos) {
 		if (props.date.ticks <= ticks && ticks < nextDay.ticks) {
 			for (const memberId of info.duplicateMembers) {
 				mergedDayInfo.duplicateMembers.add(memberId);
