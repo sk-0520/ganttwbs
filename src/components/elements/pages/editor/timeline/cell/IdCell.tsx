@@ -2,8 +2,8 @@ import classNames from "classnames";
 import { DragEvent, FC } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
+import { useSelectingBeginDateAtomReader } from "@/models/data/atom/editor/BeginDateAtoms";
 import { useDraggingTimelineAtomReader } from "@/models/data/atom/editor/DragAndDropAtoms";
-import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline, Progress } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
@@ -15,7 +15,6 @@ interface Props {
 	readableTimelineId: ReadableTimelineId;
 	readonly currentTimeline: Readonly<AnyTimeline>;
 	readonly progress: Progress;
-	selectingBeginDate: SelectingBeginDate | null;
 	callbackStartDragTimeline(ev: DragEvent): void;
 	callbackChangePrevious: (isSelected: boolean) => void;
 }
@@ -26,9 +25,10 @@ const IdCell: FC<Props> = (props: Props) => {
 	const completed = 1 <= props.progress;
 
 	const draggingTimelineAtomReader = useDraggingTimelineAtomReader();
+	const selectingBeginDateAtomReader = useSelectingBeginDateAtomReader();
 
-	const canSelect = props.selectingBeginDate && (
-		props.selectingBeginDate.timeline.id !== props.currentTimeline.id && props.selectingBeginDate.canSelect(props.currentTimeline)
+	const canSelect = selectingBeginDateAtomReader.data && (
+		selectingBeginDateAtomReader.data.timeline.id !== props.currentTimeline.id && selectingBeginDateAtomReader.data.canSelect(props.currentTimeline)
 	);
 
 	return (
@@ -42,12 +42,12 @@ const IdCell: FC<Props> = (props: Props) => {
 				)
 			}
 			title={props.currentTimeline.id}
-			draggable={!props.selectingBeginDate}
+			draggable={!selectingBeginDateAtomReader.data}
 			onDragStart={ev => props.callbackStartDragTimeline(ev)}
 			onDragEnd={draggingTimelineAtomReader.data?.onDragEnd}
 		>
 			<label>
-				{props.selectingBeginDate
+				{selectingBeginDateAtomReader.data
 					? (
 						<>
 							<input

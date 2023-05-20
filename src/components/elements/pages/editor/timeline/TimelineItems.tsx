@@ -4,7 +4,7 @@ import { FC, useCallback, useMemo, KeyboardEvent } from "react";
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
 import { useSequenceTimelinesAtomReader, useTimelineIndexMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
-import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
+import { BeginDateCallbacks } from "@/models/data/BeginDate";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline, TimelineId } from "@/models/data/Setting";
@@ -16,7 +16,6 @@ import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 
 interface Props extends ConfigurationProps, TimelineCallbacksProps {
-	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
 }
 
@@ -62,7 +61,6 @@ const TimelineItems: FC<Props> = (props: Props) => {
 								configuration={props.configuration}
 								currentTimeline={a}
 								timelineCallbacks={props.timelineCallbacks}
-								selectingBeginDate={props.selectingBeginDate}
 								beginDateCallbacks={props.beginDateCallbacks}
 								callbackSubjectKeyDown={onSubjectKeyDown}
 								callbackWorkloadKeyDown={onWorkloadKeyDown}

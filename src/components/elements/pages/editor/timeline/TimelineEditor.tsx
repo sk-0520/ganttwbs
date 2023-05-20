@@ -1,5 +1,5 @@
 import { FC, useEffect, useLayoutEffect, useMemo } from "react";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 
 import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
 import DaysHeader from "@/components/elements/pages/editor/timeline/DaysHeader";
@@ -10,10 +10,11 @@ import TimelineViewer from "@/components/elements/pages/editor/timeline/Timeline
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
+import { useSelectingBeginDateAtomWriter } from "@/models/data/atom/editor/BeginDateAtoms";
 import { useDetailEditTimelineAtomReader, useDetailEditTimelineAtomWriter, useDraggingTimelineAtomWriter, useDragSourceTimelineAtomReader, useDragSourceTimelineAtomWriter } from "@/models/data/atom/editor/DragAndDropAtoms";
 import { useActiveTimelineIdAtomWriter, useDragOverTimelineIdAtomWriter, useDragSourceTimelineIdAtomWriter, useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useCalendarInfoAtomReader, useSequenceTimelinesAtomReader, useSequenceTimelinesWriterAtomWriter, useSettingAtomWriter } from "@/models/data/atom/editor/TimelineAtoms";
-import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
+import { BeginDateCallbacks } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { DropTimeline } from "@/models/data/DropTimeline";
@@ -59,8 +60,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
 	const settingAtomWriter = useSettingAtomWriter();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
-
-	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
+	const selectingBeginDateAtomWriter = useSelectingBeginDateAtomWriter();
 
 	const timelineCallbacks: TimelineCallbacks = {
 		calcReadableTimelineId: handleCalcReadableTimelineId,
@@ -85,21 +85,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		return renderDynamicStyle(props.configuration.design, props.editorData.setting.theme);
 	}, [props.configuration.design, props.editorData.setting.theme]);
 
-	//TODO: クソ重いっぽいんやけどどう依存解決してメモ化するのか分からんので枝葉から対応するのです
-
-	// // 初回のみ
-	// useEffect(() => {
-	// 	updateRelations();
-	// }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
 	useLayoutEffect(() => {
 		settingAtomWriter.write(props.editorData.setting);
 		sequenceTimelinesWriterAtomWriter.write(...Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-	useEffect(() => {
-		updateRelations();
-	}, [sequenceTimelinesAtomReader.data]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		function fireDropTimeline(dropTimeline: DropTimeline) {
@@ -229,31 +218,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	}, [props.editorData.setting.rootTimeline, sequenceTimelinesWriterAtomWriter, activeTimelineIdAtomWriter, hoverTimelineIdAtomWriter, highlightTimelineIdsAtomWriter, dragSourceTimelineIdAtomWriter, dragOverTimelineIdAtomWriter, dragSourceTimelineAtomReader.data, dragSourceTimelineAtomWriter, draggingTimelineAtomReader]);
 
 
-	// TODO: atom を連鎖的に更新すればこいつはもういらないはず
-	function updateRelations() {
-		console.debug("全体へ通知");
-
-		// const timelineMap = Timelines.getTimelinesMap(rootTimeline);
-		// setTotalTimelineMap(timelineMap);
-
-		//const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
-		//const workRanges = Timelines.getWorkRanges([...timelineMap.values()], props.editorData.setting.calendar.holiday, props.editorData.setting.recursive, calendarInfo.timeZone);
-
-		// const changedItems = new Map(
-		// 	[...timelineMap.entries()]
-		// 		.map(([k, v]) => {
-		// 			const item: TimelineItem = {
-		// 				timeline: v,
-		// 				workRange: Require.get(workRanges, k),
-		// 			};
-
-		// 			return [k, item];
-		// 		})
-		// );
-		// const store = createTimelineStore();
-		// setTimelineStore(store);
-	}
-
 	function handleEndDetailEdit(changedTimeline: AnyTimeline | null): void {
 		console.debug("詳細編集終了", changedTimeline);
 
@@ -261,7 +225,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 		if (changedTimeline) {
 			handleUpdateTimeline(changedTimeline);
-			updateRelations();
 		}
 	}
 
@@ -446,7 +409,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleStartSelectBeginDate(timeline: TaskTimeline): void {
 		console.debug(timeline);
-		setSelectingBeginDate({
+		selectingBeginDateAtomWriter.write({
 			timeline: timeline,
 			beginDate: timeline.static ? DateTime.parse(timeline.static, calendarInfoAtomReader.data.timeZone) : null,
 			previous: new Set(timeline.previous),
@@ -455,7 +418,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleClearSelectBeginDate(timeline: TaskTimeline, clearDate: boolean, clearPrevious: boolean): void {
-		setSelectingBeginDate(c => ({
+		selectingBeginDateAtomWriter.write(c => ({
 			timeline: timeline,
 			beginDate: clearDate ? null : c?.beginDate ?? null,
 			previous: clearPrevious ? new Set() : c?.previous ?? new Set(),
@@ -464,7 +427,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleSetSelectBeginDate(timeline: TaskTimeline, set: ReadonlySet<TimelineId>): void {
-		setSelectingBeginDate(c => ({
+		selectingBeginDateAtomWriter.write(c => ({
 			timeline: timeline,
 			beginDate: c?.beginDate ?? null,
 			previous: new Set(set),
@@ -473,12 +436,12 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleSubmitSelectBeginDate(timeline: TaskTimeline): void {
-		setSelectingBeginDate(null);
-		updateRelations();
+		handleUpdateTimeline(timeline);
+		selectingBeginDateAtomWriter.write(undefined);
 	}
 
 	function handleCancelSelectBeginDate(): void {
-		setSelectingBeginDate(null);
+		selectingBeginDateAtomWriter.write(undefined);
 	}
 
 	return (
@@ -495,7 +458,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			/>
 			<TimelineItems
 				configuration={props.configuration}
-				selectingBeginDate={selectingBeginDate}
 				beginDateCallbacks={beginDateCallbacks}
 				timelineCallbacks={timelineCallbacks}
 			/>
