@@ -6,12 +6,12 @@ import { Charts } from "@/models/Charts";
 import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useCalendarInfoAtomReader, useSequenceTimelinesAtomReader, useSettingAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { ColorString } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 
-interface Props extends ConfigurationProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	//nop
 }
 
@@ -154,7 +154,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							currentTimeline={a}
 							currentIndex={i}
 							areaSize={areaData.size}
-							timelineStore={props.timelineStore}
+							timelineCallbacks={props.timelineCallbacks}
 						/>
 					);
 				})}
@@ -169,7 +169,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							currentTimeline={a}
 							currentIndex={i}
 							areaSize={areaData.size}
-							timelineStore={props.timelineStore}
+							timelineCallbacks={props.timelineCallbacks}
 						/>
 					);
 				})}

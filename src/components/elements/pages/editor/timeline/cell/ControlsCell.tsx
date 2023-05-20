@@ -7,7 +7,7 @@ import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/T
 import { useLocale } from "@/locales/locale";
 import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
-import { MoveDirection } from "@/models/store/TimelineStore";
+import { MoveDirection } from "@/models/data/TimelineCallbacks";
 
 interface Props {
 	currentTimelineKind: TimelineKind;

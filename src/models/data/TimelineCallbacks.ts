@@ -6,7 +6,7 @@ import { AnyTimeline } from "@/models/data/Setting";
 
 export type MoveDirection = "up" | "down" | "parent";
 
-export interface TimelineStore {
+export interface TimelineCallbacks {
 	/**
 	 * タイムラインの表示上IDを取得。
 	 */

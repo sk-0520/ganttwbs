@@ -7,12 +7,12 @@ import { useActiveTimelineIdAtomReader, useDragOverTimelineIdAtomReader, useDrag
 import { useCalendarInfoAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ColumnHighlightMode, RowHighlightMode } from "@/models/data/Highlight";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Dom } from "@/models/Dom";
 
-interface Props extends ConfigurationProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	//nop
 }
 
@@ -50,7 +50,7 @@ const HighlightArea: FC<Props> = (props: Props) => {
 				timelineId={timelineId}
 				areaData={areaData}
 				crossHeaderWidth={crossHeaderWidth}
-				timelineStore={props.timelineStore}
+				timelineCallbacks={props.timelineCallbacks}
 				callbackAnimationEnd={() => handleRowAnimationEnd(mode, timelineId)}
 			/>
 		);

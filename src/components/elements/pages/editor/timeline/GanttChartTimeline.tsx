@@ -31,7 +31,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 				}
 			}
 		}
-	}, [props.timelineStore, props.currentTimeline, timelineItemsAtomReader.data]);
+	}, [props.timelineCallbacks, props.currentTimeline, timelineItemsAtomReader.data]);
 
 
 	function renderCurrentTimeline(): ReactNode {
@@ -55,7 +55,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 						borderColor="#000000"
 						borderThickness={1}
 						area={area}
-						timelineStore={props.timelineStore}
+						timelineStore={props.timelineCallbacks}
 						progress={props.currentTimeline.progress}
 					/>
 				) : Settings.maybeGroupTimeline(props.currentTimeline) ? (
@@ -67,7 +67,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 						borderColor="#000000"
 						borderThickness={2}
 						area={area}
-						timelineStore={props.timelineStore}
+						timelineStore={props.timelineCallbacks}
 					  progress={Timelines.sumProgressByGroup(props.currentTimeline)}
 					/>
 				) : null

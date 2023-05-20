@@ -4,7 +4,7 @@ import { useLocale } from "@/locales/locale";
 import { useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useCalendarInfoAtomReader, useDayInfosAtomReader, useResourceInfoAtomReader, useSettingAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Days } from "@/models/Days";
@@ -13,7 +13,7 @@ import { Require } from "@/models/Require";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends TimelineStoreProps {
+interface Props extends TimelineCallbacksProps {
 	readonly date: DateTime;
 }
 
@@ -148,7 +148,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 							<dd>
 								<ul>
 									{sortedTimelines.map(i => {
-										const timelineIndex = props.timelineStore.calcReadableTimelineId(i);
+										const timelineIndex = props.timelineCallbacks.calcReadableTimelineId(i);
 										const timelineClassName = Timelines.getReadableTimelineIdClassName(timelineIndex);
 
 										return (

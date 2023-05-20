@@ -9,7 +9,7 @@ import { useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter, useHover
 import { useCalendarInfoAtomReader, useDayInfosAtomReader, useRootTimelineAtomReader, useSequenceTimelinesAtomReader, useSettingAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { GroupTimeline, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
@@ -19,7 +19,7 @@ import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineCallbacksProps {
 }
 
 const CrossHeader: FC<Props> = (props: Props) => {
@@ -62,10 +62,10 @@ const CrossHeader: FC<Props> = (props: Props) => {
 			}
 
 		}
-	}, [props.timelineStore, timelineItemsAtomReader.data]);
+	}, [props.timelineCallbacks, timelineItemsAtomReader.data]);
 
 	function addEmptyTimeline(kind: TimelineKind) {
-		props.timelineStore.addEmptyTimeline(
+		props.timelineCallbacks.addEmptyTimeline(
 			rootTimelineReader.data,
 			{
 				position: NewTimelinePosition.Next,
@@ -88,7 +88,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 
 	function handleInputTimelines(timeline: GroupTimeline | null) {
 		if (timeline) {
-			props.timelineStore.addNewTimeline(rootTimelineReader.data, timeline, NewTimelinePosition.Next);
+			props.timelineCallbacks.addNewTimeline(rootTimelineReader.data, timeline, NewTimelinePosition.Next);
 		}
 
 		setVisibleTimelinesImportDialog(false);
@@ -369,7 +369,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 			{visibleInformation && (
 				<InformationDialog
 					configuration={props.configuration}
-					timelineStore={props.timelineStore}
+					timelineCallbacks={props.timelineCallbacks}
 					callbackClose={handleCloseInformation}
 				/>
 			)}

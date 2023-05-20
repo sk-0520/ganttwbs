@@ -18,18 +18,18 @@ import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate"
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline, GroupTimeline, Progress, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Editors } from "@/models/Editors";
 import { Settings } from "@/models/Settings";
-import { MoveDirection } from "@/models/store/TimelineStore";
+import { MoveDirection } from "@/models/data/TimelineCallbacks";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	currentTimeline: AnyTimeline;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
@@ -104,7 +104,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				}
 			}
 		}
-	}, [props.currentTimeline, props.timelineStore, timelineItemsAtomReader.data]);
+	}, [props.currentTimeline, props.timelineCallbacks, timelineItemsAtomReader.data]);
 
 	useEffect(() => {
 		const isVisibleBeginDateInput = Boolean(props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id);
@@ -154,7 +154,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		//props.currentTimeline.workload = Timelines.serializeWorkload(TimeSpan.fromDays(n));
 		const workload = Timelines.serializeWorkload(TimeSpan.fromDays(n));
 
-		props.timelineStore.updateTimeline({
+		props.timelineCallbacks.updateTimeline({
 			...props.currentTimeline,
 			workload: workload,
 		});
@@ -167,20 +167,20 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 		//const progress = n / 100.0;
 
-		props.timelineStore.updateTimeline({
+		props.timelineCallbacks.updateTimeline({
 			...props.currentTimeline,
 			progress: progress,
 		});
 	}
 
 	function handleControlMoveItem(direction: MoveDirection) {
-		props.timelineStore.moveTimeline(direction, props.currentTimeline);
+		props.timelineCallbacks.moveTimeline(direction, props.currentTimeline);
 	}
 
 	function handleControlAddItem(kindOrTimeline: TimelineKind | GroupTimeline): void {
 		if (kindOrTimeline === "group" || kindOrTimeline === "task") {
 			// 空タイムライン
-			props.timelineStore.addEmptyTimeline(
+			props.timelineCallbacks.addEmptyTimeline(
 				props.currentTimeline,
 				{
 					position: NewTimelinePosition.Next,
@@ -189,7 +189,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			);
 		} else {
 			// グループ
-			props.timelineStore.addNewTimeline(
+			props.timelineCallbacks.addNewTimeline(
 				props.currentTimeline,
 				kindOrTimeline,
 				NewTimelinePosition.Next
@@ -198,7 +198,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleControlDeleteItem() {
-		props.timelineStore.removeTimeline(props.currentTimeline);
+		props.timelineCallbacks.removeTimeline(props.currentTimeline);
 	}
 
 	function handleShowDetail() {
@@ -223,7 +223,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		props.timelineStore.updateTimeline({
+		props.timelineCallbacks.updateTimeline({
 			...props.currentTimeline,
 			memberId: memberGroupPair?.member.id ?? "",
 		});
@@ -273,7 +273,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		const beforeTimeline = props.timelineStore.searchBeforeTimeline(props.currentTimeline);
+		const beforeTimeline = props.timelineCallbacks.searchBeforeTimeline(props.currentTimeline);
 		if (beforeTimeline) {
 			props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([beforeTimeline.id]));
 		}
@@ -284,7 +284,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		const beforeTimeline = props.timelineStore.searchBeforeTimeline(props.currentTimeline);
+		const beforeTimeline = props.timelineCallbacks.searchBeforeTimeline(props.currentTimeline);
 		if (beforeTimeline) {
 			props.currentTimeline.static = undefined;
 			props.currentTimeline.previous = [beforeTimeline.id];
@@ -343,13 +343,13 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		}
 	}
 
-	const timelineIndex = props.timelineStore.calcReadableTimelineId(props.currentTimeline);
+	const timelineIndex = props.timelineCallbacks.calcReadableTimelineId(props.currentTimeline);
 
 	return (
 		<TimelineHeaderRow
 			currentTimeline={props.currentTimeline}
 			selectingBeginDate={props.selectingBeginDate}
-			timelineStore={props.timelineStore}
+			timelineCallbacks={props.timelineCallbacks}
 			level={timelineIndex.level}
 		>
 			<IdCell

@@ -4,10 +4,10 @@ import Dialog from "@/components/elements/Dialog";
 import { useLocale } from "@/locales/locale";
 import { useCalendarInfoAtomReader, useDayInfosAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { DateTime } from "@/models/DateTime";
 
-interface Props extends ConfigurationProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	callbackClose(date: DateTime | undefined): void;
 }
 

@@ -4,12 +4,12 @@ import { FC, ReactNode } from "react";
 import { useDraggingTimelineAtomReader } from "@/models/data/atom/editor/DragAndDropAtoms";
 import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends TimelineStoreProps {
+interface Props extends TimelineCallbacksProps {
 	level: number;
 	currentTimeline: AnyTimeline;
 	selectingBeginDate: SelectingBeginDate | null;

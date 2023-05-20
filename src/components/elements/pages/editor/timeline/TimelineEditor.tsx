@@ -27,7 +27,7 @@ import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
 import { Editors } from "@/models/Editors";
 import { Settings } from "@/models/Settings";
-import { MoveDirection, TimelineStore } from "@/models/store/TimelineStore";
+import { MoveDirection, TimelineCallbacks } from "@/models/data/TimelineCallbacks";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 
@@ -61,8 +61,26 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const settingAtomWriter = useSettingAtomWriter();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
-	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore());
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
+
+	const timelineCallbacks: TimelineCallbacks = {
+		calcReadableTimelineId: handleCalcReadableTimelineId,
+		searchBeforeTimeline: handleSearchBeforeTimeline,
+
+		addEmptyTimeline: handleAddEmptyTimeline,
+		addNewTimeline: handleAddNewTimeline,
+		updateTimeline: handleUpdateTimeline,
+		moveTimeline: handleMoveTimeline,
+		removeTimeline: handleRemoveTimeline,
+	};
+
+	const beginDateCallbacks: BeginDateCallbacks = {
+		startSelectBeginDate: handleStartSelectBeginDate,
+		clearSelectBeginDate: handleClearSelectBeginDate,
+		setSelectBeginDate: handleSetSelectBeginDate,
+		submitSelectBeginDate: handleSubmitSelectBeginDate,
+		cancelSelectBeginDate: handleCancelSelectBeginDate,
+	};
 
 	const dynamicStyleNodes = useMemo(() => {
 		return renderDynamicStyle(props.configuration.design, props.editorData.setting.theme);
@@ -211,20 +229,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		}
 	}, [props.editorData.setting.rootTimeline, sequenceTimelinesWriterAtomWriter, activeTimelineIdAtomWriter, hoverTimelineIdAtomWriter, highlightTimelineIdsAtomWriter, dragSourceTimelineIdAtomWriter, dragOverTimelineIdAtomWriter, dragSourceTimelineAtomReader.data, dragSourceTimelineAtomWriter, draggingTimelineAtomReader]);
 
-	function createTimelineStore(): TimelineStore {
-		const result: TimelineStore = {
-			calcReadableTimelineId: handleCalcReadableTimelineId,
-			searchBeforeTimeline: handleSearchBeforeTimeline,
-
-			addEmptyTimeline: handleAddEmptyTimeline,
-			addNewTimeline: handleAddNewTimeline,
-			updateTimeline: handleUpdateTimeline,
-			moveTimeline: handleMoveTimeline,
-			removeTimeline: handleRemoveTimeline,
-		};
-
-		return result;
-	}
 
 	// TODO: atom を連鎖的に更新すればこいつはもういらないはず
 	function updateRelations() {
@@ -247,8 +251,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		// 			return [k, item];
 		// 		})
 		// );
-		const store = createTimelineStore();
-		setTimelineStore(store);
+		// const store = createTimelineStore();
+		// setTimelineStore(store);
 	}
 
 	function handleEndDetailEdit(changedTimeline: AnyTimeline | null): void {
@@ -393,8 +397,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		// 	timelineItems.map(a => [a.timeline.id, a])
 		// );
 
-		const store = createTimelineStore();
-		setTimelineStore(store);
+		// const store = createTimelineStore();
+		// setTimelineStore(store);
 		sequenceTimelinesWriterAtomWriter.write(...Timelines.flat(props.editorData.setting.rootTimeline.children));
 	}
 
@@ -417,7 +421,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			Arrays.replaceOrderInPlace(group.children, direction === "down", timeline);
 		}
 
-		sequenceTimelinesWriterAtomWriter.write(...Timelines.flat(props.editorData.setting.rootTimeline.children));	}
+		sequenceTimelinesWriterAtomWriter.write(...Timelines.flat(props.editorData.setting.rootTimeline.children));
+	}
 
 	function handleRemoveTimeline(timeline: AnyTimeline): void {
 		const groups = Timelines.getParentGroups(timeline, props.editorData.setting.rootTimeline);
@@ -437,7 +442,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		const group = Arrays.last(groups);
 		const newChildren = group.children.filter(a => a.id !== timeline.id);
 		group.children = newChildren;
-		sequenceTimelinesWriterAtomWriter.write(...Timelines.flat(props.editorData.setting.rootTimeline.children));	}
+		sequenceTimelinesWriterAtomWriter.write(...Timelines.flat(props.editorData.setting.rootTimeline.children));
+	}
 
 	function handleStartSelectBeginDate(timeline: TaskTimeline): void {
 		console.debug(timeline);
@@ -476,39 +482,31 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		setSelectingBeginDate(null);
 	}
 
-	const beginDateCallbacks: BeginDateCallbacks = {
-		startSelectBeginDate: handleStartSelectBeginDate,
-		clearSelectBeginDate: handleClearSelectBeginDate,
-		setSelectBeginDate: handleSetSelectBeginDate,
-		submitSelectBeginDate: handleSubmitSelectBeginDate,
-		cancelSelectBeginDate: handleCancelSelectBeginDate,
-	};
-
 	return (
 		<div id="timeline">
 			{dynamicStyleNodes}
 
 			<CrossHeader
 				configuration={props.configuration}
-				timelineStore={timelineStore}
+				timelineCallbacks={timelineCallbacks}
 			/>
 			<DaysHeader
 				configuration={props.configuration}
-				timelineStore={timelineStore}
+				timelineCallbacks={timelineCallbacks}
 			/>
 			<TimelineItems
 				configuration={props.configuration}
 				selectingBeginDate={selectingBeginDate}
 				beginDateCallbacks={beginDateCallbacks}
-				timelineStore={timelineStore}
+				timelineCallbacks={timelineCallbacks}
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
-				timelineStore={timelineStore}
+				timelineCallbacks={timelineCallbacks}
 			/>
 			<HighlightArea
 				configuration={props.configuration}
-				timelineStore={timelineStore}
+				timelineCallbacks={timelineCallbacks}
 			/>
 			{detailEditTimelineAtomReader.data && <TimelineDetailEditDialog
 				configuration={props.configuration}

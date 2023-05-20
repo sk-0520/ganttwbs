@@ -7,14 +7,14 @@ import { Calendars } from "@/models/Calendars";
 import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useCalendarInfoAtomReader, useSettingAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
+import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { DateTime } from "@/models/DateTime";
 import { Days } from "@/models/Days";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 
-interface Props extends ConfigurationProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	//nop
 }
 
@@ -158,7 +158,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 								<InformationDay
 									key={a.ticks}
 									date={a}
-									timelineStore={props.timelineStore}
+									timelineCallbacks={props.timelineCallbacks}
 								/>
 							);
 						})}
