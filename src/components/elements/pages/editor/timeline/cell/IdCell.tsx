@@ -3,7 +3,7 @@ import { useAtomValue } from "jotai";
 import { DragEvent, FC } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
-import { DraggingTimelineAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DraggingTimelineAtom } from "@/models/data/atom/editor/DragAndDropAtoms";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline, Progress } from "@/models/data/Setting";

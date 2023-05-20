@@ -11,8 +11,9 @@ import TimelineViewer from "@/components/elements/pages/editor/timeline/Timeline
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
+import { DetailEditTimelineAtom, DragSourceTimelineAtom, DraggingTimelineAtom } from "@/models/data/atom/editor/DragAndDropAtoms";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DetailEditTimelineAtom, DraggingTimelineAtom, DragSourceTimelineAtom, ResourceInfoAtom, SequenceTimelinesAtom, SequenceTimelinesWriterAtom, useCalendarInfoAtomReader, useSettingAtomWriter } from "@/models/data/atom/editor/TimelineAtoms";
+import { ResourceInfoAtom, SequenceTimelinesAtom, SequenceTimelinesWriterAtom, useCalendarInfoAtomReader, useSettingAtomWriter } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";

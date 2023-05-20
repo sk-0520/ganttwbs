@@ -4,7 +4,6 @@ import { Calendars } from "@/models/Calendars";
 import { AtomReader, AtomWriter } from "@/models/data/atom/AtomHelper";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { DayInfo } from "@/models/data/DayInfo";
-import { DraggingTimeline } from "@/models/data/DraggingTimeline";
 import { RootTimeline, AnyTimeline, TimelineId, Setting } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
@@ -15,10 +14,6 @@ import { Require } from "@/models/Require";
 import { Resources } from "@/models/Resources";
 import { Timelines } from "@/models/Timelines";
 import { TimeZone } from "@/models/TimeZone";
-
-export const DetailEditTimelineAtom = atom<AnyTimeline | undefined>(undefined);
-export const DragSourceTimelineAtom = atom<AnyTimeline | undefined>(undefined);
-export const DraggingTimelineAtom = atom<DraggingTimeline | undefined>(undefined);
 
 /** 設定上。一生同じ。 */
 const SettingAtom = atom<Setting>({
