@@ -180,7 +180,13 @@ export function useTimelineIndexMapAtomReader(): AtomReader<TimelineIndexMap> {
 
 export type TotalTimelineMapType = ReadonlyMap<TimelineId, AnyTimeline>;
 /** 全てのタイムライン(ノード状態ではない) */
-export const TotalTimelineMapAtom = atom<TotalTimelineMapType>(new Map());
+const TotalTimelineMapAtom = atom<TotalTimelineMapType>(new Map());
+
+export function useTotalTimelineMapAtomReader(): AtomReader<TotalTimelineMapType> {
+	return {
+		data: useAtomValue(TotalTimelineMapAtom),
+	};
+}
 
 /** 各工数時間 */
 export const WorkRangesAtom = atom<Map<TimelineId, WorkRange>>(new Map());

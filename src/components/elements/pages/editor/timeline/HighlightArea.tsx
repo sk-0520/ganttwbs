@@ -5,7 +5,7 @@ import ColumnHighlight from "@/components/elements/pages/editor/timeline/highlig
 import RowHighlight from "@/components/elements/pages/editor/timeline/highlight/RowHighlight";
 import { Charts } from "@/models/Charts";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { TotalTimelineMapAtom, useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ColumnHighlightMode, RowHighlightMode } from "@/models/data/Highlight";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
@@ -22,12 +22,12 @@ const HighlightArea: FC<Props> = (props: Props) => {
 
 	const activeTimelineId = useAtomValue(ActiveTimelineIdAtom);
 	const hoverTimelineId = useAtomValue(HoverTimelineIdAtom);
-	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
 	const [highlightTimelineIds, setHighlightTimelineIds] = useAtom(HighlightTimelineIdsAtom);
 	const [highlightDays, setHighlightDays] = useAtom(HighlightDaysAtom);
 	const dragSourceTimelineId = useAtomValue(DragSourceTimelineIdAtom);
 	const dragOverTimelineId = useAtomValue(DragOverTimelineIdAtom);
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
+	const totalTimelineMapAtomReader = useTotalTimelineMapAtomReader();
 
 	const [crossHeaderWidth, setCrossHeaderWidth] = useState(0);
 	const [crossHeaderHeight, setCrossHeaderHeight] = useState(0);
@@ -39,8 +39,8 @@ const HighlightArea: FC<Props> = (props: Props) => {
 	}, []);
 
 	const areaData = useMemo(() => {
-		return Charts.createAreaData(props.configuration.design.seed.cell, calendarInfoAtomReader.data.range, totalTimelineMap.size);
-	}, [props.configuration, calendarInfoAtomReader.data.range, totalTimelineMap.size]);
+		return Charts.createAreaData(props.configuration.design.seed.cell, calendarInfoAtomReader.data.range, totalTimelineMapAtomReader.data.size);
+	}, [props.configuration, calendarInfoAtomReader.data.range, totalTimelineMapAtomReader.data.size]);
 
 	function renderRowHighlight(timelineId: TimelineId, mode: RowHighlightMode, key?: string): ReactNode {
 		return (

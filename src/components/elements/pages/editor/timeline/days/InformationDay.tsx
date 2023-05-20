@@ -3,7 +3,7 @@ import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DayInfosAtom, TotalTimelineMapAtom, useCalendarInfoAtomReader, useResourceInfoAtomReader, useTimelineIndexMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { DayInfosAtom, useCalendarInfoAtomReader, useResourceInfoAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -22,11 +22,11 @@ interface Props extends SettingProps, TimelineStoreProps {
 const InformationDay: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
-	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
 	const resourceInfoAtomReader = useResourceInfoAtomReader();
 	const dayInfos = useAtomValue(DayInfosAtom);
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 	const timelineIndexMapAtomReader = useTimelineIndexMapAtomReader();
+	const totalTimelineMapAtomReader = useTotalTimelineMapAtomReader();
 
 	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
@@ -76,7 +76,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 
 	// ソート済みタイムライン取得
 	const sortedTimelines = timelineIndexMapAtomReader.data.size ? [...mergedDayInfo.targetTimelines]
-		.map(a => Require.get(totalTimelineMap, a))
+		.map(a => Require.get(totalTimelineMapAtomReader.data, a))
 		.sort((a, b) => {
 			const aIndex = Require.get(timelineIndexMapAtomReader.data, a.id);
 			const bIndex = Require.get(timelineIndexMapAtomReader.data, b.id);
