@@ -12,7 +12,7 @@ import TimelineHeaderRow from "@/components/elements/pages/editor/timeline/cell/
 import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/WorkloadCell";
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
-import { DetailEditTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/DragAndDropAtoms";
+import { DragSourceTimelineAtom, useDetailEditTimelineAtomWriter } from "@/models/data/atom/editor/DragAndDropAtoms";
 import { useActiveTimelineIdAtomWriter, useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useCalendarInfoAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
@@ -43,7 +43,8 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
-	const setDetailEditTimeline = useSetAtom(DetailEditTimelineAtom);
+	const detailEditTimelineAtomWriter = useDetailEditTimelineAtomWriter();
+
 	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
 	const highlightTimelineIdsAtomWriter = useHighlightTimelineIdsAtomWriter();
 	const highlightDaysAtomWriter = useHighlightDaysAtomWriter();
@@ -202,7 +203,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleShowDetail() {
-		setDetailEditTimeline(props.currentTimeline);
+		detailEditTimelineAtomWriter.write(props.currentTimeline);
 	}
 
 	function handleShowTimeline(): void {

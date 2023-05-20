@@ -11,7 +11,7 @@ import TimelineViewer from "@/components/elements/pages/editor/timeline/Timeline
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
-import { DetailEditTimelineAtom, DragSourceTimelineAtom, DraggingTimelineAtom } from "@/models/data/atom/editor/DragAndDropAtoms";
+import { DragSourceTimelineAtom, DraggingTimelineAtom, useDetailEditTimelineAtomReader, useDetailEditTimelineAtomWriter } from "@/models/data/atom/editor/DragAndDropAtoms";
 import { useActiveTimelineIdAtomWriter, useDragOverTimelineIdAtomWriter, useDragSourceTimelineIdAtomWriter, useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useCalendarInfoAtomReader, useSequenceTimelinesAtomReader, useSequenceTimelinesWriterAtomWriter, useSettingAtomWriter } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
@@ -49,7 +49,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const activeTimelineIdAtomWriter = useActiveTimelineIdAtomWriter();
 	const highlightTimelineIdsAtomWriter = useHighlightTimelineIdsAtomWriter();
 	const highlightDaysAtomWriter = useHighlightDaysAtomWriter();
-	const [detailEditTimeline, setDetailEditTimeline] = useAtom(DetailEditTimelineAtom);
+	const detailEditTimelineAtomReader = useDetailEditTimelineAtomReader();
+	const detailEditTimelineAtomWriter = useDetailEditTimelineAtomWriter();
 	const [dragSourceTimeline, setDragSourceTimeline] = useAtom(DragSourceTimelineAtom);
 	const setDraggingTimeline = useSetAtom(DraggingTimelineAtom);
 	const dragSourceTimelineIdAtomWriter = useDragSourceTimelineIdAtomWriter();
@@ -249,10 +250,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		setTimelineStore(store);
 	}
 
-	function handleEndDetailEdit(sourceTimeline: AnyTimeline, changedTimeline: AnyTimeline | null): void {
+	function handleEndDetailEdit(changedTimeline: AnyTimeline | null): void {
 		console.debug("詳細編集終了", changedTimeline);
 
-		setDetailEditTimeline(undefined);
+		detailEditTimelineAtomWriter.write(undefined);
 
 		if (changedTimeline) {
 			handleUpdateTimeline(changedTimeline);
@@ -508,10 +509,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				configuration={props.configuration}
 				timelineStore={timelineStore}
 			/>
-			{detailEditTimeline && <TimelineDetailEditDialog
+			{detailEditTimelineAtomReader.data && <TimelineDetailEditDialog
 				configuration={props.configuration}
-				timeline={detailEditTimeline}
-				callbackSubmit={(timeline) => handleEndDetailEdit(detailEditTimeline, timeline)}
+				timeline={detailEditTimelineAtomReader.data}
+				callbackSubmit={(timeline) => handleEndDetailEdit(timeline)}
 			/>}
 		</div>
 	);
