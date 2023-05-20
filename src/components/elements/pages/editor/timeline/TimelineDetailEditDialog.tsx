@@ -6,13 +6,12 @@ import MemberSelector from "@/components/elements/pages/editor/timeline/MemberSe
 import { useLocale } from "@/locales/locale";
 import { CssHelper } from "@/models/CssHelper";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { SettingProps } from "@/models/data/props/SettingProps";
 import { AnyTimeline, MemberId, Progress } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 
-interface Props extends ConfigurationProps, SettingProps {
+interface Props extends ConfigurationProps {
 	timeline: AnyTimeline;
 	callbackSubmit(changedTimeline: AnyTimeline | null): void;
 }

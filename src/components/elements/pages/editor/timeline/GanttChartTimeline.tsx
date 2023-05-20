@@ -3,7 +3,7 @@ import { FC, ReactNode, useEffect, useState } from "react";
 import GroupChart from "@/components/elements/pages/editor/timeline/shape/GroupChart";
 import TaskChart from "@/components/elements/pages/editor/timeline/shape/TaskChart";
 import { Charts } from "@/models/Charts";
-import { useCalendarInfoAtomReader, useResourceInfoAtomReader, useTimelineItemsAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader, useResourceInfoAtomReader, useSettingAtomReader, useTimelineItemsAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
 import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { Settings } from "@/models/Settings";
@@ -13,6 +13,7 @@ import { WorkRanges } from "@/models/WorkRanges";
 interface Props extends GanttChartTimelineProps { }
 
 const GanttChartTimeline: FC<Props> = (props: Props) => {
+	const settingAtomReader = useSettingAtomReader();
 	const timelineItemsAtomReader = useTimelineItemsAtomReader();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 	const resourceInfoAtomReader = useResourceInfoAtomReader();
@@ -49,8 +50,8 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 					<TaskChart
 						configuration={props.configuration}
 						currentTimeline={props.currentTimeline}
-						background={Charts.getTaskBackground(props.currentTimeline, resourceInfoAtomReader.data.memberMap, props.setting.theme)}
-						foreground={props.setting.theme.timeline.completed}
+						background={Charts.getTaskBackground(props.currentTimeline, resourceInfoAtomReader.data.memberMap, settingAtomReader.data.theme)}
+						foreground={settingAtomReader.data.theme.timeline.completed}
 						borderColor="#000000"
 						borderThickness={1}
 						area={area}
@@ -61,8 +62,8 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 					<GroupChart
 						configuration={props.configuration}
 						currentTimeline={props.currentTimeline}
-						background={Charts.getGroupBackground(props.currentTimeline, props.setting.rootTimeline, props.setting.theme)}
-						foreground={props.setting.theme.timeline.completed}
+						background={Charts.getGroupBackground(props.currentTimeline, settingAtomReader.data.rootTimeline, settingAtomReader.data.theme)}
+						foreground={settingAtomReader.data.theme.timeline.completed}
 						borderColor="#000000"
 						borderThickness={2}
 						area={area}

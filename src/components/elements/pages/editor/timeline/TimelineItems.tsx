@@ -6,7 +6,6 @@ import { Arrays } from "@/models/Arrays";
 import { TimelineIndexMap, useSequenceTimelinesAtomReader, useTimelineIndexMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline } from "@/models/data/Setting";
 import { Dom } from "@/models/Dom";
@@ -16,7 +15,7 @@ import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineStoreProps {
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
 }
@@ -61,7 +60,6 @@ const TimelineItems: FC<Props> = (props: Props) => {
 							<AnyTimelineEditor
 								key={a.id}
 								configuration={props.configuration}
-								setting={props.setting}
 								currentTimeline={a}
 								timelineStore={props.timelineStore}
 								selectingBeginDate={props.selectingBeginDate}

@@ -3,9 +3,8 @@ import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { useCalendarInfoAtomReader, useDayInfosAtomReader, useResourceInfoAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader, useDayInfosAtomReader, useResourceInfoAtomReader, useSettingAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
-import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
@@ -15,13 +14,14 @@ import { Require } from "@/models/Require";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends SettingProps, TimelineStoreProps {
+interface Props extends TimelineStoreProps {
 	readonly date: DateTime;
 }
 
 const InformationDay: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
+	const settingAtomReader = useSettingAtomReader();
 	const resourceInfoAtomReader = useResourceInfoAtomReader();
 	const dayInfosAtomReader = useDayInfosAtomReader();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
@@ -39,7 +39,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 	// }, [refDetails]);
 
 	const holidayEventValue = calendarInfoAtomReader.data.holidayEventMap.get(props.date.ticks);
-	const classNames = Days.getDayClassNames(props.date, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
+	const classNames = Days.getDayClassNames(props.date, settingAtomReader.data.calendar.holiday.regulars, holidayEventValue, settingAtomReader.data.theme);
 	const className = Days.getCellClassName(classNames);
 
 	const mergedDayInfo: DayInfo = {

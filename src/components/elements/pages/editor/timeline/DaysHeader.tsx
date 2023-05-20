@@ -6,9 +6,8 @@ import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader, useSettingAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { DateTime } from "@/models/DateTime";
 import { Days } from "@/models/Days";
@@ -16,7 +15,7 @@ import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineStoreProps {
 	//nop
 }
 
@@ -30,6 +29,7 @@ type YearMonth = {
 const DaysHeader: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
+	const settingAtomReader = useSettingAtomReader();
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
@@ -88,7 +88,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	const dayNodes = useMemo(() => {
 		return dates.map(a => {
 			const holidayEventValue = calendarInfoAtomReader.data.holidayEventMap.get(a.ticks);
-			const classNames = Days.getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
+			const classNames = Days.getDayClassNames(a, settingAtomReader.data.calendar.holiday.regulars, holidayEventValue, settingAtomReader.data.theme);
 			const className = Days.getCellClassName(classNames);
 
 			return (
@@ -97,12 +97,12 @@ const DaysHeader: FC<Props> = (props: Props) => {
 				</td>
 			);
 		});
-	}, [dates, calendarInfoAtomReader.data, props.setting]);
+	}, [dates, calendarInfoAtomReader.data, settingAtomReader.data]);
 
 	const weekNodes = useMemo(() => {
 		return dates.map(a => {
 			const holidayEventValue = calendarInfoAtomReader.data.holidayEventMap.get(a.ticks);
-			const classNames = Days.getDayClassNames(a, props.setting.calendar.holiday.regulars, holidayEventValue, props.setting.theme);
+			const classNames = Days.getDayClassNames(a, settingAtomReader.data.calendar.holiday.regulars, holidayEventValue, settingAtomReader.data.theme);
 			const className = Days.getCellClassName(classNames);
 
 			return (
@@ -111,7 +111,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 				</td>
 			);
 		});
-	}, [dates, locale, calendarInfoAtomReader.data, props.setting]);
+	}, [dates, locale, calendarInfoAtomReader.data, settingAtomReader.data]);
 
 	const dummyNodes = useMemo(() => {
 		const className = Days.getCellClassName([]);
@@ -159,7 +159,6 @@ const DaysHeader: FC<Props> = (props: Props) => {
 								<InformationDay
 									key={a.ticks}
 									date={a}
-									setting={props.setting}
 									timelineStore={props.timelineStore}
 								/>
 							);

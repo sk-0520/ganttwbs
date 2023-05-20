@@ -19,7 +19,6 @@ import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate"
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline, GroupTimeline, Progress, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
@@ -31,7 +30,7 @@ import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineStoreProps {
 	currentTimeline: AnyTimeline;
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;

@@ -488,34 +488,28 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 			<CrossHeader
 				configuration={props.configuration}
-				setting={props.editorData.setting}
 				timelineStore={timelineStore}
 			/>
 			<DaysHeader
 				configuration={props.configuration}
-				setting={props.editorData.setting}
 				timelineStore={timelineStore}
 			/>
 			<TimelineItems
 				configuration={props.configuration}
-				setting={props.editorData.setting}
 				selectingBeginDate={selectingBeginDate}
 				beginDateCallbacks={beginDateCallbacks}
 				timelineStore={timelineStore}
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
-				setting={props.editorData.setting}
 				timelineStore={timelineStore}
 			/>
 			<HighlightArea
 				configuration={props.configuration}
-				setting={props.editorData.setting}
 				timelineStore={timelineStore}
 			/>
 			{detailEditTimeline && <TimelineDetailEditDialog
 				configuration={props.configuration}
-				setting={props.editorData.setting}
 				timeline={detailEditTimeline}
 				callbackSubmit={(timeline) => handleEndDetailEdit(detailEditTimeline, timeline)}
 			/>}

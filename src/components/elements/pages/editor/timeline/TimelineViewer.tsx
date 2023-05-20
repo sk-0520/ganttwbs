@@ -5,19 +5,19 @@ import GanttChartTimeline from "@/components/elements/pages/editor/timeline/Gant
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
 import { Charts } from "@/models/Charts";
 import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { useCalendarInfoAtomReader, useSequenceTimelinesAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader, useSequenceTimelinesAtomReader, useSettingAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { ColorString } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineStoreProps {
 	//nop
 }
 
 const TimelineViewer: FC<Props> = (props: Props) => {
+	const settingAtomReader = useSettingAtomReader();
 	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
@@ -80,13 +80,13 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 			// 祝日判定
 			const holidayEventValue = calendarInfoAtomReader.data.holidayEventMap.get(date.ticks);
 			if (holidayEventValue) {
-				color = props.setting.theme.holiday.events[holidayEventValue.event.kind];
+				color = settingAtomReader.data.theme.holiday.events[holidayEventValue.event.kind];
 			}
 			// 曜日判定
 			if (!color) {
 				const week = Settings.toWeekDay(date.week);
-				if (props.setting.calendar.holiday.regulars.includes(week)) {
-					color = props.setting.theme.holiday.regulars[week];
+				if (settingAtomReader.data.calendar.holiday.regulars.includes(week)) {
+					color = settingAtomReader.data.theme.holiday.regulars[week];
 				}
 			}
 			if (color) {
@@ -118,7 +118,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				</g>
 			</g>
 		);
-	}, [areaData, calendarInfoAtomReader.data, props.configuration, props.setting, totalTimelineMapAtomReader.data.size]);
+	}, [areaData, calendarInfoAtomReader.data, props.configuration, settingAtomReader.data, totalTimelineMapAtomReader.data.size]);
 
 	function handleMouseMove(ev: MouseEvent) {
 		// 下でグダグダやってるけどこっち(か算出方法)が間違ってる感あるなぁ
@@ -151,7 +151,6 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 						<GanttChartTimeline
 							key={a.id}
 							configuration={props.configuration}
-							setting={props.setting}
 							parentGroup={null}
 							currentTimeline={a}
 							currentIndex={i}
@@ -168,7 +167,6 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 						<ConnectorTimeline
 							key={a.id}
 							configuration={props.configuration}
-							setting={props.setting}
 							currentTimeline={a}
 							currentIndex={i}
 							areaSize={areaData.size}

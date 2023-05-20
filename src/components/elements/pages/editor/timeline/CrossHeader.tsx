@@ -7,10 +7,9 @@ import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/T
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { useCalendarInfoAtomReader, useDayInfosAtomReader, useRootTimelineAtomReader, useSequenceTimelinesAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader, useDayInfosAtomReader, useRootTimelineAtomReader, useSequenceTimelinesAtomReader, useSettingAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { GroupTimeline, TimelineId, TimelineKind } from "@/models/data/Setting";
 import { WorkRangeKind } from "@/models/data/WorkRange";
@@ -21,10 +20,11 @@ import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineStoreProps {
 }
 
 const CrossHeader: FC<Props> = (props: Props) => {
+	const settingAtomReader = useSettingAtomReader();
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
@@ -157,7 +157,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 			onMouseEnter={handleMouseEnter}
 		>
 			<div className="header">
-				<h1>{props.setting.name}</h1>
+				<h1>{settingAtomReader.data.name}</h1>
 			</div>
 			<div className="content">
 				<div className="operation">

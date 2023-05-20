@@ -8,18 +8,16 @@ import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom,
 import { useCalendarInfoAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ColumnHighlightMode, RowHighlightMode } from "@/models/data/Highlight";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { Dom } from "@/models/Dom";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
+interface Props extends ConfigurationProps, TimelineStoreProps {
 	//nop
 }
 
 const HighlightArea: FC<Props> = (props: Props) => {
-
 	const activeTimelineId = useAtomValue(ActiveTimelineIdAtom);
 	const hoverTimelineId = useAtomValue(HoverTimelineIdAtom);
 	const [highlightTimelineIds, setHighlightTimelineIds] = useAtom(HighlightTimelineIdsAtom);
