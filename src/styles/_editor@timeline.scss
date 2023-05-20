@@ -529,7 +529,7 @@ $viewer-z-index: 2;
 				}
 
 				.tools {
-					&.after {
+					&.before, &.after { // どっちゃでもいいようにしておく
 						.grid {
 							color: #000;
 							table-layout: fixed;

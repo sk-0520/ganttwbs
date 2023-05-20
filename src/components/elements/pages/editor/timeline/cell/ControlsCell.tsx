@@ -100,7 +100,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 				isVisible={visibleControls}
 				callBackHidden={handleHideControls}
 			>
-				<div className="tools after">
+				<div className="tools before">
 					<table className="panel grid">
 						<tbody>
 							<tr>
