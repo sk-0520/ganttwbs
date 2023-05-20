@@ -1,9 +1,8 @@
 import classNames from "classnames";
-import { useAtomValue } from "jotai";
 import { DragEvent, FC } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
-import { DraggingTimelineAtom } from "@/models/data/atom/editor/DragAndDropAtoms";
+import { useDraggingTimelineAtomReader } from "@/models/data/atom/editor/DragAndDropAtoms";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline, Progress } from "@/models/data/Setting";
@@ -26,7 +25,7 @@ const IdCell: FC<Props> = (props: Props) => {
 	const className = Timelines.getReadableTimelineIdClassName(props.readableTimelineId);
 	const completed = 1 <= props.progress;
 
-	const draggingTimeline = useAtomValue(DraggingTimelineAtom);
+	const draggingTimelineAtomReader = useDraggingTimelineAtomReader();
 
 	const canSelect = props.selectingBeginDate && (
 		props.selectingBeginDate.timeline.id !== props.currentTimeline.id && props.selectingBeginDate.canSelect(props.currentTimeline)
@@ -38,14 +37,14 @@ const IdCell: FC<Props> = (props: Props) => {
 				classNames(
 					"timeline-cell timeline-id",
 					{
-						dragging: draggingTimeline?.sourceTimeline.id === props.currentTimeline.id
+						dragging: draggingTimelineAtomReader.data?.sourceTimeline.id === props.currentTimeline.id
 					}
 				)
 			}
 			title={props.currentTimeline.id}
 			draggable={!props.selectingBeginDate}
 			onDragStart={ev => props.callbackStartDragTimeline(ev)}
-			onDragEnd={draggingTimeline?.onDragEnd}
+			onDragEnd={draggingTimelineAtomReader.data?.onDragEnd}
 		>
 			<label>
 				{props.selectingBeginDate

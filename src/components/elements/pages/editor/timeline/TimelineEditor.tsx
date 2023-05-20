@@ -1,4 +1,3 @@
-import { useAtom, useSetAtom } from "jotai";
 import { FC, useEffect, useLayoutEffect, useMemo } from "react";
 import { ReactNode, useState } from "react";
 
@@ -11,7 +10,7 @@ import TimelineViewer from "@/components/elements/pages/editor/timeline/Timeline
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
-import { DragSourceTimelineAtom, DraggingTimelineAtom, useDetailEditTimelineAtomReader, useDetailEditTimelineAtomWriter } from "@/models/data/atom/editor/DragAndDropAtoms";
+import { useDetailEditTimelineAtomReader, useDetailEditTimelineAtomWriter, useDraggingTimelineAtomWriter, useDragSourceTimelineAtomReader, useDragSourceTimelineAtomWriter } from "@/models/data/atom/editor/DragAndDropAtoms";
 import { useActiveTimelineIdAtomWriter, useDragOverTimelineIdAtomWriter, useDragSourceTimelineIdAtomWriter, useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useCalendarInfoAtomReader, useSequenceTimelinesAtomReader, useSequenceTimelinesWriterAtomWriter, useSettingAtomWriter } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
@@ -51,8 +50,9 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const highlightDaysAtomWriter = useHighlightDaysAtomWriter();
 	const detailEditTimelineAtomReader = useDetailEditTimelineAtomReader();
 	const detailEditTimelineAtomWriter = useDetailEditTimelineAtomWriter();
-	const [dragSourceTimeline, setDragSourceTimeline] = useAtom(DragSourceTimelineAtom);
-	const setDraggingTimeline = useSetAtom(DraggingTimelineAtom);
+	const dragSourceTimelineAtomReader = useDragSourceTimelineAtomReader();
+	const dragSourceTimelineAtomWriter = useDragSourceTimelineAtomWriter();
+	const draggingTimelineAtomReader = useDraggingTimelineAtomWriter();
 	const dragSourceTimelineIdAtomWriter = useDragSourceTimelineIdAtomWriter();
 	const dragOverTimelineIdAtomWriter = useDragOverTimelineIdAtomWriter();
 	const sequenceTimelinesWriterAtomWriter = useSequenceTimelinesWriterAtomWriter();
@@ -113,13 +113,14 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			highlightTimelineIdsAtomWriter.write([dropTimeline.timeline.id]);
 		}
 
-		if (dragSourceTimeline) {
+		if (dragSourceTimelineAtomReader.data) {
+			const dragSourceTimeline = dragSourceTimelineAtomReader.data;
 			const dragging: DraggingTimeline = {
-				sourceTimeline: dragSourceTimeline,
+				sourceTimeline: dragSourceTimelineAtomReader.data,
 				onDragEnd: (ev) => {
 					console.debug("END", ev, dragSourceTimeline);
-					setDraggingTimeline(undefined);
-					setDragSourceTimeline(undefined);
+					draggingTimelineAtomReader.write(undefined);
+					dragSourceTimelineAtomWriter.write(undefined);
 					dragSourceTimelineIdAtomWriter.write(undefined);
 					dragOverTimelineIdAtomWriter.write(undefined);
 				},
@@ -206,9 +207,9 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			hoverTimelineIdAtomWriter.write(dragSourceTimeline.id);
 			highlightTimelineIdsAtomWriter.write([]);
 			dragSourceTimelineIdAtomWriter.write(dragging.sourceTimeline.id);
-			setDraggingTimeline(dragging);
+			draggingTimelineAtomReader.write(dragging);
 		}
-	}, [dragSourceTimeline, props.editorData.setting.rootTimeline, sequenceTimelinesWriterAtomWriter, activeTimelineIdAtomWriter, setDragSourceTimeline, setDraggingTimeline, hoverTimelineIdAtomWriter, highlightTimelineIdsAtomWriter, dragSourceTimelineIdAtomWriter, dragOverTimelineIdAtomWriter]);
+	}, [props.editorData.setting.rootTimeline, sequenceTimelinesWriterAtomWriter, activeTimelineIdAtomWriter, hoverTimelineIdAtomWriter, highlightTimelineIdsAtomWriter, dragSourceTimelineIdAtomWriter, dragOverTimelineIdAtomWriter, dragSourceTimelineAtomReader.data, dragSourceTimelineAtomWriter, draggingTimelineAtomReader]);
 
 	function createTimelineStore(): TimelineStore {
 		const result: TimelineStore = {

@@ -18,5 +18,32 @@ export function useDetailEditTimelineAtomWriter(): AtomWriter<AtomType<typeof De
 	};
 }
 
-export const DragSourceTimelineAtom = atom<AnyTimeline | undefined>(undefined);
-export const DraggingTimelineAtom = atom<DraggingTimeline | undefined>(undefined);
+
+const DragSourceTimelineAtom = atom<AnyTimeline | undefined>(undefined);
+
+export function useDragSourceTimelineAtomReader(): AtomReader<AtomType<typeof DragSourceTimelineAtom>> {
+	return {
+		data: useAtomValue(DragSourceTimelineAtom),
+	};
+}
+
+export function useDragSourceTimelineAtomWriter(): AtomWriter<AtomType<typeof DragSourceTimelineAtom>> {
+	return {
+		write: useSetAtom(DragSourceTimelineAtom),
+	};
+}
+
+
+const DraggingTimelineAtom = atom<DraggingTimeline | undefined>(undefined);
+
+export function useDraggingTimelineAtomReader(): AtomReader<AtomType<typeof DraggingTimelineAtom>> {
+	return {
+		data: useAtomValue(DraggingTimelineAtom),
+	};
+}
+
+export function useDraggingTimelineAtomWriter(): AtomWriter<AtomType<typeof DraggingTimelineAtom>> {
+	return {
+		write: useSetAtom(DraggingTimelineAtom),
+	};
+}

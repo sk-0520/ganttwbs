@@ -1,4 +1,3 @@
-import { useSetAtom } from "jotai";
 import { useState, useEffect, DragEvent, FC, useCallback, KeyboardEvent, useRef } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
@@ -12,7 +11,7 @@ import TimelineHeaderRow from "@/components/elements/pages/editor/timeline/cell/
 import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/WorkloadCell";
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
-import { DragSourceTimelineAtom, useDetailEditTimelineAtomWriter } from "@/models/data/atom/editor/DragAndDropAtoms";
+import { useDetailEditTimelineAtomWriter, useDragSourceTimelineAtomWriter } from "@/models/data/atom/editor/DragAndDropAtoms";
 import { useActiveTimelineIdAtomWriter, useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useCalendarInfoAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
@@ -49,7 +48,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const highlightTimelineIdsAtomWriter = useHighlightTimelineIdsAtomWriter();
 	const highlightDaysAtomWriter = useHighlightDaysAtomWriter();
 	const activeTimelineIdAtomWriter = useActiveTimelineIdAtomWriter();
-	const setDragSourceTimeline = useSetAtom(DragSourceTimelineAtom);
+	const dragSourceTimelineAtomWriter = useDragSourceTimelineAtomWriter();
 	const timelineItemsAtomReader = useTimelineItemsAtomReader();
 	const workRangesAtomReader = useWorkRangesAtomReader();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
@@ -244,7 +243,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleStartDragTimeline(ev: DragEvent): void {
 		//props.timelineStore.startDragTimeline(ev, props.currentTimeline);
-		setDragSourceTimeline(props.currentTimeline);
+		dragSourceTimelineAtomWriter.write(props.currentTimeline);
 	}
 
 	function handleChangePrevious(isSelected: boolean): void {

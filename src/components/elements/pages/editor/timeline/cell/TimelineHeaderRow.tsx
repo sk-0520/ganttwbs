@@ -1,8 +1,7 @@
 import classNames from "classnames";
-import { useAtomValue } from "jotai";
 import { FC, ReactNode } from "react";
 
-import { DraggingTimelineAtom } from "@/models/data/atom/editor/DragAndDropAtoms";
+import { useDraggingTimelineAtomReader } from "@/models/data/atom/editor/DragAndDropAtoms";
 import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -19,10 +18,10 @@ interface Props extends TimelineStoreProps {
 
 const TimelineHeaderRow: FC<Props> = (props: Props) => {
 	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
-	const draggingTimeline = useAtomValue(DraggingTimelineAtom);
+	const draggingTimelineAtomReader = useDraggingTimelineAtomReader();
 
 	function handleMouseEnter() {
-		if (!draggingTimeline && !props.selectingBeginDate) {
+		if (!draggingTimelineAtomReader.data && !props.selectingBeginDate) {
 			hoverTimelineIdAtomWriter.write(props.currentTimeline.id);
 		}
 	}
@@ -40,16 +39,16 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 					"_dynamic_programmable_cell_height",
 					{
 						["_dynamic_programmable_groups_level-" + props.level.toString()]: Settings.maybeGroupTimeline(props.currentTimeline),
-						"dragging": draggingTimeline?.sourceTimeline.id === props.currentTimeline.id,
+						"dragging": draggingTimelineAtomReader.data?.sourceTimeline.id === props.currentTimeline.id,
 						"selected-previous": props.selectingBeginDate?.previous.has(props.currentTimeline.id),
 						"completed": Settings.maybeTaskTimeline(props.currentTimeline) && 1 <= props.currentTimeline.progress
 					}
 				)
 			}
-			onDragEnter={ev => draggingTimeline?.onDragEnter(ev, props.currentTimeline)}
-			onDragOver={ev => draggingTimeline?.onDragOver(ev, props.currentTimeline)}
-			onDragLeave={ev => draggingTimeline?.onDragLeave(ev, props.currentTimeline)}
-			onDrop={ev => draggingTimeline?.onDrop(ev, props.currentTimeline)}
+			onDragEnter={ev => draggingTimelineAtomReader.data?.onDragEnter(ev, props.currentTimeline)}
+			onDragOver={ev => draggingTimelineAtomReader.data?.onDragOver(ev, props.currentTimeline)}
+			onDragLeave={ev => draggingTimelineAtomReader.data?.onDragLeave(ev, props.currentTimeline)}
+			onDrop={ev => draggingTimelineAtomReader.data?.onDrop(ev, props.currentTimeline)}
 			onMouseEnter={handleMouseEnter}
 			// onMouseLeave={handleMouseLeave}
 		>
