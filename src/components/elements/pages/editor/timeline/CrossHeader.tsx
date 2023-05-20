@@ -7,7 +7,7 @@ import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/T
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DayInfosAtom, SequenceTimelinesAtom, TimelineItemsAtom, useCalendarInfoAtomReader, useRootTimelineAtomReader, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { DayInfosAtom, TimelineItemsAtom, useCalendarInfoAtomReader, useRootTimelineAtomReader, useSequenceTimelinesAtomReader, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
@@ -28,7 +28,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
-	const sequenceTimelines = useAtomValue(SequenceTimelinesAtom);
+	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
 	const rootTimelineReader = useRootTimelineAtomReader();
 	const timelineItems = useAtomValue(TimelineItemsAtom);
 	const workRanges = useAtomValue(WorkRangesAtom);
@@ -274,9 +274,9 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						<div className="timeline-cell timeline-id"
 							title={`${locale.common.timeline.task}/${locale.common.timeline.total}`}
 						>
-							{sequenceTimelines.filter(a => Settings.maybeTaskTimeline(a)).length}
+							{sequenceTimelinesAtomReader.data.filter(a => Settings.maybeTaskTimeline(a)).length}
 							/
-							{sequenceTimelines.length}
+							{sequenceTimelinesAtomReader.data.length}
 						</div>
 						<div className="timeline-cell timeline-subject">
 							{locale.pages.editor.timeline.header.columns.subject}

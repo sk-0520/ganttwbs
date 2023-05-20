@@ -112,7 +112,7 @@ export function useResourceInfoAtomReader(): AtomReader<ResourceInfo> {
  *
  * 元々各atom内で依存系を処理してたけど、使い方が悪いのか動かんくてこいつの中で全処理するようにした。
  */
-export const SequenceTimelinesWriterAtom = atom<never, Array<AnyTimeline>, void>(
+const SequenceTimelinesWriterAtom = atom<never, Array<AnyTimeline>, void>(
 	undefined as never,
 	(get, set, ...sequenceTimelines) => {
 		if (!sequenceTimelines) {
@@ -153,8 +153,20 @@ export const SequenceTimelinesWriterAtom = atom<never, Array<AnyTimeline>, void>
 	}
 );
 
+export function useSequenceTimelinesWriterAtomWriter() {
+	return {
+		write: useSetAtom(SequenceTimelinesWriterAtom),
+	};
+}
+
 /** 各タイムラインを上から見たインデックス順の一覧 */
-export const SequenceTimelinesAtom = atom<Array<AnyTimeline>>([]);
+const SequenceTimelinesAtom = atom<Array<AnyTimeline>>([]);
+
+export function useSequenceTimelinesAtomReader(): AtomReader<Array<AnyTimeline>> {
+	return {
+		data: useAtomValue(SequenceTimelinesAtom),
+	};
+}
 
 export type TimelineIndexMap = ReadonlyMap<TimelineId, number>;
 /** 各タイムラインを上から見たインデックスのマッピング */

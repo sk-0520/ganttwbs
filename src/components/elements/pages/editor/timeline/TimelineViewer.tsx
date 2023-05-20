@@ -5,7 +5,7 @@ import GanttChartTimeline from "@/components/elements/pages/editor/timeline/Gant
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
 import { Charts } from "@/models/Charts";
 import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { SequenceTimelinesAtom, TotalTimelineMapAtom, useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { TotalTimelineMapAtom, useCalendarInfoAtomReader, useSequenceTimelinesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -18,7 +18,7 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
 }
 
 const TimelineViewer: FC<Props> = (props: Props) => {
-	const sequenceTimelines = useAtomValue(SequenceTimelinesAtom);
+	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
 	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
@@ -129,12 +129,12 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 
 		const sequenceIndex = Math.floor(ev.nativeEvent.offsetY / areaData.cell.height.value);
 		// ここのグダグダ感
-		if(sequenceTimelines.length <= sequenceIndex) {
+		if(sequenceTimelinesAtomReader.data.length <= sequenceIndex) {
 			setHoverTimelineId(undefined);
 			return;
 		}
 
-		const timeline = sequenceTimelines[sequenceIndex];
+		const timeline = sequenceTimelinesAtomReader.data[sequenceIndex];
 		setHoverTimelineId(timeline.id);
 	}
 
@@ -146,7 +146,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 				height={(areaData.size.height + (areaData.cell.height.value * (props.configuration.design.dummy.height - 1))) + "px"}
 			>
 				{gridNodes}
-				{sequenceTimelines.map((a, i) => {
+				{sequenceTimelinesAtomReader.data.map((a, i) => {
 					return (
 						<GanttChartTimeline
 							key={a.id}
@@ -160,7 +160,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 						/>
 					);
 				})}
-				{sequenceTimelines.map((a, i) => {
+				{sequenceTimelinesAtomReader.data.map((a, i) => {
 					if (!Settings.maybeTaskTimeline(a)) {
 						return null;
 					}

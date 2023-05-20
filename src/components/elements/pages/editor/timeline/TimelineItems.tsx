@@ -4,7 +4,7 @@ import { FC, useCallback, useMemo, KeyboardEvent } from "react";
 
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
-import { SequenceTimelinesAtom, TimelineIndexMap, TimelineIndexMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { TimelineIndexMap, TimelineIndexMapAtom, useSequenceTimelinesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
@@ -23,16 +23,16 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
 }
 
 const TimelineItems: FC<Props> = (props: Props) => {
-	const sequenceTimelines = useAtomValue(SequenceTimelinesAtom);
+	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
 	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
 
 	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
-		handleCellKeyDown(ev, currentTimeline, props.timelineStore, sequenceTimelines, timelineIndexMap, "subject");
-	}, [props.timelineStore, sequenceTimelines, timelineIndexMap]);
+		handleCellKeyDown(ev, currentTimeline, props.timelineStore, sequenceTimelinesAtomReader.data, timelineIndexMap, "subject");
+	}, [props.timelineStore, sequenceTimelinesAtomReader.data, timelineIndexMap]);
 
 	const onWorkloadKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
-		handleCellKeyDown(ev, currentTimeline, props.timelineStore, sequenceTimelines, timelineIndexMap, "workload");
-	}, [props.timelineStore, sequenceTimelines, timelineIndexMap]);
+		handleCellKeyDown(ev, currentTimeline, props.timelineStore, sequenceTimelinesAtomReader.data, timelineIndexMap, "workload");
+	}, [props.timelineStore, sequenceTimelinesAtomReader.data, timelineIndexMap]);
 
 	const dummyAreaNodes = useMemo(() => {
 		console.debug("dummyAreaNodedummyAreaNodedummyAreaNode");
@@ -57,7 +57,7 @@ const TimelineItems: FC<Props> = (props: Props) => {
 		<div id="timelines">
 			<table>
 				<tbody>
-					{sequenceTimelines.map((a, i) => {
+					{sequenceTimelinesAtomReader.data.map((a, i) => {
 						return (
 							<AnyTimelineEditor
 								key={a.id}
