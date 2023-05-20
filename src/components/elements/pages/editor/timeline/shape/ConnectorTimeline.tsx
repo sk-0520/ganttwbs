@@ -4,7 +4,7 @@ import { FC } from "react";
 
 import { Charts } from "@/models/Charts";
 import { AreaSize } from "@/models/data/Area";
-import { TimelineIndexMapAtom, TotalTimelineMapAtom, useCalendarInfoAtomReader, useResourceInfoAtomReader, useRootTimelineAtomReader, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { TotalTimelineMapAtom, useCalendarInfoAtomReader, useResourceInfoAtomReader, useRootTimelineAtomReader, useTimelineIndexMapAtomReader, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -22,11 +22,11 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
 
 const ConnectorTimeline: FC<Props> = (props: Props) => {
 	const rootTimelineReader = useRootTimelineAtomReader();
-	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
 	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
 	const workRanges = useAtomValue(WorkRangesAtom);
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 	const resourceInfoAtomReader = useResourceInfoAtomReader();
+	const timelineIndexMapAtomReader = useTimelineIndexMapAtomReader();
 
 	if (!props.currentTimeline.previous.length) {
 		return null;
@@ -60,7 +60,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 	return (
 		<>
 			{props.currentTimeline.previous.map(b => {
-				const previousIndex = Require.get(timelineIndexMap, b);
+				const previousIndex = Require.get(timelineIndexMapAtomReader.data, b);
 				const previousTimeline = Require.get(totalTimelineMap, b);
 
 				const previewColor = Settings.maybeGroupTimeline(previousTimeline)

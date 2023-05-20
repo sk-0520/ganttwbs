@@ -1,9 +1,8 @@
 import classNames from "classnames";
-import { useAtomValue } from "jotai";
 import { CSSProperties, FC } from "react";
 
 import { AreaData } from "@/models/data/Area";
-import { TimelineIndexMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { useTimelineIndexMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { RowHighlightMode } from "@/models/data/Highlight";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -19,9 +18,9 @@ interface Props extends ConfigurationProps, TimelineStoreProps {
 }
 
 const RowHighlight: FC<Props> = (props: Props) => {
-	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
+	const timelineIndexMapAtomReader = useTimelineIndexMapAtomReader();
 
-	const index = Require.get(timelineIndexMap, props.timelineId);
+	const index = Require.get(timelineIndexMapAtomReader.data, props.timelineId);
 
 	const baseY = props.areaData.cell.height.value * index;
 

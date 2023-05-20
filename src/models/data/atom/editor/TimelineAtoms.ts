@@ -170,7 +170,13 @@ export function useSequenceTimelinesAtomReader(): AtomReader<Array<AnyTimeline>>
 
 export type TimelineIndexMap = ReadonlyMap<TimelineId, number>;
 /** 各タイムラインを上から見たインデックスのマッピング */
-export const TimelineIndexMapAtom = atom<TimelineIndexMap>(new Map());
+const TimelineIndexMapAtom = atom<TimelineIndexMap>(new Map());
+
+export function useTimelineIndexMapAtomReader(): AtomReader<TimelineIndexMap> {
+	return {
+		data: useAtomValue(TimelineIndexMapAtom),
+	};
+}
 
 export type TotalTimelineMapType = ReadonlyMap<TimelineId, AnyTimeline>;
 /** 全てのタイムライン(ノード状態ではない) */

@@ -1,10 +1,9 @@
 
-import { useAtomValue } from "jotai";
 import { FC, useCallback, useMemo, KeyboardEvent } from "react";
 
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
-import { TimelineIndexMap, TimelineIndexMapAtom, useSequenceTimelinesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { TimelineIndexMap, useSequenceTimelinesAtomReader, useTimelineIndexMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
@@ -24,15 +23,15 @@ interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
 
 const TimelineItems: FC<Props> = (props: Props) => {
 	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
-	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
+	const timelineIndexMapAtomReader = useTimelineIndexMapAtomReader();
 
 	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
-		handleCellKeyDown(ev, currentTimeline, props.timelineStore, sequenceTimelinesAtomReader.data, timelineIndexMap, "subject");
-	}, [props.timelineStore, sequenceTimelinesAtomReader.data, timelineIndexMap]);
+		handleCellKeyDown(ev, currentTimeline, props.timelineStore, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data, "subject");
+	}, [props.timelineStore, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data]);
 
 	const onWorkloadKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
-		handleCellKeyDown(ev, currentTimeline, props.timelineStore, sequenceTimelinesAtomReader.data, timelineIndexMap, "workload");
-	}, [props.timelineStore, sequenceTimelinesAtomReader.data, timelineIndexMap]);
+		handleCellKeyDown(ev, currentTimeline, props.timelineStore, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data, "workload");
+	}, [props.timelineStore, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data]);
 
 	const dummyAreaNodes = useMemo(() => {
 		console.debug("dummyAreaNodedummyAreaNodedummyAreaNode");
