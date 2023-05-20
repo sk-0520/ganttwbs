@@ -16,7 +16,7 @@ import { Resources } from "@/models/Resources";
 import { Timelines } from "@/models/Timelines";
 import { TimeZone } from "@/models/TimeZone";
 
-/** 設定上。一生同じ。 */
+/** 設定上。初期化後は一生同じ。 */
 const SettingAtom = atom<Setting>({
 	name: "",
 	recursive: DefaultSettings.RecursiveMaxCount,
