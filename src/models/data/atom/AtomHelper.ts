@@ -5,7 +5,7 @@ export interface AtomReader<T> {
 }
 
 export interface AtomWriter<T> {
-	write(arg: T): void;
+	write(arg: T | ((prev: T) => T)): void;
 }
 
 /**

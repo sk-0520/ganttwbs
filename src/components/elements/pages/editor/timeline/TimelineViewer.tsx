@@ -1,10 +1,9 @@
-import { useSetAtom } from "jotai";
 import { FC, MouseEvent, ReactNode, useMemo } from "react";
 
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
 import { Charts } from "@/models/Charts";
-import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useCalendarInfoAtomReader, useSequenceTimelinesAtomReader, useSettingAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -19,7 +18,7 @@ interface Props extends ConfigurationProps, TimelineStoreProps {
 const TimelineViewer: FC<Props> = (props: Props) => {
 	const settingAtomReader = useSettingAtomReader();
 	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
-	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
+	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 	const totalTimelineMapAtomReader = useTotalTimelineMapAtomReader();
 
@@ -123,19 +122,19 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 	function handleMouseMove(ev: MouseEvent) {
 		// 下でグダグダやってるけどこっち(か算出方法)が間違ってる感あるなぁ
 		if (ev.nativeEvent.offsetY < 0 || areaData.size.height <= ev.nativeEvent.offsetY) {
-			setHoverTimelineId(undefined);
+			hoverTimelineIdAtomWriter.write(undefined);
 			return;
 		}
 
 		const sequenceIndex = Math.floor(ev.nativeEvent.offsetY / areaData.cell.height.value);
 		// ここのグダグダ感
 		if(sequenceTimelinesAtomReader.data.length <= sequenceIndex) {
-			setHoverTimelineId(undefined);
+			hoverTimelineIdAtomWriter.write(undefined);
 			return;
 		}
 
 		const timeline = sequenceTimelinesAtomReader.data[sequenceIndex];
-		setHoverTimelineId(timeline.id);
+		hoverTimelineIdAtomWriter.write(timeline.id);
 	}
 
 	return (

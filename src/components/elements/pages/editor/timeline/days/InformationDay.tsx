@@ -1,8 +1,7 @@
-import { useSetAtom } from "jotai";
 import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
-import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useCalendarInfoAtomReader, useDayInfosAtomReader, useResourceInfoAtomReader, useSettingAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -28,8 +27,8 @@ const InformationDay: FC<Props> = (props: Props) => {
 	const timelineIndexMapAtomReader = useTimelineIndexMapAtomReader();
 	const totalTimelineMapAtomReader = useTotalTimelineMapAtomReader();
 
-	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
-	const setHighlightDays = useSetAtom(HighlightDaysAtom);
+	const highlightTimelineIdsAtomWriter = useHighlightTimelineIdsAtomWriter();
+	const highlightDaysAtomWriter = useHighlightDaysAtomWriter();
 
 	const refDetails = useRef<HTMLDetailsElement>(null);
 
@@ -86,8 +85,8 @@ const InformationDay: FC<Props> = (props: Props) => {
 		;
 
 	function handleClickTimeline(timelineId: TimelineId): void {
-		setHighlightTimelineIds([timelineId]);
-		setHighlightDays([props.date]);
+		highlightTimelineIdsAtomWriter.write([timelineId]);
+		highlightDaysAtomWriter.write([props.date]);
 		Editors.scrollView(timelineId, props.date);
 	}
 

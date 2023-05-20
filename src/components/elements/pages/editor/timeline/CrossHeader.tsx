@@ -1,4 +1,3 @@
-import { useSetAtom } from "jotai";
 import { FC, useEffect, useState } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
@@ -6,7 +5,7 @@ import InformationDialog from "@/components/elements/pages/editor/timeline/Infor
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
-import { HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useCalendarInfoAtomReader, useDayInfosAtomReader, useRootTimelineAtomReader, useSequenceTimelinesAtomReader, useSettingAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
@@ -25,9 +24,9 @@ interface Props extends ConfigurationProps, TimelineStoreProps {
 
 const CrossHeader: FC<Props> = (props: Props) => {
 	const settingAtomReader = useSettingAtomReader();
-	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
-	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
-	const setHighlightDays = useSetAtom(HighlightDaysAtom);
+	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
+	const highlightTimelineIdsAtomWriter = useHighlightTimelineIdsAtomWriter();
+	const highlightDaysAtomWriter = useHighlightDaysAtomWriter();
 	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
 	const rootTimelineReader = useRootTimelineAtomReader();
 	const timelineItemsAtomReader = useTimelineItemsAtomReader();
@@ -142,12 +141,12 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	}
 
 	function handleMouseEnter() {
-		setHoverTimelineId(undefined);
+		hoverTimelineIdAtomWriter.write(undefined);
 	}
 
 	function scrollView(timelineId: TimelineId | undefined, date: DateTime | undefined): void {
-		setHighlightTimelineIds(timelineId ? [timelineId] : []);
-		setHighlightDays(date ? [date] : []);
+		highlightTimelineIdsAtomWriter.write(timelineId ? [timelineId] : []);
+		highlightDaysAtomWriter.write(date ? [date] : []);
 		Editors.scrollView(timelineId, date);
 	}
 

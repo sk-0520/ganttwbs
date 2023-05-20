@@ -1,9 +1,9 @@
 import classNames from "classnames";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { FC, ReactNode } from "react";
 
 import { DraggingTimelineAtom } from "@/models/data/atom/editor/DragAndDropAtoms";
-import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { SelectingBeginDate } from "@/models/data/BeginDate";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline } from "@/models/data/Setting";
@@ -18,12 +18,12 @@ interface Props extends TimelineStoreProps {
 }
 
 const TimelineHeaderRow: FC<Props> = (props: Props) => {
-	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
+	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
 	const draggingTimeline = useAtomValue(DraggingTimelineAtom);
 
 	function handleMouseEnter() {
 		if (!draggingTimeline && !props.selectingBeginDate) {
-			setHoverTimelineId(props.currentTimeline.id);
+			hoverTimelineIdAtomWriter.write(props.currentTimeline.id);
 		}
 	}
 	// function handleMouseLeave() {

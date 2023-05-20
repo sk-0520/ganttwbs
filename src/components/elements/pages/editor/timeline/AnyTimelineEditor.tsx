@@ -13,7 +13,7 @@ import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/Workl
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
 import { DetailEditTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/DragAndDropAtoms";
-import { ActiveTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { useActiveTimelineIdAtomWriter, useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useCalendarInfoAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
@@ -44,10 +44,10 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const selectingId = Timelines.toNodePreviousId(props.currentTimeline);
 
 	const setDetailEditTimeline = useSetAtom(DetailEditTimelineAtom);
-	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
-	const setHighlightTimelineIds = useSetAtom(HighlightTimelineIdsAtom);
-	const setHighlightDays = useSetAtom(HighlightDaysAtom);
-	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
+	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
+	const highlightTimelineIdsAtomWriter = useHighlightTimelineIdsAtomWriter();
+	const highlightDaysAtomWriter = useHighlightDaysAtomWriter();
+	const activeTimelineIdAtomWriter = useActiveTimelineIdAtomWriter();
 	const setDragSourceTimeline = useSetAtom(DragSourceTimelineAtom);
 	const timelineItemsAtomReader = useTimelineItemsAtomReader();
 	const workRangesAtomReader = useWorkRangesAtomReader();
@@ -111,7 +111,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		setVisibleBeginDateInput(isVisibleBeginDateInput);
 		if (isVisibleBeginDateInput) {
 			handleFocus(false);
-			setHoverTimelineId(undefined);
+			hoverTimelineIdAtomWriter.write(undefined);
 		}
 	}, [props.currentTimeline.id, props.selectingBeginDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -212,8 +212,8 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			date = workRange.begin;
 		}
 
-		setHighlightTimelineIds([props.currentTimeline.id]);
-		setHighlightDays(date ? [date] : []);
+		highlightTimelineIdsAtomWriter.write([props.currentTimeline.id]);
+		highlightDaysAtomWriter.write(date ? [date] : []);
 
 		Editors.scrollView(props.currentTimeline.id, date);
 	}
@@ -337,9 +337,9 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleFocus(isFocus: boolean): void {
 		if (isFocus) {
-			setActiveTimelineId(props.currentTimeline.id);
+			activeTimelineIdAtomWriter.write(props.currentTimeline.id);
 		} else {
-			setActiveTimelineId(undefined);
+			activeTimelineIdAtomWriter.write(undefined);
 		}
 	}
 

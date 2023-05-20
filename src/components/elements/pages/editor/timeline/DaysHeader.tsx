@@ -1,11 +1,10 @@
-import { useSetAtom } from "jotai";
 import { FC, useMemo } from "react";
 
 import InformationDay from "@/components/elements/pages/editor/timeline/days/InformationDay";
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
-import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
+import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
 import { useCalendarInfoAtomReader, useSettingAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -30,7 +29,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
 	const settingAtomReader = useSettingAtomReader();
-	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
+	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
 	const { dates, yearMonthBucket } = useMemo(() => {
@@ -131,7 +130,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	}, [locale, props.configuration.design.dummy.width]);
 
 	function handleMouseEnter() {
-		setHoverTimelineId(undefined);
+		hoverTimelineIdAtomWriter.write(undefined);
 	}
 
 	return (
