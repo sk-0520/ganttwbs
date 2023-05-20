@@ -18,7 +18,7 @@ const InformationDialog: FC<Props> = (props: Props) => {
 
 	const dates = new Set(
 		[...dayInfosAtomReader.data]
-			.map(([k, v]) => DateTime.convert(k, calendarInfoAtomReader.data.timeZone).toDateOnly())
+			.map(([k, v]) => DateTime.convert(k, calendarInfoAtomReader.data.timeZone).truncateTime())
 			.map(a => a.ticks)
 			.sort((a, b) => Number(a) - Number(b))
 	);

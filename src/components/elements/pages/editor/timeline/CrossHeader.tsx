@@ -127,7 +127,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	function handleClickInformationFirst(): void {
 		const keys = [...dayInfosAtomReader.data.keys()].sort((a, b) => Number(a) - Number(b));
 		if (keys.length) {
-			const date = DateTime.convert(keys[0], calendarInfoAtomReader.data.timeZone).toDateOnly();
+			const date = DateTime.convert(keys[0], calendarInfoAtomReader.data.timeZone).truncateTime();
 			scrollView(undefined, date);
 		}
 	}
@@ -135,7 +135,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	function handleClickInformationLast(): void {
 		const keys = [...dayInfosAtomReader.data.keys()].sort((a, b) => Number(b) - Number(a));
 		if (keys.length) {
-			const date = DateTime.convert(keys[0], calendarInfoAtomReader.data.timeZone).toDateOnly();
+			const date = DateTime.convert(keys[0], calendarInfoAtomReader.data.timeZone).truncateTime();
 			scrollView(undefined, date);
 		}
 	}

@@ -375,7 +375,7 @@ export abstract class Exports {
 		const timelineSheet = workbook.addWorksheet(Strings.replaceMap(locale.file.excel.export.timelineSheetNameFormat, {
 			"NAME": setting.name
 		}));
-		const beginDate = calcData.calendarInfo.range.begin.toDateOnly();
+		const beginDate = calcData.calendarInfo.range.begin.truncateTime();
 
 		// ヘッダ
 		// 1. タイトル - 月
@@ -485,7 +485,7 @@ export abstract class Exports {
 			}
 
 			if (successWorkRange) {
-				const beginSpan = beginDate.diff(successWorkRange.begin.toDateOnly());
+				const beginSpan = beginDate.diff(successWorkRange.begin.truncateTime());
 				const beginCell = timelineRow.getCell(ColumnKeys.length + Math.floor(beginSpan.totalDays) + 1);
 
 				beginCell.value = {

@@ -19,7 +19,7 @@ interface Props extends ConfigurationProps {
 const RowHighlight: FC<Props> = (props: Props) => {
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
-	const targetDay = calendarInfoAtomReader.data.range.begin.diff(props.date.toDateOnly()).totalDays;
+	const targetDay = calendarInfoAtomReader.data.range.begin.diff(props.date.truncateTime()).totalDays;
 
 	if (props.areaData.days < targetDay) {
 		return null;

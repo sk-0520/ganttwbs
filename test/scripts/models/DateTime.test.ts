@@ -110,6 +110,19 @@ describe("DateTime", () => {
 	});
 
 	test.each([
+		[DateTime.parse("2023-01-01T00:00:00.000", TimeZone.utc), DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc), "year"],
+		[DateTime.parse("2023-02-01T00:00:00.000", TimeZone.utc), DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc), "month"],
+		[DateTime.parse("2023-02-03T00:00:00.000", TimeZone.utc), DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc), "day"],
+		[DateTime.parse("2023-02-03T12:00:00.000", TimeZone.utc), DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc), "hour"],
+		[DateTime.parse("2023-02-03T12:34:00.000", TimeZone.utc), DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc), "minute"],
+		[DateTime.parse("2023-02-03T12:34:56.000", TimeZone.utc), DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc), "second"],
+	])("truncate", (expected: DateTime, input: DateTime, keepUnit: string) => {
+		const actual = input.truncate(keepUnit as Unit);
+		expect(actual.format("U")).toBe(expected.format("U"));
+		expect(actual.ticks).toBe(expected.ticks);
+	});
+
+	test.each([
 		[DateTime.parse("2019-02-28T00:00:00", TimeZone.utc), DateTime.parse("2019-02-01T12:34:56.789", TimeZone.utc)],
 		[DateTime.parse("2020-02-29T00:00:00", TimeZone.utc), DateTime.parse("2020-02-01T12:34:56.789", TimeZone.utc)],
 		[DateTime.parse("2019-02-28T00:00:00", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2019-02-01T12:34:56.789", TimeZone.parse("Asia/Tokyo"))],
@@ -127,7 +140,7 @@ describe("DateTime", () => {
 		[DateTime.parse("2000-01-01T00:00:00", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2000-01-01T01:02:03", TimeZone.parse("Asia/Tokyo"))],
 		[DateTime.parse("2000-02-03T00:00:00", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2000-02-03T23:59:59", TimeZone.parse("Asia/Tokyo"))],
 	])("toDateOnly", (expected, input) => {
-		const actual = input.toDateOnly();
+		const actual = input.truncateTime();
 		expect(actual.timeZone.serialize()).toBe(input.timeZone.serialize());
 		expect(actual.ticks).toBe(expected.ticks);
 	});

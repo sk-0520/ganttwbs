@@ -59,9 +59,9 @@ export abstract class Calendars {
 	 * @returns
 	 */
 	public static getDays(begin: DateTime, end: DateTime): Array<DateTime> {
-		const base = begin.toDateOnly();
+		const base = begin.truncateTime();
 
-		const diff = base.diff(end.toDateOnly()).totalDays;
+		const diff = base.diff(end.truncateTime()).totalDays;
 
 		const result = new Array<DateTime>();
 		result.push(begin);

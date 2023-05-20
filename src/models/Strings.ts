@@ -24,7 +24,7 @@ export abstract class Strings {
 		let n = 1;
 
 		RETRY:
-		while(true) {
+		while (true) {
 			for (const value of items) {
 				if (compare(value, changeName)) {
 					changeName = converter(source, ++n);
@@ -236,5 +236,4 @@ export abstract class Strings {
 
 		return source.split(/\r\n|\n|\r/);
 	}
-
 }
