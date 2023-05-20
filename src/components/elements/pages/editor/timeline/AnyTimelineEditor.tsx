@@ -1,4 +1,4 @@
-import { useAtomValue, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useState, useEffect, DragEvent, FC, useCallback, KeyboardEvent, useRef } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
@@ -14,7 +14,7 @@ import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/Wor
 import { useLocale } from "@/locales/locale";
 import { DetailEditTimelineAtom, DragSourceTimelineAtom } from "@/models/data/atom/editor/DragAndDropAtoms";
 import { ActiveTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { TimelineItemsAtom, useCalendarInfoAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
@@ -50,7 +50,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
 	const setActiveTimelineId = useSetAtom(ActiveTimelineIdAtom);
 	const setDragSourceTimeline = useSetAtom(DragSourceTimelineAtom);
-	const timelineItems = useAtomValue(TimelineItemsAtom);
+	const timelineItemsAtomReader = useTimelineItemsAtomReader();
 	const workRangesAtomReader = useWorkRangesAtomReader();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
@@ -73,7 +73,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}, [refInputDate]);
 
 	useEffect(() => {
-		const timelineItem = timelineItems.get(props.currentTimeline.id);
+		const timelineItem = timelineItemsAtomReader.data.get(props.currentTimeline.id);
 		if (timelineItem) {
 			setSubject(timelineItem.timeline.subject);
 
@@ -105,7 +105,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				}
 			}
 		}
-	}, [props.currentTimeline, props.timelineStore, timelineItems]);
+	}, [props.currentTimeline, props.timelineStore, timelineItemsAtomReader.data]);
 
 	useEffect(() => {
 		const isVisibleBeginDateInput = Boolean(props.selectingBeginDate && props.selectingBeginDate.timeline.id === props.currentTimeline.id);

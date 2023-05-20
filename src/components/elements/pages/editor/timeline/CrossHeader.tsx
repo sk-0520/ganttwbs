@@ -7,7 +7,7 @@ import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/T
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DayInfosAtom, TimelineItemsAtom, useCalendarInfoAtomReader, useRootTimelineAtomReader, useSequenceTimelinesAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { DayInfosAtom, useCalendarInfoAtomReader, useRootTimelineAtomReader, useSequenceTimelinesAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
@@ -30,7 +30,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	const setHighlightDays = useSetAtom(HighlightDaysAtom);
 	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
 	const rootTimelineReader = useRootTimelineAtomReader();
-	const timelineItems = useAtomValue(TimelineItemsAtom);
+	const timelineItemsAtomReader = useTimelineItemsAtomReader();
 	const dayInfos = useAtomValue(DayInfosAtom);
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 	const workRangesAtomReader = useWorkRangesAtomReader();
@@ -45,7 +45,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	const [visibleInformation, setVisibleInformation] = useState(false);
 
 	useEffect(() => {
-		const timelineItem = timelineItems.get(IdFactory.rootTimelineId);
+		const timelineItem = timelineItemsAtomReader.data.get(IdFactory.rootTimelineId);
 		if (timelineItem && Settings.maybeGroupTimeline(timelineItem.timeline)) {
 			console.debug(timelineItem);
 
@@ -64,7 +64,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 			}
 
 		}
-	}, [props.timelineStore, timelineItems]);
+	}, [props.timelineStore, timelineItemsAtomReader.data]);
 
 	function addEmptyTimeline(kind: TimelineKind) {
 		props.timelineStore.addEmptyTimeline(

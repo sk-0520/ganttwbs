@@ -1,10 +1,9 @@
-import { useAtomValue } from "jotai";
 import { FC, ReactNode, useEffect, useState } from "react";
 
 import GroupChart from "@/components/elements/pages/editor/timeline/shape/GroupChart";
 import TaskChart from "@/components/elements/pages/editor/timeline/shape/TaskChart";
 import { Charts } from "@/models/Charts";
-import { TimelineItemsAtom, useCalendarInfoAtomReader, useResourceInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader, useResourceInfoAtomReader, useTimelineItemsAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
 import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { Settings } from "@/models/Settings";
@@ -14,14 +13,14 @@ import { WorkRanges } from "@/models/WorkRanges";
 interface Props extends GanttChartTimelineProps { }
 
 const GanttChartTimeline: FC<Props> = (props: Props) => {
-	const timelineItems = useAtomValue(TimelineItemsAtom);
+	const timelineItemsAtomReader = useTimelineItemsAtomReader();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 	const resourceInfoAtomReader = useResourceInfoAtomReader();
 
 	const [successWorkRange, setSuccessWorkRange] = useState<SuccessWorkRange | null>();
 
 	useEffect(() => {
-		const timelineItem = timelineItems.get(props.currentTimeline.id);
+		const timelineItem = timelineItemsAtomReader.data.get(props.currentTimeline.id);
 		if (timelineItem) {
 			if (timelineItem.workRange) {
 				if (WorkRanges.maybeSuccessWorkRange(timelineItem.workRange)) {
@@ -31,7 +30,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 				}
 			}
 		}
-	}, [props.timelineStore, props.currentTimeline, timelineItems]);
+	}, [props.timelineStore, props.currentTimeline, timelineItemsAtomReader.data]);
 
 
 	function renderCurrentTimeline(): ReactNode {

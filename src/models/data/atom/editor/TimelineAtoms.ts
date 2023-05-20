@@ -198,9 +198,14 @@ export function useWorkRangesAtomReader(): AtomReader<Map<TimelineId, WorkRange>
 }
 
 /** 変更タイムライン */
-export const TimelineItemsAtom = atom<Map<TimelineId, TimelineItem>>(new Map());
+const TimelineItemsAtom = atom<Map<TimelineId, TimelineItem>>(new Map());
 
-//ReadonlyMap<TimelineId, TimelineItem>
+export function useTimelineItemsAtomReader(): AtomReader<Map<TimelineId, TimelineItem>> {
+	return {
+		data: useAtomValue(TimelineItemsAtom),
+	};
+}
+
 
 /** 日に対する何かしらの情報(情報がある時点で死んでる) */
 export const DayInfosAtom = atom<Map<DateTimeTicks, DayInfo>>(new Map());
