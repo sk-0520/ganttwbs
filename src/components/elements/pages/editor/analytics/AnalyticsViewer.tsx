@@ -31,7 +31,6 @@ const AnalyticsViewer: FC<Props> = (props: Props) => {
 				totalSuccessWorkRange={totalSuccessWorkRange}
 			/>
 			<WorkViewer
-				resourceInfo={calcData.resourceInfo}
 				sequenceTimelines={calcData.sequenceTimelines}
 				totalSuccessWorkRange={totalSuccessWorkRange}
 			/>

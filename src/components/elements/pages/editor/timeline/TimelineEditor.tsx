@@ -13,7 +13,7 @@ import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
 import { DetailEditTimelineAtom, DragSourceTimelineAtom, DraggingTimelineAtom } from "@/models/data/atom/editor/DragAndDropAtoms";
 import { ActiveTimelineIdAtom, DragOverTimelineIdAtom, DragSourceTimelineIdAtom, HighlightDaysAtom, HighlightTimelineIdsAtom, HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { ResourceInfoAtom, SequenceTimelinesAtom, SequenceTimelinesWriterAtom, useCalendarInfoAtomReader, useSettingAtomWriter } from "@/models/data/atom/editor/TimelineAtoms";
+import { SequenceTimelinesAtom, SequenceTimelinesWriterAtom, useCalendarInfoAtomReader, useSettingAtomWriter } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { Design } from "@/models/data/Design";
 import { DraggingTimeline } from "@/models/data/DraggingTimeline";
@@ -59,7 +59,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	//const [/*totalTimelineMap*/, setTotalTimelineMap] = useAtom(TotalTimelineMapAtom);
 	const settingAtomWriter = useSettingAtomWriter();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
-	const resourceInfo = useAtomValue(ResourceInfoAtom);
 
 	const [timelineStore, setTimelineStore] = useState<TimelineStore>(createTimelineStore());
 	const [selectingBeginDate, setSelectingBeginDate] = useState<SelectingBeginDate | null>(null);
@@ -502,13 +501,11 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				setting={props.editorData.setting}
 				selectingBeginDate={selectingBeginDate}
 				beginDateCallbacks={beginDateCallbacks}
-				resourceInfo={resourceInfo}
 				timelineStore={timelineStore}
 			/>
 			<TimelineViewer
 				configuration={props.configuration}
 				setting={props.editorData.setting}
-				resourceInfo={resourceInfo}
 				timelineStore={timelineStore}
 			/>
 			<HighlightArea
@@ -519,7 +516,6 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			{detailEditTimeline && <TimelineDetailEditDialog
 				configuration={props.configuration}
 				setting={props.editorData.setting}
-				resourceInfo={resourceInfo}
 				timeline={detailEditTimeline}
 				callbackSubmit={(timeline) => handleEndDetailEdit(detailEditTimeline, timeline)}
 			/>}

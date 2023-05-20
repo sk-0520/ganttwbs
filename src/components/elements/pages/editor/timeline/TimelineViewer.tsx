@@ -7,14 +7,13 @@ import { Charts } from "@/models/Charts";
 import { HoverTimelineIdAtom } from "@/models/data/atom/editor/HighlightAtoms";
 import { SequenceTimelinesAtom, TotalTimelineMapAtom, useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { ColorString } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, ResourceInfoProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
 	//nop
 }
 
@@ -23,7 +22,6 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
 	const setHoverTimelineId = useSetAtom(HoverTimelineIdAtom);
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
-
 
 	const areaData = useMemo(() => {
 		return Charts.createAreaData(props.configuration.design.seed.cell, calendarInfoAtomReader.data.range, totalTimelineMap.size);
@@ -157,7 +155,6 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							parentGroup={null}
 							currentTimeline={a}
 							currentIndex={i}
-							resourceInfo={props.resourceInfo}
 							areaSize={areaData.size}
 							timelineStore={props.timelineStore}
 						/>
@@ -174,7 +171,6 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 							setting={props.setting}
 							currentTimeline={a}
 							currentIndex={i}
-							resourceInfo={props.resourceInfo}
 							areaSize={areaData.size}
 							timelineStore={props.timelineStore}
 						/>

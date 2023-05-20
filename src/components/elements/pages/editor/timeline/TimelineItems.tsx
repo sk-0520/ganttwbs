@@ -7,7 +7,6 @@ import { Arrays } from "@/models/Arrays";
 import { SequenceTimelinesAtom, TimelineIndexMap, TimelineIndexMapAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline } from "@/models/data/Setting";
@@ -18,7 +17,7 @@ import { Settings } from "@/models/Settings";
 import { TimelineStore } from "@/models/store/TimelineStore";
 import { Timelines } from "@/models/Timelines";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, ResourceInfoProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
 	selectingBeginDate: SelectingBeginDate | null;
 	beginDateCallbacks: BeginDateCallbacks;
 }
@@ -68,7 +67,6 @@ const TimelineItems: FC<Props> = (props: Props) => {
 								timelineStore={props.timelineStore}
 								selectingBeginDate={props.selectingBeginDate}
 								beginDateCallbacks={props.beginDateCallbacks}
-								resourceInfo={props.resourceInfo}
 								callbackSubjectKeyDown={onSubjectKeyDown}
 								callbackWorkloadKeyDown={onWorkloadKeyDown}
 							/>

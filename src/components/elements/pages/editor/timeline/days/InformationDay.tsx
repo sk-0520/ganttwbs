@@ -3,7 +3,7 @@ import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { HighlightDaysAtom, HighlightTimelineIdsAtom } from "@/models/data/atom/editor/HighlightAtoms";
-import { DayInfosAtom, ResourceInfoAtom, TimelineIndexMapAtom, TotalTimelineMapAtom, useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { DayInfosAtom, TimelineIndexMapAtom, TotalTimelineMapAtom, useCalendarInfoAtomReader, useResourceInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
@@ -24,7 +24,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 
 	const timelineIndexMap = useAtomValue(TimelineIndexMapAtom);
 	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
-	const resourceInfo = useAtomValue(ResourceInfoAtom);
+	const resourceInfoAtomReader = useResourceInfoAtomReader();
 	const dayInfos = useAtomValue(DayInfosAtom);
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
@@ -61,15 +61,15 @@ const InformationDay: FC<Props> = (props: Props) => {
 
 	// ソート済み重複メンバー取得
 	const sortedMembers = [...mergedDayInfo.duplicateMembers]
-		.map(a => Require.get(resourceInfo.memberMap, a))
+		.map(a => Require.get(resourceInfoAtomReader.data.memberMap, a))
 		.sort((a, b) => {
-			const groupIndex = resourceInfo.groupItems.indexOf(a.group);
-			const groupCompare = groupIndex - resourceInfo.groupItems.indexOf(b.group);
+			const groupIndex = resourceInfoAtomReader.data.groupItems.indexOf(a.group);
+			const groupCompare = groupIndex - resourceInfoAtomReader.data.groupItems.indexOf(b.group);
 			if (!groupCompare) {
 				return groupCompare;
 			}
-			const group = resourceInfo.groupItems[groupIndex];
-			const members = Require.get(resourceInfo.memberItems, group);
+			const group = resourceInfoAtomReader.data.groupItems[groupIndex];
+			const members = Require.get(resourceInfoAtomReader.data.memberItems, group);
 			return members.indexOf(a.member) - members.indexOf(b.member);
 		})
 		;

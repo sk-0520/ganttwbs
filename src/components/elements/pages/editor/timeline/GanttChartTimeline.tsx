@@ -4,7 +4,7 @@ import { FC, ReactNode, useEffect, useState } from "react";
 import GroupChart from "@/components/elements/pages/editor/timeline/shape/GroupChart";
 import TaskChart from "@/components/elements/pages/editor/timeline/shape/TaskChart";
 import { Charts } from "@/models/Charts";
-import { TimelineItemsAtom, useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { TimelineItemsAtom, useCalendarInfoAtomReader, useResourceInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
 import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { Settings } from "@/models/Settings";
@@ -16,6 +16,7 @@ interface Props extends GanttChartTimelineProps { }
 const GanttChartTimeline: FC<Props> = (props: Props) => {
 	const timelineItems = useAtomValue(TimelineItemsAtom);
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
+	const resourceInfoAtomReader = useResourceInfoAtomReader();
 
 	const [successWorkRange, setSuccessWorkRange] = useState<SuccessWorkRange | null>();
 
@@ -49,7 +50,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 					<TaskChart
 						configuration={props.configuration}
 						currentTimeline={props.currentTimeline}
-						background={Charts.getTaskBackground(props.currentTimeline, props.resourceInfo.memberMap, props.setting.theme)}
+						background={Charts.getTaskBackground(props.currentTimeline, resourceInfoAtomReader.data.memberMap, props.setting.theme)}
 						foreground={props.setting.theme.timeline.completed}
 						borderColor="#000000"
 						borderThickness={1}

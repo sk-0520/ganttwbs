@@ -1,9 +1,8 @@
 import { FC, Fragment, ReactNode, useState } from "react";
 
 import { Calendars } from "@/models/Calendars";
-import { useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader, useResourceInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { AnyTimeline, Member, TaskTimeline } from "@/models/data/Setting";
 import { TotalSuccessWorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
@@ -12,12 +11,13 @@ import { Settings } from "@/models/Settings";
 
 type DisplayValue = "workload" | "cost";
 
-interface Props extends ResourceInfoProps {
+interface Props {
 	totalSuccessWorkRange: TotalSuccessWorkRange | undefined;
 	sequenceTimelines: Array<AnyTimeline>;
 }
 
 const WorkViewer: FC<Props> = (props: Props) => {
+	const resourceInfoAtomReader = useResourceInfoAtomReader();
 
 	const [displayValue, /*setDisplayValue*/] = useState<DisplayValue>("workload");
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
@@ -47,12 +47,12 @@ const WorkViewer: FC<Props> = (props: Props) => {
 					</tr>
 				</thead>
 				<tbody>
-					{props.resourceInfo.groupItems.map(a => {
+					{resourceInfoAtomReader.data.groupItems.map(a => {
 						if (!a.members.length) {
 							return <></>;
 						}
 
-						const members = [...Require.get(props.resourceInfo.memberItems, a)];
+						const members = [...Require.get(resourceInfoAtomReader.data.memberItems, a)];
 						const firstMember = members[0];
 						const nextMembers = members;
 						nextMembers.shift();

@@ -4,9 +4,8 @@ import { FC } from "react";
 
 import { Charts } from "@/models/Charts";
 import { AreaSize } from "@/models/data/Area";
-import { TimelineIndexMapAtom, TotalTimelineMapAtom, useCalendarInfoAtomReader, useRootTimelineAtomReader, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
+import { TimelineIndexMapAtom, TotalTimelineMapAtom, useCalendarInfoAtomReader, useResourceInfoAtomReader, useRootTimelineAtomReader, WorkRangesAtom } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { TimelineStoreProps } from "@/models/data/props/TimelineStoreProps";
 import { TaskTimeline } from "@/models/data/Setting";
@@ -14,7 +13,7 @@ import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
 import { WorkRanges } from "@/models/WorkRanges";
 
-interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps, ResourceInfoProps {
+interface Props extends ConfigurationProps, SettingProps, TimelineStoreProps {
 	currentIndex: number;
 	currentTimeline: TaskTimeline;
 
@@ -27,6 +26,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 	const totalTimelineMap = useAtomValue(TotalTimelineMapAtom);
 	const workRanges = useAtomValue(WorkRangesAtom);
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
+	const resourceInfoAtomReader = useResourceInfoAtomReader();
 
 	if (!props.currentTimeline.previous.length) {
 		return null;
@@ -55,7 +55,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 	const currentTimeSpanRange = Charts.getTimeSpanRange(calendarInfoAtomReader.data.range.begin, currentWorkRange);
 	const currentChartArea = Charts.createChartArea(currentTimeSpanRange, props.currentIndex, cell, props.areaSize);
 
-	const currentColor = Charts.getTaskBackground(props.currentTimeline, props.resourceInfo.memberMap, props.setting.theme);
+	const currentColor = Charts.getTaskBackground(props.currentTimeline, resourceInfoAtomReader.data.memberMap, props.setting.theme);
 
 	return (
 		<>
@@ -65,7 +65,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 
 				const previewColor = Settings.maybeGroupTimeline(previousTimeline)
 					? Charts.getGroupBackground(previousTimeline, rootTimelineReader.data, props.setting.theme)
-					: Charts.getTaskBackground(previousTimeline, props.resourceInfo.memberMap, props.setting.theme)
+					: Charts.getTaskBackground(previousTimeline, resourceInfoAtomReader.data.memberMap, props.setting.theme)
 					;
 
 				const previewWorkRange = workRanges.get(previousTimeline.id);

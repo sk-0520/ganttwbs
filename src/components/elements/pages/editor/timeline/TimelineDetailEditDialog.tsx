@@ -6,14 +6,13 @@ import MemberSelector from "@/components/elements/pages/editor/timeline/MemberSe
 import { useLocale } from "@/locales/locale";
 import { CssHelper } from "@/models/CssHelper";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { ResourceInfoProps } from "@/models/data/props/ResourceInfoProps";
 import { SettingProps } from "@/models/data/props/SettingProps";
 import { AnyTimeline, MemberId, Progress } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 
-interface Props extends ConfigurationProps, SettingProps, ResourceInfoProps {
+interface Props extends ConfigurationProps, SettingProps {
 	timeline: AnyTimeline;
 	callbackSubmit(changedTimeline: AnyTimeline | null): void;
 }
@@ -90,7 +89,6 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 						<dd>
 							<MemberSelector
 								defaultValue={memberId}
-								resourceInfo={props.resourceInfo}
 								callbackChangeMember={ev => setMemberId(ev?.member.id ?? "")}
 							/>
 						</dd>

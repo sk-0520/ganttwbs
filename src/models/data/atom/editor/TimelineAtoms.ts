@@ -4,6 +4,7 @@ import { Calendars } from "@/models/Calendars";
 import { AtomReader, AtomWriter } from "@/models/data/atom/AtomHelper";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { DayInfo } from "@/models/data/DayInfo";
+import { ResourceInfo } from "@/models/data/ResourceInfo";
 import { RootTimeline, AnyTimeline, TimelineId, Setting } from "@/models/data/Setting";
 import { TimelineItem } from "@/models/data/TimelineItem";
 import { WorkRange } from "@/models/data/WorkRange";
@@ -93,12 +94,18 @@ export function useCalendarInfoAtomReader(): AtomReader<CalendarInfo> {
 	};
 }
 
-export const ResourceInfoAtom = atom(
+const ResourceInfoAtom = atom(
 	get => {
 		const setting = get(SettingAtom);
 		return Resources.createResourceInfo(setting.groups);
 	}
 );
+
+export function useResourceInfoAtomReader(): AtomReader<ResourceInfo> {
+	return {
+		data: useAtomValue(ResourceInfoAtom),
+	};
+}
 
 /**
  * 変更基準点。
