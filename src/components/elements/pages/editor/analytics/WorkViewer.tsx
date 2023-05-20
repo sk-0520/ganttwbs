@@ -66,12 +66,12 @@ const WorkViewer: FC<Props> = (props: Props) => {
 									>
 										{a.name}
 									</td>
-									{renderMember(displayValue, firstMember, months, calendarInfoAtomReader.data, taskTimelines)}
+									{renderMember(displayValue, firstMember, months, calendarInfoAtomReader.data, taskTimelines, props.successWorkRanges)}
 								</tr>
 								{nextMembers.map(b => {
 									return (
 										<tr key={b.id}>
-											{renderMember(displayValue, b, months, calendarInfoAtomReader.data, taskTimelines)}
+											{renderMember(displayValue, b, months, calendarInfoAtomReader.data, taskTimelines, props.successWorkRanges)}
 										</tr>
 									);
 								})}
