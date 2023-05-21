@@ -34,6 +34,7 @@ const AnalyticsViewer: FC<Props> = (props: Props) => {
 				sequenceTimelines={calcData.sequenceTimelines}
 				successWorkRanges={calcData.workRange.successWorkRanges}
 				totalSuccessWorkRange={totalSuccessWorkRange}
+				configuration={props.configuration}
 			/>
 		</div>
 	);

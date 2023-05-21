@@ -14,6 +14,7 @@ import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
 import { Storages } from "@/models/Storages";
 import { TimeSpan } from "@/models/TimeSpan";
+import { As } from "@/models/As";
 
 const enum TabIndex {
 	File,
@@ -149,6 +150,7 @@ function createConfiguration(): Configuration {
 				height: 20,
 			},
 		},
+		workingDays: As.integer(process.env.NEXT_PUBLIC_RESOURCE_MONTH_WORKING_DAYS),
 	};
 
 	return result;

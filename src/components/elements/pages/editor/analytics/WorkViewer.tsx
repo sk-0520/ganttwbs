@@ -8,10 +8,13 @@ import { SuccessWorkRange, TotalSuccessWorkRange } from "@/models/data/WorkRange
 import { DateTime } from "@/models/DateTime";
 import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
+import { Timelines } from "@/models/Timelines";
+import { Configuration } from "@/models/data/Configuration";
+import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 
 type DisplayValue = "workload" | "cost";
 
-interface Props {
+interface Props extends ConfigurationProps {
 	totalSuccessWorkRange: TotalSuccessWorkRange | undefined;
 	successWorkRanges: ReadonlyArray<SuccessWorkRange>;
 	sequenceTimelines: ReadonlyArray<AnyTimeline>;
@@ -20,7 +23,7 @@ interface Props {
 const WorkViewer: FC<Props> = (props: Props) => {
 	const resourceInfoAtomReader = useResourceInfoAtomReader();
 
-	const [displayValue, /*setDisplayValue*/] = useState<DisplayValue>("workload");
+	const [displayValue, setDisplayValue] = useState<DisplayValue>("workload");
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
 	const months = props.totalSuccessWorkRange
@@ -33,6 +36,13 @@ const WorkViewer: FC<Props> = (props: Props) => {
 		<section>
 			<h2>
 				稼働
+				<select
+					value={displayValue}
+					onChange={ev => setDisplayValue(ev.target.value as DisplayValue)}
+				>
+					<option value={"workload" satisfies DisplayValue}>workload</option>
+					<option value={"cost" satisfies DisplayValue}>cost</option>
+				</select>
 			</h2>
 
 			<table>
@@ -66,12 +76,12 @@ const WorkViewer: FC<Props> = (props: Props) => {
 									>
 										{a.name}
 									</td>
-									{renderMember(displayValue, firstMember, months, calendarInfoAtomReader.data, taskTimelines, props.successWorkRanges)}
+									{renderMember(displayValue, firstMember, months, calendarInfoAtomReader.data, taskTimelines, props.successWorkRanges, props.configuration)}
 								</tr>
 								{nextMembers.map(b => {
 									return (
 										<tr key={b.id}>
-											{renderMember(displayValue, b, months, calendarInfoAtomReader.data, taskTimelines, props.successWorkRanges)}
+											{renderMember(displayValue, b, months, calendarInfoAtomReader.data, taskTimelines, props.successWorkRanges, props.configuration)}
 										</tr>
 									);
 								})}
@@ -99,7 +109,7 @@ function renderMonths(months: ReadonlyArray<DateTime>): ReactNode {
 	});
 }
 
-function renderMember(displayValue: DisplayValue, member: Member, months: ReadonlyArray<DateTime>, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): ReactNode {
+function renderMember(displayValue: DisplayValue, member: Member, months: ReadonlyArray<DateTime>, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>, configuration: Configuration): ReactNode {
 	return (
 		<Fragment key={member.id}>
 			<td>
@@ -116,7 +126,27 @@ function renderMember(displayValue: DisplayValue, member: Member, months: Readon
 
 				return (
 					<td key={a.ticks}>
-						{percent}
+						{Require.switch(displayValue as DisplayValue, {
+							workload: _ => (
+								<>
+									<code>
+										{Timelines.displayProgress(percent)}
+									</code>
+									<span>%</span>
+								</>
+							),
+							cost: _ => (
+								<>
+									<code>
+										{(Math.ceil(member.price.cost * percent * configuration.workingDays)).toLocaleString()}
+									</code>
+									<span>/</span>
+									<code>
+										{Math.ceil(member.price.sales * percent * configuration.workingDays).toLocaleString()}
+									</code>
+								</>
+							),
+						})}
 					</td>
 				);
 			})}
@@ -124,19 +154,38 @@ function renderMember(displayValue: DisplayValue, member: Member, months: Readon
 	);
 }
 
+function getWorkDays(begin: DateTime, end: DateTime, calendarInfo: CalendarInfo): Array<DateTime> {
+	const rangeDays = Calendars.getDays(begin, end);
+
+	const workDays = rangeDays.filter(a => {
+		const holidayEvent = calendarInfo.holidayEventMap.get(a.ticks);
+		if (holidayEvent) {
+			return false;
+		}
+
+		return !calendarInfo.holidayRegulars.has(a.week);
+	});
+
+	return workDays;
+}
 
 function calcDisplayValue(member: Member, begin: DateTime, end: DateTime, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): number {
 
-	// わからん。適当
-	const days = Calendars.getDays(begin, end);
+	const workDays = getWorkDays(begin, end, calendarInfo);
 
-	const timelines = taskTimelines.filter(a => a.memberId === member.id);
-	const workRanges = successWorkRanges
-		.filter(a => timelines.some(b => b.id === a.timeline.id))
-		.filter(a => begin.ticks <= a.begin.ticks)
-		;
+	const memberTimelines = taskTimelines.filter(a => a.memberId === member.id);
+	const memberWorkRanges = successWorkRanges.filter(a => memberTimelines.some(b => b.id === a.timeline.id));
 
-	return workRanges.length / days.length;
+	const memberWorkDays = new Array<DateTime>();
+	for (const workDay of workDays) {
+		for (const memberWorkRange of memberWorkRanges) {
+			if (workDay.isIn(memberWorkRange.begin, memberWorkRange.end)) {
+				memberWorkDays.push(workDay);
+			}
+		}
+	}
+
+	return memberWorkDays.length / workDays.length;
 
 	// switch (displayValue) {
 	// 	case "workload":
