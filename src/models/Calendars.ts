@@ -3,6 +3,7 @@ import { CalendarRange } from "@/models/data/CalendarRange";
 import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 import { Calendar, Holiday } from "@/models/data/Setting";
 import { DateTime, DateTimeTicks } from "@/models/DateTime";
+import { Settings } from "@/models/Settings";
 import { TimeZone } from "@/models/TimeZone";
 
 export abstract class Calendars {
@@ -36,6 +37,7 @@ export abstract class Calendars {
 			timeZone: timeZone,
 			range: range,
 			holidayEventMap: holidayEventMap,
+			holidayRegulars: new Set(calendar.holiday.regulars.map(a => Settings.toWeekIndex(a))),
 		};
 
 		return result;
@@ -76,6 +78,14 @@ export abstract class Calendars {
 		return result;
 	}
 
+	public static getMonthCount(begin: DateTime, end: DateTime): number {
+		const b = begin.year * 12 + begin.month;
+		const e = end.year * 12 + end.month;
+		const diff = e - b;
+
+		return Math.floor(diff) + 1;
+	}
+
 	/**
 	 * 開始・終了日からその期間の月を配列として取得する。
 	 * @param begin
@@ -83,12 +93,10 @@ export abstract class Calendars {
 	 * @returns
 	 */
 	public static getMonths(begin: DateTime, end: DateTime): Array<DateTime> {
-		const b = begin.year * 12 + begin.month;
-		const e = end.year * 12 + end.month;
-		const diff = e - b;
+		const count = this.getMonthCount(begin,end);
 
 		const result = new Array<DateTime>();
-		for (let i = 0; i < diff; i++) {
+		for (let i = 0; i < count - 1; i++) {
 			if (i) {
 				result.push(DateTime.create(
 					begin.timeZone,

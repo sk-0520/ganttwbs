@@ -72,7 +72,11 @@ const locale: Locale = {
 			task: "タスク",
 			newGroupTimeline: "新規グループ",
 			newTaskTimeline: "新規タスク",
-		}
+		},
+
+		error: {
+			calc: "計算結果エラー",
+		},
 	},
 
 	pages: {
@@ -251,6 +255,41 @@ const locale: Locale = {
 					progressMaximum: "完了",
 					comment: "コメント",
 				}
+			},
+
+			analytics: {
+				range: {
+					title: "期間",
+
+					begin: "開始",
+					end: "終了",
+
+					schedule: "予定",
+					actual: "実働",
+				},
+
+				works: {
+					title: "稼働",
+
+					resource: {
+						group: "グループ",
+						member: "要員",
+					},
+
+					header: {
+						workload: "稼働",
+						cost: "原価",
+						sales: "単価",
+					},
+
+					month: {
+						title: "各月",
+						monthFormat: "yyyy/MM",
+					},
+					total: {
+						title: "合計",
+					}
+				},
 			},
 
 			setting: {

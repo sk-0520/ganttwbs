@@ -286,10 +286,10 @@ const FileEditor: FC<Props> = (props: Props) => {
 							value={exportTableKind}
 							onChange={ev => setExportTableKind(ev.target.value as TableKind)}
 						>
-							<option value="tsv">
+							<option value={"tsv" satisfies TableKind}>
 								{locale.pages.editor.file.save.export.tableKind.tsv}
 							</option>
-							<option value="csv">
+							<option value={"csv" satisfies TableKind}>
 								{locale.pages.editor.file.save.export.tableKind.csv}
 							</option>
 						</select>

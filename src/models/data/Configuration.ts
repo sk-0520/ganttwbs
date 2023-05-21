@@ -11,4 +11,5 @@ export interface Configuration {
 	},
 	autoSave: AutoSave;
 	design: Design;
+	workingDays: number;
 }
