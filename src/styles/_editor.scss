@@ -61,6 +61,12 @@ main#editor {
 					font-family: monospace;
 				}
 			}
+
+			.inline > li > hr {
+				display: block;
+				width: 1em;
+				visibility: hidden;
+			}
 		}
 
 		&.tab-timeline {

@@ -51,6 +51,7 @@ export const enum IconKind {
 	Save,
 
 	SoftwareExcel,
+	SoftwareTable,
 }
 
 const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
@@ -95,6 +96,7 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.Save]: (props) => <Md.MdOutlineSave {...convertParameter(props)} />,
 
 	[IconKind.SoftwareExcel]: (props) => <Ai.AiFillFileExcel {...convertParameter(props)} />,
+	[IconKind.SoftwareTable]: (props) => <Md.MdOutlineGridOn {...convertParameter(props)} />,
 } as const;
 
 function convertColor(kind: IconKind, color: string | null | undefined): string | undefined {

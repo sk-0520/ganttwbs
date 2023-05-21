@@ -10,6 +10,7 @@ import SettingEditor from "@/components/elements/pages/editor/setting/SettingEdi
 import TimelineEditor from "@/components/elements/pages/editor/timeline/TimelineEditor";
 import Layout from "@/components/layout/Layout";
 import { useLocale } from "@/locales/locale";
+import { As } from "@/models/As";
 import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
 import { Storages } from "@/models/Storages";
@@ -64,7 +65,7 @@ const EditorPage: NextPage = () => {
 							<Tab>
 								{locale.pages.editor.tabs.timeline}
 							</Tab>
-							<Tab disabled>
+							<Tab>
 								{locale.pages.editor.tabs.analytics}
 							</Tab>
 							<Tab>
@@ -110,7 +111,7 @@ function createConfiguration(): Configuration {
 		tabIndex: {
 			application: 1,
 			setting: 0,
-			//application: 0,
+			//application: 2,
 		},
 
 		autoSave: {
@@ -149,6 +150,7 @@ function createConfiguration(): Configuration {
 				height: 20,
 			},
 		},
+		workingDays: As.integer(process.env.NEXT_PUBLIC_RESOURCE_MONTH_WORKING_DAYS),
 	};
 
 	return result;

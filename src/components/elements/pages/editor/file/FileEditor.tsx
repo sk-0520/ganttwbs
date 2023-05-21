@@ -12,7 +12,7 @@ import { AutoSaveKind } from "@/models/data/AutoSave";
 import { EditorData } from "@/models/data/EditorData";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { DateTime } from "@/models/DateTime";
-import { Exports } from "@/models/Exports";
+import { Exports, TableKind } from "@/models/Exports";
 import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
 import { TimeSpan } from "@/models/TimeSpan";
@@ -41,6 +41,8 @@ const FileEditor: FC<Props> = (props: Props) => {
 	const [autoSaveDownloadNextTime, setAutoSaveDownloadNextTime] = useState<DateTime>();
 
 	const [settingJson, setSettingJson] = useState("");
+
+	const [exportTableKind, setExportTableKind] = useState<TableKind>("tsv");
 
 	const autoSaveStorageIntervalId = useRef(0);
 	const autoSaveDownloadIntervalId = useRef(0);
@@ -154,6 +156,20 @@ const FileEditor: FC<Props> = (props: Props) => {
 		Browsers.download(fileName, blob);
 	}
 
+	async function handleExportCsv(kind: TableKind): Promise<void> {
+		const calcData = Exports.calc(editorData.setting);
+		const table = await Exports.createTable(editorData.setting, calcData, locale);
+		const csv = Exports.toCsv(kind, table);
+
+		const parsedFileName = path.parse(editorData.fileName);
+		const fileName = parsedFileName.name + "." + kind;
+
+		const bom = new Uint8Array([0xef, 0xbb, 0xbf]);
+		const blob = new Blob([bom, csv], { type: "application/octet-binary" });
+
+		Browsers.download(fileName, blob);
+	}
+
 	function handleJsonCopy() {
 		Browsers.copyText(settingJson);
 	}
@@ -238,14 +254,6 @@ const FileEditor: FC<Props> = (props: Props) => {
 			<dd>
 				<ul className="inline">
 					<li>
-						<button onClick={handleExportExcel}>
-							<IconLabel
-								kind={IconKind.SoftwareExcel}
-								label={locale.pages.editor.file.save.export.excel}
-							/>
-						</button>
-					</li>
-					<li>
 						<button onClick={handleDownload}>
 							{locale.common.command.download}
 						</button>
@@ -254,6 +262,50 @@ const FileEditor: FC<Props> = (props: Props) => {
 						<button onClick={handleJsonCopy}>
 							{locale.common.command.copy}
 						</button>
+					</li>
+
+					<li>
+						<hr />
+					</li>
+
+					<li>
+						<button onClick={handleExportExcel}>
+							<IconLabel
+								kind={IconKind.SoftwareExcel}
+								label={locale.pages.editor.file.save.export.excel}
+							/>
+						</button>
+					</li>
+
+					<li>
+						<hr />
+					</li>
+
+					<li>
+						<select
+							value={exportTableKind}
+							onChange={ev => setExportTableKind(ev.target.value as TableKind)}
+						>
+							<option value={"tsv" satisfies TableKind}>
+								{locale.pages.editor.file.save.export.tableKind.tsv}
+							</option>
+							<option value={"csv" satisfies TableKind}>
+								{locale.pages.editor.file.save.export.tableKind.csv}
+							</option>
+						</select>
+					</li>
+					<li>
+						<button onClick={_ => handleExportCsv(exportTableKind)}>
+							<IconLabel
+								kind={IconKind.SoftwareTable}
+								label={locale.pages.editor.file.save.export.table}
+							/>
+						</button>
+					</li>
+					<li>
+						<Link href="/template.xlsx" download>
+							{locale.pages.editor.file.save.export.tableTemplate}
+						</Link>
 					</li>
 				</ul>
 			</dd>

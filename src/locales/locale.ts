@@ -64,7 +64,11 @@ export interface Locale {
 			task: string,
 			newGroupTimeline: string,
 			newTaskTimeline: string,
-		}
+		},
+
+		error: {
+			calc: string,
+		},
 	},
 
 	/** 各ページ項目 */
@@ -147,7 +151,14 @@ export interface Locale {
 					export: {
 						title: string,
 
-						excel: string;
+						excel: string,
+
+						table: string,
+						tableKind: {
+							tsv: string,
+							csv: string,
+						},
+						tableTemplate: string,
 					},
 				},
 				byebye: string
@@ -251,6 +262,41 @@ export interface Locale {
 				}
 				// views: {
 				// },
+			},
+			analytics: {
+				range: {
+					title: string,
+
+					begin: string,
+					end: string,
+
+					schedule: string,
+					actual: string,
+				},
+
+				works: {
+					title: string,
+
+					resource: {
+						group: string,
+						member: string,
+					},
+
+					header: {
+						workload: string,
+						cost: string,
+						sales: string,
+					},
+
+					month: {
+						title: string,
+						/** DateTime.format */
+						monthFormat: string,
+					},
+					total: {
+						title: string,
+					}
+				},
 			},
 			setting: {
 				tabs: {
@@ -405,6 +451,15 @@ export interface Locale {
 				timelineSheetNameFormat: string,
 			},
 		},
+
+		table: {
+			export: {
+				/** DateTime.format */
+				dateFormat: string
+				/** DateTime.format */
+				rangeFormat: string
+			}
+		}
 	},
 
 	styles: {

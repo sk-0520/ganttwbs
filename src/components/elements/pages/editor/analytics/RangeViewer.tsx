@@ -1,6 +1,7 @@
 import { FC } from "react";
 
 import Timestamp from "@/components/elements/Timestamp";
+import { useLocale } from "@/locales/locale";
 import { useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { TotalSuccessWorkRange } from "@/models/data/WorkRange";
 
@@ -9,29 +10,31 @@ interface Props {
 }
 
 const RangeViewer: FC<Props> = (props: Props) => {
+	const locale = useLocale();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
 	return (
-		<section>
+		<section className="range">
 			<h2>
-				期間
+				{locale.pages.editor.analytics.range.title}
 			</h2>
+
 			<table>
 				<thead>
 					<tr>
-						<th>*</th>
+						<th />
 						<th>
-							開始
+							{locale.pages.editor.analytics.range.begin}
 						</th>
 						<th>
-							終了
+							{locale.pages.editor.analytics.range.end}
 						</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>
-							予定
+							{locale.pages.editor.analytics.range.schedule}
 						</td>
 						<td>
 							<Timestamp format="date" date={calendarInfoAtomReader.data.range.begin} />
@@ -42,7 +45,7 @@ const RangeViewer: FC<Props> = (props: Props) => {
 					</tr>
 					<tr>
 						<td>
-							実働
+							{locale.pages.editor.analytics.range.actual}
 						</td>
 						<td>
 							{props.totalSuccessWorkRange
@@ -51,7 +54,7 @@ const RangeViewer: FC<Props> = (props: Props) => {
 								)
 								: (
 									<span>
-										計算結果エラー
+										{locale.common.error.calc}
 									</span>
 								)
 							}
@@ -63,7 +66,7 @@ const RangeViewer: FC<Props> = (props: Props) => {
 								)
 								: (
 									<span>
-										計算結果エラー
+										{locale.common.error.calc}
 									</span>
 								)
 							}
