@@ -145,6 +145,12 @@ const locale: Locale = {
 						title: "出力",
 
 						excel: "エクセル出力",
+						table: "表出力",
+						tableKind: {
+							tsv: "TSV",
+							csv: "CSV",
+						},
+						tableTemplate: "テンプレート",
 					},
 				},
 
@@ -383,6 +389,13 @@ const locale: Locale = {
 				timelineSheetNameFormat: "timeline",
 			},
 		},
+
+		table: {
+			export: {
+				dateFormat: "yyyy/MM/dd",
+				rangeFormat: "yyyy/MM/dd HH:mm:ss",
+			}
+		}
 	},
 
 	styles: {

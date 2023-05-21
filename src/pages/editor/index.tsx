@@ -108,9 +108,9 @@ function createConfiguration(): Configuration {
 
 	const result: Configuration = {
 		tabIndex: {
-			application: 1,
+			//application: 1,
 			setting: 0,
-			//application: 0,
+			application: 0,
 		},
 
 		autoSave: {

@@ -147,7 +147,14 @@ export interface Locale {
 					export: {
 						title: string,
 
-						excel: string;
+						excel: string,
+
+						table: string,
+						tableKind: {
+							tsv: string,
+							csv: string,
+						},
+						tableTemplate: string,
 					},
 				},
 				byebye: string
@@ -405,6 +412,15 @@ export interface Locale {
 				timelineSheetNameFormat: string,
 			},
 		},
+
+		table: {
+			export: {
+				/** DateTime.format */
+				dateFormat: string
+				/** DateTime.format */
+				rangeFormat: string
+			}
+		}
 	},
 
 	styles: {
