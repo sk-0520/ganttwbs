@@ -8,7 +8,7 @@ import { Strong } from "@/models/Types";
 
 type DateTimeParseResult = ParseResult<DateTime, Error>;
 
-export type Unit = "second" | "minute" | "hour" | "day" | "week" | "month" | "year";
+export type Unit = "millisecond" | "second" | "minute" | "hour" | "day" | "week" | "month" | "year";
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 //export type DateTimeTicks = number;
@@ -324,6 +324,11 @@ export class DateTime {
 	 * @returns 切り落とされた項目は初期値(月なら1月、日なら1日、時なら0時)となる
 	 */
 	public truncate(keepUnit: Unit): DateTime {
+		if(keepUnit === "millisecond") {
+			throw new Error(keepUnit);
+			// Exclude<Unit, "millisecond"> すればいいんだけど、一応ね
+		}
+
 		const date = Require.switch(keepUnit, {
 			"year": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0).set("hour", 0).set("date", 1).set("month", 0),
 			"month": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0).set("hour", 0).set("date", 1),

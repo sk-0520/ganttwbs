@@ -45,6 +45,9 @@ describe("DateTime", () => {
 		[DateTime.parse("2000-01-31T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromDays(30)],
 		[DateTime.parse("2000-02-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromDays(31)],
 		[DateTime.parse("2001-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromDays(366)],
+		[DateTime.parse("2000-01-01T00:00:00.001", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromMilliseconds(1)],
+		[DateTime.parse("2000-01-01T00:00:00.010", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromMilliseconds(10)],
+		[DateTime.parse("2000-01-01T00:00:00.100", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), TimeSpan.fromMilliseconds(100)],
 
 		[DateTime.parse("2000-01-01T00:00:00", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.parse("Asia/Tokyo")), TimeSpan.zero],
 		[DateTime.parse("2000-01-01T00:00:00.001", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.parse("Asia/Tokyo")), TimeSpan.fromMilliseconds(1)],
@@ -56,6 +59,9 @@ describe("DateTime", () => {
 		[DateTime.parse("2000-01-31T00:00:00", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.parse("Asia/Tokyo")), TimeSpan.fromDays(30)],
 		[DateTime.parse("2000-02-01T00:00:00", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.parse("Asia/Tokyo")), TimeSpan.fromDays(31)],
 		[DateTime.parse("2001-01-01T00:00:00", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.parse("Asia/Tokyo")), TimeSpan.fromDays(366)],
+		[DateTime.parse("2000-01-01T00:00:00.001", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.parse("Asia/Tokyo")), TimeSpan.fromMilliseconds(1)],
+		[DateTime.parse("2000-01-01T00:00:00.010", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.parse("Asia/Tokyo")), TimeSpan.fromMilliseconds(10)],
+		[DateTime.parse("2000-01-01T00:00:00.100", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2000-01-01T00:00:00", TimeZone.parse("Asia/Tokyo")), TimeSpan.fromMilliseconds(100)],
 	])("add - TimeSpan", (expected: DateTime, date: DateTime, diff: TimeSpan) => {
 		const actual = date.add(diff);
 		expect(actual.timeZone.serialize()).toBe(date.timeZone.serialize());
@@ -120,6 +126,11 @@ describe("DateTime", () => {
 		const actual = input.truncate(keepUnit as Unit);
 		expect(actual.format("U")).toBe(expected.format("U"));
 		expect(actual.ticks).toBe(expected.ticks);
+	});
+
+	test("truncate - throw", () => {
+		const dateTime = DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc);
+		expect(() => dateTime.truncate("millisecond")).toThrow();
 	});
 
 	test.each([
