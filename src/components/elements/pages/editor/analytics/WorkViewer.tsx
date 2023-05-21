@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { FC, Fragment, ReactNode } from "react";
 
 import { Locale, useLocale } from "@/locales/locale";
@@ -227,23 +228,44 @@ function renderMonths(visibleCost: boolean, months: ReadonlyArray<DateTime>, loc
 
 function renderRange(visibleCost: boolean, member: Member, begin: DateTime, end: DateTime, monthCount: number, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>, configuration: Configuration): ReactNode {
 	const percent = calcDisplayValue(member, begin, end, calendarInfo, taskTimelines, successWorkRanges);
+	const overwork = 1 < percent;
 
 	return (
 		<>
-			<td className="workload">
+			<td className={
+				classNames(
+					"workload",
+					{
+						"overwork": overwork,
+					}
+				)}
+			>
 				<code>
 					{Timelines.displayProgress(percent)}
 				</code>
-				<span>%</span>
 			</td>
 			{visibleCost && (
 				<>
-					<td className="cost">
+					<td className={
+						classNames(
+							"cost",
+							{
+								"overwork": overwork,
+							}
+						)}
+					>
 						<code>
 							{(Math.ceil(member.price.cost * percent * (monthCount * configuration.workingDays))).toLocaleString()}
 						</code>
 					</td>
-					<td className="sales">
+					<td className={
+						classNames(
+							"sales",
+							{
+								"overwork": overwork,
+							}
+						)}
+					>
 						<code>
 							{Math.ceil(member.price.sales * percent * (monthCount * configuration.workingDays)).toLocaleString()}
 						</code>

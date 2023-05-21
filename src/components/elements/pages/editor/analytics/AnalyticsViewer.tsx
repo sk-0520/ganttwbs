@@ -27,6 +27,10 @@ const AnalyticsViewer: FC<Props> = (props: Props) => {
 
 	return (
 		<div id="analytics">
+			<p className="develop-warning">
+				ここの処理はクソほど怪しい。
+			</p>
+
 			<RangeViewer
 				totalSuccessWorkRange={totalSuccessWorkRange}
 			/>

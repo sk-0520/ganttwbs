@@ -277,7 +277,7 @@ const locale: Locale = {
 					},
 
 					header: {
-						workload: "稼働",
+						workload: "稼働率",
 						cost: "原価",
 						sales: "単価",
 					},
