@@ -1,5 +1,38 @@
 @use "variable" as variable;
 
 #analytics {
+	h2 {
+		background: #ccc;
+	}
 
+	section + section {
+		margin-top: 1em;
+	}
+
+	table {
+		th,
+		td {
+			padding: 0.25ex;
+			border: 1px solid black;
+		}
+	}
+
+	.range {
+	}
+
+	.workload {
+		table {
+			tbody {
+				.workload {
+					text-align: right;
+				}
+				.cost {
+					text-align: right;
+				}
+				.sales {
+					text-align: right;
+				}
+			}
+		}
+	}
 }

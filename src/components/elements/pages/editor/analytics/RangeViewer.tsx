@@ -12,14 +12,15 @@ const RangeViewer: FC<Props> = (props: Props) => {
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
 	return (
-		<section>
+		<section className="range">
 			<h2>
 				期間
 			</h2>
+
 			<table>
 				<thead>
 					<tr>
-						<th>*</th>
+						<th />
 						<th>
 							開始
 						</th>

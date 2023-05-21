@@ -35,7 +35,7 @@ const WorkViewer: FC<Props> = (props: Props) => {
 	const taskTimelines = props.sequenceTimelines.filter(Settings.maybeTaskTimeline);
 
 	return (
-		<section>
+		<section className="workload">
 			<h2>
 				稼働
 			</h2>
@@ -214,7 +214,7 @@ function renderRange(visibleCost: boolean, member: Member, begin: DateTime, end:
 
 	return (
 		<>
-			<td>
+			<td className="workload">
 				<code>
 					{Timelines.displayProgress(percent)}
 				</code>
@@ -222,12 +222,12 @@ function renderRange(visibleCost: boolean, member: Member, begin: DateTime, end:
 			</td>
 			{visibleCost && (
 				<>
-					<td>
+					<td className="cost">
 						<code>
 							{(Math.ceil(member.price.cost * percent * (monthCount * configuration.workingDays))).toLocaleString()}
 						</code>
 					</td>
-					<td>
+					<td className="sales">
 						<code>
 							{Math.ceil(member.price.sales * percent * (monthCount * configuration.workingDays)).toLocaleString()}
 						</code>
