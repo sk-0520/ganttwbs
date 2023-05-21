@@ -109,7 +109,7 @@ function renderMember(displayValue: DisplayValue, member: Member, months: Readon
 			{months.map(a => {
 				const range = {
 					begin: a,
-					end: a.getLastDayOfMonth().add(23, "hour").add(59, "minute"), //TODO ミリ秒追加がないんだわ
+					end: a.getLastDayOfMonth().add(23, "hour").add(59, "minute"), //TODO: ミリ秒追加がないんだわ
 				};
 
 				const percent = calcDisplayValue(member, range.begin, range.end, calendarInfo, taskTimelines, successWorkRanges);

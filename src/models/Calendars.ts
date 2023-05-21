@@ -3,6 +3,7 @@ import { CalendarRange } from "@/models/data/CalendarRange";
 import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 import { Calendar, Holiday } from "@/models/data/Setting";
 import { DateTime, DateTimeTicks } from "@/models/DateTime";
+import { Settings } from "@/models/Settings";
 import { TimeZone } from "@/models/TimeZone";
 
 export abstract class Calendars {
@@ -36,6 +37,7 @@ export abstract class Calendars {
 			timeZone: timeZone,
 			range: range,
 			holidayEventMap: holidayEventMap,
+			holidayRegulars: new Set(calendar.holiday.regulars.map(a => Settings.toWeekIndex(a))),
 		};
 
 		return result;
