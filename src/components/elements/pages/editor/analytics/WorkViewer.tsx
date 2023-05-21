@@ -37,20 +37,20 @@ const WorkViewer: FC<Props> = (props: Props) => {
 	return (
 		<section className="workload">
 			<h2>
-				稼働
+				{locale.pages.editor.analytics.works.title}
 			</h2>
 
 			<table>
 				<caption>
-					各月
+					{locale.pages.editor.analytics.works.month.title}
 				</caption>
 				<thead>
 					<tr>
 						<th rowSpan={2}>
-							グループ
+							{locale.pages.editor.analytics.works.resource.group}
 						</th>
 						<th rowSpan={2}>
-							要員
+							{locale.pages.editor.analytics.works.resource.member}
 						</th>
 						{renderMonths(visibleCost, months, locale)}
 					</tr>
@@ -61,12 +61,20 @@ const WorkViewer: FC<Props> = (props: Props) => {
 									{visibleCost
 										? (
 											<>
-												<th>workload</th>
-												<th>cost</th>
-												<th>sales</th>
+												<th>
+													{locale.pages.editor.analytics.works.header.workload}
+												</th>
+												<th>
+													{locale.pages.editor.analytics.works.header.cost}
+												</th>
+												<th>
+													{locale.pages.editor.analytics.works.header.sales}
+												</th>
 											</>
 										) : (
-											<th>workload</th>
+											<th>
+												{locale.pages.editor.analytics.works.header.workload}
+											</th>
 										)
 									}
 								</>
@@ -111,26 +119,34 @@ const WorkViewer: FC<Props> = (props: Props) => {
 			{props.totalSuccessWorkRange && (
 				<table>
 					<caption>
-						全期間
+						{locale.pages.editor.analytics.works.total.title}
 					</caption>
 					<thead>
 						<tr>
 							<th>
-								グループ
+								{locale.pages.editor.analytics.works.resource.group}
 							</th>
 							<th>
-								要員
+								{locale.pages.editor.analytics.works.resource.member}
 							</th>
 							<>
 								{visibleCost
 									? (
 										<>
-											<th>workload</th>
-											<th>cost</th>
-											<th>sales</th>
+											<th>
+												{locale.pages.editor.analytics.works.header.workload}
+											</th>
+											<th>
+												{locale.pages.editor.analytics.works.header.cost}
+											</th>
+											<th>
+												{locale.pages.editor.analytics.works.header.sales}
+											</th>
 										</>
 									) : (
-										<th>workload</th>
+										<th>
+											{locale.pages.editor.analytics.works.header.workload}
+										</th>
 									)
 								}
 							</>

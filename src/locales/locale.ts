@@ -64,7 +64,11 @@ export interface Locale {
 			task: string,
 			newGroupTimeline: string,
 			newTaskTimeline: string,
-		}
+		},
+
+		error: {
+			calc: string,
+		},
 	},
 
 	/** 各ページ項目 */
@@ -260,7 +264,30 @@ export interface Locale {
 				// },
 			},
 			analytics: {
+				range: {
+					title: string,
+
+					begin: string,
+					end: string,
+
+					schedule: string,
+					actual: string,
+				},
+
 				works: {
+					title: string,
+
+					resource: {
+						group: string,
+						member: string,
+					},
+
+					header: {
+						workload: string,
+						cost: string,
+						sales: string,
+					},
+
 					month: {
 						title: string,
 						/** DateTime.format */

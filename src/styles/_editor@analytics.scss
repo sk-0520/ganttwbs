@@ -10,10 +10,13 @@
 	}
 
 	table {
+		margin: 0.5em;
+
 		th,
 		td {
 			padding: 0.25ex;
 			border: 1px solid black;
+			vertical-align: middle;
 		}
 	}
 
