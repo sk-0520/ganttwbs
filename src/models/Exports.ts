@@ -1,6 +1,7 @@
 import { Border, Row, Workbook, Worksheet } from "exceljs";
 
 import { Locale } from "@/locales/locale";
+import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
 import { CalcData } from "@/models/data/CalcData";
@@ -15,7 +16,6 @@ import { Settings } from "@/models/Settings";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
-import { Arrays } from "@/models/Arrays";
 
 export type TableKind = "tsv" | "csv";
 
