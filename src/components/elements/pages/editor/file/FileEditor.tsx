@@ -297,13 +297,13 @@ const FileEditor: FC<Props> = (props: Props) => {
 					<li>
 						<button onClick={_ => handleExportCsv(exportTableKind)}>
 							<IconLabel
-								kind={IconKind.SoftwareExcel}
+								kind={IconKind.SoftwareTable}
 								label={locale.pages.editor.file.save.export.table}
 							/>
 						</button>
 					</li>
 					<li>
-						<Link href="/template.xlsx">
+						<Link href="/template.xlsx" download>
 							{locale.pages.editor.file.save.export.tableTemplate}
 						</Link>
 					</li>
