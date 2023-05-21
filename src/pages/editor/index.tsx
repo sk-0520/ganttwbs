@@ -10,11 +10,11 @@ import SettingEditor from "@/components/elements/pages/editor/setting/SettingEdi
 import TimelineEditor from "@/components/elements/pages/editor/timeline/TimelineEditor";
 import Layout from "@/components/layout/Layout";
 import { useLocale } from "@/locales/locale";
+import { As } from "@/models/As";
 import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
 import { Storages } from "@/models/Storages";
 import { TimeSpan } from "@/models/TimeSpan";
-import { As } from "@/models/As";
 
 const enum TabIndex {
 	File,

@@ -253,6 +253,18 @@ const locale: Locale = {
 				}
 			},
 
+			analytics: {
+				works: {
+					month: {
+						title: "各月",
+						monthFormat: "yyyy/MM",
+					},
+					total: {
+						title: "合計",
+					}
+				},
+			},
+
 			setting: {
 				tabs: {
 					general: "基本",

@@ -259,6 +259,18 @@ export interface Locale {
 				// views: {
 				// },
 			},
+			analytics: {
+				works: {
+					month: {
+						title: string,
+						/** DateTime.format */
+						monthFormat: string,
+					},
+					total: {
+						title: string,
+					}
+				},
+			},
 			setting: {
 				tabs: {
 					general: string,
