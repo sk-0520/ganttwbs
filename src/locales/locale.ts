@@ -153,7 +153,8 @@ export interface Locale {
 						tableKind: {
 							tsv: string,
 							csv: string,
-						}
+						},
+						tableTemplate: string,
 					},
 				},
 				byebye: string

@@ -149,7 +149,8 @@ const locale: Locale = {
 						tableKind: {
 							tsv: "TSV",
 							csv: "CSV",
-						}
+						},
+						tableTemplate: "テンプレート",
 					},
 				},
 

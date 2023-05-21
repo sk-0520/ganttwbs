@@ -302,6 +302,11 @@ const FileEditor: FC<Props> = (props: Props) => {
 							/>
 						</button>
 					</li>
+					<li>
+						<Link href="/template.xlsx">
+							{locale.pages.editor.file.save.export.tableTemplate}
+						</Link>
+					</li>
 				</ul>
 			</dd>
 			<dd>
