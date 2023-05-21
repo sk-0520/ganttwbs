@@ -123,14 +123,14 @@ describe("DateTime", () => {
 		[DateTime.parse("2023-02-03T12:34:00.000", TimeZone.utc), DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc), "minute"],
 		[DateTime.parse("2023-02-03T12:34:56.000", TimeZone.utc), DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc), "second"],
 	])("truncate", (expected: DateTime, input: DateTime, keepUnit: string) => {
-		const actual = input.truncate(keepUnit as Unit);
+		const actual = input.truncate(keepUnit as Exclude<Unit, "millisecond">);
 		expect(actual.format("U")).toBe(expected.format("U"));
 		expect(actual.ticks).toBe(expected.ticks);
 	});
 
 	test("truncate - throw", () => {
 		const dateTime = DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc);
-		expect(() => dateTime.truncate("millisecond")).toThrow();
+		expect(() => dateTime.truncate("millisecond" as Exclude<Unit, "millisecond">)).toThrow();
 	});
 
 	test.each([

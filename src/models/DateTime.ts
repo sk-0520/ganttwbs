@@ -9,6 +9,7 @@ import { Strong } from "@/models/Types";
 type DateTimeParseResult = ParseResult<DateTime, Error>;
 
 export type Unit = "millisecond" | "second" | "minute" | "hour" | "day" | "week" | "month" | "year";
+export type MonthNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 //export type DateTimeTicks = number;
@@ -59,8 +60,13 @@ export class DateTime {
 	}
 
 	/** 月(1-12) */
-	public get month(): number {
-		return this.date.get("month") + 1;
+	public get month(): MonthNumber {
+		const result = this.date.get("month") + 1;
+		if (1 <= result && result <= 12) {
+			return result as MonthNumber;
+		}
+
+		throw new Error();
 	}
 
 	/** 日 */
@@ -323,10 +329,9 @@ export class DateTime {
 	 * @param keepUnit 切り落とし時に保持する単位。ここで指定した値未満が初期値となる。
 	 * @returns 切り落とされた項目は初期値(月なら1月、日なら1日、時なら0時)となる
 	 */
-	public truncate(keepUnit: Unit): DateTime {
-		if(keepUnit === "millisecond") {
+	public truncate(keepUnit: Exclude<Unit, "millisecond">): DateTime {
+		if (keepUnit as string === "millisecond") {
 			throw new Error(keepUnit);
-			// Exclude<Unit, "millisecond"> すればいいんだけど、一応ね
 		}
 
 		const date = Require.switch(keepUnit, {
@@ -361,7 +366,7 @@ export class DateTime {
 			.set("second", 0)
 			.set("minute", 0)
 			.set("hour", 0)
-		;
+			;
 
 		return new DateTime(date, this.timeZone);
 	}
