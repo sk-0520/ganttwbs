@@ -15,6 +15,9 @@ import { Settings } from "@/models/Settings";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
+import { Arrays } from "@/models/Arrays";
+
+export type TableKind = "tsv" | "csv";
 
 type CellInputType = string | Progress | DateTime | Date;
 const ColumnKeys = [
@@ -604,6 +607,150 @@ export abstract class Exports {
 	}
 
 	public static async createTable(setting: Setting, calcData: CalcData, locale: Locale): Promise<Array<Array<string>>> {
-		return [];
+		const dates = Calendars.getDays(calcData.calendarInfo.range.begin, calcData.calendarInfo.range.end);
+		const rootTimelineItem = Require.get(calcData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
+		const rootSuccessWorkRanges = calcData.workRange.successWorkRanges.find(a => a.timeline.id === rootTimelineItem.id);
+
+		const result = new Array<Array<string>>();
+
+		result.push([
+			setting.name,
+			...Arrays.repeat("", 8),
+			...dates.map(a => {
+				const holiday = calcData.calendarInfo.holidayEventMap.get(a.ticks);
+				if(holiday) {
+					return holiday.event.display;
+				}
+
+				const weekDay = Settings.toWeekDay(a.week);
+				if (setting.calendar.holiday.regulars.includes(weekDay)) {
+					return "*";
+				}
+
+				return "";
+			}),
+		]);
+
+		result.push([
+			"uuid",
+			"kind",
+			"id",
+			"subject",
+			String(Timelines.sumWorkloadByGroup(rootTimelineItem).totalDays),
+			"resource",
+			rootSuccessWorkRanges ? rootSuccessWorkRanges.begin.format(locale.file.table.export.rangeFormat) : "",
+			rootSuccessWorkRanges ? rootSuccessWorkRanges.end.format(locale.file.table.export.rangeFormat) : "",
+			String(Timelines.sumProgressByGroup(rootTimelineItem)),
+
+			...dates.map(a => a.format(locale.file.table.export.dateFormat)),
+		]);
+
+		for (const timeline of calcData.sequenceTimelines) {
+			const readableTimelineId = Timelines.calcReadableTimelineId(timeline, rootTimelineItem);
+			const workload = Settings.maybeGroupTimeline(timeline)
+				? Timelines.sumWorkloadByGroup(timeline)
+				: Timelines.deserializeWorkload(timeline.workload)
+				;
+			const memberGroupPair = Settings.maybeGroupTimeline(timeline)
+				? undefined
+				: calcData.resourceInfo.memberMap.get(timeline.memberId)
+				;
+			const successWorkRange = calcData.workRange.successWorkRanges.find(a => a.timeline.id === timeline.id);
+			const progress = Settings.maybeGroupTimeline(timeline)
+				? Timelines.sumProgressByGroup(timeline)
+				: timeline.progress
+				;
+
+			const baseCells: Array<string> = [
+				timeline.id,
+				timeline.kind,
+				//---------------------------
+				Timelines.toReadableTimelineId(readableTimelineId),
+				timeline.subject,
+				String(workload.totalDays),
+				memberGroupPair ? `${memberGroupPair.member.name}(${memberGroupPair.group.name})` : "",
+				successWorkRange ? successWorkRange.begin.format(locale.file.table.export.rangeFormat) : "",
+				successWorkRange ? successWorkRange.end.format(locale.file.table.export.rangeFormat) : "",
+				String(progress),
+			];
+
+			const dateCells = dates.map(a => {
+				if (successWorkRange) {
+					if(successWorkRange.end.ticks < a.ticks) {
+						return "";
+					}
+
+					const position = successWorkRange.begin.diff(a).totalDays;
+					if (position < 0) {
+						return "";
+					}
+
+					const days = Calendars.getDays(successWorkRange.begin, successWorkRange.end);
+					if(days.length === 1) {
+						if(!a.equals(days[0].truncateTime())) {
+							return "";
+						}
+					} else if (!a.isIn(days[0], days[days.length - 1])) {
+						return "";
+					}
+
+					const step = 1 / days.length;
+					const isCompletedArea = ((step * position) + step) <= progress;
+
+					return isCompletedArea ? "TRUE" : "FALSE";
+				}
+
+				return "";
+			});
+
+			result.push([
+				...baseCells,
+				...dateCells,
+			]);
+		}
+
+		return result;
+	}
+
+	/**
+	 * なんちゃってCSV出力なのです。
+	 * @param kind
+	 * @param table
+	 * @returns
+	 */
+	public static toCsv(kind: TableKind, table: Array<Array<string>>): string {
+		const separator = kind === "tsv" ? "\t" : ",";
+		const cellNewLine = "\n";
+		const rowNewLine = "\r\n";
+
+		const lines = table.map(r => {
+			return r.map(c => {
+				if (!c) {
+					return "";
+				}
+
+				const chars = {
+					hasSeparator: c.includes(separator),
+					hasDoubleQuotation: c.includes("\""),
+					hasNewLines: c.includes("\r") || c.includes("\n"),
+				};
+
+				let work = c;
+
+				if (chars.hasDoubleQuotation) {
+					work = Strings.replaceAll(work, "\"", "\"\"");
+				}
+				if (chars.hasNewLines) {
+					work = Strings.splitLines(work).join(cellNewLine);
+				}
+				if (chars.hasSeparator || chars.hasDoubleQuotation || chars.hasNewLines) {
+					work = `"${work}"`;
+				}
+
+				return work;
+			}).join(separator);
+		});
+
+		return lines.join(rowNewLine);
 	}
 }
