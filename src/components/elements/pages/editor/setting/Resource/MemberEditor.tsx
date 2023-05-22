@@ -4,7 +4,7 @@ import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
-import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
+import { MemberSetting, SettingContext } from "@/models/context/SettingContext";
 import { Prices } from "@/models/data/Prices";
 import { GroupId, MemberId } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";

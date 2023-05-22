@@ -2,8 +2,8 @@ import classNames from "classnames";
 import { FC, Fragment, ReactNode } from "react";
 
 import { Locale, useLocale } from "@/locales/locale";
+import { useCalendarInfoAtomReader, useResourceInfoAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { Calendars } from "@/models/Calendars";
-import { useCalendarInfoAtomReader, useResourceInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { Configuration } from "@/models/data/Configuration";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";

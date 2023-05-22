@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import { CSSProperties, FC } from "react";
 
+import { useCalendarInfoAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { AreaData } from "@/models/data/Area";
-import { useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ColumnHighlightMode } from "@/models/data/Highlight";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { DateTime } from "@/models/DateTime";

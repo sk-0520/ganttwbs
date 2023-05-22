@@ -1,7 +1,7 @@
 import { FC, useContext } from "react";
 
 import { useLocale } from "@/locales/locale";
-import { SettingContext } from "@/models/data/context/SettingContext";
+import { SettingContext } from "@/models/context/SettingContext";
 
 const CalendarRangeSettingEditor: FC = () => {
 	const locale = useLocale();

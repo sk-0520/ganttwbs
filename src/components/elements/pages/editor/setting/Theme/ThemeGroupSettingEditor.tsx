@@ -6,7 +6,7 @@ import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
-import { SettingContext, UUID } from "@/models/data/context/SettingContext";
+import { SettingContext, UUID } from "@/models/context/SettingContext";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
 import { Strings } from "@/models/Strings";

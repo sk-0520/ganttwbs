@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import { CSSProperties, FC } from "react";
 
+import { useTimelineIndexMapAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { AreaData } from "@/models/data/Area";
-import { useTimelineIndexMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { RowHighlightMode } from "@/models/data/Highlight";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";

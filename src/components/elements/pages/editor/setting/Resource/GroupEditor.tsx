@@ -5,7 +5,7 @@ import MemberEditor from "@/components/elements/pages/editor/setting/Resource/Me
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
-import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
+import { MemberSetting, SettingContext } from "@/models/context/SettingContext";
 import { GroupId, MemberId } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";

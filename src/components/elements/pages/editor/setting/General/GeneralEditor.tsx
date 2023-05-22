@@ -3,7 +3,7 @@ import { FC, useContext, useState } from "react";
 import { IconKind, IconLabel } from "@/components/elements/Icon";
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import { useLocale } from "@/locales/locale";
-import { SettingContext } from "@/models/data/context/SettingContext";
+import { SettingContext } from "@/models/context/SettingContext";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Strings } from "@/models/Strings";
 import { TimeSpan } from "@/models/TimeSpan";

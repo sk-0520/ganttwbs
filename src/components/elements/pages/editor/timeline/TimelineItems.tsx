@@ -3,8 +3,8 @@ import { FC, useCallback, useMemo, KeyboardEvent, MouseEvent } from "react";
 
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
-import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
-import { useSequenceTimelinesAtomReader, useTimelineIndexMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useHoverTimelineIdAtomWriter } from "@/models/atom/editor/HighlightAtoms";
+import { useSequenceTimelinesAtomReader, useTimelineIndexMapAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks } from "@/models/data/BeginDate";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";

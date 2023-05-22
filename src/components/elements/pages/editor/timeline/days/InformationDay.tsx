@@ -1,8 +1,8 @@
 import { FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
-import { useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
-import { useCalendarInfoAtomReader, useDayInfosAtomReader, useResourceInfoAtomReader, useSettingAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter } from "@/models/atom/editor/HighlightAtoms";
+import { useCalendarInfoAtomReader, useDayInfosAtomReader, useResourceInfoAtomReader, useSettingAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { DayInfo } from "@/models/data/DayInfo";
 import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { TimelineId } from "@/models/data/Setting";

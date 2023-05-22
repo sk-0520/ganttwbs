@@ -4,7 +4,7 @@ import Dialog from "@/components/elements/Dialog";
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Color } from "@/models/Color";
-import { GroupSetting } from "@/models/data/context/SettingContext";
+import { GroupSetting } from "@/models/context/SettingContext";
 import { MemberId } from "@/models/data/Setting";
 import { Require } from "@/models/Require";
 

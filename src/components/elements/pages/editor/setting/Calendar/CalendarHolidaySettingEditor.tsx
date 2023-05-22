@@ -2,8 +2,8 @@ import { Editor } from "@monaco-editor/react";
 import { FC, ReactNode, useContext } from "react";
 
 import { useLocale } from "@/locales/locale";
+import { SettingContext } from "@/models/context/SettingContext";
 import { CssHelper } from "@/models/CssHelper";
-import { SettingContext } from "@/models/data/context/SettingContext";
 
 const CalendarHolidaySettingEditor: FC = () => {
 	const settingContext = useContext(SettingContext);
