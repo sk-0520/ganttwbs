@@ -8,7 +8,7 @@ const packageJsonFilePath = path.join(rootDirectoryPath, "package.json");
 const outputFilePath = path.join(rootDirectoryPath, "src", "models", "data", "generator", "license.json");
 
 const json = JSON.parse(fs.readFileSync(packageJsonFilePath).toString());
-const devDependencies = new Set([
+const dependencies = new Set([
 	...Object.keys(json["dependencies"]),
 	...Object.keys(json["devDependencies"])
 ]);
@@ -27,7 +27,7 @@ checker.init({
 		const name = key.substring(0, versionSeparatorIndex);
 		const version = key.substring(versionSeparatorIndex + 1);
 
-		if (devDependencies.has(name)) {
+		if (dependencies.has(name)) {
 			map.set(name, {
 				module: key,
 				version: version,
