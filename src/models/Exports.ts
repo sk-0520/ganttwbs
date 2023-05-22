@@ -621,7 +621,7 @@ export abstract class Exports {
 
 		result.push([
 			setting.name,
-			...Arrays.repeat("", 8),
+			...Arrays.repeat("", 9),
 			...dates.map(a => {
 				const holiday = calcData.calendarInfo.holidayEventMap.get(a.ticks);
 				if (holiday) {
@@ -643,7 +643,8 @@ export abstract class Exports {
 			"id",
 			"subject",
 			String(Timelines.sumWorkloadByGroup(rootTimelineItem).totalDays),
-			"resource",
+			"group",
+			"member",
 			rootSuccessWorkRanges ? rootSuccessWorkRanges.begin.format(locale.file.table.export.rangeFormat) : "",
 			rootSuccessWorkRanges ? rootSuccessWorkRanges.end.format(locale.file.table.export.rangeFormat) : "",
 			String(Timelines.sumProgressByGroup(rootTimelineItem)),
@@ -674,7 +675,8 @@ export abstract class Exports {
 				":" + Timelines.toReadableTimelineId(readableTimelineId),
 				timeline.subject,
 				String(workload.totalDays),
-				memberGroupPair ? `${memberGroupPair.member.name}(${memberGroupPair.group.name})` : "",
+				memberGroupPair ? memberGroupPair.group.name : "",
+				memberGroupPair ? memberGroupPair.member.name : "",
 				successWorkRange ? successWorkRange.begin.format(locale.file.table.export.rangeFormat) : "",
 				successWorkRange ? successWorkRange.end.format(locale.file.table.export.rangeFormat) : "",
 				String(progress),
