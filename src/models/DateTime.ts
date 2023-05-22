@@ -275,25 +275,30 @@ export class DateTime {
 		return new DateTime(date, timeZone);
 	}
 
-	public toDate(keepLocalTime = true): Date {
-		if (!keepLocalTime) {
-			throw new Error("keepLocalTime");
+	/**
+	 * ビルドイン `Date` への変換。
+	 * @param keepLocalTime ローカル時間を保持するか。 内部事情をコメントにするなら Excel Book の日付とかで指定が必要。
+	 * @returns ビルドイン `Date`。
+	 */
+	public toDate(keepLocalTime?: boolean): Date {
+		if (keepLocalTime) {
+			return new Date(Date.UTC(
+				this.year,
+				this.month - 1,
+				this.day,
+				this.hour,
+				this.minute,
+				this.second,
+				this.millisecond
+			));
 		}
 
-		return new Date(Date.UTC(
-			this.year,
-			this.month - 1,
-			this.day,
-			this.hour,
-			this.minute,
-			this.second,
-			this.millisecond
-		));
+		return this.date.toDate();
 	}
 
 	/**
 	 * 差分取得。
-	 * @param target
+	 * @param target 差分対象。自身からこいつまでの差分が対象となる。
 	 * @returns
 	 */
 	public diff(target: Readonly<DateTime>): TimeSpan {
@@ -309,6 +314,12 @@ export class DateTime {
 		return Number(this.ticks) - Number(date.ticks);
 	}
 
+	/**
+	 * 自身が指定日時の間に納まっているか。
+	 * @param begin 開始。
+	 * @param end 終了。
+	 * @returns 納まっているか。
+	 */
 	public isIn(begin: DateTime, end: DateTime): boolean {
 		return begin.ticks <= this.ticks && this.ticks <= end.ticks;
 	}
@@ -378,6 +389,13 @@ export class DateTime {
 	 *  * L: ローカライズ
 	 *  * `undefined`: Date.toISOString()
 	 *  * その他 _.NET_ のやつで出来そうなのだけ
+	 *    * `[[y]yy]yy`
+	 *    * `[M]M`
+	 *    * `[d]d`
+	 *    * `[H]H`
+	 *    * `[m]m`
+	 *    * `[s]s`
+	 *    * `[ff]f`
 	 * @returns
 	 */
 	public format(format?: "U" | "L" | string): string {
@@ -397,6 +415,7 @@ export class DateTime {
 		}
 
 		const map = new Map([
+			["yy", padStart0(this.year % 100, 2)],
 			["yyyy", padStart0(this.year, 4)],
 			["yyyyy", padStart0(this.year, 5)],
 
@@ -414,9 +433,12 @@ export class DateTime {
 
 			["s", this.second.toString()],
 			["ss", padStart0(this.second, 2)],
+
+			["f", this.millisecond.toString()],
+			["fff", padStart0(this.millisecond, 3)],
 		]);
 
-		const pattern = Array.from(map.keys())
+		const pattern = [...map.keys()]
 			.sort((a, b) => b.length - a.length)
 			.join("|")
 			;
@@ -428,17 +450,20 @@ export class DateTime {
 	}
 
 	/**
-	 * HTML <input type="*" /> に合わせた入力文字列へ変換。
-	 * @param type
+	 * HTML上での表現に変換。
+	 * @param tag
 	 * @returns
 	 */
-	public toInput(type: "date"): string {
-		switch (type) {
-			case "date":
+	public toHtml(tag: "time" | "input-date"): string {
+		switch (tag) {
+			case "time":
+				return this.format("U");
+
+			case "input-date":
 				return this.format("yyyy-MM-dd");
 
 			default:
-				throw new Error(type);
+				throw new Error(tag);
 		}
 	}
 

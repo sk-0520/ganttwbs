@@ -111,7 +111,7 @@ export abstract class Exports {
 			const rawValue = baseCells[columnKey];
 
 			if (rawValue instanceof DateTime) {
-				result.push(rawValue.toDate());
+				result.push(rawValue.toDate(true));
 			} else {
 				result.push(rawValue);
 			}
@@ -368,7 +368,7 @@ export abstract class Exports {
 	}
 
 	public static async createWorkbook(setting: Setting, calcData: CalcData, locale: Locale): Promise<Workbook> {
-		const dates = Calendars.getDays(calcData.calendarInfo.range.begin, calcData.calendarInfo.range.end).map(a => a.toDate());
+		const dates = Calendars.getDays(calcData.calendarInfo.range.begin, calcData.calendarInfo.range.end).map(a => a.toDate(true));
 
 		const rootTimelineItem = Require.get(calcData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
 
@@ -442,7 +442,7 @@ export abstract class Exports {
 				;
 			const successWorkRange = calcData.workRange.successWorkRanges.find(a => a.timeline.id === timeline.id);
 			const workRange = successWorkRange
-				? { begin: successWorkRange.begin.toDate(), end: successWorkRange.end.toDate() }
+				? { begin: successWorkRange.begin.toDate(true), end: successWorkRange.end.toDate(true) }
 				: { begin: "#ERROR", end: "" }
 				;
 			const progress = Settings.maybeGroupTimeline(timeline)

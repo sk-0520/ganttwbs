@@ -420,7 +420,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 									<input
 										ref={refInputDate}
 										type="date"
-										value={selectedBeginDate ? selectedBeginDate.toInput("date") : ""}
+										value={selectedBeginDate ? selectedBeginDate.toHtml("input-date") : ""}
 										onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
 									/>
 								</li>

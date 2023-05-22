@@ -164,6 +164,7 @@ describe("DateTime", () => {
 	});
 
 	test.each([
+		["21", "yy"],
 		["4321", "yyyy"],
 		["04321", "yyyyy"],
 		["1", "M"],
@@ -176,9 +177,11 @@ describe("DateTime", () => {
 		["04", "mm"],
 		["5", "s"],
 		["05", "ss"],
+		["60", "f"],
+		["060", "fff"],
 		["43210102030405", "yyyyMMddHHmmss"],
 	])("format", (expected, s) => {
-		const date = DateTime.parse("4321-01-02T03:04:05.6", TimeZone.utc);
+		const date = DateTime.parse("4321-01-02T03:04:05.060", TimeZone.utc);
 		const actual = date.format(s);
 		expect(actual).toBe(expected);
 	});

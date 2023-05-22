@@ -92,7 +92,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 
 			return (
 				<td key={a.ticks} id={Timelines.toDaysId(a)} title={holidayEventValue?.event.display} className={className}>
-					<time dateTime={a.format("U")}>{a.day}</time>
+					<time dateTime={a.toHtml("time")}>{a.day}</time>
 				</td>
 			);
 		});
