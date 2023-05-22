@@ -426,6 +426,7 @@ const locale: Locale = {
 				workRangeFormat: "yyyy/mm/dd",
 
 				timelineSheetNameFormat: "timeline",
+				resourceFormat: "${MEMBER}(${GROUP})"
 			},
 		},
 

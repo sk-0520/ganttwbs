@@ -106,6 +106,13 @@ describe("DateTime", () => {
 	});
 
 	test.each([
+		[true, DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc)],
+		[false, DateTime.parse("2000-01-01T00:00:01", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc), DateTime.parse("2000-01-01T00:00:00", TimeZone.utc)],
+	])("isIn", (expected: boolean, date: DateTime, begin: DateTime, end: DateTime) => {
+		expect(date.isIn(begin, end)).toBe(expected);
+	});
+
+	test.each([
 		[true, 2000],
 		[false, 2003],
 		[true, 2004],

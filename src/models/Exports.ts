@@ -454,7 +454,13 @@ export abstract class Exports {
 				"id": Timelines.toReadableTimelineId(readableTimelineId),
 				"subject": timeline.subject,
 				"workload": workload.totalDays,
-				"resource": memberGroupPair ? `${memberGroupPair.member.name}(${memberGroupPair.group.name})` : "",
+				"resource": memberGroupPair
+					? Strings.replaceMap(locale.file.excel.export.resourceFormat, {
+						"GROUP": memberGroupPair.group.name,
+						"MEMBER": memberGroupPair.member.name,
+					})
+					: ""
+				,
 				"range-begin": workRange.begin,
 				"range-end": workRange.end,
 				"progress": progress,
@@ -618,7 +624,7 @@ export abstract class Exports {
 			...Arrays.repeat("", 8),
 			...dates.map(a => {
 				const holiday = calcData.calendarInfo.holidayEventMap.get(a.ticks);
-				if(holiday) {
+				if (holiday) {
 					return holiday.event.display;
 				}
 
@@ -676,7 +682,7 @@ export abstract class Exports {
 
 			const dateCells = dates.map(a => {
 				if (successWorkRange) {
-					if(successWorkRange.end.ticks < a.ticks) {
+					if (successWorkRange.end.ticks < a.ticks) {
 						return "";
 					}
 
@@ -686,8 +692,8 @@ export abstract class Exports {
 					}
 
 					const days = Calendars.getDays(successWorkRange.begin, successWorkRange.end);
-					if(days.length === 1) {
-						if(!a.equals(days[0].truncateTime())) {
+					if (days.length === 1) {
+						if (!a.equals(days[0].truncateTime())) {
 							return "";
 						}
 					} else if (!a.isIn(days[0], days[days.length - 1])) {

@@ -449,6 +449,11 @@ export interface Locale {
 				 * * NAME
 				 */
 				timelineSheetNameFormat: string,
+				/**
+				 * * MEMBER
+				 * * GROUP
+				 */
+				resourceFormat: string,
 			},
 		},
 
