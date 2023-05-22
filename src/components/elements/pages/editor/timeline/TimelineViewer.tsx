@@ -83,8 +83,8 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 			}
 			// 曜日判定
 			if (!color) {
-				const week = Settings.toWeekDay(date.week);
-				if (settingAtomReader.data.calendar.holiday.regulars.includes(week)) {
+				if (calendarInfoAtomReader.data.holidayRegulars.has(date.week)) {
+					const week = Settings.toWeekDay(date.week);
 					color = settingAtomReader.data.theme.holiday.regulars[week];
 				}
 			}
@@ -128,7 +128,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 
 		const sequenceIndex = Math.floor(ev.nativeEvent.offsetY / areaData.cell.height.value);
 		// ここのグダグダ感
-		if(sequenceTimelinesAtomReader.data.length <= sequenceIndex) {
+		if (sequenceTimelinesAtomReader.data.length <= sequenceIndex) {
 			hoverTimelineIdAtomWriter.write(undefined);
 			return;
 		}
