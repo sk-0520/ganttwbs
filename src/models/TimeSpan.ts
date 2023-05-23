@@ -198,7 +198,7 @@ export class TimeSpan {
 		return ResultFactory.parseErrorIsThrow(s, this.parseCore);
 	}
 
-	private serializeIso8601(): string {
+	private formatIso8601(): string {
 		if (!this.ticks) {
 			return "P0D";
 		}
@@ -229,7 +229,7 @@ export class TimeSpan {
 		return result;
 	}
 
-	private serializeReadable(): string {
+	private formatReadable(): string {
 		let result = "";
 		if (this.days) {
 			result += this.days + ".";
@@ -248,13 +248,13 @@ export class TimeSpan {
 		return result;
 	}
 
-	public serialize(format: "iso8601" | "readable"): string {
+	public format(format: "iso8601" | "readable"): string {
 		switch (format) {
 			case "iso8601":
-				return this.serializeIso8601();
+				return this.formatIso8601();
 
 			case "readable":
-				return this.serializeReadable();
+				return this.formatReadable();
 
 			default:
 				throw new Error();
@@ -262,7 +262,7 @@ export class TimeSpan {
 	}
 
 	public toString(): string {
-		return this.serialize("readable");
+		return this.format("readable");
 	}
 
 	//#endregion

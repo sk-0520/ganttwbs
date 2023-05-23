@@ -56,7 +56,7 @@ export abstract class Timelines {
 
 
 	public static serializeWorkload(workload: TimeSpan): TimeOnly {
-		return workload.serialize("readable");
+		return workload.format("readable");
 	}
 	public static deserializeWorkload(workload: TimeOnly): TimeSpan {
 		return TimeSpan.parse(workload);
