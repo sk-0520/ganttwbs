@@ -62,7 +62,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 			autoSaveStorageIntervalId.current = 0;
 		}
 
-		if (autoSaveStorageTime.ticks <= 0 || !autoSaveStorageIsEnabled) {
+		if (Number(autoSaveStorageTime.ticks) <= 0 || !autoSaveStorageIsEnabled) {
 			setAutoSaveStorageNextTime(undefined);
 			return;
 		}
@@ -84,7 +84,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 			autoSaveDownloadIntervalId.current = 0;
 		}
 
-		if (!fileName || autoSaveDownloadTime.ticks <= 0 || !autoSaveDownloadIsEnabled) {
+		if (!fileName || Number(autoSaveDownloadTime.ticks) <= 0 || !autoSaveDownloadIsEnabled) {
 			setAutoSaveDownloadNextTime(undefined);
 			return;
 		}

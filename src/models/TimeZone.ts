@@ -226,7 +226,7 @@ class OffsetTimeZone extends TimeZone {
 
 	public override serialize(): string {
 		if (!this.serialized) {
-			const signs = 0 <= this.offset.ticks ? "+" : "-";
+			const signs = 0 <= Number(this.offset.ticks) ? "+" : "-";
 			const h = Math.abs(this.offset.hours).toString().padStart(2, "0");
 			const m = Math.abs(this.offset.minutes).toString().padStart(2, "0");
 			this.serialized = `${signs}${h}:${m}`;

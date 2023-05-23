@@ -12,7 +12,7 @@ export type Unit = "millisecond" | "second" | "minute" | "hour" | "day" | "week"
 export type MonthNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
-//export type DateTimeTicks = number;
+/** DateTime シリアル値。 数値処理する場合は `Number` を経由すること。 */
 export type DateTimeTicks = Strong<"DateTimeTicks", number>;
 
 export function toTicks(arg: number | DateTimeTicks): DateTimeTicks {

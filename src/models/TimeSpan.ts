@@ -1,8 +1,16 @@
 import { As } from "@/models/As";
 import { ParseResult, ResultFactory } from "@/models/data/Result";
 import { DateTimeTicks } from "@/models/DateTime";
+import { Strong } from "@/models/Types";
+
+/** TimeSpan シリアル値。 数値処理する場合は `Number` を経由すること。 */
+export type TimeSpanTicks = Strong<"TimeSpanTicks", number>;
 
 type TimeSpanParseResult = ParseResult<TimeSpan, Error>;
+
+function toTicks(arg: number | TimeSpanTicks): TimeSpanTicks {
+	return arg as TimeSpanTicks;
+}
 
 /**
  * 時間を扱う。
@@ -16,60 +24,63 @@ export class TimeSpan {
 	 *
 	 * @param _ticks ミリ秒。
 	 */
-	private constructor(private readonly _ticks: number) {
+	private constructor(
+		private readonly _ticks: TimeSpanTicks
+	) {
 	}
 
 	//#region property
 
+	private static _zero: TimeSpan | undefined = undefined;
 	public static get zero(): TimeSpan {
-		return new TimeSpan(0);
+		return this._zero ??= new TimeSpan(toTicks(0));
 	}
 
 	public get milliseconds(): number {
-		return this._ticks % 1000;
+		return Number(this._ticks) % 1000;
 	}
 
 	public get seconds(): number {
-		return Math.trunc((this._ticks / 1000) % 60);
+		return Math.trunc((Number(this._ticks) / 1000) % 60);
 	}
 
 	public get minutes(): number {
-		return Math.trunc((this._ticks / 1000 / 60) % 60);
+		return Math.trunc((Number(this._ticks) / 1000 / 60) % 60);
 	}
 
 	public get hours(): number {
-		return Math.trunc((this._ticks / 1000 / 60 / 60) % 24);
+		return Math.trunc((Number(this._ticks) / 1000 / 60 / 60) % 24);
 	}
 
 	public get days(): number {
-		return Math.trunc(this._ticks / 1000 / 60 / 60 / 24);
+		return Math.trunc(Number(this._ticks) / 1000 / 60 / 60 / 24);
 	}
 
 	/**
 	 * ミリ秒。
 	 */
-	public get ticks(): number {
+	public get ticks(): TimeSpanTicks {
 		return this._ticks;
 	}
 
 	public get totalMilliseconds(): number {
-		return this._ticks;
+		return Number(this._ticks);
 	}
 
 	public get totalSeconds(): number {
-		return this._ticks / 1000;
+		return Number(this._ticks) / 1000;
 	}
 
 	public get totalMinutes(): number {
-		return this._ticks / 1000 / 60;
+		return Number(this._ticks) / 1000 / 60;
 	}
 
 	public get totalHours(): number {
-		return this._ticks / 1000 / 60 / 60;
+		return Number(this._ticks) / 1000 / 60 / 60;
 	}
 
 	public get totalDays(): number {
-		return this._ticks / 1000 / 60 / 60 / 24;
+		return Number(this._ticks) / 1000 / 60 / 60 / 24;
 	}
 
 	//#endregion
@@ -81,23 +92,23 @@ export class TimeSpan {
 	}
 
 	public static fromMilliseconds(milliSeconds: number): TimeSpan {
-		return new TimeSpan(milliSeconds);
+		return new TimeSpan(toTicks(milliSeconds));
 	}
 
 	public static fromSeconds(seconds: number): TimeSpan {
-		return new TimeSpan(seconds * 1000);
+		return new TimeSpan(toTicks(seconds * 1000));
 	}
 
 	public static fromMinutes(minutes: number): TimeSpan {
-		return new TimeSpan(minutes * 60 * 1000);
+		return new TimeSpan(toTicks(minutes * 60 * 1000));
 	}
 
 	public static fromHours(hours: number): TimeSpan {
-		return new TimeSpan(hours * 60 * 60 * 1000);
+		return new TimeSpan(toTicks(hours * 60 * 60 * 1000));
 	}
 
 	public static fromDays(hours: number): TimeSpan {
-		return new TimeSpan(hours * 24 * 60 * 60 * 1000);
+		return new TimeSpan(toTicks(hours * 24 * 60 * 60 * 1000));
 	}
 
 	public equals(timeSpan: TimeSpan): boolean {
@@ -105,7 +116,7 @@ export class TimeSpan {
 	}
 
 	public compare(timeSpan: TimeSpan): number {
-		return this.ticks - timeSpan.ticks;
+		return Number(this.ticks) - Number(timeSpan.ticks);
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -116,31 +127,32 @@ export class TimeSpan {
 			return ResultFactory.error(new Error(s));
 		}
 
-		let ticks = 0;
+		let rawTicks = 0;
 
 		if (matches.groups.YEAR) {
-			ticks += As.integer(matches.groups.YEAR) * 365 * 12 * 24 * 60 * 60 * 1000;
+			rawTicks += As.integer(matches.groups.YEAR) * 365 * 12 * 24 * 60 * 60 * 1000;
 		}
 		if (matches.groups.MONTH) {
-			ticks += As.integer(matches.groups.MONTH) * 12 * 24 * 60 * 60 * 1000;
+			rawTicks += As.integer(matches.groups.MONTH) * 12 * 24 * 60 * 60 * 1000;
 		}
 		if (matches.groups.DAY) {
-			ticks += As.integer(matches.groups.DAY) * 24 * 60 * 60 * 1000;
+			rawTicks += As.integer(matches.groups.DAY) * 24 * 60 * 60 * 1000;
 		}
 
 		if (matches.groups.HOUR) {
-			ticks += As.integer(matches.groups.HOUR) * 60 * 60 * 1000;
+			rawTicks += As.integer(matches.groups.HOUR) * 60 * 60 * 1000;
 		}
 		if (matches.groups.MINUTE) {
-			ticks += As.integer(matches.groups.MINUTE) * 60 * 1000;
+			rawTicks += As.integer(matches.groups.MINUTE) * 60 * 1000;
 		}
 		if (matches.groups.SECOND) {
-			ticks += As.integer(matches.groups.SECOND) * 60 * 1000;
+			rawTicks += As.integer(matches.groups.SECOND) * 60 * 1000;
 		}
 		if (matches.groups.MS) {
-			ticks += As.integer(matches.groups.MS);
+			rawTicks += As.integer(matches.groups.MS);
 		}
-		return ResultFactory.success(new TimeSpan(ticks));
+
+		return ResultFactory.success(new TimeSpan(toTicks(rawTicks)));
 	}
 
 	private static parseReadable(s: string): TimeSpanParseResult {
