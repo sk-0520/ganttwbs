@@ -22,7 +22,7 @@ export class TimeSpan {
 	/**
 	 * 生成。
 	 *
-	 * @param _ticks ミリ秒。
+	 * @param _ticks ちっくたっく。
 	 */
 	private constructor(
 		private readonly _ticks: TimeSpanTicks

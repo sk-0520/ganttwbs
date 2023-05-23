@@ -15,7 +15,7 @@ export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 /** DateTime シリアル値。 数値処理する場合は `Number` を経由すること。 */
 export type DateTimeTicks = Strong<"DateTimeTicks", number>;
 
-export function toTicks(arg: number | DateTimeTicks): DateTimeTicks {
+function toTicks(arg: number | DateTimeTicks): DateTimeTicks {
 	return arg as DateTimeTicks;
 }
 
@@ -469,6 +469,33 @@ export class DateTime {
 
 	public toString(): string {
 		return this.format("U");
+	}
+
+	private static getMinMax(func: (...values: ReadonlyArray<number>) => number, a: DateTime, b: DateTime, ...dates: ReadonlyArray<DateTime>): DateTime {
+		let rawTicks: number;
+
+		if (dates.length) {
+			rawTicks = func(...[
+				Number(a.ticks),
+				Number(b.ticks),
+				...dates.map(i => Number(i.ticks))
+			]);
+		} else {
+			rawTicks = func(
+				Number(a.ticks),
+				Number(b.ticks),
+			);
+		}
+
+		return this.convert(toTicks(rawTicks), a.timeZone);
+	}
+
+	public static getMinimum(a: DateTime, b: DateTime, ...dates: ReadonlyArray<DateTime>): DateTime {
+		return this.getMinMax(Math.min, a, b, ...dates);
+	}
+
+	public static getMaximum(a: DateTime, b: DateTime, ...dates: ReadonlyArray<DateTime>): DateTime {
+		return this.getMinMax(Math.max, a, b, ...dates);
 	}
 
 	//#endregion
