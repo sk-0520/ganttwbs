@@ -19,6 +19,7 @@ export const enum IconKind {
 	CheckBoxTimelinePreviousOn,
 	CheckBoxTimelinePreviousOff,
 
+	RelationHeader,
 	RelationMix,
 	RelationStatic,
 	RelationPrevious,
@@ -61,6 +62,7 @@ const Icons: { [key in IconKind]: (props: Props) => ReactNode } = {
 	[IconKind.TimelineAddGroup]: (props) => <Md.MdCreateNewFolder {...convertParameter(props)} />,
 	[IconKind.TimelineImport]: (props) => <Md.MdOutlineEditNote {...convertParameter(props)} />,
 
+	[IconKind.RelationHeader]: (props) => <Md.MdOutlineSyncAlt {...convertParameter(props)} />,
 	[IconKind.RelationMix]: (props) => <Md.MdOutlineStart {...convertParameter(props)} />,
 	[IconKind.RelationStatic]: (props) => <Md.MdOutlineCalendarMonth {...convertParameter(props)} />,
 	[IconKind.RelationPrevious]: (props) => <Md.MdSubdirectoryArrowRight {...convertParameter(props)} />,

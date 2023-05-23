@@ -289,7 +289,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 							{locale.pages.editor.timeline.header.columns.resource}
 						</div>
 						<div className="timeline-cell timeline-relation">
-							{locale.pages.editor.timeline.header.columns.relation}
+							<IconImage kind={IconKind.RelationHeader} />
 						</div>
 						{
 							workRangeKind === WorkRangeKind.Success
@@ -345,7 +345,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						{locale.pages.editor.timeline.header.columns.resource}
 					</div>
 					<div className="timeline-cell timeline-relation">
-						{locale.pages.editor.timeline.header.columns.relation}
+						<IconImage kind={IconKind.RelationHeader} />
 					</div>
 					<div className="timeline-cell timeline-range-from">
 						{locale.pages.editor.timeline.header.columns.workRangeBegin}
