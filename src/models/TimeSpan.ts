@@ -120,7 +120,7 @@ export class TimeSpan {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	private static parseISO8601(s: string): TimeSpanParseResult {
+	private static parseIso8601(s: string): TimeSpanParseResult {
 		//P[n]Y[n]M[n]DT[n]H[n]M[n]S
 		const matches = /^P((?<YEAR>\d+)Y)?((?<MONTH>\d+)M)?((?<DAY>\d+)D)?(T((?<HOUR>\d+)H)?((?<MINUTE>\d+)M)?((?<SECOND>\d+)S)?(.(?<MS>\d+))?)?/.exec(s);
 		if (!matches || !matches.groups) {
@@ -184,7 +184,7 @@ export class TimeSpan {
 		}
 
 		if (s[0] === "P") {
-			return TimeSpan.parseISO8601(s);
+			return TimeSpan.parseIso8601(s);
 		}
 
 		return TimeSpan.parseReadable(s);
