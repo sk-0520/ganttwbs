@@ -295,24 +295,9 @@ function renderMember(visibleCost: boolean, member: Member, months: ReadonlyArra
 	);
 }
 
-function getWorkDays(begin: DateTime, end: DateTime, calendarInfo: CalendarInfo): Array<DateTime> {
-	const rangeDays = Calendars.getDays(begin, end);
-
-	const workDays = rangeDays.filter(a => {
-		const holidayEvent = calendarInfo.holidayEventMap.get(a.ticks);
-		if (holidayEvent) {
-			return false;
-		}
-
-		return !calendarInfo.holidayRegulars.has(a.week);
-	});
-
-	return workDays;
-}
-
 function calcPercent(member: Member, begin: DateTime, end: DateTime, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): number {
 
-	const workDays = getWorkDays(begin, end, calendarInfo);
+	const workDays = Calendars.getWorkDays(begin, end, calendarInfo);
 
 	const memberTimelines = taskTimelines.filter(a => a.memberId === member.id);
 	const memberWorkRanges = successWorkRanges.filter(a => memberTimelines.some(b => b.id === a.timeline.id));

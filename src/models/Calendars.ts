@@ -93,7 +93,7 @@ export abstract class Calendars {
 	 * @returns
 	 */
 	public static getMonths(begin: DateTime, end: DateTime): Array<DateTime> {
-		const count = this.getMonthCount(begin,end);
+		const count = this.getMonthCount(begin, end);
 
 		const result = new Array<DateTime>();
 		for (let i = 0; i < count - 1; i++) {
@@ -110,5 +110,22 @@ export abstract class Calendars {
 		result.push(end);
 
 		return result;
+	}
+
+	public static isHoliday(date: DateTime, calendarInfo: Pick<CalendarInfo, "holidayEventMap" | "holidayRegulars">): boolean {
+		const holidayEvent = calendarInfo.holidayEventMap.get(date.ticks);
+		if (holidayEvent) {
+			return true;
+		}
+
+		return calendarInfo.holidayRegulars.has(date.week);
+	}
+
+	public static getWorkDays(begin: DateTime, end: DateTime, calendarInfo: Pick<CalendarInfo, "holidayEventMap" | "holidayRegulars">): Array<DateTime> {
+		const rangeDays = Calendars.getDays(begin, end);
+
+		const workDays = rangeDays.filter(a => !this.isHoliday(a, calendarInfo));
+
+		return workDays;
 	}
 }
