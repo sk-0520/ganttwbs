@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 
 import Layout from "@/components/layout/Layout";
 import { useLocale } from "@/locales/locale";
-import { CalendarRange } from "@/models/data/CalendarRange";
 import { EditorData } from "@/models/data/EditorData";
+import { DateTimeRange } from "@/models/data/Range";
 import { Member, Setting, WeekDay } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { DefaultSettings } from "@/models/DefaultSettings";
@@ -272,7 +272,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 
 	const range = convertDateRange(data, timeZone);
 
-	const calendarRange: CalendarRange = {
+	const calendarRange: DateTimeRange = {
 		begin: range.begin,
 		end: range.end,
 	};

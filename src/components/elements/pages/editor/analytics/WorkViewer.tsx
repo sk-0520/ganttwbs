@@ -7,6 +7,7 @@ import { Calendars } from "@/models/Calendars";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { Configuration } from "@/models/data/Configuration";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import { DateTimeRange } from "@/models/data/Range";
 import { AnyTimeline, Member, TaskTimeline } from "@/models/data/Setting";
 import { SuccessWorkRange, TotalSuccessWorkRange } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
@@ -163,7 +164,7 @@ const WorkViewer: FC<Props> = (props: Props) => {
 								throw new Error();
 							}
 
-							const range = {
+							const range: DateTimeRange = {
 								begin: props.totalSuccessWorkRange.minimum.begin,
 								end: props.totalSuccessWorkRange.maximum.end,
 							};
@@ -186,7 +187,7 @@ const WorkViewer: FC<Props> = (props: Props) => {
 										<td>
 											{firstMember.name}
 										</td>
-										{renderRange(visibleCost, firstMember, range.begin, range.end, monthCount, calendarInfoAtomReader.data, taskTimelines, props.successWorkRanges, props.configuration)}
+										{renderRange(visibleCost, firstMember, range, monthCount, calendarInfoAtomReader.data, taskTimelines, props.successWorkRanges, props.configuration)}
 									</tr>
 									{nextMembers.map(b => {
 										return (
@@ -194,7 +195,7 @@ const WorkViewer: FC<Props> = (props: Props) => {
 												<td>
 													{b.name}
 												</td>
-												{renderRange(visibleCost, b, range.begin, range.end, monthCount, calendarInfoAtomReader.data, taskTimelines, props.successWorkRanges, props.configuration)}
+												{renderRange(visibleCost, b, range, monthCount, calendarInfoAtomReader.data, taskTimelines, props.successWorkRanges, props.configuration)}
 											</tr>
 										);
 									})}
@@ -226,8 +227,8 @@ function renderMonths(visibleCost: boolean, months: ReadonlyArray<DateTime>, loc
 	});
 }
 
-function renderRange(visibleCost: boolean, member: Member, begin: DateTime, end: DateTime, monthCount: number, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>, configuration: Configuration): ReactNode {
-	const percent = calcPercent(member, begin, end, calendarInfo, taskTimelines, successWorkRanges);
+function renderRange(visibleCost: boolean, member: Member, range: DateTimeRange, monthCount: number, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>, configuration: Configuration): ReactNode {
+	const percent = calcPercent(member, range, calendarInfo, taskTimelines, successWorkRanges);
 	const overwork = 1 < percent;
 
 	return (
@@ -284,20 +285,20 @@ function renderMember(visibleCost: boolean, member: Member, months: ReadonlyArra
 			</td>
 
 			{months.map(a => {
-				const range = {
+				const range: DateTimeRange = {
 					begin: a,
 					end: a.getLastDayOfMonth().add(23, "hour").add(59, "minute"), //TODO: ミリ秒追加がないんだわ
 				};
 
-				return renderRange(visibleCost, member, range.begin, range.end, 1, calendarInfo, taskTimelines, successWorkRanges, configuration);
+				return renderRange(visibleCost, member, range, 1, calendarInfo, taskTimelines, successWorkRanges, configuration);
 			})}
 		</Fragment >
 	);
 }
 
-function calcPercent(member: Member, begin: DateTime, end: DateTime, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): number {
+function calcPercent(member: Member, range: DateTimeRange, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): number {
 
-	const workDays = Calendars.getWorkDays(begin, end, calendarInfo);
+	const workDays = Calendars.getWorkDays(range, calendarInfo);
 
 	const memberTimelines = taskTimelines.filter(a => a.memberId === member.id);
 	const memberWorkRanges = successWorkRanges.filter(a => memberTimelines.some(b => b.id === a.timeline.id));

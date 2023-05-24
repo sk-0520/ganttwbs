@@ -368,7 +368,7 @@ export abstract class Exports {
 	}
 
 	public static async createWorkbook(setting: Setting, calcData: CalcData, locale: Locale): Promise<Workbook> {
-		const dates = Calendars.getDays(calcData.calendarInfo.range.begin, calcData.calendarInfo.range.end).map(a => a.toDate(true));
+		const dates = Calendars.getDays(calcData.calendarInfo.range).map(a => a.toDate(true));
 
 		const rootTimelineItem = Require.get(calcData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
 
@@ -504,7 +504,7 @@ export abstract class Exports {
 				};
 				beginCell.numFmt = ExcelFormat.Chart;
 
-				const days = Calendars.getDays(successWorkRange.begin, successWorkRange.end);
+				const days = Calendars.getDays(successWorkRange);
 
 				const targetColor = Settings.maybeGroupTimeline(timeline)
 					? groupColors[readableTimelineId.level - 1] ?? defaultGroupColor
@@ -613,7 +613,7 @@ export abstract class Exports {
 	}
 
 	public static async createTable(setting: Setting, calcData: CalcData, locale: Locale): Promise<Array<Array<string>>> {
-		const dates = Calendars.getDays(calcData.calendarInfo.range.begin, calcData.calendarInfo.range.end);
+		const dates = Calendars.getDays(calcData.calendarInfo.range);
 		const rootTimelineItem = Require.get(calcData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
 		const rootSuccessWorkRanges = calcData.workRange.successWorkRanges.find(a => a.timeline.id === rootTimelineItem.id);
 
@@ -693,7 +693,7 @@ export abstract class Exports {
 						return "";
 					}
 
-					const days = Calendars.getDays(successWorkRange.begin, successWorkRange.end);
+					const days = Calendars.getDays(successWorkRange);
 					if (days.length === 1) {
 						if (!a.equals(days[0].truncateTime())) {
 							return "";

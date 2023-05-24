@@ -1,5 +1,6 @@
 import { Arrays } from "@/models/Arrays";
 import { DayInfo } from "@/models/data/DayInfo";
+import { DateTimeRange } from "@/models/data/Range";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { ResourceInfo } from "@/models/data/ResourceInfo";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, Timestamp } from "@/models/data/Setting";
@@ -727,10 +728,7 @@ export abstract class Timelines {
 					continue;
 				}
 
-				let range: {
-					begin: DateTime;
-					end: DateTime;
-				} | undefined = undefined;
+				let range: DateTimeRange | undefined = undefined;
 
 				if (
 					// 自身の後半に対象が存在する
