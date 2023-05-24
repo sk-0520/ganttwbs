@@ -292,7 +292,7 @@ function renderMember(visibleCost: boolean, member: Member, months: ReadonlyArra
 
 				return renderRange(visibleCost, member, range, 1, calendarInfo, taskTimelines, successWorkRanges, configuration);
 			})}
-		</Fragment >
+		</Fragment>
 	);
 }
 

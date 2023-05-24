@@ -205,7 +205,7 @@ const ThemeGroupSettingEditor: FC = () => {
 						</dd>
 
 					</dl>
-				</Dialog >
+				</Dialog>
 			)}
 		</>
 	);
