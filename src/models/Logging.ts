@@ -26,11 +26,15 @@ export enum LogLevel {
 	Error,
 }
 
+export interface LogOption {
+	level: LogLevel;
+}
+
 export interface LogOptions {
 	//#region property
 
-	clientLevel: LogLevel;
-	serverLevel: LogLevel;
+	client: LogOption;
+	server: LogOption;
 
 	//#endregion
 
@@ -96,28 +100,36 @@ export function toMethod(currentLevel: LogLevel, targetLevel: LogLevel, method: 
 
 export function createLogger(header: string, options?: LogOptions): Logger {
 	const logOption = options ?? {
-		clientLevel: toLogLevel(process.env.NEXT_PUBLIC_APP_LOG_LEVEL ?? "info"),
-		serverLevel: toLogLevel(process.env.APP_LOG_LEVEL ?? "info"),
+		client: {
+			level: toLogLevel(process.env.NEXT_PUBLIC_APP_LOG_LEVEL ?? "info"),
+		},
+		server: {
+			level: toLogLevel(process.env.APP_LOG_LEVEL ?? "info"),
+		}
 	};
 
 	return new ConsoleLogger(header, logOption);
+}
+
+export function getOption(logOptions: LogOptions): LogOption {
+	return Browsers.running
+		? logOptions.client
+		: logOptions.server
+		;
 }
 
 class ConsoleLogger implements Logger {
 	public constructor(public readonly header: string, private readonly options: LogOptions) {
 		const logHeader = "[" + this.header + "] ";
 
-		const level = Browsers.running
-			? options.clientLevel
-			: options.serverLevel
-			;
+		const option = getOption(options);
 
-		this.trace = toMethod(level, LogLevel.Trace, console.trace.bind(console, logHeader));
-		this.debug = toMethod(level, LogLevel.Debug, console.debug.bind(console, logHeader));
-		this.log = toMethod(level, LogLevel.Log, console.log.bind(console, logHeader));
-		this.info = toMethod(level, LogLevel.Information, console.info.bind(console, logHeader));
-		this.warn = toMethod(level, LogLevel.Warning, console.warn.bind(console, logHeader));
-		this.error = toMethod(level, LogLevel.Error, console.error.bind(console, logHeader));
+		this.trace = toMethod(option.level, LogLevel.Trace, console.trace.bind(console, logHeader));
+		this.debug = toMethod(option.level, LogLevel.Debug, console.debug.bind(console, logHeader));
+		this.log = toMethod(option.level, LogLevel.Log, console.log.bind(console, logHeader));
+		this.info = toMethod(option.level, LogLevel.Information, console.info.bind(console, logHeader));
+		this.warn = toMethod(option.level, LogLevel.Warning, console.warn.bind(console, logHeader));
+		this.error = toMethod(option.level, LogLevel.Error, console.error.bind(console, logHeader));
 	}
 
 	//#region property
@@ -125,12 +137,13 @@ class ConsoleLogger implements Logger {
 	//#endregion
 
 	//#region function
+
 	//#endregion
 
 	//#region Logger
 
 	public get level(): LogLevel {
-		return this.options.clientLevel;
+		return getOption(this.options).level;
 	}
 
 	trace: LogMethod;
