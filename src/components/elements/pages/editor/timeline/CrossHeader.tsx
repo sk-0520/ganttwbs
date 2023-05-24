@@ -15,9 +15,12 @@ import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Editors } from "@/models/Editors";
 import { IdFactory } from "@/models/IdFactory";
+import { createLogger } from "@/models/Logging";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
+
+const logger = createLogger("CrossHeader");
 
 interface Props extends ConfigurationProps, TimelineCallbacksProps {
 }
@@ -45,7 +48,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	useEffect(() => {
 		const timelineItem = timelineItemsAtomReader.data.get(IdFactory.rootTimelineId);
 		if (timelineItem && Settings.maybeGroupTimeline(timelineItem.timeline)) {
-			console.debug(timelineItem);
+			logger.debug(timelineItem);
 
 			const workload = Timelines.sumWorkloadByGroup(timelineItem.timeline).totalDays;
 			setWorkload(workload);

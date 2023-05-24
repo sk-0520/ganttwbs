@@ -33,6 +33,31 @@ export interface LogOptions {
 	//#endregion
 }
 
+function toLogLevel(level: string): LogLevel {
+	switch (level) {
+		case "trace":
+			return LogLevel.Trace;
+
+		case "debug":
+			return LogLevel.Debug;
+
+		case "log":
+			return LogLevel.Log;
+
+		case "info":
+			return LogLevel.Information;
+
+		case "warn":
+			return LogLevel.Warning;
+
+		case "err":
+			return LogLevel.Error;
+
+		default:
+			throw new Error();
+	}
+}
+
 export interface Logger {
 	readonly level: LogLevel;
 	readonly header: string;
@@ -62,8 +87,13 @@ export function toMethod(currentLevel: LogLevel, targetLevel: LogLevel, method: 
 		;
 }
 
-export function create(header: string, options: LogOptions): Logger {
-	return new ConsoleLogger(header, options);
+export function createLogger(header: string, options?: LogOptions): Logger {
+	const logOption = options ?? {
+		clientLevel: toLogLevel(process.env.NEXT_PUBLIC_APP_LOG_LEVEL ?? "info"),
+		serverLevel: toLogLevel(process.env.APP_LOG_LEVEL ?? "info"),
+	};
+
+	return new ConsoleLogger(header, logOption);
 }
 
 class ConsoleLogger implements Logger {
