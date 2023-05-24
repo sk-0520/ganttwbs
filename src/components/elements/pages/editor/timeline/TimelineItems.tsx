@@ -11,6 +11,7 @@ import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline, TimelineId } from "@/models/data/Setting";
 import { TimelineCallbacks } from "@/models/data/TimelineCallbacks";
 import { Dom } from "@/models/Dom";
+import { Editors } from "@/models/Editors";
 import { IdFactory } from "@/models/IdFactory";
 import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
@@ -141,5 +142,7 @@ function handleCellKeyDown(ev: KeyboardEvent<HTMLInputElement>, currentTimeline:
 		const nextElement = Dom.getElementById(nextCellId, HTMLInputElement);
 		nextElement.select();
 		nextElement.focus();
+
+		Editors.scrollTimeline(nextTimeline);
 	}
 }
