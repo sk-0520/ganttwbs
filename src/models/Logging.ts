@@ -7,6 +7,13 @@ import { Browsers } from "@/models/Browsers";
  */
 export type LogMethod = (message?: any, ...optionalParams: any[]) => void;
 
+// console.time()
+// console.timeLog(LOG_GWR, "各グループ・タスク");
+// console.timeEnd(LOG_GWR);
+// console.table();
+// console.dir();
+
+
 /**
  * ログレベル。
  */
