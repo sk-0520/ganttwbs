@@ -13,9 +13,12 @@ import { TimelineCallbacks } from "@/models/data/TimelineCallbacks";
 import { Dom } from "@/models/Dom";
 import { Editors } from "@/models/Editors";
 import { IdFactory } from "@/models/IdFactory";
+import { createLogger } from "@/models/Logging";
 import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
+
+const logger = createLogger("TimelineItems");
 
 interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	beginDateCallbacks: BeginDateCallbacks;
@@ -35,7 +38,7 @@ const TimelineItems: FC<Props> = (props: Props) => {
 	}, [props.timelineCallbacks, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data]);
 
 	const dummyAreaNodes = useMemo(() => {
-		console.debug("dummyAreaNodedummyAreaNodedummyAreaNode");
+		logger.debug("dummyAreaNodedummyAreaNodedummyAreaNode");
 		return Arrays.create(props.configuration.design.dummy.height).map(_ => {
 			return (
 				<tr key={"dmy-" + IdFactory.createReactKey()} className="dummy timeline-cell timeline-header _dynamic_programmable_cell_height">

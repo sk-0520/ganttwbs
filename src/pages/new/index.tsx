@@ -12,10 +12,13 @@ import { DateTime } from "@/models/DateTime";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Goto } from "@/models/Goto";
 import { IdFactory } from "@/models/IdFactory";
+import { createLogger } from "@/models/Logging";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
+
+const logger = createLogger("pages/new/index");
 
 interface DateRange {
 	begin: DateTime;
@@ -194,7 +197,7 @@ const NewPage: NextPage = () => {
 export default NewPage;
 
 function onSubmit(data: Input, timeZone: TimeZone, router: NextRouter) {
-	console.debug(data);
+	logger.debug(data);
 
 	const fileName = "new.json";
 	let setting: Setting | null = null;
@@ -210,8 +213,8 @@ function onSubmit(data: Input, timeZone: TimeZone, router: NextRouter) {
 			break;
 	}
 
-	console.debug(setting);
-	console.debug(fileName);
+	logger.debug(setting);
+	logger.debug(fileName);
 
 	const editorData: EditorData = {
 		fileName: fileName,

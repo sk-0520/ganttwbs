@@ -20,9 +20,12 @@ import { DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/
 import { DateTime } from "@/models/DateTime";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
+import { createLogger } from "@/models/Logging";
 import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
 import { TimeZone } from "@/models/TimeZone";
+
+const logger = createLogger("SettingEditor");
 
 const NewLine = "\r\n";
 
@@ -41,7 +44,7 @@ const SettingEditor: FC<Props> = (props: Props) => {
 		event.preventDefault();
 
 		props.editorData.setting = fromContext(props.editorData.setting, setting);
-		console.debug(setting);
+		logger.debug(setting);
 		//TODO: 自動保存とぶつかる可能性あり、、、同一オブジェクトなので大丈夫、か？
 		Storages.saveEditorData(props.editorData);
 

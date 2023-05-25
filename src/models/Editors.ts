@@ -1,7 +1,10 @@
 import { DateTime } from "@/models/DateTime";
 import { Dom } from "@/models/Dom";
+import { createLogger } from "@/models/Logging";
 import { TimelineIdOrObject, Timelines } from "@/models/Timelines";
 import { Types } from "@/models/Types";
+
+const logger = createLogger("Editors");
 
 export abstract class Editors {
 
@@ -62,7 +65,7 @@ export abstract class Editors {
 
 		const rowElement = Dom.getElementById(Timelines.toRowId(timeline));
 
-		console.log({
+		logger.log({
 			rowElement: rowElement.offsetTop,
 			mainContentElement_clientHeight: mainContentElement.clientHeight,
 			mainContentElement_scrollTop: mainContentElement.scrollTop,
@@ -71,9 +74,9 @@ export abstract class Editors {
 		let top: number | undefined = undefined;
 		const height = mainContentElement.scrollTop + mainContentElement.clientHeight - crossHeaderElement.clientHeight;
 		if ((height - rowElement.clientHeight) < rowElement.offsetTop) {
-			top =  mainContentElement.scrollTop + rowElement.clientHeight * 2;
-		} else if(rowElement.offsetTop < mainContentElement.scrollTop) {
-			top =  mainContentElement.scrollTop - rowElement.clientHeight * 2;
+			top = mainContentElement.scrollTop + rowElement.clientHeight * 2;
+		} else if (rowElement.offsetTop < mainContentElement.scrollTop) {
+			top = mainContentElement.scrollTop - rowElement.clientHeight * 2;
 		}
 
 		if (Types.isNumber(top)) {
