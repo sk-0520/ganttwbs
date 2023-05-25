@@ -28,9 +28,12 @@ import { MoveDirection, TimelineCallbacks } from "@/models/data/TimelineCallback
 import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
 import { Editors } from "@/models/Editors";
+import { createLogger } from "@/models/Logging";
 import { Settings } from "@/models/Settings";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
+
+const logger = createLogger("TimelineEditor");
 
 /*
 心臓部
@@ -92,7 +95,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	useEffect(() => {
 		function fireDropTimeline(dropTimeline: DropTimeline) {
-			console.debug("FIRE");
+			logger.debug("FIRE");
 
 			const sameGroup = dropTimeline.sourceGroupTimeline.id === dropTimeline.destinationGroupTimeline.id;
 
@@ -124,14 +127,14 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			const dragging: DraggingTimeline = {
 				sourceTimeline: dragSourceTimelineAtomReader.data,
 				onDragEnd: (ev) => {
-					console.debug("END", ev, dragSourceTimeline);
+					logger.debug("END", ev, dragSourceTimeline);
 					draggingTimelineAtomReader.write(undefined);
 					dragSourceTimelineAtomWriter.write(undefined);
 					dragSourceTimelineIdAtomWriter.write(undefined);
 					dragOverTimelineIdAtomWriter.write(undefined);
 				},
 				onDragEnter: (ev, targetTimeline) => {
-					console.debug("ENTER", ev, targetTimeline);
+					logger.debug("ENTER", ev, targetTimeline);
 					if (targetTimeline.id === dragSourceTimeline.id) {
 						dragOverTimelineIdAtomWriter.write(undefined);
 					} else {
@@ -139,7 +142,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 					}
 				},
 				onDragOver: (ev, targetTimeline) => {
-					console.debug("OVER", ev, targetTimeline);
+					logger.debug("OVER", ev, targetTimeline);
 					// 自分自身への移動は抑制
 					if (targetTimeline.id === dragSourceTimeline.id) {
 						return;
@@ -163,10 +166,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 					ev.preventDefault();
 				},
 				onDragLeave: (ev, targetTimeline) => {
-					console.debug("LEAVE", ev, targetTimeline);
+					logger.debug("LEAVE", ev, targetTimeline);
 				},
 				onDrop: (ev, targetTimeline) => {
-					console.debug("DROP", ev, targetTimeline);
+					logger.debug("DROP", ev, targetTimeline);
 
 					const sourceGroupTimelines = Timelines.getParentGroups(dragSourceTimeline, props.editorData.setting.rootTimeline);
 					const targetGroupTimelines = Timelines.getParentGroups(targetTimeline, props.editorData.setting.rootTimeline);
@@ -219,7 +222,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 
 	function handleEndDetailEdit(changedTimeline: AnyTimeline | null): void {
-		console.debug("詳細編集終了", changedTimeline);
+		logger.debug("詳細編集終了", changedTimeline);
 
 		detailEditTimelineAtomWriter.write(undefined);
 
@@ -243,7 +246,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleAddNewTimeline(baseTimeline: AnyTimeline, newTimeline: AnyTimeline, position: NewTimelinePosition): void {
-		console.trace("ADD", newTimeline);
+		logger.trace("ADD", newTimeline);
 
 		// 将来追加した場合の安全弁
 		if (position !== NewTimelinePosition.Next) {
@@ -375,7 +378,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				srcGroup.children = srcGroup.children.filter(a => a.id !== timeline.id);
 				destGroup.children.push(timeline);
 			} else {
-				console.debug("最上位項目は何もしない");
+				logger.debug("最上位項目は何もしない");
 				return;
 			}
 		} else {
@@ -408,7 +411,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	}
 
 	function handleStartSelectBeginDate(timeline: TaskTimeline): void {
-		console.debug(timeline);
+		logger.debug(timeline);
 		selectingBeginDateAtomWriter.write({
 			timeline: timeline,
 			beginDate: timeline.static ? DateTime.parse(timeline.static, calendarInfoAtomReader.data.timeZone) : null,

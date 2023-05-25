@@ -10,9 +10,12 @@ import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { DateTime } from "@/models/DateTime";
 import { Days } from "@/models/Days";
+import { createLogger } from "@/models/Logging";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
+
+const logger = createLogger("DaysHeader");
 
 interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	//nop
@@ -33,7 +36,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
 	const { dates, yearMonthBucket } = useMemo(() => {
-		console.debug("DaysHeader - dates", new Date());
+		logger.debug("DaysHeader - dates", new Date());
 		const days = Calendars.getCalendarRangeDays(calendarInfoAtomReader.data.range);
 		const dates = Arrays
 			.range(0, days)

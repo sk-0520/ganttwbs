@@ -5,6 +5,9 @@ import WorkViewer from "@/components/elements/pages/editor/analytics/WorkViewer"
 import { EditorData } from "@/models/data/EditorData";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { Exports } from "@/models/Exports";
+import { createLogger } from "@/models/Logging";
+
+const logger = createLogger("AnalyticsViewer");
 
 interface Props extends ConfigurationProps {
 	isVisible: boolean;
@@ -18,7 +21,7 @@ const AnalyticsViewer: FC<Props> = (props: Props) => {
 
 	const calcData = Exports.calc(props.editorData.setting);
 
-	console.debug("calcData", calcData);
+	logger.debug("calcData", calcData);
 
 	const totalSuccessWorkRange = calcData.workRange.totalSuccessWorkRange.success
 		? calcData.workRange.totalSuccessWorkRange.value
