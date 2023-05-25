@@ -9,12 +9,8 @@ type LogMethod = (message?: any, ...optionalParams: any[]) => void;
 
 type TableMethod = (tabularData?: any, properties?: string[] | undefined) => void;
 type DirMethod = (item?: any, options?: any) => void;
-//type TimeDumpMethod = () => void;
-//type TimeMethod = (label: string, callback: (dump: TimeDumpMethod) => void) => void;
-
-// console.time()
-// console.timeLog(LOG_GWR, "各グループ・タスク");
-// console.timeEnd(LOG_GWR);
+export type TimeLogMethod = (...data: any[]) => void;
+type TimeMethod = (label: string, callback: (log: TimeLogMethod) => void) => void;
 
 /**
  * ログレベル。
@@ -34,7 +30,7 @@ export interface LogOption {
 	table: boolean,
 	dir: boolean,
 
-	//time: boolean;
+	time: boolean;
 }
 
 export interface LogOptions {
@@ -94,7 +90,7 @@ export interface Logger {
 	table: TableMethod;
 	dir: DirMethod;
 
-	//time: TimeMethod;
+	time: TimeMethod;
 }
 
 function nopLog(message?: any, ...optionalParams: any[]): void {
@@ -106,6 +102,10 @@ function nopTable(message?: any, ...optionalParams: any[]): void {
 }
 
 function nopDir(item?: any, options?: any): void {
+	//nop
+}
+
+function nopTimeLog(...data: any[]): void {
 	//nop
 }
 
@@ -132,23 +132,23 @@ export function createLogger(header: string, options?: LogOptions): Logger {
 		server: level.server < LogLevel.Information,
 	} as const;
 
-	// const time = {
-	// 	client: level.client < LogLevel.Information,
-	// 	server: level.server < LogLevel.Information,
-	// } as const;
+	const time = {
+		client: level.client < LogLevel.Information,
+		server: level.server < LogLevel.Information,
+	} as const;
 
 	const logOption = options ?? {
 		client: {
 			level: level.client,
 			table: table.client,
 			dir: dir.client,
-			//time: time.client,
+			time: time.client,
 		},
 		server: {
 			level: level.server,
 			table: table.server,
 			dir: dir.server,
-			//time: time.server,
+			time: time.server,
 		}
 	};
 
@@ -163,20 +163,22 @@ function getOption(logOptions: LogOptions): LogOption {
 }
 
 class ConsoleLogger implements Logger {
+	private readonly option: LogOption;
+
 	public constructor(public readonly header: string, private readonly options: LogOptions) {
 		const logHeader = "[" + this.header + "]";
 
-		const option = getOption(options);
+		this.option = getOption(options);
 
-		this.trace = toMethod(option.level, LogLevel.Trace, console.trace.bind(console, logHeader));
-		this.debug = toMethod(option.level, LogLevel.Debug, console.debug.bind(console, logHeader));
-		this.log = toMethod(option.level, LogLevel.Log, console.log.bind(console, logHeader));
-		this.info = toMethod(option.level, LogLevel.Information, console.info.bind(console, logHeader));
-		this.warn = toMethod(option.level, LogLevel.Warning, console.warn.bind(console, logHeader));
-		this.error = toMethod(option.level, LogLevel.Error, console.error.bind(console, logHeader));
+		this.trace = toMethod(this.option.level, LogLevel.Trace, console.trace.bind(console, logHeader));
+		this.debug = toMethod(this.option.level, LogLevel.Debug, console.debug.bind(console, logHeader));
+		this.log = toMethod(this.option.level, LogLevel.Log, console.log.bind(console, logHeader));
+		this.info = toMethod(this.option.level, LogLevel.Information, console.info.bind(console, logHeader));
+		this.warn = toMethod(this.option.level, LogLevel.Warning, console.warn.bind(console, logHeader));
+		this.error = toMethod(this.option.level, LogLevel.Error, console.error.bind(console, logHeader));
 
-		this.table = option.table ? console.table.bind(console) : nopTable;
-		this.dir = option.dir ? console.dir.bind(console) : nopDir;
+		this.table = this.option.table ? console.table.bind(console) : nopTable;
+		this.dir = this.option.dir ? console.dir.bind(console) : nopDir;
 	}
 
 	//#region Logger
@@ -195,17 +197,23 @@ class ConsoleLogger implements Logger {
 	table: TableMethod;
 	dir: DirMethod;
 
+	public time(label: string, callback: (log: TimeLogMethod) => void): void {
+		if (!this.option.time) {
+			callback(nopTimeLog);
+			return;
+		}
+
+		const timeHeader = `[${this.header}@${label}]`;
+		const log = console.timeLog.bind(console, timeHeader, "…");
+
+		console.time(timeHeader);
+
+		try {
+			callback(log);
+		} finally {
+			console.timeEnd(timeHeader);
+		}
+	}
+
 	//#endregion
 }
-
-// class TimerLogger {
-// 	constructor(
-// 		private header: string,
-// 		private label: string
-// 	) {
-// 		this.logHeader = `[${this.header}][${this.label}]`;
-// 		console.info.bind(console, this.logHeader);
-// 	}
-
-// 	public readonly logHeader:string;
-// }

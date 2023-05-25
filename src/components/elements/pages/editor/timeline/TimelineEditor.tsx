@@ -28,7 +28,7 @@ import { MoveDirection, TimelineCallbacks } from "@/models/data/TimelineCallback
 import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
 import { Editors } from "@/models/Editors";
-import { createLogger } from "@/models/Logging";
+import { createLogger, TimeLogMethod } from "@/models/Logging";
 import { Settings } from "@/models/Settings";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
@@ -483,9 +483,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 export default TimelineEditor;
 
-function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
-	console.time("CSS");
-
+function renderDynamicStyleCore(design: Design, theme: Theme, log: TimeLogMethod): ReactNode {
 	// 動的なCSSクラス名をここでがっつり作るのです
 	const styleObject = {
 		design: {
@@ -611,17 +609,23 @@ function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 	const styleClasses = Designs.convertStyleClasses(styleObject, ["_dynamic"]);
 	const style = Designs.convertStylesheet(styleClasses);
 
-	console.timeLog("CSS", "作成");
+	log("作成");
 
-	try {
-		return (
-			<style>
-				{style}
-			</style>
-		);
-	} finally {
-		console.timeEnd("CSS");
-	}
+	return (
+		<style>
+			{style}
+		</style>
+	);
+}
+
+function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
+	let result: ReactNode;
+
+	logger.time("CSS", log => {
+		result = renderDynamicStyleCore(design, theme, log);
+	});
+
+	return result;
 }
 
 function createEmptyTimeline(timelineKind: TimelineKind): AnyTimeline {
@@ -636,4 +640,6 @@ function createEmptyTimeline(timelineKind: TimelineKind): AnyTimeline {
 			throw new Error();
 	}
 }
+
+
 
