@@ -22,6 +22,15 @@ import { WorkRanges } from "@/models/WorkRanges";
 
 const logger = createLogger("CrossHeader");
 
+// logger.trace("TRACE");
+// logger.debug("DEBUG");
+// logger.log("LOG");
+// logger.info("INFO");
+// logger.warn("WARN");
+// logger.error("ERROR");
+// logger.table({a: "b", c: [1,2,3]});
+// logger.dir({a: "b", c: [1,2,3]});
+
 interface Props extends ConfigurationProps, TimelineCallbacksProps {
 }
 
