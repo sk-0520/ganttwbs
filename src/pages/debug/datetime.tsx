@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import { FC, useEffect, useState } from "react";
 
 import Layout from "@/components/layout/Layout";
-import { DateTime, toTicks } from "@/models/DateTime";
+import { DateTime, DateTimeTicks } from "@/models/DateTime";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 
@@ -41,14 +41,14 @@ const DebugDateTimeItem: FC<DebugDateTimeItemProps> = (props: DebugDateTimeItemP
 				{render("add 6 month", d => d.add(6, "month"))}
 				{render("add 12 month", d => d.add(12, "month"))}
 				{render("add 2 year", d => d.add(2, "year"))}
-				{render("[cdate] add 1 month", d => DateTime.convert(toTicks(Number(cdate(d.ticks).add(1, "month"))), d.timeZone))}
-				{render("[cdate] add 3 month", d => DateTime.convert(toTicks(Number(cdate(d.ticks).add(3, "month"))), d.timeZone))}
-				{render("[cdate] add 6 month", d => DateTime.convert(toTicks(Number(cdate(d.ticks).add(6, "month"))), d.timeZone))}
-				{render("[cdate] add 12 month", d => DateTime.convert(toTicks(Number(cdate(d.ticks).add(12, "month"))), d.timeZone))}
-				{render("[cdate] add 1 months", d => DateTime.convert(toTicks(Number(cdate(d.ticks).add(1, "months"))), d.timeZone))}
-				{render("[cdate] add 3 months", d => DateTime.convert(toTicks(Number(cdate(d.ticks).add(3, "months"))), d.timeZone))}
-				{render("[cdate] add 6 months", d => DateTime.convert(toTicks(Number(cdate(d.ticks).add(6, "months"))), d.timeZone))}
-				{render("[cdate] add 12 months", d => DateTime.convert(toTicks(Number(cdate(d.ticks).add(12, "months"))), d.timeZone))}
+				{render("[cdate] add 1 month", d => DateTime.convert(Number(cdate(d.ticks).add(1, "month")) as unknown as DateTimeTicks, d.timeZone))}
+				{render("[cdate] add 3 month", d => DateTime.convert(Number(cdate(d.ticks).add(3, "month")) as unknown as DateTimeTicks, d.timeZone))}
+				{render("[cdate] add 6 month", d => DateTime.convert(Number(cdate(d.ticks).add(6, "month")) as unknown as DateTimeTicks, d.timeZone))}
+				{render("[cdate] add 12 month", d => DateTime.convert(Number(cdate(d.ticks).add(12, "month")) as unknown as DateTimeTicks, d.timeZone))}
+				{render("[cdate] add 1 months", d => DateTime.convert(Number(cdate(d.ticks).add(1, "months")) as unknown as DateTimeTicks, d.timeZone))}
+				{render("[cdate] add 3 months", d => DateTime.convert(Number(cdate(d.ticks).add(3, "months")) as unknown as DateTimeTicks, d.timeZone))}
+				{render("[cdate] add 6 months", d => DateTime.convert(Number(cdate(d.ticks).add(6, "months")) as unknown as DateTimeTicks, d.timeZone))}
+				{render("[cdate] add 12 months", d => DateTime.convert(Number(cdate(d.ticks).add(12, "months")) as unknown as DateTimeTicks, d.timeZone))}
 				{render("create add 13 month", d => DateTime.create(d.timeZone, d.year, d.month + 13, d.day, d.hour, d.minute, d.second, d.millisecond))}
 			</tbody>
 		</table>

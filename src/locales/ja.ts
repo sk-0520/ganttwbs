@@ -187,7 +187,6 @@ const locale: Locale = {
 						subject: "作業",
 						workload: "工数",
 						resource: "割当",
-						relation: "💩",
 						workRangeBegin: "開始",
 						workRangeEnd: "終了",
 						workRangeError: "あかん",
@@ -426,6 +425,7 @@ const locale: Locale = {
 				workRangeFormat: "yyyy/mm/dd",
 
 				timelineSheetNameFormat: "timeline",
+				resourceFormat: "${MEMBER}(${GROUP})"
 			},
 		},
 

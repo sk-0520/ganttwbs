@@ -1,5 +1,5 @@
+import { DateTimeRange } from "@/models/data/Range";
 import { AnyTimeline, TimelineId } from "@/models/data/Setting";
-import { DateTime } from "@/models/DateTime";
 
 /**
  * 工数範囲計算状態。
@@ -44,10 +44,8 @@ export interface RecursiveCalculationErrorWorkRange extends ErrorWorkRange {
 }
 
 /** 有効工数範囲 */
-export interface SuccessWorkRange extends WorkRange {
+export interface SuccessWorkRange extends WorkRange, DateTimeRange {
 	kind: WorkRangeKind.Success;
-	begin: DateTime;
-	end: DateTime;
 }
 
 /** 有効工数範囲の最小・最大範囲 */

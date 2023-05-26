@@ -2,7 +2,7 @@
 import { FC, useMemo } from "react";
 
 import ErrorRow from "@/components/elements/pages/editor/timeline/shape/ErrorRow";
-import { useDetailEditTimelineAtomWriter } from "@/models/data/atom/editor/DragAndDropAtoms";
+import { useDetailEditTimelineAtomWriter } from "@/models/atom/editor/DragAndDropAtoms";
 import { ChartProps } from "@/models/data/props/ChartProps";
 import { GroupTimeline } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";

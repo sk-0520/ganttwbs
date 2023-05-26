@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import Timestamp from "@/components/elements/Timestamp";
 import { useLocale } from "@/locales/locale";
-import { useCalendarInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { TotalSuccessWorkRange } from "@/models/data/WorkRange";
 
 interface Props {

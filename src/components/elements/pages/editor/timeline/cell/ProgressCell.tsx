@@ -2,7 +2,7 @@
 import { FC, useEffect, useState } from "react";
 
 import { As } from "@/models/As";
-import { useActiveTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
+import { useActiveTimelineIdAtomWriter } from "@/models/atom/editor/HighlightAtoms";
 import { Progress } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
 

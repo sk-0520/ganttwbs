@@ -77,10 +77,10 @@ const EditorPage: NextPage = () => {
 							<FileEditor configuration={configuration} editorData={editorData} isVisible={selectedTabIndex === TabIndex.File} />
 						</TabPanel>
 						{/* このアプリの本体 */}
-						<TabPanel className="tab panel tab-timeline" >
+						<TabPanel className="tab panel tab-timeline">
 							<TimelineEditor configuration={configuration} editorData={editorData} />
 						</TabPanel>
-						<TabPanel className="tab panel tab-analytics" >
+						<TabPanel className="tab panel tab-analytics">
 							<AnalyticsViewer configuration={configuration} editorData={editorData} isVisible={selectedTabIndex === TabIndex.Analytics} />
 						</TabPanel>
 						<TabPanel className="tab panel tab-setting">

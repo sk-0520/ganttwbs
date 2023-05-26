@@ -5,7 +5,7 @@ import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import { useLocale } from "@/locales/locale";
-import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
+import { useHoverTimelineIdAtomWriter } from "@/models/atom/editor/HighlightAtoms";
 import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
 import { MoveDirection } from "@/models/data/TimelineCallbacks";
 

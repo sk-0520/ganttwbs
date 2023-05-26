@@ -2,8 +2,8 @@ import { FC, ReactNode, useEffect, useState } from "react";
 
 import GroupChart from "@/components/elements/pages/editor/timeline/shape/GroupChart";
 import TaskChart from "@/components/elements/pages/editor/timeline/shape/TaskChart";
+import { useCalendarInfoAtomReader, useResourceInfoAtomReader, useSettingAtomReader, useTimelineItemsAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { Charts } from "@/models/Charts";
-import { useCalendarInfoAtomReader, useResourceInfoAtomReader, useSettingAtomReader, useTimelineItemsAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { GanttChartTimelineProps } from "@/models/data/props/GanttChartTimelineProps";
 import { SuccessWorkRange } from "@/models/data/WorkRange";
 import { Settings } from "@/models/Settings";

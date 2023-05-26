@@ -17,7 +17,7 @@ const Timestamp: FC<Props> = (props: Props) => {
 		const values = convert(props.format, locale);
 
 		return (
-			<time className={values.className} dateTime={props.date.format("U")}>
+			<time className={values.className} dateTime={props.date.toHtml("time")}>
 				{props.date.format(values.format)}
 			</time>
 		);

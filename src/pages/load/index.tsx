@@ -7,6 +7,9 @@ import { useLocale } from "@/locales/locale";
 import { EditorData } from "@/models/data/EditorData";
 import { SettingSchema } from "@/models/data/Setting";
 import { Goto } from "@/models/Goto";
+import { createLogger } from "@/models/Logging";
+
+const logger = createLogger("pages/load/index");
 
 interface Input {
 	files: FileList;
@@ -40,7 +43,7 @@ const LoadPage: NextPage = () => {
 export default LoadPage;
 
 async function onSubmit(data: Input, router: NextRouter) {
-	console.log(data);
+	logger.log(data);
 	const file = data.files[0];
 
 	const fileName = file.name;
@@ -52,14 +55,14 @@ async function onSubmit(data: Input, router: NextRouter) {
 	const settingSchemaResult = SettingSchema.parse(settingObject);
 	/*
 	if(!settingSchemaResult.success) {
-		console.error("error");
+		logger.error("error");
 		return;
 	}
 	const setting = settingSchemaResult.data;
 	*/
 	const setting = settingSchemaResult;
-	console.debug(setting);
-	console.debug(fileName);
+	logger.debug(setting);
+	logger.debug(fileName);
 
 	const editorData: EditorData = {
 		fileName: fileName,

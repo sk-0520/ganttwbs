@@ -2,7 +2,7 @@ import { FC, useContext, useState } from "react";
 
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import { useLocale } from "@/locales/locale";
-import { SettingContext } from "@/models/data/context/SettingContext";
+import { SettingContext } from "@/models/context/SettingContext";
 import { WeekDay } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Settings } from "@/models/Settings";

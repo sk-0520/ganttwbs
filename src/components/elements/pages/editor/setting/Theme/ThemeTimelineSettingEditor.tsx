@@ -4,7 +4,7 @@ import DefaultButton from "@/components/elements/pages/editor/setting/DefaultBut
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
 import { Color } from "@/models/Color";
-import { SettingContext } from "@/models/data/context/SettingContext";
+import { SettingContext } from "@/models/context/SettingContext";
 import { DefaultSettings } from "@/models/DefaultSettings";
 
 const ThemeTimelineSettingEditor: FC = () => {

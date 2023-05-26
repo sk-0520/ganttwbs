@@ -3,18 +3,22 @@ import { FC, useCallback, useMemo, KeyboardEvent, MouseEvent } from "react";
 
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
-import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
-import { useSequenceTimelinesAtomReader, useTimelineIndexMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useHoverTimelineIdAtomWriter } from "@/models/atom/editor/HighlightAtoms";
+import { useSequenceTimelinesAtomReader, useTimelineIndexMapAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { BeginDateCallbacks } from "@/models/data/BeginDate";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { AnyTimeline, TimelineId } from "@/models/data/Setting";
 import { TimelineCallbacks } from "@/models/data/TimelineCallbacks";
 import { Dom } from "@/models/Dom";
+import { Editors } from "@/models/Editors";
 import { IdFactory } from "@/models/IdFactory";
+import { createLogger } from "@/models/Logging";
 import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
+
+const logger = createLogger("TimelineItems");
 
 interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	beginDateCallbacks: BeginDateCallbacks;
@@ -34,7 +38,7 @@ const TimelineItems: FC<Props> = (props: Props) => {
 	}, [props.timelineCallbacks, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data]);
 
 	const dummyAreaNodes = useMemo(() => {
-		console.debug("dummyAreaNodedummyAreaNodedummyAreaNode");
+		logger.debug("dummyAreaNodedummyAreaNodedummyAreaNode");
 		return Arrays.create(props.configuration.design.dummy.height).map(_ => {
 			return (
 				<tr key={"dmy-" + IdFactory.createReactKey()} className="dummy timeline-cell timeline-header _dynamic_programmable_cell_height">
@@ -141,5 +145,7 @@ function handleCellKeyDown(ev: KeyboardEvent<HTMLInputElement>, currentTimeline:
 		const nextElement = Dom.getElementById(nextCellId, HTMLInputElement);
 		nextElement.select();
 		nextElement.focus();
+
+		Editors.scrollTimeline(nextTimeline);
 	}
 }

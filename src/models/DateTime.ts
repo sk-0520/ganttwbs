@@ -8,13 +8,14 @@ import { Strong } from "@/models/Types";
 
 type DateTimeParseResult = ParseResult<DateTime, Error>;
 
-export type Unit = "second" | "minute" | "hour" | "day" | "week" | "month" | "year";
+export type Unit = "millisecond" | "second" | "minute" | "hour" | "day" | "week" | "month" | "year";
+export type MonthNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
-//export type DateTimeTicks = number;
+/** DateTime シリアル値。 数値処理する場合は `Number` を経由すること。 */
 export type DateTimeTicks = Strong<"DateTimeTicks", number>;
 
-export function toTicks(arg: number | DateTimeTicks): DateTimeTicks {
+function toTicks(arg: number | DateTimeTicks): DateTimeTicks {
 	return arg as DateTimeTicks;
 }
 
@@ -59,8 +60,13 @@ export class DateTime {
 	}
 
 	/** 月(1-12) */
-	public get month(): number {
-		return this.date.get("month") + 1;
+	public get month(): MonthNumber {
+		const result = this.date.get("month") + 1;
+		if (1 <= result && result <= 12) {
+			return result as MonthNumber;
+		}
+
+		throw new Error();
 	}
 
 	/** 日 */
@@ -101,7 +107,7 @@ export class DateTime {
 		return toTicks(Number(this.date));
 	}
 
-	public get timeIsZero(): boolean {
+	public get timeIsEmpty(): boolean {
 		return !this.hour
 			&&
 			!this.minute
@@ -269,25 +275,30 @@ export class DateTime {
 		return new DateTime(date, timeZone);
 	}
 
-	public toDate(keepLocalTime = true): Date {
-		if (!keepLocalTime) {
-			throw new Error("keepLocalTime");
+	/**
+	 * ビルドイン `Date` への変換。
+	 * @param keepLocalTime ローカル時間を保持するか。 内部事情をコメントにするなら Excel Book の日付とかで指定が必要。
+	 * @returns ビルドイン `Date`。
+	 */
+	public toDate(keepLocalTime?: boolean): Date {
+		if (keepLocalTime) {
+			return new Date(Date.UTC(
+				this.year,
+				this.month - 1,
+				this.day,
+				this.hour,
+				this.minute,
+				this.second,
+				this.millisecond
+			));
 		}
 
-		return new Date(Date.UTC(
-			this.year,
-			this.month - 1,
-			this.day,
-			this.hour,
-			this.minute,
-			this.second,
-			this.millisecond
-		));
+		return this.date.toDate();
 	}
 
 	/**
 	 * 差分取得。
-	 * @param target
+	 * @param target 差分対象。自身からこいつまでの差分が対象となる。
 	 * @returns
 	 */
 	public diff(target: Readonly<DateTime>): TimeSpan {
@@ -303,6 +314,12 @@ export class DateTime {
 		return Number(this.ticks) - Number(date.ticks);
 	}
 
+	/**
+	 * 自身が指定日時の間に納まっているか。
+	 * @param begin 開始。
+	 * @param end 終了。
+	 * @returns 納まっているか。
+	 */
 	public isIn(begin: DateTime, end: DateTime): boolean {
 		return begin.ticks <= this.ticks && this.ticks <= end.ticks;
 	}
@@ -323,7 +340,11 @@ export class DateTime {
 	 * @param keepUnit 切り落とし時に保持する単位。ここで指定した値未満が初期値となる。
 	 * @returns 切り落とされた項目は初期値(月なら1月、日なら1日、時なら0時)となる
 	 */
-	public truncate(keepUnit: Unit): DateTime {
+	public truncate(keepUnit: Exclude<Unit, "millisecond">): DateTime {
+		if (keepUnit as string === "millisecond") {
+			throw new Error(keepUnit);
+		}
+
 		const date = Require.switch(keepUnit, {
 			"year": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0).set("hour", 0).set("date", 1).set("month", 0),
 			"month": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0).set("hour", 0).set("date", 1),
@@ -356,7 +377,7 @@ export class DateTime {
 			.set("second", 0)
 			.set("minute", 0)
 			.set("hour", 0)
-		;
+			;
 
 		return new DateTime(date, this.timeZone);
 	}
@@ -368,6 +389,13 @@ export class DateTime {
 	 *  * L: ローカライズ
 	 *  * `undefined`: Date.toISOString()
 	 *  * その他 _.NET_ のやつで出来そうなのだけ
+	 *    * `[[y]yy]yy`
+	 *    * `[M]M`
+	 *    * `[d]d`
+	 *    * `[H]H`
+	 *    * `[m]m`
+	 *    * `[s]s`
+	 *    * `[ff]f`
 	 * @returns
 	 */
 	public format(format?: "U" | "L" | string): string {
@@ -387,6 +415,7 @@ export class DateTime {
 		}
 
 		const map = new Map([
+			["yy", padStart0(this.year % 100, 2)],
 			["yyyy", padStart0(this.year, 4)],
 			["yyyyy", padStart0(this.year, 5)],
 
@@ -404,9 +433,12 @@ export class DateTime {
 
 			["s", this.second.toString()],
 			["ss", padStart0(this.second, 2)],
+
+			["f", this.millisecond.toString()],
+			["fff", padStart0(this.millisecond, 3)],
 		]);
 
-		const pattern = Array.from(map.keys())
+		const pattern = [...map.keys()]
 			.sort((a, b) => b.length - a.length)
 			.join("|")
 			;
@@ -418,22 +450,52 @@ export class DateTime {
 	}
 
 	/**
-	 * HTML <input type="*" /> に合わせた入力文字列へ変換。
-	 * @param type
+	 * HTML上での表現に変換。
+	 * @param tag
 	 * @returns
 	 */
-	public toInput(type: "date"): string {
-		switch (type) {
-			case "date":
+	public toHtml(tag: "time" | "input-date"): string {
+		switch (tag) {
+			case "time":
+				return this.format("U");
+
+			case "input-date":
 				return this.format("yyyy-MM-dd");
 
 			default:
-				throw new Error(type);
+				throw new Error(tag);
 		}
 	}
 
 	public toString(): string {
 		return this.format("U");
+	}
+
+	private static getMinMax(func: (...values: ReadonlyArray<number>) => number, a: DateTime, b: DateTime, ...dates: ReadonlyArray<DateTime>): DateTime {
+		let rawTicks: number;
+
+		if (dates.length) {
+			rawTicks = func(...[
+				Number(a.ticks),
+				Number(b.ticks),
+				...dates.map(i => Number(i.ticks))
+			]);
+		} else {
+			rawTicks = func(
+				Number(a.ticks),
+				Number(b.ticks),
+			);
+		}
+
+		return this.convert(toTicks(rawTicks), a.timeZone);
+	}
+
+	public static getMinimum(a: DateTime, b: DateTime, ...dates: ReadonlyArray<DateTime>): DateTime {
+		return this.getMinMax(Math.min, a, b, ...dates);
+	}
+
+	public static getMaximum(a: DateTime, b: DateTime, ...dates: ReadonlyArray<DateTime>): DateTime {
+		return this.getMinMax(Math.max, a, b, ...dates);
 	}
 
 	//#endregion

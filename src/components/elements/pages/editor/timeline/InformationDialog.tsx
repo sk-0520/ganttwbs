@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import Dialog from "@/components/elements/Dialog";
 import { useLocale } from "@/locales/locale";
-import { useCalendarInfoAtomReader, useDayInfosAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useCalendarInfoAtomReader, useDayInfosAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { DateTime } from "@/models/DateTime";

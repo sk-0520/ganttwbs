@@ -2,9 +2,9 @@ import { FC, MouseEvent, ReactNode, useMemo } from "react";
 
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
+import { useHoverTimelineIdAtomWriter } from "@/models/atom/editor/HighlightAtoms";
+import { useCalendarInfoAtomReader, useSequenceTimelinesAtomReader, useSettingAtomReader, useTotalTimelineMapAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { Charts } from "@/models/Charts";
-import { useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
-import { useCalendarInfoAtomReader, useSequenceTimelinesAtomReader, useSettingAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { ColorString } from "@/models/data/Setting";
@@ -83,8 +83,8 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 			}
 			// 曜日判定
 			if (!color) {
-				const week = Settings.toWeekDay(date.week);
-				if (settingAtomReader.data.calendar.holiday.regulars.includes(week)) {
+				if (calendarInfoAtomReader.data.holidayRegulars.has(date.week)) {
+					const week = Settings.toWeekDay(date.week);
 					color = settingAtomReader.data.theme.holiday.regulars[week];
 				}
 			}
@@ -128,7 +128,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 
 		const sequenceIndex = Math.floor(ev.nativeEvent.offsetY / areaData.cell.height.value);
 		// ここのグダグダ感
-		if(sequenceTimelinesAtomReader.data.length <= sequenceIndex) {
+		if (sequenceTimelinesAtomReader.data.length <= sequenceIndex) {
 			hoverTimelineIdAtomWriter.write(undefined);
 			return;
 		}

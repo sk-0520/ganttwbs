@@ -5,8 +5,8 @@ import InformationDialog from "@/components/elements/pages/editor/timeline/Infor
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import Timestamp from "@/components/elements/Timestamp";
 import locale from "@/locales/ja";
-import { useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomWriter } from "@/models/data/atom/editor/HighlightAtoms";
-import { useCalendarInfoAtomReader, useDayInfosAtomReader, useRootTimelineAtomReader, useSequenceTimelinesAtomReader, useSettingAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
+import { useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomWriter } from "@/models/atom/editor/HighlightAtoms";
+import { useCalendarInfoAtomReader, useDayInfosAtomReader, useRootTimelineAtomReader, useSequenceTimelinesAtomReader, useSettingAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
@@ -15,9 +15,21 @@ import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Editors } from "@/models/Editors";
 import { IdFactory } from "@/models/IdFactory";
+import { createLogger } from "@/models/Logging";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { WorkRanges } from "@/models/WorkRanges";
+
+const logger = createLogger("CrossHeader");
+
+// logger.trace("TRACE");
+// logger.debug("DEBUG");
+// logger.log("LOG");
+// logger.info("INFO");
+// logger.warn("WARN");
+// logger.error("ERROR");
+// logger.table({a: "b", c: [1,2,3]});
+// logger.dir({a: "b", c: [1,2,3]});
 
 interface Props extends ConfigurationProps, TimelineCallbacksProps {
 }
@@ -45,7 +57,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 	useEffect(() => {
 		const timelineItem = timelineItemsAtomReader.data.get(IdFactory.rootTimelineId);
 		if (timelineItem && Settings.maybeGroupTimeline(timelineItem.timeline)) {
-			console.debug(timelineItem);
+			logger.debug(timelineItem);
 
 			const workload = Timelines.sumWorkloadByGroup(timelineItem.timeline).totalDays;
 			setWorkload(workload);
@@ -289,7 +301,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 							{locale.pages.editor.timeline.header.columns.resource}
 						</div>
 						<div className="timeline-cell timeline-relation">
-							{locale.pages.editor.timeline.header.columns.relation}
+							<IconImage kind={IconKind.RelationHeader} />
 						</div>
 						{
 							workRangeKind === WorkRangeKind.Success
@@ -345,7 +357,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						{locale.pages.editor.timeline.header.columns.resource}
 					</div>
 					<div className="timeline-cell timeline-relation">
-						{locale.pages.editor.timeline.header.columns.relation}
+						<IconImage kind={IconKind.RelationHeader} />
 					</div>
 					<div className="timeline-cell timeline-range-from">
 						{locale.pages.editor.timeline.header.columns.workRangeBegin}

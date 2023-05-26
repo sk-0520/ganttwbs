@@ -192,7 +192,6 @@ export interface Locale {
 						subject: string,
 						workload: string,
 						resource: string,
-						relation: string,
 						workRangeBegin: string,
 						workRangeEnd: string,
 						workRangeError: string,
@@ -449,6 +448,11 @@ export interface Locale {
 				 * * NAME
 				 */
 				timelineSheetNameFormat: string,
+				/**
+				 * * MEMBER
+				 * * GROUP
+				 */
+				resourceFormat: string,
 			},
 		},
 

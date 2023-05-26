@@ -2,9 +2,9 @@ import { FC, ReactNode, useEffect, useMemo, useState } from "react";
 
 import ColumnHighlight from "@/components/elements/pages/editor/timeline/highlight/ColumnHighlight";
 import RowHighlight from "@/components/elements/pages/editor/timeline/highlight/RowHighlight";
+import { useActiveTimelineIdAtomReader, useDragOverTimelineIdAtomReader, useDragSourceTimelineIdAtomReader, useHighlightDaysAtomReader, useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomReader, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomReader } from "@/models/atom/editor/HighlightAtoms";
+import { useCalendarInfoAtomReader, useTotalTimelineMapAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { Charts } from "@/models/Charts";
-import { useActiveTimelineIdAtomReader, useDragOverTimelineIdAtomReader, useDragSourceTimelineIdAtomReader, useHighlightDaysAtomReader, useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomReader, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomReader } from "@/models/data/atom/editor/HighlightAtoms";
-import { useCalendarInfoAtomReader, useTotalTimelineMapAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ColumnHighlightMode, RowHighlightMode } from "@/models/data/Highlight";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";

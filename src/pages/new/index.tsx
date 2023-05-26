@@ -5,17 +5,20 @@ import { useForm } from "react-hook-form";
 
 import Layout from "@/components/layout/Layout";
 import { useLocale } from "@/locales/locale";
-import { CalendarRange } from "@/models/data/CalendarRange";
 import { EditorData } from "@/models/data/EditorData";
+import { DateTimeRange } from "@/models/data/Range";
 import { Member, Setting, WeekDay } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Goto } from "@/models/Goto";
 import { IdFactory } from "@/models/IdFactory";
+import { createLogger } from "@/models/Logging";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
+
+const logger = createLogger("pages/new/index");
 
 interface DateRange {
 	begin: DateTime;
@@ -194,7 +197,7 @@ const NewPage: NextPage = () => {
 export default NewPage;
 
 function onSubmit(data: Input, timeZone: TimeZone, router: NextRouter) {
-	console.debug(data);
+	logger.debug(data);
 
 	const fileName = "new.json";
 	let setting: Setting | null = null;
@@ -210,8 +213,8 @@ function onSubmit(data: Input, timeZone: TimeZone, router: NextRouter) {
 			break;
 	}
 
-	console.debug(setting);
-	console.debug(fileName);
+	logger.debug(setting);
+	logger.debug(fileName);
 
 	const editorData: EditorData = {
 		fileName: fileName,
@@ -272,7 +275,7 @@ function createSampleSetting(data: Input, timeZone: TimeZone): Setting {
 
 	const range = convertDateRange(data, timeZone);
 
-	const calendarRange: CalendarRange = {
+	const calendarRange: DateTimeRange = {
 		begin: range.begin,
 		end: range.end,
 	};

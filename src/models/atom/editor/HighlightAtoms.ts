@@ -1,6 +1,6 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 
-import { AtomReader, AtomType, AtomWriter } from "@/models/data/atom/AtomHelper";
+import { AtomReader, AtomType, AtomWriter } from "@/models/atom/AtomHelper";
 import { TimelineId } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 

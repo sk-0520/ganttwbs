@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 
+import { useResourceInfoAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { Color } from "@/models/Color";
-import { useResourceInfoAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { Member, MemberId } from "@/models/data/Setting";
 import { Require } from "@/models/Require";

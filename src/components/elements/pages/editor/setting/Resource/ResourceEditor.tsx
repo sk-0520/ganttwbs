@@ -2,7 +2,7 @@ import { useContext, MouseEvent, useState, FC } from "react";
 
 import GroupsEditor from "@/components/elements/pages/editor/setting/Resource/GroupEditor";
 import { useLocale } from "@/locales/locale";
-import { GroupSetting, SettingContext } from "@/models/data/context/SettingContext";
+import { GroupSetting, SettingContext } from "@/models/context/SettingContext";
 import { GroupId } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
 

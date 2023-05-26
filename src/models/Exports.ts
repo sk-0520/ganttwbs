@@ -111,7 +111,7 @@ export abstract class Exports {
 			const rawValue = baseCells[columnKey];
 
 			if (rawValue instanceof DateTime) {
-				result.push(rawValue.toDate());
+				result.push(rawValue.toDate(true));
 			} else {
 				result.push(rawValue);
 			}
@@ -368,7 +368,7 @@ export abstract class Exports {
 	}
 
 	public static async createWorkbook(setting: Setting, calcData: CalcData, locale: Locale): Promise<Workbook> {
-		const dates = Calendars.getDays(calcData.calendarInfo.range.begin, calcData.calendarInfo.range.end).map(a => a.toDate());
+		const dates = Calendars.getDays(calcData.calendarInfo.range).map(a => a.toDate(true));
 
 		const rootTimelineItem = Require.get(calcData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
 
@@ -442,7 +442,7 @@ export abstract class Exports {
 				;
 			const successWorkRange = calcData.workRange.successWorkRanges.find(a => a.timeline.id === timeline.id);
 			const workRange = successWorkRange
-				? { begin: successWorkRange.begin.toDate(), end: successWorkRange.end.toDate() }
+				? { begin: successWorkRange.begin.toDate(true), end: successWorkRange.end.toDate(true) }
 				: { begin: "#ERROR", end: "" }
 				;
 			const progress = Settings.maybeGroupTimeline(timeline)
@@ -454,7 +454,13 @@ export abstract class Exports {
 				"id": Timelines.toReadableTimelineId(readableTimelineId),
 				"subject": timeline.subject,
 				"workload": workload.totalDays,
-				"resource": memberGroupPair ? `${memberGroupPair.member.name}(${memberGroupPair.group.name})` : "",
+				"resource": memberGroupPair
+					? Strings.replaceMap(locale.file.excel.export.resourceFormat, {
+						"GROUP": memberGroupPair.group.name,
+						"MEMBER": memberGroupPair.member.name,
+					})
+					: ""
+				,
 				"range-begin": workRange.begin,
 				"range-end": workRange.end,
 				"progress": progress,
@@ -498,7 +504,7 @@ export abstract class Exports {
 				};
 				beginCell.numFmt = ExcelFormat.Chart;
 
-				const days = Calendars.getDays(successWorkRange.begin, successWorkRange.end);
+				const days = Calendars.getDays(successWorkRange);
 
 				const targetColor = Settings.maybeGroupTimeline(timeline)
 					? groupColors[readableTimelineId.level - 1] ?? defaultGroupColor
@@ -607,7 +613,7 @@ export abstract class Exports {
 	}
 
 	public static async createTable(setting: Setting, calcData: CalcData, locale: Locale): Promise<Array<Array<string>>> {
-		const dates = Calendars.getDays(calcData.calendarInfo.range.begin, calcData.calendarInfo.range.end);
+		const dates = Calendars.getDays(calcData.calendarInfo.range);
 		const rootTimelineItem = Require.get(calcData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
 		const rootSuccessWorkRanges = calcData.workRange.successWorkRanges.find(a => a.timeline.id === rootTimelineItem.id);
 
@@ -615,10 +621,10 @@ export abstract class Exports {
 
 		result.push([
 			setting.name,
-			...Arrays.repeat("", 8),
+			...Arrays.repeat("", 9),
 			...dates.map(a => {
 				const holiday = calcData.calendarInfo.holidayEventMap.get(a.ticks);
-				if(holiday) {
+				if (holiday) {
 					return holiday.event.display;
 				}
 
@@ -637,7 +643,8 @@ export abstract class Exports {
 			"id",
 			"subject",
 			String(Timelines.sumWorkloadByGroup(rootTimelineItem).totalDays),
-			"resource",
+			"group",
+			"member",
 			rootSuccessWorkRanges ? rootSuccessWorkRanges.begin.format(locale.file.table.export.rangeFormat) : "",
 			rootSuccessWorkRanges ? rootSuccessWorkRanges.end.format(locale.file.table.export.rangeFormat) : "",
 			String(Timelines.sumProgressByGroup(rootTimelineItem)),
@@ -668,7 +675,8 @@ export abstract class Exports {
 				":" + Timelines.toReadableTimelineId(readableTimelineId),
 				timeline.subject,
 				String(workload.totalDays),
-				memberGroupPair ? `${memberGroupPair.member.name}(${memberGroupPair.group.name})` : "",
+				memberGroupPair ? memberGroupPair.group.name : "",
+				memberGroupPair ? memberGroupPair.member.name : "",
 				successWorkRange ? successWorkRange.begin.format(locale.file.table.export.rangeFormat) : "",
 				successWorkRange ? successWorkRange.end.format(locale.file.table.export.rangeFormat) : "",
 				String(progress),
@@ -676,7 +684,7 @@ export abstract class Exports {
 
 			const dateCells = dates.map(a => {
 				if (successWorkRange) {
-					if(successWorkRange.end.ticks < a.ticks) {
+					if (successWorkRange.end.ticks < a.ticks) {
 						return "";
 					}
 
@@ -685,9 +693,9 @@ export abstract class Exports {
 						return "";
 					}
 
-					const days = Calendars.getDays(successWorkRange.begin, successWorkRange.end);
-					if(days.length === 1) {
-						if(!a.equals(days[0].truncateTime())) {
+					const days = Calendars.getDays(successWorkRange);
+					if (days.length === 1) {
+						if (!a.equals(days[0].truncateTime())) {
 							return "";
 						}
 					} else if (!a.isIn(days[0], days[days.length - 1])) {

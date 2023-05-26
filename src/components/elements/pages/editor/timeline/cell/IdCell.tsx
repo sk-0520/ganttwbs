@@ -2,8 +2,8 @@ import classNames from "classnames";
 import { DragEvent, FC } from "react";
 
 import { IconImage, IconKind } from "@/components/elements/Icon";
-import { useSelectingBeginDateAtomReader } from "@/models/data/atom/editor/BeginDateAtoms";
-import { useDraggingTimelineAtomReader } from "@/models/data/atom/editor/DragAndDropAtoms";
+import { useSelectingBeginDateAtomReader } from "@/models/atom/editor/BeginDateAtoms";
+import { useDraggingTimelineAtomReader } from "@/models/atom/editor/DragAndDropAtoms";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { AnyTimeline, Progress } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";

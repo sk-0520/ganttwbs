@@ -1,17 +1,21 @@
 import { Arrays } from "@/models/Arrays";
 import { DayInfo } from "@/models/data/DayInfo";
+import { DateTimeRange } from "@/models/data/Range";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { ResourceInfo } from "@/models/data/ResourceInfo";
 import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, Timestamp } from "@/models/data/Setting";
 import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
-import { DateTime, DateTimeTicks, WeekIndex, toTicks } from "@/models/DateTime";
+import { DateTime, DateTimeTicks, WeekIndex } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
 import { Limiter } from "@/models/Limiter";
+import { TimeLogMethod, createLogger } from "@/models/Logging";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 import { Types } from "@/models/Types";
 import { WorkRanges } from "@/models/WorkRanges";
+
+const logger = createLogger("Timelines");
 
 interface Holidays {
 	dates: ReadonlyArray<DateTime>;
@@ -56,7 +60,7 @@ export abstract class Timelines {
 
 
 	public static serializeWorkload(workload: TimeSpan): TimeOnly {
-		return workload.serialize("readable");
+		return workload.format("readable");
 	}
 	public static deserializeWorkload(workload: TimeOnly): TimeSpan {
 		return TimeSpan.parse(workload);
@@ -481,10 +485,7 @@ export abstract class Timelines {
 		return undefined;
 	}
 
-	public static getWorkRanges(flatTimelines: ReadonlyArray<AnyTimeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>, timeZone: TimeZone): Map<TimelineId, WorkRange> {
-		const LOG_GWR = "作業範囲算出";
-		console.time(LOG_GWR);
-
+	private static getWorkRangesCore(flatTimelines: ReadonlyArray<AnyTimeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>, timeZone: TimeZone, log: TimeLogMethod): Map<TimelineId, WorkRange> {
 		const result = new Map<TimelineId, WorkRange>();
 
 		const holidays: Holidays = {
@@ -553,7 +554,7 @@ export abstract class Timelines {
 		}
 
 		// グループ・タスクをそれぞれ算出
-		console.timeLog(LOG_GWR, "各グループ・タスク");
+		log("各グループ・タスク");
 		const limiter = new Limiter(recursiveMaxCount);
 		const targetTimelines = new Set(flatTimelines.filter(a => !result.has(a.id)));
 		while (result.size < flatTimelines.length) {
@@ -627,8 +628,7 @@ export abstract class Timelines {
 					let prevDate = maxWorkRange.end;
 					if (timeline.static) {
 						const staticDate = DateTime.parse(timeline.static, timeZone);
-						const targetTime = toTicks(Math.max(Number(staticDate.ticks), Number(maxWorkRange.end.ticks)));
-						prevDate = DateTime.convert(targetTime, timeZone);
+						prevDate = DateTime.getMaximum(staticDate, maxWorkRange.end);
 					}
 
 					const workload = this.deserializeWorkload(timeline.workload);
@@ -687,16 +687,25 @@ export abstract class Timelines {
 			}
 		}
 
-		console.timeEnd(LOG_GWR);
-		console.debug(LOG_GWR, "反復実施数", limiter.count, "result", result.size, "flatTimelines", flatTimelines.length);
+		log("反復実施数", limiter.count, "result", result.size, "flatTimelines", flatTimelines.length);
 
 		return result;
 	}
 
-	public static calcDayInfos(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>): Map<DateTimeTicks, DayInfo> {
-		const LOG_CDI = "日情報算出";
-		console.time(LOG_CDI);
+	public static getWorkRanges(flatTimelines: ReadonlyArray<AnyTimeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>, timeZone: TimeZone): Map<TimelineId, WorkRange> {
+		let result: Map<TimelineId, WorkRange> | undefined;
 
+		logger.time("作業範囲算出", log => {
+			result = this.getWorkRangesCore(flatTimelines, holiday, recursiveMaxCount, timeZone, log);
+		});
+		if (result === undefined) {
+			throw new Error();
+		}
+
+		return result;
+	}
+
+	private static calcDayInfosCore(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>, log: TimeLogMethod): Map<DateTimeTicks, DayInfo> {
 		type SuccessWorkRangeTimeline = Omit<SuccessWorkRange, "kind" | "timeline"> & {
 			timeline: TaskTimeline,
 		}
@@ -714,7 +723,6 @@ export abstract class Timelines {
 
 		if (!successWorkRanges.size) {
 			// 重複チェックするにはそもそも範囲算出が成功してないとなんもできない
-			console.timeEnd(LOG_CDI);
 			return new Map();
 		}
 
@@ -728,10 +736,7 @@ export abstract class Timelines {
 					continue;
 				}
 
-				let range: {
-					begin: DateTime;
-					end: DateTime;
-				} | undefined = undefined;
+				let range: DateTimeRange | undefined = undefined;
 
 				if (
 					// 自身の後半に対象が存在する
@@ -816,7 +821,18 @@ export abstract class Timelines {
 			}
 		}
 
-		console.timeEnd(LOG_CDI);
+		return result;
+	}
+
+	public static calcDayInfos(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>): Map<DateTimeTicks, DayInfo> {
+		let result: Map<DateTimeTicks, DayInfo> | undefined;
+
+		logger.time("日情報算出", log => {
+			result = this.calcDayInfosCore(timelineMap, workRanges, resourceInfo, log);
+		});
+		if (result === undefined) {
+			throw new Error();
+		}
 
 		return result;
 	}

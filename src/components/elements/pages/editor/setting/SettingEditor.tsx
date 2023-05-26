@@ -12,17 +12,20 @@ import ThemeGroupSettingEditor from "@/components/elements/pages/editor/setting/
 import ThemeTimelineSettingEditor from "@/components/elements/pages/editor/setting/Theme/ThemeTimelineSettingEditor";
 import { useLocale } from "@/locales/locale";
 import { Color } from "@/models/Color";
+import { MemberSetting, SettingContext } from "@/models/context/SettingContext";
 import { Configuration } from "@/models/data/Configuration";
-import { MemberSetting, SettingContext } from "@/models/data/context/SettingContext";
 import { EditorData } from "@/models/data/EditorData";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { DateOnly, HolidayEvent, HolidayKind, Setting, WeekDay } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
+import { createLogger } from "@/models/Logging";
 import { Storages } from "@/models/Storages";
 import { Strings } from "@/models/Strings";
 import { TimeZone } from "@/models/TimeZone";
+
+const logger = createLogger("SettingEditor");
 
 const NewLine = "\r\n";
 
@@ -41,7 +44,7 @@ const SettingEditor: FC<Props> = (props: Props) => {
 		event.preventDefault();
 
 		props.editorData.setting = fromContext(props.editorData.setting, setting);
-		console.debug(setting);
+		logger.debug(setting);
 		//TODO: 自動保存とぶつかる可能性あり、、、同一オブジェクトなので大丈夫、か？
 		Storages.saveEditorData(props.editorData);
 

@@ -4,7 +4,7 @@ import DefaultButton from "@/components/elements/pages/editor/setting/DefaultBut
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
 import { Color } from "@/models/Color";
-import { SettingContext } from "@/models/data/context/SettingContext";
+import { SettingContext } from "@/models/context/SettingContext";
 import { WeekDay } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Settings } from "@/models/Settings";

@@ -1,9 +1,9 @@
 
 import { FC } from "react";
 
+import { useCalendarInfoAtomReader, useResourceInfoAtomReader, useRootTimelineAtomReader, useSettingAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader, useWorkRangesAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { Charts } from "@/models/Charts";
 import { AreaSize } from "@/models/data/Area";
-import { useCalendarInfoAtomReader, useResourceInfoAtomReader, useRootTimelineAtomReader, useSettingAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader, useWorkRangesAtomReader } from "@/models/data/atom/editor/TimelineAtoms";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
 import { TaskTimeline } from "@/models/data/Setting";
