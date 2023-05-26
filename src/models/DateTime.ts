@@ -107,7 +107,7 @@ export class DateTime {
 		return toTicks(Number(this.date));
 	}
 
-	public get timeIsZero(): boolean {
+	public get timeIsEmpty(): boolean {
 		return !this.hour
 			&&
 			!this.minute

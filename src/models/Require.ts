@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //type NonUndefined<T> = T extends undefined ? never : T;
 
+type SwitchKey = string | number | symbol;
+
 /**
  * 絶対に何か取得する系の処理。
  *
@@ -35,7 +37,7 @@ export abstract class Require {
 	 * @param defaultValue
 	 * @returns
 	 */
-	public static switch<O>(expression: string | number | symbol, cases: { [key: string | number | symbol]: (input: string | number | symbol) => O }, defaultValue?: O): O {
+	public static switch<O>(expression: SwitchKey, cases: { [key: SwitchKey]: (input: SwitchKey) => O }, defaultValue?: O): O {
 		if (expression in cases) {
 			const func = cases[expression];
 			return func(expression);

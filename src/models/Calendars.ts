@@ -71,7 +71,7 @@ export abstract class Calendars {
 			result.push(base.add(i, "day"));
 		}
 
-		if (1 <= diff && !range.end.timeIsZero) {
+		if (1 <= diff && !range.end.timeIsEmpty) {
 			result.push(range.end);
 		}
 
