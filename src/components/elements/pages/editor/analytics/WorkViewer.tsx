@@ -228,7 +228,7 @@ function renderMonths(visibleCost: boolean, months: ReadonlyArray<DateTime>, loc
 }
 
 function renderRange(visibleCost: boolean, member: Member, range: DateTimeRange, monthCount: number, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>, configuration: Configuration): ReactNode {
-	const percent = calcPercent(member, range, calendarInfo, taskTimelines, successWorkRanges);
+	const percent = Timelines.calcPercent(member, range, calendarInfo, taskTimelines, successWorkRanges);
 	const overwork = 1 < percent;
 
 	return (
@@ -296,32 +296,4 @@ function renderMember(visibleCost: boolean, member: Member, months: ReadonlyArra
 	);
 }
 
-function calcPercent(member: Member, range: DateTimeRange, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): number {
 
-	const workDays = Calendars.getWorkDays(range, calendarInfo);
-
-	const memberTimelines = taskTimelines.filter(a => a.memberId === member.id);
-	const memberWorkRanges = successWorkRanges.filter(a => memberTimelines.some(b => b.id === a.timeline.id));
-
-	const memberWorkDays = new Array<DateTime>();
-	for (const workDay of workDays) {
-		for (const memberWorkRange of memberWorkRanges) {
-			if (workDay.isIn(memberWorkRange.begin, memberWorkRange.end)) {
-				memberWorkDays.push(workDay);
-			}
-		}
-	}
-
-	return memberWorkDays.length / workDays.length;
-
-	// switch (displayValue) {
-	// 	case "workload":
-	// 		return calcDisplayValueWorkload(member, begin, end, calendarInfo, taskTimelines, totalSuccessWorkRange);
-
-	// 	case "cost":
-	// 		return calcDisplayValueCost(member, begin, end, calendarInfo, taskTimelines, totalSuccessWorkRange);
-
-	// 	default:
-	// 		throw new Error();
-	// }
-}

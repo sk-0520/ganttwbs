@@ -1,9 +1,11 @@
 import { Arrays } from "@/models/Arrays";
+import { Calendars } from "@/models/Calendars";
+import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { DayInfo } from "@/models/data/DayInfo";
 import { DateTimeRange } from "@/models/data/Range";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { ResourceInfo } from "@/models/data/ResourceInfo";
-import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, Timestamp } from "@/models/data/Setting";
+import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Member, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, Timestamp } from "@/models/data/Setting";
 import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime, DateTimeTicks, WeekIndex } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
@@ -840,4 +842,24 @@ export abstract class Timelines {
 	public static isCompleted(progress: Progress): boolean {
 		return 1 <= progress;
 	}
+
+	public static calcPercent(member: Member, range: DateTimeRange, calendarInfo: Pick<CalendarInfo, "holidayEventMap" | "holidayRegulars">, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): number {
+
+		const workDays = Calendars.getWorkDays(range, calendarInfo);
+
+		const memberTimelines = taskTimelines.filter(a => a.memberId === member.id);
+		const memberWorkRanges = successWorkRanges.filter(a => memberTimelines.some(b => b.id === a.timeline.id));
+
+		const memberWorkDays = new Array<DateTime>();
+		for (const workDay of workDays) {
+			for (const memberWorkRange of memberWorkRanges) {
+				if (workDay.isIn(memberWorkRange.begin, memberWorkRange.end)) {
+					memberWorkDays.push(workDay);
+				}
+			}
+		}
+
+		return memberWorkDays.length / workDays.length;
+	}
+
 }
