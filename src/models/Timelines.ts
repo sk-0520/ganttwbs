@@ -1,6 +1,4 @@
 import { Arrays } from "@/models/Arrays";
-import { Calendars } from "@/models/Calendars";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { DayInfo } from "@/models/data/DayInfo";
 import { DateTimeRange } from "@/models/data/Range";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
@@ -843,9 +841,16 @@ export abstract class Timelines {
 		return 1 <= progress;
 	}
 
-	public static calcPercent(member: Member, range: DateTimeRange, calendarInfo: Pick<CalendarInfo, "holidayEventMap" | "holidayRegulars">, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): number {
-
-		const workDays = Calendars.getWorkDays(range, calendarInfo);
+	/**
+	 * 指定した日の集合から該当メンバーの稼働率を算出。
+	 *
+	 * @param member
+	 * @param workDays
+	 * @param taskTimelines
+	 * @param successWorkRanges
+	 * @returns
+	 */
+	public static calcPercent(member: Member, workDays: ReadonlyArray<DateTime>, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): number {
 
 		const memberTimelines = taskTimelines.filter(a => a.memberId === member.id);
 		const memberWorkRanges = successWorkRanges.filter(a => memberTimelines.some(b => b.id === a.timeline.id));

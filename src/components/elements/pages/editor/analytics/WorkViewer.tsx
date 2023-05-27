@@ -228,7 +228,8 @@ function renderMonths(visibleCost: boolean, months: ReadonlyArray<DateTime>, loc
 }
 
 function renderRange(visibleCost: boolean, member: Member, range: DateTimeRange, monthCount: number, calendarInfo: CalendarInfo, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>, configuration: Configuration): ReactNode {
-	const percent = Timelines.calcPercent(member, range, calendarInfo, taskTimelines, successWorkRanges);
+	const workDays = Calendars.getWorkDays(range, calendarInfo);
+	const percent = Timelines.calcPercent(member, workDays, taskTimelines, successWorkRanges);
 	const overwork = 1 < percent;
 
 	return (
