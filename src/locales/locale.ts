@@ -283,6 +283,7 @@ export interface Locale {
 
 					header: {
 						workload: string,
+						workday: string,
 						cost: string,
 						sales: string,
 					},
@@ -294,6 +295,12 @@ export interface Locale {
 					},
 					total: {
 						title: string,
+						/**
+						 * * TITLE
+						 * * BEGIN
+						 * * END
+						 */
+						titleFormat: string,
 					}
 				},
 			},

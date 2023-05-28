@@ -1,6 +1,8 @@
 @use "variable" as variable;
 
 #analytics {
+	min-width: max-content;
+
 	h2 {
 		background: #ccc;
 		padding-left: 0.5ex;
@@ -14,6 +16,7 @@
 
 	table {
 		margin: 0.5em;
+		table-layout: auto;
 
 		caption {
 			text-align: left;
@@ -25,6 +28,7 @@
 			padding: 0.25ex 0.5em;
 			border: 1px solid black;
 			vertical-align: middle;
+			white-space: nowrap;
 		}
 
 		td {
@@ -51,6 +55,15 @@
 			tbody {
 				.workload {
 					text-align: right;
+
+					code {
+						&::after {
+							content: "%";
+						}
+					}
+				}
+				.workday {
+					text-align: center;
 				}
 				.cost {
 					text-align: right;

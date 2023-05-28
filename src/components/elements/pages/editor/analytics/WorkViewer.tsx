@@ -13,7 +13,13 @@ import { SuccessWorkRange, TotalSuccessWorkRange } from "@/models/data/WorkRange
 import { DateTime } from "@/models/DateTime";
 import { Require } from "@/models/Require";
 import { Settings } from "@/models/Settings";
+import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
+
+const HeaderColumn = {
+	InvisibleCostLength: 2,
+	VisibleCostLength: 4,
+} as const;
 
 interface Props extends ConfigurationProps {
 	totalSuccessWorkRange: TotalSuccessWorkRange | undefined;
@@ -67,6 +73,9 @@ const WorkViewer: FC<Props> = (props: Props) => {
 													{locale.pages.editor.analytics.works.header.workload}
 												</th>
 												<th>
+													{locale.pages.editor.analytics.works.header.workday}
+												</th>
+												<th>
 													{locale.pages.editor.analytics.works.header.cost}
 												</th>
 												<th>
@@ -74,9 +83,14 @@ const WorkViewer: FC<Props> = (props: Props) => {
 												</th>
 											</>
 										) : (
-											<th>
-												{locale.pages.editor.analytics.works.header.workload}
-											</th>
+											<>
+												<th>
+													{locale.pages.editor.analytics.works.header.workload}
+												</th>
+												<th>
+													{locale.pages.editor.analytics.works.header.workday}
+												</th>
+											</>
 										)
 									}
 								</>
@@ -121,7 +135,11 @@ const WorkViewer: FC<Props> = (props: Props) => {
 			{props.totalSuccessWorkRange && (
 				<table>
 					<caption>
-						{locale.pages.editor.analytics.works.total.title}
+						{Strings.replaceMap(locale.pages.editor.analytics.works.total.titleFormat, {
+							"TITLE": locale.pages.editor.analytics.works.total.title,
+							"BEGIN": props.totalSuccessWorkRange.minimum.begin.format(locale.common.calendar.dateOnlyFormat),
+							"END": props.totalSuccessWorkRange.maximum.end.format(locale.common.calendar.dateOnlyFormat),
+						})}
 					</caption>
 					<thead>
 						<tr>
@@ -139,6 +157,9 @@ const WorkViewer: FC<Props> = (props: Props) => {
 												{locale.pages.editor.analytics.works.header.workload}
 											</th>
 											<th>
+												{locale.pages.editor.analytics.works.header.workday}
+											</th>
+											<th>
 												{locale.pages.editor.analytics.works.header.cost}
 											</th>
 											<th>
@@ -146,9 +167,14 @@ const WorkViewer: FC<Props> = (props: Props) => {
 											</th>
 										</>
 									) : (
-										<th>
-											{locale.pages.editor.analytics.works.header.workload}
-										</th>
+										<>
+											<th>
+												{locale.pages.editor.analytics.works.header.workload}
+											</th>
+											<th>
+												{locale.pages.editor.analytics.works.header.workday}
+											</th>
+										</>
 									)
 								}
 							</>
@@ -217,7 +243,7 @@ function renderMonths(visibleCost: boolean, months: ReadonlyArray<DateTime>, loc
 		return (
 			<th
 				key={a.ticks}
-				colSpan={visibleCost ? 3 : undefined}
+				colSpan={visibleCost ? HeaderColumn.VisibleCostLength : HeaderColumn.InvisibleCostLength}
 			>
 				<time dateTime={a.format("U")}>
 					{a.format(locale.pages.editor.analytics.works.month.monthFormat)}
@@ -245,6 +271,16 @@ function renderRange(visibleCost: boolean, member: Member, range: DateTimeRange,
 				<code>
 					{Timelines.displayProgress(percent)}
 				</code>
+			</td>
+			<td className={
+				classNames(
+					"workday",
+					{
+						"overwork": overwork,
+					}
+				)}
+			>
+				{Math.round(percent * workDays.length)}
 			</td>
 			{visibleCost && (
 				<>
