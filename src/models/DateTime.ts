@@ -2,6 +2,7 @@ import { cdate } from "cdate";
 
 import { ParseResult, ResultFactory } from "@/models/data/Result";
 import { Require } from "@/models/Require";
+import { Strings } from "@/models/Strings";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 import { Strong } from "@/models/Types";
@@ -31,14 +32,6 @@ function factory(timeZone: TimeZone): cdate.cdate {
 	}
 
 	return create;
-}
-
-function padStart(value: number, length: number, fillString: string): string {
-	return value.toString().padStart(length, fillString);
-}
-
-function padStart0(value: number, length: number): string {
-	return padStart(value, length, "0");
 }
 
 /**
@@ -165,12 +158,12 @@ export class DateTime {
 		// 自分でタイムゾーン計算したらライブラリの意味ない、、、とはいえこの手法もどうなんっていう
 
 		const date = {
-			year: padStart0(year, 4),
-			month: padStart0(month, 2),
-			day: padStart0(day ?? 1, 2),
-			hour: padStart0(hour ?? 0, 2),
-			minute: padStart0(minute ?? 0, 2),
-			second: padStart0(second ?? 0, 2),
+			year: Strings.padStart0(year, 4),
+			month: Strings.padStart0(month, 2),
+			day: Strings.padStart0(day ?? 1, 2),
+			hour: Strings.padStart0(hour ?? 0, 2),
+			minute: Strings.padStart0(minute ?? 0, 2),
+			second: Strings.padStart0(second ?? 0, 2),
 			millisecond: (millisecond ?? 0).toString(),
 		};
 		const iso8601WithoutTimezone = `${date.year}-${date.month}-${date.day}T${date.hour}:${date.minute}:${date.second}.${date.millisecond}`;
@@ -473,27 +466,27 @@ export class DateTime {
 		}
 
 		const map = new Map([
-			["yy", padStart0(this.year % 100, 2)],
-			["yyyy", padStart0(this.year, 4)],
-			["yyyyy", padStart0(this.year, 5)],
+			["yy", Strings.padStart0(this.year % 100, 2)],
+			["yyyy", Strings.padStart0(this.year, 4)],
+			["yyyyy", Strings.padStart0(this.year, 5)],
 
 			["M", (this.month).toString()],
-			["MM", padStart0(this.month, 2)],
+			["MM", Strings.padStart0(this.month, 2)],
 
 			["d", this.day.toString()],
-			["dd", padStart0(this.day, 2)],
+			["dd", Strings.padStart0(this.day, 2)],
 
 			["H", this.hour.toString()],
-			["HH", padStart0(this.hour, 2)],
+			["HH", Strings.padStart0(this.hour, 2)],
 
 			["m", this.minute.toString()],
-			["mm", padStart0(this.minute, 2)],
+			["mm", Strings.padStart0(this.minute, 2)],
 
 			["s", this.second.toString()],
-			["ss", padStart0(this.second, 2)],
+			["ss", Strings.padStart0(this.second, 2)],
 
 			["f", this.millisecond.toString()],
-			["fff", padStart0(this.millisecond, 3)],
+			["fff", Strings.padStart0(this.millisecond, 3)],
 		]);
 
 		const pattern = [...map.keys()]
