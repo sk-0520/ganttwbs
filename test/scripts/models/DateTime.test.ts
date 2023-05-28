@@ -141,6 +141,23 @@ describe("DateTime", () => {
 	});
 
 	test.each([
+		[DateTime.parse("2024-01-01T00:00:00.000", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "year"],
+		[DateTime.parse("2024-02-01T00:00:00.000", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "month"],
+		[DateTime.parse("2024-02-03T00:00:00.000", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "day"],
+		[DateTime.parse("2024-02-03T12:00:00.000", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "hour"],
+		[DateTime.parse("2024-02-03T12:34:00.000", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "minute"],
+		[DateTime.parse("2024-02-03T12:34:56.000", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "second"],
+	])("startOf", (expected: DateTime, input: DateTime, unit: string) => {
+		expect(input.startOf(unit as Exclude<Unit, "millisecond">).format("U")).toBe(expected.format("U"));
+		expect(input.startOf(unit as Exclude<Unit, "millisecond">).ticks).toBe(expected.ticks);
+	});
+
+	test("startOf - throw", () => {
+		const dateTime = DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc);
+		expect(() => dateTime.startOf("millisecond" as Exclude<Unit, "millisecond">)).toThrow();
+	});
+
+	test.each([
 		[DateTime.parse("2024-12-31T23:59:59.999", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "year"],
 		[DateTime.parse("2024-02-29T23:59:59.999", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "month"],
 		[DateTime.parse("2024-02-03T23:59:59.999", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "day"],

@@ -369,6 +369,24 @@ export class DateTime {
 	}
 
 	/**
+ * 指定した単位での開始を指す日時を取得する。
+ * @param unit 年を指定した場合は自身の年の最終日、月を指定した場合は自身の月の最終日、秒を指定した場合は自身の秒の最終ミリ秒。
+ * @returns
+ */
+	public startOf(unit: Exclude<Unit, "millisecond">): DateTime {
+		const date = Require.switch(unit, {
+			"year": _ => this.date.startOf("year"),
+			"month": _ => this.date.startOf("month"),
+			"day": _ => this.date.startOf("date"),
+			"hour": _ => this.date.startOf("hour"),
+			"minute": _ => this.date.startOf("minute"),
+			"second": _ => this.date.startOf("second"),
+		});
+
+		return new DateTime(date, this.timeZone);
+	}
+
+	/**
 	 * 指定した単位での終わりを指す日時を取得する。
 	 * @param unit 年を指定した場合は自身の年の最終日、月を指定した場合は自身の月の最終日、秒を指定した場合は自身の秒の最終ミリ秒。
 	 * @returns
