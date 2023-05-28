@@ -245,7 +245,7 @@ function renderMonths(visibleCost: boolean, months: ReadonlyArray<DateTime>, loc
 				key={a.ticks}
 				colSpan={visibleCost ? HeaderColumn.VisibleCostLength : HeaderColumn.InvisibleCostLength}
 			>
-				<time dateTime={a.format("U")}>
+				<time dateTime={a.toHtml("time")}>
 					{a.format(locale.common.calendar.yearMonthFormat)}
 				</time>
 			</th>

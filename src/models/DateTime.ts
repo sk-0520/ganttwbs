@@ -16,6 +16,8 @@ export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 /** DateTime シリアル値。 数値処理する場合は `Number` を経由すること。 */
 export type DateTimeTicks = Strong<"DateTimeTicks", number>;
 
+export const InvalidHtmlTime = "invalid";
+
 function toTicks(arg: number | DateTimeTicks): DateTimeTicks {
 	return arg as DateTimeTicks;
 }
