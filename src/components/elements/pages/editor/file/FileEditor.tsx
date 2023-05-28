@@ -144,8 +144,8 @@ const FileEditor: FC<Props> = (props: Props) => {
 	}
 
 	async function handleExportExcel(): Promise<void> {
-		const calcData = Exports.calc(editorData.setting);
-		const workbook = await Exports.createWorkbook(editorData.setting, calcData, locale);
+		const calculatedData = Exports.calculate(editorData.setting);
+		const workbook = await Exports.createWorkbook(editorData.setting, calculatedData, locale);
 
 		const parsedFileName = path.parse(editorData.fileName);
 		const fileName = parsedFileName.name + ".xlsx";
@@ -157,8 +157,8 @@ const FileEditor: FC<Props> = (props: Props) => {
 	}
 
 	async function handleExportCsv(kind: TableKind): Promise<void> {
-		const calcData = Exports.calc(editorData.setting);
-		const table = await Exports.createTable(editorData.setting, calcData, locale);
+		const calculatedData = Exports.calculate(editorData.setting);
+		const table = await Exports.createTable(editorData.setting, calculatedData, locale);
 		const csv = Exports.toCsv(kind, table);
 
 		const parsedFileName = path.parse(editorData.fileName);

@@ -363,7 +363,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		}
 	}
 
-	const timelineIndex = props.timelineCallbacks.calcReadableTimelineId(props.currentTimeline);
+	const timelineIndex = props.timelineCallbacks.calculateReadableTimelineId(props.currentTimeline);
 
 	return (
 		<TimelineHeaderRow

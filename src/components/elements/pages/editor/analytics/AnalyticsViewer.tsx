@@ -19,12 +19,12 @@ const AnalyticsViewer: FC<Props> = (props: Props) => {
 		return <></>;
 	}
 
-	const calcData = Exports.calc(props.editorData.setting);
+	const calculatedData = Exports.calculate(props.editorData.setting);
 
-	logger.debug("calcData", calcData);
+	logger.debug("calcData", calculatedData);
 
-	const totalSuccessWorkRange = calcData.workRange.totalSuccessWorkRange.success
-		? calcData.workRange.totalSuccessWorkRange.value
+	const totalSuccessWorkRange = calculatedData.workRange.totalSuccessWorkRange.success
+		? calculatedData.workRange.totalSuccessWorkRange.value
 		: undefined
 	;
 
@@ -38,8 +38,8 @@ const AnalyticsViewer: FC<Props> = (props: Props) => {
 				totalSuccessWorkRange={totalSuccessWorkRange}
 			/>
 			<WorkViewer
-				sequenceTimelines={calcData.sequenceTimelines}
-				successWorkRanges={calcData.workRange.successWorkRanges}
+				sequenceTimelines={calculatedData.sequenceTimelines}
+				successWorkRanges={calculatedData.workRange.successWorkRanges}
 				totalSuccessWorkRange={totalSuccessWorkRange}
 				configuration={props.configuration}
 			/>

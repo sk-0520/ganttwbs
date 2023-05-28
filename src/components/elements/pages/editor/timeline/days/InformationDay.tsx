@@ -148,7 +148,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 							<dd>
 								<ul>
 									{sortedTimelines.map(i => {
-										const timelineIndex = props.timelineCallbacks.calcReadableTimelineId(i);
+										const timelineIndex = props.timelineCallbacks.calculateReadableTimelineId(i);
 										const timelineClassName = Timelines.getReadableTimelineIdClassName(timelineIndex);
 
 										return (

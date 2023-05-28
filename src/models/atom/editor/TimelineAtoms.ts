@@ -146,7 +146,7 @@ const SequenceTimelinesWriterAtom = atom<never, Array<AnyTimeline>, void>(
 		set(TimelineItemsAtom, timelineItems);
 
 		const resourceInfoAtom = get(ResourceInfoAtom);
-		const dayInfos = Timelines.calcDayInfos(totalTimelineMap, new Set([...workRanges.values()]), resourceInfoAtom);
+		const dayInfos = Timelines.calculateDayInfos(totalTimelineMap, new Set([...workRanges.values()]), resourceInfoAtom);
 		set(DayInfosAtom, dayInfos);
 	}
 );

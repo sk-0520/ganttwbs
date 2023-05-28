@@ -66,7 +66,7 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const selectingBeginDateAtomWriter = useSelectingBeginDateAtomWriter();
 
 	const timelineCallbacks: TimelineCallbacks = {
-		calcReadableTimelineId: handleCalcReadableTimelineId,
+		calculateReadableTimelineId: handleCalcReadableTimelineId,
 		searchBeforeTimeline: handleSearchBeforeTimeline,
 
 		addEmptyTimeline: handleAddEmptyTimeline,

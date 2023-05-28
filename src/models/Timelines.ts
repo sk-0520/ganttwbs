@@ -705,7 +705,7 @@ export abstract class Timelines {
 		return result;
 	}
 
-	private static calcDayInfosCore(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>, log: TimeLogMethod): Map<DateTimeTicks, DayInfo> {
+	private static calculateDayInfosCore(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>, log: TimeLogMethod): Map<DateTimeTicks, DayInfo> {
 		type SuccessWorkRangeTimeline = Omit<SuccessWorkRange, "kind" | "timeline"> & {
 			timeline: TaskTimeline,
 		}
@@ -824,11 +824,11 @@ export abstract class Timelines {
 		return result;
 	}
 
-	public static calcDayInfos(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>): Map<DateTimeTicks, DayInfo> {
+	public static calculateDayInfos(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>): Map<DateTimeTicks, DayInfo> {
 		let result: Map<DateTimeTicks, DayInfo> | undefined;
 
 		logger.time("日情報算出", log => {
-			result = this.calcDayInfosCore(timelineMap, workRanges, resourceInfo, log);
+			result = this.calculateDayInfosCore(timelineMap, workRanges, resourceInfo, log);
 		});
 		if (result === undefined) {
 			throw new Error();
@@ -850,7 +850,7 @@ export abstract class Timelines {
 	 * @param successWorkRanges
 	 * @returns
 	 */
-	public static calcPercent(member: Member, workDays: ReadonlyArray<DateTime>, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): number {
+	public static calculateWorkPercent(member: Member, workDays: ReadonlyArray<DateTime>, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): number {
 
 		const memberTimelines = taskTimelines.filter(a => a.memberId === member.id);
 		const memberWorkRanges = successWorkRanges.filter(a => memberTimelines.some(b => b.id === a.timeline.id));
