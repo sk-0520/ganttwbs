@@ -10,6 +10,7 @@ type DateTimeParseResult = ParseResult<DateTime, Error>;
 
 export type Unit = "millisecond" | "second" | "minute" | "hour" | "day" | "week" | "month" | "year";
 export type MonthNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+/** 曜日(0: 日曜日, 1: 月曜日, 6: 土曜日) */
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 /** DateTime シリアル値。 数値処理する場合は `Number` を経由すること。 */

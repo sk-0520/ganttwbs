@@ -1,4 +1,6 @@
 import { Calendars } from "@/models/Calendars";
+import { HolidayEventMap, HolidayRegulars } from "@/models/data/Calendar";
+import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 import { DateTimeRange } from "@/models/data/Range";
 import { DateTime } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
@@ -33,4 +35,152 @@ describe("Calendars", () => {
 		}
 	});
 
+	test.each([
+		[1, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2023-05-01", TimeZone.utc)],
+		[2, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2023-06-01", TimeZone.utc)],
+		[2, DateTime.parse("2023-05-31", TimeZone.utc), DateTime.parse("2023-06-01", TimeZone.utc)],
+		[3, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2023-07-01", TimeZone.utc)],
+		[8, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2023-12-01", TimeZone.utc)],
+		[9, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2024-01-01", TimeZone.utc)],
+		[12, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2024-04-01", TimeZone.utc)],
+		[13, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2024-05-01", TimeZone.utc)],
+	])("getMonthCount", (expected: number, begin: DateTime, end: DateTime) => {
+		expect(Calendars.getMonthCount(begin, end)).toBe(expected);
+	});
+
+	test.each([
+		[1, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2023-05-01", TimeZone.utc)],
+		[2, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2023-06-01", TimeZone.utc)],
+		[2, DateTime.parse("2023-05-31", TimeZone.utc), DateTime.parse("2023-06-01", TimeZone.utc)],
+		[3, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2023-07-01", TimeZone.utc)],
+		[8, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2023-12-01", TimeZone.utc)],
+		[9, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2024-01-01", TimeZone.utc)],
+		[12, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2024-04-01", TimeZone.utc)],
+		[13, DateTime.parse("2023-05-01", TimeZone.utc), DateTime.parse("2024-05-01", TimeZone.utc)],
+	])("getMonths", (expected: number, begin: DateTime, end: DateTime) => {
+		const actual = Calendars.getMonths(begin, end);
+		expect(actual.length).toBe(expected);
+		if (actual.length === 1) {
+			expect(actual[0].ticks).toBe(begin.ticks);
+		} else {
+			expect(actual[0].ticks).toBe(begin.ticks);
+			expect(actual[actual.length - 1].ticks).toBe(end.ticks);
+		}
+	});
+
+	test.each([
+		[DateTime.parse("2023-05-28", TimeZone.utc)],
+		[DateTime.parse("2023-05-29", TimeZone.utc)],
+		[DateTime.parse("2023-05-30", TimeZone.utc)],
+		[DateTime.parse("2023-05-31", TimeZone.utc)],
+		[DateTime.parse("2023-06-01", TimeZone.utc)],
+		[DateTime.parse("2023-06-02", TimeZone.utc)],
+		[DateTime.parse("2023-06-03", TimeZone.utc)],
+		[DateTime.parse("2023-06-04", TimeZone.utc)],
+		[DateTime.parse("2023-06-05", TimeZone.utc)],
+		[DateTime.parse("2023-06-06", TimeZone.utc)],
+		[DateTime.parse("2023-06-07", TimeZone.utc)],
+		[DateTime.parse("2023-06-08", TimeZone.utc)],
+		[DateTime.parse("2023-06-09", TimeZone.utc)],
+		[DateTime.parse("2023-06-10", TimeZone.utc)],
+	])("isHoliday - none", (date: DateTime) => {
+		const events: HolidayEventMap = new Map();
+		const regulars: HolidayRegulars = new Set();
+		const actual = Calendars.isHoliday(date, events, regulars);
+		expect(actual).toBeFalsy();
+	});
+
+	test.each([
+		[true, DateTime.parse("2023-05-28", TimeZone.utc)],
+		[false, DateTime.parse("2023-05-29", TimeZone.utc)],
+		[false, DateTime.parse("2023-05-30", TimeZone.utc)],
+		[false, DateTime.parse("2023-05-31", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-01", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-02", TimeZone.utc)],
+		[true, DateTime.parse("2023-06-03", TimeZone.utc)],
+		[true, DateTime.parse("2023-06-04", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-05", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-06", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-07", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-08", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-09", TimeZone.utc)],
+		[true, DateTime.parse("2023-06-10", TimeZone.utc)],
+	])("isHoliday - regulars", (expected: boolean, date: DateTime) => {
+		const events: HolidayEventMap = new Map();
+		const regulars: HolidayRegulars = new Set([
+			0,
+			6
+		]);
+		const actual = Calendars.isHoliday(date, events, regulars);
+		expect(actual).toBe(expected);
+	});
+
+	test.each([
+		[false, DateTime.parse("2023-05-28", TimeZone.utc)],
+		[false, DateTime.parse("2023-05-29", TimeZone.utc)],
+		[false, DateTime.parse("2023-05-30", TimeZone.utc)],
+		[true, DateTime.parse("2023-05-31", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-01", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-02", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-03", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-04", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-05", TimeZone.utc)],
+		[true, DateTime.parse("2023-06-06", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-07", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-08", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-09", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-10", TimeZone.utc)],
+	])("isHoliday - event", (expected: boolean, date: DateTime) => {
+		const dummy: HolidayEventMapValue = {
+			date: DateTime.today(TimeZone.utc),
+			event: {
+				kind: "normal",
+				display: "",
+			},
+		};
+
+		const events: HolidayEventMap = new Map([
+			[DateTime.parse("2023-05-31", TimeZone.utc).ticks, dummy],
+			[DateTime.parse("2023-06-06", TimeZone.utc).ticks, dummy],
+		]);
+		const regulars: HolidayRegulars = new Set();
+		const actual = Calendars.isHoliday(date, events, regulars);
+		expect(actual).toBe(expected);
+	});
+
+	test.each([
+		[true, DateTime.parse("2023-05-28", TimeZone.utc)],
+		[false, DateTime.parse("2023-05-29", TimeZone.utc)],
+		[false, DateTime.parse("2023-05-30", TimeZone.utc)],
+		[true, DateTime.parse("2023-05-31", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-01", TimeZone.utc)],
+		[true, DateTime.parse("2023-06-02", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-03", TimeZone.utc)],
+		[true, DateTime.parse("2023-06-04", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-05", TimeZone.utc)],
+		[true, DateTime.parse("2023-06-06", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-07", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-08", TimeZone.utc)],
+		[true, DateTime.parse("2023-06-09", TimeZone.utc)],
+		[false, DateTime.parse("2023-06-10", TimeZone.utc)],
+	])("isHoliday - regulars + event", (expected: boolean, date: DateTime) => {
+		const dummy: HolidayEventMapValue = {
+			date: DateTime.today(TimeZone.utc),
+			event: {
+				kind: "normal",
+				display: "",
+			},
+		};
+
+		const events: HolidayEventMap = new Map([
+			[DateTime.parse("2023-05-31", TimeZone.utc).ticks, dummy],
+			[DateTime.parse("2023-06-06", TimeZone.utc).ticks, dummy],
+		]);
+		const regulars: HolidayRegulars = new Set([
+			0,
+			5
+		]);
+		const actual = Calendars.isHoliday(date, events, regulars);
+		expect(actual).toBe(expected);
+	});
 });
