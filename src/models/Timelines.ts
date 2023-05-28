@@ -3,7 +3,7 @@ import { DayInfo } from "@/models/data/DayInfo";
 import { DateTimeRange } from "@/models/data/Range";
 import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
 import { ResourceInfo } from "@/models/data/ResourceInfo";
-import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, Timestamp } from "@/models/data/Setting";
+import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Member, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, Timestamp } from "@/models/data/Setting";
 import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime, DateTimeTicks, WeekIndex } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
@@ -705,7 +705,7 @@ export abstract class Timelines {
 		return result;
 	}
 
-	private static calcDayInfosCore(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>, log: TimeLogMethod): Map<DateTimeTicks, DayInfo> {
+	private static calculateDayInfosCore(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>, log: TimeLogMethod): Map<DateTimeTicks, DayInfo> {
 		type SuccessWorkRangeTimeline = Omit<SuccessWorkRange, "kind" | "timeline"> & {
 			timeline: TaskTimeline,
 		}
@@ -824,11 +824,11 @@ export abstract class Timelines {
 		return result;
 	}
 
-	public static calcDayInfos(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>): Map<DateTimeTicks, DayInfo> {
+	public static calculateDayInfos(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>): Map<DateTimeTicks, DayInfo> {
 		let result: Map<DateTimeTicks, DayInfo> | undefined;
 
 		logger.time("日情報算出", log => {
-			result = this.calcDayInfosCore(timelineMap, workRanges, resourceInfo, log);
+			result = this.calculateDayInfosCore(timelineMap, workRanges, resourceInfo, log);
 		});
 		if (result === undefined) {
 			throw new Error();
@@ -840,4 +840,31 @@ export abstract class Timelines {
 	public static isCompleted(progress: Progress): boolean {
 		return 1 <= progress;
 	}
+
+	/**
+	 * 指定した日の集合から該当メンバーの稼働率を算出。
+	 *
+	 * @param member
+	 * @param workDays
+	 * @param taskTimelines
+	 * @param successWorkRanges
+	 * @returns
+	 */
+	public static calculateWorkPercent(member: Member, workDays: ReadonlyArray<DateTime>, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): number {
+
+		const memberTimelines = taskTimelines.filter(a => a.memberId === member.id);
+		const memberWorkRanges = successWorkRanges.filter(a => memberTimelines.some(b => b.id === a.timeline.id));
+
+		const memberWorkDays = new Array<DateTime>();
+		for (const workDay of workDays) {
+			for (const memberWorkRange of memberWorkRanges) {
+				if (workDay.isIn(memberWorkRange.begin, memberWorkRange.end)) {
+					memberWorkDays.push(workDay);
+				}
+			}
+		}
+
+		return memberWorkDays.length / workDays.length;
+	}
+
 }

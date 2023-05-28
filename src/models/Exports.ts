@@ -4,7 +4,7 @@ import { Locale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
-import { CalcData } from "@/models/data/CalcData";
+import { CalculatedData } from "@/models/data/CalculatedData";
 import { ResultFactory } from "@/models/data/Result";
 import { Progress, RootTimeline, Setting } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
@@ -75,13 +75,13 @@ export abstract class Exports {
 	 * @param editorData 編集データ。
 	 * @returns 計算済みデータ。
 	 */
-	public static calc(setting: Setting): CalcData {
+	public static calculate(setting: Setting): CalculatedData {
 		const calendarInfo = Calendars.createCalendarInfo(setting.timeZone, setting.calendar);
 		const resourceInfo = Resources.createResourceInfo(setting.groups);
 		const sequenceTimelines = Timelines.flat(setting.rootTimeline.children);
 		const timelineMap = Timelines.getTimelinesMap(setting.rootTimeline);
 		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], setting.calendar.holiday, setting.recursive, calendarInfo.timeZone);
-		const dayInfos = Timelines.calcDayInfos(timelineMap, new Set([...workRanges.values()]), resourceInfo);
+		const dayInfos = Timelines.calculateDayInfos(timelineMap, new Set([...workRanges.values()]), resourceInfo);
 
 		const successWorkRanges = [...workRanges.values()].filter(WorkRanges.maybeSuccessWorkRange);
 
@@ -145,7 +145,7 @@ export abstract class Exports {
 	// 	return "$" + ret.groups.COL + "$" + ret.groups.ROW;
 	// }
 
-	private static createExcelRow1(timelineSheet: Worksheet, calcData: CalcData, setting: Setting, dates: ReadonlyArray<Readonly<Date>>, baseCellsNumberMap: ReadonlyMap<ColumnKey, number>, beginDate: DateTime, locale: Locale): Row {
+	private static createExcelRow1(timelineSheet: Worksheet, calculatedData: CalculatedData, setting: Setting, dates: ReadonlyArray<Readonly<Date>>, baseCellsNumberMap: ReadonlyMap<ColumnKey, number>, beginDate: DateTime, locale: Locale): Row {
 		const monthEqualColor = Color.create(0xcc, 0xcc, 0xcc);
 
 		const header1: BaseCells = {
@@ -249,7 +249,7 @@ export abstract class Exports {
 				}
 			}
 
-			const eventValue = calcData.calendarInfo.holidayEventMap.get(date.ticks);
+			const eventValue = calculatedData.calendarInfo.holidayEventMap.get(date.ticks);
 			if (eventValue) {
 				if (eventValue.event.kind in setting.theme.holiday.events) {
 					const color = Color.tryParse(setting.theme.holiday.events[eventValue.event.kind] || "");
@@ -276,11 +276,11 @@ export abstract class Exports {
 		return headerRow1;
 	}
 
-	private static createExcelRow2(timelineSheet: Worksheet, calcData: CalcData, setting: Setting, dates: ReadonlyArray<Readonly<Date>>, baseCellsNumberMap: ReadonlyMap<ColumnKey, number>, rootTimelineItem: RootTimeline, locale: Locale): Row {
-		const rootSuccessWorkRanges = calcData.workRange.successWorkRanges.find(a => a.timeline.id === rootTimelineItem.id);
+	private static createExcelRow2(timelineSheet: Worksheet, calculatedData: CalculatedData, setting: Setting, dates: ReadonlyArray<Readonly<Date>>, baseCellsNumberMap: ReadonlyMap<ColumnKey, number>, rootTimelineItem: RootTimeline, locale: Locale): Row {
+		const rootSuccessWorkRanges = calculatedData.workRange.successWorkRanges.find(a => a.timeline.id === rootTimelineItem.id);
 
 		const header2: BaseCells = {
-			"id": `${calcData.sequenceTimelines.filter(Settings.maybeTaskTimeline).length}/${calcData.sequenceTimelines.length}`,
+			"id": `${calculatedData.sequenceTimelines.filter(Settings.maybeTaskTimeline).length}/${calculatedData.sequenceTimelines.length}`,
 			"subject": "",
 			"workload": Timelines.sumWorkloadByGroup(rootTimelineItem).totalDays,
 			"resource": "",
@@ -325,7 +325,7 @@ export abstract class Exports {
 		return headerRow2;
 	}
 
-	private static createExcelRow3(timelineSheet: Worksheet, calcData: CalcData, setting: Setting, dates: ReadonlyArray<Readonly<Date>>, baseCellsNumberMap: ReadonlyMap<ColumnKey, number>, locale: Locale): Row {
+	private static createExcelRow3(timelineSheet: Worksheet, calculatedData: CalculatedData, setting: Setting, dates: ReadonlyArray<Readonly<Date>>, baseCellsNumberMap: ReadonlyMap<ColumnKey, number>, locale: Locale): Row {
 		const header3: BaseCells = {
 			"id": locale.pages.editor.timeline.header.columns.id,
 			"subject": locale.pages.editor.timeline.header.columns.subject,
@@ -367,10 +367,10 @@ export abstract class Exports {
 		return headerRow3;
 	}
 
-	public static async createWorkbook(setting: Setting, calcData: CalcData, locale: Locale): Promise<Workbook> {
-		const dates = Calendars.getDays(calcData.calendarInfo.range).map(a => a.toDate(true));
+	public static async createWorkbook(setting: Setting, calculatedData: CalculatedData, locale: Locale): Promise<Workbook> {
+		const dates = Calendars.getDays(calculatedData.calendarInfo.range).map(a => a.toDate(true));
 
-		const rootTimelineItem = Require.get(calcData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
+		const rootTimelineItem = Require.get(calculatedData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
 
 		const baseCellsNumberMap = this.getExcelBaseCellsNumberMap();
 
@@ -378,15 +378,15 @@ export abstract class Exports {
 		const timelineSheet = workbook.addWorksheet(Strings.replaceMap(locale.file.excel.export.timelineSheetNameFormat, {
 			"NAME": setting.name
 		}));
-		const beginDate = calcData.calendarInfo.range.begin.truncateTime();
+		const beginDate = calculatedData.calendarInfo.range.begin.truncateTime();
 
 		// ヘッダ
 		// 1. タイトル - 月
-		this.createExcelRow1(timelineSheet, calcData, setting, dates, baseCellsNumberMap, beginDate, locale);
+		this.createExcelRow1(timelineSheet, calculatedData, setting, dates, baseCellsNumberMap, beginDate, locale);
 		// 2. 集計 - 日付
-		this.createExcelRow2(timelineSheet, calcData, setting, dates, baseCellsNumberMap, rootTimelineItem, locale);
+		this.createExcelRow2(timelineSheet, calculatedData, setting, dates, baseCellsNumberMap, rootTimelineItem, locale);
 		// 3. ヘッダ - 曜日
-		this.createExcelRow3(timelineSheet, calcData, setting, dates, baseCellsNumberMap, locale);
+		this.createExcelRow3(timelineSheet, calculatedData, setting, dates, baseCellsNumberMap, locale);
 
 		// ウィンドウ枠固定
 		timelineSheet.views = [
@@ -429,7 +429,7 @@ export abstract class Exports {
 
 		// タイムラインをどさっと出力
 		//let n = 1;
-		for (const timeline of calcData.sequenceTimelines) {
+		for (const timeline of calculatedData.sequenceTimelines) {
 
 			const readableTimelineId = Timelines.calcReadableTimelineId(timeline, rootTimelineItem);
 			const workload = Settings.maybeGroupTimeline(timeline)
@@ -438,9 +438,9 @@ export abstract class Exports {
 				;
 			const memberGroupPair = Settings.maybeGroupTimeline(timeline)
 				? undefined
-				: calcData.resourceInfo.memberMap.get(timeline.memberId)
+				: calculatedData.resourceInfo.memberMap.get(timeline.memberId)
 				;
-			const successWorkRange = calcData.workRange.successWorkRanges.find(a => a.timeline.id === timeline.id);
+			const successWorkRange = calculatedData.workRange.successWorkRanges.find(a => a.timeline.id === timeline.id);
 			const workRange = successWorkRange
 				? { begin: successWorkRange.begin.toDate(true), end: successWorkRange.end.toDate(true) }
 				: { begin: "#ERROR", end: "" }
@@ -612,10 +612,10 @@ export abstract class Exports {
 		return workbook;
 	}
 
-	public static async createTable(setting: Setting, calcData: CalcData, locale: Locale): Promise<Array<Array<string>>> {
-		const dates = Calendars.getDays(calcData.calendarInfo.range);
-		const rootTimelineItem = Require.get(calcData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
-		const rootSuccessWorkRanges = calcData.workRange.successWorkRanges.find(a => a.timeline.id === rootTimelineItem.id);
+	public static async createTable(setting: Setting, calculatedData: CalculatedData, locale: Locale): Promise<Array<Array<string>>> {
+		const dates = Calendars.getDays(calculatedData.calendarInfo.range);
+		const rootTimelineItem = Require.get(calculatedData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
+		const rootSuccessWorkRanges = calculatedData.workRange.successWorkRanges.find(a => a.timeline.id === rootTimelineItem.id);
 
 		const result = new Array<Array<string>>();
 
@@ -623,7 +623,7 @@ export abstract class Exports {
 			setting.name,
 			...Arrays.repeat("", 9),
 			...dates.map(a => {
-				const holiday = calcData.calendarInfo.holidayEventMap.get(a.ticks);
+				const holiday = calculatedData.calendarInfo.holidayEventMap.get(a.ticks);
 				if (holiday) {
 					return holiday.event.display;
 				}
@@ -652,7 +652,7 @@ export abstract class Exports {
 			...dates.map(a => a.format(locale.file.table.export.dateFormat)),
 		]);
 
-		for (const timeline of calcData.sequenceTimelines) {
+		for (const timeline of calculatedData.sequenceTimelines) {
 			const readableTimelineId = Timelines.calcReadableTimelineId(timeline, rootTimelineItem);
 			const workload = Settings.maybeGroupTimeline(timeline)
 				? Timelines.sumWorkloadByGroup(timeline)
@@ -660,9 +660,9 @@ export abstract class Exports {
 				;
 			const memberGroupPair = Settings.maybeGroupTimeline(timeline)
 				? undefined
-				: calcData.resourceInfo.memberMap.get(timeline.memberId)
+				: calculatedData.resourceInfo.memberMap.get(timeline.memberId)
 				;
-			const successWorkRange = calcData.workRange.successWorkRanges.find(a => a.timeline.id === timeline.id);
+			const successWorkRange = calculatedData.workRange.successWorkRanges.find(a => a.timeline.id === timeline.id);
 			const progress = Settings.maybeGroupTimeline(timeline)
 				? Timelines.sumProgressByGroup(timeline)
 				: timeline.progress

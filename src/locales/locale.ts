@@ -283,17 +283,22 @@ export interface Locale {
 
 					header: {
 						workload: string,
+						workday: string,
 						cost: string,
 						sales: string,
 					},
 
 					month: {
 						title: string,
-						/** DateTime.format */
-						monthFormat: string,
 					},
 					total: {
 						title: string,
+						/**
+						 * * TITLE
+						 * * BEGIN
+						 * * END
+						 */
+						titleFormat: string,
 					}
 				},
 			},

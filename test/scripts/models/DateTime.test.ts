@@ -141,10 +141,34 @@ describe("DateTime", () => {
 	});
 
 	test.each([
-		[DateTime.parse("2019-02-28T00:00:00", TimeZone.utc), DateTime.parse("2019-02-01T12:34:56.789", TimeZone.utc)],
-		[DateTime.parse("2020-02-29T00:00:00", TimeZone.utc), DateTime.parse("2020-02-01T12:34:56.789", TimeZone.utc)],
-		[DateTime.parse("2019-02-28T00:00:00", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2019-02-01T12:34:56.789", TimeZone.parse("Asia/Tokyo"))],
-		[DateTime.parse("2020-02-29T00:00:00", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2020-02-01T12:34:56.789", TimeZone.parse("Asia/Tokyo"))],
+		[DateTime.parse("2024-12-31T23:59:59.999", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "year"],
+		[DateTime.parse("2024-02-29T23:59:59.999", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "month"],
+		[DateTime.parse("2024-02-03T23:59:59.999", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "day"],
+		[DateTime.parse("2024-02-03T12:59:59.999", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "hour"],
+		[DateTime.parse("2024-02-03T12:34:59.999", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "minute"],
+		[DateTime.parse("2024-02-03T12:34:56.999", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "second"],
+	])("endOf", (expected: DateTime, input: DateTime, unit: string) => {
+		expect(input.endOf(unit as Exclude<Unit, "millisecond">).format("U")).toBe(expected.format("U"));
+		expect(input.endOf(unit as Exclude<Unit, "millisecond">).ticks).toBe(expected.ticks);
+	});
+
+	test("endOf - throw", () => {
+		const dateTime = DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc);
+		expect(() => dateTime.endOf("millisecond" as Exclude<Unit, "millisecond">)).toThrow();
+	});
+
+	test.each([
+		[DateTime.parse("2024-02-03T23:59:59.999", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc)],
+	])("endOfTime", (expected: DateTime, input: DateTime) => {
+		expect(input.endOfTime().format("U")).toBe(expected.format("U"));
+		expect(input.endOfTime().ticks).toBe(expected.ticks);
+	});
+
+	test.each([
+		[DateTime.parse("2019-02-28T23:59:59.999", TimeZone.utc), DateTime.parse("2019-02-01T12:34:56.789", TimeZone.utc)],
+		[DateTime.parse("2020-02-29T23:59:59.999", TimeZone.utc), DateTime.parse("2020-02-01T12:34:56.789", TimeZone.utc)],
+		[DateTime.parse("2019-02-28T23:59:59.999", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2019-02-01T12:34:56.789", TimeZone.parse("Asia/Tokyo"))],
+		[DateTime.parse("2020-02-29T23:59:59.999", TimeZone.parse("Asia/Tokyo")), DateTime.parse("2020-02-01T12:34:56.789", TimeZone.parse("Asia/Tokyo"))],
 	])("getLastDayOfMonth", (expected: DateTime, input: DateTime) => {
 		const actual = input.getLastDayOfMonth();
 		expect(actual.format("U")).toBe(expected.format("U"));

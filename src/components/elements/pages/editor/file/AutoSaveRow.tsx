@@ -4,7 +4,7 @@ import Timestamp from "@/components/elements/Timestamp";
 import { useLocale } from "@/locales/locale";
 import { AutoSaveKind } from "@/models/data/AutoSave";
 import { Configuration } from "@/models/data/Configuration";
-import { DateTime } from "@/models/DateTime";
+import { DateTime, InvalidHtmlTime } from "@/models/DateTime";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Types } from "@/models/Types";
 
@@ -99,6 +99,6 @@ function renderDateTime(time: DateTime | undefined): ReactNode {
 	}
 
 	return (
-		<time dateTime={"invalid"}>--:--:--</time>
+		<time dateTime={InvalidHtmlTime}>--:--:--</time>
 	);
 }

@@ -1,6 +1,5 @@
-import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
+import { HolidayEventMap, HolidayRegulars } from "@/models/data/Calendar";
 import { DateTimeRange } from "@/models/data/Range";
-import { DateTimeTicks, WeekIndex } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
 
 /**
@@ -13,8 +12,8 @@ export interface CalendarInfo {
 	readonly timeZone: TimeZone;
 	/** 日付範囲 */
 	readonly range: DateTimeRange;
-	/** 祝日設定(該当祝日の基準タイムゾーン00:00:00のUNIX時間がキーとなる) */
-	readonly holidayEventMap: ReadonlyMap<DateTimeTicks, Readonly<HolidayEventMapValue>>;
+	/** 祝日設定 */
+	readonly holidayEventMap: HolidayEventMap;
 	/** 定休設定 */
-	readonly holidayRegulars: ReadonlySet<WeekIndex>;
+	readonly holidayRegulars: HolidayRegulars;
 }

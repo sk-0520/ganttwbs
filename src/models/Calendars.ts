@@ -1,3 +1,4 @@
+import { HolidayEventMap, HolidayRegulars } from "@/models/data/Calendar";
 import { CalendarInfo } from "@/models/data/CalendarInfo";
 import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
 import { DateTimeRange } from "@/models/data/Range";
@@ -56,8 +57,8 @@ export abstract class Calendars {
 
 	/**
 	 * 開始・終了日からその期間の日を配列として取得する。
-	 * @param begin
-	 * @param end
+	 * @param begin 開始日
+	 * @param end 終了日(終了日が `00:00:00.0` の場合、その日は含まれない)
 	 * @returns
 	 */
 	public static getDays(range: DateTimeRange): Array<DateTime> {
@@ -78,6 +79,12 @@ export abstract class Calendars {
 		return result;
 	}
 
+	/**
+	 * 開始日・終了日からその期間の月数を取得する。
+	 * @param begin
+	 * @param end
+	 * @returns
+	 */
 	public static getMonthCount(begin: DateTime, end: DateTime): number {
 		const b = begin.year * 12 + begin.month;
 		const e = end.year * 12 + end.month;
@@ -96,35 +103,42 @@ export abstract class Calendars {
 		const count = this.getMonthCount(begin, end);
 
 		const result = new Array<DateTime>();
-		for (let i = 0; i < count - 1; i++) {
-			if (i) {
-				result.push(DateTime.create(
-					begin.timeZone,
-					begin.year,
-					begin.month + i
-				));
-			} else {
-				result.push(begin);
-			}
+		result.push(begin);
+
+		for (let i = 1; i < count - 1; i++) {
+			result.push(DateTime.create(
+				begin.timeZone,
+				begin.year,
+				begin.month + i
+			));
 		}
-		result.push(end);
+		if(1 < count) {
+			result.push(end);
+		}
 
 		return result;
 	}
 
-	public static isHoliday(date: DateTime, calendarInfo: Pick<CalendarInfo, "holidayEventMap" | "holidayRegulars">): boolean {
-		const holidayEvent = calendarInfo.holidayEventMap.get(date.ticks);
+	public static isHoliday(date: DateTime, holidayRegulars: HolidayRegulars, holidayEventMap: HolidayEventMap): boolean {
+		const holidayEvent = holidayEventMap.get(date.ticks);
 		if (holidayEvent) {
 			return true;
 		}
 
-		return calendarInfo.holidayRegulars.has(date.week);
+		return holidayRegulars.has(date.week);
 	}
 
-	public static getWorkDays(range: DateTimeRange, calendarInfo: Pick<CalendarInfo, "holidayEventMap" | "holidayRegulars">): Array<DateTime> {
-		const rangeDays = Calendars.getDays(range);
+	/**
+	 * 開始日・終了日からその期間の稼働日を取得
+	 * @param range 開始日・終了日(終了日の扱いは `Calendars.getDays` を参照のこと)
+	 * @param holidayRegulars
+	 * @param holidayEventMap
+	 * @returns
+	 */
+	public static getWorkDays(range: DateTimeRange, holidayRegulars: HolidayRegulars, holidayEventMap: HolidayEventMap): Array<DateTime> {
+		const rangeDays = this.getDays(range);
 
-		const workDays = rangeDays.filter(a => !this.isHoliday(a, calendarInfo));
+		const workDays = rangeDays.filter(a => !this.isHoliday(a.timeIsEmpty ? a: a.truncateTime(), holidayRegulars, holidayEventMap));
 
 		return workDays;
 	}

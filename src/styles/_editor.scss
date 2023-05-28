@@ -74,6 +74,11 @@ main#editor {
 			user-select: none;
 		}
 
+		&.tab-analytics {
+			background: variable.$app-timeline-default-background;
+		}
+
+
 		&.tab-setting {
 			code.example {
 				border: 1px solid gray;
