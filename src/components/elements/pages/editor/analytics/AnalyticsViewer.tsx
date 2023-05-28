@@ -31,7 +31,8 @@ const AnalyticsViewer: FC<Props> = (props: Props) => {
 	return (
 		<div id="analytics">
 			<p className="develop-warning">
-				ここの処理はクソほど怪しい。
+				ここの処理はクソほど怪しい。<br />
+				実働だけでやってるからなーんかおかしいんちゃうかな。
 			</p>
 
 			<RangeViewer
