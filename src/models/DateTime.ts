@@ -367,6 +367,33 @@ export class DateTime {
 	}
 
 	/**
+	 * 指定した単位での終わりを指す日時を取得する。
+	 * @param unit 年を指定した場合は自身の年の最終日、月を指定した場合は自身の月の最終日、秒を指定した場合は自身の秒の最終ミリ秒。
+	 * @returns
+	 */
+	public endOf(unit: Exclude<Unit, "millisecond">): DateTime {
+		const date = Require.switch(unit, {
+			"year": _ => this.date.endOf("year"),
+			"month": _ => this.date.endOf("month"),
+			"day": _ => this.date.endOf("date"),
+			"hour": _ => this.date.endOf("hour"),
+			"minute": _ => this.date.endOf("minute"),
+			"second": _ => this.date.endOf("second"),
+		});
+
+		return new DateTime(date, this.timeZone);
+	}
+
+	/**
+	 * 自身の日付最終時間を取得。
+	 * @returns
+	 */
+	public endOfTime(): DateTime {
+		return this.endOf("day");
+	}
+
+
+	/**
 	 * 自身の所属する月の最終日を取得。
 	 * @returns
 	 */
@@ -374,10 +401,6 @@ export class DateTime {
 		const date = this.date
 			.endOf("month")
 			.endOf("day")
-			.set("millisecond", 0)
-			.set("second", 0)
-			.set("minute", 0)
-			.set("hour", 0)
 			;
 
 		return new DateTime(date, this.timeZone);

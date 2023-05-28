@@ -288,7 +288,7 @@ function renderMember(visibleCost: boolean, member: Member, months: ReadonlyArra
 			{months.map(a => {
 				const range: DateTimeRange = {
 					begin: a,
-					end: a.getLastDayOfMonth().add(23, "hour").add(59, "minute"), //TODO: ミリ秒追加がないんだわ
+					end: a.getLastDayOfMonth(),
 				};
 
 				return renderRange(visibleCost, member, range, 1, calendarInfo, taskTimelines, successWorkRanges, configuration);
