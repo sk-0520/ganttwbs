@@ -103,13 +103,15 @@ export class DateTime {
 	}
 
 	/**
-	 * UNIX時間のミリ秒取得。
 	 * @returns
 	 */
 	public get ticks(): DateTimeTicks {
 		return toTicks(Number(this.date));
 	}
 
+	/**
+	 * 時間部分が `00:00:00.0` か。
+	 */
 	public get timeIsEmpty(): boolean {
 		return !this.hour
 			&&
@@ -137,6 +139,18 @@ export class DateTime {
 		return ResultFactory.success(new DateTime(date, timeZone));
 	}
 
+	/**
+	 * 年月日時分秒から生成。
+	 * @param timeZone
+	 * @param year
+	 * @param month
+	 * @param day
+	 * @param hour
+	 * @param minute
+	 * @param second
+	 * @param millisecond
+	 * @returns
+	 */
 	public static create(
 		timeZone: TimeZone,
 		year: number,
