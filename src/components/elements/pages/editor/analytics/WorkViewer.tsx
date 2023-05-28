@@ -246,7 +246,7 @@ function renderMonths(visibleCost: boolean, months: ReadonlyArray<DateTime>, loc
 				colSpan={visibleCost ? HeaderColumn.VisibleCostLength : HeaderColumn.InvisibleCostLength}
 			>
 				<time dateTime={a.format("U")}>
-					{a.format(locale.pages.editor.analytics.works.month.monthFormat)}
+					{a.format(locale.common.calendar.yearMonthFormat)}
 				</time>
 			</th>
 		);

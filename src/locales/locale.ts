@@ -290,8 +290,6 @@ export interface Locale {
 
 					month: {
 						title: string,
-						/** DateTime.format */
-						monthFormat: string,
 					},
 					total: {
 						title: string,

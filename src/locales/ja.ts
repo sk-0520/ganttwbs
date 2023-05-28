@@ -284,7 +284,6 @@ const locale: Locale = {
 
 					month: {
 						title: "各月",
-						monthFormat: "yyyy/MM",
 					},
 					total: {
 						title: "合計",
