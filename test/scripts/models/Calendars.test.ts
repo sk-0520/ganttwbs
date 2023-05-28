@@ -5,6 +5,14 @@ import { DateTimeRange } from "@/models/data/Range";
 import { DateTime } from "@/models/DateTime";
 import { TimeZone } from "@/models/TimeZone";
 
+const dummy: HolidayEventMapValue = {
+	date: DateTime.today(TimeZone.utc),
+	event: {
+		kind: "normal",
+		display: "",
+	},
+};
+
 describe("Calendars", () => {
 	test.each([
 		[1, { begin: DateTime.parse("2023-05-17", TimeZone.utc), end: DateTime.parse("2023-05-17", TimeZone.utc) }],
@@ -84,9 +92,9 @@ describe("Calendars", () => {
 		[DateTime.parse("2023-06-09", TimeZone.utc)],
 		[DateTime.parse("2023-06-10", TimeZone.utc)],
 	])("isHoliday - none", (date: DateTime) => {
-		const events: HolidayEventMap = new Map();
 		const regulars: HolidayRegulars = new Set();
-		const actual = Calendars.isHoliday(date, events, regulars);
+		const events: HolidayEventMap = new Map();
+		const actual = Calendars.isHoliday(date, regulars, events);
 		expect(actual).toBeFalsy();
 	});
 
@@ -111,7 +119,7 @@ describe("Calendars", () => {
 			0,
 			6
 		]);
-		const actual = Calendars.isHoliday(date, events, regulars);
+		const actual = Calendars.isHoliday(date, regulars, events);
 		expect(actual).toBe(expected);
 	});
 
@@ -131,20 +139,12 @@ describe("Calendars", () => {
 		[false, DateTime.parse("2023-06-09", TimeZone.utc)],
 		[false, DateTime.parse("2023-06-10", TimeZone.utc)],
 	])("isHoliday - event", (expected: boolean, date: DateTime) => {
-		const dummy: HolidayEventMapValue = {
-			date: DateTime.today(TimeZone.utc),
-			event: {
-				kind: "normal",
-				display: "",
-			},
-		};
-
+		const regulars: HolidayRegulars = new Set();
 		const events: HolidayEventMap = new Map([
 			[DateTime.parse("2023-05-31", TimeZone.utc).ticks, dummy],
 			[DateTime.parse("2023-06-06", TimeZone.utc).ticks, dummy],
 		]);
-		const regulars: HolidayRegulars = new Set();
-		const actual = Calendars.isHoliday(date, events, regulars);
+		const actual = Calendars.isHoliday(date, regulars, events);
 		expect(actual).toBe(expected);
 	});
 
@@ -164,23 +164,125 @@ describe("Calendars", () => {
 		[true, DateTime.parse("2023-06-09", TimeZone.utc)],
 		[false, DateTime.parse("2023-06-10", TimeZone.utc)],
 	])("isHoliday - regulars + event", (expected: boolean, date: DateTime) => {
-		const dummy: HolidayEventMapValue = {
-			date: DateTime.today(TimeZone.utc),
-			event: {
-				kind: "normal",
-				display: "",
-			},
-		};
-
-		const events: HolidayEventMap = new Map([
-			[DateTime.parse("2023-05-31", TimeZone.utc).ticks, dummy],
-			[DateTime.parse("2023-06-06", TimeZone.utc).ticks, dummy],
-		]);
 		const regulars: HolidayRegulars = new Set([
 			0,
 			5
 		]);
-		const actual = Calendars.isHoliday(date, events, regulars);
+		const events: HolidayEventMap = new Map([
+			[DateTime.parse("2023-05-31", TimeZone.utc).ticks, dummy],
+			[DateTime.parse("2023-06-06", TimeZone.utc).ticks, dummy],
+		]);
+
+		const actual = Calendars.isHoliday(date, regulars, events);
 		expect(actual).toBe(expected);
+	});
+
+	test("getWorkDays - regulars", () => {
+		const expected = [
+			//DateTime.parse("2023-05-28", TimeZone.utc),
+			DateTime.parse("2023-05-29", TimeZone.utc),
+			DateTime.parse("2023-05-30", TimeZone.utc),
+			DateTime.parse("2023-05-31", TimeZone.utc),
+			DateTime.parse("2023-06-01", TimeZone.utc),
+			DateTime.parse("2023-06-02", TimeZone.utc),
+			//DateTime.parse("2023-06-03", TimeZone.utc),
+			//DateTime.parse("2023-06-04", TimeZone.utc),
+			DateTime.parse("2023-06-05", TimeZone.utc),
+			DateTime.parse("2023-06-06", TimeZone.utc),
+			DateTime.parse("2023-06-07", TimeZone.utc),
+			DateTime.parse("2023-06-08", TimeZone.utc),
+			DateTime.parse("2023-06-09", TimeZone.utc),
+			//DateTime.parse("2023-06-10", TimeZone.utc),
+		];
+
+		const range:DateTimeRange = {
+			begin: DateTime.parse("2023-05-28", TimeZone.utc),
+			end: DateTime.parse("2023-06-10T23:59:59", TimeZone.utc),
+		};
+		const regulars: HolidayRegulars = new Set([
+			0,
+			6
+		]);
+		const events: HolidayEventMap = new Map();
+		const actual = Calendars.getWorkDays(range, regulars, events);
+		expect(actual.length).toBe(expected.length);
+		for (let i = 0; i < expected.length; i++) {
+			expect(expected[i].equals(actual[i])).toBeTruthy();
+		}
+
+	});
+
+	test("getWorkDays - event", () => {
+		const expected = [
+			DateTime.parse("2023-05-28", TimeZone.utc),
+			DateTime.parse("2023-05-29", TimeZone.utc),
+			DateTime.parse("2023-05-30", TimeZone.utc),
+			//DateTime.parse("2023-05-31", TimeZone.utc),
+			DateTime.parse("2023-06-01", TimeZone.utc),
+			DateTime.parse("2023-06-02", TimeZone.utc),
+			DateTime.parse("2023-06-03", TimeZone.utc),
+			DateTime.parse("2023-06-04", TimeZone.utc),
+			DateTime.parse("2023-06-05", TimeZone.utc),
+			//DateTime.parse("2023-06-06", TimeZone.utc),
+			DateTime.parse("2023-06-07", TimeZone.utc),
+			DateTime.parse("2023-06-08", TimeZone.utc),
+			DateTime.parse("2023-06-09", TimeZone.utc),
+			DateTime.parse("2023-06-10", TimeZone.utc),
+		];
+
+		const range:DateTimeRange = {
+			begin: DateTime.parse("2023-05-28", TimeZone.utc),
+			end: DateTime.parse("2023-06-10T23:59:59", TimeZone.utc),
+		};
+		const regulars: HolidayRegulars = new Set();
+		const events: HolidayEventMap = new Map([
+			[DateTime.parse("2023-05-31", TimeZone.utc).ticks, dummy],
+			[DateTime.parse("2023-06-06", TimeZone.utc).ticks, dummy],
+		]);
+		const actual = Calendars.getWorkDays(range, regulars, events);
+		expect(actual.length).toBe(expected.length);
+		for (let i = 0; i < expected.length; i++) {
+			expect(expected[i].equals(actual[i].truncateTime())).toBeTruthy();
+		}
+
+	});
+
+
+	test("getWorkDays - regulars + event", () => {
+		const expected = [
+			//DateTime.parse("2023-05-28", TimeZone.utc),
+			DateTime.parse("2023-05-29", TimeZone.utc),
+			DateTime.parse("2023-05-30", TimeZone.utc),
+			//DateTime.parse("2023-05-31", TimeZone.utc),
+			DateTime.parse("2023-06-01", TimeZone.utc),
+			//DateTime.parse("2023-06-02", TimeZone.utc),
+			DateTime.parse("2023-06-03", TimeZone.utc),
+			//DateTime.parse("2023-06-04", TimeZone.utc),
+			DateTime.parse("2023-06-05", TimeZone.utc),
+			//DateTime.parse("2023-06-06", TimeZone.utc),
+			DateTime.parse("2023-06-07", TimeZone.utc),
+			DateTime.parse("2023-06-08", TimeZone.utc),
+			//DateTime.parse("2023-06-09", TimeZone.utc),
+			DateTime.parse("2023-06-10", TimeZone.utc),
+		];
+
+		const range:DateTimeRange = {
+			begin: DateTime.parse("2023-05-28", TimeZone.utc),
+			end: DateTime.parse("2023-06-10T23:59:59", TimeZone.utc),
+		};
+		const regulars: HolidayRegulars = new Set([
+			0,
+			5
+		]);
+		const events: HolidayEventMap = new Map([
+			[DateTime.parse("2023-05-31", TimeZone.utc).ticks, dummy],
+			[DateTime.parse("2023-06-06", TimeZone.utc).ticks, dummy],
+		]);
+		const actual = Calendars.getWorkDays(range, regulars, events);
+		expect(actual.length).toBe(expected.length);
+		for (let i = 0; i < expected.length; i++) {
+			expect(expected[i].equals(actual[i].truncateTime())).toBeTruthy();
+		}
+
 	});
 });

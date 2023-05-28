@@ -57,8 +57,8 @@ export abstract class Calendars {
 
 	/**
 	 * 開始・終了日からその期間の日を配列として取得する。
-	 * @param begin
-	 * @param end
+	 * @param begin 開始日
+	 * @param end 終了日(終了日が `00:00:00.0` の場合、その日は含まれない)
 	 * @returns
 	 */
 	public static getDays(range: DateTimeRange): Array<DateTime> {
@@ -119,7 +119,7 @@ export abstract class Calendars {
 		return result;
 	}
 
-	public static isHoliday(date: DateTime, holidayEventMap: HolidayEventMap, holidayRegulars: HolidayRegulars): boolean {
+	public static isHoliday(date: DateTime, holidayRegulars: HolidayRegulars, holidayEventMap: HolidayEventMap): boolean {
 		const holidayEvent = holidayEventMap.get(date.ticks);
 		if (holidayEvent) {
 			return true;
@@ -128,10 +128,17 @@ export abstract class Calendars {
 		return holidayRegulars.has(date.week);
 	}
 
-	public static getWorkDays(range: DateTimeRange, holidayEventMap: HolidayEventMap, holidayRegulars: HolidayRegulars): Array<DateTime> {
-		const rangeDays = Calendars.getDays(range);
+	/**
+	 * 開始日・終了日からその期間の稼働日を取得
+	 * @param range 開始日・終了日(終了日の扱いは `Calendars.getDays` を参照のこと)
+	 * @param holidayRegulars
+	 * @param holidayEventMap
+	 * @returns
+	 */
+	public static getWorkDays(range: DateTimeRange, holidayRegulars: HolidayRegulars, holidayEventMap: HolidayEventMap): Array<DateTime> {
+		const rangeDays = this.getDays(range);
 
-		const workDays = rangeDays.filter(a => !this.isHoliday(a, holidayEventMap, holidayRegulars));
+		const workDays = rangeDays.filter(a => !this.isHoliday(a.timeIsEmpty ? a: a.truncateTime(), holidayRegulars, holidayEventMap));
 
 		return workDays;
 	}
