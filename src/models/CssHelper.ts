@@ -3,6 +3,15 @@ import { Strings } from "@/models/Strings";
 export abstract class CssHelper {
 
 	/**
+	 * CSS 定義としてのクラス名に変換。
+	 * @param s
+	 * @returns
+	 */
+	public static toStyleClassName(s: string): string {
+		return "." + s;
+	}
+
+	/**
 	 * クラス名一覧を `<element class="*" />` に設定可能なクラス名に変更。
 	 * @param classNames
 	 * @returns
