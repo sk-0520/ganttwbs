@@ -10,7 +10,7 @@ export interface TimelineCallbacks {
 	/**
 	 * タイムラインの表示上IDを取得。
 	 */
-	calcReadableTimelineId(timeline: AnyTimeline): ReadableTimelineId;
+	calculateReadableTimelineId(timeline: AnyTimeline): ReadableTimelineId;
 	/**
 	 * 指定タイムラインの直近のタイムラインを取得。
 	 */

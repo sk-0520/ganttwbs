@@ -1,3 +1,4 @@
+import { CssHelper } from "@/models/CssHelper";
 import { isValueUnit, ValueUnit } from "@/models/data/Design";
 
 // セレクタとか難しい概念は知らん
@@ -45,10 +46,6 @@ export abstract class Designs {
 		return result;
 	}
 
-	public static toStyleClassName(s: string): string {
-		return "." + s;
-	}
-
 	public static toStyleProperty(s: string): string {
 		const matches = s.match(this.PropertyRegex);
 		if (!matches) {
@@ -76,7 +73,7 @@ export abstract class Designs {
 			.map(a => ({ key: a.key, lines: this.convertStylesheetBlock(a.values) }))
 			.map(a => {
 				return [
-					this.toStyleClassName(a.key),
+					CssHelper.toStyleClassName(a.key),
 					"{",
 					a.lines.map(aa => `\t${aa};`).join(newLine),
 					"}",

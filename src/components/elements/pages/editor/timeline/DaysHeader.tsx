@@ -8,7 +8,7 @@ import { useCalendarInfoAtomReader, useSettingAtomReader } from "@/models/atom/e
 import { Calendars } from "@/models/Calendars";
 import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
-import { DateTime } from "@/models/DateTime";
+import { DateTime, InvalidHtmlTime } from "@/models/DateTime";
 import { Days } from "@/models/Days";
 import { createLogger } from "@/models/Logging";
 import { Settings } from "@/models/Settings";
@@ -121,7 +121,7 @@ const DaysHeader: FC<Props> = (props: Props) => {
 		return {
 			yearMonth: (
 				<td colSpan={props.configuration.design.dummy.width} className="cell _dynamic_design_cell">
-					<time dateTime={"invalid"}>
+					<time dateTime={InvalidHtmlTime}>
 						{locale.pages.editor.timeline.header.dummy}
 					</time>
 				</td>

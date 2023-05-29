@@ -277,16 +277,17 @@ const locale: Locale = {
 
 					header: {
 						workload: "稼働率",
+						workday: "稼働日",
 						cost: "原価",
 						sales: "単価",
 					},
 
 					month: {
 						title: "各月",
-						monthFormat: "yyyy/MM",
 					},
 					total: {
 						title: "合計",
+						titleFormat: "${TITLE} (${BEGIN} - ${END})",
 					}
 				},
 			},

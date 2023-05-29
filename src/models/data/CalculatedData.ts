@@ -6,7 +6,7 @@ import { AnyTimeline, TimelineId } from "@/models/data/Setting";
 import { SuccessWorkRange, TotalSuccessWorkRange, WorkRange } from "@/models/data/WorkRange";
 import { DateTimeTicks } from "@/models/DateTime";
 
-export interface CalcData {
+export interface CalculatedData {
 	calendarInfo: CalendarInfo;
 	resourceInfo: ResourceInfo;
 	sequenceTimelines: Array<AnyTimeline>

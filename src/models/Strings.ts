@@ -236,4 +236,19 @@ export abstract class Strings {
 
 		return source.split(/\r\n|\n|\r/);
 	}
+
+	public static padStart(num: number, maxLength: number, fillString?: string): string {
+		return String(num).padStart(maxLength, fillString);
+	}
+	public static padStart0(num: number, maxLength: number): string {
+		return this.padStart(num, maxLength, "0");
+	}
+
+	public static padEnd(num: number, maxLength: number, fillString?: string): string {
+		return String(num).padEnd(maxLength, fillString);
+	}
+	public static padEnd0(num: number, maxLength: number): string {
+		return this.padEnd(num, maxLength, "0");
+	}
+
 }

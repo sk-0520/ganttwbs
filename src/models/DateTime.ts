@@ -2,6 +2,7 @@ import { cdate } from "cdate";
 
 import { ParseResult, ResultFactory } from "@/models/data/Result";
 import { Require } from "@/models/Require";
+import { Strings } from "@/models/Strings";
 import { TimeSpan } from "@/models/TimeSpan";
 import { TimeZone } from "@/models/TimeZone";
 import { Strong } from "@/models/Types";
@@ -10,10 +11,13 @@ type DateTimeParseResult = ParseResult<DateTime, Error>;
 
 export type Unit = "millisecond" | "second" | "minute" | "hour" | "day" | "week" | "month" | "year";
 export type MonthNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+/** 曜日(0: 日曜日, 1: 月曜日, 6: 土曜日) */
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 /** DateTime シリアル値。 数値処理する場合は `Number` を経由すること。 */
 export type DateTimeTicks = Strong<"DateTimeTicks", number>;
+
+export const InvalidHtmlTime = "invalid";
 
 function toTicks(arg: number | DateTimeTicks): DateTimeTicks {
 	return arg as DateTimeTicks;
@@ -28,14 +32,6 @@ function factory(timeZone: TimeZone): cdate.cdate {
 	}
 
 	return create;
-}
-
-function padStart(value: number, length: number, fillString: string): string {
-	return value.toString().padStart(length, fillString);
-}
-
-function padStart0(value: number, length: number): string {
-	return padStart(value, length, "0");
 }
 
 /**
@@ -100,13 +96,15 @@ export class DateTime {
 	}
 
 	/**
-	 * UNIX時間のミリ秒取得。
 	 * @returns
 	 */
 	public get ticks(): DateTimeTicks {
 		return toTicks(Number(this.date));
 	}
 
+	/**
+	 * 時間部分が `00:00:00.0` か。
+	 */
 	public get timeIsEmpty(): boolean {
 		return !this.hour
 			&&
@@ -134,6 +132,18 @@ export class DateTime {
 		return ResultFactory.success(new DateTime(date, timeZone));
 	}
 
+	/**
+	 * 年月日時分秒から生成。
+	 * @param timeZone
+	 * @param year
+	 * @param month
+	 * @param day
+	 * @param hour
+	 * @param minute
+	 * @param second
+	 * @param millisecond
+	 * @returns
+	 */
 	public static create(
 		timeZone: TimeZone,
 		year: number,
@@ -148,12 +158,12 @@ export class DateTime {
 		// 自分でタイムゾーン計算したらライブラリの意味ない、、、とはいえこの手法もどうなんっていう
 
 		const date = {
-			year: padStart0(year, 4),
-			month: padStart0(month, 2),
-			day: padStart0(day ?? 1, 2),
-			hour: padStart0(hour ?? 0, 2),
-			minute: padStart0(minute ?? 0, 2),
-			second: padStart0(second ?? 0, 2),
+			year: Strings.padStart0(year, 4),
+			month: Strings.padStart0(month, 2),
+			day: Strings.padStart0(day ?? 1, 2),
+			hour: Strings.padStart0(hour ?? 0, 2),
+			minute: Strings.padStart0(minute ?? 0, 2),
+			second: Strings.padStart0(second ?? 0, 2),
 			millisecond: (millisecond ?? 0).toString(),
 		};
 		const iso8601WithoutTimezone = `${date.year}-${date.month}-${date.day}T${date.hour}:${date.minute}:${date.second}.${date.millisecond}`;
@@ -366,6 +376,51 @@ export class DateTime {
 	}
 
 	/**
+ * 指定した単位での開始を指す日時を取得する。
+ * @param unit 年を指定した場合は自身の年の最終日、月を指定した場合は自身の月の最終日、秒を指定した場合は自身の秒の最終ミリ秒。
+ * @returns
+ */
+	public startOf(unit: Exclude<Unit, "millisecond">): DateTime {
+		const date = Require.switch(unit, {
+			"year": _ => this.date.startOf("year"),
+			"month": _ => this.date.startOf("month"),
+			"day": _ => this.date.startOf("date"),
+			"hour": _ => this.date.startOf("hour"),
+			"minute": _ => this.date.startOf("minute"),
+			"second": _ => this.date.startOf("second"),
+		});
+
+		return new DateTime(date, this.timeZone);
+	}
+
+	/**
+	 * 指定した単位での終わりを指す日時を取得する。
+	 * @param unit 年を指定した場合は自身の年の最終日、月を指定した場合は自身の月の最終日、秒を指定した場合は自身の秒の最終ミリ秒。
+	 * @returns
+	 */
+	public endOf(unit: Exclude<Unit, "millisecond">): DateTime {
+		const date = Require.switch(unit, {
+			"year": _ => this.date.endOf("year"),
+			"month": _ => this.date.endOf("month"),
+			"day": _ => this.date.endOf("date"),
+			"hour": _ => this.date.endOf("hour"),
+			"minute": _ => this.date.endOf("minute"),
+			"second": _ => this.date.endOf("second"),
+		});
+
+		return new DateTime(date, this.timeZone);
+	}
+
+	/**
+	 * 自身の日付最終時間を取得。
+	 * @returns
+	 */
+	public endOfTime(): DateTime {
+		return this.endOf("day");
+	}
+
+
+	/**
 	 * 自身の所属する月の最終日を取得。
 	 * @returns
 	 */
@@ -373,10 +428,6 @@ export class DateTime {
 		const date = this.date
 			.endOf("month")
 			.endOf("day")
-			.set("millisecond", 0)
-			.set("second", 0)
-			.set("minute", 0)
-			.set("hour", 0)
 			;
 
 		return new DateTime(date, this.timeZone);
@@ -415,27 +466,27 @@ export class DateTime {
 		}
 
 		const map = new Map([
-			["yy", padStart0(this.year % 100, 2)],
-			["yyyy", padStart0(this.year, 4)],
-			["yyyyy", padStart0(this.year, 5)],
+			["yy", Strings.padStart0(this.year % 100, 2)],
+			["yyyy", Strings.padStart0(this.year, 4)],
+			["yyyyy", Strings.padStart0(this.year, 5)],
 
 			["M", (this.month).toString()],
-			["MM", padStart0(this.month, 2)],
+			["MM", Strings.padStart0(this.month, 2)],
 
 			["d", this.day.toString()],
-			["dd", padStart0(this.day, 2)],
+			["dd", Strings.padStart0(this.day, 2)],
 
 			["H", this.hour.toString()],
-			["HH", padStart0(this.hour, 2)],
+			["HH", Strings.padStart0(this.hour, 2)],
 
 			["m", this.minute.toString()],
-			["mm", padStart0(this.minute, 2)],
+			["mm", Strings.padStart0(this.minute, 2)],
 
 			["s", this.second.toString()],
-			["ss", padStart0(this.second, 2)],
+			["ss", Strings.padStart0(this.second, 2)],
 
 			["f", this.millisecond.toString()],
-			["fff", padStart0(this.millisecond, 3)],
+			["fff", Strings.padStart0(this.millisecond, 3)],
 		]);
 
 		const pattern = [...map.keys()]

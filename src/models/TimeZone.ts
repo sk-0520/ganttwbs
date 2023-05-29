@@ -35,7 +35,7 @@ export abstract class TimeZone {
 
 		const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 		if (tz) {
-			return new IanaTimeZone(tz);
+			return new NamedTimeZone(tz);
 		}
 
 		const date = new Date();
@@ -46,7 +46,7 @@ export abstract class TimeZone {
 
 	private static parseCore(s: string): TimeZoneParseResult {
 		if (s.includes("/") || s === "UTC") {
-			return ResultFactory.success(new IanaTimeZone(s));
+			return ResultFactory.success(new NamedTimeZone(s));
 		}
 
 		//TODO: +-HH:MM 形式のみ。 : なかったり、HHのみとかもうめんどい
@@ -160,7 +160,7 @@ export abstract class TimeZone {
 			"UTC",
 		];
 
-		return timeZoneNames.map(a => new IanaTimeZone(a));
+		return timeZoneNames.map(a => new NamedTimeZone(a));
 	}
 
 	/**
@@ -239,7 +239,7 @@ class OffsetTimeZone extends TimeZone {
 /**
  * 名称タイムゾーン。
  */
-class IanaTimeZone extends TimeZone {
+class NamedTimeZone extends TimeZone {
 	public constructor(
 		/**
 		 * タイムゾーン名。

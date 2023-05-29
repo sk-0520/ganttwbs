@@ -115,21 +115,7 @@ export class Color {
 		return result ? new Color(result) : Colors.Black;
 	}
 
-	/**
-	 * 単純グラデーションの作成
-	 * @param start 開始色
-	 * @param end 終了色
-	 * @param count 色数
-	 * @returns グラデーション配列
-	 */
-	public static generateGradient(start: Color, end: Color, count: number): Array<Color> {
-		if (count <= 1) {
-			throw new Error(`${count}`);
-		}
-
-		// RGB と HSL で処理できるようにした方がいいかも
-		// RGB だと灰色がなぁ
-
+	private static generateRgbGradient(start: Color, end: Color, count: number): Array<Color> {
 		const a = start.raw.toRgb();
 		const z = end.raw.toRgb();
 
@@ -147,6 +133,24 @@ export class Color {
 		}
 
 		return result;
+	}
+
+	/**
+	 * 単純グラデーションの作成
+	 * @param start 開始色
+	 * @param end 終了色
+	 * @param count 色数
+	 * @returns グラデーション配列
+	 */
+	public static generateGradient(start: Color, end: Color, count: number): Array<Color> {
+		if (count <= 1) {
+			throw new Error(`${count}`);
+		}
+
+		// RGB と HSL で処理できるようにした方がいいかも
+		// RGB だと灰色がなぁ
+
+		return this.generateRgbGradient(start, end, count);
 	}
 
 	public analogous(count: number): Array<Color> {

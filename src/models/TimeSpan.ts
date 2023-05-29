@@ -14,18 +14,16 @@ function toTicks(arg: number | TimeSpanTicks): TimeSpanTicks {
 
 /**
  * 時間を扱う。
- *
- * 細かいのは時間できたときに、うん。
  */
 export class TimeSpan {
 
 	/**
 	 * 生成。
 	 *
-	 * @param _ticks ちっくたっく。
+	 * @param ticks ちっくたっく。
 	 */
 	private constructor(
-		private readonly _ticks: TimeSpanTicks
+		public readonly ticks: TimeSpanTicks
 	) {
 	}
 
@@ -36,77 +34,110 @@ export class TimeSpan {
 		return this._zero ??= new TimeSpan(toTicks(0));
 	}
 
+	/** ミリ秒部分。 */
 	public get milliseconds(): number {
-		return Number(this._ticks) % 1000;
+		return Number(this.ticks) % 1000;
 	}
 
+	/** 秒部分。 */
 	public get seconds(): number {
-		return Math.trunc((Number(this._ticks) / 1000) % 60);
+		return Math.trunc((Number(this.ticks) / 1000) % 60);
 	}
 
+	/** 分部分。 */
 	public get minutes(): number {
-		return Math.trunc((Number(this._ticks) / 1000 / 60) % 60);
+		return Math.trunc((Number(this.ticks) / 1000 / 60) % 60);
 	}
 
+	/** 時間部分。 */
 	public get hours(): number {
-		return Math.trunc((Number(this._ticks) / 1000 / 60 / 60) % 24);
+		return Math.trunc((Number(this.ticks) / 1000 / 60 / 60) % 24);
 	}
 
+	/** 日部分。 */
 	public get days(): number {
-		return Math.trunc(Number(this._ticks) / 1000 / 60 / 60 / 24);
+		return Math.trunc(Number(this.ticks) / 1000 / 60 / 60 / 24);
 	}
 
-	/**
-	 * ミリ秒。
-	 */
-	public get ticks(): TimeSpanTicks {
-		return this._ticks;
-	}
-
+	/** ミリ秒。 */
 	public get totalMilliseconds(): number {
-		return Number(this._ticks);
+		return Number(this.ticks);
 	}
 
+	/** 秒。 */
 	public get totalSeconds(): number {
-		return Number(this._ticks) / 1000;
+		return Number(this.ticks) / 1000;
 	}
 
+	/** 分。 */
 	public get totalMinutes(): number {
-		return Number(this._ticks) / 1000 / 60;
+		return Number(this.ticks) / 1000 / 60;
 	}
 
+	/** 時間。 */
 	public get totalHours(): number {
-		return Number(this._ticks) / 1000 / 60 / 60;
+		return Number(this.ticks) / 1000 / 60 / 60;
 	}
 
+	/** 日。 */
 	public get totalDays(): number {
-		return Number(this._ticks) / 1000 / 60 / 60 / 24;
+		return Number(this.ticks) / 1000 / 60 / 60 / 24;
 	}
 
 	//#endregion
 
 	//#region function
 
+	/**
+	 * 刻みから生成。
+	 * @param ticks
+	 * @returns
+	 */
 	public static fromTicks(ticks: DateTimeTicks): TimeSpan {
 		return this.fromMilliseconds(Number(ticks));
 	}
 
+	/**
+	 * ミリ秒から生成。
+	 * @param milliSeconds
+	 * @returns
+	 */
 	public static fromMilliseconds(milliSeconds: number): TimeSpan {
 		return new TimeSpan(toTicks(milliSeconds));
 	}
 
+	/**
+	 * 秒から生成。
+	 * @param seconds
+	 * @returns
+	 */
 	public static fromSeconds(seconds: number): TimeSpan {
 		return new TimeSpan(toTicks(seconds * 1000));
 	}
 
+	/**
+	 * 分から生成。
+	 * @param minutes
+	 * @returns
+	 */
 	public static fromMinutes(minutes: number): TimeSpan {
 		return new TimeSpan(toTicks(minutes * 60 * 1000));
 	}
 
+	/**
+	 * 時間から生成。
+	 * @param hours
+	 * @returns
+	 */
 	public static fromHours(hours: number): TimeSpan {
 		return new TimeSpan(toTicks(hours * 60 * 60 * 1000));
 	}
 
+	/**
+	 * 日から生成。
+	 * @param hours
+	 * @returns
+	 */
 	public static fromDays(hours: number): TimeSpan {
 		return new TimeSpan(toTicks(hours * 24 * 60 * 60 * 1000));
 	}
