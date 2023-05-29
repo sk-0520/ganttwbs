@@ -50,6 +50,10 @@ const DebugDateTimeItem: FC<DebugDateTimeItemProps> = (props: DebugDateTimeItemP
 				{render("[cdate] add 6 months", d => DateTime.convert(Number(cdate(d.ticks).add(6, "months")) as unknown as DateTimeTicks, d.timeZone))}
 				{render("[cdate] add 12 months", d => DateTime.convert(Number(cdate(d.ticks).add(12, "months")) as unknown as DateTimeTicks, d.timeZone))}
 				{render("create add 13 month", d => DateTime.create(d.timeZone, d.year, d.month + 13, d.day, d.hour, d.minute, d.second, d.millisecond))}
+				{render("getLastDayOfMonth add 0", d => d.add(0, "month").getLastDayOfMonth())}
+				{render("getLastDayOfMonth add 1", d => d.add(1, "month").getLastDayOfMonth())}
+				{render("getLastDayOfMonth add 2", d => d.add(2, "month").getLastDayOfMonth())}
+				{render("getLastDayOfMonth add 3", d => d.add(3, "month").getLastDayOfMonth())}
 			</tbody>
 		</table>
 	);
