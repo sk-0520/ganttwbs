@@ -2,6 +2,7 @@
 	"compilerOptions": {
 		"module": "CommonJS",
 		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
 	},
 	"ts-node": {
 		"files": true

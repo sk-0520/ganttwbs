@@ -425,12 +425,24 @@ export class DateTime {
 	 * @returns
 	 */
 	public getLastDayOfMonth(): DateTime {
-		const date = this.date
-			.endOf("month")
-			.endOf("day")
-			;
+		// デプロイ後に動かん
+		// const date = this.date
+		// 	.endOf("month")
+		// 	.endOf("day")
+		// 	;
 
-		return new DateTime(date, this.timeZone);
+		// return new DateTime(date, this.timeZone);
+
+		return DateTime.create(
+			this.timeZone,
+			this.year,
+			this.month + 1,
+			1,
+			0,
+			0,
+			0,
+			0
+		).add(-1, "millisecond");
 	}
 
 	/**

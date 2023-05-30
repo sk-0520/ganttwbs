@@ -30,7 +30,9 @@ jobs:
 
       - name: <Build>
         shell: bash
-        run: npm run build
+        run: |
+          npm run favicon
+          npm run build
 
       - name: <Archive>
         uses: actions/upload-artifact@v3
