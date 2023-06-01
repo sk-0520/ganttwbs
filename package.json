@@ -26,7 +26,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint-fix": "next lint --fix --dir .",
-		"favicon": "ts-node --project tsconfig.local.json ./generator/favicon.ts",
+		"favicon": "ts-node --project tsconfig.local.json ./generator/favicon-generator.ts",
 		"license": "ts-node --project tsconfig.local.json ./generator/license-generator.ts",
 		"check": "ncu",
 		"update": "ncu -u && npm install && npm run license",
