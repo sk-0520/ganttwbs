@@ -130,14 +130,14 @@ describe("DateTime", () => {
 		[DateTime.parse("2023-02-03T12:34:00.000", TimeZone.utc), DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc), "minute"],
 		[DateTime.parse("2023-02-03T12:34:56.000", TimeZone.utc), DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc), "second"],
 	])("truncate", (expected: DateTime, input: DateTime, keepUnit: string) => {
-		const actual = input.truncate(keepUnit as Exclude<Unit, "millisecond">);
+		const actual = input.truncate(keepUnit as Exclude<Unit, "week" | "millisecond">);
 		expect(actual.format("U")).toBe(expected.format("U"));
 		expect(actual.ticks).toBe(expected.ticks);
 	});
 
 	test("truncate - throw", () => {
 		const dateTime = DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc);
-		expect(() => dateTime.truncate("millisecond" as Exclude<Unit, "millisecond">)).toThrow();
+		expect(() => dateTime.truncate("millisecond" as Exclude<Unit, "week" | "millisecond">)).toThrow();
 	});
 
 	test.each([
@@ -148,13 +148,13 @@ describe("DateTime", () => {
 		[DateTime.parse("2024-02-03T12:34:00.000", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "minute"],
 		[DateTime.parse("2024-02-03T12:34:56.000", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "second"],
 	])("startOf", (expected: DateTime, input: DateTime, unit: string) => {
-		expect(input.startOf(unit as Exclude<Unit, "millisecond">).format("U")).toBe(expected.format("U"));
-		expect(input.startOf(unit as Exclude<Unit, "millisecond">).ticks).toBe(expected.ticks);
+		expect(input.startOf(unit as Exclude<Unit, "week" | "millisecond">).format("U")).toBe(expected.format("U"));
+		expect(input.startOf(unit as Exclude<Unit, "week" | "millisecond">).ticks).toBe(expected.ticks);
 	});
 
 	test("startOf - throw", () => {
 		const dateTime = DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc);
-		expect(() => dateTime.startOf("millisecond" as Exclude<Unit, "millisecond">)).toThrow();
+		expect(() => dateTime.startOf("millisecond" as Exclude<Unit, "week" | "millisecond">)).toThrow();
 	});
 
 	test.each([
@@ -165,13 +165,13 @@ describe("DateTime", () => {
 		[DateTime.parse("2024-02-03T12:34:59.999", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "minute"],
 		[DateTime.parse("2024-02-03T12:34:56.999", TimeZone.utc), DateTime.parse("2024-02-03T12:34:56.789", TimeZone.utc), "second"],
 	])("endOf", (expected: DateTime, input: DateTime, unit: string) => {
-		expect(input.endOf(unit as Exclude<Unit, "millisecond">).format("U")).toBe(expected.format("U"));
-		expect(input.endOf(unit as Exclude<Unit, "millisecond">).ticks).toBe(expected.ticks);
+		expect(input.endOf(unit as Exclude<Unit, "week" | "millisecond">).format("U")).toBe(expected.format("U"));
+		expect(input.endOf(unit as Exclude<Unit, "week" | "millisecond">).ticks).toBe(expected.ticks);
 	});
 
 	test("endOf - throw", () => {
 		const dateTime = DateTime.parse("2023-02-03T12:34:56.789", TimeZone.utc);
-		expect(() => dateTime.endOf("millisecond" as Exclude<Unit, "millisecond">)).toThrow();
+		expect(() => dateTime.endOf("millisecond" as Exclude<Unit, "week" | "millisecond">)).toThrow();
 	});
 
 	test.each([

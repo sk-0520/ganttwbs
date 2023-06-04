@@ -10,6 +10,7 @@ import { Strong } from "@/models/Types";
 type DateTimeParseResult = ParseResult<DateTime, Error>;
 
 export type Unit = "millisecond" | "second" | "minute" | "hour" | "day" | "week" | "month" | "year";
+export type AttributiveUnit = Exclude<Unit, "week" | "millisecond">;
 export type MonthNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 /** 曜日(0: 日曜日, 1: 月曜日, 6: 土曜日) */
 export type WeekIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -350,11 +351,7 @@ export class DateTime {
 	 * @param keepUnit 切り落とし時に保持する単位。ここで指定した値未満が初期値となる。
 	 * @returns 切り落とされた項目は初期値(月なら1月、日なら1日、時なら0時)となる
 	 */
-	public truncate(keepUnit: Exclude<Unit, "millisecond">): DateTime {
-		if (keepUnit as string === "millisecond") {
-			throw new Error(keepUnit);
-		}
-
+	public truncate(keepUnit: AttributiveUnit): DateTime {
 		const date = Require.switch(keepUnit, {
 			"year": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0).set("hour", 0).set("date", 1).set("month", 0),
 			"month": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0).set("hour", 0).set("date", 1),
@@ -376,11 +373,11 @@ export class DateTime {
 	}
 
 	/**
- * 指定した単位での開始を指す日時を取得する。
- * @param unit 年を指定した場合は自身の年の最終日、月を指定した場合は自身の月の最終日、秒を指定した場合は自身の秒の最終ミリ秒。
- * @returns
- */
-	public startOf(unit: Exclude<Unit, "millisecond">): DateTime {
+	 * 指定した単位での開始を指す日時を取得する。
+	 * @param unit 年を指定した場合は自身の年の最終日、月を指定した場合は自身の月の最終日、秒を指定した場合は自身の秒の最終ミリ秒。
+	 * @returns
+	 */
+	public startOf(unit: AttributiveUnit): DateTime {
 		const date = Require.switch(unit, {
 			"year": _ => this.date.startOf("year"),
 			"month": _ => this.date.startOf("month"),
@@ -398,7 +395,7 @@ export class DateTime {
 	 * @param unit 年を指定した場合は自身の年の最終日、月を指定した場合は自身の月の最終日、秒を指定した場合は自身の秒の最終ミリ秒。
 	 * @returns
 	 */
-	public endOf(unit: Exclude<Unit, "millisecond">): DateTime {
+	public endOf(unit: AttributiveUnit): DateTime {
 		const date = Require.switch(unit, {
 			"year": _ => this.date.endOf("year"),
 			"month": _ => this.date.endOf("month"),
