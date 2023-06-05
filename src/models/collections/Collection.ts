@@ -67,6 +67,14 @@ export class Collection<T> implements Iterable<T> {
 		return new Collection(appendIterable);
 	}
 
+	public prepend(element: T): Collection<T> {
+		const appendIterable = new AppendIterable<T>();
+		appendIterable.append([element]);
+		appendIterable.append(this.iterable);
+
+		return new Collection(appendIterable);
+	}
+
 	//#endregion
 
 	//#region 即時

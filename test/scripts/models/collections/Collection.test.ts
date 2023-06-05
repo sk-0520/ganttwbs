@@ -114,4 +114,10 @@ describe("Collection", () => {
 		expect(actual3.toArray()).toStrictEqual(expected3);
 		expect(actualAll.toArray()).toStrictEqual(expected3);
 	});
+
+	test("prepend", () => {
+		const collection = Collection.from([0, 1]);
+		expect(collection.prepend(2).toArray()).toStrictEqual([2, 0, 1]);
+		expect(collection.prepend(2).prepend(3).toArray()).toStrictEqual([3, 2, 0, 1]);
+	});
 });
