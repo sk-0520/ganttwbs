@@ -206,5 +206,57 @@ describe("Collection", () => {
 		expect(collection.lastOrUndefined(predicate)).toBe(expected);
 	});
 
+	describe("single", () => {
+		test("empty - throw", () => {
+			expect(() => Collection.empty().single()).toThrow(RangeError);
+		});
+
+		test("1 - 1", () => {
+			expect(Collection.from([1]).single()).toBe(1);
+		});
+
+		test("3 - throw", () => {
+			expect(() => Collection.from([1, 2, 3]).single()).toThrow(RangeError);
+		});
+
+
+		test("predicate - empty - throw", () => {
+			expect(() => Collection.empty().single(a => a === 2)).toThrow(RangeError);
+		});
+
+		test("predicate - 3 - 1", () => {
+			expect(Collection.from([0, 1, 2, 2]).single(a => a === 1)).toBe(1);
+		});
+
+		test("predicate - 4 - throw", () => {
+			expect(() => Collection.from([0, 1, 2, 2]).single(a => a === 2)).toThrow(RangeError);
+		});
+	});
+
+	describe("singleOrUndefined", () => {
+		test("empty", () => {
+			expect(Collection.empty().singleOrUndefined()).toBeUndefined();
+		});
+
+		test("1 - 1", () => {
+			expect(Collection.from([1]).singleOrUndefined()).toBe(1);
+		});
+
+		test("3 - throw", () => {
+			expect(() => Collection.from([1, 2, 3]).singleOrUndefined()).toThrow(RangeError);
+		});
+
+		test("predicate - empty", () => {
+			expect(Collection.empty().singleOrUndefined(a => a === 2)).toBeUndefined();
+		});
+
+		test("predicate - 3 - 1", () => {
+			expect(Collection.from([0, 1, 2, 2]).singleOrUndefined(a => a === 1)).toBe(1);
+		});
+
+		test("predicate - 4 - throw", () => {
+			expect(() => Collection.from([0, 1, 2, 2]).singleOrUndefined(a => a === 2)).toThrow(RangeError);
+		});
+	});
 
 });

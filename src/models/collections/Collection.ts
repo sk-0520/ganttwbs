@@ -6,6 +6,7 @@ import { RepeatIterable } from "@/models/collections/Repeat";
 import { SelectIterable } from "@/models/collections/Select";
 import { SelectManyIterable } from "@/models/collections/SelectMany";
 import { WhereIterable } from "@/models/collections/Where";
+import { Result, ResultFactory } from "@/models/data/Result";
 
 export class Collection<T> implements Iterable<T> {
 
@@ -287,7 +288,7 @@ export class Collection<T> implements Iterable<T> {
 	 * @param predicate
 	 * @returns
 	 */
-	public lastOrUndefined(predicate?: Predicate<T>): T|undefined {
+	public lastOrUndefined(predicate?: Predicate<T>): T | undefined {
 		let isFound = false;
 		let current!: T;
 
@@ -307,6 +308,56 @@ export class Collection<T> implements Iterable<T> {
 
 		if (isFound) {
 			return current;
+		}
+
+		return undefined;
+	}
+
+	private singleCore(predicate?: Predicate<T>): Result<T, RangeError> {
+		let isFound = false;
+		let current!: T;
+
+		if (predicate) {
+			for (const value of this.iterable) {
+				if (predicate(value)) {
+					if (isFound) {
+						throw new RangeError();
+					}
+					isFound = true;
+					current = value;
+				}
+			}
+		} else {
+			for (const value of this.iterable) {
+				if (isFound) {
+					throw new RangeError();
+				}
+				isFound = true;
+				current = value;
+
+			}
+		}
+
+		if (isFound) {
+			return ResultFactory.success(current);
+		}
+
+		return ResultFactory.failure(new RangeError());
+	}
+
+	public single(predicate?: Predicate<T>): T {
+		const result = this.singleCore(predicate);
+		if (result.success) {
+			return result.value;
+		}
+
+		throw result.error;
+	}
+
+	public singleOrUndefined(predicate?: Predicate<T>): T | undefined {
+		const result = this.singleCore(predicate);
+		if (result.success) {
+			return result.value;
 		}
 
 		return undefined;
