@@ -157,6 +157,17 @@ describe("Collection", () => {
 			const collection = Collection.from([0, 1, 2, 2, 3, 3, 4, 5, 5, 6]);
 			expect(collection.skipWhile(predicate).toArray()).toStrictEqual(expected);
 		});
+
+		test.each([
+			[[0, 1, 2], 4],
+			[[0, 1, 2], 3],
+			[[0, 1], 2],
+			[[0], 1],
+			[[], 0],
+		])("take", (expected: Array<number>, count: number) => {
+			const collection = Collection.range(0, 3);
+			expect(collection.take(count).toArray()).toStrictEqual(expected);
+		});
 	});
 
 	describe("即時", () => {
