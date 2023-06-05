@@ -209,6 +209,22 @@ export class Collection<T> implements Iterable<T> {
 		return count;
 	}
 
+	public firstCore(predicate?: Predicate<T>): Result<T, RangeError> {
+		if (predicate) {
+			for (const value of this.iterable) {
+				if (predicate(value)) {
+					return ResultFactory.success(value);
+				}
+			}
+		} else {
+			for (const value of this.iterable) {
+				return ResultFactory.success(value);
+			}
+		}
+
+		return ResultFactory.failure(new RangeError());
+	}
+
 	/**
 	 * [即時] 先頭要素を取得。
 	 * @param predicate
@@ -216,19 +232,12 @@ export class Collection<T> implements Iterable<T> {
 	 * @throws {RangeError} 要素なし。
 	 */
 	public first(predicate?: Predicate<T>): T {
-		if (predicate) {
-			for (const value of this.iterable) {
-				if (predicate(value)) {
-					return value;
-				}
-			}
-		} else {
-			for (const value of this.iterable) {
-				return value;
-			}
+		const result = this.firstCore(predicate);
+		if(result.success) {
+			return result.value;
 		}
 
-		throw new RangeError();
+		throw result.error;
 	}
 
 	/**
@@ -237,19 +246,37 @@ export class Collection<T> implements Iterable<T> {
 	 * @returns
 	 */
 	public firstOrUndefined(predicate?: Predicate<T>): T | undefined {
+		const result = this.firstCore(predicate);
+		if(result.success) {
+			return result.value;
+		}
+
+		return undefined;
+	}
+
+	private lastCore(predicate?: Predicate<T>): Result<T, RangeError> {
+		let isFound = false;
+		let current!: T;
+
 		if (predicate) {
 			for (const value of this.iterable) {
 				if (predicate(value)) {
-					return value;
+					isFound = true;
+					current = value;
 				}
 			}
 		} else {
 			for (const value of this.iterable) {
-				return value;
+				isFound = true;
+				current = value;
 			}
 		}
 
-		return undefined;
+		if (isFound) {
+			return ResultFactory.success(current);
+		}
+
+		return ResultFactory.failure(new RangeError());
 	}
 
 	/**
@@ -259,28 +286,12 @@ export class Collection<T> implements Iterable<T> {
 	 * @throws {RangeError} 要素なし。
 	 */
 	public last(predicate?: Predicate<T>): T {
-		let isFound = false;
-		let current!: T;
-
-		if (predicate) {
-			for (const value of this.iterable) {
-				if (predicate(value)) {
-					isFound = true;
-					current = value;
-				}
-			}
-		} else {
-			for (const value of this.iterable) {
-				isFound = true;
-				current = value;
-			}
+		const result = this.lastCore(predicate);
+		if(result.success) {
+			return result.value;
 		}
 
-		if (isFound) {
-			return current;
-		}
-
-		throw new RangeError();
+		throw result.error;
 	}
 
 	/**
@@ -289,25 +300,9 @@ export class Collection<T> implements Iterable<T> {
 	 * @returns
 	 */
 	public lastOrUndefined(predicate?: Predicate<T>): T | undefined {
-		let isFound = false;
-		let current!: T;
-
-		if (predicate) {
-			for (const value of this.iterable) {
-				if (predicate(value)) {
-					isFound = true;
-					current = value;
-				}
-			}
-		} else {
-			for (const value of this.iterable) {
-				isFound = true;
-				current = value;
-			}
-		}
-
-		if (isFound) {
-			return current;
+		const result = this.lastCore(predicate);
+		if(result.success) {
+			return result.value;
 		}
 
 		return undefined;
