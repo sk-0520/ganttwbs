@@ -2,6 +2,7 @@ import { EmptyIterable } from "@/models/collections/EmptyIterable";
 import { RangeIterable } from "@/models/collections/RangeIterable";
 import { RepeatIterable } from "@/models/collections/RepeatIterable";
 import { SelectIterable } from "@/models/collections/SelectIterable";
+import { SelectManyIterable } from "@/models/collections/SelectManyIterable";
 import { WhereIterable } from "@/models/collections/WhereIterable";
 
 export class Collection<T> implements Iterable<T> {
@@ -50,6 +51,11 @@ export class Collection<T> implements Iterable<T> {
 
 	public select<TResult>(selector: (value: T, index: number) => TResult): Collection<TResult> {
 		return new Collection(new SelectIterable(this.iterable, selector));
+	}
+
+	// 呼び方わからん
+	public selectMany<TResult>(selector: (value: T, index: number) => TResult): Collection<TResult> {
+		return new Collection(new SelectManyIterable(this.iterable as unknown as Iterable<Iterable<T>>, selector));
 	}
 
 	//#endregion

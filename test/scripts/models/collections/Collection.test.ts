@@ -1,6 +1,5 @@
 import { Collection } from "@/models/collections/Collection";
 
-
 describe("Collection", () => {
 	test.each([
 		[[0, 1, 2], 0, 3],
@@ -66,7 +65,17 @@ describe("Collection", () => {
 			.toArray()
 			;
 		expect(actual2).toStrictEqual(["A", "C"]);
+	});
 
+	test("selectMany", () => {
+		const collection = Collection.from([[1, 2, 3], [4, 5, 6]]);
+		const actual = collection.selectMany(a => `[${a}]`).toArray();
+		expect(actual).toStrictEqual(["[1]", "[2]", "[3]", "[4]", "[5]", "[6]"]);
+	});
+
+	test("selectMany - throw", () => {
+		const collection = Collection.from([1, 2, 3 ,4, 5, 6]);
+		expect(() => collection.selectMany(a => `[${a}]`).toArray()).toThrowError();
 	});
 
 });
