@@ -1,3 +1,4 @@
+import { AppendIterable } from "@/models/collections/AppendIterable";
 import { EmptyIterable } from "@/models/collections/EmptyIterable";
 import { RangeIterable } from "@/models/collections/RangeIterable";
 import { RepeatIterable } from "@/models/collections/RepeatIterable";
@@ -56,6 +57,14 @@ export class Collection<T> implements Iterable<T> {
 	// 呼び方わからん
 	public selectMany<TResult>(selector: (value: T, index: number) => TResult): Collection<TResult> {
 		return new Collection(new SelectManyIterable(this.iterable as unknown as Iterable<Iterable<T>>, selector));
+	}
+
+	public concat(iterable: Iterable<T>): Collection<T> {
+		const appendIterable = new AppendIterable<T>();
+		appendIterable.append(this.iterable);
+		appendIterable.append(iterable);
+
+		return new Collection(appendIterable);
 	}
 
 	//#endregion

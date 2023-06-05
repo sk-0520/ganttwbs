@@ -74,8 +74,38 @@ describe("Collection", () => {
 	});
 
 	test("selectMany - throw", () => {
-		const collection = Collection.from([1, 2, 3 ,4, 5, 6]);
+		const collection = Collection.from([1, 2, 3, 4, 5, 6]);
 		expect(() => collection.selectMany(a => `[${a}]`).toArray()).toThrowError();
 	});
 
+	test("concat", () => {
+		const expected1 = [10, 20, 30, -10, -20, -30];
+		const expected2 = [10, 20, 30, -10, -20, -30, 1, 3, 5];
+		const expected3 = [10, 20, 30, -10, -20, -30, 1, 3, 5, 2, 4, 6];
+
+		const input1 = [10, 20, 30];
+		const input2 = [-10, -20, -30];
+		const input3 = Collection.from([1, 3, 5]);
+		const input4 = [2, 4, 6];
+
+		const actual1 = Collection.from(input1)
+			.concat(input2)
+			;
+		const actual2 = actual1
+			.concat(input3)
+			;
+		const actual3 = actual2
+			.concat(input4)
+			;
+		const actualAll = Collection.from(input1)
+			.concat(input2)
+			.concat(input3)
+			.concat(input4)
+			;
+
+		expect(actual1.toArray()).toStrictEqual(expected1);
+		expect(actual2.toArray()).toStrictEqual(expected2);
+		expect(actual3.toArray()).toStrictEqual(expected3);
+		expect(actualAll.toArray()).toStrictEqual(expected3);
+	});
 });
