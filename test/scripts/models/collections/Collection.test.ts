@@ -141,6 +141,22 @@ describe("Collection", () => {
 			const collection = Collection.range(0, 3);
 			expect(collection.skip(count).toArray()).toStrictEqual(expected);
 		});
+
+		test.each([
+			[[0, 1, 2, 2, 3, 3, 4, 5, 5, 6], (a: number) => false],
+			[[1, 2, 2, 3, 3, 4, 5, 5, 6], (a: number) => a === 0],
+			[[2, 2, 3, 3, 4, 5, 5, 6], (a: number) => a <= 1],
+			[[3, 3, 4, 5, 5, 6], (a: number) => a <= 2],
+			[[4, 5, 5, 6], (a: number) => a <= 3],
+			[[5, 5, 6], (a: number) => a <= 4],
+			[[6], (a: number) => a <= 5],
+			[[], (a: number) => a <= 6],
+			[[], (a: number) => a <= 7],
+			[[], (a: number) => true],
+		])("skip", (expected: Array<number>, predicate: Predicate<number>) => {
+			const collection = Collection.from([0, 1, 2, 2, 3, 3, 4, 5, 5, 6]);
+			expect(collection.skipWhile(predicate).toArray()).toStrictEqual(expected);
+		});
 	});
 
 	describe("即時", () => {

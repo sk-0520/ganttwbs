@@ -5,7 +5,7 @@ import { RangeIterable } from "@/models/collections/Range";
 import { RepeatIterable } from "@/models/collections/Repeat";
 import { SelectIterable } from "@/models/collections/Select";
 import { SelectManyIterable } from "@/models/collections/SelectMany";
-import { SkipIterable } from "@/models/collections/Skip";
+import { SkipIterable, SkipWhileIterable } from "@/models/collections/Skip";
 import { WhereIterable } from "@/models/collections/Where";
 import { Result, ResultFactory } from "@/models/data/Result";
 
@@ -148,6 +148,15 @@ export class Collection<T> implements Iterable<T> {
 	 */
 	public skip(count: number): Collection<T> {
 		return new Collection(new SkipIterable(this.iterable, count));
+	}
+
+	/**
+	 * [即時] 先頭から条件を満たす限りバイパス。
+	 * @param predicate
+	 * @returns
+	 */
+	public skipWhile(predicate: Predicate<T>): Collection<T> {
+		return new Collection(new SkipWhileIterable(this.iterable, predicate));
 	}
 
 	//#endregion
