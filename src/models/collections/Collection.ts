@@ -19,18 +19,39 @@ export class Collection<T> implements Iterable<T> {
 
 	//#region 生成
 
+	/**
+	 * 反復可能オブジェクトからコレクション生成。
+	 * @param iterable 反復可能オブジェクト
+	 * @returns
+	 */
 	public static from<TSource>(iterable: Iterable<TSource>): Collection<TSource> {
 		return new Collection(iterable);
 	}
 
+	/**
+	 * 指定した範囲内の整数からコレクション生成。
+	 * @param start 開始。
+	 * @param count 終了。
+	 * @returns
+	 */
 	public static range(start: number, count: number): Collection<number> {
 		return new Collection(new RangeIterable(start, count));
 	}
 
+	/**
+	 * 繰り返されるコレクションの生成。
+	 * @param value 値。
+	 * @param count 件数。
+	 * @returns
+	 */
 	public static repeat<T>(value: T, count: number): Collection<T> {
 		return new Collection(new RepeatIterable(value, count));
 	}
 
+	/**
+	 * 空のコレクションを生成。
+	 * @returns
+	 */
 	public static empty<T>(): Collection<T> {
 		return new Collection(new EmptyIterable());
 	}
@@ -39,6 +60,10 @@ export class Collection<T> implements Iterable<T> {
 
 	//#region 実体化
 
+	/**
+	 * 配列として実体化。
+	 * @returns
+	 */
 	public toArray(): Array<T> {
 		return [...this.iterable];
 	}
@@ -47,19 +72,39 @@ export class Collection<T> implements Iterable<T> {
 
 	//#region 遅延
 
+	/**
+	 * [遅延] フィルタリング。
+	 * @param predicate
+	 * @returns
+	 */
 	public where(predicate: (value: T) => boolean): Collection<T> {
 		return new Collection(new WhereIterable(this.iterable, predicate));
 	}
 
+	/**
+	 * [遅延] 射影。
+	 * @param selector
+	 * @returns
+	 */
 	public select<TResult>(selector: (value: T, index: number) => TResult): Collection<TResult> {
 		return new Collection(new SelectIterable(this.iterable, selector));
 	}
 
-	// 呼び方わからん
+	/**
+	 * [遅延] 射影-平坦化。
+	 * TODO: TS定義がよろしくない。
+	 * @param selector
+	 * @returns
+	 */
 	public selectMany<TResult>(selector: (value: T, index: number) => TResult): Collection<TResult> {
 		return new Collection(new SelectManyIterable(this.iterable as unknown as Iterable<Iterable<T>>, selector));
 	}
 
+	/**
+	 * [遅延] 末尾に連結。
+	 * @param iterable 連結する反復可能オブジェクト。
+	 * @returns
+	 */
 	public concat(iterable: Iterable<T>): Collection<T> {
 		const appendIterable = new AppendIterable<T>();
 		appendIterable.append(this.iterable);
@@ -68,6 +113,11 @@ export class Collection<T> implements Iterable<T> {
 		return new Collection(appendIterable);
 	}
 
+	/**
+	 * [遅延] 要素を先頭に挿入。
+	 * @param element
+	 * @returns
+	 */
 	public prepend(element: T): Collection<T> {
 		const appendIterable = new AppendIterable<T>();
 		appendIterable.append([element]);
@@ -76,6 +126,11 @@ export class Collection<T> implements Iterable<T> {
 		return new Collection(appendIterable);
 	}
 
+	/**
+	 * [遅延] 要素を末尾に追加。
+	 * @param element
+	 * @returns
+	 */
 	public append(element: T): Collection<T> {
 		const appendIterable = new AppendIterable<T>();
 		appendIterable.append(this.iterable);
@@ -88,6 +143,11 @@ export class Collection<T> implements Iterable<T> {
 
 	//#region 即時
 
+	/**
+	 * [即時] 要素が含まれているか。
+	 * @param predicate 条件。未指定時は要素が一つでも存在すれば真を返す。
+	 * @returns
+	 */
 	public any(predicate?: Predicate<T>): boolean {
 		if (predicate) {
 			for (const value of this.iterable) {
@@ -106,6 +166,11 @@ export class Collection<T> implements Iterable<T> {
 		return false;
 	}
 
+	/**
+	 * [即時] 全ての要素が条件を満たすか。
+	 * @param predicate 条件。未指定時は真を返す。
+	 * @returns
+	 */
 	public all(predicate?: Predicate<T>): boolean {
 		if (predicate) {
 			for (const value of this.iterable) {
@@ -118,6 +183,11 @@ export class Collection<T> implements Iterable<T> {
 		return true;
 	}
 
+	/**
+	 * [即時] 件数を取得。
+	 * @param predicate 条件。未指定時は全数を返す。
+	 * @returns
+	 */
 	public count(predicate?: Predicate<T>): number {
 		let count = 0;
 
