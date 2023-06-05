@@ -1,4 +1,4 @@
-import { SelectManyIterable } from "@/models/collections/SelectManyIterable";
+import { SelectManyIterable } from "@/models/collections/SelectMany";
 
 describe("SelectManyIterable.test", () => {
 	test("selectMany", () => {

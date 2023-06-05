@@ -1,10 +1,10 @@
-import { AppendIterable } from "@/models/collections/AppendIterable";
-import { EmptyIterable } from "@/models/collections/EmptyIterable";
-import { RangeIterable } from "@/models/collections/RangeIterable";
-import { RepeatIterable } from "@/models/collections/RepeatIterable";
-import { SelectIterable } from "@/models/collections/SelectIterable";
-import { SelectManyIterable } from "@/models/collections/SelectManyIterable";
-import { WhereIterable } from "@/models/collections/WhereIterable";
+import { AppendIterable } from "@/models/collections/Append";
+import { EmptyIterable } from "@/models/collections/Empty";
+import { RangeIterable } from "@/models/collections/Range";
+import { RepeatIterable } from "@/models/collections/Repeat";
+import { SelectIterable } from "@/models/collections/Select";
+import { SelectManyIterable } from "@/models/collections/SelectMany";
+import { WhereIterable } from "@/models/collections/Where";
 
 export class Collection<T> implements Iterable<T> {
 
