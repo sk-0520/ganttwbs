@@ -208,6 +208,109 @@ export class Collection<T> implements Iterable<T> {
 		return count;
 	}
 
+	/**
+	 * [即時] 先頭要素を取得。
+	 * @param predicate
+	 * @returns
+	 * @throws {RangeError} 要素なし。
+	 */
+	public first(predicate?: Predicate<T>): T {
+		if (predicate) {
+			for (const value of this.iterable) {
+				if (predicate(value)) {
+					return value;
+				}
+			}
+		} else {
+			for (const value of this.iterable) {
+				return value;
+			}
+		}
+
+		throw new RangeError();
+	}
+
+	/**
+	 * [即時] 先頭要素を取得、存在しない場合は `undefined` を返す。
+	 * @param predicate
+	 * @returns
+	 */
+	public firstOrUndefined(predicate?: Predicate<T>): T | undefined {
+		if (predicate) {
+			for (const value of this.iterable) {
+				if (predicate(value)) {
+					return value;
+				}
+			}
+		} else {
+			for (const value of this.iterable) {
+				return value;
+			}
+		}
+
+		return undefined;
+	}
+
+	/**
+	 * [即時] 終端要素を取得。
+	 * @param predicate
+	 * @returns
+	 * @throws {RangeError} 要素なし。
+	 */
+	public last(predicate?: Predicate<T>): T {
+		let isFound = false;
+		let current!: T;
+
+		if (predicate) {
+			for (const value of this.iterable) {
+				if (predicate(value)) {
+					isFound = true;
+					current = value;
+				}
+			}
+		} else {
+			for (const value of this.iterable) {
+				isFound = true;
+				current = value;
+			}
+		}
+
+		if (isFound) {
+			return current;
+		}
+
+		throw new RangeError();
+	}
+
+	/**
+	 * [即時] 終端要素を取得、存在しない場合は `undefined` を返す。
+	 * @param predicate
+	 * @returns
+	 */
+	public lastOrUndefined(predicate?: Predicate<T>): T|undefined {
+		let isFound = false;
+		let current!: T;
+
+		if (predicate) {
+			for (const value of this.iterable) {
+				if (predicate(value)) {
+					isFound = true;
+					current = value;
+				}
+			}
+		} else {
+			for (const value of this.iterable) {
+				isFound = true;
+				current = value;
+			}
+		}
+
+		if (isFound) {
+			return current;
+		}
+
+		return undefined;
+	}
 
 	//#endregion
 

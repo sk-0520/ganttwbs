@@ -138,7 +138,7 @@ describe("Collection", () => {
 	});
 
 	test("any - empty", () => {
-		const collection = Collection.from([]);
+		const collection = Collection.empty();
 		expect(collection.any()).toBeFalsy();
 	});
 
@@ -152,7 +152,7 @@ describe("Collection", () => {
 	});
 
 	test("all - empty", () => {
-		const collection = Collection.from([]);
+		const collection = Collection.empty();
 		expect(collection.all()).toBeTruthy();
 	});
 
@@ -163,4 +163,48 @@ describe("Collection", () => {
 		const collection = Collection.from([1, 2, 3, 4, 5, 6]);
 		expect(collection.count(predicate)).toBe(expected);
 	});
+
+	test.each([
+		[1, undefined],
+		[5, (a:number) => 4 < a],
+	])("first", (expected: number, predicate?: Predicate<number>) => {
+		const collection = Collection.from([1, 2, 3, 4, 5, 6]);
+		expect(collection.first(predicate)).toBe(expected);
+	});
+
+	test("first - throw", () => {
+		expect(() => Collection.empty().first()).toThrow(RangeError);
+	});
+
+	test.each([
+		[1, undefined],
+		[5, (a:number) => 4 < a],
+		[undefined, (a:number) => 6 < a],
+	])("firstOrUndefined", (expected: number | undefined, predicate?: Predicate<number>) => {
+		const collection = Collection.from([1, 2, 3, 4, 5, 6]);
+		expect(collection.firstOrUndefined(predicate)).toBe(expected);
+	});
+
+	test.each([
+		[6, undefined],
+		[3, (a:number) => a < 4],
+	])("last", (expected: number, predicate?: Predicate<number>) => {
+		const collection = Collection.from([1, 2, 3, 4, 5, 6]);
+		expect(collection.last(predicate)).toBe(expected);
+	});
+
+	test("last - throw", () => {
+		expect(() => Collection.empty().last()).toThrow(RangeError);
+	});
+
+	test.each([
+		[6, undefined],
+		[3, (a:number) => a < 4],
+		[undefined, (a:number) => a < 0],
+	])("lastOrUndefined", (expected: number | undefined, predicate?: Predicate<number>) => {
+		const collection = Collection.from([1, 2, 3, 4, 5, 6]);
+		expect(collection.lastOrUndefined(predicate)).toBe(expected);
+	});
+
+
 });
