@@ -75,9 +75,49 @@ export class Collection<T> implements Iterable<T> {
 		return new Collection(appendIterable);
 	}
 
+	public append(element: T): Collection<T> {
+		const appendIterable = new AppendIterable<T>();
+		appendIterable.append(this.iterable);
+		appendIterable.append([element]);
+
+		return new Collection(appendIterable);
+	}
+
 	//#endregion
 
 	//#region 即時
+
+	public any(predicate?: (value: T) => boolean): boolean {
+		if (predicate) {
+			for (const value of this.iterable) {
+				if (predicate(value)) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		for (const _ of this.iterable) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public all(predicate?: (value: T) => boolean): boolean {
+		if (predicate) {
+			for (const value of this.iterable) {
+				if (!predicate(value)) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+
 	//#endregion
 
 

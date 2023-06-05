@@ -120,4 +120,38 @@ describe("Collection", () => {
 		expect(collection.prepend(2).toArray()).toStrictEqual([2, 0, 1]);
 		expect(collection.prepend(2).prepend(3).toArray()).toStrictEqual([3, 2, 0, 1]);
 	});
+
+	test("append", () => {
+		const collection = Collection.from([0, 1]);
+		expect(collection.append(2).toArray()).toStrictEqual([0, 1, 2]);
+		expect(collection.append(2).append(3).toArray()).toStrictEqual([0, 1, 2, 3]);
+	});
+
+	test.each([
+		[true, undefined],
+		[true, (a:number) => 6 <= a],
+		[false, (a:number) => 6 < a],
+	])("any", (expected: boolean, predicate?: (value: number) => boolean) => {
+		const collection = Collection.from([1, 2, 3, 4, 5, 6]);
+		expect(collection.any(predicate)).toBe(expected);
+	});
+
+	test("any - empty", () => {
+		const collection = Collection.from([]);
+		expect(collection.any()).toBeFalsy();
+	});
+
+	test.each([
+		[true, undefined],
+		[true, (a:number) => a <= 6],
+		[false, (a:number) => a < 6],
+	])("all", (expected: boolean, predicate?: (value: number) => boolean) => {
+		const collection = Collection.from([1, 2, 3, 4, 5, 6]);
+		expect(collection.all(predicate)).toBe(expected);
+	});
+
+	test("all - empty", () => {
+		const collection = Collection.from([]);
+		expect(collection.all()).toBeTruthy();
+	});
 });
