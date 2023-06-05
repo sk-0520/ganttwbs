@@ -38,10 +38,7 @@ class SelectIterator<TSource, TResult> extends IteratorBase<TResult> {
 			return result;
 		}
 		const v = this.selector(result.value, this.currentIndex++);
-		return {
-			done: false,
-			value: v,
-		};
+		return this.yield(v);
 	}
 
 	//#endregion

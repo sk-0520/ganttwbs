@@ -34,18 +34,12 @@ class RepeatIterator<T> extends IteratorBase<T> {
 
 	public next(): IteratorResult<T> {
 		if (this.count <= this.currentIndex) {
-			return {
-				done: true,
-				value: undefined,
-			};
+			return this.done();
 		}
 
 		this.currentIndex += 1;
 
-		return {
-			done: false,
-			value: this.value,
-		};
+		return this.yield(this.value);
 	}
 
 	//#endregion

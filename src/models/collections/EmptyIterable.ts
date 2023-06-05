@@ -24,10 +24,7 @@ class EmptyIterator<T> extends IteratorBase<T> {
 	//#region IteratorBase
 
 	public next(): IteratorResult<T> {
-		return {
-			done: true,
-			value: undefined,
-		};
+		return this.done();
 	}
 
 	//#endregion

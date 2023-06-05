@@ -14,4 +14,18 @@ export abstract class IteratorBase<T> implements IterableIterator<T>{
 	public [Symbol.iterator](): IterableIterator<T> {
 		return this;
 	}
+
+	protected done(): IteratorResult<T> {
+		return {
+			done: true,
+			value: undefined
+		};
+	}
+	protected yield(value: T): IteratorResult<T> {
+		return {
+			done: false,
+			value: value
+		};
+	}
+
 }

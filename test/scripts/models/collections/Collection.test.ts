@@ -71,6 +71,7 @@ describe("Collection", () => {
 		const collection = Collection.from([[1, 2, 3], [4, 5, 6]]);
 		const actual = collection.selectMany(a => `[${a}]`).toArray();
 		expect(actual).toStrictEqual(["[1]", "[2]", "[3]", "[4]", "[5]", "[6]"]);
+		expect(actual).toStrictEqual(["[1]", "[2]", "[3]", "[4]", "[5]", "[6]"]);
 	});
 
 	test("selectMany - throw", () => {
@@ -102,6 +103,11 @@ describe("Collection", () => {
 			.concat(input3)
 			.concat(input4)
 			;
+
+		expect(actual1.toArray()).toStrictEqual(expected1);
+		expect(actual2.toArray()).toStrictEqual(expected2);
+		expect(actual3.toArray()).toStrictEqual(expected3);
+		expect(actualAll.toArray()).toStrictEqual(expected3);
 
 		expect(actual1.toArray()).toStrictEqual(expected1);
 		expect(actual2.toArray()).toStrictEqual(expected2);

@@ -35,16 +35,10 @@ class RangeIterator extends IteratorBase<number> {
 
 	public next(): IteratorResult<number> {
 		if (this.currentValue === this.start + this.count) {
-			return {
-				done: true,
-				value: undefined,
-			};
+			return this.done();
 		}
 
-		return {
-			done: false,
-			value: this.currentValue++,
-		};
+		return this.yield(this.currentValue++);
 	}
 
 	//#endregion

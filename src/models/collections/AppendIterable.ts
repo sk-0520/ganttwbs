@@ -31,10 +31,7 @@ class AppendIterator<T> extends IteratorBase<T> {
 	public next(): IteratorResult<T> {
 		while (true) {
 			if (this.iterators.length <= this.currentIndex) {
-				return {
-					done: true,
-					value: undefined
-				};
+				return this.done();
 			}
 
 			const iterator = this.iterators[this.currentIndex];

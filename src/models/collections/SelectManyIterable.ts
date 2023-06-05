@@ -50,36 +50,25 @@ class SelectManyIterator<TSource, TCollection extends Iterable<TSource>, TResult
 	public next(): IteratorResult<TResult> {
 		if (this.innerIterator === undefined) {
 			if (!this.rebuildInnerIterator()) {
-				return {
-					done: true,
-					value: undefined,
-				};
+				return this.done();
 			}
 		}
 
 		if (this.innerIterator === undefined) {
-			return {
-				done: true,
-				value: undefined,
-			};
+			throw new Error();
 		}
 
 		while (true) {
 			const result = this.innerIterator.next();
 			if (result.done) {
 				if (!this.rebuildInnerIterator()) {
-					return {
-						done: true,
-						value: undefined,
-					};
+					return this.done();
 				}
 				continue;
 			}
 
-			return {
-				done: false,
-				value: this.selector(result.value, this.currentIndex++),
-			};
+			const v = this.selector(result.value, this.currentIndex++);
+			return this.yield(v);
 		}
 
 	}

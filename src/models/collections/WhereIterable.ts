@@ -41,10 +41,7 @@ class WhereIterator<T> extends IteratorBase<T> {
 			}
 
 			if (this.predicate(result.value)) {
-				return {
-					done: false,
-					value: result.value,
-				};
+				return this.yield(result.value);
 			}
 		}
 	}
