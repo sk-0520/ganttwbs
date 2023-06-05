@@ -3,6 +3,7 @@ import { EmptyIterable } from "@/models/collections/Empty";
 import { Predicate } from "@/models/collections/Iterator";
 import { RangeIterable } from "@/models/collections/Range";
 import { RepeatIterable } from "@/models/collections/Repeat";
+import { ReverseIterable } from "@/models/collections/Reverse";
 import { SelectIterable } from "@/models/collections/Select";
 import { SelectManyIterable } from "@/models/collections/SelectMany";
 import { SkipIterable, SkipWhileIterable } from "@/models/collections/Skip";
@@ -176,6 +177,14 @@ export class Collection<T> implements Iterable<T> {
 	 */
 	public takeWhile(predicate: Predicate<T>): Collection<T> {
 		return new Collection(new TakeWhileIterable(this.iterable, predicate));
+	}
+
+	/**
+	 * [遅延] 反転。
+	 * @returns
+	 */
+	public reverse(): Collection<T> {
+		return new Collection(new ReverseIterable(this.iterable));
 	}
 
 	//#endregion

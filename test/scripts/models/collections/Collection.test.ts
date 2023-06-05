@@ -184,6 +184,15 @@ describe("Collection", () => {
 			expect(collection.takeWhile(predicate).toArray()).toStrictEqual(expected);
 		});
 
+		test.each([
+			[[0], [0]],
+			[[2, 1, 0], [0, 1, 2]],
+		])("reverse", (expected: Array<number>, init: Array<number>) => {
+			const collection = Collection.from(init);
+			expect(collection.reverse().toArray()).toStrictEqual(expected);
+			expect(collection.reverse().reverse().toArray()).toStrictEqual(init);
+		});
+
 	});
 
 	describe("即時", () => {
