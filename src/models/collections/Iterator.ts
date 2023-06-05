@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+export type Predicate<T> = (value: T) => boolean;
+
 export abstract class IteratorBase<T> implements IterableIterator<T>{
 
 	public abstract next(...args: [] | [undefined]): IteratorResult<T, any>;

@@ -1,4 +1,5 @@
 import { Collection } from "@/models/collections/Collection";
+import { Predicate } from "@/models/collections/Iterator";
 
 describe("Collection", () => {
 	test.each([
@@ -131,7 +132,7 @@ describe("Collection", () => {
 		[true, undefined],
 		[true, (a:number) => 6 <= a],
 		[false, (a:number) => 6 < a],
-	])("any", (expected: boolean, predicate?: (value: number) => boolean) => {
+	])("any", (expected: boolean, predicate?: Predicate<number>) => {
 		const collection = Collection.from([1, 2, 3, 4, 5, 6]);
 		expect(collection.any(predicate)).toBe(expected);
 	});
@@ -145,7 +146,7 @@ describe("Collection", () => {
 		[true, undefined],
 		[true, (a:number) => a <= 6],
 		[false, (a:number) => a < 6],
-	])("all", (expected: boolean, predicate?: (value: number) => boolean) => {
+	])("all", (expected: boolean, predicate?: Predicate<number>) => {
 		const collection = Collection.from([1, 2, 3, 4, 5, 6]);
 		expect(collection.all(predicate)).toBe(expected);
 	});
@@ -153,5 +154,13 @@ describe("Collection", () => {
 	test("all - empty", () => {
 		const collection = Collection.from([]);
 		expect(collection.all()).toBeTruthy();
+	});
+
+	test.each([
+		[6, undefined],
+		[3, (a:number) => a % 2 === 0],
+	])("count", (expected: number, predicate?: Predicate<number>) => {
+		const collection = Collection.from([1, 2, 3, 4, 5, 6]);
+		expect(collection.count(predicate)).toBe(expected);
 	});
 });

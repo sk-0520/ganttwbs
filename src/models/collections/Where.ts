@@ -1,9 +1,9 @@
-import { IteratorBase } from "@/models/collections/Iterator";
+import { IteratorBase, Predicate } from "@/models/collections/Iterator";
 
 export class WhereIterable<T> implements Iterable<T> {
 	public constructor(
 		private readonly iterable: Iterable<T>,
-		private readonly predicate: (value: T) => boolean,
+		private readonly predicate: Predicate<T>,
 	) {
 	}
 
@@ -19,7 +19,7 @@ export class WhereIterable<T> implements Iterable<T> {
 class WhereIterator<T> extends IteratorBase<T> {
 	public constructor(
 		iterable: Iterable<T>,
-		private readonly predicate: (value: T) => boolean,
+		private readonly predicate: Predicate<T>,
 	) {
 		super();
 		this.iterator = iterable[Symbol.iterator]();

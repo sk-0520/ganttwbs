@@ -1,5 +1,6 @@
 import { AppendIterable } from "@/models/collections/Append";
 import { EmptyIterable } from "@/models/collections/Empty";
+import { Predicate } from "@/models/collections/Iterator";
 import { RangeIterable } from "@/models/collections/Range";
 import { RepeatIterable } from "@/models/collections/Repeat";
 import { SelectIterable } from "@/models/collections/Select";
@@ -87,7 +88,7 @@ export class Collection<T> implements Iterable<T> {
 
 	//#region 即時
 
-	public any(predicate?: (value: T) => boolean): boolean {
+	public any(predicate?: Predicate<T>): boolean {
 		if (predicate) {
 			for (const value of this.iterable) {
 				if (predicate(value)) {
@@ -105,7 +106,7 @@ export class Collection<T> implements Iterable<T> {
 		return false;
 	}
 
-	public all(predicate?: (value: T) => boolean): boolean {
+	public all(predicate?: Predicate<T>): boolean {
 		if (predicate) {
 			for (const value of this.iterable) {
 				if (!predicate(value)) {
@@ -115,6 +116,26 @@ export class Collection<T> implements Iterable<T> {
 		}
 
 		return true;
+	}
+
+	public count(predicate?: Predicate<T>): number {
+		let count = 0;
+
+		if (predicate) {
+			for (const value of this.iterable) {
+				if (predicate(value)) {
+					count += 1;
+				}
+			}
+
+			return count;
+		}
+
+		for (const _ of this.iterable) {
+			count += 1;
+		}
+
+		return count;
 	}
 
 
