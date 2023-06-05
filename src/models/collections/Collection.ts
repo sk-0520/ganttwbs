@@ -6,7 +6,7 @@ import { RepeatIterable } from "@/models/collections/Repeat";
 import { SelectIterable } from "@/models/collections/Select";
 import { SelectManyIterable } from "@/models/collections/SelectMany";
 import { SkipIterable, SkipWhileIterable } from "@/models/collections/Skip";
-import { TakeIterable } from "@/models/collections/Take";
+import { TakeIterable, TakeWhileIterable } from "@/models/collections/Take";
 import { WhereIterable } from "@/models/collections/Where";
 import { Result, ResultFactory } from "@/models/data/Result";
 
@@ -167,6 +167,15 @@ export class Collection<T> implements Iterable<T> {
 	 */
 	public take(count: number): Collection<T> {
 		return new Collection(new TakeIterable(this.iterable, count));
+	}
+
+	/**
+	 * [遅延] 先頭から条件を満たすデータを返却。
+	 * @param predicate
+	 * @returns
+	 */
+	public takeWhile(predicate: Predicate<T>): Collection<T> {
+		return new Collection(new TakeWhileIterable(this.iterable, predicate));
 	}
 
 	//#endregion

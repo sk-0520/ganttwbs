@@ -153,7 +153,7 @@ describe("Collection", () => {
 			[[], (a: number) => a <= 6],
 			[[], (a: number) => a <= 7],
 			[[], (a: number) => true],
-		])("skip", (expected: Array<number>, predicate: Predicate<number>) => {
+		])("skipWhile", (expected: Array<number>, predicate: Predicate<number>) => {
 			const collection = Collection.from([0, 1, 2, 2, 3, 3, 4, 5, 5, 6]);
 			expect(collection.skipWhile(predicate).toArray()).toStrictEqual(expected);
 		});
@@ -168,6 +168,22 @@ describe("Collection", () => {
 			const collection = Collection.range(0, 3);
 			expect(collection.take(count).toArray()).toStrictEqual(expected);
 		});
+
+		test.each([
+			[[], (a: number) => false],
+			[[0], (a: number) => a === 0],
+			[[0, 1], (a: number) => a <= 1],
+			[[0, 1, 2, 2], (a: number) => a <= 2],
+			[[0, 1, 2, 2, 3, 3], (a: number) => a <= 3],
+			[[0, 1, 2, 2, 3, 3, 4], (a: number) => a <= 4],
+			[[0, 1, 2, 2, 3, 3, 4, 5, 5], (a: number) => a <= 5],
+			[[0, 1, 2, 2, 3, 3, 4, 5, 5, 6], (a: number) => a <= 6],
+			[[0, 1, 2, 2, 3, 3, 4, 5, 5, 6], (a: number) => true],
+		])("takeWhile", (expected: Array<number>, predicate: Predicate<number>) => {
+			const collection = Collection.from([0, 1, 2, 2, 3, 3, 4, 5, 5, 6]);
+			expect(collection.takeWhile(predicate).toArray()).toStrictEqual(expected);
+		});
+
 	});
 
 	describe("即時", () => {

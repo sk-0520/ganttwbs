@@ -95,7 +95,7 @@ class SkipWhileIterator<T> extends IteratorBase<T> {
 				continue;
 			}
 
-			this.skipped = false;
+			this.skipped = true;
 			return result;
 		}
 
