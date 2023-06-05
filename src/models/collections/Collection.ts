@@ -1,3 +1,4 @@
+import { Types } from "@/models/Types";
 import { AppendIterable } from "@/models/collections/Append";
 import { EmptyIterable } from "@/models/collections/Empty";
 import { Predicate } from "@/models/collections/Iterator";
@@ -71,6 +72,41 @@ export class Collection<T> implements Iterable<T> {
 	public toArray(): Array<T> {
 		return [...this.iterable];
 	}
+
+	/**
+	 * `Map` として実体化。
+	 * @param keySelector
+	 * @param elementSelector
+	 * @returns
+	 */
+	public toDictionary<TKey, TElement>(keySelector: (value: T) => TKey, elementSelector: (value: T) => TElement): Map<TKey, TElement> {
+		const map = new Map<TKey, TElement>();
+
+		for (const value of this.iterable) {
+			const key = keySelector(value);
+			if (Types.isNullish(key)) {
+				throw new Error(`[nullish] key: ${typeof key}`);
+			}
+
+			const element = elementSelector(value);
+			if (map.has(key)) {
+				throw new Error(`[duplication] key: ${typeof key}`);
+			}
+
+			map.set(key, element);
+		}
+
+		return map;
+	}
+
+	/**
+	 * `Set` として実体化。
+	 * @returns
+	 */
+	public toHashSet(): Set<T> {
+		return new Set(this.iterable);
+	}
+
 
 	//#endregion
 
