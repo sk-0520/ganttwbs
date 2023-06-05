@@ -10,7 +10,7 @@ export class WhereIterable<T> implements Iterable<T> {
 	//#region Iterable
 
 	public [Symbol.iterator](): Iterator<T> {
-		return new WhereIterator(this.iterable, this.predicate);
+		return new WhereIterator(this.iterable[Symbol.iterator](), this.predicate);
 	}
 
 	//#endregion
@@ -18,18 +18,11 @@ export class WhereIterable<T> implements Iterable<T> {
 
 class WhereIterator<T> extends IteratorBase<T> {
 	public constructor(
-		iterable: Iterable<T>,
+		private readonly iterator: Iterator<T>,
 		private readonly predicate: Predicate<T>,
 	) {
 		super();
-		this.iterator = iterable[Symbol.iterator]();
 	}
-
-	//#region property
-
-	private iterator: Iterator<T>;
-
-	//#endregion
 
 	//#region IteratorBase
 

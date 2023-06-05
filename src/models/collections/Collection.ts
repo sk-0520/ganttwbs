@@ -5,6 +5,7 @@ import { RangeIterable } from "@/models/collections/Range";
 import { RepeatIterable } from "@/models/collections/Repeat";
 import { SelectIterable } from "@/models/collections/Select";
 import { SelectManyIterable } from "@/models/collections/SelectMany";
+import { SkipIterable } from "@/models/collections/Skip";
 import { WhereIterable } from "@/models/collections/Where";
 import { Result, ResultFactory } from "@/models/data/Result";
 
@@ -140,6 +141,15 @@ export class Collection<T> implements Iterable<T> {
 		return new Collection(appendIterable);
 	}
 
+	/**
+	 * [遅延] 先頭から指定数をバイパス。
+	 * @param count
+	 * @returns
+	 */
+	public skip(count: number): Collection<T> {
+		return new Collection(new SkipIterable(this.iterable, count));
+	}
+
 	//#endregion
 
 	//#region 即時
@@ -233,7 +243,7 @@ export class Collection<T> implements Iterable<T> {
 	 */
 	public first(predicate?: Predicate<T>): T {
 		const result = this.firstCore(predicate);
-		if(result.success) {
+		if (result.success) {
 			return result.value;
 		}
 
@@ -247,7 +257,7 @@ export class Collection<T> implements Iterable<T> {
 	 */
 	public firstOrUndefined(predicate?: Predicate<T>): T | undefined {
 		const result = this.firstCore(predicate);
-		if(result.success) {
+		if (result.success) {
 			return result.value;
 		}
 
@@ -287,7 +297,7 @@ export class Collection<T> implements Iterable<T> {
 	 */
 	public last(predicate?: Predicate<T>): T {
 		const result = this.lastCore(predicate);
-		if(result.success) {
+		if (result.success) {
 			return result.value;
 		}
 
@@ -301,7 +311,7 @@ export class Collection<T> implements Iterable<T> {
 	 */
 	public lastOrUndefined(predicate?: Predicate<T>): T | undefined {
 		const result = this.lastCore(predicate);
-		if(result.success) {
+		if (result.success) {
 			return result.value;
 		}
 
