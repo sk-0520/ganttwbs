@@ -237,18 +237,36 @@ export abstract class Strings {
 		return source.split(/\r\n|\n|\r/);
 	}
 
+	/**
+	 * `string.padStart` の引数 {number} 限定処理。
+	 * @param num
+	 * @param maxLength
+	 * @param fillString
+	 * @returns
+	 */
 	public static padStart(num: number, maxLength: number, fillString?: string): string {
 		return String(num).padStart(maxLength, fillString);
 	}
+
+	/**
+	 * `padStart` の 0 埋め。
+	 * 数値が腐りそうなので `padEnd0` はない。
+	 * @param num
+	 * @param maxLength
+	 * @returns
+	 */
 	public static padStart0(num: number, maxLength: number): string {
 		return this.padStart(num, maxLength, "0");
 	}
 
+	/**
+	 * `string.padEnd` の引数 {number} 限定処理。
+	 * @param num
+	 * @param maxLength
+	 * @param fillString
+	 * @returns
+	 */
 	public static padEnd(num: number, maxLength: number, fillString?: string): string {
 		return String(num).padEnd(maxLength, fillString);
 	}
-	public static padEnd0(num: number, maxLength: number): string {
-		return this.padEnd(num, maxLength, "0");
-	}
-
 }
