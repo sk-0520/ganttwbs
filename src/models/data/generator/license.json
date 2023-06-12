@@ -32,8 +32,8 @@
     "repository": "https://github.com/suren-atoyan/monaco-react"
   },
   "@next/bundle-analyzer": {
-    "module": "@next/bundle-analyzer@13.4.4",
-    "version": "13.4.4",
+    "module": "@next/bundle-analyzer@13.4.5",
+    "version": "13.4.5",
     "licenses": "MIT",
     "licenseNote": "# Next.js + Webpack Bundle Analyzer\n\nUse `webpack-bundle-analyzer` in your Next.js project\n\n## Installation\n\n```\nnpm install @next/bundle-analyzer\n```\n\nor\n\n```\nyarn add @next/bundle-analyzer\n```\n\nNote: if installing as a `devDependency` make sure to wrap the require in a `process.env` check as `next.config.js` is loaded during `next start` as well.\n\n### Usage with environment variables\n\nCreate a next.config.js (and make sure you have next-bundle-analyzer set up)\n\n```js\nconst withBundleAnalyzer = require('@next/bundle-analyzer')({\n  enabled: process.env.ANALYZE === 'true',\n})\nmodule.exports = withBundleAnalyzer({})\n```\n\nOr configuration as a function:\n\n```js\nmodule.exports = (phase, defaultConfig) => {\n  return withBundleAnalyzer(defaultConfig)\n}\n```\n\nThen you can run the command below:\n\n```bash\n# Analyze is done on build when env var is set\nANALYZE=true yarn build\n```\n\nWhen enabled two HTML files (client.html and server.html) will be outputted to `<distDir>/analyze/`. One will be for the server bundle, one for the browser bundle.\n\n#### Options\n\nTo disable automatically opening the report in your default browser, set `openAnalyzer` to false:\n\n```js\nconst withBundleAnalyzer = require('@next/bundle-analyzer')({\n  enabled: process.env.ANALYZE === 'true',\n  openAnalyzer: false,\n})\nmodule.exports = withBundleAnalyzer({})\n```\n\n### Usage with next-compose-plugins\n\nFrom version 2.0.0 of next-compose-plugins you need to call bundle-analyzer in this way to work\n\n```js\nconst withPlugins = require('next-compose-plugins')\nconst withBundleAnalyzer = require('@next/bundle-analyzer')({\n  enabled: process.env.ANALYZE === 'true',\n})\n\nmodule.exports = withPlugins([\n  [withBundleAnalyzer],\n  // your other plugins here\n])\n```\n",
     "repository": "https://github.com/vercel/next.js"
@@ -53,8 +53,8 @@
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
   "@types/node": {
-    "module": "@types/node@20.2.6",
-    "version": "20.2.6",
+    "module": "@types/node@20.3.0",
+    "version": "20.3.0",
     "licenses": "MIT",
     "licenseNote": "    MIT License\n\n    Copyright (c) Microsoft Corporation.\n\n    Permission is hereby granted, free of charge, to any person obtaining a copy\n    of this software and associated documentation files (the \"Software\"), to deal\n    in the Software without restriction, including without limitation the rights\n    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n    copies of the Software, and to permit persons to whom the Software is\n    furnished to do so, subject to the following conditions:\n\n    The above copyright notice and this permission notice shall be included in all\n    copies or substantial portions of the Software.\n\n    THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n    SOFTWARE\n",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
@@ -81,8 +81,8 @@
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
   },
   "@types/react": {
-    "module": "@types/react@18.2.9",
-    "version": "18.2.9",
+    "module": "@types/react@18.2.11",
+    "version": "18.2.11",
     "licenses": "MIT",
     "licenseNote": "    MIT License\n\n    Copyright (c) Microsoft Corporation.\n\n    Permission is hereby granted, free of charge, to any person obtaining a copy\n    of this software and associated documentation files (the \"Software\"), to deal\n    in the Software without restriction, including without limitation the rights\n    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n    copies of the Software, and to permit persons to whom the Software is\n    furnished to do so, subject to the following conditions:\n\n    The above copyright notice and this permission notice shall be included in all\n    copies or substantial portions of the Software.\n\n    THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n    SOFTWARE\n",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped"
@@ -133,8 +133,8 @@
     "repository": "https://github.com/kentcdodds/cross-env"
   },
   "eslint-config-next": {
-    "module": "eslint-config-next@13.4.4",
-    "version": "13.4.4",
+    "module": "eslint-config-next@13.4.5",
+    "version": "13.4.5",
     "licenses": "MIT",
     "licenseNote": "",
     "repository": "https://github.com/vercel/next.js"
@@ -210,8 +210,8 @@
     "repository": "https://github.com/facebook/jest"
   },
   "jotai": {
-    "module": "jotai@2.1.1",
-    "version": "2.1.1",
+    "module": "jotai@2.2.0",
+    "version": "2.2.0",
     "publisher": "Daishi Kato",
     "licenses": "MIT",
     "licenseNote": "MIT License\n\nCopyright (c) 2020-2023 Poimandres\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
@@ -250,8 +250,8 @@
     "repository": "https://github.com/i18next/next-i18next"
   },
   "next": {
-    "module": "next@13.4.4",
-    "version": "13.4.4",
+    "module": "next@13.4.5",
+    "version": "13.4.5",
     "licenses": "MIT",
     "licenseNote": "The MIT License (MIT)\n\nCopyright (c) 2023 Vercel, Inc.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
     "repository": "https://github.com/vercel/next.js"
