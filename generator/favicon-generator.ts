@@ -3,6 +3,7 @@ import * as path from "path";
 
 //import * as sharp from "sharp";
 import sharp from "sharp";
+import ico from "sharp-ico";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const minifyXML = require("minify-xml").minify;
@@ -17,13 +18,22 @@ const faviconSourceFileContent = fs.readFileSync(faviconSourceFilePath);
 const outputXml = minifyXML(faviconSourceFileContent.toString());
 fs.writeFileSync(faviconOutputSvgFilePath, outputXml);
 
-iconSizes.map(async a => {
-	const faviconOutputPngFilePath = path.join(rootDirectoryPath, "public", `favicon-${a}x${a}.png`);
+(async () => {
+	const pngs = new Array<Buffer>();
+	for (const iconSize of iconSizes) {
+		const faviconOutputPngFilePath = path.join(rootDirectoryPath, "public", `favicon-${iconSize}x${iconSize}.png`);
 
-	const buffer = await sharp(Buffer.from(outputXml))
-		.resize(a, a)
-		.png()
-		.toBuffer()
-		;
-	fs.writeFileSync(faviconOutputPngFilePath, buffer);
-});
+		const buffer = await sharp(Buffer.from(outputXml))
+			.resize(iconSize, iconSize)
+			.png()
+			.toBuffer()
+			;
+		fs.writeFileSync(faviconOutputPngFilePath, buffer);
+		if(iconSize < 256) {
+			pngs.push(buffer);
+		}
+	}
+
+	const iconBuffer = ico.encode(pngs);
+	fs.writeFileSync(path.join(rootDirectoryPath, "public", "favicon.ico"), iconBuffer);
+})();

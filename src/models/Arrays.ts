@@ -167,4 +167,8 @@ export abstract class Arrays {
 
 		return false;
 	}
+
+	public static orderBy<T>(array: ReadonlyArray<T>, keySelector?: (a: T, b: T) => number): Array<T> {
+		return [...array].sort(keySelector);
+	}
 }

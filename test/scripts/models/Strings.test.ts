@@ -117,8 +117,53 @@ describe("String", () => {
 		[["a", "b", "c"], "a\rb\nc"],
 	])("splitLines", (expected: Array<string>, input: string | null | undefined) => {
 		const actual = Strings.splitLines(input);
-		expect(actual).toEqual(expected);
+		expect(actual).toStrictEqual(expected);
 	});
 
+	test.each([
+		["0", 0, 0, "x"],
+		["0", 0, 1, "x"],
+		["x0", 0, 2, "x"],
+		["xx0", 0, 3, "x"],
+		["1", 1, 0, "x"],
+		["1", 1, 1, "x"],
+		["x1", 1, 2, "x"],
+		["xx1", 1, 3, "x"],
+		["1", 1, 0, undefined],
+		["1", 1, 1, undefined],
+		[" 1", 1, 2, undefined],
+		["  1", 1, 3, undefined],
+	])("padStart", (expected: string, input: number, maxLength: number, fillString: string | undefined) => {
+		const actual = Strings.padStart(input, maxLength, fillString);
+		expect(actual).toBe(expected);
+	});
+
+	test.each([
+		["1", 1, 0],
+		["1", 1, 1],
+		["01", 1, 2],
+		["001", 1, 3],
+	])("padStart0", (expected: string, input: number, maxLength: number) => {
+		const actual = Strings.padStart0(input, maxLength);
+		expect(actual).toBe(expected);
+	});
+
+	test.each([
+		["0", 0, 0, "x"],
+		["0", 0, 1, "x"],
+		["0x", 0, 2, "x"],
+		["0xx", 0, 3, "x"],
+		["1", 1, 0, "x"],
+		["1", 1, 1, "x"],
+		["1x", 1, 2, "x"],
+		["1xx", 1, 3, "x"],
+		["1", 1, 0, undefined],
+		["1", 1, 1, undefined],
+		["1 ", 1, 2, undefined],
+		["1  ", 1, 3, undefined],
+	])("padEnd", (expected: string, input: number, maxLength: number, fillString: string | undefined) => {
+		const actual = Strings.padEnd(input, maxLength, fillString);
+		expect(actual).toBe(expected);
+	});
 });
 
