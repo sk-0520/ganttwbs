@@ -70,7 +70,7 @@
 			"^(pre|post)",
 			"^(build|start)$",
 			"license",
-			"^(check|update)$",
+			"^npm-(check|update)$",
 			"^(favicon|analyze)$",
 		],
 		"auto-close-tag.activationOnLanguage": [

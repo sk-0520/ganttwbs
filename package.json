@@ -28,8 +28,8 @@
 		"lint-fix": "next lint --fix --dir .",
 		"favicon": "ts-node --project tsconfig.local.json ./generator/favicon-generator.ts",
 		"license": "ts-node --project tsconfig.local.json ./generator/license-generator.ts",
-		"check": "ncu",
-		"update": "ncu -u && npm install && npm run license",
+		"npm-check": "ncu",
+		"npm-update": "ncu -u && npm install && npm run license",
 		"analyze": "ANALYZE=true npm run build"
 	},
 	"jest": {
