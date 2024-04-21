@@ -9,10 +9,10 @@ jobs:
 
     steps:
       - name: <Checkout> Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: <Add> Node/NPM
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: ./.node-version
           cache: npm
@@ -35,7 +35,7 @@ jobs:
           npm run build
 
       - name: <Archive>
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ganttwbs
           path: |
@@ -47,10 +47,10 @@ jobs:
 
     steps:
       - name: <Checkout> Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: <Add> Node/NPM
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: ./.node-version
           cache: npm
@@ -62,7 +62,7 @@ jobs:
         run: npm run analyze
 
       - name: <Archive>
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: analyze
           path: |
