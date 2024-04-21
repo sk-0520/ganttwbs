@@ -1,4 +1,3 @@
-import { Types } from "@/models/Types";
 import { AppendIterable } from "@/models/collections/Append";
 import { EmptyIterable } from "@/models/collections/Empty";
 import { Predicate } from "@/models/collections/Iterator";
@@ -11,6 +10,7 @@ import { SkipIterable, SkipWhileIterable } from "@/models/collections/Skip";
 import { TakeIterable, TakeWhileIterable } from "@/models/collections/Take";
 import { WhereIterable } from "@/models/collections/Where";
 import { Result, ResultFactory } from "@/models/data/Result";
+import { Types } from "@/models/Types";
 
 export class Collection<T> implements Iterable<T> {
 
