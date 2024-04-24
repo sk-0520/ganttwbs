@@ -24,8 +24,8 @@ export abstract class Editors {
 		const mainContentElement = Dom.querySelector(".tab-timeline");
 		const crossHeaderElement = Dom.getElementById("cross-header");
 
-		const columnElement = date ? Dom.getElementById(Timelines.toDaysId(date)) : undefined;
-		const rowElement = timeline ? Dom.getElementById(Timelines.toRowId(timeline)) : undefined;
+		const columnElement = date ? document.getElementById(Timelines.toDaysId(date)) : null;
+		const rowElement = timeline ? document.getElementById(Timelines.toRowId(timeline)) : null;
 
 		const timelineSize = {
 			width: mainContentElement.clientWidth - crossHeaderElement.clientWidth,
