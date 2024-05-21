@@ -10,7 +10,7 @@ import SettingEditor from "@/components/elements/pages/editor/setting/SettingEdi
 import TimelineEditor from "@/components/elements/pages/editor/timeline/TimelineEditor";
 import Layout from "@/components/layout/Layout";
 import { useLocale } from "@/locales/locale";
-import { As } from "@/models/As";
+import { Cast } from "@/models/Cast";
 import { Configuration } from "@/models/data/Configuration";
 import { EditorData } from "@/models/data/EditorData";
 import { Storages } from "@/models/Storages";
@@ -150,7 +150,7 @@ function createConfiguration(): Configuration {
 				height: 20,
 			},
 		},
-		workingDays: As.integer(process.env.NEXT_PUBLIC_RESOURCE_MONTH_WORKING_DAYS),
+		workingDays: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_MONTH_WORKING_DAYS),
 	};
 
 	return result;

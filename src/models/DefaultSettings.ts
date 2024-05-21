@@ -1,4 +1,4 @@
-import { As } from "@/models/As";
+import { Cast } from "@/models/Cast";
 import { Color } from "@/models/Color";
 import { PriceSetting } from "@/models/data/PriceSetting";
 import { HolidayKind, TimelineTheme, WeekDay } from "@/models/data/Setting";
@@ -57,29 +57,29 @@ export abstract class DefaultSettings {
 	}
 
 	public static getPriceSetting(): PriceSetting {
-		let inputMax: number | undefined = As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MAXIMUM);
+		let inputMax: number | undefined = Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MAXIMUM);
 		if (inputMax <= 0) {
 			inputMax = undefined;
 		}
 
 		return {
-			workingDays: As.integer(process.env.NEXT_PUBLIC_RESOURCE_MONTH_WORKING_DAYS),
+			workingDays: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_MONTH_WORKING_DAYS),
 
 			input: {
 				cost: {
-					minimum: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MINIMUM),
+					minimum: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MINIMUM),
 					maximum: inputMax,
-					step: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_STEP),
+					step: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_STEP),
 				},
 				sales: {
-					minimum: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MINIMUM),
+					minimum: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MINIMUM),
 					maximum: inputMax,
-					step: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_STEP),
+					step: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_STEP),
 				}
 			},
 			price: {
-				cost: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_DEFAULT_COST),
-				sales: As.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_DEFAULT_SALES),
+				cost: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_DEFAULT_COST),
+				sales: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_DEFAULT_SALES),
 			}
 		};
 	}

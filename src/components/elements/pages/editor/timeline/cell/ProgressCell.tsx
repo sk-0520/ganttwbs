@@ -1,7 +1,7 @@
 
 import { FC, useEffect, useState } from "react";
 
-import { As } from "@/models/As";
+import { Cast } from "@/models/Cast";
 import { useActiveTimelineIdAtomWriter } from "@/models/atom/editor/HighlightAtoms";
 import { Progress } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
@@ -39,7 +39,7 @@ const ProgressCell: FC<Props> = (props: Props) => {
 	const progressItems = [...progressSet].sort();
 
 	function handleChangeProgress(value: string) {
-		const progress = As.float(value);
+		const progress = Cast.float(value);
 		setProgress(progress);
 		if (props.callbackChangeValue) {
 			props.callbackChangeValue(progress);

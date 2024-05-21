@@ -1,4 +1,4 @@
-import { As } from "@/models/As";
+import { Cast } from "@/models/Cast";
 import { ParseResult, ResultFactory } from "@/models/data/Result";
 import { DateTimeTicks } from "@/models/DateTime";
 import { Strong } from "@/models/Types";
@@ -161,26 +161,26 @@ export class TimeSpan {
 		let rawTicks = 0;
 
 		if (matches.groups.YEAR) {
-			rawTicks += As.integer(matches.groups.YEAR) * 365 * 12 * 24 * 60 * 60 * 1000;
+			rawTicks += Cast.integer(matches.groups.YEAR) * 365 * 12 * 24 * 60 * 60 * 1000;
 		}
 		if (matches.groups.MONTH) {
-			rawTicks += As.integer(matches.groups.MONTH) * 12 * 24 * 60 * 60 * 1000;
+			rawTicks += Cast.integer(matches.groups.MONTH) * 12 * 24 * 60 * 60 * 1000;
 		}
 		if (matches.groups.DAY) {
-			rawTicks += As.integer(matches.groups.DAY) * 24 * 60 * 60 * 1000;
+			rawTicks += Cast.integer(matches.groups.DAY) * 24 * 60 * 60 * 1000;
 		}
 
 		if (matches.groups.HOUR) {
-			rawTicks += As.integer(matches.groups.HOUR) * 60 * 60 * 1000;
+			rawTicks += Cast.integer(matches.groups.HOUR) * 60 * 60 * 1000;
 		}
 		if (matches.groups.MINUTE) {
-			rawTicks += As.integer(matches.groups.MINUTE) * 60 * 1000;
+			rawTicks += Cast.integer(matches.groups.MINUTE) * 60 * 1000;
 		}
 		if (matches.groups.SECOND) {
-			rawTicks += As.integer(matches.groups.SECOND) * 60 * 1000;
+			rawTicks += Cast.integer(matches.groups.SECOND) * 60 * 1000;
 		}
 		if (matches.groups.MS) {
-			rawTicks += As.integer(matches.groups.MS);
+			rawTicks += Cast.integer(matches.groups.MS);
 		}
 
 		return ResultFactory.success(new TimeSpan(toTicks(rawTicks)));
@@ -193,13 +193,13 @@ export class TimeSpan {
 		}
 
 		const totalSeconds
-			= As.integer(matches.groups.S)
-			+ (As.integer(matches.groups.M) * 60)
-			+ (As.integer(matches.groups.H) * 60 * 60)
-			+ (matches.groups.DAY ? As.integer(matches.groups.DAY) * 60 * 60 * 24 : 0);
+			= Cast.integer(matches.groups.S)
+			+ (Cast.integer(matches.groups.M) * 60)
+			+ (Cast.integer(matches.groups.H) * 60 * 60)
+			+ (matches.groups.DAY ? Cast.integer(matches.groups.DAY) * 60 * 60 * 24 : 0);
 
 		if (matches.groups.MS) {
-			const ms = As.integer(matches.groups.MS);
+			const ms = Cast.integer(matches.groups.MS);
 			if (ms) {
 				const totalMilliseconds = totalSeconds * 1000 + ms;
 				return ResultFactory.success(TimeSpan.fromMilliseconds(totalMilliseconds));

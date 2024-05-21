@@ -9,7 +9,7 @@ type InputType = string | undefined;
  *   * ユーザー操作で変わらないHTML値とかも対象(変えられて死んでもそれは知らぬ存ぜぬ)
  * * 失敗時は死ぬ
  */
-export abstract class As {
+export abstract class Cast {
 
 	/**
 	 * 文字列への変換。
