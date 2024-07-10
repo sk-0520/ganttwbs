@@ -58,7 +58,7 @@ const ConnectorTimeline: FC<Props> = (props: Props) => {
 			[markerBox.width, markerBox.width / 2],
 			[0, markerBox.height],
 		]
-			.map(([x, y]) => x + "," + y)
+			.map(([x, y]) => `${x},${y}`)
 			.join(" "),
 	};
 

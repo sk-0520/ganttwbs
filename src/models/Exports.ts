@@ -183,7 +183,7 @@ export abstract class Exports {
 			progress: "",
 		};
 		const headerRow1 = timelineSheet.addRow([
-			...this.createBaseCells(header1),
+			...Exports.createBaseCells(header1),
 			...dates,
 		]);
 		for (let i = 0; i < dates.length; i++) {
@@ -206,7 +206,7 @@ export abstract class Exports {
 				if (prev.month === current.month) {
 					cell.font = {
 						color: {
-							argb: this.toExcelArgbColor(monthEqualColor),
+							argb: Exports.toExcelArgbColor(monthEqualColor),
 						},
 					};
 				}
@@ -274,7 +274,7 @@ export abstract class Exports {
 							type: "pattern",
 							pattern: "solid",
 							fgColor: {
-								argb: this.toExcelArgbColor(color),
+								argb: Exports.toExcelArgbColor(color),
 							},
 						};
 					}
@@ -294,7 +294,7 @@ export abstract class Exports {
 							type: "pattern",
 							pattern: "solid",
 							fgColor: {
-								argb: this.toExcelArgbColor(color),
+								argb: Exports.toExcelArgbColor(color),
 							},
 						};
 					}
@@ -336,7 +336,7 @@ export abstract class Exports {
 			progress: Timelines.sumProgressByGroup(rootTimelineItem),
 		};
 		const headerRow2 = timelineSheet.addRow([
-			...this.createBaseCells(header2),
+			...Exports.createBaseCells(header2),
 			...dates,
 		]);
 		for (let i = 0; i < dates.length; i++) {
@@ -361,14 +361,14 @@ export abstract class Exports {
 			};
 			cell.font = {
 				color: {
-					argb: this.toExcelArgbColor(totalColor.getAutoColor()),
+					argb: Exports.toExcelArgbColor(totalColor.getAutoColor()),
 				},
 			};
 			cell.fill = {
 				type: "pattern",
 				pattern: "solid",
 				fgColor: {
-					argb: this.toExcelArgbColor(totalColor),
+					argb: Exports.toExcelArgbColor(totalColor),
 				},
 			};
 		}
@@ -394,7 +394,7 @@ export abstract class Exports {
 			progress: locale.pages.editor.timeline.header.columns.progress,
 		};
 		const headerRow3 = timelineSheet.addRow([
-			...this.createBaseCells(header3),
+			...Exports.createBaseCells(header3),
 			...dates,
 		]);
 		for (let i = 0; i < dates.length; i++) {
@@ -410,14 +410,14 @@ export abstract class Exports {
 			};
 			cell.font = {
 				color: {
-					argb: this.toExcelArgbColor(columnColor.getAutoColor()),
+					argb: Exports.toExcelArgbColor(columnColor.getAutoColor()),
 				},
 			};
 			cell.fill = {
 				type: "pattern",
 				pattern: "solid",
 				fgColor: {
-					argb: this.toExcelArgbColor(columnColor),
+					argb: Exports.toExcelArgbColor(columnColor),
 				},
 			};
 		}
@@ -439,7 +439,7 @@ export abstract class Exports {
 			IdFactory.rootTimelineId,
 		) as RootTimeline;
 
-		const baseCellsNumberMap = this.getExcelBaseCellsNumberMap();
+		const baseCellsNumberMap = Exports.getExcelBaseCellsNumberMap();
 
 		const workbook = new Workbook();
 		const timelineSheet = workbook.addWorksheet(
@@ -451,7 +451,7 @@ export abstract class Exports {
 
 		// ヘッダ
 		// 1. タイトル - 月
-		this.createExcelRow1(
+		Exports.createExcelRow1(
 			timelineSheet,
 			calculatedData,
 			setting,
@@ -461,7 +461,7 @@ export abstract class Exports {
 			locale,
 		);
 		// 2. 集計 - 日付
-		this.createExcelRow2(
+		Exports.createExcelRow2(
 			timelineSheet,
 			calculatedData,
 			setting,
@@ -471,7 +471,7 @@ export abstract class Exports {
 			locale,
 		);
 		// 3. ヘッダ - 曜日
-		this.createExcelRow3(
+		Exports.createExcelRow3(
 			timelineSheet,
 			calculatedData,
 			setting,
@@ -563,7 +563,7 @@ export abstract class Exports {
 			};
 
 			const timelineRow = timelineSheet.addRow([
-				...this.createBaseCells(timelineBaseCells),
+				...Exports.createBaseCells(timelineBaseCells),
 			]);
 
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "id")).alignment = {
@@ -637,8 +637,8 @@ export abstract class Exports {
 					const cell = timelineRow.getCell(beginCell.fullAddress.col + i);
 					const isCompletedArea = step * i + step <= progress;
 					const fillColor = isCompletedArea
-						? this.toExcelArgbColor(completedColor)
-						: this.toExcelArgbColor(targetColor);
+						? Exports.toExcelArgbColor(completedColor)
+						: Exports.toExcelArgbColor(targetColor);
 					cell.fill = {
 						type: "pattern",
 						pattern: "solid",
@@ -705,7 +705,7 @@ export abstract class Exports {
 					type: "pattern",
 					pattern: "solid",
 					fgColor: {
-						argb: this.toExcelArgbColor(
+						argb: Exports.toExcelArgbColor(
 							Color.create(groupColor.r, groupColor.g, groupColor.b),
 						),
 					},
@@ -796,7 +796,7 @@ export abstract class Exports {
 				timeline.id,
 				timeline.kind,
 				//---------------------------
-				":" + Timelines.toReadableTimelineId(readableTimelineId),
+				`:${Timelines.toReadableTimelineId(readableTimelineId)}`,
 				timeline.subject,
 				String(workload.totalDays),
 				memberGroupPair ? memberGroupPair.group.name : "",

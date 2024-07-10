@@ -83,7 +83,7 @@ const ThemeTimelineSettingEditor: FC = () => {
 				</tr>
 
 				<tr>
-					<td></td>
+					<td />
 					<td>
 						<DefaultButton visibleLabel={true} callbackClick={handleReset} />
 					</td>

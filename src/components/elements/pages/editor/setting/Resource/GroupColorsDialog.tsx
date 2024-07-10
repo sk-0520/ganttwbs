@@ -193,13 +193,13 @@ function createBaseColorMaps(
 	baseColor: Color,
 ): Record<"same" | "analogy" | "monochrome", Map<MemberId, Color>> {
 	return {
-		["same"]: new Map(group.members.map((a) => [a.id, baseColor])),
-		["analogy"]: new Map(
+		same: new Map(group.members.map((a) => [a.id, baseColor])),
+		analogy: new Map(
 			baseColor
 				.analogous(group.members.length)
 				.map((a, i) => [group.members[i].id, a]),
 		),
-		["monochrome"]: new Map(
+		monochrome: new Map(
 			baseColor
 				.monochromatic(group.members.length)
 				.map((a, i) => [group.members[i].id, a]),
@@ -215,8 +215,8 @@ function createColorTable(
 	const baseColors = createBaseColorMaps(group, baseColor);
 	const table: Record<ColorKind, Map<MemberId, Color>> = {
 		...baseColors,
-		["gradient"]: createGradientMap(group, baseColor, gradientColor),
-		["random"]: createRandomMap(group, baseColor, gradientColor),
+		gradient: createGradientMap(group, baseColor, gradientColor),
+		random: createRandomMap(group, baseColor, gradientColor),
 	};
 
 	return table;

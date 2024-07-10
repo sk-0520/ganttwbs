@@ -1,6 +1,6 @@
 /* eslint-disable import/order */
 /* eslint-disable @typescript-eslint/no-var-requires */
-const path = require("path");
+const path = require("node:path");
 
 const { i18n } = require("./next-i18next.config");
 

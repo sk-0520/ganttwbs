@@ -167,7 +167,7 @@ export abstract class TimeZone {
 	 * @returns パース成功時はタイムゾーン。失敗時は `null`。
 	 */
 	public static tryParse(s: string): TimeZone | null {
-		return ResultFactory.parseErrorIsReturnNull(s, this.parseCore);
+		return ResultFactory.parseErrorIsReturnNull(s, TimeZone.parseCore);
 	}
 
 	/**
@@ -176,7 +176,7 @@ export abstract class TimeZone {
 	 * @returns パース成功時はタイムゾーン。
 	 */
 	public static parse(s: string): TimeZone {
-		return ResultFactory.parseErrorIsThrow(s, this.parseCore);
+		return ResultFactory.parseErrorIsThrow(s, TimeZone.parseCore);
 	}
 
 	/**

@@ -78,7 +78,7 @@ const TimelineItems: FC<Props> = (props: Props) => {
 		return Arrays.create(props.configuration.design.dummy.height).map((_) => {
 			return (
 				<tr
-					key={"dmy-" + IdFactory.createReactKey()}
+					key={`dmy-${IdFactory.createReactKey()}`}
 					className="dummy timeline-cell timeline-header _dynamic_programmable_cell_height"
 				>
 					<td className="timeline-cell timeline-id">&nbsp;</td>

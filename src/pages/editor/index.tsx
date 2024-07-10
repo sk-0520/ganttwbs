@@ -52,7 +52,7 @@ const EditorPage: NextPage = () => {
 				mode="application"
 				layoutId="editor"
 				title={
-					(editorData ? editorData.fileName + " " : "") +
+					(editorData ? `${editorData.fileName} ` : "") +
 					locale.pages.editor.title
 				}
 			>

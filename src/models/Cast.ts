@@ -29,7 +29,7 @@ export abstract class Cast {
 	 * @returns
 	 */
 	public static integer(input: InputType): number {
-		const value = Number.parseInt(this.string(input));
+		const value = Number.parseInt(Cast.string(input));
 		if (Number.isNaN(value)) {
 			throw new Error(input);
 		}
@@ -43,7 +43,7 @@ export abstract class Cast {
 	 * @returns
 	 */
 	public static float(input: InputType): number {
-		const value = Number.parseFloat(this.string(input));
+		const value = Number.parseFloat(Cast.string(input));
 		if (Number.isNaN(value)) {
 			throw new Error(input);
 		}

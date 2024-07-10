@@ -37,7 +37,7 @@ export abstract class Designs {
 						Designs.toValue(valuesOrNestedBlock),
 					);
 				} else {
-					const map = this.convertStyleClasses(valuesOrNestedBlock, [
+					const map = Designs.convertStyleClasses(valuesOrNestedBlock, [
 						...parents,
 						selectorOrProperty,
 					]);
@@ -58,7 +58,7 @@ export abstract class Designs {
 	}
 
 	public static toStyleProperty(s: string): string {
-		const matches = s.match(this.PropertyRegex);
+		const matches = s.match(Designs.PropertyRegex);
 		if (!matches) {
 			throw new Error(s);
 		}
@@ -71,7 +71,7 @@ export abstract class Designs {
 	): Array<string> {
 		return [...map.entries()]
 			.sort(([ak, av], [bk, bv]) => ak.localeCompare(bk))
-			.map(([k, v]) => `${this.toStyleProperty(k)}: ${v}`);
+			.map(([k, v]) => `${Designs.toStyleProperty(k)}: ${v}`);
 	}
 
 	public static convertStylesheet(
@@ -84,7 +84,7 @@ export abstract class Designs {
 			.map(([k, v]) => ({ key: k, values: v }))
 			.map((a) => ({
 				key: a.key,
-				lines: this.convertStylesheetBlock(a.values),
+				lines: Designs.convertStylesheetBlock(a.values),
 			}))
 			.map((a) => {
 				return [

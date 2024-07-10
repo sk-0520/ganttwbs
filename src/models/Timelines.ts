@@ -52,36 +52,33 @@ export abstract class Timelines {
 	}
 
 	public static toRowId(timeline: TimelineIdOrObject): string {
-		return "timeline-row-" + this.getId(timeline);
+		return `timeline-row-${Timelines.getId(timeline)}`;
 	}
 
 	public static toSubjectId(timeline: TimelineIdOrObject): string {
-		return "timeline-cell-subject-" + this.getId(timeline);
+		return `timeline-cell-subject-${Timelines.getId(timeline)}`;
 	}
 
 	public static toWorkloadId(timeline: TimelineIdOrObject): string {
-		return "timeline-cell-workload-" + this.getId(timeline);
+		return `timeline-cell-workload-${Timelines.getId(timeline)}`;
 	}
 
 	public static toNodePreviousId(timeline: TimelineIdOrObject): string {
-		return "timeline-node-previous-" + this.getId(timeline);
+		return `timeline-node-previous-${Timelines.getId(timeline)}`;
 	}
 
 	public static toDaysId(date: DateTime): string {
-		return "days-" + date.format("yyyy_MM_dd");
+		return `days-${date.format("yyyy_MM_dd")}`;
 	}
 
 	public static toChartId(timeline: TimelineIdOrObject): string {
-		return "timeline-chart-" + this.getId(timeline);
+		return `timeline-chart-${Timelines.getId(timeline)}`;
 	}
 
 	public static getReadableTimelineIdClassName(
 		displayTimelineId: ReadableTimelineId,
 	): string {
-		return (
-			"_dynamic_programmable_readableTimelineId_level-" +
-			displayTimelineId.level
-		);
+		return `_dynamic_programmable_readableTimelineId_level-${displayTimelineId.level}`;
 	}
 
 	public static serializeWorkload(workload: TimeSpan): TimeOnly {
@@ -127,7 +124,7 @@ export abstract class Timelines {
 			subject: "",
 			comment: "",
 			previous: [],
-			workload: this.serializeWorkload(workload),
+			workload: Timelines.serializeWorkload(workload),
 			memberId: "",
 			progress: 0,
 		};
@@ -146,7 +143,7 @@ export abstract class Timelines {
 			result.push(timeline);
 		} else if (Settings.maybeGroupTimeline(timeline)) {
 			result.push(timeline);
-			const children = timeline.children.flatMap((a) => this.flatCore(a));
+			const children = timeline.children.flatMap((a) => Timelines.flatCore(a));
 			for (const child of children) {
 				result.push(child);
 			}
@@ -158,7 +155,7 @@ export abstract class Timelines {
 	public static flat(
 		timelineNodes: ReadonlyArray<AnyTimeline>,
 	): Array<AnyTimeline> {
-		return timelineNodes.flatMap((a) => this.flatCore(a));
+		return timelineNodes.flatMap((a) => Timelines.flatCore(a));
 	}
 
 	public static toIndexes(
@@ -178,10 +175,10 @@ export abstract class Timelines {
 
 		for (const timeline of timelines) {
 			if (Settings.maybeGroupTimeline(timeline)) {
-				const summary = this.sumWorkloads(timeline.children);
+				const summary = Timelines.sumWorkloads(timeline.children);
 				workloads.push(summary);
 			} else if (Settings.maybeTaskTimeline(timeline)) {
-				const span = this.deserializeWorkload(timeline.workload);
+				const span = Timelines.deserializeWorkload(timeline.workload);
 				workloads.push(span);
 			}
 		}
@@ -192,7 +189,7 @@ export abstract class Timelines {
 	}
 
 	public static sumWorkloadByGroup(groupTimeline: GroupTimeline): TimeSpan {
-		return this.sumWorkloads(groupTimeline.children);
+		return Timelines.sumWorkloads(groupTimeline.children);
 	}
 
 	public static displayProgress(progress: number): string {
@@ -204,7 +201,7 @@ export abstract class Timelines {
 
 		for (const timeline of timelines) {
 			if (Settings.maybeGroupTimeline(timeline)) {
-				const summary = this.sumProgress(timeline.children);
+				const summary = Timelines.sumProgress(timeline.children);
 				progress.push(summary);
 			} else if (Settings.maybeTaskTimeline(timeline)) {
 				progress.push(timeline.progress);
@@ -216,14 +213,14 @@ export abstract class Timelines {
 		}
 
 		const sumProgress = progress
-			.filter((a) => !isNaN(a))
+			.filter((a) => !Number.isNaN(a))
 			.reduce((r, a) => r + a, 0.0);
 
 		return sumProgress / progress.length;
 	}
 
 	public static sumProgressByGroup(groupTimeline: GroupTimeline): Progress {
-		return this.sumProgress(groupTimeline.children);
+		return Timelines.sumProgress(groupTimeline.children);
 	}
 
 	/**
@@ -240,7 +237,7 @@ export abstract class Timelines {
 
 		for (const timeline of groupTimeline.children) {
 			if (Settings.maybeGroupTimeline(timeline)) {
-				const map = this.getTimelinesMap(timeline);
+				const map = Timelines.getTimelinesMap(timeline);
 				for (const [key, value] of map) {
 					result.set(key, value);
 				}
@@ -265,7 +262,7 @@ export abstract class Timelines {
 				return node;
 			}
 			if (Settings.maybeGroupTimeline(node)) {
-				const result = this.findTimeline(timelineId, node);
+				const result = Timelines.findTimeline(timelineId, node);
 				if (result) {
 					return result;
 				}
@@ -296,8 +293,8 @@ export abstract class Timelines {
 		);
 
 		for (const child of groupChildren) {
-			const nodes = this.getParentGroups(timeline, child);
-			if (nodes && nodes.length) {
+			const nodes = Timelines.getParentGroups(timeline, child);
+			if (nodes?.length) {
 				return [groupTimeline, ...nodes];
 			}
 		}
@@ -395,7 +392,7 @@ export abstract class Timelines {
 		let begin = beginDate;
 		while (true) {
 			if (limiter.increment()) {
-				return this.createRecursiveCalculatorWorkRange(timeline);
+				return Timelines.createRecursiveCalculatorWorkRange(timeline);
 			}
 
 			const date = begin.truncateTime();
@@ -416,7 +413,7 @@ export abstract class Timelines {
 		limiter.reset();
 		for (let i = 0; i < count; i++) {
 			if (limiter.increment()) {
-				return this.createRecursiveCalculatorWorkRange(timeline);
+				return Timelines.createRecursiveCalculatorWorkRange(timeline);
 			}
 
 			const date = begin.add(i, "day").truncateTime();
@@ -448,7 +445,8 @@ export abstract class Timelines {
 	): TaskTimeline | null {
 		if (Settings.maybeTaskTimeline(timeline)) {
 			return timeline;
-		} else if (Settings.maybeGroupTimeline(timeline)) {
+		}
+		if (Settings.maybeGroupTimeline(timeline)) {
 			const taskChildren = timeline.children.filter(Settings.maybeTaskTimeline);
 			if (taskChildren.length) {
 				return taskChildren[0];
@@ -458,7 +456,7 @@ export abstract class Timelines {
 				Settings.maybeGroupTimeline,
 			);
 			for (const groupTImeline of groupChildren) {
-				const taskTimeline = this.getFirstTaskTimeline(groupTImeline);
+				const taskTimeline = Timelines.getFirstTaskTimeline(groupTImeline);
 				if (taskTimeline) {
 					return taskTimeline;
 				}
@@ -500,7 +498,7 @@ export abstract class Timelines {
 		timeline: AnyTimeline,
 		rootTimeline: GroupTimeline,
 	): AnyTimeline | undefined {
-		const sequenceTimelines = this.flat(rootTimeline.children);
+		const sequenceTimelines = Timelines.flat(rootTimeline.children);
 
 		const index = sequenceTimelines.findIndex((a) => a.id === timeline.id);
 		if (index === -1) {
@@ -530,11 +528,11 @@ export abstract class Timelines {
 					return beforeTimeline;
 				}
 
-				if (this.canSelect(beforeTimeline, timeline, rootTimeline)) {
+				if (Timelines.canSelect(beforeTimeline, timeline, rootTimeline)) {
 					// タスク自体は直近として扱える場合でも、異なるグループのためそのグループ自体を選択する
 					if (1 < beforeGroups.length) {
 						const target = beforeGroup;
-						if (this.canSelect(target, timeline, rootTimeline)) {
+						if (Timelines.canSelect(target, timeline, rootTimeline)) {
 							return target;
 						}
 					}
@@ -557,7 +555,7 @@ export abstract class Timelines {
 		const result = new Map<TimelineId, WorkRange>();
 
 		const holidays: Holidays = {
-			dates: this.convertDatesByHolidayEvents(holiday.events, timeZone),
+			dates: Timelines.convertDatesByHolidayEvents(holiday.events, timeZone),
 			weeks: holiday.regulars.map((a) => Settings.toWeekIndex(a)),
 		};
 
@@ -580,8 +578,8 @@ export abstract class Timelines {
 				throw new Error();
 			}
 			const beginDate = DateTime.parse(timeline.static, timeZone);
-			const workload = this.deserializeWorkload(timeline.workload);
-			const successWorkRange = this.createSuccessWorkRange(
+			const workload = Timelines.deserializeWorkload(timeline.workload);
+			const successWorkRange = Timelines.createSuccessWorkRange(
 				holidays,
 				timeline,
 				beginDate,
@@ -621,9 +619,9 @@ export abstract class Timelines {
 				continue;
 			}
 
-			const workload = this.deserializeWorkload(timeline.workload);
+			const workload = Timelines.deserializeWorkload(timeline.workload);
 
-			const successWorkRange = this.createSuccessWorkRange(
+			const successWorkRange = Timelines.createSuccessWorkRange(
 				holidays,
 				timeline,
 				prevRange.end,
@@ -646,7 +644,7 @@ export abstract class Timelines {
 					if (!result.has(timeline.id)) {
 						result.set(
 							timeline.id,
-							this.createRecursiveCalculatorWorkRange(timeline),
+							Timelines.createRecursiveCalculatorWorkRange(timeline),
 						);
 					}
 				}
@@ -709,7 +707,6 @@ export abstract class Timelines {
 
 					const maxWorkRange = WorkRanges.maxByEndDate(successWorkRanges);
 					if (maxWorkRange === undefined) {
-						debugger;
 						continue;
 					}
 					let prevDate = maxWorkRange.end;
@@ -718,8 +715,8 @@ export abstract class Timelines {
 						prevDate = DateTime.getMaximum(staticDate, maxWorkRange.end);
 					}
 
-					const workload = this.deserializeWorkload(timeline.workload);
-					const successWorkRange = this.createSuccessWorkRange(
+					const workload = Timelines.deserializeWorkload(timeline.workload);
+					const successWorkRange = Timelines.createSuccessWorkRange(
 						holidays,
 						timeline,
 						prevDate,
@@ -805,7 +802,7 @@ export abstract class Timelines {
 		let result: Map<TimelineId, WorkRange> | undefined;
 
 		logger.time("作業範囲算出", (log) => {
-			result = this.getWorkRangesCore(
+			result = Timelines.getWorkRangesCore(
 				flatTimelines,
 				holiday,
 				recursiveMaxCount,
@@ -953,7 +950,7 @@ export abstract class Timelines {
 		let result: Map<DateTimeTicks, DayInfo> | undefined;
 
 		logger.time("日情報算出", (log) => {
-			result = this.calculateDayInfosCore(
+			result = Timelines.calculateDayInfosCore(
 				timelineMap,
 				workRanges,
 				resourceInfo,

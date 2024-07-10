@@ -27,7 +27,7 @@ export class TimeSpan {
 
 	private static _zero: TimeSpan | undefined = undefined;
 	public static get zero(): TimeSpan {
-		return (this._zero ??= new TimeSpan(toTicks(0)));
+		return (TimeSpan._zero ??= new TimeSpan(toTicks(0)));
 	}
 
 	/** ミリ秒部分。 */
@@ -90,7 +90,7 @@ export class TimeSpan {
 	 * @returns
 	 */
 	public static fromTicks(ticks: DateTimeTicks): TimeSpan {
-		return this.fromMilliseconds(Number(ticks));
+		return TimeSpan.fromMilliseconds(Number(ticks));
 	}
 
 	/**
@@ -229,11 +229,11 @@ export class TimeSpan {
 	}
 
 	public static tryParse(s: string): TimeSpan | null {
-		return ResultFactory.parseErrorIsReturnNull(s, this.parseCore);
+		return ResultFactory.parseErrorIsReturnNull(s, TimeSpan.parseCore);
 	}
 
 	public static parse(s: string): TimeSpan {
-		return ResultFactory.parseErrorIsThrow(s, this.parseCore);
+		return ResultFactory.parseErrorIsThrow(s, TimeSpan.parseCore);
 	}
 
 	private formatIso8601(): string {
@@ -270,7 +270,7 @@ export class TimeSpan {
 	private formatReadable(): string {
 		let result = "";
 		if (this.days) {
-			result += this.days + ".";
+			result += `${this.days}.`;
 		}
 
 		result += [
@@ -280,7 +280,7 @@ export class TimeSpan {
 		].join(":");
 
 		if (this.milliseconds) {
-			result += "." + this.milliseconds.toString().padStart(3, "0");
+			result += `.${this.milliseconds.toString().padStart(3, "0")}`;
 		}
 
 		return result;

@@ -26,7 +26,7 @@ const AboutLibraryPage: NextPage = () => {
 			repository: value.repository,
 			license: value.licenses,
 			licenseNote: value.licenseNote,
-			publisher: ("publisher" in value ? value["publisher"] : undefined) ?? "",
+			publisher: ("publisher" in value ? value.publisher : undefined) ?? "",
 		};
 
 		return result;

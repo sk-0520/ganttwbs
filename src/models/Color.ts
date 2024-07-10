@@ -52,12 +52,12 @@ export class Color {
 	}
 
 	public static parse(input: string): Color {
-		return ResultFactory.parseErrorIsThrow(input, (s) => this.parseCore(s));
+		return ResultFactory.parseErrorIsThrow(input, (s) => Color.parseCore(s));
 	}
 
 	public static tryParse(input: string): Color | null {
 		return ResultFactory.parseErrorIsReturnNull(input, (s) =>
-			this.parseCore(s),
+			Color.parseCore(s),
 		);
 	}
 
@@ -65,11 +65,11 @@ export class Color {
 		function enforce(v: number, name: "r" | "g" | "b" | "a"): number {
 			if (name === "a") {
 				if (v < 0 || 1 < v) {
-					throw new Error(name + ":" + v.toString());
+					throw new Error(`${name}:${v.toString()}`);
 				}
 			} else {
 				if (v < 0 || 0xff < v) {
-					throw new Error(name + ":" + v.toString());
+					throw new Error(`${name}:${v.toString()}`);
 				}
 			}
 
@@ -157,7 +157,7 @@ export class Color {
 		// RGB と HSL で処理できるようにした方がいいかも
 		// RGB だと灰色がなぁ
 
-		return this.generateRgbGradient(start, end, count);
+		return Color.generateRgbGradient(start, end, count);
 	}
 
 	public analogous(count: number): Array<Color> {

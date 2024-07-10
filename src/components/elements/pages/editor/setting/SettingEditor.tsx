@@ -291,7 +291,7 @@ function fromCalendarHolidayEventsContext(
 	const result: { [key: DateOnly]: HolidayEvent } = {};
 
 	const items = Strings.splitLines(context)
-		.filter((a) => a && a.trim())
+		.filter((a) => a?.trim())
 		.map((a) => a.split("\t", 2))
 		.map((a) => ({ date: a[0], display: 1 in a ? a[1] : "" }))
 		.map((a) => ({

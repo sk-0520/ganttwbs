@@ -1,5 +1,5 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 import * as checker from "license-checker";
 
@@ -16,8 +16,8 @@ const outputFilePath = path.join(
 
 const json = JSON.parse(fs.readFileSync(packageJsonFilePath).toString());
 const dependencies = new Set([
-	...Object.keys(json["dependencies"]),
-	...Object.keys(json["devDependencies"]),
+	...Object.keys(json.dependencies),
+	...Object.keys(json.devDependencies),
 ]);
 
 checker.init(
@@ -43,13 +43,13 @@ checker.init(
 				map.set(name, {
 					module: key,
 					version: version,
-					publisher: value["publisher"],
-					licenses: value["licenses"],
+					publisher: value.publisher,
+					licenses: value.licenses,
 					licenseNote:
 						value.licenseFile && fs.existsSync(value.licenseFile)
 							? fs.readFileSync(value.licenseFile).toString()
 							: "",
-					repository: value["repository"],
+					repository: value.repository,
 				});
 			}
 		}

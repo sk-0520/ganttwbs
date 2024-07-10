@@ -34,7 +34,7 @@ export abstract class Types {
 	 * @param arg
 	 */
 	public static isNullish(arg: unknown): arg is null | undefined {
-		return this.isUndefined(arg) || this.isNull(arg);
+		return Types.isUndefined(arg) || Types.isNull(arg);
 	}
 
 	public static isString(arg: unknown): arg is string {
@@ -77,7 +77,7 @@ export abstract class Types {
 		arg: unknown,
 		type: Constructor<T>,
 	): arg is T {
-		if (!this.hasProperty(arg, "constructor")) {
+		if (!Types.hasProperty(arg, "constructor")) {
 			return false;
 		}
 

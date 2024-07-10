@@ -173,7 +173,7 @@ class ConsoleLogger implements Logger {
 		public readonly header: string,
 		private readonly options: LogOptions,
 	) {
-		const logHeader = "[" + this.header + "]";
+		const logHeader = `[${this.header}]`;
 
 		this.option = getOption(options);
 

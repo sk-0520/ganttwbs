@@ -55,14 +55,14 @@ const MemberSelector: FC<Props> = (props: Props) => {
 				props.callbackFocus ? props.callbackFocus(false) : undefined
 			}
 		>
-			<option></option>
+			<option />
 
 			{resourceInfoAtomReader.data.groupItems.map((a) => {
 				const members = Require.get(resourceInfoAtomReader.data.memberItems, a);
 
 				return a.name ? (
 					<optgroup key={a.name} label={a.name}>
-						<>{renderMemberOptions(members)}</>
+						{renderMemberOptions(members)}
 					</optgroup>
 				) : (
 					<>{renderMemberOptions(members)}</>

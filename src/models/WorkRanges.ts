@@ -49,7 +49,7 @@ export class WorkRanges {
 	): SuccessTimelineIdRange {
 		const successPairs = [...workRanges]
 			.filter(([k, _]) => (includeRoot ? true : k !== IdFactory.rootTimelineId))
-			.filter(([_, v]) => this.maybeSuccessWorkRange(v))
+			.filter(([_, v]) => WorkRanges.maybeSuccessWorkRange(v))
 			.map(([k, v]) => ({ timelineId: k, workRange: v as SuccessWorkRange }));
 
 		const begins = [...successPairs].sort((a, b) =>

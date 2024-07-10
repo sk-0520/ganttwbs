@@ -60,7 +60,7 @@ const Layout: NextPage<Props> = (props: Props) => {
 						</nav>
 					</header>
 					<main id={props.layoutId}>{props.children}</main>
-					<footer></footer>
+					<footer />
 				</div>
 			)}
 		</>

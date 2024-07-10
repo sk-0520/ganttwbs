@@ -37,7 +37,7 @@ export abstract class Calendars {
 			end: DateTime.parse(calendar.range.end, timeZone),
 		};
 
-		const holidayEventMap = this.createHolidayEventMap(
+		const holidayEventMap = Calendars.createHolidayEventMap(
 			calendar.holiday.events,
 			timeZone,
 		);
@@ -112,7 +112,7 @@ export abstract class Calendars {
 	 * @returns
 	 */
 	public static getMonths(begin: DateTime, end: DateTime): Array<DateTime> {
-		const count = this.getMonthCount(begin, end);
+		const count = Calendars.getMonthCount(begin, end);
 
 		const result = new Array<DateTime>();
 		result.push(begin);
@@ -152,11 +152,11 @@ export abstract class Calendars {
 		holidayRegulars: HolidayRegulars,
 		holidayEventMap: HolidayEventMap,
 	): Array<DateTime> {
-		const rangeDays = this.getDays(range);
+		const rangeDays = Calendars.getDays(range);
 
 		const workDays = rangeDays.filter(
 			(a) =>
-				!this.isHoliday(
+				!Calendars.isHoliday(
 					a.timeIsEmpty ? a : a.truncateTime(),
 					holidayRegulars,
 					holidayEventMap,

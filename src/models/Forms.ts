@@ -18,7 +18,7 @@ export abstract class Forms {
 				element.value.length,
 			);
 
-			element.value = leftString + "\t" + rightString;
+			element.value = `${leftString}\t${rightString}`;
 			// カーソル位置をタブスペースの後ろにする
 			element.selectionEnd = cursorPosition + 1;
 		}

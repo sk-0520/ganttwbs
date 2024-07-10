@@ -50,7 +50,7 @@ function convert(
 	}
 
 	return {
-		className: "timestamp-" + propsFormat,
+		className: `timestamp-${propsFormat}`,
 		format: format,
 	};
 }

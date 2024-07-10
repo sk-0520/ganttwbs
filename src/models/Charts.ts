@@ -22,7 +22,7 @@ export abstract class Charts {
 		fromTimelineId: TimelineId,
 		toTimelineId: TimelineId,
 	): string {
-		return "connecter_" + fromTimelineId + "_" + toTimelineId;
+		return `connecter_${fromTimelineId}_${toTimelineId}`;
 	}
 
 	public static toMarkerId(
@@ -30,11 +30,11 @@ export abstract class Charts {
 		toTimelineId: TimelineId,
 		marker: "start" | "end",
 	): string {
-		return "marker-" + marker + "_" + fromTimelineId + "_" + toTimelineId;
+		return `marker-${marker}_${fromTimelineId}_${toTimelineId}`;
 	}
 
 	public static toReference(target: string): string {
-		return "url(#" + target + ")";
+		return `url(#${target})`;
 	}
 
 	public static getTimeSpanRange(

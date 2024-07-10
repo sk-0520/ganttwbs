@@ -181,17 +181,15 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 		<div id="viewer" onMouseMove={handleMouseMove}>
 			<svg
 				id="canvas"
-				width={
+				width={`${
 					areaData.size.width +
-					areaData.cell.width.value * props.configuration.design.dummy.width +
-					"px"
-				}
-				height={
+					areaData.cell.width.value * props.configuration.design.dummy.width
+				}px`}
+				height={`${
 					areaData.size.height +
 					areaData.cell.height.value *
-						(props.configuration.design.dummy.height - 1) +
-					"px"
-				}
+						(props.configuration.design.dummy.height - 1)
+				}px`}
 			>
 				{gridNodes}
 				{sequenceTimelinesAtomReader.data.map((a, i) => {

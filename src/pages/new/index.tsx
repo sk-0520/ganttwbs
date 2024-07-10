@@ -192,8 +192,6 @@ function onSubmit(data: Input, timeZone: TimeZone, router: NextRouter) {
 		case "sample":
 			setting = createSampleSetting(data, timeZone);
 			break;
-
-		case "empty":
 		default:
 			setting = createEmptySetting(data, timeZone);
 			break;

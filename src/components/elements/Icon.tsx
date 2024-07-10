@@ -216,11 +216,7 @@ interface Props {
 export const IconImage: FC<Props> = (props: Props) => {
 	const factory = Icons[props.kind];
 
-	return (
-		<span className="icon">
-			<>{factory(props)}</>
-		</span>
-	);
+	return <span className="icon">{factory(props)}</span>;
 };
 
 interface LabelProps extends Props {

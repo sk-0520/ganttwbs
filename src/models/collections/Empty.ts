@@ -1,10 +1,6 @@
 import { IteratorBase } from "@/models/collections/Iterator";
 
 export class EmptyIterable<T> implements Iterable<T> {
-	public constructor() {
-		//nop
-	}
-
 	//#region Iterable
 
 	public [Symbol.iterator](): Iterator<T> {
@@ -15,10 +11,6 @@ export class EmptyIterable<T> implements Iterable<T> {
 }
 
 class EmptyIterator<T> extends IteratorBase<T> {
-	public constructor() {
-		super();
-	}
-
 	//#region IteratorBase
 
 	public next(): IteratorResult<T> {

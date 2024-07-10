@@ -99,7 +99,7 @@ const ThemeCalendarSettingEditor: FC = () => {
 					);
 				})}
 				<tr>
-					<td className="subject"></td>
+					<td className="subject" />
 					<td className="theme">
 						<DefaultButton
 							visibleLabel={true}
@@ -130,8 +130,8 @@ const ThemeCalendarSettingEditor: FC = () => {
 					</td>
 				</tr>
 				<tr>
-					<td className="header"></td>
-					<td className="subject"></td>
+					<td className="header" />
+					<td className="subject" />
 					<td className="theme">
 						<DefaultButton
 							visibleLabel={true}

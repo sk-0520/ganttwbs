@@ -24,7 +24,7 @@ describe("TimeZone", () => {
 	])("parse", (expected: TimeSpan, input: string) => {
 		const actual = TimeZone.parse(input);
 		expect(actual).toBeTruthy();
-		expect((actual as never)["offset"]["ticks"]).toBe(expected.ticks);
+		expect((actual as never).offset.ticks).toBe(expected.ticks);
 	});
 
 	test.each([["09:00"], ["+0900"], ["-0900"], ["*09:00"]])(

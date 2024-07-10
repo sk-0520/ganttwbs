@@ -198,7 +198,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 		);
 
 		const parsedFileName = path.parse(editorData.fileName);
-		const fileName = parsedFileName.name + ".xlsx";
+		const fileName = `${parsedFileName.name}.xlsx`;
 
 		//エクセルファイルを生成する
 		const binaries = await workbook.xlsx.writeBuffer();
@@ -216,7 +216,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 		const csv = Exports.toCsv(kind, table);
 
 		const parsedFileName = path.parse(editorData.fileName);
-		const fileName = parsedFileName.name + "." + kind;
+		const fileName = `${parsedFileName.name}.${kind}`;
 
 		const bom = new Uint8Array([0xef, 0xbb, 0xbf]);
 		const blob = new Blob([bom, csv], { type: "application/octet-binary" });

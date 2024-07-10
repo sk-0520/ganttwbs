@@ -6,7 +6,7 @@ export abstract class Strings {
 	 * @returns
 	 */
 	public static isNotWhiteSpace(s: string | null | undefined): s is string {
-		return typeof s === "string" && this.trim(s).length !== 0;
+		return typeof s === "string" && Strings.trim(s).length !== 0;
 	}
 
 	/**
@@ -51,7 +51,7 @@ export abstract class Strings {
 		source: string,
 		items: ReadonlySet<string>,
 	): string {
-		return this.toUnique(
+		return Strings.toUnique(
 			source,
 			items,
 			(a, b) => a === b,
@@ -94,7 +94,7 @@ export abstract class Strings {
 	 * @returns
 	 */
 	public static trimStart(s: string, characters?: ReadonlySet<string>): string {
-		const chars = characters ?? this.TrimCharacters;
+		const chars = characters ?? Strings.TrimCharacters;
 
 		if (!chars.size) {
 			return s;
@@ -118,7 +118,7 @@ export abstract class Strings {
 	 * @returns
 	 */
 	public static trimEnd(s: string, characters?: ReadonlySet<string>): string {
-		const chars = characters ?? this.TrimCharacters;
+		const chars = characters ?? Strings.TrimCharacters;
 
 		if (!chars.size) {
 			return s;
@@ -142,13 +142,13 @@ export abstract class Strings {
 	 * @returns
 	 */
 	public static trim(s: string, characters?: ReadonlySet<string>): string {
-		const chars = characters ?? this.TrimCharacters;
+		const chars = characters ?? Strings.TrimCharacters;
 
 		if (!chars.size) {
 			return s;
 		}
 
-		return this.trimEnd(this.trimStart(s, chars), chars);
+		return Strings.trimEnd(Strings.trimStart(s, chars), chars);
 	}
 
 	private static readonly _escapeRegex = /[.*+?^${}()|[\]\\]/g;
@@ -160,7 +160,7 @@ export abstract class Strings {
 	 * @returns
 	 */
 	public static escapeRegex(source: string): string {
-		return source.replace(this._escapeRegex, "\\$&");
+		return source.replace(Strings._escapeRegex, "\\$&");
 	}
 
 	public static replaceAllImpl(
@@ -171,7 +171,7 @@ export abstract class Strings {
 		if (searchValue instanceof RegExp) {
 			const flags = searchValue.flags.includes("g")
 				? searchValue.flags
-				: searchValue.flags + "g";
+				: `${searchValue.flags}g`;
 
 			return source.replace(
 				new RegExp(searchValue.source, flags),
@@ -180,7 +180,7 @@ export abstract class Strings {
 		}
 
 		return source.replace(
-			new RegExp(this.escapeRegex(searchValue), "g"),
+			new RegExp(Strings.escapeRegex(searchValue), "g"),
 			replaceValue,
 		);
 	}
@@ -191,7 +191,7 @@ export abstract class Strings {
 		replaceValue: string,
 	): string {
 		if (!String.prototype.replaceAll) {
-			return this.replaceAllImpl(source, searchValue, replaceValue);
+			return Strings.replaceAllImpl(source, searchValue, replaceValue);
 		}
 
 		return source.replaceAll(searchValue, replaceValue);
@@ -218,9 +218,9 @@ export abstract class Strings {
 			return "";
 		}
 
-		const escHead = this.escapeRegex(head);
-		const escTail = this.escapeRegex(tail);
-		const pattern = escHead + "(.+?)" + escTail;
+		const escHead = Strings.escapeRegex(head);
+		const escTail = Strings.escapeRegex(tail);
+		const pattern = `${escHead}(.+?)${escTail}`;
 
 		const regex = new RegExp(pattern, "g");
 		const replacedText = source.replace(regex, (s, m) => func(m));
@@ -255,7 +255,7 @@ export abstract class Strings {
 			};
 		}
 
-		return this.replaceFunc(source, head, tail, func);
+		return Strings.replaceFunc(source, head, tail, func);
 	}
 
 	/**
@@ -294,7 +294,7 @@ export abstract class Strings {
 	 * @returns
 	 */
 	public static padStart0(num: number, maxLength: number): string {
-		return this.padStart(num, maxLength, "0");
+		return Strings.padStart(num, maxLength, "0");
 	}
 
 	/**

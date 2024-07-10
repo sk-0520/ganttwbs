@@ -13,7 +13,7 @@ export abstract class Days {
 		for (const regular of regulars) {
 			const weekday = Settings.toWeekDay(date.week);
 			if (regular === weekday) {
-				return "_dynamic_theme_holiday_regulars_" + regular;
+				return `_dynamic_theme_holiday_regulars_${regular}`;
 			}
 		}
 
@@ -27,7 +27,7 @@ export abstract class Days {
 	): string {
 		if (holidayEventValue) {
 			if (holidayEventValue) {
-				return "_dynamic_theme_holiday_events_" + holidayEventValue.event.kind;
+				return `_dynamic_theme_holiday_events_${holidayEventValue.event.kind}`;
 			}
 		}
 
@@ -40,12 +40,12 @@ export abstract class Days {
 		holidayEventValue: HolidayEventMapValue | undefined,
 		theme: Readonly<Theme>,
 	): Array<string> {
-		const weekClassName = this.getWeekDayClassName(
+		const weekClassName = Days.getWeekDayClassName(
 			date,
 			regularHolidays,
 			theme,
 		);
-		const holidayClassName = this.getHolidayClassName(
+		const holidayClassName = Days.getHolidayClassName(
 			date,
 			holidayEventValue,
 			theme,

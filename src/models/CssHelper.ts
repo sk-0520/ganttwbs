@@ -7,7 +7,7 @@ export abstract class CssHelper {
 	 * @returns
 	 */
 	public static toStyleClassName(s: string): string {
-		return "." + s;
+		return `.${s}`;
 	}
 
 	/**

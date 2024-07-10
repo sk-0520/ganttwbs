@@ -41,7 +41,7 @@ const TimelineHeaderRow: FC<Props> = (props: Props) => {
 				"timeline-cell timeline-header",
 				"_dynamic_programmable_cell_height",
 				{
-					["_dynamic_programmable_groups_level-" + props.level.toString()]:
+					[`_dynamic_programmable_groups_level-${props.level.toString()}`]:
 						Settings.maybeGroupTimeline(props.currentTimeline),
 					dragging:
 						draggingTimelineAtomReader.data?.sourceTimeline.id ===

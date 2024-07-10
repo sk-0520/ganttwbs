@@ -12,7 +12,7 @@ export abstract class Browsers {
 	 * 作業スレッド(スレッドの概念がJSにあるのか？)がブラウザで実行されている事を強制。
 	 */
 	public static enforceRunning(): void {
-		if (!this.running) {
+		if (!Browsers.running) {
 			throw new Error("not running in the browser");
 		}
 	}
@@ -44,7 +44,7 @@ export abstract class Browsers {
 		const json = JSON.stringify(obj, undefined, space);
 
 		const blob = new Blob([json], { type: "application/json" });
-		this.download(fileName, blob);
+		Browsers.download(fileName, blob);
 	}
 
 	/**

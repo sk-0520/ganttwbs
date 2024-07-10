@@ -28,7 +28,7 @@ export abstract class ResultFactory {
 	}
 
 	public static error<E extends Error>(error: E): FailureResult<E> {
-		return this.failure(error);
+		return ResultFactory.failure(error);
 	}
 
 	public static parseErrorIsReturnNull<T, E extends Error>(

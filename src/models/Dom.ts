@@ -68,10 +68,9 @@ export class Dom {
 			if (selectors) {
 				if (Types.isString(selectors)) {
 					throw new Error("selectors");
-				} else {
-					// eslint-disable-next-line no-param-reassign
-					elementType = selectors;
 				}
+				// eslint-disable-next-line no-param-reassign
+				elementType = selectors;
 			}
 			// eslint-disable-next-line no-param-reassign
 			selectors = element;
@@ -80,7 +79,8 @@ export class Dom {
 		} else {
 			if (Types.isUndefined(selectors)) {
 				throw new Error("selectors");
-			} else if (!Types.isString(selectors)) {
+			}
+			if (!Types.isString(selectors)) {
 				throw new Error("selectors");
 			}
 		}
@@ -138,10 +138,9 @@ export class Dom {
 			if (selectors) {
 				if (Types.isString(selectors)) {
 					throw new Error("selectors");
-				} else {
-					// eslint-disable-next-line no-param-reassign
-					elementType = selectors;
 				}
+				// eslint-disable-next-line no-param-reassign
+				elementType = selectors;
 			}
 			// eslint-disable-next-line no-param-reassign
 			selectors = element;
@@ -150,7 +149,8 @@ export class Dom {
 		} else {
 			if (Types.isUndefined(selectors)) {
 				throw new Error("selectors");
-			} else if (!Types.isString(selectors)) {
+			}
+			if (!Types.isString(selectors)) {
 				throw new Error("selectors");
 			}
 		}

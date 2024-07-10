@@ -89,9 +89,7 @@ function toDisplayWorkRangeKind(locale: Locale, kind: WorkRangeKind): string {
 
 		case WorkRangeKind.UnknownError:
 			return locale.pages.editor.timeline.workRange.kind.unknownError;
-
-		case WorkRangeKind.Success:
 		default:
-			throw new Error("WorkRangeKind: " + kind.toString());
+			throw new Error(`WorkRangeKind: ${kind.toString()}`);
 	}
 }

@@ -24,7 +24,7 @@ export abstract class Arrays {
 		if (!count) {
 			return [];
 		}
-		return this.repeat<never>(undefined as never, count);
+		return Arrays.repeat<never>(undefined as never, count);
 	}
 
 	/**
@@ -174,13 +174,13 @@ export abstract class Arrays {
 		if (toNext) {
 			if (sourceIndex < array.length - 1) {
 				const destinationIndex = sourceIndex + 1;
-				this.replaceIndexInPlace(array, sourceIndex, destinationIndex);
+				Arrays.replaceIndexInPlace(array, sourceIndex, destinationIndex);
 				return true;
 			}
 		} else {
 			if (sourceIndex && array.length) {
 				const destinationIndex = sourceIndex - 1;
-				this.replaceIndexInPlace(array, sourceIndex, destinationIndex);
+				Arrays.replaceIndexInPlace(array, sourceIndex, destinationIndex);
 				return true;
 			}
 		}

@@ -14,8 +14,8 @@ import type { ColorString } from "@/models/data/Setting";
 
 interface Props {
 	color: Color;
-	callbackChanging?: (color: Color) => void | undefined;
-	callbackChanged?: (color: Color) => void | undefined;
+	callbackChanging?: (color: Color) => undefined | undefined;
+	callbackChanged?: (color: Color) => undefined | undefined;
 }
 
 const PlainColorPicker: FC<Props> = (props: Props) => {

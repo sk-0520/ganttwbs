@@ -128,7 +128,7 @@ export class DateTime {
 
 		const date = create(input);
 		const raw = date as object;
-		if ("t" in raw && isNaN(raw["t"] as number)) {
+		if ("t" in raw && Number.isNaN(raw.t as number)) {
 			return ResultFactory.error(new Error(String(input)));
 		}
 
@@ -171,7 +171,7 @@ export class DateTime {
 		};
 		const iso8601WithoutTimezone = `${date.year}-${date.month}-${date.day}T${date.hour}:${date.minute}:${date.second}.${date.millisecond}`;
 
-		return this.parse(iso8601WithoutTimezone, timeZone);
+		return DateTime.parse(iso8601WithoutTimezone, timeZone);
 	}
 
 	/**
@@ -180,7 +180,7 @@ export class DateTime {
 	 * @returns
 	 */
 	public static today(timeZone: TimeZone): DateTime {
-		const result = this.parseCore(undefined, timeZone);
+		const result = DateTime.parseCore(undefined, timeZone);
 		if (result.success) {
 			return result.value;
 		}
@@ -196,7 +196,7 @@ export class DateTime {
 	 */
 	public static tryParse(input: string, timeZone: TimeZone): DateTime | null {
 		return ResultFactory.parseErrorIsReturnNull(input, (s) =>
-			this.parseCore(s, timeZone),
+			DateTime.parseCore(s, timeZone),
 		);
 	}
 
@@ -208,7 +208,7 @@ export class DateTime {
 	 */
 	public static parse(input: string, timeZone: TimeZone): DateTime {
 		return ResultFactory.parseErrorIsThrow(input, (s) =>
-			this.parseCore(s, timeZone),
+			DateTime.parseCore(s, timeZone),
 		);
 	}
 
@@ -223,7 +223,7 @@ export class DateTime {
 		timeZone: TimeZone,
 	): DateTime {
 		return ResultFactory.parseErrorIsThrow("", (_) =>
-			this.parseCore(input, timeZone),
+			DateTime.parseCore(input, timeZone),
 		);
 	}
 
@@ -534,7 +534,7 @@ export class DateTime {
 			.join("|");
 
 		return format.replace(
-			new RegExp("(" + pattern + ")", "g"),
+			new RegExp(`(${pattern})`, "g"),
 			(m) => map.get(m) ?? m,
 		);
 	}
@@ -581,7 +581,7 @@ export class DateTime {
 			rawTicks = func(Number(a.ticks), Number(b.ticks));
 		}
 
-		return this.convert(toTicks(rawTicks), a.timeZone);
+		return DateTime.convert(toTicks(rawTicks), a.timeZone);
 	}
 
 	public static getMinimum(
@@ -589,7 +589,7 @@ export class DateTime {
 		b: DateTime,
 		...dates: ReadonlyArray<DateTime>
 	): DateTime {
-		return this.getMinMax(Math.min, a, b, ...dates);
+		return DateTime.getMinMax(Math.min, a, b, ...dates);
 	}
 
 	public static getMaximum(
@@ -597,7 +597,7 @@ export class DateTime {
 		b: DateTime,
 		...dates: ReadonlyArray<DateTime>
 	): DateTime {
-		return this.getMinMax(Math.max, a, b, ...dates);
+		return DateTime.getMinMax(Math.max, a, b, ...dates);
 	}
 
 	//#endregion
