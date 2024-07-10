@@ -5,13 +5,17 @@ import { Browsers } from "@/models/Browsers";
 /**
  * 通常ログメソッド。
  */
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type LogMethod = (message?: any, ...optionalParams: any[]) => void;
 
 type TableMethod = (
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	tabularData?: any,
 	properties?: string[] | undefined,
 ) => void;
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type DirMethod = (item?: any, options?: any) => void;
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export type TimeLogMethod = (...data: any[]) => void;
 type TimeMethod = (
 	label: string,
@@ -99,18 +103,22 @@ export interface Logger {
 	time: TimeMethod;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 function nopLog(message?: any, ...optionalParams: any[]): void {
 	//nop
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 function nopTable(message?: any, ...optionalParams: any[]): void {
 	//nop
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 function nopDir(item?: any, options?: any): void {
 	//nop
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 function nopTimeLog(...data: any[]): void {
 	//nop
 }
