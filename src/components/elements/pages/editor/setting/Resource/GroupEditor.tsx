@@ -43,7 +43,8 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 				.map((a) => a.name),
 		);
 		const name = Strings.toUniqueDefault(value, groupNames);
-		setGroupName((group.name = name));
+		group.name = name;
+		setGroupName(group.name);
 	}
 
 	function handleStartChoiceColor(): void {
@@ -70,13 +71,15 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 			priceSales: priceSetting.price.sales,
 		};
 
-		setMembers((group.members = sortMembers([...members, newMember])));
+		group.members = sortMembers([...members, newMember]);
+		setMembers(group.members);
 		setNewMemberName("");
 	}
 
 	const handleRemoveMember = (memberId: MemberId) => {
 		const newMembers = members.filter((a) => a.id !== memberId);
-		setMembers((group.members = sortMembers(newMembers)));
+		group.members = sortMembers(newMembers);
+		setMembers(group.members);
 	};
 
 	return (
@@ -210,15 +213,6 @@ const GroupsEditor: FC<Props> = (props: Props) => {
 };
 
 export default GroupsEditor;
-
-// function getGroup(groupId: GroupId, context: SettingContext): GroupSetting {
-// 	const result = context.groups.find(a => a.id === groupId);
-// 	if (!result) {
-// 		throw new Error();
-// 	}
-
-// 	return result;
-// }
 
 function sortMemberCore(
 	a: Readonly<MemberSetting>,
