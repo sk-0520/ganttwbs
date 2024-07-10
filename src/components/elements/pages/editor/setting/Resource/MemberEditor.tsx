@@ -48,7 +48,8 @@ const MemberEditor: FC<Props> = (props: Props) => {
 	useEffect(() => {
 		const updatedColor = props.updatedColors.get(member.id);
 		if (updatedColor) {
-			setColor((member.color = updatedColor));
+			member.color = updatedColor;
+			setColor(member.color);
 		}
 	}, [member, props.updatedColors]);
 
@@ -70,19 +71,23 @@ const MemberEditor: FC<Props> = (props: Props) => {
 			props.members.filter((a) => a.id !== props.memberId).map((a) => a.name),
 		);
 		const name = Strings.toUniqueDefault(value, memberNames);
-		setName((member.name = name));
+		member.name = name;
+		setName(member.name);
 	}
 
 	function handleChangePriceCost(value: number) {
-		setPriceCost((member.priceCost = value));
+		member.priceCost = value;
+		setPriceCost(member.priceCost);
 	}
 
 	function handleChangePriceSales(value: number) {
-		setPriceSales((member.priceSales = value));
+		member.priceSales = value;
+		setPriceSales(member.priceSales);
 	}
 
 	function handleChangeTheme(color: Color): void {
-		setColor((member.color = color));
+		member.color = color;
+		setColor(member.color);
 	}
 
 	return (
