@@ -30,7 +30,7 @@ const LoadPage: NextPage = () => {
 					</dd>
 				</dl>
 
-				<button className="action">作業開始</button>
+				<button type="submit" className="action">作業開始</button>
 			</form>
 		</Layout>
 	);
@@ -49,13 +49,6 @@ async function onSubmit(data: Input, router: NextRouter) {
 
 	//TODO: バージョン確認
 	const settingSchemaResult = SettingSchema.parse(settingObject);
-	/*
-	if(!settingSchemaResult.success) {
-		logger.error("error");
-		return;
-	}
-	const setting = settingSchemaResult.data;
-	*/
 	const setting = settingSchemaResult;
 	logger.debug(setting);
 	logger.debug(fileName);
