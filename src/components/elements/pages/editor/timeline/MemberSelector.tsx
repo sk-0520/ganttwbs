@@ -5,6 +5,7 @@ import { Color } from "@/models/Color";
 import type { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import type { Member, MemberId } from "@/models/data/Setting";
 import { Require } from "@/models/Require";
+import React from "react";
 
 interface Props {
 	className?: string;
@@ -57,7 +58,7 @@ const MemberSelector: FC<Props> = (props: Props) => {
 		>
 			<option />
 
-			{resourceInfoAtomReader.data.groupItems.map((a) => {
+			{resourceInfoAtomReader.data.groupItems.map((a, i) => {
 				const members = Require.get(resourceInfoAtomReader.data.memberItems, a);
 
 				return a.name ? (
@@ -65,7 +66,7 @@ const MemberSelector: FC<Props> = (props: Props) => {
 						{renderMemberOptions(members)}
 					</optgroup>
 				) : (
-					<>{renderMemberOptions(members)}</>
+					<React.Fragment key={`no-name-${a.id}`}>{renderMemberOptions(members)}</React.Fragment>
 				);
 			})}
 		</select>
