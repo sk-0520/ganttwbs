@@ -120,7 +120,7 @@ const SettingEditor: FC<Props> = (props: Props) => {
 				</Tabs>
 
 				<div className="setting-save">
-					<button className="action">
+					<button type="submit" className="action">
 						<IconLabel
 							kind={IconKind.Save}
 							label={locale.pages.editor.setting.save}
