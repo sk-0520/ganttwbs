@@ -93,7 +93,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 				}
 			}
 		}
-	}, [props.timelineCallbacks, timelineItemsAtomReader.data]);
+	}, [timelineItemsAtomReader.data]);
 
 	function addEmptyTimeline(kind: TimelineKind) {
 		props.timelineCallbacks.addEmptyTimeline(rootTimelineReader.data, {
@@ -245,6 +245,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						</li>
 						<li>
 							<button
+								type="button"
 								onClick={(ev) => handleClickCalendarFirst()}
 								title={
 									locale.pages.editor.timeline.header.operations.calendarFirst
@@ -254,7 +255,10 @@ const CrossHeader: FC<Props> = (props: Props) => {
 							</button>
 						</li>
 						<li>
-							<button onClick={(ev) => handleClickCalendarToday()}>
+							<button
+								type="button"
+								onClick={(ev) => handleClickCalendarToday()}
+							>
 								<IconLabel
 									kind={IconKind.CalendarToday}
 									label={
@@ -265,6 +269,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						</li>
 						<li>
 							<button
+								type="button"
 								title={
 									locale.pages.editor.timeline.header.operations.calendarLast
 								}
@@ -278,6 +283,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						</li>
 						<li>
 							<button
+								type="button"
 								onClick={(ev) => handleClickInformationFirst()}
 								disabled={!dayInfosAtomReader.data.size}
 								title={
@@ -290,6 +296,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						</li>
 						<li>
 							<button
+								type="button"
 								disabled={!dayInfosAtomReader.data.size}
 								onClick={(ev) => handleClickInformationList()}
 							>
@@ -304,6 +311,7 @@ const CrossHeader: FC<Props> = (props: Props) => {
 						</li>
 						<li>
 							<button
+								type="button"
 								title={
 									locale.pages.editor.timeline.header.operations.informationLast
 								}
