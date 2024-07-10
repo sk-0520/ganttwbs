@@ -25,7 +25,7 @@ const Dialog: FC<Props> = (props: Props) => {
 			refDialog.current.removeAttribute("open");
 			refDialog.current.showModal();
 		}
-	}, [refDialog]);
+	}, []);
 
 	function handleClose(type: ButtonType): void {
 		if (type === "submit") {
