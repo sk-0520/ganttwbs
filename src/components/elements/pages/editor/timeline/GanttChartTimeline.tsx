@@ -39,10 +39,7 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 				}
 			}
 		}
-	}, [
-		props.currentTimeline,
-		timelineItemsAtomReader.data,
-	]);
+	}, [props.currentTimeline, timelineItemsAtomReader.data]);
 
 	function renderCurrentTimeline(): ReactNode {
 		const cell = props.configuration.design.seed.cell;

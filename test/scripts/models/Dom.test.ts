@@ -40,9 +40,7 @@ describe("Dom", () => {
 
 		const rootDiv = Dom.querySelector("div");
 		expect(Dom.querySelector(rootDiv, "div").textContent).toBe("X1");
-		expect(() =>
-			Dom.querySelector(rootDiv, "div", HTMLSpanElement),
-		).toThrow();
+		expect(() => Dom.querySelector(rootDiv, "div", HTMLSpanElement)).toThrow();
 	});
 
 	test("querySelectorAll", () => {

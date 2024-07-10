@@ -66,7 +66,9 @@ const MemberSelector: FC<Props> = (props: Props) => {
 						{renderMemberOptions(members)}
 					</optgroup>
 				) : (
-					<React.Fragment key={`no-name-${a.id}`}>{renderMemberOptions(members)}</React.Fragment>
+					<React.Fragment key={`no-name-${a.id}`}>
+						{renderMemberOptions(members)}
+					</React.Fragment>
 				);
 			})}
 		</select>

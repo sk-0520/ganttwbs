@@ -30,7 +30,9 @@ const LoadPage: NextPage = () => {
 					</dd>
 				</dl>
 
-				<button type="submit" className="action">作業開始</button>
+				<button type="submit" className="action">
+					作業開始
+				</button>
 			</form>
 		</Layout>
 	);

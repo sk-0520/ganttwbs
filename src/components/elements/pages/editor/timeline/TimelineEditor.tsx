@@ -758,8 +758,8 @@ function renderDynamicStyleCore(
 					.filter((a) => a in theme.holiday.regulars)
 					.map((a) => {
 						const v = theme.holiday.regulars[a];
-						if(!v) {
-							throw new Error(a)
+						if (!v) {
+							throw new Error(a);
 						}
 						const backgroundColor = Color.parse(v);
 						return {

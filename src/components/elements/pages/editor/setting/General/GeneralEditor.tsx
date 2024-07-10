@@ -80,7 +80,9 @@ const GeneralEditor: FC = () => {
 					type="text"
 					required
 					defaultValue={settingContext.general.name}
-					onChange={(ev) => (settingContext.general.name = ev.target.value)}
+					onChange={(ev) => {
+						settingContext.general.name = ev.target.value;
+					}}
 				/>
 			</dd>
 

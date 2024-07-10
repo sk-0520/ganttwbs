@@ -156,10 +156,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				}
 			}
 		}
-	}, [
-		props.currentTimeline,
-		timelineItemsAtomReader.data,
-	]);
+	}, [props.currentTimeline, timelineItemsAtomReader.data]);
 
 	useEffect(() => {
 		const isVisibleBeginDateInput = Boolean(
@@ -172,7 +169,11 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			handleFocus(false);
 			hoverTimelineIdAtomWriter.write(undefined);
 		}
-	}, [props.currentTimeline.id, selectingBeginDateAtomReader.data, hoverTimelineIdAtomWriter]);
+	}, [
+		props.currentTimeline.id,
+		selectingBeginDateAtomReader.data,
+		hoverTimelineIdAtomWriter,
+	]);
 
 	useEffect(() => {
 		if (selectingBeginDateAtomReader.data) {
@@ -547,7 +548,10 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 							</legend>
 							<ul>
 								<li>
-									<button type="button" onClick={handleSubmitAttachBeforeTimeline}>
+									<button
+										type="button"
+										onClick={handleSubmitAttachBeforeTimeline}
+									>
 										<IconLabel
 											kind={IconKind.RelationJoin}
 											label={
