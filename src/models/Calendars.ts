@@ -1,15 +1,17 @@
-import { HolidayEventMap, HolidayRegulars } from "@/models/data/Calendar";
-import { CalendarInfo } from "@/models/data/CalendarInfo";
-import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
-import { DateTimeRange } from "@/models/data/Range";
-import { Calendar, Holiday } from "@/models/data/Setting";
-import { DateTime, DateTimeTicks } from "@/models/DateTime";
+import type { HolidayEventMap, HolidayRegulars } from "@/models/data/Calendar";
+import type { CalendarInfo } from "@/models/data/CalendarInfo";
+import type { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
+import type { DateTimeRange } from "@/models/data/Range";
+import type { Calendar, Holiday } from "@/models/data/Setting";
+import { DateTime, type DateTimeTicks } from "@/models/DateTime";
 import { Settings } from "@/models/Settings";
 import { TimeZone } from "@/models/TimeZone";
 
 export abstract class Calendars {
-
-	private static createHolidayEventMap(events: Holiday["events"], timeZone: TimeZone): Map<DateTimeTicks, HolidayEventMapValue> {
+	private static createHolidayEventMap(
+		events: Holiday["events"],
+		timeZone: TimeZone,
+	): Map<DateTimeTicks, HolidayEventMapValue> {
 		const result = new Map<DateTimeTicks, HolidayEventMapValue>();
 
 		for (const [k, v] of Object.entries(events)) {
@@ -24,7 +26,10 @@ export abstract class Calendars {
 		return result;
 	}
 
-	public static createCalendarInfo(rawTimeZone: string, calendar: Calendar): CalendarInfo {
+	public static createCalendarInfo(
+		rawTimeZone: string,
+		calendar: Calendar,
+	): CalendarInfo {
 		const timeZone = TimeZone.parse(rawTimeZone);
 
 		const range: DateTimeRange = {
@@ -32,13 +37,18 @@ export abstract class Calendars {
 			end: DateTime.parse(calendar.range.end, timeZone),
 		};
 
-		const holidayEventMap = this.createHolidayEventMap(calendar.holiday.events, timeZone);
+		const holidayEventMap = this.createHolidayEventMap(
+			calendar.holiday.events,
+			timeZone,
+		);
 
 		const result: CalendarInfo = {
 			timeZone: timeZone,
 			range: range,
 			holidayEventMap: holidayEventMap,
-			holidayRegulars: new Set(calendar.holiday.regulars.map(a => Settings.toWeekIndex(a))),
+			holidayRegulars: new Set(
+				calendar.holiday.regulars.map((a) => Settings.toWeekIndex(a)),
+			),
 		};
 
 		return result;
@@ -49,7 +59,9 @@ export abstract class Calendars {
 	 * @param calendarRange
 	 * @returns
 	 */
-	public static getCalendarRangeDays(calendarRange: Readonly<DateTimeRange>): number {
+	public static getCalendarRangeDays(
+		calendarRange: Readonly<DateTimeRange>,
+	): number {
 		const diff = calendarRange.begin.diff(calendarRange.end);
 		const days = Math.floor(diff.totalDays) + 1;
 		return days;
@@ -106,20 +118,20 @@ export abstract class Calendars {
 		result.push(begin);
 
 		for (let i = 1; i < count - 1; i++) {
-			result.push(DateTime.create(
-				begin.timeZone,
-				begin.year,
-				begin.month + i
-			));
+			result.push(DateTime.create(begin.timeZone, begin.year, begin.month + i));
 		}
-		if(1 < count) {
+		if (1 < count) {
 			result.push(end);
 		}
 
 		return result;
 	}
 
-	public static isHoliday(date: DateTime, holidayRegulars: HolidayRegulars, holidayEventMap: HolidayEventMap): boolean {
+	public static isHoliday(
+		date: DateTime,
+		holidayRegulars: HolidayRegulars,
+		holidayEventMap: HolidayEventMap,
+	): boolean {
 		const holidayEvent = holidayEventMap.get(date.ticks);
 		if (holidayEvent) {
 			return true;
@@ -135,10 +147,21 @@ export abstract class Calendars {
 	 * @param holidayEventMap
 	 * @returns
 	 */
-	public static getWorkDays(range: DateTimeRange, holidayRegulars: HolidayRegulars, holidayEventMap: HolidayEventMap): Array<DateTime> {
+	public static getWorkDays(
+		range: DateTimeRange,
+		holidayRegulars: HolidayRegulars,
+		holidayEventMap: HolidayEventMap,
+	): Array<DateTime> {
 		const rangeDays = this.getDays(range);
 
-		const workDays = rangeDays.filter(a => !this.isHoliday(a.timeIsEmpty ? a: a.truncateTime(), holidayRegulars, holidayEventMap));
+		const workDays = rangeDays.filter(
+			(a) =>
+				!this.isHoliday(
+					a.timeIsEmpty ? a : a.truncateTime(),
+					holidayRegulars,
+					holidayEventMap,
+				),
+		);
 
 		return workDays;
 	}

@@ -1,11 +1,10 @@
-import { IteratorBase, Predicate } from "@/models/collections/Iterator";
+import { IteratorBase, type Predicate } from "@/models/collections/Iterator";
 
 export class TakeIterable<T> implements Iterable<T> {
 	public constructor(
 		private readonly iterable: Iterable<T>,
 		private readonly count: number,
-	) {
-	}
+	) {}
 
 	//#region Iterable
 
@@ -48,13 +47,15 @@ export class TakeWhileIterable<T> implements Iterable<T> {
 	public constructor(
 		private readonly iterable: Iterable<T>,
 		private readonly predicate: Predicate<T>,
-	) {
-	}
+	) {}
 
 	//#region Iterable
 
 	public [Symbol.iterator](): Iterator<T> {
-		return new TakeWhileIterator(this.iterable[Symbol.iterator](), this.predicate);
+		return new TakeWhileIterator(
+			this.iterable[Symbol.iterator](),
+			this.predicate,
+		);
 	}
 
 	//#endregion
@@ -84,7 +85,7 @@ class TakeWhileIterator<T> extends IteratorBase<T> {
 				return result;
 			}
 
-			if(this.predicate(result.value)) {
+			if (this.predicate(result.value)) {
 				return result;
 			}
 

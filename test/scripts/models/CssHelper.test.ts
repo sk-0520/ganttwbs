@@ -1,7 +1,6 @@
 import { CssHelper } from "@/models/CssHelper";
 
 describe("CssHelper", () => {
-
 	test.each([
 		["", []],
 		["a", ["a"]],
@@ -18,5 +17,4 @@ describe("CssHelper", () => {
 	])("toFontFamily", (expected: string, input: ReadonlyArray<string>) => {
 		expect(CssHelper.toFontFamily(input)).toBe(expected);
 	});
-
 });

@@ -1,8 +1,7 @@
-
-import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
-import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
-import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
-import { AnyTimeline } from "@/models/data/Setting";
+import type { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
+import type { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
+import type { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
+import type { AnyTimeline } from "@/models/data/Setting";
 
 export type MoveDirection = "up" | "down" | "parent";
 
@@ -21,14 +20,21 @@ export interface TimelineCallbacks {
 	 * @param baseTimeline 追加するタイムラインの基準タイムライン。
 	 * @param options 追加方法。
 	 */
-	addEmptyTimeline(baseTimeline: AnyTimeline, options: NewTimelineOptions): void;
+	addEmptyTimeline(
+		baseTimeline: AnyTimeline,
+		options: NewTimelineOptions,
+	): void;
 	/**
 	 * タイムライン追加。
 	 * @param baseTimeline
 	 * @param newTimeline
 	 * @param position
 	 */
-	addNewTimeline(baseTimeline: AnyTimeline, newTimeline: AnyTimeline, position: NewTimelinePosition): void;
+	addNewTimeline(
+		baseTimeline: AnyTimeline,
+		newTimeline: AnyTimeline,
+		position: NewTimelinePosition,
+	): void;
 	/**
 	 * タイムラインを更新。
 	 * @param timeline
@@ -53,5 +59,3 @@ export interface TimelineCallbacks {
 	//  */
 	// startDragTimeline(event: DragEvent, sourceTimeline: AnyTimeline): void;
 }
-
-

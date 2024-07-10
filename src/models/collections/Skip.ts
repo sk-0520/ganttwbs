@@ -1,11 +1,10 @@
-import { IteratorBase, Predicate } from "@/models/collections/Iterator";
+import { IteratorBase, type Predicate } from "@/models/collections/Iterator";
 
 export class SkipIterable<T> implements Iterable<T> {
 	public constructor(
 		private readonly iterable: Iterable<T>,
 		private readonly count: number,
-	) {
-	}
+	) {}
 
 	//#region Iterable
 
@@ -56,13 +55,15 @@ export class SkipWhileIterable<T> implements Iterable<T> {
 	public constructor(
 		private readonly iterable: Iterable<T>,
 		private readonly predicate: Predicate<T>,
-	) {
-	}
+	) {}
 
 	//#region Iterable
 
 	public [Symbol.iterator](): Iterator<T> {
-		return new SkipWhileIterator(this.iterable[Symbol.iterator](), this.predicate);
+		return new SkipWhileIterator(
+			this.iterable[Symbol.iterator](),
+			this.predicate,
+		);
 	}
 
 	//#endregion
@@ -91,7 +92,7 @@ class SkipWhileIterator<T> extends IteratorBase<T> {
 				return result;
 			}
 
-			if(this.predicate(result.value)) {
+			if (this.predicate(result.value)) {
 				continue;
 			}
 

@@ -1,7 +1,6 @@
 import { Strings } from "@/models/Strings";
 
 export abstract class CssHelper {
-
 	/**
 	 * CSS 定義としてのクラス名に変換。
 	 * @param s
@@ -17,10 +16,7 @@ export abstract class CssHelper {
 	 * @returns
 	 */
 	public static joinClassName(classNames: ReadonlyArray<string>): string {
-		return classNames
-			.map(a => Strings.trim(a))
-			.join(" ")
-			;
+		return classNames.map((a) => Strings.trim(a)).join(" ");
 	}
 
 	/**
@@ -30,10 +26,8 @@ export abstract class CssHelper {
 	 */
 	public static toFontFamily(families: ReadonlyArray<string>): string {
 		return families
-			.map(a => Strings.trim(a))
-			.map(a => a.includes(" ") ? `'${a}'` : a)
-			.join(",")
-			;
+			.map((a) => Strings.trim(a))
+			.map((a) => (a.includes(" ") ? `'${a}'` : a))
+			.join(",");
 	}
-
 }

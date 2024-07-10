@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from "react";
+import { type FC, useContext, useState } from "react";
 
 import { IconKind, IconLabel } from "@/components/elements/Icon";
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
@@ -56,7 +56,9 @@ const GeneralEditor: FC = () => {
 	const settingContext = useContext(SettingContext);
 
 	const [recursive, setRecursive] = useState(settingContext.general.recursive);
-	const [timeZone, setTimeZone] = useState(settingContext.general.timeZone.serialize());
+	const [timeZone, setTimeZone] = useState(
+		settingContext.general.timeZone.serialize(),
+	);
 
 	function handleChangeRecursive(value: number): void {
 		setRecursive(value);
@@ -72,21 +74,17 @@ const GeneralEditor: FC = () => {
 
 	return (
 		<dl className="inputs">
-			<dt>
-				{locale.pages.editor.setting.general.projectName}
-			</dt>
+			<dt>{locale.pages.editor.setting.general.projectName}</dt>
 			<dd>
 				<input
 					type="text"
 					required
 					defaultValue={settingContext.general.name}
-					onChange={ev => settingContext.general.name = ev.target.value}
+					onChange={(ev) => (settingContext.general.name = ev.target.value)}
 				/>
 			</dd>
 
-			<dt>
-				{locale.pages.editor.setting.general.recursive}
-			</dt>
+			<dt>{locale.pages.editor.setting.general.recursive}</dt>
 			<dd>
 				<input
 					type="number"
@@ -94,28 +92,27 @@ const GeneralEditor: FC = () => {
 					min={1}
 					max={999999}
 					value={recursive}
-					onChange={ev => handleChangeRecursive(ev.target.valueAsNumber)}
+					onChange={(ev) => handleChangeRecursive(ev.target.valueAsNumber)}
 				/>
-				<DefaultButton callbackClick={() => setRecursive(DefaultSettings.RecursiveMaxCount)} />
+				<DefaultButton
+					callbackClick={() => setRecursive(DefaultSettings.RecursiveMaxCount)}
+				/>
 			</dd>
 
-			<dt>
-				{locale.common.calendar.timeZone}
-			</dt>
+			<dt>{locale.common.calendar.timeZone}</dt>
 			<dd>
 				<select
 					value={timeZone}
-					onChange={ev => handleChangeTimeZone(TimeZone.parse(ev.target.value))}
+					onChange={(ev) =>
+						handleChangeTimeZone(TimeZone.parse(ev.target.value))
+					}
 				>
 					<optgroup
 						label={locale.pages.editor.setting.general.timeZoneKind.name}
 					>
-						{TimeZone.getTimeZones().map(a => {
+						{TimeZone.getTimeZones().map((a) => {
 							return (
-								<option
-									key={a.serialize()}
-									value={a.serialize()}
-								>
+								<option key={a.serialize()} value={a.serialize()}>
 									{a.serialize()}
 								</option>
 							);
@@ -124,14 +121,11 @@ const GeneralEditor: FC = () => {
 					<optgroup
 						label={locale.pages.editor.setting.general.timeZoneKind.offset}
 					>
-						{timeZoneOffsets.map(a => {
+						{timeZoneOffsets.map((a) => {
 							const timeZone = TimeZone.create(a);
 
 							return (
-								<option
-									key={timeZone.serialize()}
-									value={timeZone.serialize()}
-								>
+								<option key={timeZone.serialize()} value={timeZone.serialize()}>
 									{timeZone.serialize()}
 								</option>
 							);
@@ -140,23 +134,21 @@ const GeneralEditor: FC = () => {
 				</select>
 				<button
 					type="button"
-					onClick={_ => handleChangeTimeZone(currentTimeZone)}
+					onClick={(_) => handleChangeTimeZone(currentTimeZone)}
 				>
 					<IconLabel
 						kind={IconKind.Reset}
 						label={Strings.replaceMap(
 							locale.pages.editor.setting.general.selectCurrentTimeZoneFormat,
 							{
-								"TIMEZONE": TimeZone.getClientTimeZone().serialize(),
-							}
+								TIMEZONE: TimeZone.getClientTimeZone().serialize(),
+							},
 						)}
 					/>
 				</button>
 			</dd>
-
 		</dl>
 	);
 };
 
 export default GeneralEditor;
-

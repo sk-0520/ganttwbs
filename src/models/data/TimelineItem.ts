@@ -1,5 +1,5 @@
-import { AnyTimeline } from "@/models/data/Setting";
-import { WorkRange } from "@/models/data/WorkRange";
+import type { AnyTimeline } from "@/models/data/Setting";
+import type { WorkRange } from "@/models/data/WorkRange";
 
 export interface TimelineItem {
 	/** 対象タイムライン */

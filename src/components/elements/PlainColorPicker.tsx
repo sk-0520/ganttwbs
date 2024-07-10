@@ -1,10 +1,16 @@
-import { CSSProperties, FC, useEffect, useRef, useState } from "react";
+import {
+	type CSSProperties,
+	type FC,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import { SketchPicker } from "react-color";
-import { PresetColor } from "react-color/lib/components/sketch/Sketch";
+import type { PresetColor } from "react-color/lib/components/sketch/Sketch";
 
 import Overlay from "@/components/elements/Overlay";
 import { Color } from "@/models/Color";
-import { ColorString } from "@/models/data/Setting";
+import type { ColorString } from "@/models/data/Setting";
 
 interface Props {
 	color: Color;
@@ -55,18 +61,18 @@ const PlainColorPicker: FC<Props> = (props: Props) => {
 				<button
 					className="button"
 					type="button"
-					onClick={ev => setIsVisible(true)}
+					onClick={(ev) => setIsVisible(true)}
 				>
-					<span className="box" style={boxStyle}>&nbsp;</span>
+					<span className="box" style={boxStyle}>
+						&nbsp;
+					</span>
 					<code>{props.color.toHtml()}</code>
 				</button>
 				<Overlay
 					isVisible={isVisible}
 					callBackHidden={() => setIsVisible(false)}
 				>
-					<div
-						ref={refPicker}
-					>
+					<div ref={refPicker}>
 						<SketchPicker
 							className="picker"
 							color={props.color.toHtml()}
@@ -75,7 +81,6 @@ const PlainColorPicker: FC<Props> = (props: Props) => {
 							onChange={(cr, _) => handleChanging(cr.hex)}
 							onChangeComplete={(cr, _) => handleChanged(cr.hex)}
 						/>
-
 					</div>
 				</Overlay>
 			</span>

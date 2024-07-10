@@ -1,5 +1,5 @@
-import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
-import { TimelineKind } from "@/models/data/Setting";
+import type { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
+import type { TimelineKind } from "@/models/data/Setting";
 
 export interface NewTimelineOptions {
 	timelineKind: TimelineKind;

@@ -1,5 +1,5 @@
 import { Browsers } from "@/models/Browsers";
-import { ParseResult, ResultFactory } from "@/models/data/Result";
+import { type ParseResult, ResultFactory } from "@/models/data/Result";
 import { TimeSpan } from "@/models/TimeSpan";
 
 type TimeZoneParseResult = ParseResult<TimeZone, Error>;
@@ -8,7 +8,6 @@ type TimeZoneParseResult = ParseResult<TimeZone, Error>;
  * タイムゾーン。
  */
 export abstract class TimeZone {
-
 	/**
 	 * UTCタイムゾーンの取得。
 	 */
@@ -61,7 +60,9 @@ export abstract class TimeZone {
 		const m = Number.parseInt(match.groups.M, 10);
 		const totalMinutes = (h * 60 + m) * signs;
 
-		return ResultFactory.success(new OffsetTimeZone(TimeSpan.fromMinutes(totalMinutes)));
+		return ResultFactory.success(
+			new OffsetTimeZone(TimeSpan.fromMinutes(totalMinutes)),
+		);
 	}
 
 	public static getTimeZones(): Array<TimeZone> {
@@ -155,12 +156,9 @@ export abstract class TimeZone {
 			"Pacific/Tongatapu",
 		];
 
-		const timeZoneNames = [
-			...baseTimeZoneNames.sort(),
-			"UTC",
-		];
+		const timeZoneNames = [...baseTimeZoneNames.sort(), "UTC"];
 
-		return timeZoneNames.map(a => new NamedTimeZone(a));
+		return timeZoneNames.map((a) => new NamedTimeZone(a));
 	}
 
 	/**
@@ -211,7 +209,7 @@ class OffsetTimeZone extends TimeZone {
 		/**
 		 * UTC からの位置。
 		 */
-		public readonly offset: TimeSpan
+		public readonly offset: TimeSpan,
 	) {
 		super();
 	}
@@ -244,7 +242,7 @@ class NamedTimeZone extends TimeZone {
 		/**
 		 * タイムゾーン名。
 		 */
-		public readonly name: string
+		public readonly name: string,
 	) {
 		super();
 	}

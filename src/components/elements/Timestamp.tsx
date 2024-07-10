@@ -1,13 +1,11 @@
+import type { FC } from "react";
 
-import { FC } from "react";
-
-import { Locale, useLocale } from "@/locales/locale";
-import { DateTime } from "@/models/DateTime";
-
+import { type Locale, useLocale } from "@/locales/locale";
+import type { DateTime } from "@/models/DateTime";
 
 interface Props {
 	date: DateTime | null;
-	format: "date" | "time" | "datetime"
+	format: "date" | "time" | "datetime";
 }
 
 const Timestamp: FC<Props> = (props: Props) => {
@@ -28,7 +26,10 @@ const Timestamp: FC<Props> = (props: Props) => {
 
 export default Timestamp;
 
-function convert(propsFormat: string, locale: Locale): { className: string, format: string } {
+function convert(
+	propsFormat: string,
+	locale: Locale,
+): { className: string; format: string } {
 	let format: string;
 
 	switch (propsFormat) {

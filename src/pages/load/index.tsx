@@ -1,10 +1,10 @@
-import { NextPage } from "next";
-import { NextRouter, useRouter } from "next/router";
+import type { NextPage } from "next";
+import { type NextRouter, useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import Layout from "@/components/layout/Layout";
 import { useLocale } from "@/locales/locale";
-import { EditorData } from "@/models/data/EditorData";
+import type { EditorData } from "@/models/data/EditorData";
 import { SettingSchema } from "@/models/data/Setting";
 import { Goto } from "@/models/Goto";
 import { createLogger } from "@/models/Logging";
@@ -18,15 +18,11 @@ interface Input {
 const LoadPage: NextPage = () => {
 	const locale = useLocale();
 	const router = useRouter();
-	const { register, handleSubmit, } = useForm<Input>();
+	const { register, handleSubmit } = useForm<Input>();
 
 	return (
-		<Layout
-			mode="page"
-			layoutId="load"
-			title={locale.pages.load.title}
-		>
-			<form onSubmit={handleSubmit(data => onSubmit(data, router))}>
+		<Layout mode="page" layoutId="load" title={locale.pages.load.title}>
+			<form onSubmit={handleSubmit((data) => onSubmit(data, router))}>
 				<dl className="inputs">
 					<dt>ファイル</dt>
 					<dd>

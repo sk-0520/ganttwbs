@@ -4,8 +4,7 @@ export class RepeatIterable<T> implements Iterable<T> {
 	public constructor(
 		private readonly value: T,
 		private readonly count: number,
-	) {
-	}
+	) {}
 
 	//#region Iterable
 

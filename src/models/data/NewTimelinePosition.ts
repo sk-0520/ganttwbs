@@ -1,3 +1,3 @@
-export const enum NewTimelinePosition {
-	Next,
+export enum NewTimelinePosition {
+	Next = 0,
 }

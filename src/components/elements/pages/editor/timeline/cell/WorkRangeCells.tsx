@@ -1,12 +1,11 @@
 import classNames from "classnames";
-import { FC } from "react";
+import type { FC } from "react";
 
 import DynamicLabel from "@/components/elements/DynamicLabel";
 import Timestamp from "@/components/elements/Timestamp";
-import { Locale, useLocale } from "@/locales/locale";
+import { type Locale, useLocale } from "@/locales/locale";
 import { WorkRangeKind } from "@/models/data/WorkRange";
-import { DateTime } from "@/models/DateTime";
-
+import type { DateTime } from "@/models/DateTime";
 
 interface Props {
 	workRangeKind: WorkRangeKind;
@@ -22,52 +21,45 @@ const WorkRangeCells: FC<Props> = (props: Props) => {
 
 	const selectOrClickClassName = props.selectable ? "selectable" : "clickable";
 
-	return props.workRangeKind === WorkRangeKind.Success
-		? (
-			<>
-				<td
-					className={
-						classNames(
-							"timeline-cell timeline-range-from",
-							selectOrClickClassName
-						)
-					}
-					onClick={props.callbackClickBeginDate}
-				>
-					<DynamicLabel htmlFor={props.htmlFor} wrap={props.selectable}>
-						<Timestamp format="date" date={props.beginDate} />
-					</DynamicLabel>
-				</td>
-				<td
-					className={
-						classNames(
-							"timeline-cell timeline-range-to",
-							selectOrClickClassName
-						)
-					}
-					onClick={props.callbackClickBeginDate}
-				>
-					<DynamicLabel htmlFor={props.htmlFor} wrap={props.selectable}>
-						<Timestamp format="date" date={props.endDate} />
-					</DynamicLabel>
-				</td>
-			</>
-		) : (
+	return props.workRangeKind === WorkRangeKind.Success ? (
+		<>
 			<td
-				className={
-					classNames(
-						"timeline-cell timeline-range-area",
-						selectOrClickClassName
-					)
-				}
-				colSpan={2}
+				className={classNames(
+					"timeline-cell timeline-range-from",
+					selectOrClickClassName,
+				)}
 				onClick={props.callbackClickBeginDate}
 			>
 				<DynamicLabel htmlFor={props.htmlFor} wrap={props.selectable}>
-					{toDisplayWorkRangeKind(locale, props.workRangeKind)}
+					<Timestamp format="date" date={props.beginDate} />
 				</DynamicLabel>
 			</td>
-		);
+			<td
+				className={classNames(
+					"timeline-cell timeline-range-to",
+					selectOrClickClassName,
+				)}
+				onClick={props.callbackClickBeginDate}
+			>
+				<DynamicLabel htmlFor={props.htmlFor} wrap={props.selectable}>
+					<Timestamp format="date" date={props.endDate} />
+				</DynamicLabel>
+			</td>
+		</>
+	) : (
+		<td
+			className={classNames(
+				"timeline-cell timeline-range-area",
+				selectOrClickClassName,
+			)}
+			colSpan={2}
+			onClick={props.callbackClickBeginDate}
+		>
+			<DynamicLabel htmlFor={props.htmlFor} wrap={props.selectable}>
+				{toDisplayWorkRangeKind(locale, props.workRangeKind)}
+			</DynamicLabel>
+		</td>
+	);
 };
 
 export default WorkRangeCells;
@@ -102,5 +94,4 @@ function toDisplayWorkRangeKind(locale: Locale, kind: WorkRangeKind): string {
 		default:
 			throw new Error("WorkRangeKind: " + kind.toString());
 	}
-
 }

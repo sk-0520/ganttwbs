@@ -2,7 +2,6 @@
  * 配列の処理ヘルパー。
  */
 export abstract class Arrays {
-
 	/**
 	 * 指定の値を繰り返した配列の生成。
 	 * @param value 参照の場合、配列内全てが同じ参照となる。
@@ -27,7 +26,6 @@ export abstract class Arrays {
 		}
 		return this.repeat<never>(undefined as never, count);
 	}
-
 
 	/**
 	 * 指定した範囲の配列を作成
@@ -80,7 +78,12 @@ export abstract class Arrays {
 	 * @returns 値。
 	 * @throws `undefined` の場合に `RangeError`
 	 */
-	public static find<T>(array: ReadonlyArray<T>, predicate: (value: T, index: number, obj: readonly T[]) => boolean, thisArg?: any): T { // eslint-disable-line @typescript-eslint/no-explicit-any
+	public static find<T>(
+		array: ReadonlyArray<T>,
+		predicate: (value: T, index: number, obj: readonly T[]) => boolean,
+		thisArg?: any,
+	): T {
+		// eslint-disable-line @typescript-eslint/no-explicit-any
 		const result = array.find(predicate, thisArg);
 		if (result === undefined) {
 			throw new RangeError("not found");
@@ -98,7 +101,12 @@ export abstract class Arrays {
 	 * @returns 値。
 	 * @throws `undefined` の場合に `RangeError`
 	 */
-	public static findLast<T>(array: ReadonlyArray<T>, predicate: (value: T, index: number, obj: readonly T[]) => boolean, thisArg?: any): T { // eslint-disable-line @typescript-eslint/no-explicit-any
+	public static findLast<T>(
+		array: ReadonlyArray<T>,
+		predicate: (value: T, index: number, obj: readonly T[]) => boolean,
+		thisArg?: any,
+	): T {
+		// eslint-disable-line @typescript-eslint/no-explicit-any
 		const result = array.findLast(predicate, thisArg);
 		if (result === undefined) {
 			throw new RangeError("not found");
@@ -113,7 +121,11 @@ export abstract class Arrays {
 	 * @param fromIndex 元の位置。
 	 * @param toIndex 移動先の位置。
 	 */
-	public static moveIndexInPlace<T>(array: Array<T>, fromIndex: number, toIndex: number) {
+	public static moveIndexInPlace<T>(
+		array: Array<T>,
+		fromIndex: number,
+		toIndex: number,
+	) {
 		const sourceElement = array[fromIndex];
 		array.splice(fromIndex, 1);
 		array.splice(toIndex, 0, sourceElement);
@@ -127,7 +139,11 @@ export abstract class Arrays {
 	 * @param sourceIndex 元の位置。
 	 * @param destinationIndex 置き換え先の位置。
 	 */
-	public static replaceIndexInPlace<T>(array: Array<T>, sourceIndex: number, destinationIndex: number): Array<T> {
+	public static replaceIndexInPlace<T>(
+		array: Array<T>,
+		sourceIndex: number,
+		destinationIndex: number,
+	): Array<T> {
 		if (sourceIndex === destinationIndex) {
 			return array;
 		}
@@ -145,8 +161,12 @@ export abstract class Arrays {
 	 * @param element 対象要素。
 	 * @returns 移動できたか。
 	 */
-	public static replaceOrderInPlace<T>(array: Array<T>, toNext: boolean, element: T): boolean {
-		const sourceIndex = array.findIndex(a => a === element);
+	public static replaceOrderInPlace<T>(
+		array: Array<T>,
+		toNext: boolean,
+		element: T,
+	): boolean {
+		const sourceIndex = array.findIndex((a) => a === element);
 		if (sourceIndex === -1) {
 			return false;
 		}
@@ -168,7 +188,10 @@ export abstract class Arrays {
 		return false;
 	}
 
-	public static orderBy<T>(array: ReadonlyArray<T>, keySelector?: (a: T, b: T) => number): Array<T> {
+	public static orderBy<T>(
+		array: ReadonlyArray<T>,
+		keySelector?: (a: T, b: T) => number,
+	): Array<T> {
 		return [...array].sort(keySelector);
 	}
 }

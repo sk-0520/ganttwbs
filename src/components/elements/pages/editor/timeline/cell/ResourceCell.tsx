@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
 import MemberSelector from "@/components/elements/pages/editor/timeline/MemberSelector";
-import { MemberGroupPair } from "@/models/data/MemberGroupPair";
-import { AnyTimeline, MemberId } from "@/models/data/Setting";
+import type { MemberGroupPair } from "@/models/data/MemberGroupPair";
+import type { AnyTimeline, MemberId } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 
 interface Props {
@@ -14,7 +14,6 @@ interface Props {
 }
 
 const ResourceCell: FC<Props> = (props: Props) => {
-
 	return (
 		<td className="timeline-cell timeline-resource">
 			{Settings.maybeTaskTimeline(props.currentTimeline) && (
@@ -28,7 +27,6 @@ const ResourceCell: FC<Props> = (props: Props) => {
 			)}
 		</td>
 	);
-
 };
 
 export default ResourceCell;

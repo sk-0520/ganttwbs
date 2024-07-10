@@ -1,12 +1,12 @@
 import classNames from "classnames";
-import { CSSProperties, FC } from "react";
+import type { CSSProperties, FC } from "react";
 
 import { useTimelineIndexMapAtomReader } from "@/models/atom/editor/TimelineAtoms";
-import { AreaData } from "@/models/data/Area";
-import { RowHighlightMode } from "@/models/data/Highlight";
-import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
-import { TimelineId } from "@/models/data/Setting";
+import type { AreaData } from "@/models/data/Area";
+import type { RowHighlightMode } from "@/models/data/Highlight";
+import type { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import type { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
+import type { TimelineId } from "@/models/data/Setting";
 import { Require } from "@/models/Require";
 
 interface Props extends ConfigurationProps, TimelineCallbacksProps {
@@ -32,12 +32,7 @@ const RowHighlight: FC<Props> = (props: Props) => {
 
 	return (
 		<div
-			className={
-				classNames(
-					"highlight-row",
-					props.mode
-				)
-			}
+			className={classNames("highlight-row", props.mode)}
 			style={style}
 			onAnimationEnd={props.callbackAnimationEnd}
 		/>

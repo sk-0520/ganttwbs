@@ -1,11 +1,11 @@
 import classNames from "classnames";
-import { CSSProperties, FC } from "react";
+import type { CSSProperties, FC } from "react";
 
 import { useCalendarInfoAtomReader } from "@/models/atom/editor/TimelineAtoms";
-import { AreaData } from "@/models/data/Area";
-import { ColumnHighlightMode } from "@/models/data/Highlight";
-import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { DateTime } from "@/models/DateTime";
+import type { AreaData } from "@/models/data/Area";
+import type { ColumnHighlightMode } from "@/models/data/Highlight";
+import type { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import type { DateTime } from "@/models/DateTime";
 
 interface Props extends ConfigurationProps {
 	mode: ColumnHighlightMode;
@@ -19,7 +19,9 @@ interface Props extends ConfigurationProps {
 const RowHighlight: FC<Props> = (props: Props) => {
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
 
-	const targetDay = calendarInfoAtomReader.data.range.begin.diff(props.date.truncateTime()).totalDays;
+	const targetDay = calendarInfoAtomReader.data.range.begin.diff(
+		props.date.truncateTime(),
+	).totalDays;
 
 	if (props.areaData.days < targetDay) {
 		return null;
@@ -35,12 +37,7 @@ const RowHighlight: FC<Props> = (props: Props) => {
 
 	return (
 		<div
-			className={
-				classNames(
-					"highlight-column",
-					props.mode
-				)
-			}
+			className={classNames("highlight-column", props.mode)}
 			style={style}
 			onAnimationEnd={props.callbackAnimationEnd}
 		/>

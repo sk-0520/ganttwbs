@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from "react";
+import { type FC, useEffect, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
 
@@ -27,7 +27,6 @@ const Dialog: FC<Props> = (props: Props) => {
 		}
 	}, [refDialog]);
 
-
 	function handleClose(type: ButtonType): void {
 		if (type === "submit") {
 			if (props.preSubmit) {
@@ -46,9 +45,7 @@ const Dialog: FC<Props> = (props: Props) => {
 				<div className="header">
 					<h1>{props.title}</h1>
 				</div>
-				<div className="main">
-					{props.children}
-				</div>
+				<div className="main">{props.children}</div>
 				<div className="footer">
 					{props.button === "close" ? (
 						<ul className="buttons">
@@ -56,7 +53,7 @@ const Dialog: FC<Props> = (props: Props) => {
 								<button
 									className="close"
 									type="button"
-									onClick={ev => handleClose("close")}
+									onClick={(ev) => handleClose("close")}
 								>
 									{locale.common.dialog.close}
 								</button>
@@ -68,7 +65,7 @@ const Dialog: FC<Props> = (props: Props) => {
 								<button
 									className="submit"
 									type="button"
-									onClick={ev => handleClose("submit")}
+									onClick={(ev) => handleClose("submit")}
 									data-submit
 								>
 									{locale.common.dialog.submit}
@@ -78,14 +75,13 @@ const Dialog: FC<Props> = (props: Props) => {
 								<button
 									className="cancel"
 									type="button"
-									onClick={ev => handleClose("close")}
+									onClick={(ev) => handleClose("close")}
 								>
 									{locale.common.dialog.cancel}
 								</button>
 							</li>
 						</ul>
-					) : null
-					}
+					) : null}
 				</div>
 			</div>
 		</dialog>

@@ -1,10 +1,9 @@
-
-import { FC } from "react";
+import type { FC } from "react";
 
 import ErrorRow from "@/components/elements/pages/editor/timeline/shape/ErrorRow";
 import { useDetailEditTimelineAtomWriter } from "@/models/atom/editor/DragAndDropAtoms";
-import { ChartProps } from "@/models/data/props/ChartProps";
-import { TaskTimeline } from "@/models/data/Setting";
+import type { ChartProps } from "@/models/data/props/ChartProps";
+import type { TaskTimeline } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
 
 interface Props extends ChartProps {
@@ -17,10 +16,7 @@ const TaskChart: FC<Props> = (props: Props) => {
 	if (!props.area.timeSpanRange) {
 		return (
 			<g>
-				<ErrorRow
-					area={props.area}
-					color="red"
-				/>
+				<ErrorRow area={props.area} color="red" />
 			</g>
 		);
 	}
@@ -41,7 +37,9 @@ const TaskChart: FC<Props> = (props: Props) => {
 				stroke={props.borderColor}
 				strokeWidth={props.borderThickness}
 				paintOrder="stroke"
-				onDoubleClick={_ => detailEditTimelineAtomWriter.write(props.currentTimeline)}
+				onDoubleClick={(_) =>
+					detailEditTimelineAtomWriter.write(props.currentTimeline)
+				}
 			/>
 
 			<rect

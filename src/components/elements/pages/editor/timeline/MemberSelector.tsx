@@ -1,9 +1,9 @@
-import { FC, ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 
 import { useResourceInfoAtomReader } from "@/models/atom/editor/TimelineAtoms";
 import { Color } from "@/models/Color";
-import { MemberGroupPair } from "@/models/data/MemberGroupPair";
-import { Member, MemberId } from "@/models/data/Setting";
+import type { MemberGroupPair } from "@/models/data/MemberGroupPair";
+import type { Member, MemberId } from "@/models/data/Setting";
 import { Require } from "@/models/Require";
 
 interface Props {
@@ -18,23 +18,23 @@ interface Props {
 const MemberSelector: FC<Props> = (props: Props) => {
 	const resourceInfoAtomReader = useResourceInfoAtomReader();
 
-	function renderMemberOptions(members: ReadonlyArray<Member>): Array<ReactNode> {
-		return (
-			members.map(a => {
-				return (
-					<option
-						key={a.id}
-						value={a.id}
-						style={{
-							color: Color.parse(a.color).getAutoColor().toHtml(),
-							background: a.color,
-						}}
-					>
-						{a.name}
-					</option>
-				);
-			})
-		);
+	function renderMemberOptions(
+		members: ReadonlyArray<Member>,
+	): Array<ReactNode> {
+		return members.map((a) => {
+			return (
+				<option
+					key={a.id}
+					value={a.id}
+					style={{
+						color: Color.parse(a.color).getAutoColor().toHtml(),
+						background: a.color,
+					}}
+				>
+					{a.name}
+				</option>
+			);
+		});
 	}
 
 	function handleChangeOption(memberId: MemberId) {
@@ -47,25 +47,25 @@ const MemberSelector: FC<Props> = (props: Props) => {
 			className={props.className}
 			disabled={props.disabled}
 			defaultValue={props.defaultValue}
-			onChange={ev => handleChangeOption(ev.target.value)}
-			onFocus={ev => props.callbackFocus ? props.callbackFocus(true): undefined}
-			onBlur={ev => props.callbackFocus ? props.callbackFocus(false): undefined}
+			onChange={(ev) => handleChangeOption(ev.target.value)}
+			onFocus={(ev) =>
+				props.callbackFocus ? props.callbackFocus(true) : undefined
+			}
+			onBlur={(ev) =>
+				props.callbackFocus ? props.callbackFocus(false) : undefined
+			}
 		>
 			<option></option>
 
-			{resourceInfoAtomReader.data.groupItems.map(a => {
+			{resourceInfoAtomReader.data.groupItems.map((a) => {
 				const members = Require.get(resourceInfoAtomReader.data.memberItems, a);
 
-				return (
-					a.name ?
-						(
-							<optgroup key={a.name} label={a.name}>
-								<>{renderMemberOptions(members)}</>
-							</optgroup>
-						)
-						: (
-							<>{renderMemberOptions(members)}</>
-						)
+				return a.name ? (
+					<optgroup key={a.name} label={a.name}>
+						<>{renderMemberOptions(members)}</>
+					</optgroup>
+				) : (
+					<>{renderMemberOptions(members)}</>
 				);
 			})}
 		</select>

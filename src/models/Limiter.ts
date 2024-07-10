@@ -4,7 +4,6 @@
  * ループ中にインクリメントして処理継続が可能かを判断する想定。
  */
 export class Limiter {
-
 	private _count = 0;
 
 	public constructor(public readonly max: number) {

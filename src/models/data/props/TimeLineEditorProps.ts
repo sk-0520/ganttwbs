@@ -1,7 +1,10 @@
-import { BeginDateCallbacks, SelectingBeginDate } from "@/models/data/BeginDate";
-import { DraggingTimeline } from "@/models/data/DraggingTimeline";
-import { GroupTimeline } from "@/models/data/Setting";
-import { TimelineCallbacks } from "@/models/data/TimelineCallbacks";
+import type {
+	BeginDateCallbacks,
+	SelectingBeginDate,
+} from "@/models/data/BeginDate";
+import type { DraggingTimeline } from "@/models/data/DraggingTimeline";
+import type { GroupTimeline } from "@/models/data/Setting";
+import type { TimelineCallbacks } from "@/models/data/TimelineCallbacks";
 
 export interface TimeLineEditorProps<TargetTimeline> {
 	treeIndexes: Array<number>;

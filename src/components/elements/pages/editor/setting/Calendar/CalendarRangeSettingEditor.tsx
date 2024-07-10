@@ -1,4 +1,4 @@
-import { FC, useContext } from "react";
+import { type FC, useContext } from "react";
 
 import { useLocale } from "@/locales/locale";
 import { SettingContext } from "@/models/context/SettingContext";
@@ -14,7 +14,9 @@ const CalendarRangeSettingEditor: FC = () => {
 				<input
 					type="date"
 					defaultValue={settingContext.calendar.range.begin}
-					onChange={ev => settingContext.calendar.range.begin = ev.target.value}
+					onChange={(ev) =>
+						(settingContext.calendar.range.begin = ev.target.value)
+					}
 				/>
 			</label>
 			<span>～</span>
@@ -22,7 +24,9 @@ const CalendarRangeSettingEditor: FC = () => {
 				<input
 					type="date"
 					defaultValue={settingContext.calendar.range.end}
-					onChange={ev => settingContext.calendar.range.end = ev.target.value}
+					onChange={(ev) =>
+						(settingContext.calendar.range.end = ev.target.value)
+					}
 				/>
 				{locale.pages.editor.setting.calendar.range.end}
 			</label>

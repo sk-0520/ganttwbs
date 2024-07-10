@@ -1,12 +1,12 @@
 import { Editor } from "@monaco-editor/react";
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
 import MemberSelector from "@/components/elements/pages/editor/timeline/MemberSelector";
 import { useLocale } from "@/locales/locale";
 import { CssHelper } from "@/models/CssHelper";
-import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { AnyTimeline, MemberId, Progress } from "@/models/data/Setting";
+import type { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import type { AnyTimeline, MemberId, Progress } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { Timelines } from "@/models/Timelines";
 import { TimeSpan } from "@/models/TimeSpan";
@@ -20,9 +20,17 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 	const locale = useLocale();
 
 	const [subject, setSubject] = useState(props.timeline.subject);
-	const [workload, setWorkload] = useState(Settings.maybeTaskTimeline(props.timeline) ? TimeSpan.parse(props.timeline.workload) : TimeSpan.zero);
-	const [memberId, setMemberId] = useState<MemberId>(Settings.maybeTaskTimeline(props.timeline) ? props.timeline.memberId : "");
-	const [progress, setProgress] = useState<Progress>(Settings.maybeTaskTimeline(props.timeline) ? props.timeline.progress : 0);
+	const [workload, setWorkload] = useState(
+		Settings.maybeTaskTimeline(props.timeline)
+			? TimeSpan.parse(props.timeline.workload)
+			: TimeSpan.zero,
+	);
+	const [memberId, setMemberId] = useState<MemberId>(
+		Settings.maybeTaskTimeline(props.timeline) ? props.timeline.memberId : "",
+	);
+	const [progress, setProgress] = useState<Progress>(
+		Settings.maybeTaskTimeline(props.timeline) ? props.timeline.progress : 0,
+	);
 	const [comment, setComment] = useState(props.timeline.comment);
 
 	function handleSubmit() {
@@ -44,7 +52,7 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 		<Dialog
 			button="submit"
 			title={locale.pages.editor.timeline.detailDialog.title}
-			callbackClose={type => {
+			callbackClose={(type) => {
 				if (type === "submit") {
 					handleSubmit();
 				} else {
@@ -53,52 +61,46 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 			}}
 		>
 			<dl className="inputs timeline-editor">
-				<dt>
-					{locale.pages.editor.timeline.header.columns.subject}
-				</dt>
+				<dt>{locale.pages.editor.timeline.header.columns.subject}</dt>
 				<dd>
 					<input
 						value={subject}
-						onChange={ev => setSubject(ev.target.value)}
+						onChange={(ev) => setSubject(ev.target.value)}
 					/>
 				</dd>
 
-				{
-					Settings.maybeTaskTimeline(props.timeline) && <>
-						<dt>
-							{locale.pages.editor.timeline.header.columns.workload}
-						</dt>
+				{Settings.maybeTaskTimeline(props.timeline) && (
+					<>
+						<dt>{locale.pages.editor.timeline.header.columns.workload}</dt>
 						<dd>
 							<input
 								type="number"
 								min={0}
 								step={0.25}
 								value={Timelines.displayWorkload(workload.totalDays)}
-								onChange={ev => setWorkload(TimeSpan.fromDays(ev.target.valueAsNumber))}
+								onChange={(ev) =>
+									setWorkload(TimeSpan.fromDays(ev.target.valueAsNumber))
+								}
 							/>
 						</dd>
 					</>
-				}
+				)}
 
-				{
-					Settings.maybeTaskTimeline(props.timeline) && <>
-						<dt>
-							{locale.pages.editor.timeline.header.columns.resource}
-						</dt>
+				{Settings.maybeTaskTimeline(props.timeline) && (
+					<>
+						<dt>{locale.pages.editor.timeline.header.columns.resource}</dt>
 						<dd>
 							<MemberSelector
 								defaultValue={memberId}
-								callbackChangeMember={ev => setMemberId(ev?.member.id ?? "")}
+								callbackChangeMember={(ev) => setMemberId(ev?.member.id ?? "")}
 							/>
 						</dd>
 					</>
-				}
+				)}
 
-				{
-					Settings.maybeTaskTimeline(props.timeline) && <>
-						<dt>
-							{locale.pages.editor.timeline.header.columns.progress}
-						</dt>
+				{Settings.maybeTaskTimeline(props.timeline) && (
+					<>
+						<dt>{locale.pages.editor.timeline.header.columns.progress}</dt>
 						<dd>
 							<input
 								type="number"
@@ -106,14 +108,11 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 								max={100}
 								step={1}
 								value={Timelines.displayProgress(progress)}
-								onChange={ev => setProgress(ev.target.valueAsNumber / 100.0)}
+								onChange={(ev) => setProgress(ev.target.valueAsNumber / 100.0)}
 							/>
 							<ul className="progress-fixed">
 								<li>
-									<button
-										type="button"
-										onClick={_ => setProgress(0)}
-									>
+									<button type="button" onClick={(_) => setProgress(0)}>
 										{locale.pages.editor.timeline.detailDialog.progressMinimum}
 									</button>
 								</li>
@@ -124,33 +123,30 @@ const TimelineDetailEditDialog: FC<Props> = (props: Props) => {
 										max={1}
 										step={0.01}
 										value={progress}
-										onChange={ev => setProgress(ev.target.valueAsNumber)}
+										onChange={(ev) => setProgress(ev.target.valueAsNumber)}
 									/>
 								</li>
 								<li>
-									<button
-										type="button"
-										onClick={_ => setProgress(1)}
-									>
+									<button type="button" onClick={(_) => setProgress(1)}>
 										{locale.pages.editor.timeline.detailDialog.progressMaximum}
 									</button>
 								</li>
 							</ul>
 						</dd>
 					</>
-				}
+				)}
 
-				<dt>
-					{locale.pages.editor.timeline.detailDialog.comment}
-				</dt>
+				<dt>{locale.pages.editor.timeline.detailDialog.comment}</dt>
 				<dd>
 					<Editor
 						width="100%"
 						height="10em"
 						value={comment}
-						onChange={ev => setComment(ev ?? "")}
+						onChange={(ev) => setComment(ev ?? "")}
 						options={{
-							fontFamily: CssHelper.toFontFamily(locale.styles.editor.fontFamilies),
+							fontFamily: CssHelper.toFontFamily(
+								locale.styles.editor.fontFamilies,
+							),
 							lineNumbers: "off",
 							quickSuggestions: false,
 						}}

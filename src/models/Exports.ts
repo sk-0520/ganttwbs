@@ -1,12 +1,12 @@
-import { Border, Row, Workbook, Worksheet } from "exceljs";
+import { type Border, type Row, Workbook, type Worksheet } from "exceljs";
 
-import { Locale } from "@/locales/locale";
+import type { Locale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { Calendars } from "@/models/Calendars";
 import { Color } from "@/models/Color";
-import { CalculatedData } from "@/models/data/CalculatedData";
+import type { CalculatedData } from "@/models/data/CalculatedData";
 import { ResultFactory } from "@/models/data/Result";
-import { Progress, RootTimeline, Setting } from "@/models/data/Setting";
+import type { Progress, RootTimeline, Setting } from "@/models/data/Setting";
 import { DateTime } from "@/models/DateTime";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { IdFactory } from "@/models/IdFactory";
@@ -29,7 +29,7 @@ const ColumnKeys = [
 	"range-end",
 	"progress",
 ] as const;
-type ColumnKey = typeof ColumnKeys[number];
+type ColumnKey = (typeof ColumnKeys)[number];
 type BaseCells = { [key in ColumnKey]: CellInputType };
 
 const ExcelFormat = {
@@ -66,7 +66,6 @@ const DefaultBorders = {
 };
 
 export abstract class Exports {
-
 	/**
 	 * 編集データから出力用の計算済みデータを生成。
 	 *
@@ -76,19 +75,34 @@ export abstract class Exports {
 	 * @returns 計算済みデータ。
 	 */
 	public static calculate(setting: Setting): CalculatedData {
-		const calendarInfo = Calendars.createCalendarInfo(setting.timeZone, setting.calendar);
+		const calendarInfo = Calendars.createCalendarInfo(
+			setting.timeZone,
+			setting.calendar,
+		);
 		const resourceInfo = Resources.createResourceInfo(setting.groups);
 		const sequenceTimelines = Timelines.flat(setting.rootTimeline.children);
 		const timelineMap = Timelines.getTimelinesMap(setting.rootTimeline);
-		const workRanges = Timelines.getWorkRanges([...timelineMap.values()], setting.calendar.holiday, setting.recursive, calendarInfo.timeZone);
-		const dayInfos = Timelines.calculateDayInfos(timelineMap, new Set([...workRanges.values()]), resourceInfo);
+		const workRanges = Timelines.getWorkRanges(
+			[...timelineMap.values()],
+			setting.calendar.holiday,
+			setting.recursive,
+			calendarInfo.timeZone,
+		);
+		const dayInfos = Timelines.calculateDayInfos(
+			timelineMap,
+			new Set([...workRanges.values()]),
+			resourceInfo,
+		);
 
-		const successWorkRanges = [...workRanges.values()].filter(WorkRanges.maybeSuccessWorkRange);
+		const successWorkRanges = [...workRanges.values()].filter(
+			WorkRanges.maybeSuccessWorkRange,
+		);
 
 		const totalSuccessWorkRange = successWorkRanges.length
-			? ResultFactory.success(WorkRanges.getTotalSuccessWorkRange(successWorkRanges))
-			: ResultFactory.failure<never>(undefined as never)
-			;
+			? ResultFactory.success(
+					WorkRanges.getTotalSuccessWorkRange(successWorkRanges),
+				)
+			: ResultFactory.failure<never>(undefined as never);
 
 		return {
 			calendarInfo,
@@ -104,7 +118,9 @@ export abstract class Exports {
 		};
 	}
 
-	private static createBaseCells(baseCells: BaseCells): Array<string | number | Date> {
+	private static createBaseCells(
+		baseCells: BaseCells,
+	): Array<string | number | Date> {
 		const result: ReturnType<typeof this.createBaseCells> = [];
 
 		for (const columnKey of ColumnKeys) {
@@ -122,18 +138,19 @@ export abstract class Exports {
 
 	private static getExcelBaseCellsNumberMap(): Map<ColumnKey, number> {
 		const result = new Map<ColumnKey, number>(
-			ColumnKeys.map((a, i) => [a, i + 1])
+			ColumnKeys.map((a, i) => [a, i + 1]),
 		);
 
 		return result;
 	}
 
 	private static toExcelArgbColor(color: Color): string {
-		return (color.a * 255).toString(16).padStart(2, "0")
-			+ color.r.toString(16).padStart(2, "0")
-			+ color.g.toString(16).padStart(2, "0")
-			+ color.b.toString(16).padStart(2, "0")
-			;
+		return (
+			(color.a * 255).toString(16).padStart(2, "0") +
+			color.r.toString(16).padStart(2, "0") +
+			color.g.toString(16).padStart(2, "0") +
+			color.b.toString(16).padStart(2, "0")
+		);
 	}
 
 	// private static toAbsoluteAddress(address:string):string {
@@ -145,21 +162,29 @@ export abstract class Exports {
 	// 	return "$" + ret.groups.COL + "$" + ret.groups.ROW;
 	// }
 
-	private static createExcelRow1(timelineSheet: Worksheet, calculatedData: CalculatedData, setting: Setting, dates: ReadonlyArray<Readonly<Date>>, baseCellsNumberMap: ReadonlyMap<ColumnKey, number>, beginDate: DateTime, locale: Locale): Row {
+	private static createExcelRow1(
+		timelineSheet: Worksheet,
+		calculatedData: CalculatedData,
+		setting: Setting,
+		dates: ReadonlyArray<Readonly<Date>>,
+		baseCellsNumberMap: ReadonlyMap<ColumnKey, number>,
+		beginDate: DateTime,
+		locale: Locale,
+	): Row {
 		const monthEqualColor = Color.create(0xcc, 0xcc, 0xcc);
 
 		const header1: BaseCells = {
-			"id": setting.name,
-			"subject": "",
-			"workload": "",
-			"resource": "",
+			id: setting.name,
+			subject: "",
+			workload: "",
+			resource: "",
 			"range-begin": "",
 			"range-end": "",
-			"progress": "",
+			progress: "",
 		};
 		const headerRow1 = timelineSheet.addRow([
 			...this.createBaseCells(header1),
-			...dates
+			...dates,
 		]);
 		for (let i = 0; i < dates.length; i++) {
 			const cell = headerRow1.getCell(ColumnKeys.length + i + 1);
@@ -190,7 +215,7 @@ export abstract class Exports {
 		timelineSheet.mergeCells(1, 1, 1, ColumnKeys.length);
 		const titleCell = headerRow1.getCell(Require.get(baseCellsNumberMap, "id"));
 		titleCell.font = {
-			bold: true
+			bold: true,
 		};
 		titleCell.alignment = {
 			horizontal: "justify",
@@ -198,19 +223,21 @@ export abstract class Exports {
 		};
 
 		for (const key of ColumnKeys) {
-			const column = timelineSheet.getColumn(Require.get(baseCellsNumberMap, key));
+			const column = timelineSheet.getColumn(
+				Require.get(baseCellsNumberMap, key),
+			);
 			column.outlineLevel = 1;
 			column.width = Require.switch(key as ColumnKey, {
-				"id": () => 14,
-				"subject": () => 20,
-				"workload": () => 8,
-				"resource": () => 14,
+				id: () => 14,
+				subject: () => 20,
+				workload: () => 8,
+				resource: () => 14,
 				"range-begin": () => 12,
 				"range-end": () => 12,
-				"progress": () => 8,
+				progress: () => 8,
 			});
 			column.style.alignment = {
-				vertical: "middle"
+				vertical: "middle",
 			};
 			column.style.border = {
 				top: DefaultBorders.BaseCell,
@@ -235,8 +262,13 @@ export abstract class Exports {
 
 			if (setting.theme.holiday.regulars) {
 				const weekDay = Settings.toWeekDay(date.week);
-				if (weekDay in setting.theme.holiday.regulars && setting.calendar.holiday.regulars.includes(weekDay)) {
-					const color = Color.tryParse(setting.theme.holiday.regulars[weekDay] || "");
+				if (
+					weekDay in setting.theme.holiday.regulars &&
+					setting.calendar.holiday.regulars.includes(weekDay)
+				) {
+					const color = Color.tryParse(
+						setting.theme.holiday.regulars[weekDay] || "",
+					);
 					if (color) {
 						column.fill = {
 							type: "pattern",
@@ -249,10 +281,14 @@ export abstract class Exports {
 				}
 			}
 
-			const eventValue = calculatedData.calendarInfo.holidayEventMap.get(date.ticks);
+			const eventValue = calculatedData.calendarInfo.holidayEventMap.get(
+				date.ticks,
+			);
 			if (eventValue) {
 				if (eventValue.event.kind in setting.theme.holiday.events) {
-					const color = Color.tryParse(setting.theme.holiday.events[eventValue.event.kind] || "");
+					const color = Color.tryParse(
+						setting.theme.holiday.events[eventValue.event.kind] || "",
+					);
 					if (color) {
 						column.fill = {
 							type: "pattern",
@@ -276,31 +312,46 @@ export abstract class Exports {
 		return headerRow1;
 	}
 
-	private static createExcelRow2(timelineSheet: Worksheet, calculatedData: CalculatedData, setting: Setting, dates: ReadonlyArray<Readonly<Date>>, baseCellsNumberMap: ReadonlyMap<ColumnKey, number>, rootTimelineItem: RootTimeline, locale: Locale): Row {
-		const rootSuccessWorkRanges = calculatedData.workRange.successWorkRanges.find(a => a.timeline.id === rootTimelineItem.id);
+	private static createExcelRow2(
+		timelineSheet: Worksheet,
+		calculatedData: CalculatedData,
+		setting: Setting,
+		dates: ReadonlyArray<Readonly<Date>>,
+		baseCellsNumberMap: ReadonlyMap<ColumnKey, number>,
+		rootTimelineItem: RootTimeline,
+		locale: Locale,
+	): Row {
+		const rootSuccessWorkRanges =
+			calculatedData.workRange.successWorkRanges.find(
+				(a) => a.timeline.id === rootTimelineItem.id,
+			);
 
 		const header2: BaseCells = {
-			"id": `${calculatedData.sequenceTimelines.filter(Settings.maybeTaskTimeline).length}/${calculatedData.sequenceTimelines.length}`,
-			"subject": "",
-			"workload": Timelines.sumWorkloadByGroup(rootTimelineItem).totalDays,
-			"resource": "",
+			id: `${calculatedData.sequenceTimelines.filter(Settings.maybeTaskTimeline).length}/${calculatedData.sequenceTimelines.length}`,
+			subject: "",
+			workload: Timelines.sumWorkloadByGroup(rootTimelineItem).totalDays,
+			resource: "",
 			"range-begin": rootSuccessWorkRanges?.begin ?? "",
 			"range-end": rootSuccessWorkRanges?.end ?? "",
-			"progress": Timelines.sumProgressByGroup(rootTimelineItem),
+			progress: Timelines.sumProgressByGroup(rootTimelineItem),
 		};
 		const headerRow2 = timelineSheet.addRow([
 			...this.createBaseCells(header2),
-			...dates
+			...dates,
 		]);
 		for (let i = 0; i < dates.length; i++) {
 			const cell = headerRow2.getCell(ColumnKeys.length + i + 1);
 			cell.style.numFmt = locale.file.excel.export.dayOnlyFormat;
 		}
 
-		headerRow2.getCell(Require.get(baseCellsNumberMap, "workload")).numFmt = ExcelFormat.Workload;
-		headerRow2.getCell(Require.get(baseCellsNumberMap, "progress")).numFmt = ExcelFormat.Progress;
-		headerRow2.getCell(Require.get(baseCellsNumberMap, "range-begin")).numFmt = locale.file.excel.export.workRangeFormat;
-		headerRow2.getCell(Require.get(baseCellsNumberMap, "range-end")).numFmt = locale.file.excel.export.workRangeFormat;
+		headerRow2.getCell(Require.get(baseCellsNumberMap, "workload")).numFmt =
+			ExcelFormat.Workload;
+		headerRow2.getCell(Require.get(baseCellsNumberMap, "progress")).numFmt =
+			ExcelFormat.Progress;
+		headerRow2.getCell(Require.get(baseCellsNumberMap, "range-begin")).numFmt =
+			locale.file.excel.export.workRangeFormat;
+		headerRow2.getCell(Require.get(baseCellsNumberMap, "range-end")).numFmt =
+			locale.file.excel.export.workRangeFormat;
 		const totalColor = Color.parse("ccc");
 		for (const key of ColumnKeys) {
 			const cell = headerRow2.getCell(Require.get(baseCellsNumberMap, key));
@@ -325,19 +376,26 @@ export abstract class Exports {
 		return headerRow2;
 	}
 
-	private static createExcelRow3(timelineSheet: Worksheet, calculatedData: CalculatedData, setting: Setting, dates: ReadonlyArray<Readonly<Date>>, baseCellsNumberMap: ReadonlyMap<ColumnKey, number>, locale: Locale): Row {
+	private static createExcelRow3(
+		timelineSheet: Worksheet,
+		calculatedData: CalculatedData,
+		setting: Setting,
+		dates: ReadonlyArray<Readonly<Date>>,
+		baseCellsNumberMap: ReadonlyMap<ColumnKey, number>,
+		locale: Locale,
+	): Row {
 		const header3: BaseCells = {
-			"id": locale.pages.editor.timeline.header.columns.id,
-			"subject": locale.pages.editor.timeline.header.columns.subject,
-			"workload": locale.pages.editor.timeline.header.columns.workload,
-			"resource": locale.pages.editor.timeline.header.columns.resource,
+			id: locale.pages.editor.timeline.header.columns.id,
+			subject: locale.pages.editor.timeline.header.columns.subject,
+			workload: locale.pages.editor.timeline.header.columns.workload,
+			resource: locale.pages.editor.timeline.header.columns.resource,
 			"range-begin": locale.pages.editor.timeline.header.columns.workRangeBegin,
 			"range-end": locale.pages.editor.timeline.header.columns.workRangeEnd,
-			"progress": locale.pages.editor.timeline.header.columns.progress,
+			progress: locale.pages.editor.timeline.header.columns.progress,
 		};
 		const headerRow3 = timelineSheet.addRow([
 			...this.createBaseCells(header3),
-			...dates
+			...dates,
 		]);
 		for (let i = 0; i < dates.length; i++) {
 			const cell = headerRow3.getCell(ColumnKeys.length + i + 1);
@@ -367,26 +425,60 @@ export abstract class Exports {
 		return headerRow3;
 	}
 
-	public static async createWorkbook(setting: Setting, calculatedData: CalculatedData, locale: Locale): Promise<Workbook> {
-		const dates = Calendars.getDays(calculatedData.calendarInfo.range).map(a => a.toDate(true));
+	public static async createWorkbook(
+		setting: Setting,
+		calculatedData: CalculatedData,
+		locale: Locale,
+	): Promise<Workbook> {
+		const dates = Calendars.getDays(calculatedData.calendarInfo.range).map(
+			(a) => a.toDate(true),
+		);
 
-		const rootTimelineItem = Require.get(calculatedData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
+		const rootTimelineItem = Require.get(
+			calculatedData.timelineMap,
+			IdFactory.rootTimelineId,
+		) as RootTimeline;
 
 		const baseCellsNumberMap = this.getExcelBaseCellsNumberMap();
 
 		const workbook = new Workbook();
-		const timelineSheet = workbook.addWorksheet(Strings.replaceMap(locale.file.excel.export.timelineSheetNameFormat, {
-			"NAME": setting.name
-		}));
+		const timelineSheet = workbook.addWorksheet(
+			Strings.replaceMap(locale.file.excel.export.timelineSheetNameFormat, {
+				NAME: setting.name,
+			}),
+		);
 		const beginDate = calculatedData.calendarInfo.range.begin.truncateTime();
 
 		// ヘッダ
 		// 1. タイトル - 月
-		this.createExcelRow1(timelineSheet, calculatedData, setting, dates, baseCellsNumberMap, beginDate, locale);
+		this.createExcelRow1(
+			timelineSheet,
+			calculatedData,
+			setting,
+			dates,
+			baseCellsNumberMap,
+			beginDate,
+			locale,
+		);
 		// 2. 集計 - 日付
-		this.createExcelRow2(timelineSheet, calculatedData, setting, dates, baseCellsNumberMap, rootTimelineItem, locale);
+		this.createExcelRow2(
+			timelineSheet,
+			calculatedData,
+			setting,
+			dates,
+			baseCellsNumberMap,
+			rootTimelineItem,
+			locale,
+		);
 		// 3. ヘッダ - 曜日
-		this.createExcelRow3(timelineSheet, calculatedData, setting, dates, baseCellsNumberMap, locale);
+		this.createExcelRow3(
+			timelineSheet,
+			calculatedData,
+			setting,
+			dates,
+			baseCellsNumberMap,
+			locale,
+		);
 
 		// ウィンドウ枠固定
 		timelineSheet.views = [
@@ -394,7 +486,7 @@ export abstract class Exports {
 				state: "frozen",
 				xSplit: ColumnKeys.length,
 				ySplit: 3,
-			}
+			},
 		];
 
 		// 印刷設定
@@ -413,16 +505,18 @@ export abstract class Exports {
 				right: 0.5,
 				header: 0.25,
 				footer: 0.25,
-			}
+			},
 		};
 
 		// ヘッダ・フッタ設定
 		timelineSheet.headerFooter = {
 			oddHeader: "&A",
-			oddFooter: "&P/&N"
+			oddFooter: "&P/&N",
 		};
 
-		const groupColors = setting.theme.groups.map(a => Color.tryParse(a) ?? DefaultSettings.UnknownMemberColor);
+		const groupColors = setting.theme.groups.map(
+			(a) => Color.tryParse(a) ?? DefaultSettings.UnknownMemberColor,
+		);
 		const defaultGroupColor = Color.parse(setting.theme.timeline.defaultGroup);
 		const defaultTaskColor = Color.parse(setting.theme.timeline.defaultTask);
 		const completedColor = Color.parse(setting.theme.timeline.completed);
@@ -430,40 +524,42 @@ export abstract class Exports {
 		// タイムラインをどさっと出力
 		//let n = 1;
 		for (const timeline of calculatedData.sequenceTimelines) {
-
-			const readableTimelineId = Timelines.calcReadableTimelineId(timeline, rootTimelineItem);
+			const readableTimelineId = Timelines.calcReadableTimelineId(
+				timeline,
+				rootTimelineItem,
+			);
 			const workload = Settings.maybeGroupTimeline(timeline)
 				? Timelines.sumWorkloadByGroup(timeline)
-				: Timelines.deserializeWorkload(timeline.workload)
-				;
+				: Timelines.deserializeWorkload(timeline.workload);
 			const memberGroupPair = Settings.maybeGroupTimeline(timeline)
 				? undefined
-				: calculatedData.resourceInfo.memberMap.get(timeline.memberId)
-				;
-			const successWorkRange = calculatedData.workRange.successWorkRanges.find(a => a.timeline.id === timeline.id);
+				: calculatedData.resourceInfo.memberMap.get(timeline.memberId);
+			const successWorkRange = calculatedData.workRange.successWorkRanges.find(
+				(a) => a.timeline.id === timeline.id,
+			);
 			const workRange = successWorkRange
-				? { begin: successWorkRange.begin.toDate(true), end: successWorkRange.end.toDate(true) }
-				: { begin: "#ERROR", end: "" }
-				;
+				? {
+						begin: successWorkRange.begin.toDate(true),
+						end: successWorkRange.end.toDate(true),
+					}
+				: { begin: "#ERROR", end: "" };
 			const progress = Settings.maybeGroupTimeline(timeline)
 				? Timelines.sumProgressByGroup(timeline)
-				: timeline.progress
-				;
+				: timeline.progress;
 
 			const timelineBaseCells: BaseCells = {
-				"id": Timelines.toReadableTimelineId(readableTimelineId),
-				"subject": timeline.subject,
-				"workload": workload.totalDays,
-				"resource": memberGroupPair
+				id: Timelines.toReadableTimelineId(readableTimelineId),
+				subject: timeline.subject,
+				workload: workload.totalDays,
+				resource: memberGroupPair
 					? Strings.replaceMap(locale.file.excel.export.resourceFormat, {
-						"GROUP": memberGroupPair.group.name,
-						"MEMBER": memberGroupPair.member.name,
-					})
-					: ""
-				,
+							GROUP: memberGroupPair.group.name,
+							MEMBER: memberGroupPair.member.name,
+						})
+					: "",
 				"range-begin": workRange.begin,
 				"range-end": workRange.end,
-				"progress": progress,
+				progress: progress,
 			};
 
 			const timelineRow = timelineSheet.addRow([
@@ -475,13 +571,19 @@ export abstract class Exports {
 				horizontal: "left",
 				indent: readableTimelineId.level - 1,
 			};
-			const progressCell = timelineRow.getCell(Require.get(baseCellsNumberMap, "progress"));
+			const progressCell = timelineRow.getCell(
+				Require.get(baseCellsNumberMap, "progress"),
+			);
 
 			timelineRow.getCell(Require.get(baseCellsNumberMap, "id")).numFmt = "@";
-			timelineRow.getCell(Require.get(baseCellsNumberMap, "workload")).numFmt = ExcelFormat.Workload;
+			timelineRow.getCell(Require.get(baseCellsNumberMap, "workload")).numFmt =
+				ExcelFormat.Workload;
 			progressCell.numFmt = ExcelFormat.Progress;
-			timelineRow.getCell(Require.get(baseCellsNumberMap, "range-begin")).numFmt = locale.file.excel.export.workRangeFormat;
-			timelineRow.getCell(Require.get(baseCellsNumberMap, "range-end")).numFmt = locale.file.excel.export.workRangeFormat;
+			timelineRow.getCell(
+				Require.get(baseCellsNumberMap, "range-begin"),
+			).numFmt = locale.file.excel.export.workRangeFormat;
+			timelineRow.getCell(Require.get(baseCellsNumberMap, "range-end")).numFmt =
+				locale.file.excel.export.workRangeFormat;
 
 			for (let i = 0; i < dates.length; i++) {
 				const cell = timelineRow.getCell(ColumnKeys.length + i + 1);
@@ -495,7 +597,9 @@ export abstract class Exports {
 
 			if (successWorkRange) {
 				const beginSpan = beginDate.diff(successWorkRange.begin.truncateTime());
-				const beginCell = timelineRow.getCell(ColumnKeys.length + Math.floor(beginSpan.totalDays) + 1);
+				const beginCell = timelineRow.getCell(
+					ColumnKeys.length + Math.floor(beginSpan.totalDays) + 1,
+				);
 
 				beginCell.value = {
 					formula: progressCell.address,
@@ -508,8 +612,9 @@ export abstract class Exports {
 
 				const targetColor = Settings.maybeGroupTimeline(timeline)
 					? groupColors[readableTimelineId.level - 1] ?? defaultGroupColor
-					: (memberGroupPair?.member.color ? Color.parse(memberGroupPair.member.color) : defaultTaskColor)
-					;
+					: memberGroupPair?.member.color
+						? Color.parse(memberGroupPair.member.color)
+						: defaultTaskColor;
 
 				beginCell.style.border = {
 					left: DefaultBorders.TimelineRangeCell,
@@ -517,7 +622,9 @@ export abstract class Exports {
 					bottom: DefaultBorders.TimelineCell,
 					right: DefaultBorders.TimelineCell,
 				};
-				const endCell = timelineRow.getCell(beginCell.fullAddress.col + days.length);
+				const endCell = timelineRow.getCell(
+					beginCell.fullAddress.col + days.length,
+				);
 				endCell.style.border = {
 					left: DefaultBorders.TimelineRangeCell,
 					top: DefaultBorders.TimelineCell,
@@ -528,11 +635,10 @@ export abstract class Exports {
 				const step = 1 / days.length;
 				for (let i = 0; i < days.length; i++) {
 					const cell = timelineRow.getCell(beginCell.fullAddress.col + i);
-					const isCompletedArea = ((step * i) + step) <= progress;
+					const isCompletedArea = step * i + step <= progress;
 					const fillColor = isCompletedArea
 						? this.toExcelArgbColor(completedColor)
-						: this.toExcelArgbColor(targetColor)
-						;
+						: this.toExcelArgbColor(targetColor);
 					cell.fill = {
 						type: "pattern",
 						pattern: "solid",
@@ -586,24 +692,22 @@ export abstract class Exports {
 				// 		} satisfies DataBarRuleType,
 				// 	],
 				// });
-
-
 			}
 
 			//const date = beginDate.add(i, "day");
 
-
-
 			if (Settings.maybeGroupTimeline(timeline)) {
-				const groupColor = (readableTimelineId.level - 1) in groupColors
-					? groupColors[readableTimelineId.level - 1]
-					: defaultGroupColor
-					;
+				const groupColor =
+					readableTimelineId.level - 1 in groupColors
+						? groupColors[readableTimelineId.level - 1]
+						: defaultGroupColor;
 				timelineRow.fill = {
 					type: "pattern",
 					pattern: "solid",
 					fgColor: {
-						argb: this.toExcelArgbColor(Color.create(groupColor.r, groupColor.g, groupColor.b)),
+						argb: this.toExcelArgbColor(
+							Color.create(groupColor.r, groupColor.g, groupColor.b),
+						),
 					},
 				};
 			}
@@ -612,18 +716,30 @@ export abstract class Exports {
 		return workbook;
 	}
 
-	public static async createTable(setting: Setting, calculatedData: CalculatedData, locale: Locale): Promise<Array<Array<string>>> {
+	public static async createTable(
+		setting: Setting,
+		calculatedData: CalculatedData,
+		locale: Locale,
+	): Promise<Array<Array<string>>> {
 		const dates = Calendars.getDays(calculatedData.calendarInfo.range);
-		const rootTimelineItem = Require.get(calculatedData.timelineMap, IdFactory.rootTimelineId) as RootTimeline;
-		const rootSuccessWorkRanges = calculatedData.workRange.successWorkRanges.find(a => a.timeline.id === rootTimelineItem.id);
+		const rootTimelineItem = Require.get(
+			calculatedData.timelineMap,
+			IdFactory.rootTimelineId,
+		) as RootTimeline;
+		const rootSuccessWorkRanges =
+			calculatedData.workRange.successWorkRanges.find(
+				(a) => a.timeline.id === rootTimelineItem.id,
+			);
 
 		const result = new Array<Array<string>>();
 
 		result.push([
 			setting.name,
 			...Arrays.repeat("", 9),
-			...dates.map(a => {
-				const holiday = calculatedData.calendarInfo.holidayEventMap.get(a.ticks);
+			...dates.map((a) => {
+				const holiday = calculatedData.calendarInfo.holidayEventMap.get(
+					a.ticks,
+				);
 				if (holiday) {
 					return holiday.event.display;
 				}
@@ -645,28 +761,36 @@ export abstract class Exports {
 			String(Timelines.sumWorkloadByGroup(rootTimelineItem).totalDays),
 			"group",
 			"member",
-			rootSuccessWorkRanges ? rootSuccessWorkRanges.begin.format(locale.file.table.export.rangeFormat) : "",
-			rootSuccessWorkRanges ? rootSuccessWorkRanges.end.format(locale.file.table.export.rangeFormat) : "",
+			rootSuccessWorkRanges
+				? rootSuccessWorkRanges.begin.format(
+						locale.file.table.export.rangeFormat,
+					)
+				: "",
+			rootSuccessWorkRanges
+				? rootSuccessWorkRanges.end.format(locale.file.table.export.rangeFormat)
+				: "",
 			String(Timelines.sumProgressByGroup(rootTimelineItem)),
 
-			...dates.map(a => a.format(locale.file.table.export.dateFormat)),
+			...dates.map((a) => a.format(locale.file.table.export.dateFormat)),
 		]);
 
 		for (const timeline of calculatedData.sequenceTimelines) {
-			const readableTimelineId = Timelines.calcReadableTimelineId(timeline, rootTimelineItem);
+			const readableTimelineId = Timelines.calcReadableTimelineId(
+				timeline,
+				rootTimelineItem,
+			);
 			const workload = Settings.maybeGroupTimeline(timeline)
 				? Timelines.sumWorkloadByGroup(timeline)
-				: Timelines.deserializeWorkload(timeline.workload)
-				;
+				: Timelines.deserializeWorkload(timeline.workload);
 			const memberGroupPair = Settings.maybeGroupTimeline(timeline)
 				? undefined
-				: calculatedData.resourceInfo.memberMap.get(timeline.memberId)
-				;
-			const successWorkRange = calculatedData.workRange.successWorkRanges.find(a => a.timeline.id === timeline.id);
+				: calculatedData.resourceInfo.memberMap.get(timeline.memberId);
+			const successWorkRange = calculatedData.workRange.successWorkRanges.find(
+				(a) => a.timeline.id === timeline.id,
+			);
 			const progress = Settings.maybeGroupTimeline(timeline)
 				? Timelines.sumProgressByGroup(timeline)
-				: timeline.progress
-				;
+				: timeline.progress;
 
 			const baseCells: Array<string> = [
 				timeline.id,
@@ -677,12 +801,16 @@ export abstract class Exports {
 				String(workload.totalDays),
 				memberGroupPair ? memberGroupPair.group.name : "",
 				memberGroupPair ? memberGroupPair.member.name : "",
-				successWorkRange ? successWorkRange.begin.format(locale.file.table.export.rangeFormat) : "",
-				successWorkRange ? successWorkRange.end.format(locale.file.table.export.rangeFormat) : "",
+				successWorkRange
+					? successWorkRange.begin.format(locale.file.table.export.rangeFormat)
+					: "",
+				successWorkRange
+					? successWorkRange.end.format(locale.file.table.export.rangeFormat)
+					: "",
 				String(progress),
 			];
 
-			const dateCells = dates.map(a => {
+			const dateCells = dates.map((a) => {
 				if (successWorkRange) {
 					if (successWorkRange.end.ticks < a.ticks) {
 						return "";
@@ -703,7 +831,7 @@ export abstract class Exports {
 					}
 
 					const step = 1 / days.length;
-					const isCompletedArea = ((step * position) + step) <= progress;
+					const isCompletedArea = step * position + step <= progress;
 
 					return isCompletedArea ? "TRUE" : "FALSE";
 				}
@@ -711,10 +839,7 @@ export abstract class Exports {
 				return "";
 			});
 
-			result.push([
-				...baseCells,
-				...dateCells,
-			]);
+			result.push([...baseCells, ...dateCells]);
 		}
 
 		return result;
@@ -731,32 +856,38 @@ export abstract class Exports {
 		const cellNewLine = "\n";
 		const rowNewLine = "\r\n";
 
-		const lines = table.map(r => {
-			return r.map(c => {
-				if (!c) {
-					return "";
-				}
+		const lines = table.map((r) => {
+			return r
+				.map((c) => {
+					if (!c) {
+						return "";
+					}
 
-				const chars = {
-					hasSeparator: c.includes(separator),
-					hasDoubleQuotation: c.includes("\""),
-					hasNewLines: c.includes("\r") || c.includes("\n"),
-				};
+					const chars = {
+						hasSeparator: c.includes(separator),
+						hasDoubleQuotation: c.includes('"'),
+						hasNewLines: c.includes("\r") || c.includes("\n"),
+					};
 
-				let work = c;
+					let work = c;
 
-				if (chars.hasDoubleQuotation) {
-					work = Strings.replaceAll(work, "\"", "\"\"");
-				}
-				if (chars.hasNewLines) {
-					work = Strings.splitLines(work).join(cellNewLine);
-				}
-				if (chars.hasSeparator || chars.hasDoubleQuotation || chars.hasNewLines) {
-					work = `"${work}"`;
-				}
+					if (chars.hasDoubleQuotation) {
+						work = Strings.replaceAll(work, '"', '""');
+					}
+					if (chars.hasNewLines) {
+						work = Strings.splitLines(work).join(cellNewLine);
+					}
+					if (
+						chars.hasSeparator ||
+						chars.hasDoubleQuotation ||
+						chars.hasNewLines
+					) {
+						work = `"${work}"`;
+					}
 
-				return work;
-			}).join(separator);
+					return work;
+				})
+				.join(separator);
 		});
 
 		return lines.join(rowNewLine);

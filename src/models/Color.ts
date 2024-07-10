@@ -1,7 +1,7 @@
 import { mostReadable, random, TinyColor } from "@ctrl/tinycolor";
 
-import { ParseResult, ResultFactory } from "@/models/data/Result";
-import { ColorString } from "@/models/data/Setting";
+import { type ParseResult, ResultFactory } from "@/models/data/Result";
+import type { ColorString } from "@/models/data/Setting";
 import { Types } from "@/models/Types";
 
 type ColorParseResult = ParseResult<Color, Error>;
@@ -10,7 +10,6 @@ type ColorParseResult = ParseResult<Color, Error>;
  * 色。
  */
 export class Color {
-
 	private constructor(private readonly raw: TinyColor) {
 		if (!raw.isValid) {
 			throw new Error();
@@ -53,11 +52,13 @@ export class Color {
 	}
 
 	public static parse(input: string): Color {
-		return ResultFactory.parseErrorIsThrow(input, s => this.parseCore(s));
+		return ResultFactory.parseErrorIsThrow(input, (s) => this.parseCore(s));
 	}
 
 	public static tryParse(input: string): Color | null {
-		return ResultFactory.parseErrorIsReturnNull(input, s => this.parseCore(s));
+		return ResultFactory.parseErrorIsReturnNull(input, (s) =>
+			this.parseCore(s),
+		);
 	}
 
 	public static create(r: number, g: number, b: number, a?: number): Color {
@@ -79,7 +80,7 @@ export class Color {
 			r: enforce(r, "r"),
 			g: enforce(g, "g"),
 			b: enforce(b, "b"),
-			a: Types.isUndefined(a) ? undefined : enforce(a, "a")
+			a: Types.isUndefined(a) ? undefined : enforce(a, "a"),
 		});
 
 		return new Color(colorImpl);
@@ -104,18 +105,18 @@ export class Color {
 	 */
 	public getAutoColor(): Color {
 		const autoColors = [Colors.Black, Colors.White];
-		const result = mostReadable(
-			this.raw,
-			autoColors,
-			{
-				includeFallbackColors: true
-			}
-		);
+		const result = mostReadable(this.raw, autoColors, {
+			includeFallbackColors: true,
+		});
 
 		return result ? new Color(result) : Colors.Black;
 	}
 
-	private static generateRgbGradient(start: Color, end: Color, count: number): Array<Color> {
+	private static generateRgbGradient(
+		start: Color,
+		end: Color,
+		count: number,
+	): Array<Color> {
 		const a = start.raw.toRgb();
 		const z = end.raw.toRgb();
 
@@ -124,11 +125,13 @@ export class Color {
 		for (let i = 0; i < count; i++) {
 			const zp = (i / (count - 1)) * 100;
 			const ap = 100 - zp;
-			const color = new Color(new TinyColor({
-				r: (a.r * ap / 100) + (z.r * zp / 100),
-				g: (a.g * ap / 100) + (z.g * zp / 100),
-				b: (a.b * ap / 100) + (z.b * zp / 100),
-			}));
+			const color = new Color(
+				new TinyColor({
+					r: (a.r * ap) / 100 + (z.r * zp) / 100,
+					g: (a.g * ap) / 100 + (z.g * zp) / 100,
+					b: (a.b * ap) / 100 + (z.b * zp) / 100,
+				}),
+			);
 			result.push(color);
 		}
 
@@ -142,7 +145,11 @@ export class Color {
 	 * @param count 色数
 	 * @returns グラデーション配列
 	 */
-	public static generateGradient(start: Color, end: Color, count: number): Array<Color> {
+	public static generateGradient(
+		start: Color,
+		end: Color,
+		count: number,
+	): Array<Color> {
 		if (count <= 1) {
 			throw new Error(`${count}`);
 		}
@@ -154,11 +161,11 @@ export class Color {
 	}
 
 	public analogous(count: number): Array<Color> {
-		return this.raw.analogous(count).map(a => new Color(a));
+		return this.raw.analogous(count).map((a) => new Color(a));
 	}
 
 	public monochromatic(count: number): Array<Color> {
-		return this.raw.monochromatic(count).map(a => new Color(a));
+		return this.raw.monochromatic(count).map((a) => new Color(a));
 	}
 
 	public static random(): Color {
@@ -798,7 +805,11 @@ export abstract class Colors {
 	/** Folly */
 	public static readonly Folly = Color.create(0xff, 0x00, 0x4f);
 	/** Forest Green (Traditional) */
-	public static readonly ForestGreenTraditional = Color.create(0x01, 0x44, 0x21);
+	public static readonly ForestGreenTraditional = Color.create(
+		0x01,
+		0x44,
+		0x21,
+	);
 	/** Forest Green (Web) */
 	public static readonly ForestGreenWeb = Color.create(0x22, 0x8b, 0x22);
 	/** French Beige */
@@ -860,7 +871,11 @@ export abstract class Colors {
 	/** Gray (X11 Gray) */
 	public static readonly GrayX11Gray = Color.create(0xbe, 0xbe, 0xbe);
 	/** Green (Color Wheel) (X11 Green) */
-	public static readonly GreenColorWheelX11Green = Color.create(0x00, 0xff, 0x00);
+	public static readonly GreenColorWheelX11Green = Color.create(
+		0x00,
+		0xff,
+		0x00,
+	);
 	/** Green (Crayola) */
 	public static readonly GreenCrayola = Color.create(0x1c, 0xac, 0x78);
 	/** Green (Html/Css Green) */
@@ -932,13 +947,29 @@ export abstract class Colors {
 	/** Indigo (Web) */
 	public static readonly IndigoWeb = Color.create(0x4b, 0x00, 0x82);
 	/** International Klein Blue */
-	public static readonly InternationalKleinBlue = Color.create(0x00, 0x2f, 0xa7);
+	public static readonly InternationalKleinBlue = Color.create(
+		0x00,
+		0x2f,
+		0xa7,
+	);
 	/** International Orange (Aerospace) */
-	public static readonly InternationalOrangeAerospace = Color.create(0xff, 0x4f, 0x00);
+	public static readonly InternationalOrangeAerospace = Color.create(
+		0xff,
+		0x4f,
+		0x00,
+	);
 	/** International Orange (Engineering) */
-	public static readonly InternationalOrangeEngineering = Color.create(0xba, 0x16, 0xc);
+	public static readonly InternationalOrangeEngineering = Color.create(
+		0xba,
+		0x16,
+		0xc,
+	);
 	/** International Orange (Golden Gate Bridge) */
-	public static readonly InternationalOrangeGoldenGateBridge = Color.create(0xc0, 0x36, 0x2c);
+	public static readonly InternationalOrangeGoldenGateBridge = Color.create(
+		0xc0,
+		0x36,
+		0x2c,
+	);
 	/** Iris */
 	public static readonly Iris = Color.create(0x5a, 0x4f, 0xcf);
 	/** Isabelline */
@@ -1182,7 +1213,11 @@ export abstract class Colors {
 	/** Midnight Blue */
 	public static readonly MidnightBlue = Color.create(0x19, 0x19, 0x70);
 	/** Midnight Green (Eagle Green) */
-	public static readonly MidnightGreenEagleGreen = Color.create(0x00, 0x49, 0x53);
+	public static readonly MidnightGreenEagleGreen = Color.create(
+		0x00,
+		0x49,
+		0x53,
+	);
 	/** Mikado Yellow */
 	public static readonly MikadoYellow = Color.create(0xff, 0xc4, 0xc);
 	/** Mint */
@@ -1258,7 +1293,11 @@ export abstract class Colors {
 	/** Olive Drab #7 */
 	public static readonly OliveDrab7 = Color.create(0x3c, 0x34, 0x1f);
 	/** Olive Drab (Web) (Olive Drab #3) */
-	public static readonly OliveDrabWebOliveDrab3 = Color.create(0x6b, 0x8e, 0x23);
+	public static readonly OliveDrabWebOliveDrab3 = Color.create(
+		0x6b,
+		0x8e,
+		0x23,
+	);
 	/** Olivine */
 	public static readonly Olivine = Color.create(0x9a, 0xb9, 0x73);
 	/** Onyx */
@@ -1592,7 +1631,11 @@ export abstract class Colors {
 	/** Saddle Brown */
 	public static readonly SaddleBrown = Color.create(0x8b, 0x45, 0x13);
 	/** Safety Orange (Blaze Orange) */
-	public static readonly SafetyOrangeBlazeOrange = Color.create(0xff, 0x67, 0x00);
+	public static readonly SafetyOrangeBlazeOrange = Color.create(
+		0xff,
+		0x67,
+		0x00,
+	);
 	/** Saffron */
 	public static readonly Saffron = Color.create(0xf4, 0xc4, 0x30);
 	/** Salmon */
@@ -1796,7 +1839,11 @@ export abstract class Colors {
 	/** United Nations Blue */
 	public static readonly UnitedNationsBlue = Color.create(0x5b, 0x92, 0xe5);
 	/** University Of California Gold */
-	public static readonly UniversityOfCaliforniaGold = Color.create(0xb7, 0x87, 0x27);
+	public static readonly UniversityOfCaliforniaGold = Color.create(
+		0xb7,
+		0x87,
+		0x27,
+	);
 	/** Unmellow Yellow */
 	public static readonly UnmellowYellow = Color.create(0xff, 0xff, 0x66);
 	/** Up Forest Green */

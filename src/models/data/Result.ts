@@ -1,4 +1,3 @@
-
 export type Result<S, E> = SuccessResult<S> | FailureResult<E>;
 
 interface SuccessResult<S> {
@@ -14,7 +13,6 @@ interface FailureResult<E> {
 export type ParseResult<S, E extends Error> = Result<S, E>;
 
 export abstract class ResultFactory {
-
 	public static success<S>(value: S): SuccessResult<S> {
 		return {
 			success: true,
@@ -33,7 +31,10 @@ export abstract class ResultFactory {
 		return this.failure(error);
 	}
 
-	public static parseErrorIsReturnNull<T, E extends Error>(s: string, func: (s: string) => ParseResult<T, E>): T | null {
+	public static parseErrorIsReturnNull<T, E extends Error>(
+		s: string,
+		func: (s: string) => ParseResult<T, E>,
+	): T | null {
 		const result = func(s);
 
 		if (!result.success) {
@@ -43,7 +44,10 @@ export abstract class ResultFactory {
 		return result.value;
 	}
 
-	public static parseErrorIsThrow<T, E extends Error>(s: string, func: (s: string) => ParseResult<T, E>): T {
+	public static parseErrorIsThrow<T, E extends Error>(
+		s: string,
+		func: (s: string) => ParseResult<T, E>,
+	): T {
 		const result = func(s);
 
 		if (!result.success) {

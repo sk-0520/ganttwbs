@@ -1,13 +1,18 @@
-import { FC, MouseEvent, ReactNode, useMemo } from "react";
+import { type FC, type MouseEvent, type ReactNode, useMemo } from "react";
 
 import GanttChartTimeline from "@/components/elements/pages/editor/timeline/GanttChartTimeline";
 import ConnectorTimeline from "@/components/elements/pages/editor/timeline/shape/ConnectorTimeline";
 import { useHoverTimelineIdAtomWriter } from "@/models/atom/editor/HighlightAtoms";
-import { useCalendarInfoAtomReader, useSequenceTimelinesAtomReader, useSettingAtomReader, useTotalTimelineMapAtomReader } from "@/models/atom/editor/TimelineAtoms";
+import {
+	useCalendarInfoAtomReader,
+	useSequenceTimelinesAtomReader,
+	useSettingAtomReader,
+	useTotalTimelineMapAtomReader,
+} from "@/models/atom/editor/TimelineAtoms";
 import { Charts } from "@/models/Charts";
-import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
-import { ColorString } from "@/models/data/Setting";
+import type { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import type { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
+import type { ColorString } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
 
@@ -23,16 +28,35 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 	const totalTimelineMapAtomReader = useTotalTimelineMapAtomReader();
 
 	const areaData = useMemo(() => {
-		return Charts.createAreaData(props.configuration.design.seed.cell, calendarInfoAtomReader.data.range, totalTimelineMapAtomReader.data.size);
-	}, [props.configuration, calendarInfoAtomReader.data, totalTimelineMapAtomReader.data.size]);
+		return Charts.createAreaData(
+			props.configuration.design.seed.cell,
+			calendarInfoAtomReader.data.range,
+			totalTimelineMapAtomReader.data.size,
+		);
+	}, [
+		props.configuration,
+		calendarInfoAtomReader.data,
+		totalTimelineMapAtomReader.data.size,
+	]);
 
 	const gridNodes = useMemo(() => {
-		const width = areaData.cell.width.value * (areaData.days + props.configuration.design.dummy.width);
-		const height = areaData.cell.height.value * (totalTimelineMapAtomReader.data.size + props.configuration.design.dummy.height);
+		const width =
+			areaData.cell.width.value *
+			(areaData.days + props.configuration.design.dummy.width);
+		const height =
+			areaData.cell.height.value *
+			(totalTimelineMapAtomReader.data.size +
+				props.configuration.design.dummy.height);
 
 		// 横軸
 		const gridHorizontals = new Array<ReactNode>();
-		for (let i = 0; i < (totalTimelineMapAtomReader.data.size + props.configuration.design.dummy.height); i++) {
+		for (
+			let i = 0;
+			i <
+			totalTimelineMapAtomReader.data.size +
+				props.configuration.design.dummy.height;
+			i++
+		) {
 			const y = areaData.cell.height.value + areaData.cell.height.value * i;
 			gridHorizontals.push(
 				<line
@@ -44,15 +68,21 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 					stroke="black"
 					strokeWidth={1}
 					strokeDasharray={1}
-				/>
+				/>,
 			);
 		}
 
 		// 縦軸
 		const gridHolidays = new Array<ReactNode>();
 		const gridVerticals = new Array<ReactNode>();
-		for (let i = 0; i < (areaData.days + props.configuration.design.dummy.width); i++) {
-			const date = calendarInfoAtomReader.data.range.begin.add(TimeSpan.fromDays(i));
+		for (
+			let i = 0;
+			i < areaData.days + props.configuration.design.dummy.width;
+			i++
+		) {
+			const date = calendarInfoAtomReader.data.range.begin.add(
+				TimeSpan.fromDays(i),
+			);
 
 			const gridX = areaData.cell.width.value + areaData.cell.width.value * i;
 
@@ -66,7 +96,7 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 					stroke="gray"
 					strokeWidth={1}
 					strokeDasharray={1.5}
-				/>
+				/>,
 			);
 
 			if (areaData.days < i) {
@@ -77,9 +107,14 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 			let color: ColorString | undefined = undefined;
 
 			// 祝日判定
-			const holidayEventValue = calendarInfoAtomReader.data.holidayEventMap.get(date.ticks);
+			const holidayEventValue = calendarInfoAtomReader.data.holidayEventMap.get(
+				date.ticks,
+			);
 			if (holidayEventValue) {
-				color = settingAtomReader.data.theme.holiday.events[holidayEventValue.event.kind];
+				color =
+					settingAtomReader.data.theme.holiday.events[
+						holidayEventValue.event.kind
+					];
 			}
 			// 曜日判定
 			if (!color) {
@@ -99,34 +134,39 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 						width={areaData.cell.width.value}
 						height={height}
 						fill={color}
-					/>
+					/>,
 				);
 			}
 		}
 
 		return (
 			<g>
-				<g>
-					{gridHolidays.map(a => a)}
-				</g>
-				<g>
-					{gridHorizontals.map(a => a)}
-				</g>
-				<g>
-					{gridVerticals.map(a => a)}
-				</g>
+				<g>{gridHolidays.map((a) => a)}</g>
+				<g>{gridHorizontals.map((a) => a)}</g>
+				<g>{gridVerticals.map((a) => a)}</g>
 			</g>
 		);
-	}, [areaData, calendarInfoAtomReader.data, props.configuration, settingAtomReader.data, totalTimelineMapAtomReader.data.size]);
+	}, [
+		areaData,
+		calendarInfoAtomReader.data,
+		props.configuration,
+		settingAtomReader.data,
+		totalTimelineMapAtomReader.data.size,
+	]);
 
 	function handleMouseMove(ev: MouseEvent) {
 		// 下でグダグダやってるけどこっち(か算出方法)が間違ってる感あるなぁ
-		if (ev.nativeEvent.offsetY < 0 || areaData.size.height <= ev.nativeEvent.offsetY) {
+		if (
+			ev.nativeEvent.offsetY < 0 ||
+			areaData.size.height <= ev.nativeEvent.offsetY
+		) {
 			hoverTimelineIdAtomWriter.write(undefined);
 			return;
 		}
 
-		const sequenceIndex = Math.floor(ev.nativeEvent.offsetY / areaData.cell.height.value);
+		const sequenceIndex = Math.floor(
+			ev.nativeEvent.offsetY / areaData.cell.height.value,
+		);
 		// ここのグダグダ感
 		if (sequenceTimelinesAtomReader.data.length <= sequenceIndex) {
 			hoverTimelineIdAtomWriter.write(undefined);
@@ -141,8 +181,17 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 		<div id="viewer" onMouseMove={handleMouseMove}>
 			<svg
 				id="canvas"
-				width={(areaData.size.width + (areaData.cell.width.value * props.configuration.design.dummy.width)) + "px"}
-				height={(areaData.size.height + (areaData.cell.height.value * (props.configuration.design.dummy.height - 1))) + "px"}
+				width={
+					areaData.size.width +
+					areaData.cell.width.value * props.configuration.design.dummy.width +
+					"px"
+				}
+				height={
+					areaData.size.height +
+					areaData.cell.height.value *
+						(props.configuration.design.dummy.height - 1) +
+					"px"
+				}
 			>
 				{gridNodes}
 				{sequenceTimelinesAtomReader.data.map((a, i) => {
@@ -174,7 +223,6 @@ const TimelineViewer: FC<Props> = (props: Props) => {
 					);
 				})}
 			</svg>
-
 		</div>
 	);
 };

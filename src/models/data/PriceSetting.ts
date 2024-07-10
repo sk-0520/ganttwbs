@@ -1,7 +1,7 @@
 interface PriceInputSetting {
-	readonly minimum: number,
-	readonly maximum: number | undefined,
-	readonly step: number,
+	readonly minimum: number;
+	readonly maximum: number | undefined;
+	readonly step: number;
 }
 
 export interface PriceSetting {

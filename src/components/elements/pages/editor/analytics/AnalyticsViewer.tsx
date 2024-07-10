@@ -1,9 +1,9 @@
-import { FC } from "react";
+import type { FC } from "react";
 
 import RangeViewer from "@/components/elements/pages/editor/analytics/RangeViewer";
 import WorkViewer from "@/components/elements/pages/editor/analytics/WorkViewer";
-import { EditorData } from "@/models/data/EditorData";
-import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import type { EditorData } from "@/models/data/EditorData";
+import type { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
 import { Exports } from "@/models/Exports";
 import { createLogger } from "@/models/Logging";
 
@@ -23,21 +23,20 @@ const AnalyticsViewer: FC<Props> = (props: Props) => {
 
 	logger.debug("calcData", calculatedData);
 
-	const totalSuccessWorkRange = calculatedData.workRange.totalSuccessWorkRange.success
+	const totalSuccessWorkRange = calculatedData.workRange.totalSuccessWorkRange
+		.success
 		? calculatedData.workRange.totalSuccessWorkRange.value
-		: undefined
-	;
+		: undefined;
 
 	return (
 		<div id="analytics">
 			<p className="develop-warning">
-				ここの処理はクソほど怪しい。<br />
+				ここの処理はクソほど怪しい。
+				<br />
 				実働だけでやってるからなーんかおかしいんちゃうかな。
 			</p>
 
-			<RangeViewer
-				totalSuccessWorkRange={totalSuccessWorkRange}
-			/>
+			<RangeViewer totalSuccessWorkRange={totalSuccessWorkRange} />
 			<WorkViewer
 				sequenceTimelines={calculatedData.sequenceTimelines}
 				successWorkRanges={calculatedData.workRange.successWorkRanges}

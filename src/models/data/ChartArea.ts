@@ -1,5 +1,5 @@
-import { AreaSize } from "@/models/data/Area";
-import { TimeSpanRange } from "@/models/data/Range";
+import type { AreaSize } from "@/models/data/Area";
+import type { TimeSpanRange } from "@/models/data/Range";
 
 /**
  * チャートの基準領域。

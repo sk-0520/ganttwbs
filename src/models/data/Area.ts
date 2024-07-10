@@ -1,4 +1,4 @@
-import { CellDesign } from "@/models/data/Design";
+import type { CellDesign } from "@/models/data/Design";
 
 /**
  * 描画全領域。

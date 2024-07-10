@@ -1,13 +1,11 @@
-
-import { FC } from "react";
+import type { FC } from "react";
 
 import DynamicLabel from "@/components/elements/DynamicLabel";
 import { IconImage, IconKind } from "@/components/elements/Icon";
-import { AnyTimeline } from "@/models/data/Setting";
+import type { AnyTimeline } from "@/models/data/Setting";
 import { Settings } from "@/models/Settings";
 
-
-const enum Relations {
+enum Relations {
 	Unknown = 0,
 	Empty = 0b0001,
 	Static = 0b0010,
@@ -36,21 +34,30 @@ const RelationCell: FC<Props> = (props: Props) => {
 
 	return (
 		<td className="timeline-cell timeline-relation">
-			<DynamicLabel
-				wrap={props.selectable}
-				htmlFor={props.htmlFor}
-			>
-				{
-					relations === (Relations.Static | Relations.Previous)
-						? <IconImage kind={IconKind.RelationMix} fill={null} title="前工程 + 開始固定" />
-						: relations === Relations.Static
-							? <IconImage kind={IconKind.RelationStatic} fill={null} title="開始固定" />
-							: relations === Relations.Previous
-								? <IconImage kind={IconKind.RelationPrevious} fill={null} title="前工程あり" />
-								: relations === Relations.Empty
-									? <IconImage kind={IconKind.TimelineGroup} fill={null} />
-									: "💩"
-				}
+			<DynamicLabel wrap={props.selectable} htmlFor={props.htmlFor}>
+				{relations === (Relations.Static | Relations.Previous) ? (
+					<IconImage
+						kind={IconKind.RelationMix}
+						fill={null}
+						title="前工程 + 開始固定"
+					/>
+				) : relations === Relations.Static ? (
+					<IconImage
+						kind={IconKind.RelationStatic}
+						fill={null}
+						title="開始固定"
+					/>
+				) : relations === Relations.Previous ? (
+					<IconImage
+						kind={IconKind.RelationPrevious}
+						fill={null}
+						title="前工程あり"
+					/>
+				) : relations === Relations.Empty ? (
+					<IconImage kind={IconKind.TimelineGroup} fill={null} />
+				) : (
+					"💩"
+				)}
 			</DynamicLabel>
 		</td>
 	);

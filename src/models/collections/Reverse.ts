@@ -1,10 +1,7 @@
 import { IteratorBase } from "@/models/collections/Iterator";
 
 export class ReverseIterable<T> implements Iterable<T> {
-	public constructor(
-		private readonly iterable: Iterable<T>
-	) {
-	}
+	public constructor(private readonly iterable: Iterable<T>) {}
 
 	//#region Iterable
 
@@ -16,9 +13,7 @@ export class ReverseIterable<T> implements Iterable<T> {
 }
 
 class ReverseIterator<T> extends IteratorBase<T> {
-	public constructor(
-		private readonly iterator: Iterator<T>,
-	) {
+	public constructor(private readonly iterator: Iterator<T>) {
 		super();
 	}
 
@@ -44,7 +39,7 @@ class ReverseIterator<T> extends IteratorBase<T> {
 			}
 		}
 
-		if(this.currentIndex <= 0) {
+		if (this.currentIndex <= 0) {
 			return this.done();
 		}
 

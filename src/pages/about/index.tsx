@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import Link from "next/link";
 
 import Layout from "@/components/layout/Layout";
@@ -8,23 +8,23 @@ const AboutPage: NextPage = () => {
 	const locale = useLocale();
 
 	return (
-		<Layout
-			mode="page"
-			layoutId="about"
-			title={locale.pages.about.title}
-		>
+		<Layout mode="page" layoutId="about" title={locale.pages.about.title}>
 			<>
-				<p>
-					{locale.pages.about.description}
-				</p>
+				<p>{locale.pages.about.description}</p>
 				<ul className="just-like">
 					<li>
-						<a href={process.env.NEXT_PUBLIC_APP_REPOSITORY_URL} target="app-repository">
+						<a
+							href={process.env.NEXT_PUBLIC_APP_REPOSITORY_URL}
+							target="app-repository"
+						>
 							{locale.pages.about.repository}
 						</a>
 					</li>
 					<li>
-						<a href={process.env.NEXT_PUBLIC_APP_LICENSE_URL} target="app-license">
+						<a
+							href={process.env.NEXT_PUBLIC_APP_LICENSE_URL}
+							target="app-license"
+						>
 							{locale.pages.about.license}
 						</a>
 					</li>

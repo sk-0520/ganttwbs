@@ -1,11 +1,11 @@
 import { Editor } from "@monaco-editor/react";
-import { FC, useId, useState } from "react";
+import { type FC, useId, useState } from "react";
 
 import Dialog from "@/components/elements/Dialog";
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { CssHelper } from "@/models/CssHelper";
-import { GroupTimeline, TaskTimeline } from "@/models/data/Setting";
+import type { GroupTimeline, TaskTimeline } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
@@ -25,7 +25,6 @@ const TimelinesImportDialog: FC<Props> = (props: Props) => {
 		subject: useId(),
 		contents: useId(),
 	} as const;
-
 
 	function handlePreSubmit(): boolean {
 		const lines = convertLines(contents);
@@ -69,13 +68,12 @@ const TimelinesImportDialog: FC<Props> = (props: Props) => {
 		props.callbackClose(groupTimeline);
 	}
 
-
 	return (
 		<Dialog
 			title={locale.pages.editor.timeline.importDialog.title}
 			button="submit"
 			preSubmit={handlePreSubmit}
-			callbackClose={a => handleClose(a === "submit")}
+			callbackClose={(a) => handleClose(a === "submit")}
 		>
 			<dl className="inputs">
 				<dt>
@@ -87,7 +85,7 @@ const TimelinesImportDialog: FC<Props> = (props: Props) => {
 					<input
 						id={id.subject}
 						value={subject}
-						onChange={ev => setSubject(ev.target.value)}
+						onChange={(ev) => setSubject(ev.target.value)}
 					/>
 				</dd>
 
@@ -101,13 +99,15 @@ const TimelinesImportDialog: FC<Props> = (props: Props) => {
 						height={200}
 						width={400}
 						value={contents}
-						onChange={ev => setContents(ev ?? "")}
+						onChange={(ev) => setContents(ev ?? "")}
 						options={{
 							lineNumbers: "on",
 							minimap: {
-								enabled: false
+								enabled: false,
 							},
-							fontFamily: CssHelper.toFontFamily(locale.styles.editor.fontFamilies),
+							fontFamily: CssHelper.toFontFamily(
+								locale.styles.editor.fontFamilies,
+							),
 							quickSuggestions: false,
 						}}
 					/>
@@ -121,7 +121,6 @@ export default TimelinesImportDialog;
 
 function convertLines(contents: string) {
 	return Strings.splitLines(contents)
-		.map(a => Strings.trim(a))
-		.filter(a => a)
-		;
+		.map((a) => Strings.trim(a))
+		.filter((a) => a);
 }

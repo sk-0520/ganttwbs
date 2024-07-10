@@ -1,17 +1,17 @@
 import classNames from "classnames";
-import { FC, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
 import Overlay from "@/components/elements/Overlay";
 import TimelinesImportDialog from "@/components/elements/pages/editor/timeline/TimelinesImportDialog";
 import { useLocale } from "@/locales/locale";
 import { useHoverTimelineIdAtomWriter } from "@/models/atom/editor/HighlightAtoms";
-import { GroupTimeline, TimelineKind } from "@/models/data/Setting";
-import { MoveDirection } from "@/models/data/TimelineCallbacks";
+import type { GroupTimeline, TimelineKind } from "@/models/data/Setting";
+import type { MoveDirection } from "@/models/data/TimelineCallbacks";
 
 interface Props {
 	currentTimelineKind: TimelineKind;
-	disabled: boolean,
+	disabled: boolean;
 	callbackMoveItem: (direction: MoveDirection) => void;
 	callbackAddItem: (kindOrTimeline: TimelineKind | GroupTimeline) => void;
 	callbackDeleteItem: () => void;
@@ -25,7 +25,8 @@ const ControlsCell: FC<Props> = (props: Props) => {
 	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
 
 	const [visibleControls, setVisibleControls] = useState(false);
-	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] = useState(false);
+	const [visibleTimelinesImportDialog, setVisibleTimelinesImportDialog] =
+		useState(false);
 
 	useEffect(() => {
 		if (visibleControls) {
@@ -79,27 +80,19 @@ const ControlsCell: FC<Props> = (props: Props) => {
 	}
 
 	return (
-		<td className={
-			classNames(
-				"timeline-cell timeline-controls",
-				{
-					"prompt": visibleControls
-				}
-			)
-		}>
+		<td
+			className={classNames("timeline-cell timeline-controls", {
+				prompt: visibleControls,
+			})}
+		>
 			<button
 				className="cell"
 				disabled={props.disabled}
 				onClick={handleStartControls}
 			>
-				<IconImage
-					kind={IconKind.Option}
-				/>
+				<IconImage kind={IconKind.Option} />
 			</button>
-			<Overlay
-				isVisible={visibleControls}
-				callBackHidden={handleHideControls}
-			>
+			<Overlay isVisible={visibleControls} callBackHidden={handleHideControls}>
 				<div className="tools before">
 					<table className="panel grid">
 						<tbody>
@@ -110,33 +103,41 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleMoveItem("up")}
+										onClick={(_) => handleMoveItem("up")}
 									>
 										<IconLabel
 											kind={IconKind.MoveUp}
-											label={locale.pages.editor.timeline.timelines.controls.move.up}
+											label={
+												locale.pages.editor.timeline.timelines.controls.move.up
+											}
 										/>
 									</button>
 								</td>
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleMoveItem("down")}
+										onClick={(_) => handleMoveItem("down")}
 									>
 										<IconLabel
 											kind={IconKind.MoveDown}
-											label={locale.pages.editor.timeline.timelines.controls.move.down}
+											label={
+												locale.pages.editor.timeline.timelines.controls.move
+													.down
+											}
 										/>
 									</button>
 								</td>
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleMoveItem("parent")}
+										onClick={(_) => handleMoveItem("parent")}
 									>
 										<IconLabel
 											kind={IconKind.MovePrev}
-											label={locale.pages.editor.timeline.timelines.controls.move.parent}
+											label={
+												locale.pages.editor.timeline.timelines.controls.move
+													.parent
+											}
 										/>
 									</button>
 								</td>
@@ -145,9 +146,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								<th
 									className="col-header"
 									title={
-										props.currentTimelineKind === "group"
-											? "終端"
-											: "直近"
+										props.currentTimelineKind === "group" ? "終端" : "直近"
 									}
 								>
 									{locale.pages.editor.timeline.timelines.controls.add.title}
@@ -155,33 +154,41 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleAddItem("group")}
+										onClick={(_) => handleAddItem("group")}
 									>
 										<IconLabel
 											kind={IconKind.TimelineAddGroup}
-											label={locale.pages.editor.timeline.timelines.controls.add.group}
+											label={
+												locale.pages.editor.timeline.timelines.controls.add
+													.group
+											}
 										/>
 									</button>
 								</td>
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleAddItem("task")}
+										onClick={(_) => handleAddItem("task")}
 									>
 										<IconLabel
 											kind={IconKind.TimelineAddTask}
-											label={locale.pages.editor.timeline.timelines.controls.add.task}
+											label={
+												locale.pages.editor.timeline.timelines.controls.add.task
+											}
 										/>
 									</button>
 								</td>
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleShowTimelinesImportDialog()}
+										onClick={(_) => handleShowTimelinesImportDialog()}
 									>
 										<IconLabel
 											kind={IconKind.TimelineImport}
-											label={locale.pages.editor.timeline.timelines.controls.add.import}
+											label={
+												locale.pages.editor.timeline.timelines.controls.add
+													.import
+											}
 										/>
 									</button>
 								</td>
@@ -193,29 +200,35 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleShowDetail()}
+										onClick={(_) => handleShowDetail()}
 									>
 										<IconLabel
 											kind={IconKind.Edit}
-											label={locale.pages.editor.timeline.timelines.controls.others.setting}
+											label={
+												locale.pages.editor.timeline.timelines.controls.others
+													.setting
+											}
 										/>
 									</button>
 								</td>
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleShowTimeline()}
+										onClick={(_) => handleShowTimeline()}
 									>
 										<IconLabel
 											kind={IconKind.MoveTarget}
-											label={locale.pages.editor.timeline.timelines.controls.others.show}
+											label={
+												locale.pages.editor.timeline.timelines.controls.others
+													.show
+											}
 										/>
 									</button>
 								</td>
 								<td className="col-cell">
 									<button
 										className="simple"
-										onClick={_ => handleDeleteItem()}
+										onClick={(_) => handleDeleteItem()}
 									>
 										<IconLabel
 											kind={IconKind.Remove}
@@ -229,9 +242,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 				</div>
 			</Overlay>
 			{visibleTimelinesImportDialog && (
-				<TimelinesImportDialog
-					callbackClose={handleCloseTimelinesImport}
-				/>
+				<TimelinesImportDialog callbackClose={handleCloseTimelinesImport} />
 			)}
 		</td>
 	);

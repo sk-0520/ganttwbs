@@ -91,7 +91,9 @@ describe("TimeSpan", () => {
 
 	test("equals", () => {
 		expect(TimeSpan.fromDays(0).equals(TimeSpan.fromDays(0))).toBeTruthy();
-		expect(TimeSpan.fromMilliseconds(0).equals(TimeSpan.fromMilliseconds(1))).toBeFalsy();
+		expect(
+			TimeSpan.fromMilliseconds(0).equals(TimeSpan.fromMilliseconds(1)),
+		).toBeFalsy();
 	});
 
 	test.each([
@@ -124,7 +126,6 @@ describe("TimeSpan", () => {
 		const s2 = dup.format("readable");
 		expect(s1).toBe(s2);
 	});
-
 
 	test.each([
 		["PT0S"],

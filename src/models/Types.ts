@@ -1,8 +1,7 @@
 /** クラス的な。 */
 export type Constructor<T extends object> = {
-	prototype: T,
+	prototype: T;
 };
-
 
 declare const _Strong: unique symbol;
 /**
@@ -13,7 +12,6 @@ declare const _Strong: unique symbol;
 export type Strong<T, U = string> = T & { readonly [_Strong]: U };
 
 export abstract class Types {
-
 	/**
 	 * 型が `undefined` か。
 	 * @param arg
@@ -47,8 +45,13 @@ export abstract class Types {
 		return typeof arg === "number";
 	}
 
-	public static hasProperty(arg: unknown, key: PropertyKey): arg is Record<PropertyKey, unknown> {
-		return arg !== undefined && arg !== null && typeof arg === "object" && key in arg;
+	public static hasProperty(
+		arg: unknown,
+		key: PropertyKey,
+	): arg is Record<PropertyKey, unknown> {
+		return (
+			arg !== undefined && arg !== null && typeof arg === "object" && key in arg
+		);
 	}
 
 	/**
@@ -57,10 +60,12 @@ export abstract class Types {
 	 * @param type
 	 * @returns
 	 */
-	public static instanceOf<T extends object>(arg: unknown, type: Constructor<T>): arg is T {
+	public static instanceOf<T extends object>(
+		arg: unknown,
+		type: Constructor<T>,
+	): arg is T {
 		return arg instanceof type.prototype.constructor;
 	}
-
 
 	/**
 	 * 指定したオブジェクトが指定したクラス(コンストラクタ)と同じか
@@ -68,7 +73,10 @@ export abstract class Types {
 	 * @param type
 	 * @returns
 	 */
-	public static isEqual<T extends object>(arg: unknown, type: Constructor<T>): arg is T {
+	public static isEqual<T extends object>(
+		arg: unknown,
+		type: Constructor<T>,
+	): arg is T {
 		if (!this.hasProperty(arg, "constructor")) {
 			return false;
 		}
@@ -92,8 +100,10 @@ export abstract class Types {
 				break;
 			}
 
-			const currentPropertyNames = Object.getOwnPropertyNames(prototype) as Array<keyof T>;
-			const targets = currentPropertyNames.filter(i => {
+			const currentPropertyNames = Object.getOwnPropertyNames(
+				prototype,
+			) as Array<keyof T>;
+			const targets = currentPropertyNames.filter((i) => {
 				const descriptor = Object.getOwnPropertyDescriptor(prototype, i);
 				return i !== "__proto__" && descriptor?.get instanceof Function;
 			});

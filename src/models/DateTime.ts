@@ -1,15 +1,23 @@
 import { cdate } from "cdate";
 
-import { ParseResult, ResultFactory } from "@/models/data/Result";
+import { type ParseResult, ResultFactory } from "@/models/data/Result";
 import { Require } from "@/models/Require";
 import { Strings } from "@/models/Strings";
 import { TimeSpan } from "@/models/TimeSpan";
-import { TimeZone } from "@/models/TimeZone";
-import { Strong } from "@/models/Types";
+import type { TimeZone } from "@/models/TimeZone";
+import type { Strong } from "@/models/Types";
 
 type DateTimeParseResult = ParseResult<DateTime, Error>;
 
-export type Unit = "millisecond" | "second" | "minute" | "hour" | "day" | "week" | "month" | "year";
+export type Unit =
+	| "millisecond"
+	| "second"
+	| "minute"
+	| "hour"
+	| "day"
+	| "week"
+	| "month"
+	| "year";
 export type AttributiveUnit = Exclude<Unit, "week" | "millisecond">;
 export type MonthNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 /** 曜日(0: 日曜日, 1: 月曜日, 6: 土曜日) */
@@ -42,12 +50,10 @@ function factory(timeZone: TimeZone): cdate.cdate {
  * 気持ちタイムゾーンもできてると思ってるけど確証はない。
  */
 export class DateTime {
-
 	private constructor(
 		private readonly date: cdate.CDate,
-		public readonly timeZone: TimeZone
-	) {
-	}
+		public readonly timeZone: TimeZone,
+	) {}
 
 	//#region property
 
@@ -107,21 +113,17 @@ export class DateTime {
 	 * 時間部分が `00:00:00.0` か。
 	 */
 	public get timeIsEmpty(): boolean {
-		return !this.hour
-			&&
-			!this.minute
-			&&
-			!this.second
-			&&
-			!this.millisecond
-			;
+		return !this.hour && !this.minute && !this.second && !this.millisecond;
 	}
 
 	//#endregion
 
 	//#region function
 
-	private static parseCore(input: string | Date | DateTimeTicks | undefined, timeZone: TimeZone): DateTimeParseResult {
+	private static parseCore(
+		input: string | Date | DateTimeTicks | undefined,
+		timeZone: TimeZone,
+	): DateTimeParseResult {
 		const create = factory(timeZone);
 
 		const date = create(input);
@@ -153,7 +155,7 @@ export class DateTime {
 		hour?: number,
 		minute?: number,
 		second?: number,
-		millisecond?: number
+		millisecond?: number,
 	): DateTime {
 		// 指定された各数値で new Date(y,m,d...) 的な事したかったけど分からんかった,
 		// 自分でタイムゾーン計算したらライブラリの意味ない、、、とはいえこの手法もどうなんっていう
@@ -193,7 +195,9 @@ export class DateTime {
 	 * @returns
 	 */
 	public static tryParse(input: string, timeZone: TimeZone): DateTime | null {
-		return ResultFactory.parseErrorIsReturnNull(input, s => this.parseCore(s, timeZone));
+		return ResultFactory.parseErrorIsReturnNull(input, (s) =>
+			this.parseCore(s, timeZone),
+		);
 	}
 
 	/**
@@ -203,7 +207,9 @@ export class DateTime {
 	 * @returns
 	 */
 	public static parse(input: string, timeZone: TimeZone): DateTime {
-		return ResultFactory.parseErrorIsThrow(input, s => this.parseCore(s, timeZone));
+		return ResultFactory.parseErrorIsThrow(input, (s) =>
+			this.parseCore(s, timeZone),
+		);
 	}
 
 	/**
@@ -212,8 +218,13 @@ export class DateTime {
 	 * @param timeZone
 	 * @returns
 	 */
-	public static convert(input: Date | DateTimeTicks, timeZone: TimeZone): DateTime {
-		return ResultFactory.parseErrorIsThrow("", _ => this.parseCore(input, timeZone));
+	public static convert(
+		input: Date | DateTimeTicks,
+		timeZone: TimeZone,
+	): DateTime {
+		return ResultFactory.parseErrorIsThrow("", (_) =>
+			this.parseCore(input, timeZone),
+		);
 	}
 
 	/**
@@ -293,15 +304,17 @@ export class DateTime {
 	 */
 	public toDate(keepLocalTime?: boolean): Date {
 		if (keepLocalTime) {
-			return new Date(Date.UTC(
-				this.year,
-				this.month - 1,
-				this.day,
-				this.hour,
-				this.minute,
-				this.second,
-				this.millisecond
-			));
+			return new Date(
+				Date.UTC(
+					this.year,
+					this.month - 1,
+					this.day,
+					this.hour,
+					this.minute,
+					this.second,
+					this.millisecond,
+				),
+			);
 		}
 
 		return this.date.toDate();
@@ -343,7 +356,7 @@ export class DateTime {
 	 * @returns
 	 */
 	public static isLeapYear(year: number): boolean {
-		return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
+		return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 	}
 
 	/**
@@ -353,12 +366,31 @@ export class DateTime {
 	 */
 	public truncate(keepUnit: AttributiveUnit): DateTime {
 		const date = Require.switch(keepUnit, {
-			"year": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0).set("hour", 0).set("date", 1).set("month", 0),
-			"month": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0).set("hour", 0).set("date", 1),
-			"day": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0).set("hour", 0),
-			"hour": _ => this.date.set("millisecond", 0).set("second", 0).set("minute", 0),
-			"minute": _ => this.date.set("millisecond", 0).set("second", 0),
-			"second": _ => this.date.set("millisecond", 0),
+			year: (_) =>
+				this.date
+					.set("millisecond", 0)
+					.set("second", 0)
+					.set("minute", 0)
+					.set("hour", 0)
+					.set("date", 1)
+					.set("month", 0),
+			month: (_) =>
+				this.date
+					.set("millisecond", 0)
+					.set("second", 0)
+					.set("minute", 0)
+					.set("hour", 0)
+					.set("date", 1),
+			day: (_) =>
+				this.date
+					.set("millisecond", 0)
+					.set("second", 0)
+					.set("minute", 0)
+					.set("hour", 0),
+			hour: (_) =>
+				this.date.set("millisecond", 0).set("second", 0).set("minute", 0),
+			minute: (_) => this.date.set("millisecond", 0).set("second", 0),
+			second: (_) => this.date.set("millisecond", 0),
 		});
 
 		return new DateTime(date, this.timeZone);
@@ -379,12 +411,12 @@ export class DateTime {
 	 */
 	public startOf(unit: AttributiveUnit): DateTime {
 		const date = Require.switch(unit, {
-			"year": _ => this.date.startOf("year"),
-			"month": _ => this.date.startOf("month"),
-			"day": _ => this.date.startOf("date"),
-			"hour": _ => this.date.startOf("hour"),
-			"minute": _ => this.date.startOf("minute"),
-			"second": _ => this.date.startOf("second"),
+			year: (_) => this.date.startOf("year"),
+			month: (_) => this.date.startOf("month"),
+			day: (_) => this.date.startOf("date"),
+			hour: (_) => this.date.startOf("hour"),
+			minute: (_) => this.date.startOf("minute"),
+			second: (_) => this.date.startOf("second"),
 		});
 
 		return new DateTime(date, this.timeZone);
@@ -397,12 +429,12 @@ export class DateTime {
 	 */
 	public endOf(unit: AttributiveUnit): DateTime {
 		const date = Require.switch(unit, {
-			"year": _ => this.date.endOf("year"),
-			"month": _ => this.date.endOf("month"),
-			"day": _ => this.date.endOf("date"),
-			"hour": _ => this.date.endOf("hour"),
-			"minute": _ => this.date.endOf("minute"),
-			"second": _ => this.date.endOf("second"),
+			year: (_) => this.date.endOf("year"),
+			month: (_) => this.date.endOf("month"),
+			day: (_) => this.date.endOf("date"),
+			hour: (_) => this.date.endOf("hour"),
+			minute: (_) => this.date.endOf("minute"),
+			second: (_) => this.date.endOf("second"),
 		});
 
 		return new DateTime(date, this.timeZone);
@@ -415,7 +447,6 @@ export class DateTime {
 	public endOfTime(): DateTime {
 		return this.endOf("day");
 	}
-
 
 	/**
 	 * 自身の所属する月の最終日を取得。
@@ -438,7 +469,7 @@ export class DateTime {
 			0,
 			0,
 			0,
-			0
+			0,
 		).add(-1, "millisecond");
 	}
 
@@ -479,7 +510,7 @@ export class DateTime {
 			["yyyy", Strings.padStart0(this.year, 4)],
 			["yyyyy", Strings.padStart0(this.year, 5)],
 
-			["M", (this.month).toString()],
+			["M", this.month.toString()],
 			["MM", Strings.padStart0(this.month, 2)],
 
 			["d", this.day.toString()],
@@ -500,12 +531,11 @@ export class DateTime {
 
 		const pattern = [...map.keys()]
 			.sort((a, b) => b.length - a.length)
-			.join("|")
-			;
+			.join("|");
 
 		return format.replace(
 			new RegExp("(" + pattern + ")", "g"),
-			m => map.get(m) ?? m
+			(m) => map.get(m) ?? m,
 		);
 	}
 
@@ -531,30 +561,42 @@ export class DateTime {
 		return this.format("U");
 	}
 
-	private static getMinMax(func: (...values: ReadonlyArray<number>) => number, a: DateTime, b: DateTime, ...dates: ReadonlyArray<DateTime>): DateTime {
+	private static getMinMax(
+		func: (...values: ReadonlyArray<number>) => number,
+		a: DateTime,
+		b: DateTime,
+		...dates: ReadonlyArray<DateTime>
+	): DateTime {
 		let rawTicks: number;
 
 		if (dates.length) {
-			rawTicks = func(...[
-				Number(a.ticks),
-				Number(b.ticks),
-				...dates.map(i => Number(i.ticks))
-			]);
-		} else {
 			rawTicks = func(
-				Number(a.ticks),
-				Number(b.ticks),
+				...[
+					Number(a.ticks),
+					Number(b.ticks),
+					...dates.map((i) => Number(i.ticks)),
+				],
 			);
+		} else {
+			rawTicks = func(Number(a.ticks), Number(b.ticks));
 		}
 
 		return this.convert(toTicks(rawTicks), a.timeZone);
 	}
 
-	public static getMinimum(a: DateTime, b: DateTime, ...dates: ReadonlyArray<DateTime>): DateTime {
+	public static getMinimum(
+		a: DateTime,
+		b: DateTime,
+		...dates: ReadonlyArray<DateTime>
+	): DateTime {
 		return this.getMinMax(Math.min, a, b, ...dates);
 	}
 
-	public static getMaximum(a: DateTime, b: DateTime, ...dates: ReadonlyArray<DateTime>): DateTime {
+	public static getMaximum(
+		a: DateTime,
+		b: DateTime,
+		...dates: ReadonlyArray<DateTime>
+	): DateTime {
 		return this.getMinMax(Math.max, a, b, ...dates);
 	}
 

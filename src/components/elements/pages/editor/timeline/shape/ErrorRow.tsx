@@ -1,7 +1,7 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-import { ChartArea } from "@/models/data/ChartArea";
-import { ColorString } from "@/models/data/Setting";
+import type { ChartArea } from "@/models/data/ChartArea";
+import type { ColorString } from "@/models/data/Setting";
 
 interface Props {
 	area: ChartArea;

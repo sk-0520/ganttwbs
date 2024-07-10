@@ -1,11 +1,11 @@
-import { FC, useContext, useState } from "react";
+import { type FC, useContext, useState } from "react";
 
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
 import { useLocale } from "@/locales/locale";
-import { Color } from "@/models/Color";
+import type { Color } from "@/models/Color";
 import { SettingContext } from "@/models/context/SettingContext";
-import { WeekDay } from "@/models/data/Setting";
+import type { WeekDay } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Settings } from "@/models/Settings";
 
@@ -15,42 +15,51 @@ const ThemeCalendarSettingEditor: FC = () => {
 
 	const weekDays = Settings.getWeekDays();
 
-	const [holidayRegulars, setHolidayRegulars] = useState(settingContext.theme.holiday.regulars);
-	const [holidayEvents, setHolidayEvents] = useState(settingContext.theme.holiday.events);
+	const [holidayRegulars, setHolidayRegulars] = useState(
+		settingContext.theme.holiday.regulars,
+	);
+	const [holidayEvents, setHolidayEvents] = useState(
+		settingContext.theme.holiday.events,
+	);
 
 	function handleSetRegularColor(week: WeekDay, color: Color) {
 		holidayRegulars[week] = color;
-		setHolidayRegulars(settingContext.theme.holiday.regulars = { ...holidayRegulars });
+		setHolidayRegulars(
+			(settingContext.theme.holiday.regulars = { ...holidayRegulars }),
+		);
 	}
 
-	function handleSetHolidayEventColor(event: "normal" | "special", color: Color) {
+	function handleSetHolidayEventColor(
+		event: "normal" | "special",
+		color: Color,
+	) {
 		holidayEvents[event] = color;
-		setHolidayEvents(settingContext.theme.holiday.events = { ...holidayEvents });
+		setHolidayEvents(
+			(settingContext.theme.holiday.events = { ...holidayEvents }),
+		);
 	}
 
 	function handleResetRegular() {
 		const weekDays = Settings.getWeekDays()
-			.map(a => ({ [a]: DefaultSettings.BusinessWeekdayColor }))
-			.reduce((r, a) => ({ ...r, ...a }))
-			;
+			.map((a) => ({ [a]: DefaultSettings.BusinessWeekdayColor }))
+			.reduce((r, a) => ({ ...r, ...a }));
 		const defaultRegulars = Object.entries(DefaultSettings.getRegularHolidays())
 			.map(([k, v]) => ({ [k]: v }))
-			.reduce((r, a) => ({ ...r, ...a }))
-			;
+			.reduce((r, a) => ({ ...r, ...a }));
 
 		const defaultWeeks = {
 			...weekDays,
 			...defaultRegulars,
 		} as { [key in WeekDay]: Color };
 
-		setHolidayRegulars(
-			settingContext.theme.holiday.regulars = defaultWeeks
-		);
+		setHolidayRegulars((settingContext.theme.holiday.regulars = defaultWeeks));
 	}
 
 	function handleResetHoliday() {
 		setHolidayEvents(
-			settingContext.theme.holiday.events = { ...DefaultSettings.getEventHolidayColors() },
+			(settingContext.theme.holiday.events = {
+				...DefaultSettings.getEventHolidayColors(),
+			}),
 		);
 	}
 
@@ -67,7 +76,7 @@ const ThemeCalendarSettingEditor: FC = () => {
 								<td className="theme">
 									<PlainColorPicker
 										color={holidayRegulars[week]}
-										callbackChanged={c => handleSetRegularColor(week, c)}
+										callbackChanged={(c) => handleSetRegularColor(week, c)}
 									/>
 								</td>
 							</>
@@ -76,18 +85,16 @@ const ThemeCalendarSettingEditor: FC = () => {
 
 					return (
 						<tr key={a}>
-							{
-								i ? (
-									renderWeek(a)
-								) : (
-									<>
-										<td className="header" rowSpan={weekDays.length + 1}>
-											{locale.common.calendar.week.name}
-										</td>
-										{renderWeek(a)}
-									</>
-								)
-							}
+							{i ? (
+								renderWeek(a)
+							) : (
+								<>
+									<td className="header" rowSpan={weekDays.length + 1}>
+										{locale.common.calendar.week.name}
+									</td>
+									{renderWeek(a)}
+								</>
+							)}
 						</tr>
 					);
 				})}
@@ -105,24 +112,20 @@ const ThemeCalendarSettingEditor: FC = () => {
 					<td className="header" rowSpan={2}>
 						{locale.common.calendar.holiday.name}
 					</td>
-					<td className="subject">
-						{locale.common.calendar.holiday.normal}
-					</td>
+					<td className="subject">{locale.common.calendar.holiday.normal}</td>
 					<td className="theme">
 						<PlainColorPicker
 							color={holidayEvents.normal}
-							callbackChanged={c => handleSetHolidayEventColor("normal", c)}
+							callbackChanged={(c) => handleSetHolidayEventColor("normal", c)}
 						/>
 					</td>
 				</tr>
 				<tr>
-					<td className="subject">
-						{locale.common.calendar.holiday.special}
-					</td>
+					<td className="subject">{locale.common.calendar.holiday.special}</td>
 					<td className="theme">
 						<PlainColorPicker
 							color={holidayEvents.special}
-							callbackChanged={c => handleSetHolidayEventColor("special", c)}
+							callbackChanged={(c) => handleSetHolidayEventColor("special", c)}
 						/>
 					</td>
 				</tr>

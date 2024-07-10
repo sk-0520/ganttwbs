@@ -1,4 +1,4 @@
-import { Atom } from "jotai";
+import type { Atom } from "jotai";
 
 export interface AtomReader<T> {
 	data: Readonly<T>;
@@ -19,5 +19,4 @@ export interface AtomWriter<T> {
  */
 export type AtomType<TAtom extends Atom<unknown>> = TAtom extends Atom<infer T>
 	? T
-	: unknown
-	;
+	: unknown;

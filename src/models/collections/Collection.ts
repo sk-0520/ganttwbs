@@ -1,6 +1,6 @@
 import { AppendIterable } from "@/models/collections/Append";
 import { EmptyIterable } from "@/models/collections/Empty";
-import { Predicate } from "@/models/collections/Iterator";
+import type { Predicate } from "@/models/collections/Iterator";
 import { RangeIterable } from "@/models/collections/Range";
 import { RepeatIterable } from "@/models/collections/Repeat";
 import { ReverseIterable } from "@/models/collections/Reverse";
@@ -9,15 +9,11 @@ import { SelectManyIterable } from "@/models/collections/SelectMany";
 import { SkipIterable, SkipWhileIterable } from "@/models/collections/Skip";
 import { TakeIterable, TakeWhileIterable } from "@/models/collections/Take";
 import { WhereIterable } from "@/models/collections/Where";
-import { Result, ResultFactory } from "@/models/data/Result";
+import { type Result, ResultFactory } from "@/models/data/Result";
 import { Types } from "@/models/Types";
 
 export class Collection<T> implements Iterable<T> {
-
-	private constructor(
-		private readonly iterable: Iterable<T>
-	) {
-	}
+	private constructor(private readonly iterable: Iterable<T>) {}
 
 	//#region property
 	//#endregion
@@ -29,7 +25,9 @@ export class Collection<T> implements Iterable<T> {
 	 * @param iterable 反復可能オブジェクト
 	 * @returns
 	 */
-	public static from<TSource>(iterable: Iterable<TSource>): Collection<TSource> {
+	public static from<TSource>(
+		iterable: Iterable<TSource>,
+	): Collection<TSource> {
 		return new Collection(iterable);
 	}
 
@@ -79,7 +77,10 @@ export class Collection<T> implements Iterable<T> {
 	 * @param elementSelector
 	 * @returns
 	 */
-	public toDictionary<TKey, TElement>(keySelector: (value: T) => TKey, elementSelector: (value: T) => TElement): Map<TKey, TElement> {
+	public toDictionary<TKey, TElement>(
+		keySelector: (value: T) => TKey,
+		elementSelector: (value: T) => TElement,
+	): Map<TKey, TElement> {
 		const map = new Map<TKey, TElement>();
 
 		for (const value of this.iterable) {
@@ -107,7 +108,6 @@ export class Collection<T> implements Iterable<T> {
 		return new Set(this.iterable);
 	}
 
-
 	//#endregion
 
 	//#region 遅延
@@ -126,7 +126,9 @@ export class Collection<T> implements Iterable<T> {
 	 * @param selector
 	 * @returns
 	 */
-	public select<TResult>(selector: (value: T, index: number) => TResult): Collection<TResult> {
+	public select<TResult>(
+		selector: (value: T, index: number) => TResult,
+	): Collection<TResult> {
 		return new Collection(new SelectIterable(this.iterable, selector));
 	}
 
@@ -136,8 +138,15 @@ export class Collection<T> implements Iterable<T> {
 	 * @param selector
 	 * @returns
 	 */
-	public selectMany<TResult>(selector: (value: T, index: number) => TResult): Collection<TResult> {
-		return new Collection(new SelectManyIterable(this.iterable as unknown as Iterable<Iterable<T>>, selector));
+	public selectMany<TResult>(
+		selector: (value: T, index: number) => TResult,
+	): Collection<TResult> {
+		return new Collection(
+			new SelectManyIterable(
+				this.iterable as unknown as Iterable<Iterable<T>>,
+				selector,
+			),
+		);
 	}
 
 	/**
@@ -412,7 +421,6 @@ export class Collection<T> implements Iterable<T> {
 				}
 				isFound = true;
 				current = value;
-
 			}
 		}
 
@@ -442,7 +450,6 @@ export class Collection<T> implements Iterable<T> {
 	}
 
 	//#endregion
-
 
 	//#region Iterable
 

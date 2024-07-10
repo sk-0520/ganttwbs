@@ -1,12 +1,22 @@
-import { FC, useRef } from "react";
+import { type FC, useRef } from "react";
 
 import { useLocale } from "@/locales/locale";
-import { useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter } from "@/models/atom/editor/HighlightAtoms";
-import { useCalendarInfoAtomReader, useDayInfosAtomReader, useResourceInfoAtomReader, useSettingAtomReader, useTimelineIndexMapAtomReader, useTotalTimelineMapAtomReader } from "@/models/atom/editor/TimelineAtoms";
-import { DayInfo } from "@/models/data/DayInfo";
-import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
-import { TimelineId } from "@/models/data/Setting";
-import { DateTime } from "@/models/DateTime";
+import {
+	useHighlightDaysAtomWriter,
+	useHighlightTimelineIdsAtomWriter,
+} from "@/models/atom/editor/HighlightAtoms";
+import {
+	useCalendarInfoAtomReader,
+	useDayInfosAtomReader,
+	useResourceInfoAtomReader,
+	useSettingAtomReader,
+	useTimelineIndexMapAtomReader,
+	useTotalTimelineMapAtomReader,
+} from "@/models/atom/editor/TimelineAtoms";
+import type { DayInfo } from "@/models/data/DayInfo";
+import type { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
+import type { TimelineId } from "@/models/data/Setting";
+import type { DateTime } from "@/models/DateTime";
 import { Days } from "@/models/Days";
 import { Editors } from "@/models/Editors";
 import { Require } from "@/models/Require";
@@ -37,8 +47,15 @@ const InformationDay: FC<Props> = (props: Props) => {
 	// 	}
 	// }, [refDetails]);
 
-	const holidayEventValue = calendarInfoAtomReader.data.holidayEventMap.get(props.date.ticks);
-	const classNames = Days.getDayClassNames(props.date, settingAtomReader.data.calendar.holiday.regulars, holidayEventValue, settingAtomReader.data.theme);
+	const holidayEventValue = calendarInfoAtomReader.data.holidayEventMap.get(
+		props.date.ticks,
+	);
+	const classNames = Days.getDayClassNames(
+		props.date,
+		settingAtomReader.data.calendar.holiday.regulars,
+		holidayEventValue,
+		settingAtomReader.data.theme,
+	);
 	const className = Days.getCellClassName(classNames);
 
 	const mergedDayInfo: DayInfo = {
@@ -60,29 +77,34 @@ const InformationDay: FC<Props> = (props: Props) => {
 
 	// ソート済み重複メンバー取得
 	const sortedMembers = [...mergedDayInfo.duplicateMembers]
-		.map(a => Require.get(resourceInfoAtomReader.data.memberMap, a))
+		.map((a) => Require.get(resourceInfoAtomReader.data.memberMap, a))
 		.sort((a, b) => {
-			const groupIndex = resourceInfoAtomReader.data.groupItems.indexOf(a.group);
-			const groupCompare = groupIndex - resourceInfoAtomReader.data.groupItems.indexOf(b.group);
+			const groupIndex = resourceInfoAtomReader.data.groupItems.indexOf(
+				a.group,
+			);
+			const groupCompare =
+				groupIndex - resourceInfoAtomReader.data.groupItems.indexOf(b.group);
 			if (!groupCompare) {
 				return groupCompare;
 			}
 			const group = resourceInfoAtomReader.data.groupItems[groupIndex];
-			const members = Require.get(resourceInfoAtomReader.data.memberItems, group);
+			const members = Require.get(
+				resourceInfoAtomReader.data.memberItems,
+				group,
+			);
 			return members.indexOf(a.member) - members.indexOf(b.member);
-		})
-		;
+		});
 
 	// ソート済みタイムライン取得
-	const sortedTimelines = timelineIndexMapAtomReader.data.size ? [...mergedDayInfo.targetTimelines]
-		.map(a => Require.get(totalTimelineMapAtomReader.data, a))
-		.sort((a, b) => {
-			const aIndex = Require.get(timelineIndexMapAtomReader.data, a.id);
-			const bIndex = Require.get(timelineIndexMapAtomReader.data, b.id);
-			return aIndex - bIndex;
-		})
-		: []
-		;
+	const sortedTimelines = timelineIndexMapAtomReader.data.size
+		? [...mergedDayInfo.targetTimelines]
+				.map((a) => Require.get(totalTimelineMapAtomReader.data, a))
+				.sort((a, b) => {
+					const aIndex = Require.get(timelineIndexMapAtomReader.data, a.id);
+					const bIndex = Require.get(timelineIndexMapAtomReader.data, b.id);
+					return aIndex - bIndex;
+				})
+		: [];
 
 	function handleClickTimeline(timelineId: TimelineId): void {
 		highlightTimelineIdsAtomWriter.write([timelineId]);
@@ -103,9 +125,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 			className={className}
 		>
 			{0 < mergedDayInfo.duplicateMembers.size ? (
-				<details
-					ref={refDetails}
-				>
+				<details ref={refDetails}>
 					<summary>
 						{/* U+EF0Fが取り除かれて白黒になる対応(vscodeかjsxかは知らん) */}
 						{/*"⚠️"*/}
@@ -123,18 +143,15 @@ const InformationDay: FC<Props> = (props: Props) => {
 							</dt>
 							<dd>
 								<ul>
-									{sortedMembers.map(a => {
+									{sortedMembers.map((a) => {
 										return (
-											<li
-												key={a.member.id}
-												title={a.member.id}
-											>
+											<li key={a.member.id} title={a.member.id}>
 												{Strings.replaceMap(
 													locale.pages.editor.timeline.information.memberFormat,
 													{
-														"MEMBER": a.member.name,
-														"GROUP": a.group.name,
-													}
+														MEMBER: a.member.name,
+														GROUP: a.group.name,
+													},
 												)}
 											</li>
 										);
@@ -147,23 +164,20 @@ const InformationDay: FC<Props> = (props: Props) => {
 							</dt>
 							<dd>
 								<ul>
-									{sortedTimelines.map(i => {
-										const timelineIndex = props.timelineCallbacks.calculateReadableTimelineId(i);
-										const timelineClassName = Timelines.getReadableTimelineIdClassName(timelineIndex);
+									{sortedTimelines.map((i) => {
+										const timelineIndex =
+											props.timelineCallbacks.calculateReadableTimelineId(i);
+										const timelineClassName =
+											Timelines.getReadableTimelineIdClassName(timelineIndex);
 
 										return (
-											<li
-												key={i.id}
-												title={i.id}
-											>
+											<li key={i.id} title={i.id}>
 												<a
 													className="event"
 													href="#"
-													onClick={ev => handleClickTimeline(i.id)}
+													onClick={(ev) => handleClickTimeline(i.id)}
 												>
-													<span
-														className={timelineClassName}
-													>
+													<span className={timelineClassName}>
 														{Timelines.toReadableTimelineId(timelineIndex)}
 														<span className="separator">-</span>
 														{i.subject}
@@ -176,11 +190,7 @@ const InformationDay: FC<Props> = (props: Props) => {
 							</dd>
 						</dl>
 						<div className="close">
-							<button
-								className="button"
-								type="button"
-								onClick={handleClose}
-							>
+							<button className="button" type="button" onClick={handleClose}>
 								{locale.common.dialog.close}
 							</button>
 						</div>

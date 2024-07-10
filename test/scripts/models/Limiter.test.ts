@@ -1,10 +1,7 @@
 import { Limiter } from "@/models/Limiter";
 
 describe("Limiter", () => {
-	test.each([
-		[0],
-		[-1],
-	])("invalid", (init: number) => {
+	test.each([[0], [-1]])("invalid", (init: number) => {
 		expect(() => new Limiter(init)).toThrowError();
 	});
 

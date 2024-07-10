@@ -10,7 +10,6 @@ type InputType = string | undefined;
  * * 失敗時は死ぬ
  */
 export abstract class Cast {
-
 	/**
 	 * 文字列への変換。
 	 * @param input

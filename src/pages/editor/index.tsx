@@ -1,5 +1,5 @@
 import { Provider as JotaiProvider } from "jotai";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
@@ -11,16 +11,16 @@ import TimelineEditor from "@/components/elements/pages/editor/timeline/Timeline
 import Layout from "@/components/layout/Layout";
 import { useLocale } from "@/locales/locale";
 import { Cast } from "@/models/Cast";
-import { Configuration } from "@/models/data/Configuration";
-import { EditorData } from "@/models/data/EditorData";
+import type { Configuration } from "@/models/data/Configuration";
+import type { EditorData } from "@/models/data/EditorData";
 import { Storages } from "@/models/Storages";
 import { TimeSpan } from "@/models/TimeSpan";
 
-const enum TabIndex {
-	File,
-	Editor,
-	Analytics,
-	Setting,
+enum TabIndex {
+	File = 0,
+	Editor = 1,
+	Analytics = 2,
+	Setting = 3,
 }
 
 const EditorPage: NextPage = () => {
@@ -29,7 +29,9 @@ const EditorPage: NextPage = () => {
 
 	const [configuration] = useState(createConfiguration());
 	const [editorData, setEditorData] = useState<EditorData | null>(null);
-	const [selectedTabIndex, setSelectedTabIndex] = useState(configuration.tabIndex.application);
+	const [selectedTabIndex, setSelectedTabIndex] = useState(
+		configuration.tabIndex.application,
+	);
 
 	function handleOnSelect(index: number, lastIndex: number, event: Event) {
 		setSelectedTabIndex(index);
@@ -49,7 +51,10 @@ const EditorPage: NextPage = () => {
 			<Layout
 				mode="application"
 				layoutId="editor"
-				title={(editorData ? editorData.fileName + " " : "") + locale.pages.editor.title}
+				title={
+					(editorData ? editorData.fileName + " " : "") +
+					locale.pages.editor.title
+				}
 			>
 				{!editorData && <p>{locale.pages.editor.loading}</p>}
 				{editorData && (
@@ -59,32 +64,38 @@ const EditorPage: NextPage = () => {
 						onSelect={handleOnSelect}
 					>
 						<TabList>
-							<Tab>
-								{locale.pages.editor.tabs.file}
-							</Tab>
-							<Tab>
-								{locale.pages.editor.tabs.timeline}
-							</Tab>
-							<Tab>
-								{locale.pages.editor.tabs.analytics}
-							</Tab>
-							<Tab>
-								{locale.pages.editor.tabs.setting}
-							</Tab>
+							<Tab>{locale.pages.editor.tabs.file}</Tab>
+							<Tab>{locale.pages.editor.tabs.timeline}</Tab>
+							<Tab>{locale.pages.editor.tabs.analytics}</Tab>
+							<Tab>{locale.pages.editor.tabs.setting}</Tab>
 						</TabList>
 
 						<TabPanel className="tab panel tab-file">
-							<FileEditor configuration={configuration} editorData={editorData} isVisible={selectedTabIndex === TabIndex.File} />
+							<FileEditor
+								configuration={configuration}
+								editorData={editorData}
+								isVisible={selectedTabIndex === TabIndex.File}
+							/>
 						</TabPanel>
 						{/* このアプリの本体 */}
 						<TabPanel className="tab panel tab-timeline">
-							<TimelineEditor configuration={configuration} editorData={editorData} />
+							<TimelineEditor
+								configuration={configuration}
+								editorData={editorData}
+							/>
 						</TabPanel>
 						<TabPanel className="tab panel tab-analytics">
-							<AnalyticsViewer configuration={configuration} editorData={editorData} isVisible={selectedTabIndex === TabIndex.Analytics} />
+							<AnalyticsViewer
+								configuration={configuration}
+								editorData={editorData}
+								isVisible={selectedTabIndex === TabIndex.Analytics}
+							/>
 						</TabPanel>
 						<TabPanel className="tab panel tab-setting">
-							<SettingEditor configuration={configuration} editorData={editorData} />
+							<SettingEditor
+								configuration={configuration}
+								editorData={editorData}
+							/>
 						</TabPanel>
 					</Tabs>
 				)}
@@ -99,12 +110,12 @@ function createConfiguration(): Configuration {
 	const cell = {
 		width: {
 			value: 20,
-			unit: "px"
+			unit: "px",
 		},
 		height: {
 			value: 20,
-			unit: "px"
-		}
+			unit: "px",
+		},
 	};
 
 	const result: Configuration = {
@@ -124,14 +135,14 @@ function createConfiguration(): Configuration {
 				isEnabled: false,
 				time: TimeSpan.fromMinutes(5),
 				step: 1,
-			}
+			},
 		},
 		design: {
 			seed: {
 				cell: {
 					width: cell.width,
 					height: cell.height,
-				}
+				},
 			},
 			programmable: {
 				group: {
@@ -141,16 +152,18 @@ function createConfiguration(): Configuration {
 					maximum: 10,
 					paddingLeft: {
 						value: 0.5,
-						unit: "ch"
+						unit: "ch",
 					},
-				}
+				},
 			},
 			dummy: {
 				width: 30,
 				height: 20,
 			},
 		},
-		workingDays: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_MONTH_WORKING_DAYS),
+		workingDays: Cast.integer(
+			process.env.NEXT_PUBLIC_RESOURCE_MONTH_WORKING_DAYS,
+		),
 	};
 
 	return result;

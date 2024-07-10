@@ -1,28 +1,28 @@
-import { DateTimeRange } from "@/models/data/Range";
-import { AnyTimeline, TimelineId } from "@/models/data/Setting";
+import type { DateTimeRange } from "@/models/data/Range";
+import type { AnyTimeline, TimelineId } from "@/models/data/Setting";
 
 /**
  * 工数範囲計算状態。
  */
-export const enum WorkRangeKind {
+export enum WorkRangeKind {
 	/** 成功 */
-	Success,
+	Success = 0,
 	/** 読み込み中 */
-	Loading,
+	Loading = 1,
 	/** 未入力 */
-	NoInput,
+	NoInput = 2,
 	/** 自身を選択 */
-	SelfSelectedError,
+	SelfSelectedError = 3,
 	/** 子なし */
-	NoChildren,
+	NoChildren = 4,
 	/** 関連タイムライン未入力 */
-	RelationNoInput,
+	RelationNoInput = 5,
 	/** 関連タイムラインエラー */
-	RelationError,
+	RelationError = 6,
 	/** 反復計算上限エラー */
-	RecursiveError,
+	RecursiveError = 7,
 	/** なんか知らんけどエラー */
-	UnknownError,
+	UnknownError = 8,
 }
 
 /** 工数範囲(使えるかどうかは `kind` 次第) */

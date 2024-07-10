@@ -1,7 +1,7 @@
 import { Cast } from "@/models/Cast";
-import { ParseResult, ResultFactory } from "@/models/data/Result";
-import { DateTimeTicks } from "@/models/DateTime";
-import { Strong } from "@/models/Types";
+import { type ParseResult, ResultFactory } from "@/models/data/Result";
+import type { DateTimeTicks } from "@/models/DateTime";
+import type { Strong } from "@/models/Types";
 
 /** TimeSpan シリアル値。 数値処理する場合は `Number` を経由すること。 */
 export type TimeSpanTicks = Strong<"TimeSpanTicks", number>;
@@ -16,22 +16,18 @@ function toTicks(arg: number | TimeSpanTicks): TimeSpanTicks {
  * 時間を扱う。
  */
 export class TimeSpan {
-
 	/**
 	 * 生成。
 	 *
 	 * @param ticks ちっくたっく。
 	 */
-	private constructor(
-		public readonly ticks: TimeSpanTicks
-	) {
-	}
+	private constructor(public readonly ticks: TimeSpanTicks) {}
 
 	//#region property
 
 	private static _zero: TimeSpan | undefined = undefined;
 	public static get zero(): TimeSpan {
-		return this._zero ??= new TimeSpan(toTicks(0));
+		return (this._zero ??= new TimeSpan(toTicks(0)));
 	}
 
 	/** ミリ秒部分。 */
@@ -153,7 +149,10 @@ export class TimeSpan {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private static parseIso8601(s: string): TimeSpanParseResult {
 		//P[n]Y[n]M[n]DT[n]H[n]M[n]S
-		const matches = /^P((?<YEAR>\d+)Y)?((?<MONTH>\d+)M)?((?<DAY>\d+)D)?(T((?<HOUR>\d+)H)?((?<MINUTE>\d+)M)?((?<SECOND>\d+)S)?(.(?<MS>\d+))?)?/.exec(s);
+		const matches =
+			/^P((?<YEAR>\d+)Y)?((?<MONTH>\d+)M)?((?<DAY>\d+)D)?(T((?<HOUR>\d+)H)?((?<MINUTE>\d+)M)?((?<SECOND>\d+)S)?(.(?<MS>\d+))?)?/.exec(
+				s,
+			);
 		if (!matches || !matches.groups) {
 			return ResultFactory.error(new Error(s));
 		}
@@ -161,7 +160,8 @@ export class TimeSpan {
 		let rawTicks = 0;
 
 		if (matches.groups.YEAR) {
-			rawTicks += Cast.integer(matches.groups.YEAR) * 365 * 12 * 24 * 60 * 60 * 1000;
+			rawTicks +=
+				Cast.integer(matches.groups.YEAR) * 365 * 12 * 24 * 60 * 60 * 1000;
 		}
 		if (matches.groups.MONTH) {
 			rawTicks += Cast.integer(matches.groups.MONTH) * 12 * 24 * 60 * 60 * 1000;
@@ -187,22 +187,29 @@ export class TimeSpan {
 	}
 
 	private static parseReadable(s: string): TimeSpanParseResult {
-		const matches = /^((?<DAY>\d+)\.)?(?<H>\d+):(?<M>\d+):(?<S>\d+)(\.(?<MS>\d{1,3}))?$/.exec(s);
+		const matches =
+			/^((?<DAY>\d+)\.)?(?<H>\d+):(?<M>\d+):(?<S>\d+)(\.(?<MS>\d{1,3}))?$/.exec(
+				s,
+			);
 		if (!matches || !matches.groups) {
 			return ResultFactory.error(new Error(s));
 		}
 
-		const totalSeconds
-			= Cast.integer(matches.groups.S)
-			+ (Cast.integer(matches.groups.M) * 60)
-			+ (Cast.integer(matches.groups.H) * 60 * 60)
-			+ (matches.groups.DAY ? Cast.integer(matches.groups.DAY) * 60 * 60 * 24 : 0);
+		const totalSeconds =
+			Cast.integer(matches.groups.S) +
+			Cast.integer(matches.groups.M) * 60 +
+			Cast.integer(matches.groups.H) * 60 * 60 +
+			(matches.groups.DAY
+				? Cast.integer(matches.groups.DAY) * 60 * 60 * 24
+				: 0);
 
 		if (matches.groups.MS) {
 			const ms = Cast.integer(matches.groups.MS);
 			if (ms) {
 				const totalMilliseconds = totalSeconds * 1000 + ms;
-				return ResultFactory.success(TimeSpan.fromMilliseconds(totalMilliseconds));
+				return ResultFactory.success(
+					TimeSpan.fromMilliseconds(totalMilliseconds),
+				);
 			}
 		}
 

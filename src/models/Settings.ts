@@ -1,9 +1,14 @@
-import { AnyTimeline, GroupTimeline, RootTimeline, TaskTimeline, WeekDay } from "@/models/data/Setting";
-import { WeekIndex } from "@/models/DateTime";
+import type {
+	AnyTimeline,
+	GroupTimeline,
+	RootTimeline,
+	TaskTimeline,
+	WeekDay,
+} from "@/models/data/Setting";
+import type { WeekIndex } from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
 
 export abstract class Settings {
-
 	/**
 	 * 全ての `WeekDay` を取得。
 	 * @returns
@@ -72,7 +77,6 @@ export abstract class Settings {
 			default:
 				throw new Error();
 		}
-
 	}
 
 	/**
@@ -81,7 +85,9 @@ export abstract class Settings {
 	 * @param timeline
 	 * @returns
 	 */
-	public static maybeRootTimeline(timeline: AnyTimeline): timeline is RootTimeline {
+	public static maybeRootTimeline(
+		timeline: AnyTimeline,
+	): timeline is RootTimeline {
 		return timeline.id === IdFactory.rootTimelineId;
 	}
 	/**
@@ -90,7 +96,9 @@ export abstract class Settings {
 	 * @param timeline
 	 * @returns
 	 */
-	public static maybeGroupTimeline(timeline: AnyTimeline): timeline is GroupTimeline {
+	public static maybeGroupTimeline(
+		timeline: AnyTimeline,
+	): timeline is GroupTimeline {
 		return timeline.kind === "group";
 	}
 	/**
@@ -99,9 +107,9 @@ export abstract class Settings {
 	 * @param timeline
 	 * @returns
 	 */
-	public static maybeTaskTimeline(timeline: AnyTimeline): timeline is TaskTimeline {
+	public static maybeTaskTimeline(
+		timeline: AnyTimeline,
+	): timeline is TaskTimeline {
 		return timeline.kind === "task";
 	}
-
 }
-

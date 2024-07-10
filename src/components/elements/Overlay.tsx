@@ -1,5 +1,10 @@
-
-import { FC, ReactNode, useEffect, useRef, MouseEvent } from "react";
+import {
+	type FC,
+	type ReactNode,
+	useEffect,
+	useRef,
+	type MouseEvent,
+} from "react";
 
 interface Props {
 	isVisible: boolean;
@@ -16,14 +21,17 @@ interface Props {
  * @param props
  */
 const Overlay: FC<Props> = (props: Props) => {
-
 	const refChildren = useRef<HTMLSpanElement>(null);
 
 	useEffect(() => {
 		if (refChildren.current) {
-			refChildren.current.addEventListener("wheel", ev => {
-				ev.preventDefault();
-			}, { passive: false });
+			refChildren.current.addEventListener(
+				"wheel",
+				(ev) => {
+					ev.preventDefault();
+				},
+				{ passive: false },
+			);
 		}
 	}, []);
 

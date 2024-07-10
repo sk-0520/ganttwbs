@@ -1,6 +1,5 @@
-import { HolidayEvent } from "@/models/data/Setting";
-import { DateTime } from "@/models/DateTime";
-
+import type { HolidayEvent } from "@/models/data/Setting";
+import type { DateTime } from "@/models/DateTime";
 
 /**
  * 祝日マッピング。

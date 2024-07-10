@@ -1,4 +1,4 @@
-import { Locale } from "@/locales/locale";
+import type { Locale } from "@/locales/locale";
 
 const locale: Locale = {
 	language: "日本語",
@@ -41,22 +41,22 @@ const locale: Locale = {
 			week: {
 				name: "曜日",
 				long: {
-					"monday": "月曜日",
-					"tuesday": "火曜日",
-					"wednesday": "水曜日",
-					"thursday": "木曜日",
-					"friday": "金曜日",
-					"saturday": "土曜日",
-					"sunday": "日曜日",
+					monday: "月曜日",
+					tuesday: "火曜日",
+					wednesday: "水曜日",
+					thursday: "木曜日",
+					friday: "金曜日",
+					saturday: "土曜日",
+					sunday: "日曜日",
 				},
 				short: {
-					"monday": "月",
-					"tuesday": "火",
-					"wednesday": "水",
-					"thursday": "木",
-					"friday": "金",
-					"saturday": "土",
-					"sunday": "日",
+					monday: "月",
+					tuesday: "火",
+					wednesday: "水",
+					thursday: "木",
+					friday: "金",
+					saturday: "土",
+					sunday: "日",
 				},
 			},
 
@@ -141,7 +141,8 @@ const locale: Locale = {
 						},
 						download: {
 							kind: "ダウンロード",
-							fileNameFormat: "${ORIGINAL_NAME}(自動保存-${TIMESTAMP}).${ORIGINAL_EXT}"
+							fileNameFormat:
+								"${ORIGINAL_NAME}(自動保存-${TIMESTAMP}).${ORIGINAL_EXT}",
 						},
 					},
 
@@ -165,7 +166,7 @@ const locale: Locale = {
 				information: {
 					memberDuplication: "メンバーが重複しています",
 					timelineAffected: "影響タイムライン",
-					memberFormat: "${MEMBER} (${GROUP})"
+					memberFormat: "${MEMBER} (${GROUP})",
 				},
 
 				header: {
@@ -205,7 +206,7 @@ const locale: Locale = {
 						relationError: "関係タイムラインエラー",
 						recursiveError: "反復計算エラー",
 						unknownError: "エラー",
-					}
+					},
 				},
 				timelines: {
 					range: {
@@ -238,7 +239,7 @@ const locale: Locale = {
 							show: "表示",
 							setting: "詳細設定",
 						},
-					}
+					},
 				},
 				informationDialog: {
 					title: "情報一覧",
@@ -253,7 +254,7 @@ const locale: Locale = {
 					progressMinimum: "未対応",
 					progressMaximum: "完了",
 					comment: "コメント",
-				}
+				},
 			},
 
 			analytics: {
@@ -288,7 +289,7 @@ const locale: Locale = {
 					total: {
 						title: "合計",
 						titleFormat: "${TITLE} (${BEGIN} - ${END})",
-					}
+					},
 				},
 			},
 
@@ -309,7 +310,7 @@ const locale: Locale = {
 						name: "タイムゾーン名",
 						offset: "オフセット",
 					},
-					selectCurrentTimeZoneFormat: "現在のタイムゾーン(${TIMEZONE})"
+					selectCurrentTimeZoneFormat: "現在のタイムゾーン(${TIMEZONE})",
 				},
 
 				resource: {
@@ -339,11 +340,10 @@ const locale: Locale = {
 							gradient: "グラデーション",
 							random: "ランダム",
 						},
-					}
+					},
 				},
 
 				calendar: {
-
 					range: {
 						title: "日付範囲",
 						begin: "開始",
@@ -363,10 +363,10 @@ const locale: Locale = {
 							description: "国などが定める通常の祝日を設定してください。",
 						},
 						special: {
-							description: "会社の年末年始・夏季休暇などを設定してください。通常の祝日と重複する場合、こちらが優先されます。",
+							description:
+								"会社の年末年始・夏季休暇などを設定してください。通常の祝日と重複する場合、こちらが優先されます。",
 						},
 					},
-
 				},
 
 				theme: {
@@ -411,9 +411,9 @@ const locale: Locale = {
 					module: "モジュール",
 					author: "作者",
 					license: "ライセンス",
-					licenseNote: "ライセンスの全文表示切替"
-				}
-			}
+					licenseNote: "ライセンスの全文表示切替",
+				},
+			},
 		},
 	},
 
@@ -426,7 +426,7 @@ const locale: Locale = {
 				workRangeFormat: "yyyy/mm/dd",
 
 				timelineSheetNameFormat: "timeline",
-				resourceFormat: "${MEMBER}(${GROUP})"
+				resourceFormat: "${MEMBER}(${GROUP})",
 			},
 		},
 
@@ -434,19 +434,15 @@ const locale: Locale = {
 			export: {
 				dateFormat: "yyyy/MM/dd",
 				rangeFormat: "yyyy/MM/dd HH:mm:ss",
-			}
-		}
+			},
+		},
 	},
 
 	styles: {
 		editor: {
-			fontFamilies: [
-				"MigMix 1M",
-				"Consolas",
-				"MS Gothic",
-			]
-		}
-	}
+			fontFamilies: ["MigMix 1M", "Consolas", "MS Gothic"],
+		},
+	},
 };
 
 export default locale;

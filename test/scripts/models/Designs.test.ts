@@ -1,8 +1,7 @@
-import { ValueUnit } from "@/models/data/Design";
+import type { ValueUnit } from "@/models/data/Design";
 import { Designs } from "@/models/Designs";
 
 describe("Designs", () => {
-
 	test.each([
 		["1px", { value: 1, unit: "px" }],
 		["1234em", { value: 1234, unit: "em" }],
@@ -81,7 +80,7 @@ describe("Designs", () => {
 
 					c2: {
 						abc: "def",
-					}
+					},
 				},
 
 				c: "cccc",
@@ -108,11 +107,11 @@ describe("Designs", () => {
 			name: {
 				a: {
 					value: 100,
-					unit: "px"
+					unit: "px",
 				},
 				b: {
 					value: 0,
-					unit: "px"
+					unit: "px",
 				},
 			},
 		};

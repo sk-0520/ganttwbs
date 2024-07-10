@@ -1,15 +1,23 @@
-
-import { FC, useCallback, useMemo, KeyboardEvent, MouseEvent } from "react";
+import {
+	type FC,
+	useCallback,
+	useMemo,
+	type KeyboardEvent,
+	type MouseEvent,
+} from "react";
 
 import AnyTimelineEditor from "@/components/elements/pages/editor/timeline/AnyTimelineEditor";
 import { Arrays } from "@/models/Arrays";
 import { useHoverTimelineIdAtomWriter } from "@/models/atom/editor/HighlightAtoms";
-import { useSequenceTimelinesAtomReader, useTimelineIndexMapAtomReader } from "@/models/atom/editor/TimelineAtoms";
-import { BeginDateCallbacks } from "@/models/data/BeginDate";
-import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
-import { AnyTimeline, TimelineId } from "@/models/data/Setting";
-import { TimelineCallbacks } from "@/models/data/TimelineCallbacks";
+import {
+	useSequenceTimelinesAtomReader,
+	useTimelineIndexMapAtomReader,
+} from "@/models/atom/editor/TimelineAtoms";
+import type { BeginDateCallbacks } from "@/models/data/BeginDate";
+import type { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import type { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
+import type { AnyTimeline, TimelineId } from "@/models/data/Setting";
+import type { TimelineCallbacks } from "@/models/data/TimelineCallbacks";
 import { Dom } from "@/models/Dom";
 import { Editors } from "@/models/Editors";
 import { IdFactory } from "@/models/IdFactory";
@@ -29,19 +37,50 @@ const TimelineItems: FC<Props> = (props: Props) => {
 	const timelineIndexMapAtomReader = useTimelineIndexMapAtomReader();
 	const hoverTimelineIdAtomWriter = useHoverTimelineIdAtomWriter();
 
-	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
-		handleCellKeyDown(ev, currentTimeline, props.timelineCallbacks, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data, "subject");
-	}, [props.timelineCallbacks, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data]);
+	const onSubjectKeyDown = useCallback(
+		(ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
+			handleCellKeyDown(
+				ev,
+				currentTimeline,
+				props.timelineCallbacks,
+				sequenceTimelinesAtomReader.data,
+				timelineIndexMapAtomReader.data,
+				"subject",
+			);
+		},
+		[
+			props.timelineCallbacks,
+			sequenceTimelinesAtomReader.data,
+			timelineIndexMapAtomReader.data,
+		],
+	);
 
-	const onWorkloadKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
-		handleCellKeyDown(ev, currentTimeline, props.timelineCallbacks, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data, "workload");
-	}, [props.timelineCallbacks, sequenceTimelinesAtomReader.data, timelineIndexMapAtomReader.data]);
+	const onWorkloadKeyDown = useCallback(
+		(ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline) => {
+			handleCellKeyDown(
+				ev,
+				currentTimeline,
+				props.timelineCallbacks,
+				sequenceTimelinesAtomReader.data,
+				timelineIndexMapAtomReader.data,
+				"workload",
+			);
+		},
+		[
+			props.timelineCallbacks,
+			sequenceTimelinesAtomReader.data,
+			timelineIndexMapAtomReader.data,
+		],
+	);
 
 	const dummyAreaNodes = useMemo(() => {
 		logger.debug("dummyAreaNodedummyAreaNodedummyAreaNode");
-		return Arrays.create(props.configuration.design.dummy.height).map(_ => {
+		return Arrays.create(props.configuration.design.dummy.height).map((_) => {
 			return (
-				<tr key={"dmy-" + IdFactory.createReactKey()} className="dummy timeline-cell timeline-header _dynamic_programmable_cell_height">
+				<tr
+					key={"dmy-" + IdFactory.createReactKey()}
+					className="dummy timeline-cell timeline-header _dynamic_programmable_cell_height"
+				>
 					<td className="timeline-cell timeline-id">&nbsp;</td>
 					<td className="timeline-cell timeline-subject" />
 					<td className="timeline-cell timeline-workload" />
@@ -78,11 +117,7 @@ const TimelineItems: FC<Props> = (props: Props) => {
 						);
 					})}
 				</tbody>
-				<tfoot
-					onMouseEnter={handleMouseMove}
-				>
-					{dummyAreaNodes}
-				</tfoot>
+				<tfoot onMouseEnter={handleMouseMove}>{dummyAreaNodes}</tfoot>
 			</table>
 		</div>
 	);
@@ -90,7 +125,14 @@ const TimelineItems: FC<Props> = (props: Props) => {
 
 export default TimelineItems;
 
-function handleCellKeyDown(ev: KeyboardEvent<HTMLInputElement>, currentTimeline: AnyTimeline, timelineStore: TimelineCallbacks, sequenceTimelines: ReadonlyArray<AnyTimeline>, timelineIndexMap: ReadonlyMap<TimelineId, number>, currentCell: "subject" | "workload"): void {
+function handleCellKeyDown(
+	ev: KeyboardEvent<HTMLInputElement>,
+	currentTimeline: AnyTimeline,
+	timelineStore: TimelineCallbacks,
+	sequenceTimelines: ReadonlyArray<AnyTimeline>,
+	timelineIndexMap: ReadonlyMap<TimelineId, number>,
+	currentCell: "subject" | "workload",
+): void {
 	if (ev.key !== "Enter") {
 		return;
 	}
@@ -139,8 +181,8 @@ function handleCellKeyDown(ev: KeyboardEvent<HTMLInputElement>, currentTimeline:
 	if (nextIndex !== -1) {
 		const nextTimeline = sequenceTimelines[nextIndex];
 		const nextCellId = Require.switch(currentCell, {
-			"subject": () => Timelines.toSubjectId(nextTimeline),
-			"workload": () => Timelines.toWorkloadId(nextTimeline),
+			subject: () => Timelines.toSubjectId(nextTimeline),
+			workload: () => Timelines.toWorkloadId(nextTimeline),
 		});
 		const nextElement = Dom.getElementById(nextCellId, HTMLInputElement);
 		nextElement.select();

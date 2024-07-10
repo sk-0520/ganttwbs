@@ -1,9 +1,13 @@
 import { createContext } from "react";
 
-import { Color } from "@/models/Color";
-import { DateOnly, GroupId, MemberId, WeekDay } from "@/models/data/Setting";
-import { TimeZone } from "@/models/TimeZone";
-
+import type { Color } from "@/models/Color";
+import type {
+	DateOnly,
+	GroupId,
+	MemberId,
+	WeekDay,
+} from "@/models/data/Setting";
+import type { TimeZone } from "@/models/TimeZone";
 
 export type UUID = string;
 
@@ -38,19 +42,19 @@ export interface CalendarSetting {
 		events: {
 			normal: string;
 			special: string;
-		}
+		};
 	};
 }
 
 export interface ThemeSetting {
 	holiday: {
-		regulars: { [key in WeekDay]: Color },
+		regulars: { [key in WeekDay]: Color };
 		events: {
-			normal: Color,
-			special: Color,
-		}
+			normal: Color;
+			special: Color;
+		};
 	};
-	groups: Array<{ key: UUID, value: Color }>;
+	groups: Array<{ key: UUID; value: Color }>;
 	timeline: {
 		defaultGroup: Color;
 		defaultTask: Color;
@@ -60,9 +64,11 @@ export interface ThemeSetting {
 
 export interface SettingContext {
 	general: GeneralSetting;
-	groups: Array<GroupSetting>,
+	groups: Array<GroupSetting>;
 	calendar: CalendarSetting;
 	theme: ThemeSetting;
 }
 
-export const SettingContext = createContext<SettingContext>({} as SettingContext);
+export const SettingContext = createContext<SettingContext>(
+	{} as SettingContext,
+);

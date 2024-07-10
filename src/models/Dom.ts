@@ -1,4 +1,4 @@
-import { Constructor, Types } from "@/models/Types";
+import { type Constructor, Types } from "@/models/Types";
 
 export class Dom {
 	/**
@@ -9,7 +9,10 @@ export class Dom {
 	 * @returns
 	 * @throws {Error} セレクタから要素が見つからない, 要素に指定された型が合わない
 	 */
-	public static getElementById<THtmlElement extends HTMLElement>(elementId: string, elementType?: Constructor<THtmlElement>): THtmlElement {
+	public static getElementById<THtmlElement extends HTMLElement>(
+		elementId: string,
+		elementType?: Constructor<THtmlElement>,
+	): THtmlElement {
 		const result = document.getElementById(elementId);
 		if (!result) {
 			throw new Error(elementId);
@@ -17,7 +20,9 @@ export class Dom {
 
 		if (elementType) {
 			if (!Types.instanceOf(result, elementType)) {
-				throw new Error(`${result.constructor.name} != ${elementType.prototype.constructor.name}`);
+				throw new Error(
+					`${result.constructor.name} != ${elementType.prototype.constructor.name}`,
+				);
 			}
 		}
 
@@ -31,13 +36,34 @@ export class Dom {
 	 * @param selectors
 	 * @returns
 	 */
-	public static querySelector<K extends keyof HTMLElementTagNameMap>(element: ParentNode, selectors: K): HTMLElementTagNameMap[K];
-	public static querySelector<K extends keyof HTMLElementTagNameMap>(selectors: K): HTMLElementTagNameMap[K];
-	public static querySelector<K extends keyof SVGElementTagNameMap>(element: ParentNode, selectors: K): SVGElementTagNameMap[K];
-	public static querySelector<K extends keyof SVGElementTagNameMap>(selectors: K): SVGElementTagNameMap[K];
-	public static querySelector<TElement extends Element = Element>(selectors: string, elementType?: Constructor<TElement>): TElement;
-	public static querySelector<TElement extends Element = Element>(element: ParentNode, selectors: string, elementType?: Constructor<TElement>): TElement;
-	public static querySelector<TElement extends Element = Element>(element: ParentNode | string | null, selectors?: string | Constructor<TElement>, elementType?: Constructor<TElement>): TElement {
+	public static querySelector<K extends keyof HTMLElementTagNameMap>(
+		element: ParentNode,
+		selectors: K,
+	): HTMLElementTagNameMap[K];
+	public static querySelector<K extends keyof HTMLElementTagNameMap>(
+		selectors: K,
+	): HTMLElementTagNameMap[K];
+	public static querySelector<K extends keyof SVGElementTagNameMap>(
+		element: ParentNode,
+		selectors: K,
+	): SVGElementTagNameMap[K];
+	public static querySelector<K extends keyof SVGElementTagNameMap>(
+		selectors: K,
+	): SVGElementTagNameMap[K];
+	public static querySelector<TElement extends Element = Element>(
+		selectors: string,
+		elementType?: Constructor<TElement>,
+	): TElement;
+	public static querySelector<TElement extends Element = Element>(
+		element: ParentNode,
+		selectors: string,
+		elementType?: Constructor<TElement>,
+	): TElement;
+	public static querySelector<TElement extends Element = Element>(
+		element: ParentNode | string | null,
+		selectors?: string | Constructor<TElement>,
+		elementType?: Constructor<TElement>,
+	): TElement {
 		if (Types.isString(element)) {
 			if (selectors) {
 				if (Types.isString(selectors)) {
@@ -66,7 +92,9 @@ export class Dom {
 
 		if (elementType) {
 			if (!Types.instanceOf(result, elementType)) {
-				throw new Error(`${result.constructor.name} != ${elementType.prototype.constructor.name}`);
+				throw new Error(
+					`${result.constructor.name} != ${elementType.prototype.constructor.name}`,
+				);
 			}
 		}
 
@@ -78,13 +106,34 @@ export class Dom {
 	 * @param element
 	 * @param selectors
 	 */
-	public static querySelectorAll<K extends keyof HTMLElementTagNameMap>(element: ParentNode, selectors: K): NodeListOf<HTMLElementTagNameMap[K]>;
-	public static querySelectorAll<K extends keyof HTMLElementTagNameMap>(selectors: K): NodeListOf<HTMLElementTagNameMap[K]>;
-	public static querySelectorAll<K extends keyof SVGElementTagNameMap>(element: ParentNode, selectors: K): NodeListOf<SVGElementTagNameMap[K]>;
-	public static querySelectorAll<K extends keyof SVGElementTagNameMap>(selectors: K): NodeListOf<SVGElementTagNameMap[K]>;
-	public static querySelectorAll<TElement extends Element = Element>(selectors: string, elementType?: Constructor<TElement>): NodeListOf<TElement>;
-	public static querySelectorAll<TElement extends Element = Element>(element: ParentNode, selectors: string, elementType?: Constructor<TElement>): NodeListOf<TElement>;
-	public static querySelectorAll<TElement extends Element = Element>(element: ParentNode | string | null, selectors?: string | Constructor<TElement>, elementType?: Constructor<TElement>): NodeListOf<TElement> {
+	public static querySelectorAll<K extends keyof HTMLElementTagNameMap>(
+		element: ParentNode,
+		selectors: K,
+	): NodeListOf<HTMLElementTagNameMap[K]>;
+	public static querySelectorAll<K extends keyof HTMLElementTagNameMap>(
+		selectors: K,
+	): NodeListOf<HTMLElementTagNameMap[K]>;
+	public static querySelectorAll<K extends keyof SVGElementTagNameMap>(
+		element: ParentNode,
+		selectors: K,
+	): NodeListOf<SVGElementTagNameMap[K]>;
+	public static querySelectorAll<K extends keyof SVGElementTagNameMap>(
+		selectors: K,
+	): NodeListOf<SVGElementTagNameMap[K]>;
+	public static querySelectorAll<TElement extends Element = Element>(
+		selectors: string,
+		elementType?: Constructor<TElement>,
+	): NodeListOf<TElement>;
+	public static querySelectorAll<TElement extends Element = Element>(
+		element: ParentNode,
+		selectors: string,
+		elementType?: Constructor<TElement>,
+	): NodeListOf<TElement>;
+	public static querySelectorAll<TElement extends Element = Element>(
+		element: ParentNode | string | null,
+		selectors?: string | Constructor<TElement>,
+		elementType?: Constructor<TElement>,
+	): NodeListOf<TElement> {
 		if (Types.isString(element)) {
 			if (selectors) {
 				if (Types.isString(selectors)) {
@@ -114,7 +163,9 @@ export class Dom {
 		if (elementType) {
 			for (const elm of result) {
 				if (!Types.instanceOf(elm, elementType)) {
-					throw new Error(`elm ${elm} != ${elementType.prototype.constructor.name}`);
+					throw new Error(
+						`elm ${elm} != ${elementType.prototype.constructor.name}`,
+					);
 				}
 			}
 		}
@@ -129,10 +180,24 @@ export class Dom {
 	 * @param element
 	 * @returns
 	 */
-	public static closest<K extends keyof HTMLElementTagNameMap>(element: Element, selectors: K): HTMLElementTagNameMap[K];
-	public static closest<K extends keyof SVGElementTagNameMap>(element: Element, selectors: K): SVGElementTagNameMap[K];
-	public static closest<E extends Element = Element>(element: Element, selectors: string, elementType?: Constructor<E>): E;
-	public static closest<TElement extends Element = Element>(element: Element, selectors: string, elementType?: Constructor<TElement>): Element {
+	public static closest<K extends keyof HTMLElementTagNameMap>(
+		element: Element,
+		selectors: K,
+	): HTMLElementTagNameMap[K];
+	public static closest<K extends keyof SVGElementTagNameMap>(
+		element: Element,
+		selectors: K,
+	): SVGElementTagNameMap[K];
+	public static closest<E extends Element = Element>(
+		element: Element,
+		selectors: string,
+		elementType?: Constructor<E>,
+	): E;
+	public static closest<TElement extends Element = Element>(
+		element: Element,
+		selectors: string,
+		elementType?: Constructor<TElement>,
+	): Element {
 		const result = element.closest(selectors);
 		if (!result) {
 			throw new Error(selectors);
@@ -140,7 +205,9 @@ export class Dom {
 
 		if (elementType) {
 			if (!Types.instanceOf(result, elementType)) {
-				throw new Error(`${result.constructor.name} != ${elementType.prototype.constructor.name}`);
+				throw new Error(
+					`${result.constructor.name} != ${elementType.prototype.constructor.name}`,
+				);
 			}
 		}
 

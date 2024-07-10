@@ -1,4 +1,4 @@
-import { MemberId, TimelineId } from "@/models/data/Setting";
+import type { MemberId, TimelineId } from "@/models/data/Setting";
 
 export interface DayInfo {
 	/** 重複メンバーID */

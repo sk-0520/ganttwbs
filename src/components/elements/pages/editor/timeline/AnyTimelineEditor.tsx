@@ -1,4 +1,12 @@
-import { useState, useEffect, DragEvent, FC, useCallback, KeyboardEvent, useRef } from "react";
+import {
+	useState,
+	useEffect,
+	type DragEvent,
+	type FC,
+	useCallback,
+	type KeyboardEvent,
+	useRef,
+} from "react";
 
 import { IconImage, IconKind, IconLabel } from "@/components/elements/Icon";
 import ControlsCell from "@/components/elements/pages/editor/timeline/cell/ControlsCell";
@@ -11,17 +19,38 @@ import TimelineHeaderRow from "@/components/elements/pages/editor/timeline/cell/
 import WorkloadCell from "@/components/elements/pages/editor/timeline/cell/WorkloadCell";
 import WorkRangeCells from "@/components/elements/pages/editor/timeline/cell/WorkRangeCells";
 import { useLocale } from "@/locales/locale";
-import { useSelectingBeginDateAtomReader, useSelectingBeginDateAtomWriter } from "@/models/atom/editor/BeginDateAtoms";
-import { useDetailEditTimelineAtomWriter, useDragSourceTimelineAtomWriter } from "@/models/atom/editor/DragAndDropAtoms";
-import { useActiveTimelineIdAtomWriter, useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomWriter } from "@/models/atom/editor/HighlightAtoms";
-import { useCalendarInfoAtomReader, useTimelineItemsAtomReader, useWorkRangesAtomReader } from "@/models/atom/editor/TimelineAtoms";
-import { BeginDateCallbacks } from "@/models/data/BeginDate";
-import { MemberGroupPair } from "@/models/data/MemberGroupPair";
+import {
+	useSelectingBeginDateAtomReader,
+	useSelectingBeginDateAtomWriter,
+} from "@/models/atom/editor/BeginDateAtoms";
+import {
+	useDetailEditTimelineAtomWriter,
+	useDragSourceTimelineAtomWriter,
+} from "@/models/atom/editor/DragAndDropAtoms";
+import {
+	useActiveTimelineIdAtomWriter,
+	useHighlightDaysAtomWriter,
+	useHighlightTimelineIdsAtomWriter,
+	useHoverTimelineIdAtomWriter,
+} from "@/models/atom/editor/HighlightAtoms";
+import {
+	useCalendarInfoAtomReader,
+	useTimelineItemsAtomReader,
+	useWorkRangesAtomReader,
+} from "@/models/atom/editor/TimelineAtoms";
+import type { BeginDateCallbacks } from "@/models/data/BeginDate";
+import type { MemberGroupPair } from "@/models/data/MemberGroupPair";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
-import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
-import { AnyTimeline, GroupTimeline, Progress, TaskTimeline, TimelineKind } from "@/models/data/Setting";
-import { MoveDirection } from "@/models/data/TimelineCallbacks";
+import type { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import type { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
+import type {
+	AnyTimeline,
+	GroupTimeline,
+	Progress,
+	TaskTimeline,
+	TimelineKind,
+} from "@/models/data/Setting";
+import type { MoveDirection } from "@/models/data/TimelineCallbacks";
 import { WorkRangeKind } from "@/models/data/WorkRange";
 import { DateTime } from "@/models/DateTime";
 import { Editors } from "@/models/Editors";
@@ -34,7 +63,10 @@ interface Props extends ConfigurationProps, TimelineCallbacksProps {
 	currentTimeline: AnyTimeline;
 	beginDateCallbacks: BeginDateCallbacks;
 	callbackSubjectKeyDown(ev: KeyboardEvent, currentTimeline: AnyTimeline): void;
-	callbackWorkloadKeyDown(ev: KeyboardEvent, currentTimeline: AnyTimeline): void;
+	callbackWorkloadKeyDown(
+		ev: KeyboardEvent,
+		currentTimeline: AnyTimeline,
+	): void;
 }
 
 const AnyTimelineEditor: FC<Props> = (props: Props) => {
@@ -57,17 +89,28 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 	const [subject, setSubject] = useState(props.currentTimeline.subject);
 	const [workload, setWorkload] = useState(0);
-	const [memberId, setMemberId] = useState(Settings.maybeTaskTimeline(props.currentTimeline) ? props.currentTimeline.memberId : "");
+	const [memberId, setMemberId] = useState(
+		Settings.maybeTaskTimeline(props.currentTimeline)
+			? props.currentTimeline.memberId
+			: "",
+	);
 	const [workRangeKind, setWorkRangeKind] = useState(WorkRangeKind.Loading);
 	const [beginDate, setBeginDate] = useState<DateTime | null>(null);
 	const [endDate, setEndDate] = useState<DateTime | null>(null);
 	const [progress, setProgress] = useState(0);
-	const [isSelectedPrevious, setIsSelectedPrevious] = useState(selectingBeginDateAtomReader.data?.previous.has(props.currentTimeline.id) ?? false);
-	const [selectedBeginDate, setSelectedBeginDate] = useState(selectingBeginDateAtomReader.data?.beginDate ?? null);
+	const [isSelectedPrevious, setIsSelectedPrevious] = useState(
+		selectingBeginDateAtomReader.data?.previous.has(props.currentTimeline.id) ??
+			false,
+	);
+	const [selectedBeginDate, setSelectedBeginDate] = useState(
+		selectingBeginDateAtomReader.data?.beginDate ?? null,
+	);
 	const [visibleBeginDateInput, setVisibleBeginDateInput] = useState(false);
 	const refInputDate = useRef<HTMLInputElement>(null);
 
-	const isCompletedTask = Settings.maybeTaskTimeline(props.currentTimeline) && Timelines.isCompleted(props.currentTimeline.progress);
+	const isCompletedTask =
+		Settings.maybeTaskTimeline(props.currentTimeline) &&
+		Timelines.isCompleted(props.currentTimeline.progress);
 
 	useEffect(() => {
 		if (refInputDate.current) {
@@ -76,19 +119,24 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	}, [refInputDate]);
 
 	useEffect(() => {
-		const timelineItem = timelineItemsAtomReader.data.get(props.currentTimeline.id);
+		const timelineItem = timelineItemsAtomReader.data.get(
+			props.currentTimeline.id,
+		);
 		if (timelineItem) {
 			setSubject(timelineItem.timeline.subject);
 
 			if (Settings.maybeGroupTimeline(timelineItem.timeline)) {
-				const workload = Timelines.sumWorkloadByGroup(timelineItem.timeline).totalDays;
+				const workload = Timelines.sumWorkloadByGroup(
+					timelineItem.timeline,
+				).totalDays;
 				setWorkload(workload);
 
 				const progress = Timelines.sumProgressByGroup(timelineItem.timeline);
 				setProgress(progress);
-
 			} else if (Settings.maybeTaskTimeline(timelineItem.timeline)) {
-				const workload = Timelines.deserializeWorkload(timelineItem.timeline.workload).totalDays;
+				const workload = Timelines.deserializeWorkload(
+					timelineItem.timeline.workload,
+				).totalDays;
 				setWorkload(workload);
 
 				const progress = timelineItem.timeline.progress;
@@ -108,10 +156,18 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				}
 			}
 		}
-	}, [props.currentTimeline, props.timelineCallbacks, timelineItemsAtomReader.data]);
+	}, [
+		props.currentTimeline,
+		props.timelineCallbacks,
+		timelineItemsAtomReader.data,
+	]);
 
 	useEffect(() => {
-		const isVisibleBeginDateInput = Boolean(selectingBeginDateAtomReader.data && selectingBeginDateAtomReader.data.timeline.id === props.currentTimeline.id);
+		const isVisibleBeginDateInput = Boolean(
+			selectingBeginDateAtomReader.data &&
+				selectingBeginDateAtomReader.data.timeline.id ===
+					props.currentTimeline.id,
+		);
 		setVisibleBeginDateInput(isVisibleBeginDateInput);
 		if (isVisibleBeginDateInput) {
 			handleFocus(false);
@@ -122,27 +178,38 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 	useEffect(() => {
 		if (selectingBeginDateAtomReader.data) {
 			if (Settings.maybeGroupTimeline(props.currentTimeline)) {
-				const selected = selectingBeginDateAtomReader.data.previous.has(props.currentTimeline.id);
+				const selected = selectingBeginDateAtomReader.data.previous.has(
+					props.currentTimeline.id,
+				);
 				setIsSelectedPrevious(selected);
 			} else if (Settings.maybeTaskTimeline(props.currentTimeline)) {
-				const selected = selectingBeginDateAtomReader.data.previous.has(props.currentTimeline.id);
+				const selected = selectingBeginDateAtomReader.data.previous.has(
+					props.currentTimeline.id,
+				);
 				setIsSelectedPrevious(selected);
 
-				setSelectedBeginDate(selectingBeginDateAtomReader.data.beginDate ?? null);
+				setSelectedBeginDate(
+					selectingBeginDateAtomReader.data.beginDate ?? null,
+				);
 			} else {
 				throw new Error();
 			}
 		}
 	}, [props.currentTimeline, selectingBeginDateAtomReader.data]);
 
-	const onSubjectKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>) => {
-		props.callbackSubjectKeyDown(ev, props.currentTimeline);
-	}, [props]);
+	const onSubjectKeyDown = useCallback(
+		(ev: KeyboardEvent<HTMLInputElement>) => {
+			props.callbackSubjectKeyDown(ev, props.currentTimeline);
+		},
+		[props],
+	);
 
-	const handleWorkloadKeyDown = useCallback((ev: KeyboardEvent<HTMLInputElement>) => {
-		props.callbackWorkloadKeyDown(ev, props.currentTimeline);
-	}, [props]);
-
+	const handleWorkloadKeyDown = useCallback(
+		(ev: KeyboardEvent<HTMLInputElement>) => {
+			props.callbackWorkloadKeyDown(ev, props.currentTimeline);
+		},
+		[props],
+	);
 
 	function handleChangeSubject(s: string) {
 		setSubject(s);
@@ -181,22 +248,21 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		props.timelineCallbacks.moveTimeline(direction, props.currentTimeline);
 	}
 
-	function handleControlAddItem(kindOrTimeline: TimelineKind | GroupTimeline): void {
+	function handleControlAddItem(
+		kindOrTimeline: TimelineKind | GroupTimeline,
+	): void {
 		if (kindOrTimeline === "group" || kindOrTimeline === "task") {
 			// 空タイムライン
-			props.timelineCallbacks.addEmptyTimeline(
-				props.currentTimeline,
-				{
-					position: NewTimelinePosition.Next,
-					timelineKind: kindOrTimeline,
-				}
-			);
+			props.timelineCallbacks.addEmptyTimeline(props.currentTimeline, {
+				position: NewTimelinePosition.Next,
+				timelineKind: kindOrTimeline,
+			});
 		} else {
 			// グループ
 			props.timelineCallbacks.addNewTimeline(
 				props.currentTimeline,
 				kindOrTimeline,
-				NewTimelinePosition.Next
+				NewTimelinePosition.Next,
 			);
 		}
 	}
@@ -222,7 +288,9 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		Editors.scrollView(props.currentTimeline.id, date);
 	}
 
-	function handleChangeMember(memberGroupPair: MemberGroupPair | undefined): void {
+	function handleChangeMember(
+		memberGroupPair: MemberGroupPair | undefined,
+	): void {
 		if (!Settings.maybeTaskTimeline(props.currentTimeline)) {
 			throw new Error();
 		}
@@ -258,7 +326,9 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		if (isSelected) {
 			selectingBeginDateAtomReader.data.previous.add(props.currentTimeline.id);
 		} else {
-			selectingBeginDateAtomReader.data.previous.delete(props.currentTimeline.id);
+			selectingBeginDateAtomReader.data.previous.delete(
+				props.currentTimeline.id,
+			);
 		}
 		setIsSelectedPrevious(isSelected);
 	}
@@ -268,14 +338,16 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			return;
 		}
 
-		selectingBeginDateAtomWriter.write(c => {
+		selectingBeginDateAtomWriter.write((c) => {
 			if (!c) {
 				throw new Error();
 			}
 
 			return {
 				...c,
-				beginDate: date ? DateTime.convert(date, calendarInfoAtomReader.data.timeZone) : null,
+				beginDate: date
+					? DateTime.convert(date, calendarInfoAtomReader.data.timeZone)
+					: null,
 			};
 		});
 		setSelectedBeginDate(selectingBeginDateAtomReader.data.beginDate);
@@ -286,9 +358,14 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		const beforeTimeline = props.timelineCallbacks.searchBeforeTimeline(props.currentTimeline);
+		const beforeTimeline = props.timelineCallbacks.searchBeforeTimeline(
+			props.currentTimeline,
+		);
 		if (beforeTimeline) {
-			props.beginDateCallbacks.setSelectBeginDate(props.currentTimeline, new Set([beforeTimeline.id]));
+			props.beginDateCallbacks.setSelectBeginDate(
+				props.currentTimeline,
+				new Set([beforeTimeline.id]),
+			);
 		}
 	}
 
@@ -301,7 +378,8 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			...props.currentTimeline,
 		};
 
-		const beforeTimeline = props.timelineCallbacks.searchBeforeTimeline(timeline);
+		const beforeTimeline =
+			props.timelineCallbacks.searchBeforeTimeline(timeline);
 		if (beforeTimeline) {
 			timeline.static = undefined;
 			timeline.previous = [beforeTimeline.id];
@@ -316,7 +394,11 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		props.beginDateCallbacks.clearSelectBeginDate(props.currentTimeline, false, true);
+		props.beginDateCallbacks.clearSelectBeginDate(
+			props.currentTimeline,
+			false,
+			true,
+		);
 	}
 
 	function handleClearStatic() {
@@ -324,7 +406,11 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			throw new Error();
 		}
 
-		props.beginDateCallbacks.clearSelectBeginDate(props.currentTimeline, true, false);
+		props.beginDateCallbacks.clearSelectBeginDate(
+			props.currentTimeline,
+			true,
+			false,
+		);
 	}
 
 	function handleSubmitPrevious() {
@@ -338,7 +424,9 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 
 		const timeline: TaskTimeline = {
 			...props.currentTimeline,
-			static: selectingBeginDateAtomReader.data.beginDate ? selectingBeginDateAtomReader.data.beginDate.format("yyyy-MM-dd") : undefined,
+			static: selectingBeginDateAtomReader.data.beginDate
+				? selectingBeginDateAtomReader.data.beginDate.format("yyyy-MM-dd")
+				: undefined,
 			previous: [...selectingBeginDateAtomReader.data.previous],
 		};
 
@@ -363,7 +451,9 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		}
 	}
 
-	const timelineIndex = props.timelineCallbacks.calculateReadableTimelineId(props.currentTimeline);
+	const timelineIndex = props.timelineCallbacks.calculateReadableTimelineId(
+		props.currentTimeline,
+	);
 
 	return (
 		<TimelineHeaderRow
@@ -395,7 +485,11 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
 				disabled={Boolean(selectingBeginDateAtomReader.data) || isCompletedTask}
 				value={workload}
-				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeWorkload : undefined}
+				callbackChangeValue={
+					Settings.maybeTaskTimeline(props.currentTimeline)
+						? handleChangeWorkload
+						: undefined
+				}
 				callbackFocus={handleFocus}
 				callbackKeyDown={handleWorkloadKeyDown}
 			/>
@@ -411,108 +505,127 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 				selectable={Boolean(selectingBeginDateAtomReader.data)}
 				htmlFor={selectingId}
 			/>
-			{
-				visibleBeginDateInput
-					? (
-						<td className="timeline-cell timeline-range-area prompt" colSpan={2}>
-							<ul className="contents">
-								<li className="main">
-									<input
-										ref={refInputDate}
-										type="date"
-										value={selectedBeginDate ? selectedBeginDate.toHtml("input-date") : ""}
-										onChange={ev => handleChangeSelectingBeginDate(ev.target.valueAsDate)}
-									/>
-								</li>
+			{visibleBeginDateInput ? (
+				<td className="timeline-cell timeline-range-area prompt" colSpan={2}>
+					<ul className="contents">
+						<li className="main">
+							<input
+								ref={refInputDate}
+								type="date"
+								value={
+									selectedBeginDate
+										? selectedBeginDate.toHtml("input-date")
+										: ""
+								}
+								onChange={(ev) =>
+									handleChangeSelectingBeginDate(ev.target.valueAsDate)
+								}
+							/>
+						</li>
+						<li>
+							<button
+								type="button"
+								title={locale.common.dialog.submit}
+								onClick={handleSubmitPrevious}
+							>
+								<IconImage kind={IconKind.ConfirmPositive} fill="green" />
+							</button>
+						</li>
+						<li>
+							<button
+								type="button"
+								title={locale.common.dialog.cancel}
+								onClick={handleCancelPrevious}
+							>
+								<IconImage kind={IconKind.ConfirmCancel} />
+							</button>
+						</li>
+					</ul>
+					<div className="tools after">
+						<fieldset>
+							<legend>
+								{locale.pages.editor.timeline.timelines.range.immediate.title}
+							</legend>
+							<ul>
 								<li>
-									<button
-										type="button"
-										title={locale.common.dialog.submit}
-										onClick={handleSubmitPrevious}
-									>
-										<IconImage
-											kind={IconKind.ConfirmPositive}
-											fill="green"
-										/>
-									</button>
-								</li>
-								<li>
-									<button
-										type="button"
-										title={locale.common.dialog.cancel}
-										onClick={handleCancelPrevious}
-									>
-										<IconImage
-											kind={IconKind.ConfirmCancel}
+									<button onClick={handleSubmitAttachBeforeTimeline}>
+										<IconLabel
+											kind={IconKind.RelationJoin}
+											label={
+												locale.pages.editor.timeline.timelines.range.immediate
+													.attachBeforeTimeline
+											}
 										/>
 									</button>
 								</li>
 							</ul>
-							<div className="tools after">
-								<fieldset>
-									<legend>
-										{locale.pages.editor.timeline.timelines.range.immediate.title}
-									</legend>
-									<ul>
-										<li>
-											<button onClick={handleSubmitAttachBeforeTimeline}>
-												<IconLabel
-													kind={IconKind.RelationJoin}
-													label={locale.pages.editor.timeline.timelines.range.immediate.attachBeforeTimeline}
-												/>
-											</button>
-										</li>
-									</ul>
-								</fieldset>
-								<fieldset>
-									<legend>
-										{locale.pages.editor.timeline.timelines.range.continue.title}
-									</legend>
-									<ul>
-										<li>
-											<button onClick={handleAttachBeforeTimeline}>
-												<IconLabel
-													kind={IconKind.RelationJoin}
-													label={locale.pages.editor.timeline.timelines.range.continue.attachBeforeTimeline}
-												/>
-											</button>
-										</li>
-										<li>
-											<button onClick={handleClearPrevious}>
-												<IconLabel
-													kind={IconKind.RelationClear}
-													label={locale.pages.editor.timeline.timelines.range.continue.clearRelation}
-												/>
-											</button>
-										</li>
-										<li>
-											<button onClick={handleClearStatic}>
-												<IconLabel
-													kind={IconKind.Clear}
-													label={locale.pages.editor.timeline.timelines.range.continue.clearDate}
-												/>
-											</button>
-										</li>
-									</ul>
-								</fieldset>
-							</div>
-						</td>
-					) : (
-						<WorkRangeCells
-							workRangeKind={workRangeKind}
-							selectable={Boolean(selectingBeginDateAtomReader.data)}
-							beginDate={beginDate}
-							endDate={endDate}
-							htmlFor={selectingId}
-							callbackClickBeginDate={Settings.maybeTaskTimeline(props.currentTimeline) && !isCompletedTask ? handleClickBeginDate : undefined}
-						/>
-					)
-			}
+						</fieldset>
+						<fieldset>
+							<legend>
+								{locale.pages.editor.timeline.timelines.range.continue.title}
+							</legend>
+							<ul>
+								<li>
+									<button onClick={handleAttachBeforeTimeline}>
+										<IconLabel
+											kind={IconKind.RelationJoin}
+											label={
+												locale.pages.editor.timeline.timelines.range.continue
+													.attachBeforeTimeline
+											}
+										/>
+									</button>
+								</li>
+								<li>
+									<button onClick={handleClearPrevious}>
+										<IconLabel
+											kind={IconKind.RelationClear}
+											label={
+												locale.pages.editor.timeline.timelines.range.continue
+													.clearRelation
+											}
+										/>
+									</button>
+								</li>
+								<li>
+									<button onClick={handleClearStatic}>
+										<IconLabel
+											kind={IconKind.Clear}
+											label={
+												locale.pages.editor.timeline.timelines.range.continue
+													.clearDate
+											}
+										/>
+									</button>
+								</li>
+							</ul>
+						</fieldset>
+					</div>
+				</td>
+			) : (
+				<WorkRangeCells
+					workRangeKind={workRangeKind}
+					selectable={Boolean(selectingBeginDateAtomReader.data)}
+					beginDate={beginDate}
+					endDate={endDate}
+					htmlFor={selectingId}
+					callbackClickBeginDate={
+						Settings.maybeTaskTimeline(props.currentTimeline) &&
+						!isCompletedTask
+							? handleClickBeginDate
+							: undefined
+					}
+				/>
+			)}
 			<ProgressCell
 				readOnly={!Settings.maybeTaskTimeline(props.currentTimeline)}
 				disabled={Boolean(selectingBeginDateAtomReader.data) || isCompletedTask}
 				progress={progress}
-				callbackChangeValue={Settings.maybeTaskTimeline(props.currentTimeline) ? handleChangeProgress : undefined}
+				callbackChangeValue={
+					Settings.maybeTaskTimeline(props.currentTimeline)
+						? handleChangeProgress
+						: undefined
+				}
 				callbackFocus={handleFocus}
 			/>
 			<ControlsCell

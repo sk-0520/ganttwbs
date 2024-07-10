@@ -1,8 +1,9 @@
-import { KeyboardEvent } from "react";
+import type { KeyboardEvent } from "react";
 
 export abstract class Forms {
-
-	public static handleKeyDownAcceptTab(event: KeyboardEvent<HTMLTextAreaElement>) {
+	public static handleKeyDownAcceptTab(
+		event: KeyboardEvent<HTMLTextAreaElement>,
+	) {
 		if (event.key === "Tab") {
 			event.preventDefault();
 
@@ -12,12 +13,14 @@ export abstract class Forms {
 			const cursorPosition = element.selectionStart;
 			// カーソルの左右の文字列値
 			const leftString = element.value.substring(0, cursorPosition);
-			const rightString = element.value.substring(cursorPosition, element.value.length);
+			const rightString = element.value.substring(
+				cursorPosition,
+				element.value.length,
+			);
 
 			element.value = leftString + "\t" + rightString;
 			// カーソル位置をタブスペースの後ろにする
 			element.selectionEnd = cursorPosition + 1;
 		}
 	}
-
 }

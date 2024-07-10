@@ -1,5 +1,5 @@
-import { DateTime } from "@/models/DateTime";
-import { TimeSpan } from "@/models/TimeSpan";
+import type { DateTime } from "@/models/DateTime";
+import type { TimeSpan } from "@/models/TimeSpan";
 
 export interface Range<T> {
 	/** 開始。 */

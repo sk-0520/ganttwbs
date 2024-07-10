@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -20,8 +20,12 @@ const revision = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA;
 const Layout: NextPage<Props> = (props: Props) => {
 	const locale = useLocale();
 
-	const headTitle = props.title ? `${props.title} - ${process.env.NEXT_PUBLIC_APP_NAME}` : process.env.NEXT_PUBLIC_APP_NAME;
-	const pageTitle = props.title ? props.title : process.env.NEXT_PUBLIC_APP_NAME;
+	const headTitle = props.title
+		? `${props.title} - ${process.env.NEXT_PUBLIC_APP_NAME}`
+		: process.env.NEXT_PUBLIC_APP_NAME;
+	const pageTitle = props.title
+		? props.title
+		: process.env.NEXT_PUBLIC_APP_NAME;
 
 	return (
 		<>
@@ -30,51 +34,35 @@ const Layout: NextPage<Props> = (props: Props) => {
 				<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 				<meta name="app-revision" content={revision} />
 			</Head>
-			{
-				props.mode === "application"
-					? (
-						<div id="mode-application">
-							<main id={props.layoutId}>
-								{props.children}
-							</main>
-						</div>
-					)
-					: (
-						<div id="mode-page">
-							<h1>{pageTitle}</h1>
-							<header>
-								<nav>
-									<ul>
-										<li>
-											<Link href="/">
-												{locale.pages.top.title}
-											</Link>
-										</li>
-										<li>
-											<Link href="/new">
-												{locale.pages.new.title}
-											</Link>
-										</li>
-										<li>
-											<Link href="/load">
-												{locale.pages.load.title}
-											</Link>
-										</li>
-										<li>
-											<Link href="/about">
-												{locale.pages.about.title}
-											</Link>
-										</li>
-									</ul>
-								</nav>
-							</header>
-							<main id={props.layoutId}>
-								{props.children}
-							</main>
-							<footer></footer>
-						</div>
-					)
-			}
+			{props.mode === "application" ? (
+				<div id="mode-application">
+					<main id={props.layoutId}>{props.children}</main>
+				</div>
+			) : (
+				<div id="mode-page">
+					<h1>{pageTitle}</h1>
+					<header>
+						<nav>
+							<ul>
+								<li>
+									<Link href="/">{locale.pages.top.title}</Link>
+								</li>
+								<li>
+									<Link href="/new">{locale.pages.new.title}</Link>
+								</li>
+								<li>
+									<Link href="/load">{locale.pages.load.title}</Link>
+								</li>
+								<li>
+									<Link href="/about">{locale.pages.about.title}</Link>
+								</li>
+							</ul>
+						</nav>
+					</header>
+					<main id={props.layoutId}>{props.children}</main>
+					<footer></footer>
+				</div>
+			)}
 		</>
 	);
 };

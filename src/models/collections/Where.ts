@@ -1,11 +1,10 @@
-import { IteratorBase, Predicate } from "@/models/collections/Iterator";
+import { IteratorBase, type Predicate } from "@/models/collections/Iterator";
 
 export class WhereIterable<T> implements Iterable<T> {
 	public constructor(
 		private readonly iterable: Iterable<T>,
 		private readonly predicate: Predicate<T>,
-	) {
-	}
+	) {}
 
 	//#region Iterable
 

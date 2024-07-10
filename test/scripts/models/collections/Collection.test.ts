@@ -1,5 +1,5 @@
 import { Collection } from "@/models/collections/Collection";
-import { Predicate } from "@/models/collections/Iterator";
+import type { Predicate } from "@/models/collections/Iterator";
 
 describe("Collection", () => {
 	describe("生成", () => {
@@ -42,8 +42,12 @@ describe("Collection", () => {
 
 		test("select - source", () => {
 			const collection = Collection.from([0, 1, 2, 3, 4, 5]);
-			expect(collection.select(a => a * a).toArray()).toStrictEqual([0, 1, 4, 9, 16, 25]);
-			expect(collection.select(a => a * a).toArray()).toStrictEqual([0, 1, 4, 9, 16, 25]);
+			expect(collection.select((a) => a * a).toArray()).toStrictEqual([
+				0, 1, 4, 9, 16, 25,
+			]);
+			expect(collection.select((a) => a * a).toArray()).toStrictEqual([
+				0, 1, 4, 9, 16, 25,
+			]);
 		});
 
 		test("select - index", () => {
@@ -56,31 +60,34 @@ describe("Collection", () => {
 			const collection = Collection.from(["A", "B", "C", "D"]);
 			const actual1 = collection
 				.select((a, i) => i)
-				.where(a => a % 2 !== 0)
-				.select(a => String.fromCharCode(65 + a))
-				.toArray()
-				;
+				.where((a) => a % 2 !== 0)
+				.select((a) => String.fromCharCode(65 + a))
+				.toArray();
 			expect(actual1).toStrictEqual(["B", "D"]);
 
 			const actual2 = collection
 				.select((a, i) => i)
-				.where(a => a % 2 === 0)
-				.select(a => String.fromCharCode(65 + a))
-				.toArray()
-				;
+				.where((a) => a % 2 === 0)
+				.select((a) => String.fromCharCode(65 + a))
+				.toArray();
 			expect(actual2).toStrictEqual(["A", "C"]);
 		});
 
 		test("selectMany", () => {
-			const collection = Collection.from([[1, 2, 3], [4, 5, 6]]);
-			const actual = collection.selectMany(a => `[${a}]`).toArray();
+			const collection = Collection.from([
+				[1, 2, 3],
+				[4, 5, 6],
+			]);
+			const actual = collection.selectMany((a) => `[${a}]`).toArray();
 			expect(actual).toStrictEqual(["[1]", "[2]", "[3]", "[4]", "[5]", "[6]"]);
 			expect(actual).toStrictEqual(["[1]", "[2]", "[3]", "[4]", "[5]", "[6]"]);
 		});
 
 		test("selectMany - throw", () => {
 			const collection = Collection.from([1, 2, 3, 4, 5, 6]);
-			expect(() => collection.selectMany(a => `[${a}]`).toArray()).toThrowError();
+			expect(() =>
+				collection.selectMany((a) => `[${a}]`).toArray(),
+			).toThrowError();
 		});
 
 		test("concat", () => {
@@ -93,20 +100,13 @@ describe("Collection", () => {
 			const input3 = Collection.from([1, 3, 5]);
 			const input4 = [2, 4, 6];
 
-			const actual1 = Collection.from(input1)
-				.concat(input2)
-				;
-			const actual2 = actual1
-				.concat(input3)
-				;
-			const actual3 = actual2
-				.concat(input4)
-				;
+			const actual1 = Collection.from(input1).concat(input2);
+			const actual2 = actual1.concat(input3);
+			const actual3 = actual2.concat(input4);
 			const actualAll = Collection.from(input1)
 				.concat(input2)
 				.concat(input3)
-				.concat(input4)
-				;
+				.concat(input4);
 
 			expect(actual1.toArray()).toStrictEqual(expected1);
 			expect(actual2.toArray()).toStrictEqual(expected2);
@@ -122,13 +122,17 @@ describe("Collection", () => {
 		test("prepend", () => {
 			const collection = Collection.from([0, 1]);
 			expect(collection.prepend(2).toArray()).toStrictEqual([2, 0, 1]);
-			expect(collection.prepend(2).prepend(3).toArray()).toStrictEqual([3, 2, 0, 1]);
+			expect(collection.prepend(2).prepend(3).toArray()).toStrictEqual([
+				3, 2, 0, 1,
+			]);
 		});
 
 		test("append", () => {
 			const collection = Collection.from([0, 1]);
 			expect(collection.append(2).toArray()).toStrictEqual([0, 1, 2]);
-			expect(collection.append(2).append(3).toArray()).toStrictEqual([0, 1, 2, 3]);
+			expect(collection.append(2).append(3).toArray()).toStrictEqual([
+				0, 1, 2, 3,
+			]);
 		});
 
 		test.each([
@@ -186,13 +190,15 @@ describe("Collection", () => {
 
 		test.each([
 			[[0], [0]],
-			[[2, 1, 0], [0, 1, 2]],
+			[
+				[2, 1, 0],
+				[0, 1, 2],
+			],
 		])("reverse", (expected: Array<number>, init: Array<number>) => {
 			const collection = Collection.from(init);
 			expect(collection.reverse().toArray()).toStrictEqual(expected);
 			expect(collection.reverse().reverse().toArray()).toStrictEqual(init);
 		});
-
 	});
 
 	describe("即時", () => {
@@ -248,10 +254,13 @@ describe("Collection", () => {
 			[1, undefined],
 			[5, (a: number) => 4 < a],
 			[undefined, (a: number) => 6 < a],
-		])("firstOrUndefined", (expected: number | undefined, predicate?: Predicate<number>) => {
-			const collection = Collection.from([1, 2, 3, 4, 5, 6]);
-			expect(collection.firstOrUndefined(predicate)).toBe(expected);
-		});
+		])(
+			"firstOrUndefined",
+			(expected: number | undefined, predicate?: Predicate<number>) => {
+				const collection = Collection.from([1, 2, 3, 4, 5, 6]);
+				expect(collection.firstOrUndefined(predicate)).toBe(expected);
+			},
+		);
 
 		test.each([
 			[6, undefined],
@@ -269,10 +278,13 @@ describe("Collection", () => {
 			[6, undefined],
 			[3, (a: number) => a < 4],
 			[undefined, (a: number) => a < 0],
-		])("lastOrUndefined", (expected: number | undefined, predicate?: Predicate<number>) => {
-			const collection = Collection.from([1, 2, 3, 4, 5, 6]);
-			expect(collection.lastOrUndefined(predicate)).toBe(expected);
-		});
+		])(
+			"lastOrUndefined",
+			(expected: number | undefined, predicate?: Predicate<number>) => {
+				const collection = Collection.from([1, 2, 3, 4, 5, 6]);
+				expect(collection.lastOrUndefined(predicate)).toBe(expected);
+			},
+		);
 
 		describe("single", () => {
 			test("empty - throw", () => {
@@ -287,17 +299,20 @@ describe("Collection", () => {
 				expect(() => Collection.from([1, 2, 3]).single()).toThrow(RangeError);
 			});
 
-
 			test("predicate - empty - throw", () => {
-				expect(() => Collection.empty().single(a => a === 2)).toThrow(RangeError);
+				expect(() => Collection.empty().single((a) => a === 2)).toThrow(
+					RangeError,
+				);
 			});
 
 			test("predicate - 3 - 1", () => {
-				expect(Collection.from([0, 1, 2, 2]).single(a => a === 1)).toBe(1);
+				expect(Collection.from([0, 1, 2, 2]).single((a) => a === 1)).toBe(1);
 			});
 
 			test("predicate - 4 - throw", () => {
-				expect(() => Collection.from([0, 1, 2, 2]).single(a => a === 2)).toThrow(RangeError);
+				expect(() =>
+					Collection.from([0, 1, 2, 2]).single((a) => a === 2),
+				).toThrow(RangeError);
 			});
 		});
 
@@ -311,19 +326,27 @@ describe("Collection", () => {
 			});
 
 			test("3 - throw", () => {
-				expect(() => Collection.from([1, 2, 3]).singleOrUndefined()).toThrow(RangeError);
+				expect(() => Collection.from([1, 2, 3]).singleOrUndefined()).toThrow(
+					RangeError,
+				);
 			});
 
 			test("predicate - empty", () => {
-				expect(Collection.empty().singleOrUndefined(a => a === 2)).toBeUndefined();
+				expect(
+					Collection.empty().singleOrUndefined((a) => a === 2),
+				).toBeUndefined();
 			});
 
 			test("predicate - 3 - 1", () => {
-				expect(Collection.from([0, 1, 2, 2]).singleOrUndefined(a => a === 1)).toBe(1);
+				expect(
+					Collection.from([0, 1, 2, 2]).singleOrUndefined((a) => a === 1),
+				).toBe(1);
 			});
 
 			test("predicate - 4 - throw", () => {
-				expect(() => Collection.from([0, 1, 2, 2]).singleOrUndefined(a => a === 2)).toThrow(RangeError);
+				expect(() =>
+					Collection.from([0, 1, 2, 2]).singleOrUndefined((a) => a === 2),
+				).toThrow(RangeError);
 			});
 		});
 	});

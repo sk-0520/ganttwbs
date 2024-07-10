@@ -1,17 +1,39 @@
 import { Arrays } from "@/models/Arrays";
-import { DayInfo } from "@/models/data/DayInfo";
-import { DateTimeRange } from "@/models/data/Range";
-import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
-import { ResourceInfo } from "@/models/data/ResourceInfo";
-import { AnyTimeline, DateOnly, GroupTimeline, Holiday, HolidayEvent, Member, Progress, RootTimeline, TaskTimeline, TimeOnly, TimelineId, Timestamp } from "@/models/data/Setting";
-import { RecursiveCalculationErrorWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind } from "@/models/data/WorkRange";
-import { DateTime, DateTimeTicks, WeekIndex } from "@/models/DateTime";
+import type { DayInfo } from "@/models/data/DayInfo";
+import type { DateTimeRange } from "@/models/data/Range";
+import type { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
+import type { ResourceInfo } from "@/models/data/ResourceInfo";
+import type {
+	AnyTimeline,
+	DateOnly,
+	GroupTimeline,
+	Holiday,
+	HolidayEvent,
+	Member,
+	Progress,
+	RootTimeline,
+	TaskTimeline,
+	TimeOnly,
+	TimelineId,
+	Timestamp,
+} from "@/models/data/Setting";
+import {
+	type RecursiveCalculationErrorWorkRange,
+	type SuccessWorkRange,
+	type WorkRange,
+	WorkRangeKind,
+} from "@/models/data/WorkRange";
+import {
+	DateTime,
+	type DateTimeTicks,
+	type WeekIndex,
+} from "@/models/DateTime";
 import { IdFactory } from "@/models/IdFactory";
 import { Limiter } from "@/models/Limiter";
-import { TimeLogMethod, createLogger } from "@/models/Logging";
+import { type TimeLogMethod, createLogger } from "@/models/Logging";
 import { Settings } from "@/models/Settings";
 import { TimeSpan } from "@/models/TimeSpan";
-import { TimeZone } from "@/models/TimeZone";
+import type { TimeZone } from "@/models/TimeZone";
 import { Types } from "@/models/Types";
 import { WorkRanges } from "@/models/WorkRanges";
 
@@ -25,7 +47,6 @@ interface Holidays {
 export type TimelineIdOrObject = TimelineId | AnyTimeline;
 
 export abstract class Timelines {
-
 	private static getId(timeline: TimelineIdOrObject): string {
 		return typeof timeline === "string" ? timeline : timeline.id;
 	}
@@ -54,10 +75,14 @@ export abstract class Timelines {
 		return "timeline-chart-" + this.getId(timeline);
 	}
 
-	public static getReadableTimelineIdClassName(displayTimelineId: ReadableTimelineId): string {
-		return "_dynamic_programmable_readableTimelineId_level-" + displayTimelineId.level;
+	public static getReadableTimelineIdClassName(
+		displayTimelineId: ReadableTimelineId,
+	): string {
+		return (
+			"_dynamic_programmable_readableTimelineId_level-" +
+			displayTimelineId.level
+		);
 	}
-
 
 	public static serializeWorkload(workload: TimeSpan): TimeOnly {
 		return workload.format("readable");
@@ -121,7 +146,7 @@ export abstract class Timelines {
 			result.push(timeline);
 		} else if (Settings.maybeGroupTimeline(timeline)) {
 			result.push(timeline);
-			const children = timeline.children.flatMap(a => this.flatCore(a));
+			const children = timeline.children.flatMap((a) => this.flatCore(a));
 			for (const child of children) {
 				result.push(child);
 			}
@@ -130,11 +155,15 @@ export abstract class Timelines {
 		return result;
 	}
 
-	public static flat(timelineNodes: ReadonlyArray<AnyTimeline>): Array<AnyTimeline> {
-		return timelineNodes.flatMap(a => this.flatCore(a));
+	public static flat(
+		timelineNodes: ReadonlyArray<AnyTimeline>,
+	): Array<AnyTimeline> {
+		return timelineNodes.flatMap((a) => this.flatCore(a));
 	}
 
-	public static toIndexes(timelines: ReadonlyArray<AnyTimeline>): Map<TimelineId, number> {
+	public static toIndexes(
+		timelines: ReadonlyArray<AnyTimeline>,
+	): Map<TimelineId, number> {
 		return new Map(timelines.map((a, i) => [a.id, i]));
 	}
 
@@ -142,7 +171,9 @@ export abstract class Timelines {
 		return workload.toFixed(2);
 	}
 
-	public static sumWorkloads(timelines: ReadonlyArray<GroupTimeline | TaskTimeline>): TimeSpan {
+	public static sumWorkloads(
+		timelines: ReadonlyArray<GroupTimeline | TaskTimeline>,
+	): TimeSpan {
 		const workloads: Array<TimeSpan> = [];
 
 		for (const timeline of timelines) {
@@ -155,10 +186,7 @@ export abstract class Timelines {
 			}
 		}
 
-		const sumMs = workloads.reduce(
-			(r, a) => r + a.totalMilliseconds,
-			0
-		);
+		const sumMs = workloads.reduce((r, a) => r + a.totalMilliseconds, 0);
 
 		return TimeSpan.fromMilliseconds(sumMs);
 	}
@@ -187,10 +215,9 @@ export abstract class Timelines {
 			return 0;
 		}
 
-		const sumProgress = progress.filter(a => !isNaN(a)).reduce(
-			(r, a) => r + a,
-			0.0
-		);
+		const sumProgress = progress
+			.filter((a) => !isNaN(a))
+			.reduce((r, a) => r + a, 0.0);
 
 		return sumProgress / progress.length;
 	}
@@ -204,7 +231,9 @@ export abstract class Timelines {
 	 * @param groupTimeline
 	 * @returns マップデータ
 	 */
-	public static getTimelinesMap(groupTimeline: GroupTimeline): Map<TimelineId, AnyTimeline> {
+	public static getTimelinesMap(
+		groupTimeline: GroupTimeline,
+	): Map<TimelineId, AnyTimeline> {
 		const result = new Map<TimelineId, AnyTimeline>();
 
 		result.set(groupTimeline.id, groupTimeline);
@@ -223,7 +252,10 @@ export abstract class Timelines {
 		return result;
 	}
 
-	public static findTimeline(timelineId: TimelineId, groupTimeline: Readonly<GroupTimeline>): AnyTimeline | null {
+	public static findTimeline(
+		timelineId: TimelineId,
+		groupTimeline: Readonly<GroupTimeline>,
+	): AnyTimeline | null {
 		if (timelineId === groupTimeline.id) {
 			return groupTimeline;
 		}
@@ -249,15 +281,19 @@ export abstract class Timelines {
 	 * @param groupTimeline 検索対象のグループタイムライン(再帰的に参照される)。
 	 * @returns 親グループの配列。最小で1、何も見つからない場合は 空配列。
 	 */
-	public static getParentGroups(timeline: Readonly<AnyTimeline>, groupTimeline: Readonly<GroupTimeline>): Array<GroupTimeline> {
-
+	public static getParentGroups(
+		timeline: Readonly<AnyTimeline>,
+		groupTimeline: Readonly<GroupTimeline>,
+	): Array<GroupTimeline> {
 		for (const child of groupTimeline.children) {
 			if (child.id === timeline.id) {
 				return [groupTimeline];
 			}
 		}
 
-		const groupChildren = groupTimeline.children.filter(Settings.maybeGroupTimeline);
+		const groupChildren = groupTimeline.children.filter(
+			Settings.maybeGroupTimeline,
+		);
 
 		for (const child of groupChildren) {
 			const nodes = this.getParentGroups(timeline, child);
@@ -267,11 +303,12 @@ export abstract class Timelines {
 		}
 
 		return [];
-
 	}
 
-	public static calcReadableTimelineId(timeline: Readonly<AnyTimeline>, rootTimeline: Readonly<GroupTimeline>): ReadableTimelineId {
-
+	public static calcReadableTimelineId(
+		timeline: Readonly<AnyTimeline>,
+		rootTimeline: Readonly<GroupTimeline>,
+	): ReadableTimelineId {
 		const groups = Timelines.getParentGroups(timeline, rootTimeline);
 		if (!groups.length) {
 			// 削除時に呼ばれた場合、すでに存在しない
@@ -287,7 +324,7 @@ export abstract class Timelines {
 		for (let i = 1; i < groups.length; i++) {
 			const parent = groups[i - 1];
 			const group = groups[i];
-			const index = parent.children.findIndex(a => a.id === group.id);
+			const index = parent.children.findIndex((a) => a.id === group.id);
 			if (index === -1) {
 				throw new Error();
 			}
@@ -295,7 +332,7 @@ export abstract class Timelines {
 		}
 		// 最終アイテム・ルートのレベル設定
 		const last = Arrays.last(groups);
-		const index = last.children.findIndex(a => a.id === timeline.id);
+		const index = last.children.findIndex((a) => a.id === timeline.id);
 		if (index === -1) {
 			throw new Error();
 		}
@@ -309,7 +346,10 @@ export abstract class Timelines {
 		return result;
 	}
 
-	private static convertDatesByHolidayEvents(events: { [key: DateOnly]: HolidayEvent }, timeZone: TimeZone): Array<DateTime> {
+	private static convertDatesByHolidayEvents(
+		events: { [key: DateOnly]: HolidayEvent },
+		timeZone: TimeZone,
+	): Array<DateTime> {
 		const result = new Array<DateTime>();
 
 		for (const [key, _] of Object.entries(events)) {
@@ -320,21 +360,29 @@ export abstract class Timelines {
 		return result;
 	}
 
-	private static createRecursiveCalculatorWorkRange(timeline: AnyTimeline): RecursiveCalculationErrorWorkRange {
+	private static createRecursiveCalculatorWorkRange(
+		timeline: AnyTimeline,
+	): RecursiveCalculationErrorWorkRange {
 		return {
 			kind: WorkRangeKind.RecursiveError,
 			timeline: timeline,
 		};
 	}
 
-	private static createSuccessWorkRange(holidays: Holidays, timeline: AnyTimeline, beginDate: DateTime, workload: TimeSpan, timeZone: TimeZone, recursiveMaxCount: number): SuccessWorkRange | RecursiveCalculationErrorWorkRange {
-
+	private static createSuccessWorkRange(
+		holidays: Holidays,
+		timeline: AnyTimeline,
+		beginDate: DateTime,
+		workload: TimeSpan,
+		timeZone: TimeZone,
+		recursiveMaxCount: number,
+	): SuccessWorkRange | RecursiveCalculationErrorWorkRange {
 		function isHoliday(dateOnly: DateTime): boolean {
 			if (holidays.weeks.includes(dateOnly.week)) {
 				return true;
 			}
 
-			if (holidays.dates.some(a => a.ticks === dateOnly.ticks)) {
+			if (holidays.dates.some((a) => a.ticks === dateOnly.ticks)) {
 				return true;
 			}
 
@@ -362,7 +410,8 @@ export abstract class Timelines {
 		let end = begin.add(TimeSpan.fromMilliseconds(workload.totalMilliseconds));
 
 		// 開始日から終了日までにある休日を加算
-		let count = begin.truncateTime().diff(begin).totalDays + begin.diff(end).totalDays;
+		let count =
+			begin.truncateTime().diff(begin).totalDays + begin.diff(end).totalDays;
 		let endDays = 0;
 		limiter.reset();
 		for (let i = 0; i < count; i++) {
@@ -388,14 +437,15 @@ export abstract class Timelines {
 		return result;
 	}
 
-
 	/**
 	 * タイムラインから最初に見つかったタスクを返す。
 	 * ここでいう最初は層の浅い部分となる。
 	 * @param timeline
 	 * @returns
 	 */
-	public static getFirstTaskTimeline(timeline: AnyTimeline): TaskTimeline | null {
+	public static getFirstTaskTimeline(
+		timeline: AnyTimeline,
+	): TaskTimeline | null {
 		if (Settings.maybeTaskTimeline(timeline)) {
 			return timeline;
 		} else if (Settings.maybeGroupTimeline(timeline)) {
@@ -404,7 +454,9 @@ export abstract class Timelines {
 				return taskChildren[0];
 			}
 
-			const groupChildren = timeline.children.filter(Settings.maybeGroupTimeline);
+			const groupChildren = timeline.children.filter(
+				Settings.maybeGroupTimeline,
+			);
 			for (const groupTImeline of groupChildren) {
 				const taskTimeline = this.getFirstTaskTimeline(groupTImeline);
 				if (taskTimeline) {
@@ -425,10 +477,14 @@ export abstract class Timelines {
 	 * @param rootTimeline
 	 * @returns
 	 */
-	public static canSelect(targetTimeline: AnyTimeline, baseTimeline: AnyTimeline, rootTimeline: GroupTimeline): boolean {
+	public static canSelect(
+		targetTimeline: AnyTimeline,
+		baseTimeline: AnyTimeline,
+		rootTimeline: GroupTimeline,
+	): boolean {
 		const groups = Timelines.getParentGroups(baseTimeline, rootTimeline);
 		if (groups.length) {
-			return !groups.some(a => a.id === targetTimeline.id);
+			return !groups.some((a) => a.id === targetTimeline.id);
 		}
 
 		return true;
@@ -440,10 +496,13 @@ export abstract class Timelines {
 	 * @param rootTimeline
 	 * @returns
 	 */
-	public static searchBeforeTimeline(timeline: AnyTimeline, rootTimeline: GroupTimeline): AnyTimeline | undefined {
+	public static searchBeforeTimeline(
+		timeline: AnyTimeline,
+		rootTimeline: GroupTimeline,
+	): AnyTimeline | undefined {
 		const sequenceTimelines = this.flat(rootTimeline.children);
 
-		const index = sequenceTimelines.findIndex(a => a.id === timeline.id);
+		const index = sequenceTimelines.findIndex((a) => a.id === timeline.id);
 		if (index === -1) {
 			throw new Error();
 		}
@@ -455,13 +514,16 @@ export abstract class Timelines {
 			const beforeTimeline = sequenceTimelines[i];
 			if (Settings.maybeGroupTimeline(beforeTimeline)) {
 				// 前項目が自身の属するグループの場合、直近タイムラインにはなりえない
-				if (groups.find(a => a.id === beforeTimeline.id)) {
+				if (groups.find((a) => a.id === beforeTimeline.id)) {
 					continue;
 				}
 				return beforeTimeline;
 			}
 			if (Settings.maybeTaskTimeline(beforeTimeline)) {
-				const beforeGroups = Timelines.getParentGroups(beforeTimeline, rootTimeline);
+				const beforeGroups = Timelines.getParentGroups(
+					beforeTimeline,
+					rootTimeline,
+				);
 				const beforeGroup = Arrays.last(beforeGroups);
 				// 前項目のグループと自身のグループが同じ場合、兄弟として直近として扱える
 				if (beforeGroup.id === group.id) {
@@ -485,12 +547,18 @@ export abstract class Timelines {
 		return undefined;
 	}
 
-	private static getWorkRangesCore(flatTimelines: ReadonlyArray<AnyTimeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>, timeZone: TimeZone, log: TimeLogMethod): Map<TimelineId, WorkRange> {
+	private static getWorkRangesCore(
+		flatTimelines: ReadonlyArray<AnyTimeline>,
+		holiday: Holiday,
+		recursiveMaxCount: Readonly<number>,
+		timeZone: TimeZone,
+		log: TimeLogMethod,
+	): Map<TimelineId, WorkRange> {
 		const result = new Map<TimelineId, WorkRange>();
 
 		const holidays: Holidays = {
 			dates: this.convertDatesByHolidayEvents(holiday.events, timeZone),
-			weeks: holiday.regulars.map(a => Settings.toWeekIndex(a)),
+			weeks: holiday.regulars.map((a) => Settings.toWeekIndex(a)),
 		};
 
 		// 算出済みキャッシュ
@@ -502,26 +570,32 @@ export abstract class Timelines {
 		} as const;
 
 		// タスクのみ
-		const taskTimelines = flatTimelines
-			.filter(Settings.maybeTaskTimeline)
-			;
+		const taskTimelines = flatTimelines.filter(Settings.maybeTaskTimeline);
 		// 開始固定だけのタスクを算出
-		const staticTimelines = taskTimelines
-			.filter(a => a.static && !a.previous.length)
-			;
+		const staticTimelines = taskTimelines.filter(
+			(a) => a.static && !a.previous.length,
+		);
 		for (const timeline of staticTimelines) {
 			if (!Types.isString(timeline.static)) {
 				throw new Error();
 			}
 			const beginDate = DateTime.parse(timeline.static, timeZone);
 			const workload = this.deserializeWorkload(timeline.workload);
-			const successWorkRange = this.createSuccessWorkRange(holidays, timeline, beginDate, workload, timeZone, recursiveMaxCount);
+			const successWorkRange = this.createSuccessWorkRange(
+				holidays,
+				timeline,
+				beginDate,
+				workload,
+				timeZone,
+				recursiveMaxCount,
+			);
 			result.set(timeline.id, successWorkRange);
 			cache.statics.set(timeline.id, timeline);
 		}
 		// 固定・前工程のないタスクを未入力設定
-		const emptyTimelines = taskTimelines
-			.filter(a => !a.static && !a.previous.length);
+		const emptyTimelines = taskTimelines.filter(
+			(a) => !a.static && !a.previous.length,
+		);
 		for (const timeline of emptyTimelines) {
 			const range: WorkRange = {
 				kind: WorkRangeKind.NoInput,
@@ -549,19 +623,31 @@ export abstract class Timelines {
 
 			const workload = this.deserializeWorkload(timeline.workload);
 
-			const successWorkRange = this.createSuccessWorkRange(holidays, timeline, prevRange.end, workload, timeZone, recursiveMaxCount);
+			const successWorkRange = this.createSuccessWorkRange(
+				holidays,
+				timeline,
+				prevRange.end,
+				workload,
+				timeZone,
+				recursiveMaxCount,
+			);
 			result.set(timeline.id, successWorkRange);
 		}
 
 		// グループ・タスクをそれぞれ算出
 		log("各グループ・タスク");
 		const limiter = new Limiter(recursiveMaxCount);
-		const targetTimelines = new Set(flatTimelines.filter(a => !result.has(a.id)));
+		const targetTimelines = new Set(
+			flatTimelines.filter((a) => !result.has(a.id)),
+		);
 		while (result.size < flatTimelines.length) {
 			if (limiter.increment()) {
 				for (const timeline of flatTimelines) {
 					if (!result.has(timeline.id)) {
-						result.set(timeline.id, this.createRecursiveCalculatorWorkRange(timeline));
+						result.set(
+							timeline.id,
+							this.createRecursiveCalculatorWorkRange(timeline),
+						);
 					}
 				}
 
@@ -586,7 +672,7 @@ export abstract class Timelines {
 						continue;
 					}
 
-					if (timeline.previous.some(a => cache.noInputs.has(a))) {
+					if (timeline.previous.some((a) => cache.noInputs.has(a))) {
 						// 前工程に未入力項目があれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
 							kind: WorkRangeKind.RelationNoInput,
@@ -595,16 +681,15 @@ export abstract class Timelines {
 						continue;
 					}
 
-					if (!timeline.previous.every(a => result.has(a))) {
+					if (!timeline.previous.every((a) => result.has(a))) {
 						// 前工程が結果セットに全て格納されていなければ無視する
 						continue;
 					}
 
 					const resultWorkRanges = timeline.previous
-						.map(a => result.get(a))
-						.filter((a): a is WorkRange => a !== undefined)
-						;
-					if (resultWorkRanges.some(a => WorkRanges.isError(a))) {
+						.map((a) => result.get(a))
+						.filter((a): a is WorkRange => a !== undefined);
+					if (resultWorkRanges.some((a) => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
 							kind: WorkRangeKind.RelationError,
@@ -614,7 +699,9 @@ export abstract class Timelines {
 					}
 
 					// 多分これで算出可能
-					const successWorkRanges = resultWorkRanges.filter(WorkRanges.maybeSuccessWorkRange);
+					const successWorkRanges = resultWorkRanges.filter(
+						WorkRanges.maybeSuccessWorkRange,
+					);
 					if (resultWorkRanges.length !== successWorkRanges.length) {
 						// わからん
 						continue;
@@ -632,9 +719,15 @@ export abstract class Timelines {
 					}
 
 					const workload = this.deserializeWorkload(timeline.workload);
-					const successWorkRange = this.createSuccessWorkRange(holidays, timeline, prevDate, workload, timeZone, recursiveMaxCount);
+					const successWorkRange = this.createSuccessWorkRange(
+						holidays,
+						timeline,
+						prevDate,
+						workload,
+						timeZone,
+						recursiveMaxCount,
+					);
 					result.set(timeline.id, successWorkRange);
-
 				} else if (Settings.maybeGroupTimeline(timeline)) {
 					// グループ
 
@@ -648,22 +741,23 @@ export abstract class Timelines {
 						continue;
 					}
 
-					const resultChildren = timeline.children.filter(a => result.has(a.id));
+					const resultChildren = timeline.children.filter((a) =>
+						result.has(a.id),
+					);
 					if (timeline.children.length !== resultChildren.length) {
 						// 子の長さが違う場合、反復がまだ達成できていない可能性あり
 						continue;
 					}
 
-					if (!resultChildren.every(a => result.has(a.id))) {
+					if (!resultChildren.every((a) => result.has(a.id))) {
 						// 結果セットに全て格納されていないのであれば算出できない
 						continue;
 					}
 
 					const resultWorkRanges = resultChildren
-						.map(a => result.get(a.id))
-						.filter((a): a is WorkRange => a !== undefined)
-						;
-					if (resultWorkRanges.some(a => WorkRanges.isError(a))) {
+						.map((a) => result.get(a.id))
+						.filter((a): a is WorkRange => a !== undefined);
+					if (resultWorkRanges.some((a) => WorkRanges.isError(a))) {
 						// 前工程にエラーがあれば自身は関係ミス扱いにする
 						result.set(timeline.id, {
 							kind: WorkRangeKind.RelationError,
@@ -672,9 +766,12 @@ export abstract class Timelines {
 						continue;
 					}
 					// まぁまぁ(たぶん条件漏れあり)
-					const items = resultWorkRanges.filter(WorkRanges.maybeSuccessWorkRange);
+					const items = resultWorkRanges.filter(
+						WorkRanges.maybeSuccessWorkRange,
+					);
 					if (items.length) {
-						const totalSuccessWorkRange = WorkRanges.getTotalSuccessWorkRange(items);
+						const totalSuccessWorkRange =
+							WorkRanges.getTotalSuccessWorkRange(items);
 						const successWorkRange: SuccessWorkRange = {
 							timeline: timeline,
 							kind: WorkRangeKind.Success,
@@ -687,16 +784,34 @@ export abstract class Timelines {
 			}
 		}
 
-		log("反復実施数", limiter.count, "result", result.size, "flatTimelines", flatTimelines.length);
+		log(
+			"反復実施数",
+			limiter.count,
+			"result",
+			result.size,
+			"flatTimelines",
+			flatTimelines.length,
+		);
 
 		return result;
 	}
 
-	public static getWorkRanges(flatTimelines: ReadonlyArray<AnyTimeline>, holiday: Holiday, recursiveMaxCount: Readonly<number>, timeZone: TimeZone): Map<TimelineId, WorkRange> {
+	public static getWorkRanges(
+		flatTimelines: ReadonlyArray<AnyTimeline>,
+		holiday: Holiday,
+		recursiveMaxCount: Readonly<number>,
+		timeZone: TimeZone,
+	): Map<TimelineId, WorkRange> {
 		let result: Map<TimelineId, WorkRange> | undefined;
 
-		logger.time("作業範囲算出", log => {
-			result = this.getWorkRangesCore(flatTimelines, holiday, recursiveMaxCount, timeZone, log);
+		logger.time("作業範囲算出", (log) => {
+			result = this.getWorkRangesCore(
+				flatTimelines,
+				holiday,
+				recursiveMaxCount,
+				timeZone,
+				log,
+			);
 		});
 		if (result === undefined) {
 			throw new Error();
@@ -705,20 +820,31 @@ export abstract class Timelines {
 		return result;
 	}
 
-	private static calculateDayInfosCore(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>, log: TimeLogMethod): Map<DateTimeTicks, DayInfo> {
-		type SuccessWorkRangeTimeline = Omit<SuccessWorkRange, "kind" | "timeline"> & {
-			timeline: TaskTimeline,
-		}
+	private static calculateDayInfosCore(
+		timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>,
+		workRanges: ReadonlySet<Readonly<WorkRange>>,
+		resourceInfo: Readonly<ResourceInfo>,
+		log: TimeLogMethod,
+	): Map<DateTimeTicks, DayInfo> {
+		type SuccessWorkRangeTimeline = Omit<
+			SuccessWorkRange,
+			"kind" | "timeline"
+		> & {
+			timeline: TaskTimeline;
+		};
 
 		const successWorkRanges = new Set(
 			[...workRanges]
 				.filter(WorkRanges.maybeSuccessWorkRange)
-				.filter(a => Settings.maybeTaskTimeline(a.timeline))
-				.map(a => ({
-					begin: a.begin,
-					end: a.end,
-					timeline: a.timeline as TaskTimeline
-				} satisfies SuccessWorkRangeTimeline))
+				.filter((a) => Settings.maybeTaskTimeline(a.timeline))
+				.map(
+					(a) =>
+						({
+							begin: a.begin,
+							end: a.end,
+							timeline: a.timeline as TaskTimeline,
+						}) satisfies SuccessWorkRangeTimeline,
+				),
 		);
 
 		if (!successWorkRanges.size) {
@@ -740,11 +866,9 @@ export abstract class Timelines {
 
 				if (
 					// 自身の後半に対象が存在する
-					(currentWorkRange.begin.ticks < otherWorkRange.begin.ticks)
-					&&
-					(otherWorkRange.begin.ticks < currentWorkRange.end.ticks)
-					&&
-					(currentWorkRange.end.ticks < otherWorkRange.end.ticks)
+					currentWorkRange.begin.ticks < otherWorkRange.begin.ticks &&
+					otherWorkRange.begin.ticks < currentWorkRange.end.ticks &&
+					currentWorkRange.end.ticks < otherWorkRange.end.ticks
 				) {
 					range = {
 						begin: otherWorkRange.begin,
@@ -752,11 +876,9 @@ export abstract class Timelines {
 					};
 				} else if (
 					// 自身の中に対象が存在する
-					(currentWorkRange.begin.ticks <= otherWorkRange.begin.ticks)
-					&&
-					(otherWorkRange.begin.ticks < otherWorkRange.end.ticks)
-					&&
-					(otherWorkRange.end.ticks <= currentWorkRange.end.ticks)
+					currentWorkRange.begin.ticks <= otherWorkRange.begin.ticks &&
+					otherWorkRange.begin.ticks < otherWorkRange.end.ticks &&
+					otherWorkRange.end.ticks <= currentWorkRange.end.ticks
 				) {
 					range = {
 						begin: otherWorkRange.begin,
@@ -764,11 +886,9 @@ export abstract class Timelines {
 					};
 				} else if (
 					// 自身の前半に対象が存在する
-					(otherWorkRange.begin.ticks < currentWorkRange.begin.ticks)
-					&&
-					(currentWorkRange.begin.ticks < otherWorkRange.end.ticks)
-					&&
-					(otherWorkRange.end.ticks < currentWorkRange.end.ticks)
+					otherWorkRange.begin.ticks < currentWorkRange.begin.ticks &&
+					currentWorkRange.begin.ticks < otherWorkRange.end.ticks &&
+					otherWorkRange.end.ticks < currentWorkRange.end.ticks
 				) {
 					range = {
 						begin: currentWorkRange.begin,
@@ -776,11 +896,9 @@ export abstract class Timelines {
 					};
 				} else if (
 					// 自身が対象の中に納まる
-					(otherWorkRange.begin.ticks <= currentWorkRange.begin.ticks)
-					&&
-					(currentWorkRange.begin.ticks < currentWorkRange.end.ticks)
-					&&
-					(currentWorkRange.end.ticks <= otherWorkRange.end.ticks)
+					otherWorkRange.begin.ticks <= currentWorkRange.begin.ticks &&
+					currentWorkRange.begin.ticks < currentWorkRange.end.ticks &&
+					currentWorkRange.end.ticks <= otherWorkRange.end.ticks
 				) {
 					range = {
 						begin: currentWorkRange.begin,
@@ -789,7 +907,11 @@ export abstract class Timelines {
 				}
 
 				if (range) {
-					if (currentWorkRange.timeline.memberId === otherWorkRange.timeline.memberId && resourceInfo.memberMap.has(currentWorkRange.timeline.memberId)) {
+					if (
+						currentWorkRange.timeline.memberId ===
+							otherWorkRange.timeline.memberId &&
+						resourceInfo.memberMap.has(currentWorkRange.timeline.memberId)
+					) {
 						const setInfo = (date: DateTime) => {
 							let info = result.get(date.ticks);
 							if (!info) {
@@ -808,8 +930,7 @@ export abstract class Timelines {
 						for (let i = 0; i < length; i++) {
 							const date = i
 								? range.begin.add(i, "day").truncateTime()
-								: range.begin
-								;
+								: range.begin;
 							setInfo(date);
 						}
 						// 終端(中途半端な終了時間を考慮)
@@ -824,11 +945,20 @@ export abstract class Timelines {
 		return result;
 	}
 
-	public static calculateDayInfos(timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>, workRanges: ReadonlySet<Readonly<WorkRange>>, resourceInfo: Readonly<ResourceInfo>): Map<DateTimeTicks, DayInfo> {
+	public static calculateDayInfos(
+		timelineMap: ReadonlyMap<TimelineId, Readonly<AnyTimeline>>,
+		workRanges: ReadonlySet<Readonly<WorkRange>>,
+		resourceInfo: Readonly<ResourceInfo>,
+	): Map<DateTimeTicks, DayInfo> {
 		let result: Map<DateTimeTicks, DayInfo> | undefined;
 
-		logger.time("日情報算出", log => {
-			result = this.calculateDayInfosCore(timelineMap, workRanges, resourceInfo, log);
+		logger.time("日情報算出", (log) => {
+			result = this.calculateDayInfosCore(
+				timelineMap,
+				workRanges,
+				resourceInfo,
+				log,
+			);
 		});
 		if (result === undefined) {
 			throw new Error();
@@ -850,10 +980,18 @@ export abstract class Timelines {
 	 * @param successWorkRanges
 	 * @returns
 	 */
-	public static calculateWorkPercent(member: Member, workDays: ReadonlyArray<DateTime>, taskTimelines: ReadonlyArray<TaskTimeline>, successWorkRanges: ReadonlyArray<SuccessWorkRange>): number {
-
-		const memberTimelines = taskTimelines.filter(a => a.memberId === member.id);
-		const memberWorkRanges = successWorkRanges.filter(a => memberTimelines.some(b => b.id === a.timeline.id));
+	public static calculateWorkPercent(
+		member: Member,
+		workDays: ReadonlyArray<DateTime>,
+		taskTimelines: ReadonlyArray<TaskTimeline>,
+		successWorkRanges: ReadonlyArray<SuccessWorkRange>,
+	): number {
+		const memberTimelines = taskTimelines.filter(
+			(a) => a.memberId === member.id,
+		);
+		const memberWorkRanges = successWorkRanges.filter((a) =>
+			memberTimelines.some((b) => b.id === a.timeline.id),
+		);
 
 		const memberWorkDays = new Array<DateTime>();
 		for (const workDay of workDays) {
@@ -866,5 +1004,4 @@ export abstract class Timelines {
 
 		return memberWorkDays.length / workDays.length;
 	}
-
 }

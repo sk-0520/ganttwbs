@@ -4,8 +4,7 @@ export class SelectIterable<TSource, TResult> implements Iterable<TResult> {
 	public constructor(
 		private readonly iterable: Iterable<TSource>,
 		private readonly selector: (source: TSource, index: number) => TResult,
-	) {
-	}
+	) {}
 
 	//#region Iterable
 

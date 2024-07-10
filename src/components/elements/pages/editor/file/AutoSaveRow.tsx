@@ -1,10 +1,10 @@
-import { FC, ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 
 import Timestamp from "@/components/elements/Timestamp";
 import { useLocale } from "@/locales/locale";
 import { AutoSaveKind } from "@/models/data/AutoSave";
-import { Configuration } from "@/models/data/Configuration";
-import { DateTime, InvalidHtmlTime } from "@/models/DateTime";
+import type { Configuration } from "@/models/data/Configuration";
+import { type DateTime, InvalidHtmlTime } from "@/models/DateTime";
 import { TimeSpan } from "@/models/TimeSpan";
 import { Types } from "@/models/Types";
 
@@ -18,7 +18,10 @@ interface Props {
 	nextTime: DateTime | undefined;
 
 	callbackChangeAutoSaveIsEnable(kind: AutoSaveKind, isEnabled: boolean): void;
-	callbackChangeAutoSaveTime(kind: AutoSaveKind, time: TimeSpan | undefined): void
+	callbackChangeAutoSaveTime(
+		kind: AutoSaveKind,
+		time: TimeSpan | undefined,
+	): void;
 }
 
 const AutoSaveRow: FC<Props> = (props: Props) => {
@@ -28,28 +31,31 @@ const AutoSaveRow: FC<Props> = (props: Props) => {
 		kind: string;
 		step: number;
 	};
-	const kindValues: KindValues = props.kind === AutoSaveKind.Storage
-		? {
-			kind: locale.pages.editor.file.save.auto.storage.kind,
-			step: props.configuration.autoSave.storage.step,
-		}
-		: {
-			kind: locale.pages.editor.file.save.auto.download.kind,
-			step: props.configuration.autoSave.download.step,
-		}
-		;
+	const kindValues: KindValues =
+		props.kind === AutoSaveKind.Storage
+			? {
+					kind: locale.pages.editor.file.save.auto.storage.kind,
+					step: props.configuration.autoSave.storage.step,
+				}
+			: {
+					kind: locale.pages.editor.file.save.auto.download.kind,
+					step: props.configuration.autoSave.download.step,
+				};
 
 	return (
 		<tr>
-			<td className="kind-cell">
-				{kindValues.kind}
-			</td>
+			<td className="kind-cell">{kindValues.kind}</td>
 			<td className="enabled-cell">
 				<label>
 					<input
 						type="checkbox"
 						checked={props.isEnabled}
-						onChange={ev => props.callbackChangeAutoSaveIsEnable(props.kind, ev.target.checked)}
+						onChange={(ev) =>
+							props.callbackChangeAutoSaveIsEnable(
+								props.kind,
+								ev.target.checked,
+							)
+						}
 					/>
 					{locale.common.enabled}
 				</label>
@@ -61,15 +67,16 @@ const AutoSaveRow: FC<Props> = (props: Props) => {
 					min={0}
 					step={kindValues.step}
 					value={toAutoSaveTimeValue(props.time)}
-					onChange={ev => props.callbackChangeAutoSaveTime(props.kind, fromAutoSaveTimeValue(ev.target.valueAsNumber))}
+					onChange={(ev) =>
+						props.callbackChangeAutoSaveTime(
+							props.kind,
+							fromAutoSaveTimeValue(ev.target.valueAsNumber),
+						)
+					}
 				/>
 			</td>
-			<td className="last-time-cell">
-				{renderDateTime(props.lastTime)}
-			</td>
-			<td className="next-time-cell">
-				{renderDateTime(props.nextTime)}
-			</td>
+			<td className="last-time-cell">{renderDateTime(props.lastTime)}</td>
+			<td className="next-time-cell">{renderDateTime(props.nextTime)}</td>
 		</tr>
 	);
 };
@@ -80,7 +87,9 @@ function toAutoSaveTimeValue(time: TimeSpan) {
 	return time.totalMinutes;
 }
 
-function fromAutoSaveTimeValue(value: number | undefined): TimeSpan | undefined {
+function fromAutoSaveTimeValue(
+	value: number | undefined,
+): TimeSpan | undefined {
 	if (Types.isUndefined(value)) {
 		return undefined;
 	}
@@ -90,15 +99,8 @@ function fromAutoSaveTimeValue(value: number | undefined): TimeSpan | undefined 
 
 function renderDateTime(time: DateTime | undefined): ReactNode {
 	if (time) {
-		return (
-			<Timestamp
-				format="time"
-				date={time}
-			/>
-		);
+		return <Timestamp format="time" date={time} />;
 	}
 
-	return (
-		<time dateTime={InvalidHtmlTime}>--:--:--</time>
-	);
+	return <time dateTime={InvalidHtmlTime}>--:--:--</time>;
 }

@@ -1,140 +1,140 @@
 import { useRouter } from "next/router";
 
 import ja from "@/locales/ja";
-import { WeekDay } from "@/models/data/Setting";
+import type { WeekDay } from "@/models/data/Setting";
 
 export interface Locale {
 	/** 言語名 */
-	language: string,
+	language: string;
 	/** 共通項目 */
 	common: {
-		enabled: string,
-		disabled: string,
+		enabled: string;
+		disabled: string;
 
 		command: {
-			add: string,
-			remove: string,
+			add: string;
+			remove: string;
 
-			download: string,
-			upload: string,
+			download: string;
+			upload: string;
 
-			copy: string,
-		},
+			copy: string;
+		};
 
 		dialog: {
-			submit: string,
-			cancel: string,
-			close: string,
-		},
+			submit: string;
+			cancel: string;
+			close: string;
+		};
 
 		calendar: {
-			timeZone: string,
+			timeZone: string;
 
 			unit: {
-				month: string,
-				day: string,
-				holiday: string,
-			},
+				month: string;
+				day: string;
+				holiday: string;
+			};
 
 			holiday: {
-				name: string,
-				normal: string,
-				special: string,
-			},
+				name: string;
+				normal: string;
+				special: string;
+			};
 
 			week: {
-				name: string,
-				long: { [key in WeekDay]: string },
-				short: { [key in WeekDay]: string },
-			},
+				name: string;
+				long: { [key in WeekDay]: string };
+				short: { [key in WeekDay]: string };
+			};
 
 			/** DateTime.format */
-			yearMonthFormat: string,
+			yearMonthFormat: string;
 			/** DateTime.format */
-			dateTimeFormat: string,
+			dateTimeFormat: string;
 			/** DateTime.format */
-			dateOnlyFormat: string,
+			dateOnlyFormat: string;
 			/** DateTime.format */
-			timeOnlyFormat: string,
-		},
+			timeOnlyFormat: string;
+		};
 
 		timeline: {
-			total: string,
-			group: string,
-			task: string,
-			newGroupTimeline: string,
-			newTaskTimeline: string,
-		},
+			total: string;
+			group: string;
+			task: string;
+			newGroupTimeline: string;
+			newTaskTimeline: string;
+		};
 
 		error: {
-			calc: string,
-		},
-	},
+			calc: string;
+		};
+	};
 
 	/** 各ページ項目 */
 	pages: {
 		top: {
-			title: string,
-		},
+			title: string;
+		};
 		new: {
-			title: string,
+			title: string;
 
-			description: string,
-			projectName: string,
+			description: string;
+			projectName: string;
 
 			range: {
-				title: string,
+				title: string;
 
-				beginYear: string,
-				beginMonth: string,
-				monthCount: string,
-			},
+				beginYear: string;
+				beginMonth: string;
+				monthCount: string;
+			};
 
 			mode: {
-				title: string,
+				title: string;
 
-				empty: string,
-				sample: string,
-			}
+				empty: string;
+				sample: string;
+			};
 
-			submit: string,
-		},
+			submit: string;
+		};
 		load: {
-			title: string,
-		},
+			title: string;
+		};
 		editor: {
-			title: string,
+			title: string;
 
 			tabs: {
-				file: string,
-				timeline: string,
-				analytics: string,
-				setting: string,
-			},
+				file: string;
+				timeline: string;
+				analytics: string;
+				setting: string;
+			};
 
-			loading: string,
+			loading: string;
 
 			file: {
 				save: {
-					title: string,
-					fileName: string,
+					title: string;
+					fileName: string;
 
 					auto: {
-						title: string,
+						title: string;
 
 						columns: {
-							kind: string,
-							enabled: string,
-							span: string,
-							last: string,
-							next: string,
-						},
+							kind: string;
+							enabled: string;
+							span: string;
+							last: string;
+							next: string;
+						};
 
 						storage: {
-							kind: string,
-						},
+							kind: string;
+						};
 						download: {
-							kind: string,
+							kind: string;
 							/**
 							 * 自動ダウンロードで使用するファイル名。
 							 *
@@ -144,338 +144,336 @@ export interface Locale {
 							 * * ORIGINAL_EXT
 							 * * TIMESTAMP
 							 */
-							fileNameFormat: string,
-						}
-					},
+							fileNameFormat: string;
+						};
+					};
 
 					export: {
-						title: string,
+						title: string;
 
-						excel: string,
+						excel: string;
 
-						table: string,
+						table: string;
 						tableKind: {
-							tsv: string,
-							csv: string,
-						},
-						tableTemplate: string,
-					},
-				},
-				byebye: string
-			},
+							tsv: string;
+							csv: string;
+						};
+						tableTemplate: string;
+					};
+				};
+				byebye: string;
+			};
 			timeline: {
 				information: {
-					memberDuplication: string,
-					timelineAffected: string,
+					memberDuplication: string;
+					timelineAffected: string;
 					/**
 					 * * MEMBER
 					 * * GROUP
 					 */
-					memberFormat: string,
-				},
+					memberFormat: string;
+				};
 				header: {
 					operations: {
-						addNewGroupTimeline: string,
-						addNewTaskTimeline: string,
-						importTimelines: string,
+						addNewGroupTimeline: string;
+						addNewTaskTimeline: string;
+						importTimelines: string;
 
-						calendarFirst: string,
-						calendarToday: string,
-						calendarLast: string,
+						calendarFirst: string;
+						calendarToday: string;
+						calendarLast: string;
 
-						informationFirst: string,
-						informationList: string,
-						informationLast: string,
-					},
+						informationFirst: string;
+						informationList: string;
+						informationLast: string;
+					};
 					columns: {
-						id: string,
-						subject: string,
-						workload: string,
-						resource: string,
-						workRangeBegin: string,
-						workRangeEnd: string,
-						workRangeError: string,
-						progress: string,
-						controls: string,
-					},
-					dummy: string,
-				},
+						id: string;
+						subject: string;
+						workload: string;
+						resource: string;
+						workRangeBegin: string;
+						workRangeEnd: string;
+						workRangeError: string;
+						progress: string;
+						controls: string;
+					};
+					dummy: string;
+				};
 				workRange: {
 					kind: {
-						loading: string,
-						noInput: string,
-						selfSelectedError: string,
-						noChildren: string,
-						relationNoInput: string,
-						relationError: string,
-						recursiveError: string,
-						unknownError: string,
-					}
-				},
+						loading: string;
+						noInput: string;
+						selfSelectedError: string;
+						noChildren: string;
+						relationNoInput: string;
+						relationError: string;
+						recursiveError: string;
+						unknownError: string;
+					};
+				};
 				timelines: {
 					range: {
 						immediate: {
-							title: string,
-							attachBeforeTimeline: string,
-						},
+							title: string;
+							attachBeforeTimeline: string;
+						};
 						continue: {
-							title: string,
-							attachBeforeTimeline: string,
-							clearRelation: string,
-							clearDate: string,
-						},
-					},
+							title: string;
+							attachBeforeTimeline: string;
+							clearRelation: string;
+							clearDate: string;
+						};
+					};
 					controls: {
 						move: {
-							title: string,
-							up: string,
-							down: string,
-							parent: string,
-						},
+							title: string;
+							up: string;
+							down: string;
+							parent: string;
+						};
 						add: {
-							title: string,
-							group: string,
-							task: string,
-							import: string,
-						},
+							title: string;
+							group: string;
+							task: string;
+							import: string;
+						};
 						others: {
-							title: string,
-							show: string,
-							setting: string,
-						},
-					}
-				},
+							title: string;
+							show: string;
+							setting: string;
+						};
+					};
+				};
 				informationDialog: {
-					title: string,
-				},
+					title: string;
+				};
 				importDialog: {
-					title: string,
-					subject: string,
-					contents: string,
-				},
+					title: string;
+					subject: string;
+					contents: string;
+				};
 				detailDialog: {
-					title: string,
-					progressMinimum: string,
-					progressMaximum: string,
-					comment: string,
-				}
+					title: string;
+					progressMinimum: string;
+					progressMaximum: string;
+					comment: string;
+				};
 				// views: {
 				// },
-			},
+			};
 			analytics: {
 				range: {
-					title: string,
+					title: string;
 
-					begin: string,
-					end: string,
+					begin: string;
+					end: string;
 
-					schedule: string,
-					actual: string,
-				},
+					schedule: string;
+					actual: string;
+				};
 
 				works: {
-					title: string,
+					title: string;
 
 					resource: {
-						group: string,
-						member: string,
-					},
+						group: string;
+						member: string;
+					};
 
 					header: {
-						workload: string,
-						workday: string,
-						cost: string,
-						sales: string,
-					},
+						workload: string;
+						workday: string;
+						cost: string;
+						sales: string;
+					};
 
 					month: {
-						title: string,
-					},
+						title: string;
+					};
 					total: {
-						title: string,
+						title: string;
 						/**
 						 * * TITLE
 						 * * BEGIN
 						 * * END
 						 */
-						titleFormat: string,
-					}
-				},
-			},
+						titleFormat: string;
+					};
+				};
+			};
 			setting: {
 				tabs: {
-					general: string,
-					resource: string,
-					calendar: string,
-					theme: string,
-				},
+					general: string;
+					resource: string;
+					calendar: string;
+					theme: string;
+				};
 
 				save: string;
 
 				general: {
-					projectName: string,
-					recursive: string,
+					projectName: string;
+					recursive: string;
 					timeZoneKind: {
-						name: string,
-						offset: string,
-					},
-					selectCurrentTimeZoneFormat: string,
-				},
+						name: string;
+						offset: string;
+					};
+					selectCurrentTimeZoneFormat: string;
+				};
 
 				resource: {
-					groupName: string,
-					choiceColor: string,
-					newGroup: string,
-					newMember: string,
+					groupName: string;
+					choiceColor: string;
+					newGroup: string;
+					newMember: string;
 
 					columns: {
-						memberName: string,
+						memberName: string;
 						/**
 						 * * UNIT
 						 */
-						costFormat: string,
+						costFormat: string;
 						/**
 						 * * UNIT
 						 */
-						salesFormat: string,
-						theme: string,
-						rate: string,
-					},
+						salesFormat: string;
+						theme: string;
+						rate: string;
+					};
 
 					choiceColorDialog: {
-						title: string,
-						baseColor: string,
-						gradientColor: string,
-						resetRandomColor: string,
+						title: string;
+						baseColor: string;
+						gradientColor: string;
+						resetRandomColor: string;
 
 						kinds: {
-							same: string,
-							analogy: string,
-							monochrome: string,
-							gradient: string,
-							random: string,
-						},
-					}
-				},
+							same: string;
+							analogy: string;
+							monochrome: string;
+							gradient: string;
+							random: string;
+						};
+					};
+				};
 
 				calendar: {
-
 					range: {
-						title: string,
-						begin: string,
-						end: string,
-					},
+						title: string;
+						begin: string;
+						end: string;
+					};
 
 					week: {
-						title: string,
-					},
+						title: string;
+					};
 
 					holiday: {
-						title: string,
-						description: string,
-						example: string,
+						title: string;
+						description: string;
+						example: string;
 
 						normal: {
-							description: string,
-						},
+							description: string;
+						};
 						special: {
-							description: string,
-						},
-					},
-
-				},
+							description: string;
+						};
+					};
+				};
 
 				theme: {
 					calendar: {
-						title: string,
-					},
+						title: string;
+					};
 
 					group: {
-						title: string,
+						title: string;
 						/**
 						 * * LEVEL
 						 */
-						levelFormat: string,
-						collectiveSetting: string,
+						levelFormat: string;
+						collectiveSetting: string;
 						collectiveSettingDialog: {
-							title: string,
-							countInfinity: string,
+							title: string;
+							countInfinity: string;
 							/**
 							 * * COUNT
 							 */
-							countFiniteFormat: string,
-							color: string,
-						},
-					},
+							countFiniteFormat: string;
+							color: string;
+						};
+					};
 
 					timeline: {
-						title: string,
+						title: string;
 
-						defaultGroup: string,
-						defaultTask: string,
-						completed: string,
-					},
-				},
-			},
-		},
+						defaultGroup: string;
+						defaultTask: string;
+						completed: string;
+					};
+				};
+			};
+		};
 		about: {
-			title: string,
+			title: string;
 
-			description: string,
-			repository: string,
-			license: string,
+			description: string;
+			repository: string;
+			license: string;
 
 			pages: {
 				library: {
-					title: string,
+					title: string;
 
-					module: string,
-					author: string,
-					license: string,
-					licenseNote: string,
-				}
-			}
-		},
-	},
+					module: string;
+					author: string;
+					license: string;
+					licenseNote: string;
+				};
+			};
+		};
+	};
 
 	file: {
 		excel: {
 			export: {
 				/** Excel format */
-				monthOnlyFormat: string,
+				monthOnlyFormat: string;
 				/** Excel format */
-				dayOnlyFormat: string,
+				dayOnlyFormat: string;
 				/** Excel format */
-				weekOnlyFormat: string,
+				weekOnlyFormat: string;
 				/** Excel format */
-				workRangeFormat: string,
+				workRangeFormat: string;
 				/**
 				 * * NAME
 				 */
-				timelineSheetNameFormat: string,
+				timelineSheetNameFormat: string;
 				/**
 				 * * MEMBER
 				 * * GROUP
 				 */
-				resourceFormat: string,
-			},
-		},
+				resourceFormat: string;
+			};
+		};
 
 		table: {
 			export: {
 				/** DateTime.format */
-				dateFormat: string
+				dateFormat: string;
 				/** DateTime.format */
-				rangeFormat: string
-			}
-		}
-	},
+				rangeFormat: string;
+			};
+		};
+	};
 
 	styles: {
 		editor: {
-			fontFamilies: Array<string>,
-		},
-	},
+			fontFamilies: Array<string>;
+		};
+	};
 }
 
 export function useLocale(): Locale {

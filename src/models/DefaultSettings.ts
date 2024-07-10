@@ -1,7 +1,11 @@
 import { Cast } from "@/models/Cast";
 import { Color } from "@/models/Color";
-import { PriceSetting } from "@/models/data/PriceSetting";
-import { HolidayKind, TimelineTheme, WeekDay } from "@/models/data/Setting";
+import type { PriceSetting } from "@/models/data/PriceSetting";
+import type {
+	HolidayKind,
+	TimelineTheme,
+	WeekDay,
+} from "@/models/data/Setting";
 
 /**
  * 設定項目の初期値。
@@ -9,7 +13,6 @@ import { HolidayKind, TimelineTheme, WeekDay } from "@/models/data/Setting";
  * 完全な定数ではなく環境変数からもデータ取得を行うが外から見たら定数。
  */
 export abstract class DefaultSettings {
-
 	/**
 	 * 反復計算最大数。
 	 */
@@ -27,8 +30,8 @@ export abstract class DefaultSettings {
 	 */
 	public static getRegularHolidays(): { [K in WeekDay]?: Color } {
 		return {
-			"saturday": Color.parse("#babaff"),
-			"sunday": Color.parse("#ffbaba"),
+			saturday: Color.parse("#babaff"),
+			sunday: Color.parse("#ffbaba"),
 		};
 	}
 
@@ -43,45 +46,64 @@ export abstract class DefaultSettings {
 	}
 
 	public static getGroupThemeColors(): Array<Color> {
-		return Color.generateGradient(Color.parse("#5555ee"), Color.parse("#80ff00"), 5);
+		return Color.generateGradient(
+			Color.parse("#5555ee"),
+			Color.parse("#80ff00"),
+			5,
+		);
 	}
 
 	public static getTimelineTheme(): TimelineTheme {
 		const result: TimelineTheme = {
 			defaultGroup: "#ee00ee",
 			defaultTask: "#ffffba",
-			completed: "#000000"
+			completed: "#000000",
 		};
 
 		return result;
 	}
 
 	public static getPriceSetting(): PriceSetting {
-		let inputMax: number | undefined = Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MAXIMUM);
+		let inputMax: number | undefined = Cast.integer(
+			process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MAXIMUM,
+		);
 		if (inputMax <= 0) {
 			inputMax = undefined;
 		}
 
 		return {
-			workingDays: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_MONTH_WORKING_DAYS),
+			workingDays: Cast.integer(
+				process.env.NEXT_PUBLIC_RESOURCE_MONTH_WORKING_DAYS,
+			),
 
 			input: {
 				cost: {
-					minimum: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MINIMUM),
+					minimum: Cast.integer(
+						process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MINIMUM,
+					),
 					maximum: inputMax,
-					step: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_STEP),
+					step: Cast.integer(
+						process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_STEP,
+					),
 				},
 				sales: {
-					minimum: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MINIMUM),
+					minimum: Cast.integer(
+						process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_MINIMUM,
+					),
 					maximum: inputMax,
-					step: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_STEP),
-				}
+					step: Cast.integer(
+						process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_INPUT_STEP,
+					),
+				},
 			},
 			price: {
-				cost: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_DEFAULT_COST),
-				sales: Cast.integer(process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_DEFAULT_SALES),
-			}
+				cost: Cast.integer(
+					process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_DEFAULT_COST,
+				),
+				sales: Cast.integer(
+					process.env.NEXT_PUBLIC_RESOURCE_GROUP_MEMBER_PRICE_DEFAULT_SALES,
+				),
+			},
 		};
 	}
-
 }

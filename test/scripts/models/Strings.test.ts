@@ -11,9 +11,12 @@ describe("String", () => {
 		[false, "\r"],
 		[false, "\r\n"],
 		[false, " \r\n \r\n "],
-	])("isNotWhiteSpace", (expected: boolean, input: string | null | undefined) => {
-		expect(Strings.isNotWhiteSpace(input)).toBe(expected);
-	});
+	])(
+		"isNotWhiteSpace",
+		(expected: boolean, input: string | null | undefined) => {
+			expect(Strings.isNotWhiteSpace(input)).toBe(expected);
+		},
+	);
 
 	test.each([
 		["", "", []],
@@ -69,17 +72,25 @@ describe("String", () => {
 	});
 
 	test("replaceAllImpl", () => {
-		expect(Strings.replaceAllImpl("abcabcABCABC", "a", "-")).toBe("-bc-bcABCABC");
-		expect(Strings.replaceAllImpl("abcabcABCABC", /a/, "-")).toBe("-bc-bcABCABC");
-		expect(Strings.replaceAllImpl("abcabcABCABC", /a/i, "-")).toBe("-bc-bc-BC-BC");
-		expect(Strings.replaceAllImpl("abcabcABCABC", /a/g, "-")).toBe("-bc-bcABCABC");
-		expect(Strings.replaceAllImpl("abcabcABCABC", /a/gi, "-")).toBe("-bc-bc-BC-BC");
+		expect(Strings.replaceAllImpl("abcabcABCABC", "a", "-")).toBe(
+			"-bc-bcABCABC",
+		);
+		expect(Strings.replaceAllImpl("abcabcABCABC", /a/, "-")).toBe(
+			"-bc-bcABCABC",
+		);
+		expect(Strings.replaceAllImpl("abcabcABCABC", /a/i, "-")).toBe(
+			"-bc-bc-BC-BC",
+		);
+		expect(Strings.replaceAllImpl("abcabcABCABC", /a/g, "-")).toBe(
+			"-bc-bcABCABC",
+		);
+		expect(Strings.replaceAllImpl("abcabcABCABC", /a/gi, "-")).toBe(
+			"-bc-bc-BC-BC",
+		);
 	});
 
-	test.each([
-		["", ""],
-	])("replaceFunc - throw", (head: string, tail: string) => {
-		expect(() => Strings.replaceFunc("", head, tail, s => s)).toThrowError();
+	test.each([["", ""]])("replaceFunc - throw", (head: string, tail: string) => {
+		expect(() => Strings.replaceFunc("", head, tail, (s) => s)).toThrowError();
 	});
 
 	test.each([
@@ -90,18 +101,48 @@ describe("String", () => {
 		["<A>", "(A)", "(", ")", (s: string) => `<${s}>`],
 		["<A>-<B>-<C>", "(A)-(B)-<C>", "(", ")", (s: string) => `<${s}>`],
 		["<A>\r<B>\n<C>", "(A)\r(B)\n<C>", "(", ")", (s: string) => `<${s}>`],
-	])("replaceFunc", (expected: string, source: string, head: string, tail: string, func: (placeholder: string) => string) => {
-		expect(Strings.replaceFunc(source, head, tail, func)).toBe(expected);
-	});
+	])(
+		"replaceFunc",
+		(
+			expected: string,
+			source: string,
+			head: string,
+			tail: string,
+			func: (placeholder: string) => string,
+		) => {
+			expect(Strings.replaceFunc(source, head, tail, func)).toBe(expected);
+		},
+	);
 
 	test.each([
-		["ABC-abc-ABC", "ABC-abc-ABC", { "A": "[aa]" }, undefined, undefined],
-		["[aa]BC-abc-[aa]BC", "${A}BC-abc-${A}BC", { "A": "[aa]" }, undefined, undefined],
-		["[aa]BC-abc-[aa]BC", "${A}BC-abc-${A}BC", new Map([["A", "[aa]"]]), undefined, undefined],
-		["ABC-abc-ABC", "ABC-${abc}-ABC", { "ABC": "" }, undefined, undefined],
-	])("replaceMap", (expected: string, source: string, map: ReadonlyMap<string, string> | Record<string, string>, head: string | undefined, tail: string | undefined) => {
-		expect(Strings.replaceMap(source, map, head, tail)).toBe(expected);
-	});
+		["ABC-abc-ABC", "ABC-abc-ABC", { A: "[aa]" }, undefined, undefined],
+		[
+			"[aa]BC-abc-[aa]BC",
+			"${A}BC-abc-${A}BC",
+			{ A: "[aa]" },
+			undefined,
+			undefined,
+		],
+		[
+			"[aa]BC-abc-[aa]BC",
+			"${A}BC-abc-${A}BC",
+			new Map([["A", "[aa]"]]),
+			undefined,
+			undefined,
+		],
+		["ABC-abc-ABC", "ABC-${abc}-ABC", { ABC: "" }, undefined, undefined],
+	])(
+		"replaceMap",
+		(
+			expected: string,
+			source: string,
+			map: ReadonlyMap<string, string> | Record<string, string>,
+			head: string | undefined,
+			tail: string | undefined,
+		) => {
+			expect(Strings.replaceMap(source, map, head, tail)).toBe(expected);
+		},
+	);
 
 	test.each([
 		[[], null],
@@ -115,10 +156,13 @@ describe("String", () => {
 		[["", ""], "\n"],
 		[["", ""], "\r"],
 		[["a", "b", "c"], "a\rb\nc"],
-	])("splitLines", (expected: Array<string>, input: string | null | undefined) => {
-		const actual = Strings.splitLines(input);
-		expect(actual).toStrictEqual(expected);
-	});
+	])(
+		"splitLines",
+		(expected: Array<string>, input: string | null | undefined) => {
+			const actual = Strings.splitLines(input);
+			expect(actual).toStrictEqual(expected);
+		},
+	);
 
 	test.each([
 		["0", 0, 0, "x"],
@@ -133,10 +177,18 @@ describe("String", () => {
 		["1", 1, 1, undefined],
 		[" 1", 1, 2, undefined],
 		["  1", 1, 3, undefined],
-	])("padStart", (expected: string, input: number, maxLength: number, fillString: string | undefined) => {
-		const actual = Strings.padStart(input, maxLength, fillString);
-		expect(actual).toBe(expected);
-	});
+	])(
+		"padStart",
+		(
+			expected: string,
+			input: number,
+			maxLength: number,
+			fillString: string | undefined,
+		) => {
+			const actual = Strings.padStart(input, maxLength, fillString);
+			expect(actual).toBe(expected);
+		},
+	);
 
 	test.each([
 		["1", 1, 0],
@@ -161,9 +213,16 @@ describe("String", () => {
 		["1", 1, 1, undefined],
 		["1 ", 1, 2, undefined],
 		["1  ", 1, 3, undefined],
-	])("padEnd", (expected: string, input: number, maxLength: number, fillString: string | undefined) => {
-		const actual = Strings.padEnd(input, maxLength, fillString);
-		expect(actual).toBe(expected);
-	});
+	])(
+		"padEnd",
+		(
+			expected: string,
+			input: number,
+			maxLength: number,
+			fillString: string | undefined,
+		) => {
+			const actual = Strings.padEnd(input, maxLength, fillString);
+			expect(actual).toBe(expected);
+		},
+	);
 });
-

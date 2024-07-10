@@ -1,15 +1,30 @@
-import { FC, ReactNode, useEffect, useMemo, useState } from "react";
+import { type FC, type ReactNode, useEffect, useMemo, useState } from "react";
 
 import ColumnHighlight from "@/components/elements/pages/editor/timeline/highlight/ColumnHighlight";
 import RowHighlight from "@/components/elements/pages/editor/timeline/highlight/RowHighlight";
-import { useActiveTimelineIdAtomReader, useDragOverTimelineIdAtomReader, useDragSourceTimelineIdAtomReader, useHighlightDaysAtomReader, useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomReader, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomReader } from "@/models/atom/editor/HighlightAtoms";
-import { useCalendarInfoAtomReader, useTotalTimelineMapAtomReader } from "@/models/atom/editor/TimelineAtoms";
+import {
+	useActiveTimelineIdAtomReader,
+	useDragOverTimelineIdAtomReader,
+	useDragSourceTimelineIdAtomReader,
+	useHighlightDaysAtomReader,
+	useHighlightDaysAtomWriter,
+	useHighlightTimelineIdsAtomReader,
+	useHighlightTimelineIdsAtomWriter,
+	useHoverTimelineIdAtomReader,
+} from "@/models/atom/editor/HighlightAtoms";
+import {
+	useCalendarInfoAtomReader,
+	useTotalTimelineMapAtomReader,
+} from "@/models/atom/editor/TimelineAtoms";
 import { Charts } from "@/models/Charts";
-import { ColumnHighlightMode, RowHighlightMode } from "@/models/data/Highlight";
-import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
-import { TimelineId } from "@/models/data/Setting";
-import { DateTime } from "@/models/DateTime";
+import type {
+	ColumnHighlightMode,
+	RowHighlightMode,
+} from "@/models/data/Highlight";
+import type { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import type { TimelineCallbacksProps } from "@/models/data/props/TimelineStoreProps";
+import type { TimelineId } from "@/models/data/Setting";
+import type { DateTime } from "@/models/DateTime";
 import { Dom } from "@/models/Dom";
 
 interface Props extends ConfigurationProps, TimelineCallbacksProps {
@@ -38,10 +53,22 @@ const HighlightArea: FC<Props> = (props: Props) => {
 	}, []);
 
 	const areaData = useMemo(() => {
-		return Charts.createAreaData(props.configuration.design.seed.cell, calendarInfoAtomReader.data.range, totalTimelineMapAtomReader.data.size);
-	}, [props.configuration, calendarInfoAtomReader.data.range, totalTimelineMapAtomReader.data.size]);
+		return Charts.createAreaData(
+			props.configuration.design.seed.cell,
+			calendarInfoAtomReader.data.range,
+			totalTimelineMapAtomReader.data.size,
+		);
+	}, [
+		props.configuration,
+		calendarInfoAtomReader.data.range,
+		totalTimelineMapAtomReader.data.size,
+	]);
 
-	function renderRowHighlight(timelineId: TimelineId, mode: RowHighlightMode, key?: string): ReactNode {
+	function renderRowHighlight(
+		timelineId: TimelineId,
+		mode: RowHighlightMode,
+		key?: string,
+	): ReactNode {
 		return (
 			<RowHighlight
 				key={key}
@@ -56,24 +83,32 @@ const HighlightArea: FC<Props> = (props: Props) => {
 		);
 	}
 
-	function handleRowAnimationEnd(mode: RowHighlightMode, timelineId: TimelineId): void {
+	function handleRowAnimationEnd(
+		mode: RowHighlightMode,
+		timelineId: TimelineId,
+	): void {
 		if (mode === "highlight") {
-			highlightTimelineIdsAtomWriter.write(c => c.filter(a => a !== timelineId));
+			highlightTimelineIdsAtomWriter.write((c) =>
+				c.filter((a) => a !== timelineId),
+			);
 		}
 	}
 
-	function handleColumnAnimationEnd(mode: ColumnHighlightMode, date: DateTime): void {
+	function handleColumnAnimationEnd(
+		mode: ColumnHighlightMode,
+		date: DateTime,
+	): void {
 		if (mode === "highlight") {
-			highlightDaysAtomWriter.write(c => c.filter(a => !a.equals(date)));
+			highlightDaysAtomWriter.write((c) => c.filter((a) => !a.equals(date)));
 		}
 	}
 
 	return (
 		<div id="highlight-area">
-			{highlightTimelineIdsAtomReader.data.map(a => {
+			{highlightTimelineIdsAtomReader.data.map((a) => {
 				return renderRowHighlight(a, "highlight", a);
 			})}
-			{highlightDaysAtomReader.data.map(a => {
+			{highlightDaysAtomReader.data.map((a) => {
 				return (
 					<ColumnHighlight
 						key={a.ticks}
@@ -83,14 +118,20 @@ const HighlightArea: FC<Props> = (props: Props) => {
 						areaData={areaData}
 						crossHeaderWidth={crossHeaderWidth}
 						crossHeaderHeight={crossHeaderHeight}
-						callbackAnimationEnd={() => handleColumnAnimationEnd("highlight", a)}
+						callbackAnimationEnd={() =>
+							handleColumnAnimationEnd("highlight", a)
+						}
 					/>
 				);
 			})}
-			{hoverTimelineIdAtomReader.data && renderRowHighlight(hoverTimelineIdAtomReader.data, "hover")}
-			{dragOverTimelineIdAtomReader.data && renderRowHighlight(dragOverTimelineIdAtomReader.data, "drag-over")}
-			{dragSourceTimelineIdAtomReader.data && renderRowHighlight(dragSourceTimelineIdAtomReader.data, "drag-source")}
-			{activeTimelineIdAtomReader.data && renderRowHighlight(activeTimelineIdAtomReader.data, "active")}
+			{hoverTimelineIdAtomReader.data &&
+				renderRowHighlight(hoverTimelineIdAtomReader.data, "hover")}
+			{dragOverTimelineIdAtomReader.data &&
+				renderRowHighlight(dragOverTimelineIdAtomReader.data, "drag-over")}
+			{dragSourceTimelineIdAtomReader.data &&
+				renderRowHighlight(dragSourceTimelineIdAtomReader.data, "drag-source")}
+			{activeTimelineIdAtomReader.data &&
+				renderRowHighlight(activeTimelineIdAtomReader.data, "active")}
 		</div>
 	);
 };

@@ -1,5 +1,5 @@
-import { MemberGroupPair } from "@/models/data/MemberGroupPair";
-import { Group, Member, MemberId } from "@/models/data/Setting";
+import type { MemberGroupPair } from "@/models/data/MemberGroupPair";
+import type { Group, Member, MemberId } from "@/models/data/Setting";
 
 export interface ResourceInfo {
 	/** メンバーIDとメンバー・グループのマッピング */

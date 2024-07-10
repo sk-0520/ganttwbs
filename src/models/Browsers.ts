@@ -1,7 +1,6 @@
 import { Types } from "@/models/Types";
 
 export abstract class Browsers {
-
 	/**
 	 * ブラウザで実行中か。
 	 */
@@ -37,7 +36,11 @@ export abstract class Browsers {
 	 * @param obj
 	 * @param space
 	 */
-	public static downloadJson(fileName: string, obj: object, space?: number | string | undefined) {
+	public static downloadJson(
+		fileName: string,
+		obj: object,
+		space?: number | string | undefined,
+	) {
 		const json = JSON.stringify(obj, undefined, space);
 
 		const blob = new Blob([json], { type: "application/json" });

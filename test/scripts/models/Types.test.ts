@@ -1,10 +1,10 @@
-import { Constructor, Types } from "@/models/Types";
+import { type Constructor, Types } from "@/models/Types";
 
-class TestSuper { }
-class TestSub1 extends TestSuper { }
-class TestSub1Sub extends TestSub1 { }
-class TestSub1SubSub extends TestSub1Sub { }
-class TestSub2 extends TestSuper { }
+class TestSuper {}
+class TestSub1 extends TestSuper {}
+class TestSub1Sub extends TestSub1 {}
+class TestSub1SubSub extends TestSub1Sub {}
+class TestSub2 extends TestSuper {}
 
 class TestDeepSuper {
 	public A = 10;
@@ -13,7 +13,10 @@ class TestDeepSuper {
 	}
 }
 class TestDeep extends TestDeepSuper {
-	public constructor(public a: number, private nest: { b: string, node: { c: boolean } }) {
+	public constructor(
+		public a: number,
+		private nest: { b: string; node: { c: boolean } },
+	) {
 		super();
 	}
 
@@ -27,7 +30,6 @@ class TestDeep extends TestDeepSuper {
 }
 
 describe("Types", () => {
-
 	test.each([
 		[true, undefined],
 		[false, null],
@@ -144,9 +146,16 @@ describe("Types", () => {
 		[false, null, TestSuper],
 		[false, {}, TestSuper],
 		[false, 0, TestSuper],
-	])("instanceOf", <T1, T2 extends object>(expected: boolean, obj: T1, type: Constructor<T2>) => {
-		expect(Types.instanceOf(obj, type)).toBe(expected);
-	});
+	])(
+		"instanceOf",
+		<T1, T2 extends object>(
+			expected: boolean,
+			obj: T1,
+			type: Constructor<T2>,
+		) => {
+			expect(Types.instanceOf(obj, type)).toBe(expected);
+		},
+	);
 
 	test.each([
 		[true, new TestSuper(), TestSuper],
@@ -169,9 +178,16 @@ describe("Types", () => {
 		[false, null, TestSuper],
 		[false, {}, TestSuper],
 		[false, 0, TestSuper],
-	])("isEqual", <T1, T2 extends object>(expected: boolean, obj: T1, type: Constructor<T2>) => {
-		expect(Types.isEqual(obj, type)).toBe(expected);
-	});
+	])(
+		"isEqual",
+		<T1, T2 extends object>(
+			expected: boolean,
+			obj: T1,
+			type: Constructor<T2>,
+		) => {
+			expect(Types.isEqual(obj, type)).toBe(expected);
+		},
+	);
 
 	test("getProperties", () => {
 		const input = new TestDeep(-1, { b: "A", node: { c: true } });

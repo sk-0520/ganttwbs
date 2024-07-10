@@ -1,9 +1,9 @@
-import { FC, useContext, useState } from "react";
+import { type FC, useContext, useState } from "react";
 
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import { useLocale } from "@/locales/locale";
 import { SettingContext } from "@/models/context/SettingContext";
-import { WeekDay } from "@/models/data/Setting";
+import type { WeekDay } from "@/models/data/Setting";
 import { DefaultSettings } from "@/models/DefaultSettings";
 import { Settings } from "@/models/Settings";
 
@@ -15,58 +15,50 @@ const CalendarWeekSettingEditor: FC = () => {
 
 	function handleChange(weekDay: WeekDay, checked: boolean): void {
 		setWeeks(
-			settingContext.calendar.holiday.regulars = {
+			(settingContext.calendar.holiday.regulars = {
 				...weeks,
 				[weekDay]: checked,
-			}
+			}),
 		);
 	}
 
 	function handleReset() {
 		const weekDays = Settings.getWeekDays()
-			.map(a => ({[a]: false}))
-			.reduce((r, a) => ({ ...r, ...a }))
-		;
+			.map((a) => ({ [a]: false }))
+			.reduce((r, a) => ({ ...r, ...a }));
 		const defaultRegulars = Object.keys(DefaultSettings.getRegularHolidays())
-			.map(a => ({[a]: true}))
-			.reduce((r, a) => ({ ...r, ...a }))
-		;
+			.map((a) => ({ [a]: true }))
+			.reduce((r, a) => ({ ...r, ...a }));
 
 		const defaultWeeks = {
 			...weekDays,
 			...defaultRegulars,
 		} as { [key in WeekDay]: boolean };
 
-		setWeeks(
-			settingContext.calendar.holiday.regulars = defaultWeeks
-		);
+		setWeeks((settingContext.calendar.holiday.regulars = defaultWeeks));
 	}
 
 	const weekDays = Settings.getWeekDays();
 
 	return (
 		<ul>
-			{weekDays.map(a => (
+			{weekDays.map((a) => (
 				<li key={a}>
 					<label>
 						<input
 							type="checkbox"
 							checked={weeks[a]}
-							onChange={ev => handleChange(a, ev.target.checked)}
+							onChange={(ev) => handleChange(a, ev.target.checked)}
 						/>
 						{locale.common.calendar.week.long[a]}
 					</label>
 				</li>
 			))}
 			<li>
-				<DefaultButton
-					visibleLabel={true}
-					callbackClick={handleReset}
-				/>
+				<DefaultButton visibleLabel={true} callbackClick={handleReset} />
 			</li>
 		</ul>
 	);
 };
 
 export default CalendarWeekSettingEditor;
-

@@ -1,13 +1,12 @@
-
-import { FC, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 
 import { Cast } from "@/models/Cast";
 import { useActiveTimelineIdAtomWriter } from "@/models/atom/editor/HighlightAtoms";
-import { Progress } from "@/models/data/Setting";
+import type { Progress } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
 
 const defaultProgressItems = [
-	0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1
+	0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1,
 ] as const;
 
 interface Props {
@@ -44,7 +43,7 @@ const ProgressCell: FC<Props> = (props: Props) => {
 		if (props.callbackChangeValue) {
 			props.callbackChangeValue(progress);
 		}
-		if(Timelines.isCompleted(progress)) {
+		if (Timelines.isCompleted(progress)) {
 			activeTimelineIdAtomWriter.write(undefined);
 		}
 	}
@@ -55,16 +54,13 @@ const ProgressCell: FC<Props> = (props: Props) => {
 				className="edit"
 				disabled={props.disabled}
 				value={progress.toString()}
-				onChange={ev => handleChangeProgress(ev.target.value)}
-				onFocus={ev => props.callbackFocus(true)}
-				onBlur={ev => props.callbackFocus(false)}
+				onChange={(ev) => handleChangeProgress(ev.target.value)}
+				onFocus={(ev) => props.callbackFocus(true)}
+				onBlur={(ev) => props.callbackFocus(false)}
 			>
-				{progressItems.map(a => {
+				{progressItems.map((a) => {
 					return (
-						<option
-							key={a}
-							value={a.toString()}
-						>
+						<option key={a} value={a.toString()}>
 							{Timelines.displayProgress(a)}
 						</option>
 					);

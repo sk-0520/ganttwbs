@@ -10,7 +10,6 @@ type SwitchKey = string | number | symbol;
  * ※配列系は `Arrays` を参照のこと。
  */
 export abstract class Require {
-
 	/**
 	 * `Map<K,V>` から値を取得。
 	 * 取得した値が `undefined` の場合に例外を投げるため、値として有効な `undefined` が入らない個所で使用すること。
@@ -37,14 +36,20 @@ export abstract class Require {
 	 * @param defaultValue
 	 * @returns
 	 */
-	public static switch<O>(expression: SwitchKey, cases: { [key: SwitchKey]: (input: SwitchKey) => O }, defaultValue?: O): O {
+	public static switch<O>(
+		expression: SwitchKey,
+		cases: { [key: SwitchKey]: (input: SwitchKey) => O },
+		defaultValue?: O,
+	): O {
 		if (expression in cases) {
 			const func = cases[expression];
 			return func(expression);
 		}
 
 		if (defaultValue === undefined) {
-			throw new Error(`expression: ${String(expression)}, cases: ${Object.keys(cases).join(", ")}`);
+			throw new Error(
+				`expression: ${String(expression)}, cases: ${Object.keys(cases).join(", ")}`,
+			);
 		}
 
 		return defaultValue;

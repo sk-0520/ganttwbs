@@ -1,21 +1,21 @@
-import { TimeSpan } from "@/models/TimeSpan";
+import type { TimeSpan } from "@/models/TimeSpan";
 
-export const enum AutoSaveKind {
-	Storage,
-	Download,
+export enum AutoSaveKind {
+	Storage = 0,
+	Download = 1,
 }
 
 interface AutoSaveState {
 	//TODO: 状態として切り分け
-	isEnabled: boolean,
+	isEnabled: boolean;
 	//TODO: 状態として切り分け
-	time: TimeSpan,
+	time: TimeSpan;
 	readonly step: number;
 }
 
 export interface AutoSave {
 	/** ストレージへの保存設定 */
-	storage: AutoSaveState,
+	storage: AutoSaveState;
 	/** ダウンロード設定 */
-	download: AutoSaveState,
+	download: AutoSaveState;
 }

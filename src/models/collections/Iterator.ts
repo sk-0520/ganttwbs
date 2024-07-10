@@ -2,8 +2,7 @@
 
 export type Predicate<T> = (value: T) => boolean;
 
-export abstract class IteratorBase<T> implements IterableIterator<T>{
-
+export abstract class IteratorBase<T> implements IterableIterator<T> {
 	public abstract next(...args: [] | [undefined]): IteratorResult<T, any>;
 
 	public return?(value?: any): IteratorResult<T, any> {
@@ -20,14 +19,13 @@ export abstract class IteratorBase<T> implements IterableIterator<T>{
 	protected done(): IteratorResult<T> {
 		return {
 			done: true,
-			value: undefined
+			value: undefined,
 		};
 	}
 	protected yield(value: T): IteratorResult<T> {
 		return {
 			done: false,
-			value: value
+			value: value,
 		};
 	}
-
 }

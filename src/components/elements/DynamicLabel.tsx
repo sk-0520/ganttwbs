@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 
 interface Props {
 	htmlFor?: string;
@@ -13,15 +13,10 @@ interface Props {
  * @param props
  */
 const DynamicLabel: FC<Props> = (props: Props) => {
-	return (
-		props.wrap
-			? (
-				<label htmlFor={props.htmlFor}>
-					{props.children}
-				</label>
-			) : (
-				<>{props.children}</>
-			)
+	return props.wrap ? (
+		<label htmlFor={props.htmlFor}>{props.children}</label>
+	) : (
+		<>{props.children}</>
 	);
 };
 

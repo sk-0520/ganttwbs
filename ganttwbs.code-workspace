@@ -21,7 +21,7 @@
 			"**/dist/**": true,
 			"**/bin/**": true,
 			"**/obj/**": true,
-			"*.lnk": true,
+			"*.lnk": true
 		},
 		"html.format.indentInnerHtml": true,
 		"html.format.wrapLineLength": 0,
@@ -29,9 +29,7 @@
 		"typescript.preferences.importModuleSpecifier": "non-relative",
 		"json.schemas": [
 			{
-				"fileMatch": [
-					"*.jsonc"
-				],
+				"fileMatch": ["*.jsonc"],
 				"schema": {
 					"allowTrailingCommas": true
 				}
@@ -71,12 +69,9 @@
 			"^(build|start)$",
 			"license",
 			"^npm-(check|update)$",
-			"^(favicon|analyze)$",
+			"^(favicon|analyze)$"
 		],
-		"auto-close-tag.activationOnLanguage": [
-			"html",
-			"tsx",
-		],
+		"auto-close-tag.activationOnLanguage": ["html", "tsx"],
 		"editor.codeActionsOnSave": {
 			"quickfix.biome": "always",
 			"source.organizeImports.biome": "always"

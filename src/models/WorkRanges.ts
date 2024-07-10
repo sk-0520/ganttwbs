@@ -1,17 +1,24 @@
 import { Arrays } from "@/models/Arrays";
-import { TimelineId } from "@/models/data/Setting";
-import { TotalSuccessWorkRange, SuccessWorkRange, WorkRange, WorkRangeKind, SuccessTimelineIdRange } from "@/models/data/WorkRange";
+import type { TimelineId } from "@/models/data/Setting";
+import {
+	type TotalSuccessWorkRange,
+	type SuccessWorkRange,
+	type WorkRange,
+	WorkRangeKind,
+	type SuccessTimelineIdRange,
+} from "@/models/data/WorkRange";
 import { IdFactory } from "@/models/IdFactory";
 
 export class WorkRanges {
-
 	/**
 	 * `workRange` は `SuccessWorkRange` か。
 	 * 本処理は型ガードではあるものの型チェックは行わない。
 	 * @param workRange
 	 * @returns
 	 */
-	public static maybeSuccessWorkRange(workRange: WorkRange | null | undefined): workRange is SuccessWorkRange {
+	public static maybeSuccessWorkRange(
+		workRange: WorkRange | null | undefined,
+	): workRange is SuccessWorkRange {
 		if (workRange) {
 			return workRange.kind === WorkRangeKind.Success;
 		}
@@ -36,15 +43,21 @@ export class WorkRanges {
 		return errorKinds.includes(workRange.kind);
 	}
 
-	public static getSuccessTimelineIdRange(workRanges: ReadonlyMap<TimelineId, Readonly<WorkRange>>, includeRoot?: boolean): SuccessTimelineIdRange {
+	public static getSuccessTimelineIdRange(
+		workRanges: ReadonlyMap<TimelineId, Readonly<WorkRange>>,
+		includeRoot?: boolean,
+	): SuccessTimelineIdRange {
 		const successPairs = [...workRanges]
-			.filter(([k, _]) => includeRoot ? true : k !== IdFactory.rootTimelineId)
+			.filter(([k, _]) => (includeRoot ? true : k !== IdFactory.rootTimelineId))
 			.filter(([_, v]) => this.maybeSuccessWorkRange(v))
-			.map(([k, v]) => ({ timelineId: k, workRange: v as SuccessWorkRange }))
-			;
+			.map(([k, v]) => ({ timelineId: k, workRange: v as SuccessWorkRange }));
 
-		const begins = [...successPairs].sort((a, b) => a.workRange.begin.compare(b.workRange.begin));
-		const ends = [...successPairs].sort((a, b) => a.workRange.end.compare(b.workRange.end));
+		const begins = [...successPairs].sort((a, b) =>
+			a.workRange.begin.compare(b.workRange.begin),
+		);
+		const ends = [...successPairs].sort((a, b) =>
+			a.workRange.end.compare(b.workRange.end),
+		);
 
 		const result: SuccessTimelineIdRange = {
 			begin: begins.length ? begins[0] : undefined,
@@ -54,7 +67,9 @@ export class WorkRanges {
 		return result;
 	}
 
-	public static getTotalSuccessWorkRange(items: ReadonlyArray<SuccessWorkRange>): TotalSuccessWorkRange {
+	public static getTotalSuccessWorkRange(
+		items: ReadonlyArray<SuccessWorkRange>,
+	): TotalSuccessWorkRange {
 		const minItems = [...items].sort((a, b) => a.begin.compare(b.begin));
 		const maxItems = [...items].sort((a, b) => a.end.compare(b.end));
 
@@ -66,9 +81,10 @@ export class WorkRanges {
 		return result;
 	}
 
-	public static maxByEndDate(items: ReadonlyArray<SuccessWorkRange>): SuccessWorkRange {
+	public static maxByEndDate(
+		items: ReadonlyArray<SuccessWorkRange>,
+	): SuccessWorkRange {
 		const sortedItems = [...items].sort((a, b) => a.end.compare(b.end));
 		return sortedItems[sortedItems.length - 1];
 	}
-
 }

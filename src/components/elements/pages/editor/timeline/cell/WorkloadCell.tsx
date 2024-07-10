@@ -1,7 +1,6 @@
+import type { FC, KeyboardEvent } from "react";
 
-import { FC, KeyboardEvent } from "react";
-
-import { AnyTimeline } from "@/models/data/Setting";
+import type { AnyTimeline } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
 
 interface Props {
@@ -15,7 +14,6 @@ interface Props {
 }
 
 const WorkloadCell: FC<Props> = (props: Props) => {
-
 	if (props.readOnly) {
 		return (
 			<td className="timeline-cell timeline-workload readonly">
@@ -34,9 +32,13 @@ const WorkloadCell: FC<Props> = (props: Props) => {
 				step="0.25"
 				min={0}
 				value={Timelines.displayWorkload(props.value)}
-				onChange={ev => props.callbackChangeValue ? props.callbackChangeValue(ev.target.valueAsNumber) : undefined}
-				onFocus={ev => props.callbackFocus(true)}
-				onBlur={ev => props.callbackFocus(false)}
+				onChange={(ev) =>
+					props.callbackChangeValue
+						? props.callbackChangeValue(ev.target.valueAsNumber)
+						: undefined
+				}
+				onFocus={(ev) => props.callbackFocus(true)}
+				onBlur={(ev) => props.callbackFocus(false)}
 				onKeyDown={props.callbackKeyDown}
 			/>
 		</td>

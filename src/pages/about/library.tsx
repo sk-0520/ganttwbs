@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { Fragment } from "react";
 
 import Layout from "@/components/layout/Layout";
@@ -6,18 +6,19 @@ import { useLocale } from "@/locales/locale";
 import license from "@/models/data/generator/license.json";
 
 interface License {
-	module: string,
-	repository: string,
-	license: string,
-	licenseNote: string,
-	publisher: string
+	module: string;
+	repository: string;
+	license: string;
+	licenseNote: string;
+	publisher: string;
 }
 
 const AboutLibraryPage: NextPage = () => {
 	const locale = useLocale();
 
-	const getKeys = <T extends object>(json: T): Array<keyof T> => Object.keys(json) as Array<keyof T>;
-	const licenseItems = getKeys(license).map(a => {
+	const getKeys = <T extends object>(json: T): Array<keyof T> =>
+		Object.keys(json) as Array<keyof T>;
+	const licenseItems = getKeys(license).map((a) => {
 		const value = license[a];
 
 		const result: License = {
@@ -40,48 +41,40 @@ const AboutLibraryPage: NextPage = () => {
 			<table className="license">
 				<thead>
 					<tr>
-						<th>
-							{locale.pages.about.pages.library.module}
-						</th>
-						<th>
-							{locale.pages.about.pages.library.author}
-						</th>
-						<th>
-							{locale.pages.about.pages.library.license}
-						</th>
+						<th>{locale.pages.about.pages.library.module}</th>
+						<th>{locale.pages.about.pages.library.author}</th>
+						<th>{locale.pages.about.pages.library.license}</th>
 					</tr>
 				</thead>
 				<tbody>
 					<>
-						{
-							licenseItems.map(a => {
-								return (
-									<Fragment
-										key={a.module}
-									>
+						{licenseItems.map((a) => {
+							return (
+								<Fragment key={a.module}>
+									<tr>
+										<td>
+											<a href={a.repository} target={a.module}>
+												{a.module}
+											</a>
+										</td>
+										<td>{a.publisher}</td>
+										<td>{a.license}</td>
+									</tr>
+									{a.licenseNote && (
 										<tr>
-											<td>
-												<a href={a.repository} target={a.module}>
-													{a.module}
-												</a>
+											<td colSpan={3}>
+												<details>
+													<summary>
+														{locale.pages.about.pages.library.licenseNote}
+													</summary>
+													<pre className="license-note">{a.licenseNote}</pre>
+												</details>
 											</td>
-											<td>{a.publisher}</td>
-											<td>{a.license}</td>
 										</tr>
-										{a.licenseNote && (
-											<tr>
-												<td colSpan={3}>
-													<details>
-														<summary>{locale.pages.about.pages.library.licenseNote}</summary>
-														<pre className="license-note">{a.licenseNote}</pre>
-													</details>
-												</td>
-											</tr>
-										)}
-									</Fragment>
-								);
-							})
-						}
+									)}
+								</Fragment>
+							);
+						})}
 					</>
 				</tbody>
 			</table>

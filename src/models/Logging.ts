@@ -7,28 +7,34 @@ import { Browsers } from "@/models/Browsers";
  */
 type LogMethod = (message?: any, ...optionalParams: any[]) => void;
 
-type TableMethod = (tabularData?: any, properties?: string[] | undefined) => void;
+type TableMethod = (
+	tabularData?: any,
+	properties?: string[] | undefined,
+) => void;
 type DirMethod = (item?: any, options?: any) => void;
 export type TimeLogMethod = (...data: any[]) => void;
-type TimeMethod = (label: string, callback: (log: TimeLogMethod) => void) => void;
+type TimeMethod = (
+	label: string,
+	callback: (log: TimeLogMethod) => void,
+) => void;
 
 /**
  * ログレベル。
  */
 export enum LogLevel {
-	Trace,
-	Debug,
-	Log,
-	Information,
-	Warning,
-	Error,
+	Trace = 0,
+	Debug = 1,
+	Log = 2,
+	Information = 3,
+	Warning = 4,
+	Error = 5,
 }
 
 export interface LogOption {
 	level: LogLevel;
 
-	table: boolean,
-	dir: boolean,
+	table: boolean;
+	dir: boolean;
 
 	time: boolean;
 }
@@ -109,11 +115,12 @@ function nopTimeLog(...data: any[]): void {
 	//nop
 }
 
-function toMethod(currentLevel: LogLevel, targetLevel: LogLevel, method: LogMethod): LogMethod {
-	return currentLevel <= targetLevel
-		? method
-		: nopLog
-		;
+function toMethod(
+	currentLevel: LogLevel,
+	targetLevel: LogLevel,
+	method: LogMethod,
+): LogMethod {
+	return currentLevel <= targetLevel ? method : nopLog;
 }
 
 export function createLogger(header: string, options?: LogOptions): Logger {
@@ -149,33 +156,57 @@ export function createLogger(header: string, options?: LogOptions): Logger {
 			table: table.server,
 			dir: dir.server,
 			time: time.server,
-		}
+		},
 	};
 
 	return new ConsoleLogger(header, logOption);
 }
 
 function getOption(logOptions: LogOptions): LogOption {
-	return Browsers.running
-		? logOptions.client
-		: logOptions.server
-		;
+	return Browsers.running ? logOptions.client : logOptions.server;
 }
 
 class ConsoleLogger implements Logger {
 	private readonly option: LogOption;
 
-	public constructor(public readonly header: string, private readonly options: LogOptions) {
+	public constructor(
+		public readonly header: string,
+		private readonly options: LogOptions,
+	) {
 		const logHeader = "[" + this.header + "]";
 
 		this.option = getOption(options);
 
-		this.trace = toMethod(this.option.level, LogLevel.Trace, console.trace.bind(console, logHeader));
-		this.debug = toMethod(this.option.level, LogLevel.Debug, console.debug.bind(console, logHeader));
-		this.log = toMethod(this.option.level, LogLevel.Log, console.log.bind(console, logHeader));
-		this.info = toMethod(this.option.level, LogLevel.Information, console.info.bind(console, logHeader));
-		this.warn = toMethod(this.option.level, LogLevel.Warning, console.warn.bind(console, logHeader));
-		this.error = toMethod(this.option.level, LogLevel.Error, console.error.bind(console, logHeader));
+		this.trace = toMethod(
+			this.option.level,
+			LogLevel.Trace,
+			console.trace.bind(console, logHeader),
+		);
+		this.debug = toMethod(
+			this.option.level,
+			LogLevel.Debug,
+			console.debug.bind(console, logHeader),
+		);
+		this.log = toMethod(
+			this.option.level,
+			LogLevel.Log,
+			console.log.bind(console, logHeader),
+		);
+		this.info = toMethod(
+			this.option.level,
+			LogLevel.Information,
+			console.info.bind(console, logHeader),
+		);
+		this.warn = toMethod(
+			this.option.level,
+			LogLevel.Warning,
+			console.warn.bind(console, logHeader),
+		);
+		this.error = toMethod(
+			this.option.level,
+			LogLevel.Error,
+			console.error.bind(console, logHeader),
+		);
 
 		this.table = this.option.table ? console.table.bind(console) : nopTable;
 		this.dir = this.option.dir ? console.dir.bind(console) : nopDir;

@@ -1,13 +1,15 @@
 import { CssHelper } from "@/models/CssHelper";
-import { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
-import { Holiday, Theme } from "@/models/data/Setting";
-import { DateTime } from "@/models/DateTime";
+import type { HolidayEventMapValue } from "@/models/data/HolidayEventMapValue";
+import type { Holiday, Theme } from "@/models/data/Setting";
+import type { DateTime } from "@/models/DateTime";
 import { Settings } from "@/models/Settings";
 
 export abstract class Days {
-
-	public static getWeekDayClassName(date: DateTime, regulars: Readonly<Holiday["regulars"]>, theme: Readonly<Theme>): string {
-
+	public static getWeekDayClassName(
+		date: DateTime,
+		regulars: Readonly<Holiday["regulars"]>,
+		theme: Readonly<Theme>,
+	): string {
 		for (const regular of regulars) {
 			const weekday = Settings.toWeekDay(date.week);
 			if (regular === weekday) {
@@ -18,7 +20,11 @@ export abstract class Days {
 		return "";
 	}
 
-	public static getHolidayClassName(date: DateTime, holidayEventValue: HolidayEventMapValue | undefined, theme: Readonly<Theme>): string {
+	public static getHolidayClassName(
+		date: DateTime,
+		holidayEventValue: HolidayEventMapValue | undefined,
+		theme: Readonly<Theme>,
+	): string {
 		if (holidayEventValue) {
 			if (holidayEventValue) {
 				return "_dynamic_theme_holiday_events_" + holidayEventValue.event.kind;
@@ -28,15 +34,33 @@ export abstract class Days {
 		return "";
 	}
 
-	public static getDayClassNames(date: DateTime, regularHolidays: Readonly<Holiday["regulars"]>, holidayEventValue: HolidayEventMapValue | undefined, theme: Readonly<Theme>): Array<string> {
-		const weekClassName = this.getWeekDayClassName(date, regularHolidays, theme);
-		const holidayClassName = this.getHolidayClassName(date, holidayEventValue, theme);
+	public static getDayClassNames(
+		date: DateTime,
+		regularHolidays: Readonly<Holiday["regulars"]>,
+		holidayEventValue: HolidayEventMapValue | undefined,
+		theme: Readonly<Theme>,
+	): Array<string> {
+		const weekClassName = this.getWeekDayClassName(
+			date,
+			regularHolidays,
+			theme,
+		);
+		const holidayClassName = this.getHolidayClassName(
+			date,
+			holidayEventValue,
+			theme,
+		);
 
-		return [weekClassName, holidayClassName].filter(a => a);
+		return [weekClassName, holidayClassName].filter((a) => a);
 	}
 
-	public static getCellClassName(customClassNames: ReadonlyArray<string>): string {
-		return CssHelper.joinClassName(["cell", "_dynamic_design_cell", ...customClassNames]);
+	public static getCellClassName(
+		customClassNames: ReadonlyArray<string>,
+	): string {
+		return CssHelper.joinClassName([
+			"cell",
+			"_dynamic_design_cell",
+			...customClassNames,
+		]);
 	}
-
 }

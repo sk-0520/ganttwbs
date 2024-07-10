@@ -1,22 +1,19 @@
 import { IteratorBase } from "@/models/collections/Iterator";
 
 export class AppendIterable<T> implements Iterable<T> {
-
-	private items = new Array<Iterable<T>>;
+	private items = new Array<Iterable<T>>();
 
 	public append(iterable: Iterable<T>): void {
 		this.items.push(iterable);
 	}
 
 	public [Symbol.iterator](): Iterator<T> {
-		return new AppendIterator(this.items.map(a => a[Symbol.iterator]()));
+		return new AppendIterator(this.items.map((a) => a[Symbol.iterator]()));
 	}
 }
 
 class AppendIterator<T> extends IteratorBase<T> {
-	public constructor(
-		private iterators: Array<Iterator<T>>
-	) {
+	public constructor(private iterators: Array<Iterator<T>>) {
 		super();
 	}
 

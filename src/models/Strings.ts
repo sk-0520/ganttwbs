@@ -1,5 +1,4 @@
 export abstract class Strings {
-
 	/**
 	 * 非空文字列(ホワイトスペース構成は除く)か。
 	 *
@@ -18,13 +17,17 @@ export abstract class Strings {
 	 * @param converter 一意な値への変換処理。
 	 * @returns 一意な値。
 	 */
-	public static toUnique(source: string, items: ReadonlySet<string>, compare: (a: string, b: string) => boolean, converter: (source: string, number: number) => string): string {
+	public static toUnique(
+		source: string,
+		items: ReadonlySet<string>,
+		compare: (a: string, b: string) => boolean,
+		converter: (source: string, number: number) => string,
+	): string {
 		let changeName = source;
 
 		let n = 1;
 
-		RETRY:
-		while (true) {
+		RETRY: while (true) {
 			for (const value of items) {
 				if (compare(value, changeName)) {
 					changeName = converter(source, ++n);
@@ -44,8 +47,16 @@ export abstract class Strings {
 	 * @param items 重複チェック用の集合。
 	 * @returns 一意な値。
 	 */
-	public static toUniqueDefault(source: string, items: ReadonlySet<string>): string {
-		return this.toUnique(source, items, (a, b) => a === b, (source, number) => `${source}(${number})`);
+	public static toUniqueDefault(
+		source: string,
+		items: ReadonlySet<string>,
+	): string {
+		return this.toUnique(
+			source,
+			items,
+			(a, b) => a === b,
+			(source, number) => `${source}(${number})`,
+		);
 	}
 
 	/**
@@ -152,21 +163,33 @@ export abstract class Strings {
 		return source.replace(this._escapeRegex, "\\$&");
 	}
 
-
-	public static replaceAllImpl(source: string, searchValue: string | RegExp, replaceValue: string): string {
+	public static replaceAllImpl(
+		source: string,
+		searchValue: string | RegExp,
+		replaceValue: string,
+	): string {
 		if (searchValue instanceof RegExp) {
 			const flags = searchValue.flags.includes("g")
 				? searchValue.flags
-				: searchValue.flags + "g"
-				;
+				: searchValue.flags + "g";
 
-			return source.replace(new RegExp(searchValue.source, flags), replaceValue);
+			return source.replace(
+				new RegExp(searchValue.source, flags),
+				replaceValue,
+			);
 		}
 
-		return source.replace(new RegExp(this.escapeRegex(searchValue), "g"), replaceValue);
+		return source.replace(
+			new RegExp(this.escapeRegex(searchValue), "g"),
+			replaceValue,
+		);
 	}
 
-	public static replaceAll(source: string, searchValue: string | RegExp, replaceValue: string): string {
+	public static replaceAll(
+		source: string,
+		searchValue: string | RegExp,
+		replaceValue: string,
+	): string {
 		if (!String.prototype.replaceAll) {
 			return this.replaceAllImpl(source, searchValue, replaceValue);
 		}
@@ -182,7 +205,12 @@ export abstract class Strings {
 	 * @param func プレースホルダー置き換え処理。
 	 * @returns 置き換え文字列。
 	 */
-	public static replaceFunc(source: string, head: string, tail: string, func: (placeholder: string) => string): string {
+	public static replaceFunc(
+		source: string,
+		head: string,
+		tail: string,
+		func: (placeholder: string) => string,
+	): string {
 		if (!head || !tail) {
 			throw new Error(`head: ${head}, tail: ${tail}`);
 		}
@@ -208,8 +236,12 @@ export abstract class Strings {
 	 * @param tail プレースホルダー終了。
 	 * @returns
 	 */
-	public static replaceMap(source: string, map: ReadonlyMap<string, string> | Record<string, string>, head = "${", tail = "}"): string {
-
+	public static replaceMap(
+		source: string,
+		map: ReadonlyMap<string, string> | Record<string, string>,
+		head = "${",
+		tail = "}",
+	): string {
 		let func: (placeholder: string) => string;
 		if (map instanceof Map) {
 			func = (placeholder: string): string => {
@@ -217,7 +249,9 @@ export abstract class Strings {
 			};
 		} else {
 			func = (placeholder: string): string => {
-				return placeholder in map ? (map as Record<string, string>)[placeholder] : placeholder;
+				return placeholder in map
+					? (map as Record<string, string>)[placeholder]
+					: placeholder;
 			};
 		}
 
@@ -244,7 +278,11 @@ export abstract class Strings {
 	 * @param fillString
 	 * @returns
 	 */
-	public static padStart(num: number, maxLength: number, fillString?: string): string {
+	public static padStart(
+		num: number,
+		maxLength: number,
+		fillString?: string,
+	): string {
 		return String(num).padStart(maxLength, fillString);
 	}
 
@@ -266,7 +304,11 @@ export abstract class Strings {
 	 * @param fillString
 	 * @returns
 	 */
-	public static padEnd(num: number, maxLength: number, fillString?: string): string {
+	public static padEnd(
+		num: number,
+		maxLength: number,
+		fillString?: string,
+	): string {
 		return String(num).padEnd(maxLength, fillString);
 	}
 }

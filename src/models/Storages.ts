@@ -1,4 +1,4 @@
-import { EditorData } from "@/models/data/EditorData";
+import type { EditorData } from "@/models/data/EditorData";
 
 /**
  * 何かしらのストレージ処理。
@@ -6,7 +6,6 @@ import { EditorData } from "@/models/data/EditorData";
  * まぁブラウザ。
  */
 export abstract class Storages {
-
 	private static readonly EditorKey = "editor";
 
 	/**
@@ -32,5 +31,4 @@ export abstract class Storages {
 		const data = settingObject as EditorData;
 		return data;
 	}
-
 }

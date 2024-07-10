@@ -1,6 +1,6 @@
-import { FC, KeyboardEvent } from "react";
+import type { FC, KeyboardEvent } from "react";
 
-import { AnyTimeline } from "@/models/data/Setting";
+import type { AnyTimeline } from "@/models/data/Setting";
 import { Timelines } from "@/models/Timelines";
 
 interface Props {
@@ -23,9 +23,9 @@ const SubjectCell: FC<Props> = (props: Props) => {
 				value={props.value}
 				readOnly={props.readOnly}
 				disabled={props.disabled}
-				onChange={ev => props.callbackChangeValue(ev.target.value)}
-				onFocus={ev => props.callbackFocus(true)}
-				onBlur={ev => props.callbackFocus(false)}
+				onChange={(ev) => props.callbackChangeValue(ev.target.value)}
+				onFocus={(ev) => props.callbackFocus(true)}
+				onBlur={(ev) => props.callbackFocus(false)}
 				onKeyDown={props.callbackKeyDown}
 			/>
 		</td>

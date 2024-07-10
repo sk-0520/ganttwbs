@@ -12,7 +12,6 @@ export type DateOnly = z.infer<typeof DateOnlySchema>;
 const TimeOnlySchema = z.string();
 export type TimeOnly = z.infer<typeof TimeOnlySchema>;
 
-
 const WeekDaySchema = z.enum([
 	"monday",
 	"tuesday",
@@ -24,10 +23,7 @@ const WeekDaySchema = z.enum([
 ]);
 export type WeekDay = z.infer<typeof WeekDaySchema>;
 
-const HolidayKindSchema = z.enum([
-	"normal",
-	"special",
-]);
+const HolidayKindSchema = z.enum(["normal", "special"]);
 export type HolidayKind = z.infer<typeof HolidayKindSchema>;
 
 const GroupIdSchema = z.string();
@@ -36,17 +32,10 @@ export type GroupId = z.infer<typeof GroupIdSchema>;
 const MemberIdSchema = z.string();
 export type MemberId = z.infer<typeof MemberIdSchema>;
 
-const TimelineKindSchema = z.enum([
-	"group",
-	"task",
-]);
+const TimelineKindSchema = z.enum(["group", "task"]);
 export type TimelineKind = z.infer<typeof TimelineKindSchema>;
 
-const TaskTimelineWorkStateSchema = z.enum([
-	"enabled",
-	"disabled",
-	"sleep",
-]);
+const TaskTimelineWorkStateSchema = z.enum(["enabled", "disabled", "sleep"]);
 export type TaskTimelineWorkState = z.infer<typeof TaskTimelineWorkStateSchema>;
 
 const HolidayEventSchema = z.object({
@@ -62,7 +51,7 @@ export type HolidayEvent = z.infer<typeof HolidayEventSchema>;
 const HolidaySchema = z.object({
 	/** 定休曜日 */
 	regulars: z.array(WeekDaySchema),
-	events: z.record(DateOnlySchema, HolidayEventSchema)
+	events: z.record(DateOnlySchema, HolidayEventSchema),
 });
 /** @inheritdoc */
 export type Holiday = z.infer<typeof HolidaySchema>;
@@ -80,7 +69,6 @@ const CalendarSchema = z.object({
 });
 /** @inheritdoc */
 export type Calendar = z.infer<typeof CalendarSchema>;
-
 
 const TimelineIdSchema = z.string().nonempty();
 /** @inheritdoc */
@@ -110,7 +98,7 @@ interface IGroupTimeline extends Timeline {
 }
 
 interface IRootTimeline extends IGroupTimeline {
-	id: RootTimelineId,
+	id: RootTimelineId;
 }
 
 interface ITaskTimeline extends Timeline {
@@ -122,21 +110,24 @@ interface ITaskTimeline extends Timeline {
 	progress: Progress;
 }
 
-const GroupTimelineSchema: z.ZodSchema<IGroupTimeline> = z.lazy(() => TimelineSchema.extend({
-	kind: z.literal("group"),
-	children: z.array(z.union([GroupTimelineSchema, TaskTimelineSchema])),
-}));
+const GroupTimelineSchema: z.ZodSchema<IGroupTimeline> = z.lazy(() =>
+	TimelineSchema.extend({
+		kind: z.literal("group"),
+		children: z.array(z.union([GroupTimelineSchema, TaskTimelineSchema])),
+	}),
+);
 /** @inheritdoc */
 export type GroupTimeline = z.infer<typeof GroupTimelineSchema>;
 
-const RootTimelineSchema: z.ZodSchema<IRootTimeline> = z.lazy(() => TimelineSchema.extend({
-	id: RootTimelineIdSchema,
-	kind: z.literal("group"),
-	children: z.array(z.union([GroupTimelineSchema, TaskTimelineSchema])),
-}));
+const RootTimelineSchema: z.ZodSchema<IRootTimeline> = z.lazy(() =>
+	TimelineSchema.extend({
+		id: RootTimelineIdSchema,
+		kind: z.literal("group"),
+		children: z.array(z.union([GroupTimelineSchema, TaskTimelineSchema])),
+	}),
+);
 /** @inheritdoc */
 export type RootTimeline = z.infer<typeof RootTimelineSchema>;
-
 
 const TaskTimelineSchema = TimelineSchema.extend({
 	kind: z.literal("task"),
@@ -186,7 +177,6 @@ const ThemeSchema = z.object({
 	timeline: TimelineThemeSchema,
 });
 export type Theme = z.infer<typeof ThemeSchema>;
-
 
 /** 1日単価 */
 const PriceSchema = z.object({

@@ -1,5 +1,5 @@
-import { FC, useEffect, useLayoutEffect, useMemo } from "react";
-import { ReactNode } from "react";
+import { type FC, useEffect, useLayoutEffect, useMemo } from "react";
+import type { ReactNode } from "react";
 
 import CrossHeader from "@/components/elements/pages/editor/timeline/CrossHeader";
 import DaysHeader from "@/components/elements/pages/editor/timeline/DaysHeader";
@@ -10,25 +10,53 @@ import TimelineViewer from "@/components/elements/pages/editor/timeline/Timeline
 import { useLocale } from "@/locales/locale";
 import { Arrays } from "@/models/Arrays";
 import { useSelectingBeginDateAtomWriter } from "@/models/atom/editor/BeginDateAtoms";
-import { useDetailEditTimelineAtomReader, useDetailEditTimelineAtomWriter, useDraggingTimelineAtomWriter, useDragSourceTimelineAtomReader, useDragSourceTimelineAtomWriter } from "@/models/atom/editor/DragAndDropAtoms";
-import { useActiveTimelineIdAtomWriter, useDragOverTimelineIdAtomWriter, useDragSourceTimelineIdAtomWriter, useHighlightDaysAtomWriter, useHighlightTimelineIdsAtomWriter, useHoverTimelineIdAtomWriter } from "@/models/atom/editor/HighlightAtoms";
-import { useCalendarInfoAtomReader, useSequenceTimelinesAtomReader, useSequenceTimelinesWriterAtomWriter, useSettingAtomWriter } from "@/models/atom/editor/TimelineAtoms";
+import {
+	useDetailEditTimelineAtomReader,
+	useDetailEditTimelineAtomWriter,
+	useDraggingTimelineAtomWriter,
+	useDragSourceTimelineAtomReader,
+	useDragSourceTimelineAtomWriter,
+} from "@/models/atom/editor/DragAndDropAtoms";
+import {
+	useActiveTimelineIdAtomWriter,
+	useDragOverTimelineIdAtomWriter,
+	useDragSourceTimelineIdAtomWriter,
+	useHighlightDaysAtomWriter,
+	useHighlightTimelineIdsAtomWriter,
+	useHoverTimelineIdAtomWriter,
+} from "@/models/atom/editor/HighlightAtoms";
+import {
+	useCalendarInfoAtomReader,
+	useSequenceTimelinesAtomReader,
+	useSequenceTimelinesWriterAtomWriter,
+	useSettingAtomWriter,
+} from "@/models/atom/editor/TimelineAtoms";
 import { Color } from "@/models/Color";
-import { BeginDateCallbacks } from "@/models/data/BeginDate";
-import { Design } from "@/models/data/Design";
-import { DraggingTimeline } from "@/models/data/DraggingTimeline";
-import { DropTimeline } from "@/models/data/DropTimeline";
-import { EditorData } from "@/models/data/EditorData";
-import { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
+import type { BeginDateCallbacks } from "@/models/data/BeginDate";
+import type { Design } from "@/models/data/Design";
+import type { DraggingTimeline } from "@/models/data/DraggingTimeline";
+import type { DropTimeline } from "@/models/data/DropTimeline";
+import type { EditorData } from "@/models/data/EditorData";
+import type { NewTimelineOptions } from "@/models/data/NewTimelineOptions";
 import { NewTimelinePosition } from "@/models/data/NewTimelinePosition";
-import { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
-import { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
-import { AnyTimeline, GroupTimeline, TaskTimeline, Theme, TimelineId, TimelineKind } from "@/models/data/Setting";
-import { MoveDirection, TimelineCallbacks } from "@/models/data/TimelineCallbacks";
+import type { ConfigurationProps } from "@/models/data/props/ConfigurationProps";
+import type { ReadableTimelineId } from "@/models/data/ReadableTimelineId";
+import type {
+	AnyTimeline,
+	GroupTimeline,
+	TaskTimeline,
+	Theme,
+	TimelineId,
+	TimelineKind,
+} from "@/models/data/Setting";
+import type {
+	MoveDirection,
+	TimelineCallbacks,
+} from "@/models/data/TimelineCallbacks";
 import { DateTime } from "@/models/DateTime";
 import { Designs } from "@/models/Designs";
 import { Editors } from "@/models/Editors";
-import { createLogger, TimeLogMethod } from "@/models/Logging";
+import { createLogger, type TimeLogMethod } from "@/models/Logging";
 import { Settings } from "@/models/Settings";
 import { Strings } from "@/models/Strings";
 import { Timelines } from "@/models/Timelines";
@@ -59,7 +87,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	const draggingTimelineAtomReader = useDraggingTimelineAtomWriter();
 	const dragSourceTimelineIdAtomWriter = useDragSourceTimelineIdAtomWriter();
 	const dragOverTimelineIdAtomWriter = useDragOverTimelineIdAtomWriter();
-	const sequenceTimelinesWriterAtomWriter = useSequenceTimelinesWriterAtomWriter();
+	const sequenceTimelinesWriterAtomWriter =
+		useSequenceTimelinesWriterAtomWriter();
 	const sequenceTimelinesAtomReader = useSequenceTimelinesAtomReader();
 	const settingAtomWriter = useSettingAtomWriter();
 	const calendarInfoAtomReader = useCalendarInfoAtomReader();
@@ -85,37 +114,59 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	};
 
 	const dynamicStyleNodes = useMemo(() => {
-		return renderDynamicStyle(props.configuration.design, props.editorData.setting.theme);
+		return renderDynamicStyle(
+			props.configuration.design,
+			props.editorData.setting.theme,
+		);
 	}, [props.configuration.design, props.editorData.setting.theme]);
 
 	useLayoutEffect(() => {
 		settingAtomWriter.write(props.editorData.setting);
-		sequenceTimelinesWriterAtomWriter.write(...Timelines.flat(props.editorData.setting.rootTimeline.children));
+		sequenceTimelinesWriterAtomWriter.write(
+			...Timelines.flat(props.editorData.setting.rootTimeline.children),
+		);
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		function fireDropTimeline(dropTimeline: DropTimeline) {
 			logger.debug("FIRE");
 
-			const sameGroup = dropTimeline.sourceGroupTimeline.id === dropTimeline.destinationGroupTimeline.id;
+			const sameGroup =
+				dropTimeline.sourceGroupTimeline.id ===
+				dropTimeline.destinationGroupTimeline.id;
 
 			if (sameGroup) {
 				// 同一グループ内移動
-				Arrays.moveIndexInPlace(dropTimeline.sourceGroupTimeline.children, dropTimeline.sourceIndex, dropTimeline.destinationIndex);
+				Arrays.moveIndexInPlace(
+					dropTimeline.sourceGroupTimeline.children,
+					dropTimeline.sourceIndex,
+					dropTimeline.destinationIndex,
+				);
 			} else {
 				// グループから破棄
-				const newSourceChildren = dropTimeline.sourceGroupTimeline.children.filter(a => a.id !== dropTimeline.timeline.id);
+				const newSourceChildren =
+					dropTimeline.sourceGroupTimeline.children.filter(
+						(a) => a.id !== dropTimeline.timeline.id,
+					);
 				dropTimeline.sourceGroupTimeline.children = newSourceChildren;
 
 				// 別グループに追加
 				if (dropTimeline.destinationIndex === -1) {
-					dropTimeline.destinationGroupTimeline.children.push(dropTimeline.timeline);
+					dropTimeline.destinationGroupTimeline.children.push(
+						dropTimeline.timeline,
+					);
 				} else {
-					dropTimeline.destinationGroupTimeline.children.splice(dropTimeline.destinationIndex, 0, dropTimeline.timeline);
+					dropTimeline.destinationGroupTimeline.children.splice(
+						dropTimeline.destinationIndex,
+						0,
+						dropTimeline.timeline,
+					);
 				}
 			}
 
-			sequenceTimelinesWriterAtomWriter.write(...Timelines.flat(props.editorData.setting.rootTimeline.children));
+			sequenceTimelinesWriterAtomWriter.write(
+				...Timelines.flat(props.editorData.setting.rootTimeline.children),
+			);
 
 			activeTimelineIdAtomWriter.write(undefined);
 			hoverTimelineIdAtomWriter.write(dropTimeline.timeline.id);
@@ -158,7 +209,11 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 					// 自身のグループへの移動は抑制(どうすりゃいいのか正解が分からん)
 					if (Settings.maybeGroupTimeline(targetTimeline)) {
-						if (targetTimeline.children.find(a => a.id === dragSourceTimeline.id)) {
+						if (
+							targetTimeline.children.find(
+								(a) => a.id === dragSourceTimeline.id,
+							)
+						) {
 							return;
 						}
 					}
@@ -171,21 +226,32 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				onDrop: (ev, targetTimeline) => {
 					logger.debug("DROP", ev, targetTimeline);
 
-					const sourceGroupTimelines = Timelines.getParentGroups(dragSourceTimeline, props.editorData.setting.rootTimeline);
-					const targetGroupTimelines = Timelines.getParentGroups(targetTimeline, props.editorData.setting.rootTimeline);
+					const sourceGroupTimelines = Timelines.getParentGroups(
+						dragSourceTimeline,
+						props.editorData.setting.rootTimeline,
+					);
+					const targetGroupTimelines = Timelines.getParentGroups(
+						targetTimeline,
+						props.editorData.setting.rootTimeline,
+					);
 
 					if (!sourceGroupTimelines.length || !targetGroupTimelines.length) {
 						// ツリーにいない場合はどうにもならん
-						throw new Error(JSON.stringify({
-							sourceGroupTimelines,
-							targetGroupTimelines,
-						}));
+						throw new Error(
+							JSON.stringify({
+								sourceGroupTimelines,
+								targetGroupTimelines,
+							}),
+						);
 					}
 
 					// 対象がグループの場合、そのグループへ移動
 					if (Settings.maybeGroupTimeline(targetTimeline)) {
-						const sourceGroupTimeline = sourceGroupTimelines[sourceGroupTimelines.length - 1];
-						const sourceIndex = sourceGroupTimeline.children.findIndex(a => a.id === dragSourceTimeline.id);
+						const sourceGroupTimeline =
+							sourceGroupTimelines[sourceGroupTimelines.length - 1];
+						const sourceIndex = sourceGroupTimeline.children.findIndex(
+							(a) => a.id === dragSourceTimeline.id,
+						);
 
 						fireDropTimeline({
 							timeline: dragSourceTimeline,
@@ -198,18 +264,26 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 					}
 
 					// 単純移動
-					const sourceNodes = sourceGroupTimelines[sourceGroupTimelines.length - 1].children;
-					const sourceIndex = sourceNodes.findIndex(a => a.id === dragSourceTimeline.id);
-					const destinationNodes = targetGroupTimelines[targetGroupTimelines.length - 1].children;
-					const destinationIndex = destinationNodes.findIndex(a => a.id === targetTimeline.id);
+					const sourceNodes =
+						sourceGroupTimelines[sourceGroupTimelines.length - 1].children;
+					const sourceIndex = sourceNodes.findIndex(
+						(a) => a.id === dragSourceTimeline.id,
+					);
+					const destinationNodes =
+						targetGroupTimelines[targetGroupTimelines.length - 1].children;
+					const destinationIndex = destinationNodes.findIndex(
+						(a) => a.id === targetTimeline.id,
+					);
 					fireDropTimeline({
 						timeline: dragSourceTimeline,
-						sourceGroupTimeline: sourceGroupTimelines[sourceGroupTimelines.length - 1],
+						sourceGroupTimeline:
+							sourceGroupTimelines[sourceGroupTimelines.length - 1],
 						sourceIndex: sourceIndex,
-						destinationGroupTimeline: targetGroupTimelines[targetGroupTimelines.length - 1],
+						destinationGroupTimeline:
+							targetGroupTimelines[targetGroupTimelines.length - 1],
 						destinationIndex: destinationIndex,
 					});
-				}
+				},
 			};
 
 			activeTimelineIdAtomWriter.write(undefined);
@@ -218,8 +292,18 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			dragSourceTimelineIdAtomWriter.write(dragging.sourceTimeline.id);
 			draggingTimelineAtomReader.write(dragging);
 		}
-	}, [props.editorData.setting.rootTimeline, sequenceTimelinesWriterAtomWriter, activeTimelineIdAtomWriter, hoverTimelineIdAtomWriter, highlightTimelineIdsAtomWriter, dragSourceTimelineIdAtomWriter, dragOverTimelineIdAtomWriter, dragSourceTimelineAtomReader.data, dragSourceTimelineAtomWriter, draggingTimelineAtomReader]);
-
+	}, [
+		props.editorData.setting.rootTimeline,
+		sequenceTimelinesWriterAtomWriter,
+		activeTimelineIdAtomWriter,
+		hoverTimelineIdAtomWriter,
+		highlightTimelineIdsAtomWriter,
+		dragSourceTimelineIdAtomWriter,
+		dragOverTimelineIdAtomWriter,
+		dragSourceTimelineAtomReader.data,
+		dragSourceTimelineAtomWriter,
+		draggingTimelineAtomReader,
+	]);
 
 	function handleEndDetailEdit(changedTimeline: AnyTimeline | null): void {
 		logger.debug("詳細編集終了", changedTimeline);
@@ -231,21 +315,38 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		}
 	}
 
-	function handleCalcReadableTimelineId(timeline: Readonly<AnyTimeline>): ReadableTimelineId {
-		return Timelines.calcReadableTimelineId(timeline, props.editorData.setting.rootTimeline);
+	function handleCalcReadableTimelineId(
+		timeline: Readonly<AnyTimeline>,
+	): ReadableTimelineId {
+		return Timelines.calcReadableTimelineId(
+			timeline,
+			props.editorData.setting.rootTimeline,
+		);
 	}
 
-	function handleSearchBeforeTimeline(timeline: AnyTimeline): AnyTimeline | undefined {
-		return Timelines.searchBeforeTimeline(timeline, props.editorData.setting.rootTimeline);
+	function handleSearchBeforeTimeline(
+		timeline: AnyTimeline,
+	): AnyTimeline | undefined {
+		return Timelines.searchBeforeTimeline(
+			timeline,
+			props.editorData.setting.rootTimeline,
+		);
 	}
 
-	function handleAddEmptyTimeline(baseTimeline: AnyTimeline, options: NewTimelineOptions): void {
+	function handleAddEmptyTimeline(
+		baseTimeline: AnyTimeline,
+		options: NewTimelineOptions,
+	): void {
 		const newTimeline = createEmptyTimeline(options.timelineKind);
 
 		handleAddNewTimeline(baseTimeline, newTimeline, options.position);
 	}
 
-	function handleAddNewTimeline(baseTimeline: AnyTimeline, newTimeline: AnyTimeline, position: NewTimelinePosition): void {
+	function handleAddNewTimeline(
+		baseTimeline: AnyTimeline,
+		newTimeline: AnyTimeline,
+		position: NewTimelinePosition,
+	): void {
 		logger.trace("ADD", newTimeline);
 
 		// 将来追加した場合の安全弁
@@ -255,33 +356,39 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 		if (!newTimeline.subject) {
 			const timelineSubjects = new Set(
-				sequenceTimelinesAtomReader.data.filter(a => a.kind === newTimeline.kind)
-					.map(a => a.subject)
+				sequenceTimelinesAtomReader.data
+					.filter((a) => a.kind === newTimeline.kind)
+					.map((a) => a.subject),
 			);
-			const defaultSubject = newTimeline.kind === "group"
-				? locale.common.timeline.newGroupTimeline
-				: locale.common.timeline.newTaskTimeline
-				;
-			newTimeline.subject = Strings.toUniqueDefault(defaultSubject, timelineSubjects);
+			const defaultSubject =
+				newTimeline.kind === "group"
+					? locale.common.timeline.newGroupTimeline
+					: locale.common.timeline.newTaskTimeline;
+			newTimeline.subject = Strings.toUniqueDefault(
+				defaultSubject,
+				timelineSubjects,
+			);
 		}
 
 		let parent: GroupTimeline;
 		if (Settings.maybeGroupTimeline(baseTimeline)) {
 			parent = baseTimeline;
 		} else {
-			const groups = Timelines.getParentGroups(baseTimeline, props.editorData.setting.rootTimeline);
+			const groups = Timelines.getParentGroups(
+				baseTimeline,
+				props.editorData.setting.rootTimeline,
+			);
 			parent = Arrays.last(groups);
 		}
 
 		if (Settings.maybeGroupTimeline(baseTimeline)) {
 			// グループの場合、そのグループの末っ子に設定
-			parent.children = [
-				...parent.children,
-				newTimeline,
-			];
+			parent.children = [...parent.children, newTimeline];
 		} else {
 			// タスクの場合、次に設定する
-			const currentIndex = parent.children.findIndex(a => a.id === baseTimeline.id);
+			const currentIndex = parent.children.findIndex(
+				(a) => a.id === baseTimeline.id,
+			);
 			const newChildren = [...parent.children];
 			newChildren.splice(currentIndex + 1, 0, newTimeline);
 			parent.children = newChildren;
@@ -290,13 +397,18 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		// 前工程の設定されていないタスクに対して可能であれば直近項目を前項目として設定
 		const newTaskTimeline = Timelines.getFirstTaskTimeline(newTimeline);
 		if (newTaskTimeline) {
-			const beforeTimeline = Timelines.searchBeforeTimeline(newTaskTimeline, props.editorData.setting.rootTimeline);
+			const beforeTimeline = Timelines.searchBeforeTimeline(
+				newTaskTimeline,
+				props.editorData.setting.rootTimeline,
+			);
 			if (beforeTimeline) {
 				newTaskTimeline.previous = [beforeTimeline.id];
 			}
 		}
 
-		sequenceTimelinesWriterAtomWriter.write(...Timelines.flat(props.editorData.setting.rootTimeline.children));
+		sequenceTimelinesWriterAtomWriter.write(
+			...Timelines.flat(props.editorData.setting.rootTimeline.children),
+		);
 		setTimeout(() => {
 			highlightTimelineIdsAtomWriter.write([newTimeline.id]);
 			highlightDaysAtomWriter.write([]);
@@ -306,7 +418,10 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 	function handleUpdateTimeline(timeline: AnyTimeline): void {
 		//
-		const source = Timelines.findTimeline(timeline.id, props.editorData.setting.rootTimeline);
+		const source = Timelines.findTimeline(
+			timeline.id,
+			props.editorData.setting.rootTimeline,
+		);
 		if (!source) {
 			return;
 		}
@@ -364,18 +479,28 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 
 		// const store = createTimelineStore();
 		// setTimelineStore(store);
-		sequenceTimelinesWriterAtomWriter.write(...Timelines.flat(props.editorData.setting.rootTimeline.children));
+		sequenceTimelinesWriterAtomWriter.write(
+			...Timelines.flat(props.editorData.setting.rootTimeline.children),
+		);
 	}
 
-	function handleMoveTimeline(direction: MoveDirection, timeline: AnyTimeline): void {
-		const groups = Timelines.getParentGroups(timeline, props.editorData.setting.rootTimeline);
+	function handleMoveTimeline(
+		direction: MoveDirection,
+		timeline: AnyTimeline,
+	): void {
+		const groups = Timelines.getParentGroups(
+			timeline,
+			props.editorData.setting.rootTimeline,
+		);
 
 		if (direction === "parent") {
 			if (1 < groups.length) {
 				//TODO: 正直どこに配置すればいいのか分からん
 				const srcGroup = groups[groups.length - 1];
 				const destGroup = groups[groups.length - 2];
-				srcGroup.children = srcGroup.children.filter(a => a.id !== timeline.id);
+				srcGroup.children = srcGroup.children.filter(
+					(a) => a.id !== timeline.id,
+				);
 				destGroup.children.push(timeline);
 			} else {
 				logger.debug("最上位項目は何もしない");
@@ -383,58 +508,95 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 			}
 		} else {
 			const group = Arrays.last(groups);
-			Arrays.replaceOrderInPlace(group.children, direction === "down", timeline);
+			Arrays.replaceOrderInPlace(
+				group.children,
+				direction === "down",
+				timeline,
+			);
 		}
 
-		sequenceTimelinesWriterAtomWriter.write(...Timelines.flat(props.editorData.setting.rootTimeline.children));
+		sequenceTimelinesWriterAtomWriter.write(
+			...Timelines.flat(props.editorData.setting.rootTimeline.children),
+		);
 	}
 
 	function handleRemoveTimeline(timeline: AnyTimeline): void {
-		const groups = Timelines.getParentGroups(timeline, props.editorData.setting.rootTimeline);
+		const groups = Timelines.getParentGroups(
+			timeline,
+			props.editorData.setting.rootTimeline,
+		);
 
 		// 前工程を破棄
-		const timelineMap = Timelines.getTimelinesMap(props.editorData.setting.rootTimeline);
+		const timelineMap = Timelines.getTimelinesMap(
+			props.editorData.setting.rootTimeline,
+		);
 
 		for (const [_, value] of timelineMap) {
 			if (Settings.maybeTaskTimeline(value)) {
 				if (value.previous.includes(timeline.id)) {
-					value.previous = value.previous.filter(a => a !== timeline.id);
+					value.previous = value.previous.filter((a) => a !== timeline.id);
 				}
 			}
 		}
 
 		// データから破棄
 		const group = Arrays.last(groups);
-		const newChildren = group.children.filter(a => a.id !== timeline.id);
+		const newChildren = group.children.filter((a) => a.id !== timeline.id);
 		group.children = newChildren;
-		sequenceTimelinesWriterAtomWriter.write(...Timelines.flat(props.editorData.setting.rootTimeline.children));
+		sequenceTimelinesWriterAtomWriter.write(
+			...Timelines.flat(props.editorData.setting.rootTimeline.children),
+		);
 	}
 
 	function handleStartSelectBeginDate(timeline: TaskTimeline): void {
 		logger.debug(timeline);
 		selectingBeginDateAtomWriter.write({
 			timeline: timeline,
-			beginDate: timeline.static ? DateTime.parse(timeline.static, calendarInfoAtomReader.data.timeZone) : null,
+			beginDate: timeline.static
+				? DateTime.parse(timeline.static, calendarInfoAtomReader.data.timeZone)
+				: null,
 			previous: new Set(timeline.previous),
-			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editorData.setting.rootTimeline),
+			canSelect: (targetTimeline) =>
+				Timelines.canSelect(
+					targetTimeline,
+					timeline,
+					props.editorData.setting.rootTimeline,
+				),
 		});
 	}
 
-	function handleClearSelectBeginDate(timeline: TaskTimeline, clearDate: boolean, clearPrevious: boolean): void {
-		selectingBeginDateAtomWriter.write(c => ({
+	function handleClearSelectBeginDate(
+		timeline: TaskTimeline,
+		clearDate: boolean,
+		clearPrevious: boolean,
+	): void {
+		selectingBeginDateAtomWriter.write((c) => ({
 			timeline: timeline,
 			beginDate: clearDate ? null : c?.beginDate ?? null,
 			previous: clearPrevious ? new Set() : c?.previous ?? new Set(),
-			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editorData.setting.rootTimeline),
+			canSelect: (targetTimeline) =>
+				Timelines.canSelect(
+					targetTimeline,
+					timeline,
+					props.editorData.setting.rootTimeline,
+				),
 		}));
 	}
 
-	function handleSetSelectBeginDate(timeline: TaskTimeline, set: ReadonlySet<TimelineId>): void {
-		selectingBeginDateAtomWriter.write(c => ({
+	function handleSetSelectBeginDate(
+		timeline: TaskTimeline,
+		set: ReadonlySet<TimelineId>,
+	): void {
+		selectingBeginDateAtomWriter.write((c) => ({
 			timeline: timeline,
 			beginDate: c?.beginDate ?? null,
 			previous: new Set(set),
-			canSelect: (targetTimeline) => Timelines.canSelect(targetTimeline, timeline, props.editorData.setting.rootTimeline)
+			canSelect: (targetTimeline) =>
+				Timelines.canSelect(
+					targetTimeline,
+					timeline,
+					props.editorData.setting.rootTimeline,
+				),
 		}));
 	}
 
@@ -472,18 +634,24 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 				configuration={props.configuration}
 				timelineCallbacks={timelineCallbacks}
 			/>
-			{detailEditTimelineAtomReader.data && <TimelineDetailEditDialog
-				configuration={props.configuration}
-				timeline={detailEditTimelineAtomReader.data}
-				callbackSubmit={(timeline) => handleEndDetailEdit(timeline)}
-			/>}
+			{detailEditTimelineAtomReader.data && (
+				<TimelineDetailEditDialog
+					configuration={props.configuration}
+					timeline={detailEditTimelineAtomReader.data}
+					callbackSubmit={(timeline) => handleEndDetailEdit(timeline)}
+				/>
+			)}
 		</div>
 	);
 };
 
 export default TimelineEditor;
 
-function renderDynamicStyleCore(design: Design, theme: Theme, log: TimeLogMethod): ReactNode {
+function renderDynamicStyleCore(
+	design: Design,
+	theme: Theme,
+	log: TimeLogMethod,
+): ReactNode {
 	// 動的なCSSクラス名をここでがっつり作るのです
 	const styleObject = {
 		design: {
@@ -493,7 +661,7 @@ function renderDynamicStyleCore(design: Design, theme: Theme, log: TimeLogMethod
 				maxHeight: design.seed.cell.height,
 				minWidth: design.seed.cell.width,
 				maxWidth: design.seed.cell.width,
-			}
+			},
 		},
 
 		programmable: {
@@ -505,21 +673,24 @@ function renderDynamicStyleCore(design: Design, theme: Theme, log: TimeLogMethod
 				width: {
 					minWidth: design.seed.cell.width,
 					maxWidth: design.seed.cell.width,
-				}
+				},
 			},
 
 			groups: {
 				...Arrays.range(1, design.programmable.group.maximum)
-					.map(level => {
+					.map((level) => {
 						const index = level - 1;
-						const backgroundColor = index in theme.groups ? theme.groups[index] : theme.timeline.defaultGroup;
+						const backgroundColor =
+							index in theme.groups
+								? theme.groups[index]
+								: theme.timeline.defaultGroup;
 						const foregroundColor = Color.parse(backgroundColor).getAutoColor();
 
 						return {
 							[`level-${level}`]: {
 								color: foregroundColor.toHtml(),
 								background: backgroundColor,
-							}
+							},
 						};
 					})
 					.reduce((r, a) => ({ ...r, ...a })),
@@ -527,8 +698,8 @@ function renderDynamicStyleCore(design: Design, theme: Theme, log: TimeLogMethod
 
 			readableTimelineId: {
 				...Arrays.range(1, design.programmable.group.maximum)
-					.map(level => {
-						const paddingWidth = `${((level - 1) * design.programmable.readableTimelineId.paddingLeft.value) + design.programmable.readableTimelineId.paddingLeft.unit}`;
+					.map((level) => {
+						const paddingWidth = `${(level - 1) * design.programmable.readableTimelineId.paddingLeft.value + design.programmable.readableTimelineId.paddingLeft.unit}`;
 
 						const index = level - 2;
 						//let paddingColor = "transparent";
@@ -539,19 +710,19 @@ function renderDynamicStyleCore(design: Design, theme: Theme, log: TimeLogMethod
 							// グラデーションの生成
 							const colors = new Array<string>();
 							for (let i = 0; i <= index; i++) {
-								const color = i in theme.groups ? theme.groups[i] : theme.timeline.defaultGroup;
+								const color =
+									i in theme.groups
+										? theme.groups[i]
+										: theme.timeline.defaultGroup;
 								colors.push(color);
 							}
-							const gradients = colors
-								.map((a, i) => {
-									const from = (i / colors.length);
-									const to = from + (1 / colors.length);
-									return `${a} ${from * 100}% ${to * 100}%`;
-								})
-								;
+							const gradients = colors.map((a, i) => {
+								const from = i / colors.length;
+								const to = from + 1 / colors.length;
+								return `${a} ${from * 100}% ${to * 100}%`;
+							});
 							gradient = `linear-gradient(to right, ${gradients.join(",")})`;
 						}
-
 
 						return {
 							[`level-${level}`]: {
@@ -569,7 +740,7 @@ function renderDynamicStyleCore(design: Design, theme: Theme, log: TimeLogMethod
 								maxWidth: paddingWidth,
 								minWidth: paddingWidth,
 								height: "100%",
-							}
+							},
 						};
 					})
 					.reduce((r, a) => ({ ...r, ...a })),
@@ -579,15 +750,15 @@ function renderDynamicStyleCore(design: Design, theme: Theme, log: TimeLogMethod
 		theme: {
 			holiday: {
 				regulars: Settings.getWeekDays()
-					.filter(a => a in theme.holiday.regulars)
-					.map(a => {
+					.filter((a) => a in theme.holiday.regulars)
+					.map((a) => {
 						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 						const backgroundColor = Color.parse(theme.holiday.regulars[a]!);
 						return {
 							[a]: {
 								color: backgroundColor.getAutoColor().toHtml(),
 								background: backgroundColor.toHtml(),
-							}
+							},
 						};
 					})
 					.reduce((r, a) => ({ ...r, ...a })),
@@ -597,12 +768,12 @@ function renderDynamicStyleCore(design: Design, theme: Theme, log: TimeLogMethod
 						return {
 							[k]: {
 								color: backgroundColor.getAutoColor().toHtml(),
-								background: `${backgroundColor.toHtml()} !important`
-							}
+								background: `${backgroundColor.toHtml()} !important`,
+							},
 						};
 					})
 					.reduce((r, a) => ({ ...r, ...a })),
-			}
+			},
 		},
 	};
 
@@ -611,17 +782,13 @@ function renderDynamicStyleCore(design: Design, theme: Theme, log: TimeLogMethod
 
 	log("作成");
 
-	return (
-		<style>
-			{style}
-		</style>
-	);
+	return <style>{style}</style>;
 }
 
 function renderDynamicStyle(design: Design, theme: Theme): ReactNode {
 	let result: ReactNode;
 
-	logger.time("CSS", log => {
+	logger.time("CSS", (log) => {
 		result = renderDynamicStyleCore(design, theme, log);
 	});
 
@@ -640,6 +807,3 @@ function createEmptyTimeline(timelineKind: TimelineKind): AnyTimeline {
 			throw new Error();
 	}
 }
-
-
-

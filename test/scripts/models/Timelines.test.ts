@@ -22,6 +22,4 @@ describe("Timelines", () => {
 		expect(Settings.maybeGroupTimeline(timeline)).toBeFalsy();
 		expect(Settings.maybeTaskTimeline(timeline)).toBeTruthy();
 	});
-
 });
-

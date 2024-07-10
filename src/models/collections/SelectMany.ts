@@ -1,22 +1,33 @@
 import { IteratorBase } from "@/models/collections/Iterator";
 
-export class SelectManyIterable<TSource, TCollection extends Iterable<TSource>, TResult> implements Iterable<TResult> {
+export class SelectManyIterable<
+	TSource,
+	TCollection extends Iterable<TSource>,
+	TResult,
+> implements Iterable<TResult>
+{
 	public constructor(
 		private readonly iterable: Iterable<TCollection>,
 		private readonly selector: (source: TSource, index: number) => TResult,
-	) {
-	}
+	) {}
 
 	//#region Iterable
 
 	public [Symbol.iterator](): Iterator<TResult> {
-		return new SelectManyIterator(this.iterable[Symbol.iterator](), this.selector);
+		return new SelectManyIterator(
+			this.iterable[Symbol.iterator](),
+			this.selector,
+		);
 	}
 
 	//#endregion
 }
 
-class SelectManyIterator<TSource, TCollection extends Iterable<TSource>, TResult> extends IteratorBase<TResult> {
+class SelectManyIterator<
+	TSource,
+	TCollection extends Iterable<TSource>,
+	TResult,
+> extends IteratorBase<TResult> {
 	public constructor(
 		private readonly outerIterator: Iterator<TCollection>,
 		private readonly selector: (source: TSource, index: number) => TResult,
@@ -70,7 +81,6 @@ class SelectManyIterator<TSource, TCollection extends Iterable<TSource>, TResult
 			const v = this.selector(result.value, this.currentIndex++);
 			return this.yield(v);
 		}
-
 	}
 
 	//#endregion

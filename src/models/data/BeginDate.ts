@@ -1,6 +1,9 @@
-import { TaskTimeline, AnyTimeline, TimelineId } from "@/models/data/Setting";
-import { DateTime } from "@/models/DateTime";
-
+import type {
+	TaskTimeline,
+	AnyTimeline,
+	TimelineId,
+} from "@/models/data/Setting";
+import type { DateTime } from "@/models/DateTime";
 
 export interface SelectingBeginDate {
 	timeline: TaskTimeline;
@@ -11,8 +14,15 @@ export interface SelectingBeginDate {
 
 export interface BeginDateCallbacks {
 	startSelectBeginDate(timeline: TaskTimeline): void;
-	clearSelectBeginDate(timeline: TaskTimeline, clearDate: boolean, clearPrevious: boolean): void;
-	setSelectBeginDate(timeline: TaskTimeline, map: ReadonlySet<TimelineId>): void;
+	clearSelectBeginDate(
+		timeline: TaskTimeline,
+		clearDate: boolean,
+		clearPrevious: boolean,
+	): void;
+	setSelectBeginDate(
+		timeline: TaskTimeline,
+		map: ReadonlySet<TimelineId>,
+	): void;
 	submitSelectBeginDate(timeline: TaskTimeline): void;
 	cancelSelectBeginDate(timeline: TaskTimeline): void;
 }

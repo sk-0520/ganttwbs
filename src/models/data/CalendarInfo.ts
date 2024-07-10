@@ -1,6 +1,6 @@
-import { HolidayEventMap, HolidayRegulars } from "@/models/data/Calendar";
-import { DateTimeRange } from "@/models/data/Range";
-import { TimeZone } from "@/models/TimeZone";
+import type { HolidayEventMap, HolidayRegulars } from "@/models/data/Calendar";
+import type { DateTimeRange } from "@/models/data/Range";
+import type { TimeZone } from "@/models/TimeZone";
 
 /**
  * カレンダー情報。

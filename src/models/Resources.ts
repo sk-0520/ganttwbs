@@ -1,9 +1,8 @@
-import { MemberGroupPair } from "@/models/data/MemberGroupPair";
-import { ResourceInfo } from "@/models/data/ResourceInfo";
-import { Group, Member, MemberId } from "@/models/data/Setting";
+import type { MemberGroupPair } from "@/models/data/MemberGroupPair";
+import type { ResourceInfo } from "@/models/data/ResourceInfo";
+import type { Group, Member, MemberId } from "@/models/data/Setting";
 
 export abstract class Resources {
-
 	public static createResourceInfo(groups: ReadonlyArray<Group>): ResourceInfo {
 		const memberMap = new Map<MemberId, MemberGroupPair>();
 		const memberItems = new Map<Group, Array<Member>>();
@@ -13,7 +12,10 @@ export abstract class Resources {
 				memberMap.set(member.id, { group: group, member: member });
 			}
 
-			memberItems.set(group, [...group.members].sort((a, b) => a.name.localeCompare(b.name)));
+			memberItems.set(
+				group,
+				[...group.members].sort((a, b) => a.name.localeCompare(b.name)),
+			);
 		}
 
 		const result: ResourceInfo = {
@@ -23,5 +25,4 @@ export abstract class Resources {
 		};
 		return result;
 	}
-
 }

@@ -4,8 +4,7 @@ export class RangeIterable implements Iterable<number> {
 	public constructor(
 		private readonly start: number,
 		private readonly count: number,
-	) {
-	}
+	) {}
 
 	//#region Iterable
 

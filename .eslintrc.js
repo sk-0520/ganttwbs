@@ -1,35 +1,30 @@
 module.exports = {
-	"root": true,
-	"env": {
-		"browser": true,
-		"es2020": true
+	root: true,
+	env: {
+		browser: true,
+		es2020: true,
 	},
-	"extends": [
+	extends: [
 		"plugin:@typescript-eslint/recommended",
 		"next",
-		"next/core-web-vitals"
+		"next/core-web-vitals",
 	],
-	"parser": "@typescript-eslint/parser",
-	"parserOptions": {
-		"ecmaFeatures": {
-			"jsx": true
+	parser: "@typescript-eslint/parser",
+	parserOptions: {
+		ecmaFeatures: {
+			jsx: true,
 		},
-		"sourceType": "module"
+		sourceType: "module",
 	},
-	"plugins": [
+	plugins: [
 		"import",
 		"no-relative-import-paths",
 		"unused-imports",
-		"@typescript-eslint"
+		"@typescript-eslint",
 	],
-	"rules": {
-		"quotes": [
-			"error",
-			"double"
-		],
-		"eqeqeq": [
-			"error",
-		],
+	rules: {
+		quotes: ["error", "double"],
+		eqeqeq: ["error"],
 		/*
 		"no-tabs": [
 			"error",
@@ -38,51 +33,32 @@ module.exports = {
 			}
 		],
 		*/
-		"semi": [
-			"error",
-			"always"
-		],
-		"no-extra-semi": [
-			"error",
-		],
+		semi: ["error", "always"],
+		"no-extra-semi": ["error"],
 		"semi-spacing": [
 			"error",
 			{
-				"before": false,
-				"after": true
-			}
+				before: false,
+				after: true,
+			},
 		],
-		"no-cond-assign": [
-			"error",
-		],
-		"no-func-assign": [
-			"error",
-		],
-		"no-invalid-regexp": [
-			"error",
-		],
-		"no-loop-func": [
-			"error",
-		],
-		"no-octal-escape": [
-			"error",
-		],
-		"no-implicit-coercion": [
-			"error",
-		],
-		"no-inner-declarations": [
-			"error",
-		],
+		"no-cond-assign": ["error"],
+		"no-func-assign": ["error"],
+		"no-invalid-regexp": ["error"],
+		"no-loop-func": ["error"],
+		"no-octal-escape": ["error"],
+		"no-implicit-coercion": ["error"],
+		"no-inner-declarations": ["error"],
 		"no-param-reassign": [
 			"error",
 			{
-				"props": false
-			}
+				props: false,
+			},
 		],
 		"import/order": [
 			"warn",
 			{
-				"groups": [
+				groups: [
 					"builtin",
 					"external",
 					"internal",
@@ -93,12 +69,10 @@ module.exports = {
 					"type",
 				],
 				"newlines-between": "always",
-				"pathGroupsExcludedImportTypes": [
-					"builtin"
-				],
-				"alphabetize": {
-					"order": "asc",
-					"caseInsensitive": true
+				pathGroupsExcludedImportTypes: ["builtin"],
+				alphabetize: {
+					order: "asc",
+					caseInsensitive: true,
 				},
 				/*
 				"pathGroups": [
@@ -109,42 +83,33 @@ module.exports = {
 					},
 				]
 				*/
-			}
+			},
 		],
 		"no-relative-import-paths/no-relative-import-paths": [
-			"error", {
-				"allowSameFolder": false,
-				"rootDir": "src",
-				"prefix": "@"
-			}
-		],
-		"unused-imports/no-unused-imports": [
-			"error"
-		],
-		"jsx-quotes": [
 			"error",
-			"prefer-double",
+			{
+				allowSameFolder: false,
+				rootDir: "src",
+				prefix: "@",
+			},
 		],
-		"react/jsx-indent": [
-			"error",
-			"tab"
-		],
+		"unused-imports/no-unused-imports": ["error"],
+		"jsx-quotes": ["error", "prefer-double"],
+		"react/jsx-indent": ["error", "tab"],
 		"@typescript-eslint/no-empty-interface": [
 			"error",
 			{
-				"allowSingleExtends": true
-			}
+				allowSingleExtends: true,
+			},
 		],
 		"@typescript-eslint/no-unused-vars": [
 			"warn",
 			{
 				//"argsIgnorePattern": "^_*$",
-				"argsIgnorePattern": "^.*$",
-				"varsIgnorePattern": "^_*$"
-			}
+				argsIgnorePattern: "^.*$",
+				varsIgnorePattern: "^_*$",
+			},
 		],
-		"@typescript-eslint/no-non-null-assertion": [
-			"error"
-		]
-	}
+		"@typescript-eslint/no-non-null-assertion": ["error"],
+	},
 };

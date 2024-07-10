@@ -1,9 +1,12 @@
-import { useContext, MouseEvent, useState, FC } from "react";
+import { useContext, type MouseEvent, useState, type FC } from "react";
 
 import GroupsEditor from "@/components/elements/pages/editor/setting/Resource/GroupEditor";
 import { useLocale } from "@/locales/locale";
-import { GroupSetting, SettingContext } from "@/models/context/SettingContext";
-import { GroupId } from "@/models/data/Setting";
+import {
+	type GroupSetting,
+	SettingContext,
+} from "@/models/context/SettingContext";
+import type { GroupId } from "@/models/data/Setting";
 import { IdFactory } from "@/models/IdFactory";
 
 const ResourceEditor: FC = () => {
@@ -19,7 +22,7 @@ const ResourceEditor: FC = () => {
 			return;
 		}
 
-		const names = editGroups.map(a => a.name);
+		const names = editGroups.map((a) => a.name);
 		if (names.includes(groupName)) {
 			return;
 		}
@@ -29,12 +32,12 @@ const ResourceEditor: FC = () => {
 			name: groupName,
 			members: [],
 		};
-		setEditGroups(settingContext.groups = [...editGroups, newGroup]);
+		setEditGroups((settingContext.groups = [...editGroups, newGroup]));
 		setNewGroupName("");
 	}
 
 	function handleRemoveGroup(groupId: GroupId) {
-		const targetGroup = editGroups.find(a => a.id === groupId);
+		const targetGroup = editGroups.find((a) => a.id === groupId);
 		if (!targetGroup) {
 			throw new Error();
 		}
@@ -47,18 +50,18 @@ const ResourceEditor: FC = () => {
 			groups.push(group);
 		}
 
-		setEditGroups(settingContext.groups = groups);
+		setEditGroups((settingContext.groups = groups));
 	}
 
 	return (
 		<>
 			<dl className="inputs">
-				{editGroups.map(a => {
+				{editGroups.map((a) => {
 					return (
 						<GroupsEditor
 							key={a.id}
 							groupId={a.id}
-							callbackRemove={a => handleRemoveGroup(a)}
+							callbackRemove={(a) => handleRemoveGroup(a)}
 						/>
 					);
 				})}
@@ -69,7 +72,7 @@ const ResourceEditor: FC = () => {
 				<dd>
 					<input
 						value={newGroupName}
-						onChange={ev => setNewGroupName(ev.target.value)}
+						onChange={(ev) => setNewGroupName(ev.target.value)}
 					/>
 					<button type="button" onClick={handleAddGroup}>
 						{locale.common.command.add}
@@ -81,4 +84,3 @@ const ResourceEditor: FC = () => {
 };
 
 export default ResourceEditor;
-

@@ -1,13 +1,13 @@
 import { v4 } from "uuid";
 
-import { MemberId, TimelineId } from "@/models/data/Setting";
+import type { MemberId, TimelineId } from "@/models/data/Setting";
 
 /**
  * 何らかのID生成マシーン。
  */
 export abstract class IdFactory {
-
-	public static readonly rootTimelineId = "00000000-0000-0000-0000-000000000000";
+	public static readonly rootTimelineId =
+		"00000000-0000-0000-0000-000000000000";
 
 	/**
 	 * React 表示要素のキー生成。

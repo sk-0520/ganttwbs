@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from "react";
+import { type FC, useContext, useState } from "react";
 
 import DefaultButton from "@/components/elements/pages/editor/setting/DefaultButton";
 import PlainColorPicker from "@/components/elements/PlainColorPicker";
@@ -11,9 +11,15 @@ const ThemeTimelineSettingEditor: FC = () => {
 	const locale = useLocale();
 	const settingContext = useContext(SettingContext);
 
-	const [defaultGroup, setDefaultGroup] = useState(settingContext.theme.timeline.defaultGroup);
-	const [defaultTask, setDefaultTask] = useState(settingContext.theme.timeline.defaultTask);
-	const [completed, setCompleted] = useState(settingContext.theme.timeline.completed);
+	const [defaultGroup, setDefaultGroup] = useState(
+		settingContext.theme.timeline.defaultGroup,
+	);
+	const [defaultTask, setDefaultTask] = useState(
+		settingContext.theme.timeline.defaultTask,
+	);
+	const [completed, setCompleted] = useState(
+		settingContext.theme.timeline.completed,
+	);
 
 	function handleChangeDefaultGroup(color: Color) {
 		setDefaultGroup(color);
@@ -47,37 +53,31 @@ const ThemeTimelineSettingEditor: FC = () => {
 		<table className="timeline">
 			<tbody>
 				<tr>
-					<td>
-						{locale.pages.editor.setting.theme.timeline.defaultGroup}
-					</td>
+					<td>{locale.pages.editor.setting.theme.timeline.defaultGroup}</td>
 					<td>
 						<PlainColorPicker
 							color={defaultGroup}
-							callbackChanged={c => handleChangeDefaultGroup(c)}
+							callbackChanged={(c) => handleChangeDefaultGroup(c)}
 						/>
 					</td>
 				</tr>
 
 				<tr>
-					<td>
-						{locale.pages.editor.setting.theme.timeline.defaultTask}
-					</td>
+					<td>{locale.pages.editor.setting.theme.timeline.defaultTask}</td>
 					<td>
 						<PlainColorPicker
 							color={defaultTask}
-							callbackChanged={c => handleChangeDefaultTask(c)}
+							callbackChanged={(c) => handleChangeDefaultTask(c)}
 						/>
 					</td>
 				</tr>
 
 				<tr>
-					<td>
-						{locale.pages.editor.setting.theme.timeline.completed}
-					</td>
+					<td>{locale.pages.editor.setting.theme.timeline.completed}</td>
 					<td>
 						<PlainColorPicker
 							color={completed}
-							callbackChanged={c => handleChangeCompleted(c)}
+							callbackChanged={(c) => handleChangeCompleted(c)}
 						/>
 					</td>
 				</tr>
@@ -85,10 +85,7 @@ const ThemeTimelineSettingEditor: FC = () => {
 				<tr>
 					<td></td>
 					<td>
-						<DefaultButton
-							visibleLabel={true}
-							callbackClick={handleReset}
-						/>
+						<DefaultButton visibleLabel={true} callbackClick={handleReset} />
 					</td>
 				</tr>
 			</tbody>
