@@ -24,9 +24,8 @@ const ThemeCalendarSettingEditor: FC = () => {
 
 	function handleSetRegularColor(week: WeekDay, color: Color) {
 		holidayRegulars[week] = color;
-		setHolidayRegulars(
-			(settingContext.theme.holiday.regulars = { ...holidayRegulars }),
-		);
+		settingContext.theme.holiday.regulars = { ...holidayRegulars };
+		setHolidayRegulars(settingContext.theme.holiday.regulars);
 	}
 
 	function handleSetHolidayEventColor(
@@ -34,9 +33,8 @@ const ThemeCalendarSettingEditor: FC = () => {
 		color: Color,
 	) {
 		holidayEvents[event] = color;
-		setHolidayEvents(
-			(settingContext.theme.holiday.events = { ...holidayEvents }),
-		);
+		settingContext.theme.holiday.events = { ...holidayEvents };
+		setHolidayEvents(settingContext.theme.holiday.events);
 	}
 
 	function handleResetRegular() {
@@ -51,16 +49,15 @@ const ThemeCalendarSettingEditor: FC = () => {
 			...weekDays,
 			...defaultRegulars,
 		} as { [key in WeekDay]: Color };
-
-		setHolidayRegulars((settingContext.theme.holiday.regulars = defaultWeeks));
+		settingContext.theme.holiday.regulars = defaultWeeks;
+		setHolidayRegulars(settingContext.theme.holiday.regulars);
 	}
 
 	function handleResetHoliday() {
-		setHolidayEvents(
-			(settingContext.theme.holiday.events = {
-				...DefaultSettings.getEventHolidayColors(),
-			}),
-		);
+		settingContext.theme.holiday.events = {
+			...DefaultSettings.getEventHolidayColors(),
+		};
+		setHolidayEvents(settingContext.theme.holiday.events);
 	}
 
 	return (
