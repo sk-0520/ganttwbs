@@ -15,7 +15,8 @@
 			},
 			"a11y": {
 				"useValidAnchor": "warn",
-				"useKeyWithClickEvents": "warn"
+				"useKeyWithClickEvents": "warn",
+				"noSvgWithoutTitle": "info"
 			}
 		}
 	},
