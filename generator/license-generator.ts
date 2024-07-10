@@ -24,10 +24,9 @@ checker.init(
 	{
 		start: rootDirectoryPath,
 	},
-	(error: any, packages: object) => {
-		// eslint-disable-line @typescript-eslint/no-explicit-any
+	(error, packages) => {
 		if (error) {
-			throw new Error(error);
+			throw error;
 		}
 
 		const map = new Map<string, object>();
