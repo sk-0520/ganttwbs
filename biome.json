@@ -12,6 +12,10 @@
 			},
 			"performance": {
 				"noAccumulatingSpread": "info"
+			},
+			"a11y": {
+				"useValidAnchor": "warn",
+				"useKeyWithClickEvents": "warn"
 			}
 		}
 	},
