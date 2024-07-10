@@ -1,7 +1,7 @@
 /**
  * 配列の処理ヘルパー。
  */
-export  abstract class Arrays {
+export abstract class Arrays {
 	/**
 	 * 指定の値を繰り返した配列の生成。
 	 * @param value 参照の場合、配列内全てが同じ参照となる。
