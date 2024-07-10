@@ -8,18 +8,18 @@
 		"rules": {
 			"recommended": true,
 			"style": {
-				"noParameterAssign": "off"
+				"noParameterAssign": "info"
 			},
 			"complexity": {
-				"noStaticOnlyClass": "off"
+				"noStaticOnlyClass": "info"
 			},
 			"performance": {
-				"noAccumulatingSpread": "off"
+				"noAccumulatingSpread": "info"
 			},
 			"a11y": {
-				"useValidAnchor": "off",
-				"useKeyWithClickEvents": "off",
-				"noSvgWithoutTitle": "off"
+				"useValidAnchor": "info",
+				"useKeyWithClickEvents": "info",
+				"noSvgWithoutTitle": "info"
 			}
 		}
 	},
