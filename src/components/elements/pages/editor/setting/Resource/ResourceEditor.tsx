@@ -32,7 +32,8 @@ const ResourceEditor: FC = () => {
 			name: groupName,
 			members: [],
 		};
-		setEditGroups((settingContext.groups = [...editGroups, newGroup]));
+		settingContext.groups = [...editGroups, newGroup];
+		setEditGroups(settingContext.groups);
 		setNewGroupName("");
 	}
 
@@ -50,36 +51,33 @@ const ResourceEditor: FC = () => {
 			groups.push(group);
 		}
 
-		setEditGroups((settingContext.groups = groups));
+		settingContext.groups = groups;
+		setEditGroups(settingContext.groups);
 	}
 
 	return (
-		<>
-			<dl className="inputs">
-				{editGroups.map((a) => {
-					return (
-						<GroupsEditor
-							key={a.id}
-							groupId={a.id}
-							callbackRemove={(a) => handleRemoveGroup(a)}
-						/>
-					);
-				})}
-
-				<dt className="group">
-					{locale.pages.editor.setting.resource.newGroup}
-				</dt>
-				<dd>
-					<input
-						value={newGroupName}
-						onChange={(ev) => setNewGroupName(ev.target.value)}
+		<dl className="inputs">
+			{editGroups.map((a) => {
+				return (
+					<GroupsEditor
+						key={a.id}
+						groupId={a.id}
+						callbackRemove={(a) => handleRemoveGroup(a)}
 					/>
-					<button type="button" onClick={handleAddGroup}>
-						{locale.common.command.add}
-					</button>
-				</dd>
-			</dl>
-		</>
+				);
+			})}
+
+			<dt className="group">{locale.pages.editor.setting.resource.newGroup}</dt>
+			<dd>
+				<input
+					value={newGroupName}
+					onChange={(ev) => setNewGroupName(ev.target.value)}
+				/>
+				<button type="button" onClick={handleAddGroup}>
+					{locale.common.command.add}
+				</button>
+			</dd>
+		</dl>
 	);
 };
 

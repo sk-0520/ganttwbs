@@ -40,7 +40,6 @@ const GanttChartTimeline: FC<Props> = (props: Props) => {
 			}
 		}
 	}, [
-		props.timelineCallbacks,
 		props.currentTimeline,
 		timelineItemsAtomReader.data,
 	]);
