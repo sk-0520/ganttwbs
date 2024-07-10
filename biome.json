@@ -8,17 +8,17 @@
 		"rules": {
 			"recommended": true,
 			"style": {
-				"noParameterAssign": "warn"
+				"noParameterAssign": "info"
 			},
 			"complexity": {
-				"noStaticOnlyClass": "off"
+				"noStaticOnlyClass": "info"
 			},
 			"performance": {
 				"noAccumulatingSpread": "info"
 			},
 			"a11y": {
-				"useValidAnchor": "warn",
-				"useKeyWithClickEvents": "warn",
+				"useValidAnchor": "info",
+				"useKeyWithClickEvents": "info",
 				"noSvgWithoutTitle": "info"
 			}
 		}
