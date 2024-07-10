@@ -39,12 +39,14 @@ const ThemeGroupSettingEditor: FC = () => {
 			throw new Error();
 		}
 		target.value = color;
-		setGroups((settingContext.theme.groups = [...groups]));
+		settingContext.theme.groups = [...groups];
+		setGroups(settingContext.theme.groups);
 	}
 
 	function handleRemoveColor(key: UUID) {
 		const items = groups.filter((a) => a.key !== key);
-		setGroups((settingContext.theme.groups = items));
+		settingContext.theme.groups = items;
+		setGroups(settingContext.theme.groups);
 	}
 
 	function handleAddColor() {
@@ -52,7 +54,8 @@ const ThemeGroupSettingEditor: FC = () => {
 			key: IdFactory.createReactKey(),
 			value: Color.random(),
 		});
-		setGroups((settingContext.theme.groups = [...groups]));
+		settingContext.theme.groups = [...groups];
+		setGroups(settingContext.theme.groups);
 	}
 
 	function handleStartResetColor() {
@@ -148,7 +151,8 @@ const ThemeGroupSettingEditor: FC = () => {
 								key: IdFactory.createReactKey(),
 								value: a,
 							}));
-							setGroups((settingContext.theme.groups = groups));
+							settingContext.theme.groups = groups;
+							setGroups(settingContext.theme.groups);
 						}
 						setVisibleResetColor(false);
 					}}

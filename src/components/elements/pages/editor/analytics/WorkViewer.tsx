@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { type FC, Fragment, type ReactNode } from "react";
+import React, { type FC, Fragment, type ReactNode } from "react";
 
 import { type Locale, useLocale } from "@/locales/locale";
 import {
@@ -69,9 +69,9 @@ const WorkViewer: FC<Props> = (props: Props) => {
 						{renderMonths(visibleCost, months, locale)}
 					</tr>
 					<tr>
-						{months.map((_) => {
+						{months.map((a) => {
 							return (
-								<>
+								<React.Fragment key={a.ticks}>
 									{visibleCost ? (
 										<>
 											<th>
@@ -95,7 +95,7 @@ const WorkViewer: FC<Props> = (props: Props) => {
 											</th>
 										</>
 									)}
-								</>
+								</React.Fragment>
 							);
 						})}
 					</tr>

@@ -14,13 +14,12 @@ import type { ColorString } from "@/models/data/Setting";
 
 interface Props {
 	color: Color;
-	callbackChanging?: (color: Color) => undefined | undefined;
-	callbackChanged?: (color: Color) => undefined | undefined;
+	callbackChanging?: (color: Color) => void;
+	callbackChanged?: (color: Color) => void;
 }
 
 const PlainColorPicker: FC<Props> = (props: Props) => {
 	const [isVisible, setIsVisible] = useState(false);
-	//const [color, setColor] = useState(props.color);
 	const refPicker = useRef<HTMLDivElement>(null);
 
 	const presetColors = new Array<PresetColor>();
