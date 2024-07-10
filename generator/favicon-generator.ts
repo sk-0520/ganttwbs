@@ -1,11 +1,9 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 
+import { minify } from "minify-xml";
 import sharp from "sharp";
 import ico from "sharp-ico";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const minifyXML = require("minify-xml").minify;
 
 const iconSizes = [16, 32, 48, 64, 128, 256, 512];
 
@@ -22,7 +20,7 @@ const faviconOutputSvgFilePath = path.join(
 );
 
 const faviconSourceFileContent = fs.readFileSync(faviconSourceFilePath);
-const outputXml = minifyXML(faviconSourceFileContent.toString());
+const outputXml = minify(faviconSourceFileContent.toString());
 fs.writeFileSync(faviconOutputSvgFilePath, outputXml);
 
 (async () => {
