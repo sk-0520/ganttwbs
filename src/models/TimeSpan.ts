@@ -27,7 +27,8 @@ export class TimeSpan {
 
 	private static _zero: TimeSpan | undefined = undefined;
 	public static get zero(): TimeSpan {
-		return (TimeSpan._zero ??= new TimeSpan(toTicks(0)));
+		TimeSpan._zero ??= new TimeSpan(toTicks(0));
+		return TimeSpan._zero;
 	}
 
 	/** ミリ秒部分。 */
