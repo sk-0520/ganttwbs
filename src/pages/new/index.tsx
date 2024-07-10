@@ -174,7 +174,7 @@ const NewPage: NextPage = () => {
 					</dd>
 				</dl>
 
-				<button className="action">{locale.pages.new.submit}</button>
+				<button type="submit" className="action">{locale.pages.new.submit}</button>
 			</form>
 		</Layout>
 	);
