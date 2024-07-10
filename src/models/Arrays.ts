@@ -1,7 +1,7 @@
 /**
  * 配列の処理ヘルパー。
  */
-export abstract class Arrays {
+export  abstract class Arrays {
 	/**
 	 * 指定の値を繰り返した配列の生成。
 	 * @param value 参照の場合、配列内全てが同じ参照となる。
@@ -81,6 +81,7 @@ export abstract class Arrays {
 	public static find<T>(
 		array: ReadonlyArray<T>,
 		predicate: (value: T, index: number, obj: readonly T[]) => boolean,
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		thisArg?: any,
 	): T {
 		// eslint-disable-line @typescript-eslint/no-explicit-any
@@ -104,6 +105,7 @@ export abstract class Arrays {
 	public static findLast<T>(
 		array: ReadonlyArray<T>,
 		predicate: (value: T, index: number, obj: readonly T[]) => boolean,
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		thisArg?: any,
 	): T {
 		// eslint-disable-line @typescript-eslint/no-explicit-any

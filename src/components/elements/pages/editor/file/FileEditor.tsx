@@ -89,13 +89,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 			setAutoSaveStorageLastTime(now);
 			setAutoSaveStorageNextTime(now.add(autoSaveStorageTime));
 		}, autoSaveStorageTime.totalMilliseconds);
-	}, [
-		autoSaveStorageIntervalId,
-		editorData,
-		fileName,
-		autoSaveStorageIsEnabled,
-		autoSaveStorageTime,
-	]);
+	}, [editorData, autoSaveStorageIsEnabled, autoSaveStorageTime]);
 
 	// 自動ダウンロード処理
 	useEffect(() => {
@@ -129,7 +123,6 @@ const FileEditor: FC<Props> = (props: Props) => {
 			setAutoSaveDownloadNextTime(now.add(autoSaveDownloadTime));
 		}, autoSaveDownloadTime.totalMilliseconds);
 	}, [
-		autoSaveDownloadIntervalId,
 		editorData,
 		fileName,
 		autoSaveDownloadIsEnabled,
@@ -138,7 +131,8 @@ const FileEditor: FC<Props> = (props: Props) => {
 	]);
 
 	function handleChangeFileName(value: string): void {
-		setFileName((editorData.fileName = value));
+		editorData.fileName = value;
+		setFileName(editorData.fileName);
 	}
 
 	function handleChangeAutoSaveIsEnable(
@@ -147,15 +141,13 @@ const FileEditor: FC<Props> = (props: Props) => {
 	): void {
 		switch (autoSaveKind) {
 			case AutoSaveKind.Storage:
-				setAutoSaveStorageIsEnabled(
-					(configuration.autoSave.storage.isEnabled = checked),
-				);
+				configuration.autoSave.storage.isEnabled = checked;
+				setAutoSaveStorageIsEnabled(configuration.autoSave.storage.isEnabled);
 				break;
 
 			case AutoSaveKind.Download:
-				setAutoSaveDownloadIsEnabled(
-					(configuration.autoSave.download.isEnabled = checked),
-				);
+				configuration.autoSave.download.isEnabled = checked;
+				setAutoSaveDownloadIsEnabled(configuration.autoSave.download.isEnabled);
 				break;
 
 			default:
@@ -173,11 +165,13 @@ const FileEditor: FC<Props> = (props: Props) => {
 
 		switch (autoSaveKind) {
 			case AutoSaveKind.Storage:
-				setAutoSaveStorageTime((configuration.autoSave.storage.time = time));
+				configuration.autoSave.storage.time = time;
+				setAutoSaveStorageTime(configuration.autoSave.storage.time);
 				break;
 
 			case AutoSaveKind.Download:
-				setAutoSaveDownloadTime((configuration.autoSave.download.time = time));
+				configuration.autoSave.download.time = time;
+				setAutoSaveDownloadTime(configuration.autoSave.download.time);
 				break;
 
 			default:
@@ -296,12 +290,12 @@ const FileEditor: FC<Props> = (props: Props) => {
 			<dd>
 				<ul className="inline">
 					<li>
-						<button onClick={handleDownload}>
+						<button type="button" onClick={handleDownload}>
 							{locale.common.command.download}
 						</button>
 					</li>
 					<li>
-						<button onClick={handleJsonCopy}>
+						<button type="button" onClick={handleJsonCopy}>
 							{locale.common.command.copy}
 						</button>
 					</li>
@@ -311,7 +305,7 @@ const FileEditor: FC<Props> = (props: Props) => {
 					</li>
 
 					<li>
-						<button onClick={handleExportExcel}>
+						<button type="button" onClick={handleExportExcel}>
 							<IconLabel
 								kind={IconKind.SoftwareExcel}
 								label={locale.pages.editor.file.save.export.excel}
@@ -339,7 +333,10 @@ const FileEditor: FC<Props> = (props: Props) => {
 						</select>
 					</li>
 					<li>
-						<button onClick={(_) => handleExportCsv(exportTableKind)}>
+						<button
+							type="button"
+							onClick={(_) => handleExportCsv(exportTableKind)}
+						>
 							<IconLabel
 								kind={IconKind.SoftwareTable}
 								label={locale.pages.editor.file.save.export.table}
