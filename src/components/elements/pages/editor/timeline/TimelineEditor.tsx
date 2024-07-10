@@ -125,7 +125,12 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		sequenceTimelinesWriterAtomWriter.write(
 			...Timelines.flat(props.editorData.setting.rootTimeline.children),
 		);
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [
+		settingAtomWriter,
+		props.editorData.setting,
+		sequenceTimelinesWriterAtomWriter,
+		props.editorData.setting.rootTimeline.children,
+	]);
 
 	useEffect(() => {
 		function fireDropTimeline(dropTimeline: DropTimeline) {
@@ -752,8 +757,11 @@ function renderDynamicStyleCore(
 				regulars: Settings.getWeekDays()
 					.filter((a) => a in theme.holiday.regulars)
 					.map((a) => {
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-						const backgroundColor = Color.parse(theme.holiday.regulars[a]!);
+						const v = theme.holiday.regulars[a];
+						if(!v) {
+							throw new Error(a)
+						}
+						const backgroundColor = Color.parse(v);
 						return {
 							[a]: {
 								color: backgroundColor.getAutoColor().toHtml(),
