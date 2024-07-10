@@ -14,12 +14,11 @@ const CalendarWeekSettingEditor: FC = () => {
 	const [weeks, setWeeks] = useState(settingContext.calendar.holiday.regulars);
 
 	function handleChange(weekDay: WeekDay, checked: boolean): void {
-		setWeeks(
-			(settingContext.calendar.holiday.regulars = {
-				...weeks,
-				[weekDay]: checked,
-			}),
-		);
+		settingContext.calendar.holiday.regulars = {
+			...weeks,
+			[weekDay]: checked,
+		};
+		setWeeks(settingContext.calendar.holiday.regulars);
 	}
 
 	function handleReset() {
@@ -35,7 +34,8 @@ const CalendarWeekSettingEditor: FC = () => {
 			...defaultRegulars,
 		} as { [key in WeekDay]: boolean };
 
-		setWeeks((settingContext.calendar.holiday.regulars = defaultWeeks));
+		settingContext.calendar.holiday.regulars = defaultWeeks;
+		setWeeks(settingContext.calendar.holiday.regulars);
 	}
 
 	const weekDays = Settings.getWeekDays();
