@@ -12,14 +12,14 @@ describe("Dom", () => {
 			<span id="id2">id2:1</span>
 		`;
 
-		expect(Dom.getElementById("id1").textContent!).toBe("id1:1");
-		expect(Dom.getElementById("id2").textContent!).toBe("id2:1");
-		expect(Dom.getElementById("id2", HTMLSpanElement).textContent!).toBe(
+		expect(Dom.getElementById("id1").textContent).toBe("id1:1");
+		expect(Dom.getElementById("id2").textContent).toBe("id2:1");
+		expect(Dom.getElementById("id2", HTMLSpanElement).textContent).toBe(
 			"id2:1",
 		);
 
-		expect(() => Dom.getElementById("id3")).toThrowError();
-		expect(() => Dom.getElementById("id2", HTMLDivElement)).toThrowError();
+		expect(() => Dom.getElementById("id3")).toThrow();
+		expect(() => Dom.getElementById("id2", HTMLDivElement)).toThrow();
 	});
 
 	test("querySelector", () => {
@@ -30,19 +30,19 @@ describe("Dom", () => {
 			</div>
 		`;
 
-		expect(Dom.querySelector('[data-name="x"]').textContent!).toBe("X1");
-		expect(Dom.querySelector('[name="x"]').textContent!).toBe("X2");
+		expect(Dom.querySelector('[data-name="x"]').textContent).toBe("X1");
+		expect(Dom.querySelector('[name="x"]').textContent).toBe("X2");
 
-		expect(() => Dom.querySelector(".x")).toThrowError();
+		expect(() => Dom.querySelector(".x")).toThrow();
 		expect(() =>
 			Dom.querySelector('[data-name="x"]', HTMLSpanElement),
-		).toThrowError();
+		).toThrow();
 
 		const rootDiv = Dom.querySelector("div");
-		expect(Dom.querySelector(rootDiv, "div").textContent!).toBe("X1");
+		expect(Dom.querySelector(rootDiv, "div").textContent).toBe("X1");
 		expect(() =>
 			Dom.querySelector(rootDiv, "div", HTMLSpanElement),
-		).toThrowError();
+		).toThrow();
 	});
 
 	test("querySelectorAll", () => {
@@ -69,7 +69,7 @@ describe("Dom", () => {
 		expect(Dom.querySelectorAll("div *").length).toBe(3);
 		expect(Dom.querySelectorAll("div div").length).toBe(2);
 
-		expect(() => Dom.querySelectorAll("div *", HTMLDivElement)).toThrowError();
+		expect(() => Dom.querySelectorAll("div *", HTMLDivElement)).toThrow();
 		expect(Dom.querySelectorAll("div *", HTMLElement).length).toBe(3);
 		expect(Dom.querySelectorAll("div div", HTMLDivElement).length).toBe(2);
 
@@ -101,9 +101,9 @@ describe("Dom", () => {
 		expect(Dom.closest(d, "#a > div").id).toBe("b");
 		expect(Dom.closest(d, "#a > div > div").id).toBe("c");
 
-		expect(() => Dom.closest(d, "#a span")).toThrowError();
+		expect(() => Dom.closest(d, "#a span")).toThrow();
 
 		expect(Dom.closest(a, "*", HTMLDivElement).id).toBe("a");
-		expect(() => Dom.closest(a, "*", HTMLSpanElement)).toThrowError();
+		expect(() => Dom.closest(a, "*", HTMLSpanElement)).toThrow();
 	});
 });
