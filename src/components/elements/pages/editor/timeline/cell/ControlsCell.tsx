@@ -86,6 +86,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 			})}
 		>
 			<button
+				type="button"
 				className="cell"
 				disabled={props.disabled}
 				onClick={handleStartControls}
@@ -102,6 +103,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								</th>
 								<td className="col-cell">
 									<button
+										type="button"
 										className="simple"
 										onClick={(_) => handleMoveItem("up")}
 									>
@@ -115,6 +117,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								</td>
 								<td className="col-cell">
 									<button
+										type="button"
 										className="simple"
 										onClick={(_) => handleMoveItem("down")}
 									>
@@ -129,6 +132,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								</td>
 								<td className="col-cell">
 									<button
+										type="button"
 										className="simple"
 										onClick={(_) => handleMoveItem("parent")}
 									>
@@ -153,6 +157,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								</th>
 								<td className="col-cell">
 									<button
+										type="button"
 										className="simple"
 										onClick={(_) => handleAddItem("group")}
 									>
@@ -167,6 +172,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								</td>
 								<td className="col-cell">
 									<button
+										type="button"
 										className="simple"
 										onClick={(_) => handleAddItem("task")}
 									>
@@ -180,6 +186,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								</td>
 								<td className="col-cell">
 									<button
+										type="button"
 										className="simple"
 										onClick={(_) => handleShowTimelinesImportDialog()}
 									>
@@ -199,6 +206,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								</th>
 								<td className="col-cell">
 									<button
+										type="button"
 										className="simple"
 										onClick={(_) => handleShowDetail()}
 									>
@@ -213,6 +221,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								</td>
 								<td className="col-cell">
 									<button
+										type="button"
 										className="simple"
 										onClick={(_) => handleShowTimeline()}
 									>
@@ -227,6 +236,7 @@ const ControlsCell: FC<Props> = (props: Props) => {
 								</td>
 								<td className="col-cell">
 									<button
+										type="button"
 										className="simple"
 										onClick={(_) => handleDeleteItem()}
 									>
