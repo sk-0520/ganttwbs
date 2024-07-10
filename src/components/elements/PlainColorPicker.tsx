@@ -33,7 +33,7 @@ const PlainColorPicker: FC<Props> = (props: Props) => {
 				});
 			}
 		}
-	}, [isVisible, refPicker]);
+	}, [isVisible]);
 
 	function handleChanging(value: ColorString): void {
 		if (props.callbackChanging) {
@@ -55,35 +55,30 @@ const PlainColorPicker: FC<Props> = (props: Props) => {
 	};
 
 	return (
-		<>
-			<span className="color-picker-wrapper plain">
-				<button
-					className="button"
-					type="button"
-					onClick={(ev) => setIsVisible(true)}
-				>
-					<span className="box" style={boxStyle}>
-						&nbsp;
-					</span>
-					<code>{props.color.toHtml()}</code>
-				</button>
-				<Overlay
-					isVisible={isVisible}
-					callBackHidden={() => setIsVisible(false)}
-				>
-					<div ref={refPicker}>
-						<SketchPicker
-							className="picker"
-							color={props.color.toHtml()}
-							disableAlpha={false}
-							presetColors={presetColors}
-							onChange={(cr, _) => handleChanging(cr.hex)}
-							onChangeComplete={(cr, _) => handleChanged(cr.hex)}
-						/>
-					</div>
-				</Overlay>
-			</span>
-		</>
+		<span className="color-picker-wrapper plain">
+			<button
+				className="button"
+				type="button"
+				onClick={(ev) => setIsVisible(true)}
+			>
+				<span className="box" style={boxStyle}>
+					&nbsp;
+				</span>
+				<code>{props.color.toHtml()}</code>
+			</button>
+			<Overlay isVisible={isVisible} callBackHidden={() => setIsVisible(false)}>
+				<div ref={refPicker}>
+					<SketchPicker
+						className="picker"
+						color={props.color.toHtml()}
+						disableAlpha={false}
+						presetColors={presetColors}
+						onChange={(cr, _) => handleChanging(cr.hex)}
+						onChangeComplete={(cr, _) => handleChanged(cr.hex)}
+					/>
+				</div>
+			</Overlay>
+		</span>
 	);
 };
 
