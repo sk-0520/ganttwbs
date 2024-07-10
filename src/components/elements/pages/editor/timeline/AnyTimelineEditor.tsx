@@ -116,7 +116,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		if (refInputDate.current) {
 			refInputDate.current.focus();
 		}
-	}, [refInputDate]);
+	}, []);
 
 	useEffect(() => {
 		const timelineItem = timelineItemsAtomReader.data.get(
@@ -158,7 +158,6 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 		}
 	}, [
 		props.currentTimeline,
-		props.timelineCallbacks,
 		timelineItemsAtomReader.data,
 	]);
 
@@ -173,7 +172,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 			handleFocus(false);
 			hoverTimelineIdAtomWriter.write(undefined);
 		}
-	}, [props.currentTimeline.id, selectingBeginDateAtomReader.data]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [props.currentTimeline.id, selectingBeginDateAtomReader.data, hoverTimelineIdAtomWriter]);
 
 	useEffect(() => {
 		if (selectingBeginDateAtomReader.data) {
@@ -548,7 +547,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 							</legend>
 							<ul>
 								<li>
-									<button onClick={handleSubmitAttachBeforeTimeline}>
+									<button type="button" onClick={handleSubmitAttachBeforeTimeline}>
 										<IconLabel
 											kind={IconKind.RelationJoin}
 											label={
@@ -566,7 +565,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 							</legend>
 							<ul>
 								<li>
-									<button onClick={handleAttachBeforeTimeline}>
+									<button type="button" onClick={handleAttachBeforeTimeline}>
 										<IconLabel
 											kind={IconKind.RelationJoin}
 											label={
@@ -577,7 +576,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 									</button>
 								</li>
 								<li>
-									<button onClick={handleClearPrevious}>
+									<button type="button" onClick={handleClearPrevious}>
 										<IconLabel
 											kind={IconKind.RelationClear}
 											label={
@@ -588,7 +587,7 @@ const AnyTimelineEditor: FC<Props> = (props: Props) => {
 									</button>
 								</li>
 								<li>
-									<button onClick={handleClearStatic}>
+									<button type="button" onClick={handleClearStatic}>
 										<IconLabel
 											kind={IconKind.Clear}
 											label={
