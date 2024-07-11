@@ -24,7 +24,7 @@
 		}
 	},
 	"files": {
-		"ignore": ["src/models/data/generator/*.json"]
+		"ignore": ["*.json"]
 	},
 	"vcs": {
 		"enabled": true,
