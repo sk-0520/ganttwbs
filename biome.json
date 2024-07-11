@@ -11,8 +11,8 @@
 				"noStaticOnlyClass": "off"
 			},
 			"a11y": {
-				"useValidAnchor": "info",
-				"useKeyWithClickEvents": "info",
+				"useValidAnchor": "off",
+				"useKeyWithClickEvents": "off",
 				"noSvgWithoutTitle": "off"
 			}
 		}
