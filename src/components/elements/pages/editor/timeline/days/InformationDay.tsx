@@ -42,11 +42,6 @@ const InformationDay: FC<Props> = (props: Props) => {
 
 	const refDetails = useRef<HTMLDetailsElement>(null);
 
-	// useEffect(() => {
-	// 	if (refDetails.current) {
-	// 	}
-	// }, [refDetails]);
-
 	const holidayEventValue = calendarInfoAtomReader.data.holidayEventMap.get(
 		props.date.ticks,
 	);
