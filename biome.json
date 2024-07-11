@@ -23,6 +23,11 @@
 			}
 		}
 	},
+	"files": {
+		"ignore": [
+			"src/models/data/generator/*.json"
+		]
+	},
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git"
