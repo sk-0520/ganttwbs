@@ -694,7 +694,7 @@ function renderDynamicStyleCore(
 							},
 						};
 					})
-					.reduce((r, a) => ({ ...r, ...a })),
+					.reduce((r, a) => Object.assign(r, a), {}),
 			},
 
 			readableTimelineId: {
@@ -744,7 +744,7 @@ function renderDynamicStyleCore(
 							},
 						};
 					})
-					.reduce((r, a) => ({ ...r, ...a })),
+					.reduce((r, a) => Object.assign(r, a), {}),
 			},
 		},
 
@@ -765,7 +765,7 @@ function renderDynamicStyleCore(
 							},
 						};
 					})
-					.reduce((r, a) => ({ ...r, ...a })),
+					.reduce((r, a) => Object.assign(r, a), {}),
 				events: Object.entries(theme.holiday.events)
 					.map(([k, v]) => {
 						const backgroundColor = Color.parse(v);
@@ -776,7 +776,7 @@ function renderDynamicStyleCore(
 							},
 						};
 					})
-					.reduce((r, a) => ({ ...r, ...a })),
+					.reduce((r, a) => Object.assign(r, a), {}),
 			},
 		},
 	};

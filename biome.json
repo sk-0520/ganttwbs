@@ -13,9 +13,6 @@
 			"complexity": {
 				"noStaticOnlyClass": "off"
 			},
-			"performance": {
-				"noAccumulatingSpread": "info"
-			},
 			"a11y": {
 				"useValidAnchor": "info",
 				"useKeyWithClickEvents": "info",

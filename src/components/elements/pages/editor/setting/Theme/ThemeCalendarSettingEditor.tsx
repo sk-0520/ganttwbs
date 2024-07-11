@@ -40,10 +40,10 @@ const ThemeCalendarSettingEditor: FC = () => {
 	function handleResetRegular() {
 		const weekDays = Settings.getWeekDays()
 			.map((a) => ({ [a]: DefaultSettings.BusinessWeekdayColor }))
-			.reduce((r, a) => ({ ...r, ...a }));
+			.reduce((r, a) => Object.assign(r, a), {});
 		const defaultRegulars = Object.entries(DefaultSettings.getRegularHolidays())
 			.map(([k, v]) => ({ [k]: v }))
-			.reduce((r, a) => ({ ...r, ...a }));
+			.reduce((r, a) => Object.assign(r, a), {});
 
 		const defaultWeeks = {
 			...weekDays,

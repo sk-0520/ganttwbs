@@ -24,10 +24,10 @@ const CalendarWeekSettingEditor: FC = () => {
 	function handleReset() {
 		const weekDays = Settings.getWeekDays()
 			.map((a) => ({ [a]: false }))
-			.reduce((r, a) => ({ ...r, ...a }));
+			.reduce((r, a) => Object.assign(r, a), {});
 		const defaultRegulars = Object.keys(DefaultSettings.getRegularHolidays())
 			.map((a) => ({ [a]: true }))
-			.reduce((r, a) => ({ ...r, ...a }));
+			.reduce((r, a) => Object.assign(r, a), {});
 
 		const defaultWeeks = {
 			...weekDays,

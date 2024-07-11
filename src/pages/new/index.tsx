@@ -228,7 +228,7 @@ function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 	const defaultWeekColors = Settings.getWeekDays()
 		.filter((a) => !(a in regularHolidays))
 		.map((a) => ({ [a]: DefaultSettings.BusinessWeekdayColor }))
-		.reduce((r, a) => ({ ...r, ...a }));
+		.reduce((r, a) => Object.assign(r, a), {});
 
 	const range = convertDateRange(data, timeZone);
 
@@ -252,14 +252,14 @@ function createEmptySetting(data: Input, timeZone: TimeZone): Setting {
 				regulars: {
 					...Object.entries(regularHolidays)
 						.map(([k, v]) => ({ [k]: v.toHtml() }))
-						.reduce((r, a) => ({ ...r, ...a })),
+						.reduce((r, a) => Object.assign(r, a), {}),
 					...Object.entries(defaultWeekColors)
 						.map(([k, v]) => ({ [k]: v.toHtml() }))
-						.reduce((r, a) => ({ ...r, ...a })),
+						.reduce((r, a) => Object.assign(r, a), {}),
 				},
 				events: Object.entries(DefaultSettings.getEventHolidayColors())
 					.map(([k, v]) => ({ [k]: v.toHtml() }))
-					.reduce((r, a) => ({ ...r, ...a })),
+					.reduce((r, a) => Object.assign(r, a), {}),
 			},
 			groups: DefaultSettings.getGroupThemeColors().map((a) => a.toHtml()),
 			timeline: DefaultSettings.getTimelineTheme(),
