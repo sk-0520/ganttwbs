@@ -19,7 +19,7 @@
 			"a11y": {
 				"useValidAnchor": "info",
 				"useKeyWithClickEvents": "info",
-				"noSvgWithoutTitle": "info"
+				"noSvgWithoutTitle": "off"
 			}
 		}
 	},
