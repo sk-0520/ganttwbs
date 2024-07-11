@@ -11,7 +11,7 @@
 				"noParameterAssign": "info"
 			},
 			"complexity": {
-				"noStaticOnlyClass": "info"
+				"noStaticOnlyClass": "off"
 			},
 			"performance": {
 				"noAccumulatingSpread": "info"
