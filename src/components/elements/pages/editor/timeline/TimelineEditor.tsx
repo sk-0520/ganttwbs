@@ -120,17 +120,13 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 		);
 	}, [props.configuration.design, props.editorData.setting.theme]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useLayoutEffect(() => {
 		settingAtomWriter.write(props.editorData.setting);
 		sequenceTimelinesWriterAtomWriter.write(
 			...Timelines.flat(props.editorData.setting.rootTimeline.children),
 		);
-	}, [
-		settingAtomWriter,
-		props.editorData.setting,
-		sequenceTimelinesWriterAtomWriter,
-		props.editorData.setting.rootTimeline.children,
-	]);
+	}, []);
 
 	useEffect(() => {
 		function fireDropTimeline(dropTimeline: DropTimeline) {
