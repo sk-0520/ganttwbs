@@ -35,11 +35,19 @@
 		"analyze": "ANALYZE=true npm run build"
 	},
 	"jest": {
-		"moduleFileExtensions": ["ts", "js"],
+		"moduleFileExtensions": [
+			"ts",
+			"js"
+		],
 		"transform": {
-			"^.+\\.ts$": ["ts-jest", "tsconfig.json"]
+			"^.+\\.ts$": [
+				"ts-jest",
+				"tsconfig.json"
+			]
 		},
-		"testMatch": ["**/test/scripts/**/*"],
+		"testMatch": [
+			"**/test/scripts/**/*"
+		],
 		"moduleNameMapper": {
 			"@/(.+)": "<rootDir>/src/$1"
 		},
@@ -83,7 +91,6 @@
 		"jotai": "^2.9.0",
 		"license-checker": "^25.0.1",
 		"markuplint": "^4.9.2",
-		"minify-xml": "^4.4.1",
 		"next": "^14.2.4",
 		"next-i18next": "^15.3.0",
 		"npm-check-updates": "^16.14.20",

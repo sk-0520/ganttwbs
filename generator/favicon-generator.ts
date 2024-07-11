@@ -1,7 +1,6 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 
-import { minify } from "minify-xml";
 import sharp from "sharp";
 import ico from "sharp-ico";
 
@@ -20,7 +19,7 @@ const faviconOutputSvgFilePath = path.join(
 );
 
 const faviconSourceFileContent = fs.readFileSync(faviconSourceFilePath);
-const outputXml = minify(faviconSourceFileContent.toString());
+const outputXml = faviconSourceFileContent;
 fs.writeFileSync(faviconOutputSvgFilePath, outputXml);
 
 (async () => {
