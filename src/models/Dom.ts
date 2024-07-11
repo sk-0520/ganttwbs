@@ -64,36 +64,36 @@ export class Dom {
 		selectors?: string | Constructor<TElement>,
 		elementType?: Constructor<TElement>,
 	): TElement {
-		if (Types.isString(element)) {
-			if (selectors) {
-				if (Types.isString(selectors)) {
+		let workElement = element;
+		let workSelectors = selectors;
+		let workElementType = elementType;
+		if (Types.isString(workElement)) {
+			if (workSelectors) {
+				if (Types.isString(workSelectors)) {
 					throw new Error("selectors");
 				}
-				// eslint-disable-next-line no-param-reassign
-				elementType = selectors;
+				workElementType = workSelectors;
 			}
-			// eslint-disable-next-line no-param-reassign
-			selectors = element;
-			// eslint-disable-next-line no-param-reassign
-			element = null;
+			workSelectors = workElement;
+			workElement = null;
 		} else {
-			if (Types.isUndefined(selectors)) {
+			if (Types.isUndefined(workSelectors)) {
 				throw new Error("selectors");
 			}
-			if (!Types.isString(selectors)) {
+			if (!Types.isString(workSelectors)) {
 				throw new Error("selectors");
 			}
 		}
 
-		const result = (element ?? document).querySelector(selectors);
+		const result = (workElement ?? document).querySelector(workSelectors);
 		if (!result) {
-			throw new Error(selectors);
+			throw new Error(workSelectors);
 		}
 
-		if (elementType) {
-			if (!Types.instanceOf(result, elementType)) {
+		if (workElementType) {
+			if (!Types.instanceOf(result, workElementType)) {
 				throw new Error(
-					`${result.constructor.name} != ${elementType.prototype.constructor.name}`,
+					`${result.constructor.name} != ${workElementType.prototype.constructor.name}`,
 				);
 			}
 		}
@@ -134,37 +134,40 @@ export class Dom {
 		selectors?: string | Constructor<TElement>,
 		elementType?: Constructor<TElement>,
 	): NodeListOf<TElement> {
-		if (Types.isString(element)) {
-			if (selectors) {
-				if (Types.isString(selectors)) {
+		let workElement = element;
+		let workSelectors = selectors;
+		let workElementType = elementType;
+
+		if (Types.isString(workElement)) {
+			if (workSelectors) {
+				if (Types.isString(workSelectors)) {
 					throw new Error("selectors");
 				}
-				// eslint-disable-next-line no-param-reassign
-				elementType = selectors;
+				workElementType = workSelectors;
 			}
-			// eslint-disable-next-line no-param-reassign
-			selectors = element;
-			// eslint-disable-next-line no-param-reassign
-			element = null;
+			workSelectors = workElement;
+			workElement = null;
 		} else {
-			if (Types.isUndefined(selectors)) {
+			if (Types.isUndefined(workSelectors)) {
 				throw new Error("selectors");
 			}
-			if (!Types.isString(selectors)) {
+			if (!Types.isString(workSelectors)) {
 				throw new Error("selectors");
 			}
 		}
 
-		const result = (element ?? document).querySelectorAll<TElement>(selectors);
+		const result = (workElement ?? document).querySelectorAll<TElement>(
+			workSelectors,
+		);
 		if (!result) {
-			throw new Error(selectors);
+			throw new Error(workSelectors);
 		}
 
-		if (elementType) {
+		if (workElementType) {
 			for (const elm of result) {
-				if (!Types.instanceOf(elm, elementType)) {
+				if (!Types.instanceOf(elm, workElementType)) {
 					throw new Error(
-						`elm ${elm} != ${elementType.prototype.constructor.name}`,
+						`elm ${elm} != ${workElementType.prototype.constructor.name}`,
 					);
 				}
 			}
