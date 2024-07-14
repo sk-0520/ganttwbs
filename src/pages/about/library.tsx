@@ -4,6 +4,13 @@ import { Fragment } from "react";
 import Layout from "@/components/layout/Layout";
 import { useLocale } from "@/locales/locale";
 import license from "@/models/data/generator/license.json";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableRow,
+} from "@mui/material";
 
 interface License {
 	module: string;
@@ -38,71 +45,46 @@ const AboutLibraryPage: NextPage = () => {
 			layoutId="about-library"
 			title={locale.pages.about.pages.library.title}
 		>
-			<table className="license">
-				<thead>
-					<tr>
-						<th>{locale.pages.about.pages.library.module}</th>
-						<th>{locale.pages.about.pages.library.author}</th>
-						<th>{locale.pages.about.pages.library.license}</th>
-					</tr>
-				</thead>
-				<tbody>
-					<>
-						{licenseItems.map((a) => {
-							return (
-								<Fragment key={a.module}>
-									<tr>
-										<td>
-											<a href={a.repository} target={a.module}>
-												{a.module}
-											</a>
-										</td>
-										<td>{a.publisher}</td>
-										<td>{a.license}</td>
-									</tr>
-									{a.licenseNote && (
-										<tr>
-											<td colSpan={3}>
-												<details>
-													<summary>
-														{locale.pages.about.pages.library.licenseNote}
-													</summary>
-													<pre className="license-note">{a.licenseNote}</pre>
-												</details>
-											</td>
-										</tr>
-									)}
-								</Fragment>
-							);
-						})}
-					</>
-				</tbody>
-			</table>
+			<Table>
+				<TableHead>
+					<TableRow>
+						<TableCell>{locale.pages.about.pages.library.module}</TableCell>
+						<TableCell>{locale.pages.about.pages.library.author}</TableCell>
+						<TableCell>{locale.pages.about.pages.library.license}</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{licenseItems.map((a) => {
+						return (
+							<Fragment key={a.module}>
+								<TableRow>
+									<TableCell>
+										<a href={a.repository} target={a.module}>
+											{a.module}
+										</a>
+									</TableCell>
+									<TableCell>{a.publisher}</TableCell>
+									<TableCell>{a.license}</TableCell>
+								</TableRow>
+								{a.licenseNote && (
+									<TableRow>
+										<TableCell colSpan={3}>
+											<details>
+												<summary>
+													{locale.pages.about.pages.library.licenseNote}
+												</summary>
+												<pre className="license-note">{a.licenseNote}</pre>
+											</details>
+										</TableCell>
+									</TableRow>
+								)}
+							</Fragment>
+						);
+					})}
+				</TableBody>
+			</Table>
 		</Layout>
 	);
 };
 
 export default AboutLibraryPage;
-
-// function setLibraries() {
-// 	//const names = Object.keys(license).sort() as Array<keyof license>;
-// 	const names = getKeys(license);
-// 	for (const name of names) {
-// 		const itemsElement = dom.cloneTemplate(itemTemplateElement);
-
-// 		const value = license[name];
-
-// 		const libraryElement = dom.requireSelector(itemsElement, '[name="library"]', HTMLAnchorElement);
-// 		libraryElement.textContent = value.module;
-// 		libraryElement.href = value.repository;
-
-// 		const licenseElement = dom.requireSelector(itemsElement, '[name="license"]');
-// 		licenseElement.textContent = value.licenses;
-
-// 		const publisherElement = dom.requireSelector(itemsElement, '[name="publisher"]');
-// 		publisherElement.textContent = types.getPropertyOr(value, 'publisher', '');
-
-// 		libraryItemsElement.appendChild(itemsElement);
-// 	}
-
-// }
