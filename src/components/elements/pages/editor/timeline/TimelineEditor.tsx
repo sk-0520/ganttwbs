@@ -573,8 +573,8 @@ const TimelineEditor: FC<Props> = (props: Props) => {
 	): void {
 		selectingBeginDateAtomWriter.write((c) => ({
 			timeline: timeline,
-			beginDate: clearDate ? null : c?.beginDate ?? null,
-			previous: clearPrevious ? new Set() : c?.previous ?? new Set(),
+			beginDate: clearDate ? null : (c?.beginDate ?? null),
+			previous: clearPrevious ? new Set() : (c?.previous ?? new Set()),
 			canSelect: (targetTimeline) =>
 				Timelines.canSelect(
 					targetTimeline,

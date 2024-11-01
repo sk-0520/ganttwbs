@@ -611,7 +611,7 @@ export abstract class Exports {
 				const days = Calendars.getDays(successWorkRange);
 
 				const targetColor = Settings.maybeGroupTimeline(timeline)
-					? groupColors[readableTimelineId.level - 1] ?? defaultGroupColor
+					? (groupColors[readableTimelineId.level - 1] ?? defaultGroupColor)
 					: memberGroupPair?.member.color
 						? Color.parse(memberGroupPair.member.color)
 						: defaultTaskColor;

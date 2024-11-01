@@ -46,6 +46,7 @@ const IdCell: FC<Props> = (props: Props) => {
 			onDragStart={(ev) => props.callbackStartDragTimeline(ev)}
 			onDragEnd={draggingTimelineAtomReader.data?.onDragEnd}
 		>
+			{/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
 			<label>
 				{selectingBeginDateAtomReader.data ? (
 					<>

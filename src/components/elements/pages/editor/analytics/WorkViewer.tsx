@@ -168,29 +168,19 @@ const WorkViewer: FC<Props> = (props: Props) => {
 						<tr>
 							<th>{locale.pages.editor.analytics.works.resource.group}</th>
 							<th>{locale.pages.editor.analytics.works.resource.member}</th>
-							<>
-								{visibleCost ? (
-									<>
-										<th>
-											{locale.pages.editor.analytics.works.header.workload}
-										</th>
-										<th>
-											{locale.pages.editor.analytics.works.header.workday}
-										</th>
-										<th>{locale.pages.editor.analytics.works.header.cost}</th>
-										<th>{locale.pages.editor.analytics.works.header.sales}</th>
-									</>
-								) : (
-									<>
-										<th>
-											{locale.pages.editor.analytics.works.header.workload}
-										</th>
-										<th>
-											{locale.pages.editor.analytics.works.header.workday}
-										</th>
-									</>
-								)}
-							</>
+							{visibleCost ? (
+								<>
+									<th>{locale.pages.editor.analytics.works.header.workload}</th>
+									<th>{locale.pages.editor.analytics.works.header.workday}</th>
+									<th>{locale.pages.editor.analytics.works.header.cost}</th>
+									<th>{locale.pages.editor.analytics.works.header.sales}</th>
+								</>
+							) : (
+								<>
+									<th>{locale.pages.editor.analytics.works.header.workload}</th>
+									<th>{locale.pages.editor.analytics.works.header.workday}</th>
+								</>
+							)}
 						</tr>
 					</thead>
 					<tbody>

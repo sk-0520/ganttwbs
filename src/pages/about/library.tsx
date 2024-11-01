@@ -47,35 +47,33 @@ const AboutLibraryPage: NextPage = () => {
 					</tr>
 				</thead>
 				<tbody>
-					<>
-						{licenseItems.map((a) => {
-							return (
-								<Fragment key={a.module}>
+					{licenseItems.map((a) => {
+						return (
+							<Fragment key={a.module}>
+								<tr>
+									<td>
+										<a href={a.repository} target={a.module}>
+											{a.module}
+										</a>
+									</td>
+									<td>{a.publisher}</td>
+									<td>{a.license}</td>
+								</tr>
+								{a.licenseNote && (
 									<tr>
-										<td>
-											<a href={a.repository} target={a.module}>
-												{a.module}
-											</a>
+										<td colSpan={3}>
+											<details>
+												<summary>
+													{locale.pages.about.pages.library.licenseNote}
+												</summary>
+												<pre className="license-note">{a.licenseNote}</pre>
+											</details>
 										</td>
-										<td>{a.publisher}</td>
-										<td>{a.license}</td>
 									</tr>
-									{a.licenseNote && (
-										<tr>
-											<td colSpan={3}>
-												<details>
-													<summary>
-														{locale.pages.about.pages.library.licenseNote}
-													</summary>
-													<pre className="license-note">{a.licenseNote}</pre>
-												</details>
-											</td>
-										</tr>
-									)}
-								</Fragment>
-							);
-						})}
-					</>
+								)}
+							</Fragment>
+						);
+					})}
 				</tbody>
 			</table>
 		</Layout>
